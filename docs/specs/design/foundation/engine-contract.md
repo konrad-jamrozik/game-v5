@@ -150,7 +150,8 @@ Engine API
 │       └── advanceTurn()
 └── developer
     ├── queries
-    │   └── getCampaignState()
+    │   ├── getCampaignState()
+    │   └── getInitiativeOperationLevels()
     └── actions
         ├── addMoney(amount)
         └── addAgents(...)
@@ -171,7 +172,7 @@ The following table is the complete set of namespace placement rules. For each n
 | `session.autopilot` | Listing the Autopilot AIs available for engagement, engaging Autopilot, reporting an Autopilot engagement's status, and disengaging it. | [Available Autopilot AIs](autopilot.md#available-autopilot-ais) and [Autopilot lifecycle and concurrency](autopilot.md#autopilot-lifecycle-and-concurrency) in Autopilot |
 | `player.queries` | Read-only Player-visible information and ordinary action discovery: the current state, what happened in past Turns, the available actions, and whether a given gameplay action would succeed. | [Player-visible information](player-api.md#player-visible-information) and [Action preview](player-api.md#action-preview) in Player API, [Current state, Turn report, and history](world-history.md#current-state-turn-report-and-history) in History and Turn Report, and the specification owning each value |
 | `player.actions` | Normal gameplay mutations, including Advance turn. | The mechanics specification owning each action, under [Gameplay actions](player-api.md#gameplay-actions) in Player API; [Turn Advancement](../mechanics/turn-advancement.md) for Advance turn |
-| `developer.queries` | Read-only inspection of full Campaign state. Its `getCampaignState()` returns Campaign state in full. | [Inspection contract](developer-access.md#inspection-contract) in Developer Access |
+| `developer.queries` | Read-only inspection of full Campaign state and of values derived from the Game build that are not Player-visible. Its `getCampaignState()` returns Campaign state in full; every other operation is owned by the Mechanics specification that defines the values it returns, e.g. `getInitiativeOperationLevels()`. | [Inspection contract](developer-access.md#inspection-contract) in Developer Access, and the Mechanics specification owning each value |
 | `developer.actions` | Validated, recorded Player cheat actions; e.g., adding money or adding Agents. | [Player cheat actions](developer-access.md#player-cheat-actions) in Developer Access, and the Mechanics specification owning each Player cheat action |
 
 The complete Principal access matrix is:

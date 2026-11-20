@@ -5,7 +5,7 @@
 | Spec ID | LEAD |
 | Family | Mechanics |
 | Audience | Engine designer, Content designer, AI designer, Implementer |
-| Owns | What a Lead GDR describes, Lead discovery, Lead availability, Lead status, and the effect of completing a Lead. |
+| Owns | What a Lead GDR describes, Lead discovery, Lead availability, Lead status, the effect of completing a Lead, and the Initiative operation level. |
 | Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
@@ -25,6 +25,7 @@ These terms are specific to [Leads](domain-model.md#leads-investigations-mission
 | Required progress | The [progress points](domain-model.md#leads-investigations-mission-sites-and-missions) an [Investigation](domain-model.md#leads-investigations-mission-sites-and-missions) of a Lead needs at least to complete, set by the Lead's `required_progress`. | Lead difficulty; resistance |
 | Discovered Lead | A Lead the player has learned of, under [Lead discovery](#lead-discovery). Only a discovered Lead is Player-visible, and a Lead once discovered stays discovered. |  |
 | Completed Lead | A Lead with at least one Completed Investigation, i.e. whose completion count is at least 1, under [Missions from a Lead](#missions-from-a-lead). | Investigated Lead; successfully investigated Lead. An Abandoned or Active Investigation has also investigated its Lead. |
+| Initiative operation level | How far into a [Faction](domain-model.md#factions)'s Initiative Missions a Lead or an [Initiative Mission site](domain-model.md#leads-investigations-mission-sites-and-missions) lies: a whole number derived from the [Game build](../foundation/core-concepts.md#game-build-and-content)'s Leads, under [Initiative operation level](#initiative-operation-level). The first Initiative Mission site the [Agency](domain-model.md#agency-and-agents) can reach against a Faction has level 1, and each one reachable only after winning another has a higher level. | Initiative level; Mission site level |
 | Lead status | The Player-visible summary of a discovered Lead's availability: Available, Inactive, or Archived, under [Lead status](#lead-status). |  |
 
 # Lead GDRs
@@ -92,6 +93,42 @@ A Lead is hidden until the player has earned the knowledge of it, and what the p
 - **Hidden until then:** An undiscovered Lead is not Player-visible, under [Player-visible information](#player-visible-information), and is never available.
 
 In scope only a Won Mission and a Completed Investigation can make a Condition hold that did not, and both happen during Advance turn, so a Lead becomes discovered only at campaign creation or in an Advance turn.
+
+# Initiative operation level
+
+The Agency reaches a Faction's harder Initiative Mission sites only by winning easier ones first, because a Won Mission discovers the Leads that lead on. The Initiative operation level counts those steps, so that an interface, an [Autopilot AI](../foundation/engine-contract.md#principals-and-access), and balancing tools can tell how far along a Lead or a Mission site is without reading the Conditions that discover Leads.
+
+**Proposed rule:** The Initiative operation level is a [Derived value](../foundation/core-concepts.md#value-classification) of the [Game build](../foundation/core-concepts.md#game-build-and-content): it is calculated from the Lead and MissionSiteArchetype GDRs alone, reads no Campaign state, and so never changes during a [Campaign](../foundation/core-concepts.md#campaign-and-session). It is defined for the following three things, and this list is exhaustive:
+
+- **A Lead:** for a Lead L that creates a Mission site, its Required level plus 1; for a Lead that creates none, its Required level. The Required level of L is the Required level of its `discovered_when`, under the table below, or 0 for a Lead without `discovered_when`. It is the highest Initiative operation level of an [Initiative Mission](domain-model.md#leads-investigations-mission-sites-and-missions) that must be Won before L can be discovered, and it counts only Initiative Missions against the Faction of L.
+- **An Initiative Mission site:** the Initiative operation level of the Lead that created it, under [Missions from a Lead](#missions-from-a-lead).
+- **A MissionSiteArchetype of kind initiative:** the lowest Initiative operation level among the Leads whose `create_mission_site` Effect names it, of whatever Faction, i.e. the earliest level at which a Mission site of it can be created.
+
+The Required level of a Condition is calculated from its form, under [Condition format](../foundation/conditions.md#condition-format) in Conditions. This table is exhaustive for the Condition kinds a `discovered_when` may use.
+
+| Condition | Required level |
+| --- | --- |
+| `lead_completed` naming Lead M | The Required level of M. Completing M does not require winning a Mission from M, so the Mission site M creates adds nothing. |
+| `mission_won` naming a MissionSiteArchetype of kind initiative | The lowest Initiative operation level among the Leads of the Faction of L whose `create_mission_site` Effect names that MissionSiteArchetype. |
+| `mission_won` naming a MissionSiteArchetype of kind response | 0, because a Response Mission site needs no Initiative Mission to be Won first. |
+| `all` | The highest Required level of its Conditions, or 0 for an empty list. |
+| `any` | The lowest Required level of its Conditions. |
+| `not` | 0, because a `not` can hold before any Mission is Won. |
+
+The values are calculated together: every Lead starts with no value, and the equations above are applied to every Lead again and again until no value changes. A value that reads a Lead or Condition still without a value has none itself, the lowest of several values ignores those without one, and an `any` whose Conditions all have none has none. Values only fall while they are calculated, so the calculation ends. A Lead left without a value, e.g. one whose `discovered_when` requires the Lead itself, or one that needs a Won Mission at a MissionSiteArchetype no Lead of its Faction creates, has no Initiative operation level, and neither has a MissionSiteArchetype of kind initiative that no Lead with a value creates. The Initiative operation level depends on no random outcome and on no [Campaign configuration](../foundation/core-concepts.md#campaign-and-session) setting.
+
+These rules guarantee that the Initiative operation level of a Lead that creates a Mission site, of every Initiative Mission site, and of every MissionSiteArchetype that has one is at least 1, and that of a Lead that creates none is at least 0. They also guarantee that a Lead or Initiative Mission site of level N, for N of at least 2, cannot be discovered or created before a Mission at an Initiative Mission site of level N − 1 against the same Faction is Won. A `not` and a `mission_won` naming a MissionSiteArchetype of kind response add nothing to the level, so the guarantee holds however a `discovered_when` is written.
+
+E.g., with the Bootstrap GDRs, `locate_red_dawn_member` is discovered once `criminal_organizations`, which needs no Won Mission, is completed, so its Required level is 0 and it and its `apprehend_member` Mission sites have level 1. `interrogate_red_dawn_member` is discovered by a Won Mission at `apprehend_member` and has level 1, as has `red_dawn_profile`, discovered by its completion. `locate_red_dawn_safehouse` is discovered by the completion of `red_dawn_profile`, so its Required level is 1 and it and its `raid_safehouse` Mission sites have level 2.
+
+**Informative rationale:** Taking the highest Required level of `all` follows the Game designer's rule that a Mission site's level is one more than the highest level among everything it requires. Taking the lowest level for `any` and for a MissionSiteArchetype that several Leads create gives the earliest point at which the Agency can reach a Lead or meet a Mission site, which is what both prioritizing Leads and balancing a Mission site's Enemies need. The level is calculated from GDRs rather than recorded in them, so a Content designer who reorders a chain cannot leave a stale level behind.
+
+## Reading Initiative operation levels
+
+**Proposed rule:** The Initiative operation level reaches its readers through two API surfaces, under [API hierarchy](../foundation/engine-contract.md#api-hierarchy) in Engine Contract, and through no other:
+
+- **[Player API](../foundation/engine-contract.md#api-surfaces):** the level of every discovered Lead and of every Initiative Mission site, under [Player-visible information](#player-visible-information), so that a user interface and an Autopilot AI read it rather than derive it.
+- **[Developer API](../foundation/engine-contract.md#api-surfaces):** `developer.queries.getInitiativeOperationLevels()` reports the level of every Lead and of every MissionSiteArchetype of kind initiative the Game build of the [Current campaign](../foundation/core-concepts.md#campaign-and-session) supplies, discovered or not, and names each one that has none. It reads no Campaign state, so a balancing tool reads the levels of a Game build from any Campaign created from it. It is a query: it changes no Campaign state and is not a [Player action](../foundation/engine-contract.md#player-actions-and-turns).
 
 # Lead availability
 
@@ -189,6 +226,9 @@ The player is told what a Lead is and whether it can be investigated, and never 
 | For each discovered Lead, whether it is available | Yes |
 | For each discovered Lead, its [Lead status](#lead-status) | Yes |
 | For each discovered Lead, its completion count | Yes |
+| For each discovered Lead, its [Initiative operation level](#initiative-operation-level), or that it has none | Yes |
+| For each [Initiative Mission site](domain-model.md#leads-investigations-mission-sites-and-missions), its Initiative operation level | Yes |
+| The Initiative operation level of an undiscovered Lead, and of a MissionSiteArchetype as such | No; Developer API reports them, under [Reading Initiative operation levels](#reading-initiative-operation-levels) |
 | The Leads discovered in an Advance turn, under [Turn report](#turn-report) | Yes |
 | The `discovered_when` of any Lead, and whether it or any part of it holds | No |
 | Which of the five conditions of [Lead availability](#lead-availability) hold for a Lead | No |
@@ -217,6 +257,8 @@ An undiscovered Lead is hidden completely: Player API returns neither the Lead n
 - **Lost then Won, with `until_mission_won`:** A Lead whose Mission was Lost and that is investigated again creates another Mission site. When the Mission there is Won, condition 2 stops holding; the earlier Lost Mission stays Lost and blocks nothing ([What changes availability](#what-changes-availability)).
 - **One attempt, with `never`:** Once an Investigation of the Lead is Completed, the Lead is Archived at once, while the Mission site it created is still Active; the Mission site is unaffected ([Lead status](#lead-status)).
 - **Won [Response Mission](domain-model.md#leads-investigations-mission-sites-and-missions):** It is from no Lead, because no Lead created its Mission site, so it changes condition 2 of no Lead; it can make a `mission_won` Condition hold, and so can discover a Lead ([Missions from a Lead](#missions-from-a-lead), [Lead discovery](#lead-discovery)).
+- **Mission site that several Leads create:** Each Initiative Mission site has the Initiative operation level of the Lead that created it, so two Mission sites of one MissionSiteArchetype may have different levels; the MissionSiteArchetype has the lowest of them ([Initiative operation level](#initiative-operation-level)).
+- **Lead whose discovery no chain of Leads reaches,** e.g. one whose `discovered_when` requires the Lead itself: It has no Initiative operation level, and it adds nothing to the level of a MissionSiteArchetype it would create ([Initiative operation level](#initiative-operation-level)).
 - **Game build without a Lead:** It passes [Lead GDR validation](#lead-gdr-validation). No Lead exists to be available, no Initiative Mission site is ever created, and no Lead can win the Campaign.
 - **Invalid GDRs:** A Game build that fails [Lead GDR validation](#lead-gdr-validation), e.g. with a `discovered_when` that names no Condition kind, a `create_mission_site` of a MissionSiteArchetype of kind response, two `create_mission_site` Effects in `on_completion`, or an `eliminate_faction` Effect in a Lead without `faction`, is defective and no Campaign is created from it.
 

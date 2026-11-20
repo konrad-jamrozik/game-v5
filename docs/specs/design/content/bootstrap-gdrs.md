@@ -90,7 +90,7 @@ Three Upgrades raise an Agency-wide cap, two change a value of every Agent, and 
 
 Type owner: [Leads and Progression](../mechanics/leads-and-progression.md).
 
-The Leads of each Faction form one chain of eight tiers. In each tier a locate Lead creates one Initiative Mission site, and a Won [Mission](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) there discovers the tier's follow-up Lead, which creates no Mission site. The table lists the Leads of Red Dawn one per row, in the order of the chain, and describes those of Exalt and Black Lotus by the same 18 rows.
+The Leads of each Faction form one chain of eight tiers. In each tier a locate Lead creates one Initiative Mission site, and a Won [Mission](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) there discovers the tier's follow-up Lead, which creates no Mission site. The number of a tier is the [Initiative operation level](../mechanics/leads-and-progression.md#initiative-operation-level) of its locate Lead and of the Initiative Mission site it creates, and its follow-up Lead has the same level, as has the profile Lead, at level 1; `criminal_organizations` has level 0, and each Terminate Lead and `peace_on_earth` have level 8. The table lists the Leads of Red Dawn one per row, in the order of the chain, and describes those of Exalt and Black Lotus by the same 18 rows.
 
 | GDR | Type | GDR purpose | What it supplies |
 | --- | --- | --- | --- |
