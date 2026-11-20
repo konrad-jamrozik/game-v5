@@ -1,9 +1,11 @@
 /**
  * Worker thread of server.ts. It loads the engine straight from the TypeScript source of the game-v5-impl-web clone,
  * so it runs the engine as it is on disk when the thread starts, and fights Detached Combats with
- * `developer.tools.fightCombat`.
+ * `developer.tools.fightCombatBatch`.
  *
  * For one Mission site it reports the test team's win rate, then the smallest team that reaches the target win rate.
+ * That search starts from a team size estimated from Combat ratings, steps outward from it until the answer is
+ * bracketed, and then bisects; each team size tried stops its batch as soon as its answer is certain.
  */
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
@@ -20,6 +22,16 @@ interface SiteJob {
   target: number
   trials: number
   maxn: number
+  /** The Combat rating of the site's Enemies at full health, i.e. the sum of their effective skills. */
+  rating: number
+  /** The effective skill of one Agent of the test team. */
+  agentRating: number
+}
+
+/** A site already solved in this run: its Combat rating and the team size it needs. */
+interface Hint {
+  rating: number
+  need: number
 }
 
 type Rate = { win: number; killed: number; pass: boolean } | { error: string } | null
@@ -84,12 +96,17 @@ async function boot() {
      * One batch of Detached Combats, `developer.tools.fightCombatBatch(setup, count)`: how many Combats Prevailed and
      * how many Agents are dead over the batch. It builds no Combat report.
      */
-    fightBatch(setup: unknown, count: number): { error: string } | { prevailed: number; agentsDead: number } {
-      const result = engine.developer.tools.fightCombatBatch(setup, count)
+    fightBatch(
+      setup: unknown,
+      count: number,
+      stop?: { prevailed: number; notPrevailed: number },
+    ): { error: string } | { fought: number; prevailed: number; agentsDead: number } {
+      const result = engine.developer.tools.fightCombatBatch(setup, count, stop)
       if (!result.ok) {
         return { error: result.error.message }
       }
-      return { prevailed: result.value.totals.prevailed, agentsDead: result.value.totals.agentsDead }
+      const { fought, prevailed, agentsDead } = result.value.totals
+      return { fought, prevailed, agentsDead }
     },
     initiativeLevels: Object.fromEntries(
       levels.value.missionSiteArchetypes.map((item: { id: string; level: number | null }) => [item.id, item.level]),
@@ -113,12 +130,15 @@ booted.then(
 
 /** The newest run the server has announced; a job of an older run stops at its next check. */
 let gen = 0
+/** The sites solved in the newest run, which server.ts passes on to every worker thread. */
+let hints: Hint[] = []
 
 /**
  * Fights `trials` Combats of a team of `n` in one batch, Combat `i` with the Detached seed `<site>|<n>#<i>`, so
- * `fightCombat` with that seed shows any one of them in full.
+ * `fightCombat` with that seed shows any one of them in full. With `decideOnly`, the batch stops as soon as it is
+ * certain whether the team reaches the target, so the rate it reports is over the Combats fought.
  */
-async function rate(job: SiteJob, n: number): Promise<Rate> {
+async function rate(job: SiteJob, n: number, decideOnly: boolean): Promise<Rate> {
   await tick()
   if (job.gen !== gen) {
     return null
@@ -129,15 +149,33 @@ async function rate(job: SiteJob, n: number): Promise<Rate> {
   const r = engine.fightBatch(
     { agents, enemies: job.enemies, gdrValues: job.gdrValues, seed: `${job.id}|${n}` },
     job.trials,
+    decideOnly ? { prevailed: needWins, notPrevailed: job.trials - needWins + 1 } : undefined,
   )
   if ('error' in r) {
     return { error: r.error }
   }
-  return { win: (r.prevailed / job.trials) * 100, killed: r.agentsDead / job.trials, pass: r.prevailed >= needWins }
+  return { win: (r.prevailed / r.fought) * 100, killed: r.agentsDead / r.fought, pass: r.prevailed >= needWins }
+}
+
+/**
+ * The team size to try first. Teams that need equal strength scale with the Enemies' Combat rating, so the estimate
+ * is the need of the solved site whose Combat rating is closest, scaled by the ratio of the two ratings; with no site
+ * solved yet, it is the team whose Combat rating equals the Enemies'.
+ */
+function estimate(job: SiteJob): number {
+  let best: Hint | null = null
+  for (const hint of hints) {
+    if (best === null || Math.abs(Math.log(hint.rating / job.rating)) < Math.abs(Math.log(best.rating / job.rating))) {
+      best = hint
+    }
+  }
+  const guess =
+    best !== null && job.rating > 0 ? (best.need * job.rating) / best.rating : job.rating / Math.max(1, job.agentRating)
+  return Math.min(job.maxn, Math.max(1, Math.round(guess)))
 }
 
 async function run(job: SiteJob): Promise<void> {
-  const base = await rate(job, job.n)
+  const base = await rate(job, job.n, false)
   if (base === null) {
     return
   }
@@ -146,48 +184,83 @@ async function run(job: SiteJob): Promise<void> {
     return
   }
   port.postMessage({ type: 'rate', gen: job.gen, id: job.id, win: base.win, killed: base.killed })
-  let lo = 1
-  let hi = 0
-  if (base.pass) {
-    hi = job.n
-  } else {
-    // Double the team until it reaches the target, so a small answer never costs a Combat of the largest team.
-    lo = job.n + 1
-    let size = job.n
-    while (size < job.maxn) {
-      size = Math.min(job.maxn, size * 2)
-      const r = await rate(job, size)
-      if (r === null) {
-        return
+  // The smallest team known to pass is hi, and every team below lo is known to fail; hi of 0 means none passes yet.
+  let lo = base.pass ? 1 : job.n + 1
+  let hi = base.pass ? job.n : 0
+  /** Fights a team size of the search; null when the run was replaced. */
+  const passes = async (size: number): Promise<boolean | null> => {
+    const r = await rate(job, size, true)
+    return r === null ? null : !('error' in r) && r.pass
+  }
+  const start = Math.min(hi > 0 ? hi : job.maxn, Math.max(lo, estimate(job)))
+  // The first step is a few percent of the estimate, so the answer is usually bracketed by the first one or two tries.
+  const firstStep = Math.max(1, Math.round(start * 0.04))
+  if (hi === 0 || start < hi) {
+    const first = await passes(start)
+    if (first === null) {
+      return
+    }
+    if (first) {
+      hi = start
+      // Step down from the estimate, doubling the step, until a size fails.
+      for (let step = firstStep; hi - step >= lo; step *= 2) {
+        const result = await passes(hi - step)
+        if (result === null) {
+          return
+        }
+        if (!result) {
+          lo = hi - step + 1
+          break
+        }
+        hi -= step
       }
-      if (!('error' in r) && r.pass) {
-        hi = size
-        break
+    } else {
+      lo = start + 1
+      // Step up from the estimate, doubling the step, until a size passes or the largest team fails.
+      for (let step = firstStep; lo <= job.maxn; step *= 2) {
+        const size = Math.min(job.maxn, start + step)
+        const result = await passes(size)
+        if (result === null) {
+          return
+        }
+        if (result) {
+          hi = size
+          break
+        }
+        lo = size + 1
       }
-      lo = size + 1
     }
   }
   let need: number | null = null
   if (hi > 0) {
     while (lo < hi) {
       const mid = (lo + hi) >> 1
-      const r = await rate(job, mid)
-      if (r === null) {
+      const result = await passes(mid)
+      if (result === null) {
         return
       }
-      if (!('error' in r) && r.pass) {
+      if (result) {
         hi = mid
       } else {
         lo = mid + 1
       }
     }
-    need = lo
+    need = hi
   }
-  port.postMessage({ type: 'need', gen: job.gen, id: job.id, need })
+  port.postMessage({ type: 'need', gen: job.gen, id: job.id, need, rating: job.rating })
 }
 
-port.on('message', (message: SiteJob | { type: 'cancel'; gen: number }) => {
+port.on('message', (message: SiteJob | { type: 'cancel'; gen: number } | ({ type: 'hint'; gen: number } & Hint)) => {
+  if (message.gen > gen) {
+    hints = []
+  }
   gen = Math.max(gen, message.gen)
+  if (message.type === 'hint') {
+    if (message.gen === gen) {
+      hints.push({ rating: message.rating, need: message.need })
+    }
+    return
+  }
   if (message.type === 'site') {
     run(message).catch((e: unknown) =>
       port.postMessage({

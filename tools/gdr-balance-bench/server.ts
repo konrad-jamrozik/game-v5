@@ -200,38 +200,49 @@ function startPool(): void {
       const worker = new Worker(new URL('./worker.ts', import.meta.url), { workerData: { impl: IMPL } })
       const slot: Slot = { worker, ready: false, busy: false }
       mine.push(slot)
-      worker.on('message', (m: { type: string; gen?: number; message?: string } & Partial<Info>) => {
-        if (pool !== mine) {
-          return
-        }
-        if (m.type === 'ready') {
-          slot.ready = true
-          resolve({
-            initiativeLevels: m.initiativeLevels!,
-            enemyOrder: m.enemyOrder!,
-            combatGdrValueNames: m.combatGdrValueNames ?? null,
-          })
-          pump()
-          return
-        }
-        if (m.type === 'error') {
-          reject(new Error(m.message))
-          return
-        }
-        if (m.gen !== gen) {
-          return
-        }
-        stream?.write(`${JSON.stringify(m)}\n`)
-        if (m.type === 'need' || m.type === 'failed') {
-          slot.busy = false
-          remaining -= 1
-          if (remaining === 0) {
-            stream?.end()
-            stream = null
+      worker.on(
+        'message',
+        (
+          m: { type: string; gen?: number; message?: string; need?: number | null; rating?: number } & Partial<Info>,
+        ) => {
+          if (pool !== mine) {
+            return
           }
-          pump()
-        }
-      })
+          if (m.type === 'ready') {
+            slot.ready = true
+            resolve({
+              initiativeLevels: m.initiativeLevels!,
+              enemyOrder: m.enemyOrder!,
+              combatGdrValueNames: m.combatGdrValueNames ?? null,
+            })
+            pump()
+            return
+          }
+          if (m.type === 'error') {
+            reject(new Error(m.message))
+            return
+          }
+          if (m.gen !== gen) {
+            return
+          }
+          stream?.write(`${JSON.stringify(m)}\n`)
+          // A solved site tells every worker thread where to start the searches still to come.
+          if (m.type === 'need' && typeof m.need === 'number' && typeof m.rating === 'number') {
+            for (const other of pool) {
+              other.worker.postMessage({ type: 'hint', gen, rating: m.rating, need: m.need })
+            }
+          }
+          if (m.type === 'need' || m.type === 'failed') {
+            slot.busy = false
+            remaining -= 1
+            if (remaining === 0) {
+              stream?.end()
+              stream = null
+            }
+            pump()
+          }
+        },
+      )
       worker.on('error', (e) => {
         console.error('engine worker failed:', e.message)
         reject(e)
