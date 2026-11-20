@@ -55,8 +55,28 @@ async function boot() {
     name: u.name as string,
     effect: u.effect as string,
   }))
+  // Each Initiative operation level's MissionSiteArchetype, from Developer API on the scratch Campaign alone, so that
+  // a row can name the next Initiative Mission site to win against each Faction. It is fixed game data.
+  ok(scratch.session.developer.enable())
+  const levels = ok<Any>(scratch.developer.queries.getInitiativeOperationLevels()).missionSiteArchetypes as Any[]
+  const names = new Map<string, string>(
+    (ok<Any>(scratch.player.queries.getGameData()).missionSiteArchetypes as Any[]).map((a) => [a.id, a.name]),
+  )
+  for (const item of levels) {
+    if (item.level !== null) {
+      chain.set(item.level as number, names.get(item.id) ?? item.id)
+    }
+  }
+  exhaustionFreePoints = ok<Any>(scratch.player.queries.getGameData()).agentParameters['exhaustionFreePoints'] as number
   return { MemoryStorage, createEngine, BASIC_AI_THRESHOLDS, createBasicAutopilotAi, upgrades }
 }
+
+/** The name of the Initiative Mission site of each Initiative operation level. */
+const chain = new Map<number, string>()
+/** AgentParameters' `exhaustion_free_points`, up to which an Agent counts as a Rested Agent. */
+let exhaustionFreePoints = 0
+/** The exhaustion above which an Agent on Standby counts as exhausted in Work. */
+const STANDBY_EXHAUSTED_ABOVE = 20
 
 const booted = boot()
 const campaigns = new Map<string, Campaign>()
@@ -80,6 +100,24 @@ function statsOf(campaign: Campaign): CampaignStats {
   const skillNow = agents.reduce((s, a) => s + (a.ableToFight ? (a.effectiveSkill as number) : 0), 0)
   const skillFresh = agents.reduce((s, a) => s + Math.floor((a.skillHundredths as number) / 100), 0)
   const ratingFresh = Math.round(skillFresh * (skillNow > 0 ? ratingNow / skillNow : 1))
+  // The Agents the Basic Autopilot AI may form a team of for a Mission site: its Rested Agents that are able to fight,
+  // i.e. those that can be assigned, are Fit for work, are on Standby or Training, have their full health, and have
+  // exhaustion of at most exhaustion_free_points.
+  const ready = agents.filter(
+    (a) =>
+      a.canBeAssigned &&
+      a.fitForWork &&
+      (a.assignment?.kind === 'Standby' || a.assignment?.kind === 'Training') &&
+      a.healthLostHundredths === 0 &&
+      a.exhaustion <= exhaustionFreePoints &&
+      a.ableToFight,
+  )
+  const ratingReady = ok<Any>(
+    player.queries.previewDeployment(
+      null,
+      ready.map((a) => a.id),
+    ),
+  ).teamCombatRating as number
   const missions = { Response: { won: 0, lost: 0, expired: 0 }, Initiative: { won: 0, lost: 0, expired: 0 } }
   const siteById = new Map<string, Any>(retired.missionSites.map((s: Any) => [s.id, s]))
   const best = new Map<string, { level: number | null; name: string }>()
@@ -107,7 +145,8 @@ function statsOf(campaign: Campaign): CampaignStats {
   const all = [...agents, ...(retired.agents as Any[])]
   const assignments: Record<string, number> = {}
   for (const a of agents) {
-    const kind = (a.assignment?.kind as string | undefined) ?? 'None'
+    const assigned = (a.assignment?.kind as string | undefined) ?? 'None'
+    const kind = assigned === 'Standby' && a.exhaustion > STANDBY_EXHAUSTED_ABOVE ? 'Exhausted' : assigned
     assignments[kind] = (assignments[kind] ?? 0) + 1
   }
   return {
@@ -129,15 +168,21 @@ function statsOf(campaign: Campaign): CampaignStats {
     meanSkill:
       agents.length === 0 ? 0 : agents.reduce((s, a) => s + (a.skillHundredths as number), 0) / agents.length / 100,
     upgrades: Object.fromEntries((agency.upgrades as Any[]).map((u) => [u.id, u.acquisitions as number])),
-    ratingNow,
+    ratingReady,
+    ready: ready.length,
     ratingFresh,
     missions,
-    factions: (live.factions as Any[]).map((f) => ({
-      id: f.id,
-      name: f.name,
-      eliminated: f.eliminated,
-      best: best.get(f.id) ?? null,
-    })),
+    factions: (live.factions as Any[]).map((f) => {
+      const top = best.get(f.id)?.level ?? 0
+      const level = [...chain.keys()].filter((l) => l > top).sort((x, y) => x - y)[0]
+      return {
+        id: f.id,
+        name: f.name,
+        eliminated: f.eliminated,
+        best: best.get(f.id) ?? null,
+        next: f.eliminated || level === undefined ? null : { level, name: chain.get(level)! },
+      }
+    }),
     hired: all.length - campaign.initialAgents,
     killed: all.filter((a) => a.agentStatus === 'Killed').length,
     dismissed: all.filter((a) => a.agentStatus === 'Dismissed').length,

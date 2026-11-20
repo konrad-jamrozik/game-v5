@@ -738,8 +738,16 @@
         const ml = (m) =>
           `<span class="good">${m.won}</span><span class="dim">/</span><span class="bad">${m.lost}</span><span class="dim">/${m.expired}</span>`
         const work = (a) =>
-          ['Contracting', 'Training', 'Investigation', 'Standby', 'Recovery', 'Deployed']
-            .map((k) => `${k[0]}${a[k] ?? 0}`)
+          [
+            ['C', 'Contracting'],
+            ['T', 'Training'],
+            ['I', 'Investigation'],
+            ['S', 'Standby'],
+            ['Ex', 'Exhausted'],
+            ['R', 'Recovery'],
+            ['D', 'Deployed'],
+          ]
+            .map(([l, k]) => `${l}${a[k] ?? 0}`)
             .join(' ')
         const L1 = [
           ['Turn', 'The Current Turn', (s) => fmt(s.turn), 56],
@@ -774,16 +782,21 @@
           ],
           [
             'Work',
-            'Serving Agents by Assignment, In transit included: Contracting, Training, Investigation, Standby, Recovery, Deployed',
+            'Serving Agents by Assignment, In transit included: Contracting, Training, Investigation, Standby with exhaustion up to 20, Standby with exhaustion above 20 (Ex), Recovery, Deployed',
             (s) => `<span class="dim">${work(s.assignments)}</span>`,
-            200,
+            230,
             true,
           ],
         ]
         const L2 = [
-          ['CR now', 'Combat rating of every Serving Agent together, as they are now', (s) => fmt(s.ratingNow), 80],
           [
-            'CR fresh',
+            'CR ready',
+            'Combat rating of the Agents the AI may send to a Mission site now, i.e. its Rested Agents able to fight; their number after it',
+            (s) => `${fmt(s.ratingReady)} <span class="dim">(${fmt(s.ready)})</span>`,
+            118,
+          ],
+          [
+            'CR all',
             'Combat rating of every Serving Agent together at full health and exhaustion 0',
             (s) => `<span style="color:var(--accent-text)">${fmt(s.ratingFresh)}</span>`,
             80,
@@ -803,15 +816,14 @@
           ['Initiative', 'Initiative Missions Won / Lost / Expired', (s) => ml(s.missions.Initiative), 104],
           ...factions.map((f, i) => [
             f.name,
-            `The Won Initiative Mission against ${f.name} with the highest Initiative operation level; ✕ once the Faction is Eliminated`,
+            `The next Initiative Mission site to win against ${f.name}: one Initiative operation level above the highest it has Won; Eliminated once the Faction is`,
             (s) => {
               const x = s.factions[i]
               if (!x) return ''
-              const best =
-                x.best === null
-                  ? '<span class="dim">—</span>'
-                  : `<span class="dim">L${x.best.level ?? '?'}</span> ${esc(x.best.name)}`
-              return `${best}${x.eliminated ? ' <span class="good" title="Eliminated">✕</span>' : ''}`
+              if (x.eliminated) return '<span class="good">Eliminated ✕</span>'
+              return x.next === null
+                ? '<span class="dim">—</span>'
+                : `<span class="dim">L${x.next.level}</span> ${esc(x.next.name)}`
             },
             240,
             true,
@@ -830,7 +842,7 @@
 
       function renderHead() {
         $('legend').innerHTML =
-          `<b>CR fresh</b> is the Combat rating the same Agents would have at full health and exhaustion 0. A label with <b>+</b>, e.g. <b>+Weapon</b>, is how many times that Upgrade was bought. Work: Contracting, Training, Investigation, Standby, Recovery, Deployed. Missions: Won / Lost / Expired. Hover a label for its meaning. Time is the latest run's wall-clock time, and the total of every run. <b>Load params</b> copies a Campaign's parameters into the Parameters editor above, e.g. to launch a variant of it.`
+          `<b>CR ready</b> is the Combat rating of the Agents the AI may send to a Mission site now: its Rested Agents able to fight, i.e. on Standby or Training, Fit for work, at full health, with exhaustion of at most <code>exhaustion_free_points</code>; their number is in brackets, and a team is further limited by the free Transport cap. <b>CR all</b> is the Combat rating of every Serving Agent at full health and exhaustion 0. A label with <b>+</b>, e.g. <b>+Weapon</b>, is how many times that Upgrade was bought. Work: Contracting, Training, Investigation, Standby with exhaustion up to 20, Exhausted on Standby (above 20), Recovery, Deployed. Each Faction shows the next Initiative Mission site to win against it, one level above the highest Won. Missions: Won / Lost / Expired. Hover a label for its meaning. Time is the latest run's wall-clock time, and the total of every run. <b>Load params</b> copies a Campaign's parameters into the Parameters editor above, e.g. to launch a variant of it.`
       }
 
       const rows = new Map()

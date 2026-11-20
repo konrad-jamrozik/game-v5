@@ -50,15 +50,23 @@ export interface CampaignStats {
   readonly agentCap: number
   readonly transportCap: number
   readonly trainingCap: number
-  /** Serving Agents by the kind of their Current assignment, those In transit included. */
+  /**
+   * Serving Agents by the kind of their Current assignment, those In transit included; an Agent on Standby with
+   * exhaustion above 20 counts as `Exhausted` instead.
+   */
   readonly assignments: Record<string, number>
   /** The mean base skill of the Serving Agents. */
   readonly meanSkill: number
   /** Acquisitions by Upgrade ID. */
   readonly upgrades: Record<string, number>
-  /** The Combat rating of every Serving Agent together, as `previewDeployment` reports it. */
-  readonly ratingNow: number
-  /** The same at full health and exhaustion 0. */
+  /**
+   * The Combat rating, as `previewDeployment` reports it, of the Agents the Basic Autopilot AI may form a team of: its
+   * Rested Agents that are able to fight.
+   */
+  readonly ratingReady: number
+  /** How many Agents that is. */
+  readonly ready: number
+  /** The Combat rating of every Serving Agent together at full health and exhaustion 0. */
   readonly ratingFresh: number
   readonly missions: { Response: MissionCounts; Initiative: MissionCounts }
   readonly factions: readonly {
@@ -67,6 +75,8 @@ export interface CampaignStats {
     readonly eliminated: boolean
     /** The Won Initiative Mission site against the Faction with the highest Initiative operation level. */
     readonly best: { readonly level: number | null; readonly name: string } | null
+    /** The Initiative Mission site one Initiative operation level above `best`; none once the Faction is Eliminated. */
+    readonly next: { readonly level: number; readonly name: string } | null
   }[]
   /** Agents beyond those the Campaign started with. */
   readonly hired: number
