@@ -30,10 +30,10 @@ kind: initiative
 name: Raid outpost
 expires_in_turns: 10
 enemies:
-  initiate: 8
-  operative: 5
-  soldier: 2
-  handler: 3
+  initiate: 12
+  operative: 8
+  soldier: 3
+  handler: 4
 on_win:
   - money: 400
   - funding: 10
@@ -45,10 +45,10 @@ kind: initiative
 name: Raid training facility
 expires_in_turns: 12
 enemies:
-  initiate: 14
-  operative: 7
-  soldier: 1
-  handler: 4
+  initiate: 40
+  operative: 20
+  soldier: 4
+  handler: 10
   lieutenant: 1
 on_win:
   - money: 800
@@ -61,12 +61,12 @@ kind: initiative
 name: Raid logistics hub
 expires_in_turns: 15
 enemies:
-  initiate: 10
-  operative: 5
-  soldier: 6
-  elite: 1
-  handler: 2
-  lieutenant: 1
+  initiate: 32
+  operative: 16
+  soldier: 20
+  elite: 4
+  handler: 6
+  lieutenant: 4
   commander: 1
 on_win:
   - money: 2000
@@ -79,13 +79,13 @@ kind: initiative
 name: Raid command center
 expires_in_turns: 20
 enemies:
-  initiate: 5
-  operative: 5
-  soldier: 8
-  elite: 2
-  handler: 2
-  lieutenant: 1
-  commander: 1
+  initiate: 20
+  operative: 20
+  soldier: 30
+  elite: 10
+  handler: 8
+  lieutenant: 6
+  commander: 3
 on_win:
   - money: 3000
   - funding: 25
@@ -97,13 +97,13 @@ kind: initiative
 name: Raid regional stronghold
 expires_in_turns: 30
 enemies:
-  initiate: 6
-  operative: 11
-  soldier: 11
-  elite: 3
-  handler: 3
-  lieutenant: 2
-  commander: 1
+  initiate: 20
+  operative: 40
+  soldier: 40
+  elite: 12
+  handler: 10
+  lieutenant: 8
+  commander: 3
   high_commander: 1
 on_win:
   - money: 5000
@@ -116,11 +116,11 @@ kind: initiative
 name: Raid HQ
 expires_in_turns: 40
 enemies:
-  soldier: 12
-  elite: 6
-  lieutenant: 2
-  commander: 1
-  high_commander: 1
+  soldier: 60
+  elite: 30
+  lieutenant: 12
+  commander: 6
+  high_commander: 2
   cult_leader: 1
 on_win:
   - money: 10000
@@ -144,9 +144,9 @@ name: Foil sabotage
 operation_level: 2
 expires_in_turns: 4
 enemies:
-  initiate: 1
-  operative: 1
-  soldier: 1
+  initiate: 2
+  operative: 2
+  soldier: 2
   handler: 1
   lieutenant: 1
 ---
@@ -178,9 +178,9 @@ name: Foil VIP assassination
 operation_level: 2
 expires_in_turns: 4
 enemies:
-  initiate: 3
-  operative: 3
-  soldier: 1
+  initiate: 4
+  operative: 4
+  soldier: 2
   handler: 1
 ---
 id: defend_against_office_raid
@@ -190,9 +190,9 @@ name: Defend against office raid
 operation_level: 2
 expires_in_turns: 4
 enemies:
-  initiate: 2
-  operative: 1
-  soldier: 1
+  initiate: 4
+  operative: 4
+  soldier: 4
   handler: 1
   lieutenant: 1
 ---
@@ -203,11 +203,11 @@ name: Foil financial heist
 operation_level: 3
 expires_in_turns: 5
 enemies:
-  initiate: 6
-  operative: 6
-  soldier: 4
-  handler: 2
-  lieutenant: 1
+  initiate: 10
+  operative: 10
+  soldier: 8
+  handler: 4
+  lieutenant: 2
 ---
 id: intercept_arms_deal
 type: MissionSiteArchetype
@@ -216,12 +216,13 @@ name: Intercept arms deal
 operation_level: 3
 expires_in_turns: 5
 enemies:
-  initiate: 5
-  operative: 5
-  soldier: 3
-  elite: 1
-  handler: 2
-  lieutenant: 1
+  initiate: 12
+  operative: 12
+  soldier: 10
+  elite: 2
+  handler: 4
+  lieutenant: 2
+  commander: 1
 ---
 id: defend_against_facility_raid
 type: MissionSiteArchetype
@@ -230,12 +231,13 @@ name: Defend against facility raid
 operation_level: 3
 expires_in_turns: 5
 enemies:
-  initiate: 6
-  operative: 5
-  soldier: 3
-  elite: 1
-  handler: 2
-  lieutenant: 1
+  initiate: 16
+  operative: 12
+  soldier: 12
+  elite: 2
+  handler: 6
+  lieutenant: 3
+  commander: 1
 ---
 id: counter_civilian_terror
 type: MissionSiteArchetype
@@ -244,12 +246,12 @@ name: Counter civilian terror
 operation_level: 4
 expires_in_turns: 6
 enemies:
-  initiate: 10
-  operative: 8
-  soldier: 5
-  elite: 1
-  handler: 3
-  lieutenant: 1
+  initiate: 30
+  operative: 24
+  soldier: 15
+  elite: 4
+  handler: 10
+  lieutenant: 3
   commander: 1
 ---
 id: defend_against_city_government_assault
@@ -259,13 +261,13 @@ name: Defend against city government assault
 operation_level: 4
 expires_in_turns: 6
 enemies:
-  initiate: 5
-  operative: 5
-  soldier: 4
-  elite: 2
-  handler: 1
-  lieutenant: 1
-  commander: 1
+  initiate: 24
+  operative: 24
+  soldier: 20
+  elite: 8
+  handler: 6
+  lieutenant: 4
+  commander: 2
 ---
 id: defend_against_retaliation_strike
 type: MissionSiteArchetype
@@ -274,13 +276,13 @@ name: Defend against retaliation strike
 operation_level: 4
 expires_in_turns: 6
 enemies:
-  initiate: 5
-  operative: 2
-  soldier: 5
-  elite: 2
-  handler: 1
-  lieutenant: 1
-  commander: 1
+  initiate: 24
+  operative: 8
+  soldier: 24
+  elite: 8
+  handler: 4
+  lieutenant: 6
+  commander: 3
 ---
 id: foil_coup_attempt
 type: MissionSiteArchetype
@@ -289,11 +291,11 @@ name: Foil coup attempt
 operation_level: 5
 expires_in_turns: 7
 enemies:
-  operative: 6
-  soldier: 6
-  elite: 6
-  lieutenant: 1
-  commander: 1
+  operative: 20
+  soldier: 20
+  elite: 20
+  lieutenant: 5
+  commander: 5
   high_commander: 1
 ---
 id: foil_nuclear_plant_bombing
@@ -303,13 +305,13 @@ name: Foil nuclear plant bombing
 operation_level: 5
 expires_in_turns: 7
 enemies:
-  initiate: 10
-  operative: 9
-  soldier: 7
-  elite: 4
-  handler: 4
-  lieutenant: 2
-  commander: 1
+  initiate: 28
+  operative: 24
+  soldier: 20
+  elite: 12
+  handler: 10
+  lieutenant: 5
+  commander: 3
   high_commander: 1
 ---
 id: defend_military_installation
@@ -319,13 +321,13 @@ name: Defend military installation
 operation_level: 5
 expires_in_turns: 7
 enemies:
-  initiate: 7
-  operative: 11
-  soldier: 9
-  elite: 4
-  handler: 3
-  lieutenant: 2
-  commander: 1
+  initiate: 20
+  operative: 30
+  soldier: 24
+  elite: 12
+  handler: 7
+  lieutenant: 6
+  commander: 3
   high_commander: 1
 ---
 id: defend_against_hq_assault
@@ -335,11 +337,11 @@ name: Defend against HQ assault
 operation_level: 6
 expires_in_turns: 8
 enemies:
-  initiate: 17
-  operative: 17
-  soldier: 17
-  elite: 4
-  handler: 4
-  lieutenant: 4
-  commander: 2
+  initiate: 40
+  operative: 40
+  soldier: 40
+  elite: 10
+  handler: 10
+  lieutenant: 10
+  commander: 4
   high_commander: 1
