@@ -12,7 +12,7 @@ It needs a clone of the Implementation repo `game-v5-impl-web` next to this repo
 npm run balance:bench
 ```
 
-Then open <http://127.0.0.1:4717/>. To use other locations or another port:
+Then open <http://127.0.0.1:4717/>. The server runs under `node --watch`, so it restarts by itself whenever `server.ts` or `search.ts` changes on disk, e.g. after a pull; reload the page after such a restart. To use other locations or another port:
 
 ```bash
 node tools/gdr-balance-bench/server.ts --impl <game-v5-impl-web clone> --spec <game-v5 clone> --port <number>
