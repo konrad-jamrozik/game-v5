@@ -125,6 +125,7 @@ async function fight(probe: Probe): Promise<ProbeResult> {
   }
   return {
     ...head,
+    fought: r.fought,
     win: (r.prevailed / r.fought) * 100,
     killed: r.agentsDead / r.fought,
     pass: r.prevailed >= needWins,

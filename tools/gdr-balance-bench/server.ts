@@ -173,6 +173,14 @@ let searches: SiteSearch[] = []
 let hints: Hint[] = []
 let stream: http.ServerResponse | null = null
 
+/** When the current run started, for the time each site's search took. */
+let runStart = 0
+
+/** What a site's search took: the time since the run started, the team sizes tried, and the Combats fought. */
+function effort(search: SiteSearch): { ms: number; probes: number; combats: number } {
+  return { ms: Math.round(performance.now() - runStart), probes: search.probes, combats: search.combats }
+}
+
 /** Writes one message of the current run to the page. */
 function send(message: unknown): void {
   stream?.write(`${JSON.stringify(message)}\n`)
@@ -230,14 +238,14 @@ function onProbe(result: ProbeResult): void {
   }
   search.record(result)
   if ('error' in result) {
-    send({ type: 'failed', gen, id: result.id, message: result.error })
+    send({ type: 'failed', gen, id: result.id, message: result.error, ...effort(search) })
     return
   }
   if (result.full) {
     send({ type: 'rate', gen, id: result.id, win: result.win, killed: result.killed })
   }
   if (search.need !== undefined) {
-    send({ type: 'need', gen, id: result.id, need: search.need })
+    send({ type: 'need', gen, id: result.id, need: search.need, ...effort(search) })
     // A solved site tells the searches still to come where to start.
     if (search.need !== null) {
       hints.push({ rating: search.job.rating, need: search.need })
@@ -340,6 +348,7 @@ const server = http.createServer((req, res) => {
         }
       })
       searches = jobs.map((job) => new SiteSearch({ ...job, gen }))
+      runStart = performance.now()
       hints = []
       res.writeHead(200, { 'content-type': 'application/x-ndjson', 'cache-control': 'no-store' })
       res.write('\n')

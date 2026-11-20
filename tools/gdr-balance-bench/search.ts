@@ -59,7 +59,18 @@ export interface Probe {
 
 /** A probe's result from a worker thread. */
 export type ProbeResult =
-  | { type: 'probe'; gen: number; id: string; size: number; full: boolean; win: number; killed: number; pass: boolean }
+  | {
+      type: 'probe'
+      gen: number
+      id: string
+      size: number
+      full: boolean
+      /** The number of Combats the probe fought. */
+      fought: number
+      win: number
+      killed: number
+      pass: boolean
+    }
   | { type: 'probe'; gen: number; id: string; size: number; full: boolean; error: string }
 
 /**
@@ -94,6 +105,9 @@ export class SiteSearch {
   /** The answer once known: a team size, or null when no team up to maxn reaches the target. */
   need: number | null | undefined = undefined
   failed: string | null = null
+  /** The number of probes finished so far, i.e. team sizes tried, and of Combats they fought. */
+  probes = 0
+  combats = 0
   private baseSent = false
   private baseDone = false
   /** Whether a probe of the search, rather than the test team, has failed; until then the search steps down. */
@@ -184,6 +198,10 @@ export class SiteSearch {
   /** Records a probe's result; stale results of sizes already decided change nothing. */
   record(result: ProbeResult): void {
     this.running.delete(result.size)
+    this.probes += 1
+    if (!('error' in result)) {
+      this.combats += result.fought
+    }
     if ('error' in result) {
       this.failed = result.error
       return

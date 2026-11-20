@@ -901,7 +901,7 @@
   ${panel('Field agent and Combat exhaustion', 'content/agents/agent_archetypes.yaml · agent_parameters.yaml', `<div class="kv"><span class="k"><code>field_agent.base_skill</code><small>a newly hired Agent</small></span>${inp('field_agent.base_skill')}</div><div class="kv"><span class="k"><code>field_agent.base_health</code><small></small></span>${inp('field_agent.base_health', { min: 1 })}</div><div class="kv"><span class="k"><code>field_agent.weapon</code><small></small></span>${sel('field_agent.weapon', WP)}</div>` + row(ap + '.exhaustion_per_attack', 'to the attacker, hit or miss') + row(ap + '.exhaustion_per_defense', 'to the defender, hit or miss') + row(ap + '.exhaustion_free_points', 'exhaustion up to this costs no skill') + row(ap + '.skill_penalty_pct_per_exhaustion', '% of skill lost per point above the free points', { step: 0.5 }) + row(ap + '.exhaustion_incapacitation', 'Incapacitated at this exhaustion'))}
   </div></div>
   ${panel('Test team', 'not a GDR: the team every Mission site below is fought with', `<div class="ctl">${tin('n', 'Agents', { min: 1, max: 300 })}${tin('skill', 'Base skill', { min: 1 })}${tin('ex', 'Starting exhaustion')}${tin('wu', 'Weapon damage upgrades')}${tin('au', 'Armor upgrades')}${tin('target', 'Target win %', { min: 1, max: 100 })}</div><div class="note" id="teamnote"></div><div class="note" id="simstatus"></div>`, 'read')}
-  ${panel('Mission sites', 'content/missions/mission_site_archetypes.yaml', `<div class="tw"><table id="sites"><tr><th>MissionSiteArchetype</th><th style="text-align:left">Kind</th><th>expires</th>${EN.map((e) => `<th title="${e}">${EN_AB[e]}</th>`).join('')}<th class="d">Enemies</th><th class="d">Rating</th><th class="d">Test team wins, of ${TRIALS} Combats</th><th class="d">Agents killed</th><th class="d">Team for target</th><th class="d">Transport upgrades</th></tr>${SITES.map((s, i) => `<tr${i === INIT.length ? ' class="sep"' : ''}><td class="name">${title(s)}</td><td id="sl_${s}" style="text-align:left;font-family:var(--body);color:var(--text2)">${BASE[s].level ? 'Response · operation level ' + BASE[s].level : 'Initiative'}</td><td>${inp(s + '.expires_in_turns', { min: 1 })}</td>${EN.map((e) => `<td class="w">${inp(s + '.enemies.' + e)}</td>`).join('')}<td class="d" id="sc_${s}"></td><td class="d" id="sr_${s}"></td><td class="d" id="sw_${s}" style="text-align:left"></td><td class="d" id="sk_${s}"></td><td class="d" id="sn_${s}"></td><td class="d" id="st_${s}"></td></tr>`).join('')}</table></div><div class="note"><b>Every Combat is fought by the game-v5-impl-web engine itself</b>, through <code>developer.tools.fightCombatBatch</code>, with the values on this page passed as its Combatants and GDR values; this page has no Combat rules of its own. <b>Each win rate is the share of ${TRIALS} Combats the test team Prevailed in</b>, and Agents killed is the mean over those ${TRIALS}. A Mission is Won only when the Combat outcome is Prevailed, so a retreat counts as a loss. Team for target is the smallest team of the test team's skill and upgrades that reaches the target win rate, searched up to ${MAXN} Agents; the search starts from the team size that the Combat ratings estimate, and each team size tried is one batch of at most ${TRIALS} Combats that stops as soon as its answer is certain. Transport upgrades is how many it takes to deploy that team at once. The Initiative operation levels come from <code>developer.queries.getInitiativeOperationLevels</code>. Each Combat's Detached seed is fixed, so a changed number reflects your edit and not new dice: Combat <i>i</i> of a team of <i>n</i> at a Mission site has the Detached seed <code>&lt;site&gt;|&lt;n&gt;#&lt;i&gt;</code>, which <code>developer.tools.fightCombat</code> shows in full.</div>`)}
+  ${panel('Mission sites', 'content/missions/mission_site_archetypes.yaml', `<div class="tw"><table id="sites"><tr><th>MissionSiteArchetype</th><th style="text-align:left">Kind</th><th>expires</th>${EN.map((e) => `<th title="${e}">${EN_AB[e]}</th>`).join('')}<th class="d">Enemies</th><th class="d">Rating</th><th class="d">Test team wins, of ${TRIALS} Combats</th><th class="d">Agents killed</th><th class="d">Team for target</th><th class="d">Transport upgrades</th><th class="d">Search</th></tr>${SITES.map((s, i) => `<tr${i === INIT.length ? ' class="sep"' : ''}><td class="name">${title(s)}</td><td id="sl_${s}" style="text-align:left;font-family:var(--body);color:var(--text2)">${BASE[s].level ? 'Response · operation level ' + BASE[s].level : 'Initiative'}</td><td>${inp(s + '.expires_in_turns', { min: 1 })}</td>${EN.map((e) => `<td class="w">${inp(s + '.enemies.' + e)}</td>`).join('')}<td class="d" id="sc_${s}"></td><td class="d" id="sr_${s}"></td><td class="d" id="sw_${s}" style="text-align:left"></td><td class="d" id="sk_${s}"></td><td class="d" id="sn_${s}"></td><td class="d" id="st_${s}"></td><td class="d" id="sx_${s}"></td></tr>`).join('')}</table></div><div class="note"><b>Every Combat is fought by the game-v5-impl-web engine itself</b>, through <code>developer.tools.fightCombatBatch</code>, with the values on this page passed as its Combatants and GDR values; this page has no Combat rules of its own. <b>Each win rate is the share of ${TRIALS} Combats the test team Prevailed in</b>, and Agents killed is the mean over those ${TRIALS}. A Mission is Won only when the Combat outcome is Prevailed, so a retreat counts as a loss. Team for target is the smallest team of the test team's skill and upgrades that reaches the target win rate, searched up to ${MAXN} Agents; the search starts from the team size that the Combat ratings estimate, and each team size tried is one batch of at most ${TRIALS} Combats that stops as soon as its answer is certain. Transport upgrades is how many it takes to deploy that team at once. The Initiative operation levels come from <code>developer.queries.getInitiativeOperationLevels</code>. Each Combat's Detached seed is fixed, so a changed number reflects your edit and not new dice: Combat <i>i</i> of a team of <i>n</i> at a Mission site has the Detached seed <code>&lt;site&gt;|&lt;n&gt;#&lt;i&gt;</code>, which <code>developer.tools.fightCombat</code> shows in full.</div>`)}
   </section>`)
         /* Agents */
         h.push(`<section id="agents"><div class="shead"><h2>Agents</h2><p>How long an Agent can work before it tires, how fast it rests and heals, and how fast it grows.</p></div><div class="cols"><div class="col">
@@ -1022,6 +1022,17 @@
         engineErr = '',
         doneSites = 0
       const cell = (p, s) => document.getElementById(p + '_' + s)
+      /* The run's elapsed time: until its last site is done, then frozen. */
+      let runStarted = 0,
+        runEnded = 0
+      function runSeconds() {
+        if (!runStarted) return 0
+        if (doneSites >= SITES.length && !runEnded) runEnded = performance.now()
+        return ((runEnded || performance.now()) - runStarted) / 1000
+      }
+      setInterval(() => {
+        if (runStarted && !runEnded && !engineErr) paintStatus()
+      }, 250)
       function paintStatus() {
         const e = document.getElementById('simstatus')
         if (!e) return
@@ -1033,8 +1044,8 @@
           : !ENG
             ? 'Starting the game-v5-impl-web engine…'
             : doneSites >= SITES.length
-              ? `All ${SITES.length} Mission sites fought by ${src}.`
-              : `Fighting: ${doneSites} of ${SITES.length} Mission sites done, by ${src}.`
+              ? `All ${SITES.length} Mission sites fought in ${f(runSeconds(), 1)} s by ${src}.`
+              : `Fighting: ${doneSites} of ${SITES.length} Mission sites done after ${f(runSeconds(), 1)} s, by ${src}.`
       }
       function paintLevels() {
         if (!ENG) return
@@ -1062,6 +1073,10 @@
             `<span class="meter"><i style="width:${m.win}%;background:${col}"></i></span><span class="${cls}">${f(m.win, 0)}%</span>`
           cell('sk', s).textContent = f(m.killed, 1)
           return false
+        }
+        if ((m.type === 'need' || m.type === 'failed') && m.ms !== undefined) {
+          /* How long the site's search took from the start of the run, and what it fought. */
+          cell('sx', s).textContent = `${f(m.ms / 1000, 1)} s · ${m.probes} sizes · ${f(m.combats, 0)} Combats`
         }
         if (m.type === 'need') {
           const need = m.need
@@ -1194,7 +1209,10 @@
           cell('sk', s).textContent = ''
           cell('sn', s).textContent = '…'
           cell('st', s).textContent = ''
+          cell('sx', s).textContent = ''
         })
+        runStarted = performance.now()
+        runEnded = 0
         paintStatus()
         runLocal(jobs, gen)
       }
