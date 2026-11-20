@@ -272,7 +272,7 @@ function onProbe(result: ProbeResult): void {
   if (search.need !== undefined) {
     tell(search, { type: 'need', id: result.id, need: search.need, ...effort(search) })
     // A solved site tells the searches still to come where to start.
-    if (search.need !== null) {
+    if (typeof search.need === 'number') {
       hints.push({ rating: search.job.rating, need: search.need })
     }
   }

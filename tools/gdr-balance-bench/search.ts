@@ -22,6 +22,8 @@ export interface SiteJob {
   n: number
   gdrValues: Record<string, number>
   target: number
+  /** Whether to search for the smallest team that reaches the target; without it, only the test team is fought. */
+  findTeam: boolean
   trials: number
   maxn: number
   /** The Combat rating of the site's Enemies at full health, i.e. the sum of their effective skills. */
@@ -116,7 +118,17 @@ export function estimate(job: SiteJob, hints: readonly Hint[]): number {
  * Two runs whose job has the same key reuse one search.
  */
 export function searchKey(job: SiteJob): string {
-  return JSON.stringify([job.id, job.enemies, job.agent, job.n, job.gdrValues, job.target, job.trials, job.maxn])
+  return JSON.stringify([
+    job.id,
+    job.enemies,
+    job.agent,
+    job.n,
+    job.gdrValues,
+    job.target,
+    job.findTeam,
+    job.trials,
+    job.maxn,
+  ])
 }
 
 /** Gives every search its own number, which its probes carry, so a probe's result finds its search across runs. */
@@ -139,8 +151,11 @@ export class SiteSearch {
   readonly tried = new Set<number>()
   /** The win rate, in percent, each finished probe saw over the Combats it fought. */
   private readonly wins = new Map<number, number>()
-  /** The answer once known: a team size, or null when no team up to maxn reaches the target. */
-  need: number | null | undefined = undefined
+  /**
+   * The answer once known: a team size, null when no team up to maxn reaches the target, or 'skipped' when the run
+   * does not search for it.
+   */
+  need: number | null | 'skipped' | undefined = undefined
   failed: string | null = null
   /** The number of probes finished so far, i.e. team sizes tried, and of Combats they fought. */
   probes = 0
@@ -305,6 +320,9 @@ export class SiteSearch {
     }
     if (result.full) {
       this.baseDone = true
+      if (!this.job.findTeam) {
+        this.need = 'skipped'
+      }
     }
     if (!('error' in result)) {
       this.wins.set(result.size, result.win)
@@ -316,6 +334,9 @@ export class SiteSearch {
       if (!result.full) {
         this.lowFromSearch = true
       }
+    }
+    if (this.need === 'skipped') {
+      return
     }
     if (this.hi > 0 && this.lo >= this.hi) {
       this.need = this.hi

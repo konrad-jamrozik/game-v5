@@ -364,6 +364,19 @@
         flex-direction: column;
         gap: 3px;
       }
+      /* A checkbox among the number fields of a control row, aligned with their inputs. */
+      .ctl label.chk {
+        flex-direction: row;
+        align-items: center;
+        align-self: flex-end;
+        gap: 6px;
+        min-height: 30px;
+        cursor: pointer;
+      }
+      .ctl label.chk input {
+        width: auto;
+        accent-color: var(--accent);
+      }
       .lbl {
         font-weight: 600;
         font-size: 13px;
@@ -857,7 +870,18 @@
       /* ---------- state ---------- */
       const clone = (o) => JSON.parse(JSON.stringify(o))
       let cur = clone(BASE)
-      const TEAM0 = { n: 4, skill: 100, ex: 0, wu: 0, au: 0, target: 90, inv_n: 4, inv_skill: 100, ign: 100 }
+      const TEAM0 = {
+        n: 4,
+        skill: 100,
+        ex: 0,
+        wu: 0,
+        au: 0,
+        target: 90,
+        team: true,
+        inv_n: 4,
+        inv_skill: 100,
+        ign: 100,
+      }
       let T = clone(TEAM0)
       const get = (o, p) => p.split('.').reduce((a, k) => (a == null ? a : a[k]), o)
       const set = (o, p, v) => {
@@ -911,6 +935,9 @@
         `<div class="panel ${cls}"><h3>${title}</h3>${src ? `<div class="src">${src}</div>` : ''}${body}</div>`
       const tin = (k, label, o = {}) =>
         `<label><span class="lbl">${label}</span><input type="number" id="t_${k}" data-t="${k}" value="${T[k]}" step="${o.step || 1}" min="${o.min ?? 0}"${o.max ? ` max="${o.max}"` : ''}></label>`
+      /* A checkbox of the test team, e.g. whether to search each site for the team that reaches the target. */
+      const tcheck = (k, label) =>
+        `<label class="chk"><input type="checkbox" id="t_${k}" data-t="${k}"${T[k] !== false ? ' checked' : ''}><span class="lbl">${label}</span></label>`
       const out = (rows) => `<dl class="out">${rows.map((r) => `<dt>${r[0]}</dt><dd>${r[1]}</dd>`).join('')}</dl>`
       const title = (id) => id.replace(/_/g, ' ').replace(/^./, (c) => c.toUpperCase())
 
@@ -928,7 +955,7 @@
   ${panel('Combat parameters', 'content/combat/combat_parameters.yaml', row(cp + '.weapon_damage_range', 'damage roll is base damage ± this fraction', { step: 0.05 }) + row(cp + '.retreat_below_agent_rating_fraction', 'Agents retreat below this fraction of their starting Combat rating…', { step: 0.05 }) + row(cp + '.retreat_at_enemy_to_agent_rating', "…while Enemies hold at least this ratio of the Agents' rating", { step: 0.05 }) + row(cp + '.incapacitation_skill_fraction', 'Incapacitated at this fraction of base skill or less', { step: 0.05 }) + extra(cp))}
   ${panel('Field agent and Combat exhaustion', 'content/agents/agent_archetypes.yaml · agent_parameters.yaml', `<div class="kv"><span class="k"><code>field_agent.base_skill</code><small>a newly hired Agent</small></span>${inp('field_agent.base_skill')}</div><div class="kv"><span class="k"><code>field_agent.base_health</code><small></small></span>${inp('field_agent.base_health', { min: 1 })}</div><div class="kv"><span class="k"><code>field_agent.weapon</code><small></small></span>${sel('field_agent.weapon', WP)}</div>` + row(ap + '.exhaustion_per_attack', 'to the attacker, hit or miss') + row(ap + '.exhaustion_per_defense', 'to the defender, hit or miss') + row(ap + '.exhaustion_free_points', 'exhaustion up to this costs no skill') + row(ap + '.skill_penalty_pct_per_exhaustion', '% of skill lost per point above the free points', { step: 0.5 }) + row(ap + '.exhaustion_incapacitation', 'Incapacitated at this exhaustion'))}
   </div></div>
-  ${panel('Test team', 'not a GDR: the team every Mission site below is fought with', `<div class="ctl">${tin('n', 'Agents', { min: 1, max: 300 })}${tin('skill', 'Base skill', { min: 1 })}${tin('ex', 'Starting exhaustion')}${tin('wu', 'Weapon damage upgrades')}${tin('au', 'Armor upgrades')}${tin('target', 'Target win %', { min: 1, max: 100 })}</div><div class="note" id="teamnote"></div><div class="note" id="simstatus"></div>`, 'read')}
+  ${panel('Test team', 'not a GDR: the team every Mission site below is fought with', `<div class="ctl">${tin('n', 'Agents', { min: 1, max: 300 })}${tin('skill', 'Base skill', { min: 1 })}${tin('ex', 'Starting exhaustion')}${tin('wu', 'Weapon damage upgrades')}${tin('au', 'Armor upgrades')}${tin('target', 'Target win %', { min: 1, max: 100 })}${tcheck('team', 'Find team for target')}</div><div class="note" id="teamnote"></div><div class="note" id="simstatus"></div>`, 'read')}
   ${panel('Mission sites', 'content/missions/mission_site_archetypes.yaml', `<div class="tw"><table id="sites"><tr><th>MissionSiteArchetype</th><th style="text-align:left">Kind</th><th>expires</th>${EN.map((e) => `<th title="${e}">${EN_AB[e]}</th>`).join('')}<th class="d">Enemies</th><th class="d">Rating</th><th class="d">Test team wins, of ${TRIALS} Combats</th><th class="d">Agents killed</th><th class="d">Team for target</th><th class="d">Transport upgrades</th><th class="d">Search</th></tr>${SITES.map((s, i) => `<tr${rowClass(s, i)}><td class="name">${title(s)}</td><td id="sl_${s}" style="text-align:left;font-family:var(--body);color:var(--text2)">${BASE[s].level ? 'Response · operation level ' + BASE[s].level : 'Initiative'}</td><td>${inp(s + '.expires_in_turns', { min: 1 })}</td>${EN.map((e) => `<td class="w">${inp(s + '.enemies.' + e)}</td>`).join('')}<td class="d" id="sc_${s}"></td><td class="d" id="sr_${s}"></td><td class="d" id="sw_${s}" style="text-align:left"></td><td class="d" id="sk_${s}"></td><td class="d" id="sn_${s}"></td><td class="d" id="st_${s}"></td><td class="d" id="sx_${s}"></td></tr>`).join('')}</table></div><div class="note"><b>Every Combat is fought by the game-v5-impl-web engine itself</b>, through <code>developer.tools.fightCombatBatch</code>, with the values on this page passed as its Combatants and GDR values; this page has no Combat rules of its own. <b>Each win rate is the share of ${TRIALS} Combats the test team Prevailed in</b>, and Agents killed is the mean over those ${TRIALS}. A Mission is Won only when the Combat outcome is Prevailed, so a retreat counts as a loss. Team for target is the smallest team of the test team's skill and upgrades that reaches the target win rate, searched up to ${MAXN} Agents; the search starts from the team size that the Combat ratings estimate, and each team size tried is one batch of at most ${TRIALS} Combats that stops as soon as its answer is certain. Transport upgrades is how many it takes to deploy that team at once. The Initiative operation levels come from <code>developer.queries.getInitiativeOperationLevels</code>. Each Combat's Detached seed is fixed, so a changed number reflects your edit and not new dice: Combat <i>i</i> of a team of <i>n</i> at a Mission site has the Detached seed <code>&lt;site&gt;|&lt;n&gt;#&lt;i&gt;</code>, which <code>developer.tools.fightCombat</code> shows in full.</div>`)}
   </section>`)
         /* Agents */
@@ -1107,8 +1134,14 @@
         if ((m.type === 'need' || m.type === 'failed') && m.ms !== undefined) {
           /* How long the site's search took from the start of the run, and what it fought. */
           const x = cell('sx', s)
-          x.innerHTML = `${f(m.ms / 1000, 1)} s <small style="color:var(--muted)">· ${m.probes} sizes</small>`
+          x.innerHTML = `${f(m.ms / 1000, 1)} s <small style="color:var(--muted)">· ${m.probes} ${m.probes === 1 ? 'size' : 'sizes'}</small>`
           x.title = `${m.probes} team sizes tried, ${f(m.combats, 0)} Combats fought`
+        }
+        if (m.type === 'need' && m.need === 'skipped') {
+          /* Find team for target is off: only the test team was fought. */
+          cell('sn', s).textContent = '–'
+          cell('st', s).textContent = '–'
+          return true
         }
         if (m.type === 'need') {
           const need = m.need
@@ -1215,6 +1248,7 @@
             n: T.n,
             gdrValues,
             target: T.target,
+            findTeam: T.team !== false,
             trials: TRIALS,
             maxn: MAXN,
             rating,
@@ -1226,6 +1260,7 @@
           agent,
           T.n,
           T.target,
+          T.team,
           gdrValues,
           cur.economy.base_transport_cap,
           cur.transport_cap,
@@ -1672,6 +1707,9 @@
           if (typeof v === 'number' && !Number.isFinite(v)) return
           set(cur, p, v)
           el.classList.toggle('chg', v !== get(BASE, p))
+          later()
+        } else if (el.dataset.t && el.type === 'checkbox') {
+          T[el.dataset.t] = el.checked
           later()
         } else if (el.dataset.t) {
           const v = parseFloat(el.value)
