@@ -78,7 +78,7 @@ Each line starts with the number of the Player action in the Turn, from 1, in th
 | `addAgents` | "Added N Agents (cheat)". |
 | Any other operation | The operation's name, e.g. that of a Player action a later Mechanics specification adds. |
 
-A count of 1 takes the singular, e.g. "Hired 1 Agent". No line names the Agents an action concerned; a line names only the Lead or Mission site it concerned, resolved through `getHistory()` when it is [Retired](../../foundation/world-history.md#glossary).
+A count of 1 takes the singular, e.g. "Hired 1 Agent". No line names the Agents an action concerned; a line names only the Lead or Mission site it concerned, resolved through `getCurrentState()`, which returns it whether or not it is [Retired](../../foundation/world-history.md#glossary).
 
 # Artboard
 
