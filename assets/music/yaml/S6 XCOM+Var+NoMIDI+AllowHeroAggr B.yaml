@@ -4,7 +4,6 @@ original_title: 'S6 XCOM+Var+NoMIDI+AllowHeroAggr B'
 song_url: https://suno.com/song/fe0b5c85-02f7-4d8e-a16f-93ab2a1a2f78
 model: 'v6 (chirp-hawk)'
 created: '2026-11-18 19:26:39'
-variation_of: 'S6 XCOM+Var+NoMIDI+AllowHeroAggr A.mp3'
 tags: [electronic, sci-fi, lo-fi]
 length: '3:24'
 instrumental: true
@@ -14,14 +13,21 @@ meta_prompt_taxonomy:
     - 'more variety, less monotonous'
     - 'no retro MIDI or Amiga-era synth sound'
     - 'allow heroic and aggressive styles: synthwave, epic orchestral, aggressive drums, and heroic brass taken out of Exclude styles'
-prompt_from:
-  tool: Claude Code
-  same_prompt_as: 'S6 XCOM+Var+NoMIDI+AllowHeroAggr A.mp3'
-prompt: |-
+suno:
+  prompt: |-
+    Dark, ominous, atmospheric 1990s science-fiction strategy game soundtrack, inspired by the original X-COM: UFO Defense (1994).
+
+    Eerie electronic music with haunting minor-key melodies, deep ominous harmonies, unsettling dissonance, and mysterious alien textures.
+
+    Cold, sinister, hypnotic, and deeply unsettling. Evoke paranoia, isolation, dread, and the constant threat of an unknown extraterrestrial enemy.
+
+    Gradual melodic and atmospheric evolution, with subtle musical variety and an unpredictable sense of danger.
+
+    Instrumental background music for extended strategic gameplay. Vintage 1990s PC game aesthetic, emphasizing psychological tension and fear of the unknown rather than action, heroism, or excitement.
+  exclude_styles: |-
+    Vocals, singing, choir, EDM, upbeat, trailer music, rock, pop, bright melodies, jazz swing, chiptune, 8-bit
+  weirdness: 0.5
+  style_influence: 0.7
+  variety: '2'
+final_prompt_from_gen_tool: |-
   1990s science-fiction strategy game soundtrack, cold electronic drones and hollow minor-key synth pulses with wavering alien textures and dissonant tones; free-time drifting drone, slowly evolving and unpredictable; vintage PC-game synthesis, narrow lo-fi mix with restrained tape hiss; instrumental.
-exclude_styles: |-
-  Vocals, singing, choir, EDM, upbeat, trailer music, rock, pop, bright melodies, jazz swing, chiptune, 8-bit
-control_sliders:
-  suno_weirdness: 0.5
-  suno_style_influence: 0.7
-  suno_variety: '2 - High / Distinct styles'

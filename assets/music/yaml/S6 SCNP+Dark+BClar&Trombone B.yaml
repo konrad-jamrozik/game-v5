@@ -7,35 +7,24 @@ created: '2026-11-17 20:45'
 tags: [dark ambient, tactical strategy, minimalist]
 length: '3:08'
 instrumental: true
-instruments: [bass clarinet, muted trombone]
 meta_prompt_taxonomy:
   stem: 'Replicate "Scanning Protocol" (Chris D''Ambrosio, XCOM Legacy OST)'
   adjustments:
     - 'darker and bassier; less electronic and spacey'
     - 'instruments: bass clarinet + muted trombone'
-    - 'Suno v6 settings: Exclude styles, Weirdness 40%, Style influence 70%, Variety off; also exclude heroic brass, big band, jazz swing'
-prompt_from:
-  tool: ChatGPT
-  conversation_url: https://chatgpt.com/g/g-p-6afba6a0888481918cbd7e450a7fbe5e-game-v5/c/6afccce8-2738-83e8-bbda-37a71f1f7057
-  share_url: https://chatgpt.com/share/6afe0b9c-848c-83e8-a164-93829b33092c
-  continues_from: 'S6 SCNP+Dark+Piano&Cello A.mp3'
-  meta_prompt: |-
-    Let's now try, using the same Suno v6 interface
+suno:
+  prompt: |-
+    Dark, brooding tactical strategy game soundtrack with deep bass drones, low-frequency rumbling, hollow bass clarinet, and ominous muted trombone. Sinister, mysterious, claustrophobic, and deeply unsettling.
 
-    Bass clarinet + muted trombone
-prompt: |-
-  Dark, brooding tactical strategy game soundtrack with deep bass drones, low-frequency rumbling, hollow bass clarinet, and ominous muted trombone. Sinister, mysterious, claustrophobic, and deeply unsettling.
+    Minimalist arrangement dominated by thick, resonant low-end frequencies, shadowy minor-key harmonies, sparse percussion, and slow hypnotic bass pulses. Breathy, low-register bass clarinet phrases weave through the darkness, accompanied by distant muted trombone notes and restrained brass swells.
 
-  Minimalist arrangement dominated by thick, resonant low-end frequencies, shadowy minor-key harmonies, sparse percussion, and slow hypnotic bass pulses. Breathy, low-register bass clarinet phrases weave through the darkness, accompanied by distant muted trombone notes and restrained brass swells.
+    Evoke paranoia, secrecy, isolation, and an unseen, approaching threat. Slowly evolving layers, subtle dissonance, eerie woodwind motifs, and haunting brass resonances. Organic, gritty, oppressive, and grounded rather than futuristic or cosmic.
 
-  Evoke paranoia, secrecy, isolation, and an unseen, approaching threat. Slowly evolving layers, subtle dissonance, eerie woodwind motifs, and haunting brass resonances. Organic, gritty, oppressive, and grounded rather than futuristic or cosmic.
-
-  Very slow tempo, understated intensity, seamless loopable background music for prolonged strategy gameplay. No vocals, no bright synth leads, no spacey effects, no upbeat rhythms, no dramatic crescendos, no epic orchestration.
-exclude_styles: |-
-  Vocals, singing, choir, EDM, synthwave, upbeat, epic orchestral, trailer music, rock, pop, bright melodies, aggressive drums, heroic brass, big band, jazz swing
-control_sliders:
-  suno_weirdness: 0.4
-  suno_style_influence: 0.7
-  suno_variety: '0 - Off / Exact style'
+    Very slow tempo, understated intensity, seamless loopable background music for prolonged strategy gameplay. No vocals, no bright synth leads, no spacey effects, no upbeat rhythms, no dramatic crescendos, no epic orchestration.
+  exclude_styles: |-
+    Vocals, singing, choir, EDM, synthwave, upbeat, epic orchestral, trailer music, rock, pop, bright melodies, aggressive drums, heroic brass, big band, jazz swing
+  weirdness: 0.4
+  style_influence: 0.7
+  variety: '0'
 notes: |-
-  `prompt` is the Styles text ChatGPT produced, word for word: Suno's Variety control was Off (`suno_variety: '0 - Off / Exact style'`), as ChatGPT recommended, so Suno stored the text as pasted. The `exclude_styles` and the Weirdness and Style influence sliders are also those ChatGPT recommended; it added heroic brass, big band, and jazz swing to the Exclude styles of S6 SCNP+Dark+Piano&Cello to keep the brass and woodwind from pulling the song toward jazz or orchestral brass.
+  `suno.prompt` is the Styles text ChatGPT produced, word for word: Suno's Variety control was Off (`suno.variety: '0'`), as ChatGPT recommended, so Suno stored the text as pasted. The `suno.exclude_styles` and the Weirdness and Style influence sliders are also those ChatGPT recommended; it added heroic brass, big band, and jazz swing to the Exclude styles of S6 SCNP+Dark+Piano&Cello to keep the brass and woodwind from pulling the song toward jazz or orchestral brass.

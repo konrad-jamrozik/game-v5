@@ -4,43 +4,35 @@ original_title: 'Black Orbit Watch'
 model: 'Music v2.5'
 created: '2026-11-16 23:43:05'
 tags: [electronic, ambient, soundtrack]
-bpm: 125
 length: '2:00'
-description: |-
-  A cold, ominous instrumental soundtrack for a strategic defense screen, built from vintage FM synthesis, hollow digital textures, and unresolved harmonic tension. It evokes relentless extraterrestrial threat, military vigilance, and the slow anxiety of an unfolding catastrophe.
 meta_prompt_taxonomy:
   stem: 'Dark 1990s sci-fi tactical strategy soundtrack in the style of the original X-COM: UFO Defense (1994), retro MIDI and Amiga synths'
   adjustments:
     - 'no repeated "bum bum bum" pulse; more variety and flair'
     - 'Geoscape: a global defense command screen'
     - 'more serious, ominous, dangerous; not relaxing, cozy, or lo-fi'
-prompt_from:
-  tool: ChatGPT
-  conversation_url: https://chatgpt.com/g/g-p-6afba6a0888481918cbd7e450a7fbe5e-game-v5/c/6afb9ab3-67b0-83e8-87db-9d7bf6ab3333
-  share_url: https://chatgpt.com/share/6afe2395-cf20-83e8-95e4-6a466299dbfd
-  meta_prompt: |-
-    I got WAY too relaxing / cozy / lo-fi coffee girls vibes track out of it. Can you tweak to make it more serious / ominous / dangerous? Also yuou can drop cthulu / tftd
-prompt: |-
-  Dark, ominous, atmospheric 1990s science-fiction strategy game soundtrack, inspired by the original X-COM: UFO Defense (1994) Geoscape music.
+elevenlabs:
+  prompt: |-
+    Dark, ominous, atmospheric 1990s science-fiction strategy game soundtrack, inspired by the original X-COM: UFO Defense (1994) Geoscape music.
 
-  Cold, serious, threatening electronic music conveying the constant danger of an unknown extraterrestrial invasion. Humanity is desperately coordinating its defense against a technologically superior alien civilization. The atmosphere is one of uncertainty, paranoia, isolation, military vigilance, scientific mystery, and impending catastrophe.
+    Cold, serious, threatening electronic music conveying the constant danger of an unknown extraterrestrial invasion. Humanity is desperately coordinating its defense against a technologically superior alien civilization. The atmosphere is one of uncertainty, paranoia, isolation, military vigilance, scientific mystery, and impending catastrophe.
 
-  Authentic vintage 1990s DOS PC game synthesizer aesthetic, with dark FM synthesis, cold digital synthesizer textures, deep ominous drones, hollow electronic tones, metallic resonances, unsettling minor-key harmonies, and sparse, haunting melodies.
+    Authentic vintage 1990s DOS PC game synthesizer aesthetic, with dark FM synthesis, cold digital synthesizer textures, deep ominous drones, hollow electronic tones, metallic resonances, unsettling minor-key harmonies, and sparse, haunting melodies.
 
-  SLOW BUT THREATENING. Restrained tempo around 55–65 BPM, with an unmistakable atmosphere of danger and unease. The music should feel tense and foreboding even during its quietest passages.
+    SLOW BUT THREATENING. Restrained tempo around 55–65 BPM, with an unmistakable atmosphere of danger and unease. The music should feel tense and foreboding even during its quietest passages.
 
-  Use mysterious, memorable synthesizer motifs built around minor seconds, tritones, descending chromatic intervals, and unresolved dissonant harmonies. Introduce unexpected harmonic changes, eerie counter-melodies, and occasional disturbing electronic textures to maintain interest.
+    Use mysterious, memorable synthesizer motifs built around minor seconds, tritones, descending chromatic intervals, and unresolved dissonant harmonies. Introduce unexpected harmonic changes, eerie counter-melodies, and occasional disturbing electronic textures to maintain interest.
 
-  Employ slow, dark harmonic progressions, sustained dissonant chords, sparse low-register synth notes, distant metallic impacts, and irregular electronic accents. Allow moments of near-silence to emphasize isolation and suspense.
+    Employ slow, dark harmonic progressions, sustained dissonant chords, sparse low-register synth notes, distant metallic impacts, and irregular electronic accents. Allow moments of near-silence to emphasize isolation and suspense.
 
-  Avoid persistent rhythmic bass pulses, repetitive ostinatos, continuous ticking percussion, or mechanically repeating patterns. Rhythmic elements should appear occasionally to reinforce tension, then disappear.
+    Avoid persistent rhythmic bass pulses, repetitive ostinatos, continuous ticking percussion, or mechanically repeating patterns. Rhythmic elements should appear occasionally to reinforce tension, then disappear.
 
-  The music should evolve gradually through distinct but coherent passages, alternating between oppressive stillness, sinister melodic development, unsettling harmonic changes, and brief increases in psychological tension.
+    The music should evolve gradually through distinct but coherent passages, alternating between oppressive stillness, sinister melodic development, unsettling harmonic changes, and brief increases in psychological tension.
 
-  Maintain a sense of military seriousness, alien menace, cold technological environments, and existential danger throughout. No warmth, comfort, sentimentality, optimism, or relaxation.
+    Maintain a sense of military seriousness, alien menace, cold technological environments, and existential danger throughout. No warmth, comfort, sentimentality, optimism, or relaxation.
 
-  Avoid cozy lo-fi music, chillhop, jazzy chords, pleasant ambient soundscapes, soft piano, warm synth pads, soothing melodies, upbeat rhythms, cinematic action music, epic orchestration, and dramatic combat percussion.
+    Avoid cozy lo-fi music, chillhop, jazzy chords, pleasant ambient soundscapes, soft piano, warm synth pads, soothing melodies, upbeat rhythms, cinematic action music, epic orchestration, and dramatic combat percussion.
 
-  Instrumental only. Cold, dark, slightly lo-fi 1990s electronic synthesis with restrained dynamics, deliberate pacing, haunting melodic identity, and an unresolved atmosphere of ever-present extraterrestrial threat.
+    Instrumental only. Cold, dark, slightly lo-fi 1990s electronic synthesis with restrained dynamics, deliberate pacing, haunting melodic identity, and an unresolved atmosphere of ever-present extraterrestrial threat.
 
-  Designed for extended strategic gameplay on a global defense command screen, where every passing hour brings humanity closer to an unknown catastrophe.
+    Designed for extended strategic gameplay on a global defense command screen, where every passing hour brings humanity closer to an unknown catastrophe.

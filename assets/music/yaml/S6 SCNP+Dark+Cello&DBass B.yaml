@@ -4,34 +4,30 @@ original_title: 'S6 SCNP+Dark+Cello&DBass B'
 song_url: https://suno.com/song/52086cbd-4c5b-47af-b543-ecd2af20b803
 model: 'v6 (chirp-hawk)'
 created: '2026-11-18 18:03:10'
-variation_of: 'S6 SCNP+Dark+Cello&DBass A.mp3'
-
 tags: ['ambient', 'minimalist', 'dark']
 length: '2:33'
 instrumental: true
-instruments: ['cello', 'bowed double bass']
 meta_prompt_taxonomy:
   stem: 'Replicate "Scanning Protocol" (Chris D''Ambrosio, XCOM Legacy OST)'
   adjustments:
     - 'darker and bassier; less electronic and spacey'
     - 'instruments: cello + double bass'
-    - 'Suno v6 settings: Instrumental, Weirdness 40%, Style influence 70%, Variety off, Max Mode off, Personalize off, Duration Auto; Exclude styles as below'
-prompt_from:
-  tool: ChatGPT
-  same_prompt_as: 'S6 SCNP+Dark+Cello&DBass A.mp3'
-prompt: |-
-  Dark, brooding tactical strategy game soundtrack with mournful cello and deep bowed double bass. Oppressive, melancholic, claustrophobic, and quietly threatening.
+suno:
+  prompt: |-
+    Dark, brooding tactical strategy game soundtrack with mournful cello and deep bowed double bass. Oppressive, melancholic, claustrophobic, and quietly threatening.
 
-    Minimalist arrangement: resonant contrabass drones and low string vibrations beneath sparse, restrained cello phrases. Shadowy minor-key harmonies, subtle dissonance, long sustained notes, and ample silence. Let the double bass provide subterranean weight while the cello adds subdued emotional unease.
+      Minimalist arrangement: resonant contrabass drones and low string vibrations beneath sparse, restrained cello phrases. Shadowy minor-key harmonies, subtle dissonance, long sustained notes, and ample silence. Let the double bass provide subterranean weight while the cello adds subdued emotional unease.
 
-    Evoke paranoia, isolation, secrecy, and an unseen approaching threat. Organic, woody, gritty, and grounded. Slowly evolving textures, very slow pacing, understated intensity, and unobtrusive background music suitable for prolonged strategy gameplay.
+      Evoke paranoia, isolation, secrecy, and an unseen approaching threat. Organic, woody, gritty, and grounded. Slowly evolving textures, very slow pacing, understated intensity, and unobtrusive background music suitable for prolonged strategy gameplay.
 
-    No prominent rhythmic ostinato, driving beat, dramatic builds, climaxes, or abrupt ending. Keep the texture and dynamics consistent for looping.
-exclude_styles: |-
-  Vocals, singing, choir, EDM, synthwave, upbeat, epic orchestral, trailer music, rock, pop, bright melodies, aggressive drums, heroic brass, jazz swing
-control_sliders:
-  suno_weirdness: 0.4
-  suno_style_influence: 0.7
-  suno_variety: '0 - Off / Exact style'
+      No prominent rhythmic ostinato, driving beat, dramatic builds, climaxes, or abrupt ending. Keep the texture and dynamics consistent for looping.
+  exclude_styles: |-
+    Vocals, singing, choir, EDM, synthwave, upbeat, epic orchestral, trailer music, rock, pop, bright melodies, aggressive drums, heroic brass, jazz swing
+  weirdness: 0.4
+  style_influence: 0.7
+  variety: '0'
+  max_mode: false
+  personalize: false
+  duration: auto
 notes: |-
-  Generated from the specification proposed in the Codex chat "Find untried instrument combinations"; the Game designer confirmed following those instructions. The song page supplies the current source title, model, creation time, display tags, duration, Styles text, Exclude styles, Instrumental setting, and sliders. The source titles already match the repository names; earlier source titles are not known. `created` is the Suno generation time converted to Pacific time, not the later download time. `prompt` preserves the Styles text stored by Suno, including its paragraph indentation. Max Mode off, Personalize off, Duration Auto, and empty Lyrics were instructed; those three UI controls are not exposed in the retrieved song metadata.
+  Generated from the specification proposed in the Codex chat "Find untried instrument combinations"; the Game designer confirmed following those instructions. The song page supplies the current source title, model, creation time, display tags, duration, Styles text, Exclude styles, Instrumental setting, and sliders. The source titles already match the repository names; earlier source titles are not known. `created` is the Suno generation time converted to Pacific time, not the later download time. `suno.prompt` preserves the Styles text stored by Suno, including its paragraph indentation. Max Mode off, Personalize off, Duration Auto, and empty Lyrics were instructed; those three UI controls are not exposed in the retrieved song metadata.

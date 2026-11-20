@@ -2,26 +2,20 @@ file: 'V3A-S5 SCNP+Dark+Violin.mp3'
 source: Suno v5 via v03ai
 original_title: 'v03AI UFO 5 - Scanning Protocol - Dark Violin'
 created: '2026-11-17 14:06'
-tags: [Dark ambient, bass-heavy, ominous, minimalist, brooding, atmospheric, industrial]
 meta_prompt_taxonomy:
   stem: 'Replicate "Scanning Protocol" (Chris D''Ambrosio, XCOM Legacy OST)'
   adjustments:
     - 'darker and bassier; less electronic and spacey'
     - 'instruments: violins, keeping the prompt length'
-prompt_from:
-  tool: ChatGPT
-  conversation_url: https://chatgpt.com/g/g-p-6afba6a0888481918cbd7e450a7fbe5e-game-v5/c/6afccce8-2738-83e8-bbda-37a71f1f7057
-  share_url: https://chatgpt.com/share/6afe0b9c-848c-83e8-a164-93829b33092c
-  continues_from: 'V3A-S5 SCNP+Dark.mp3'
-  meta_prompt: |-
-    OK that was good, I got good stuff out of it. Let's experiment a bit, suggest that the prompt has some violins in it. But keep the overall prompt length the same, so cut out some stuff from it.
-prompt: |-
-  Dark, brooding tactical strategy game soundtrack with deep, heavy bass drones, low-frequency rumbling, ominous atmospheric textures, slow hypnotic bass pulses, and haunting, melancholic violins. Subdued, menacing, claustrophobic, and deeply unsettling.
+v03ai:
+  prompt: |-
+    Dark, brooding tactical strategy game soundtrack with deep, heavy bass drones, low-frequency rumbling, ominous atmospheric textures, slow hypnotic bass pulses, and haunting, melancholic violins. Subdued, menacing, claustrophobic, and deeply unsettling.
 
-  Minimalist arrangement dominated by thick, resonant low-end frequencies, shadowy minor-key harmonies, sparse percussion, and restrained violin passages. Subtle rhythmic movement creates persistent tension without becoming energetic or driving.
+    Minimalist arrangement dominated by thick, resonant low-end frequencies, shadowy minor-key harmonies, sparse percussion, and restrained violin passages. Subtle rhythmic movement creates persistent tension without becoming energetic or driving.
 
-  Evoke paranoia, secrecy, isolation, and an unseen, approaching threat. Slowly evolving layers, sustained low string notes, occasional dissonance, and eerie violin melodies emerging from the darkness. Organic, gritty, and grounded rather than futuristic or cosmic.
+    Evoke paranoia, secrecy, isolation, and an unseen, approaching threat. Slowly evolving layers, sustained low string notes, occasional dissonance, and eerie violin melodies emerging from the darkness. Organic, gritty, and grounded rather than futuristic or cosmic.
 
-  Very slow tempo, understated intensity, seamless loopable background music for prolonged strategy gameplay. No vocals, no bright synth leads, no spacey effects, no upbeat rhythms, no dramatic crescendos, no epic orchestration.
+    Very slow tempo, understated intensity, seamless loopable background music for prolonged strategy gameplay. No vocals, no bright synth leads, no spacey effects, no upbeat rhythms, no dramatic crescendos, no epic orchestration.
+  style: [Dark ambient, bass-heavy, ominous, minimalist, brooding, atmospheric, industrial]
 notes: |-
   This is the full prompt ChatGPT produced; the prompt given to v03ai was slightly truncated, to fit v03ai's cap of 1,000 characters for a Suno v5 prompt.

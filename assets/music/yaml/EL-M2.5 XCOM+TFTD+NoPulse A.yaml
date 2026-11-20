@@ -4,41 +4,30 @@ original_title: 'Depth Signal'
 model: 'Music v2.5'
 created: '2026-11-16 23:42:39'
 tags: [electronic, ambient]
-bpm: 122
 length: '2:00'
-description: |-
-  A dark, atmospheric retro sci-fi tactical soundtrack with eerie FM synthesis, submerged ruin textures, and subtle cosmic horror unease. It evolves through exploration, contact, aftermath, and an unresolved ending with authentic lo-fi 1990s PC game character.
 meta_prompt_taxonomy:
   stem: 'Dark 1990s sci-fi tactical strategy soundtrack in the style of the original X-COM: UFO Defense (1994), retro MIDI and Amiga synths'
   adjustments:
     - 'a tint of Cthulhu and X-COM: Terror from the Deep'
     - 'no repeated "bum bum bum" pulse; more variety and flair'
-prompt_from:
-  tool: ChatGPT
-  conversation_url: https://chatgpt.com/g/g-p-6afba6a0888481918cbd7e450a7fbe5e-game-v5/c/6afb9ab3-67b0-83e8-87db-9d7bf6ab3333
-  share_url: https://chatgpt.com/share/6afe2395-cf20-83e8-95e4-6a466299dbfd
-  continues_from: 'EL-M2 XCOM+TFTD X1.opus'
-  meta_prompt: |-
-    OK so I got a song from elevenlabs but it is a bit too monotonous, bum bum bum bum
+elevenlabs:
+  prompt: |-
+    Dark, atmospheric 1990s science-fiction tactical strategy game soundtrack inspired by the musical atmosphere of the original X-COM: UFO Defense (1994) and X-COM: Terror from the Deep (1995), with subtle Lovecraftian cosmic horror influences.
 
-    Any suggestion how to remove that repeated pulse and maybe add some flair or variety to the track? Fix overall prompt? Fix prompt sections?
-prompt: |-
-  Dark, atmospheric 1990s science-fiction tactical strategy game soundtrack inspired by the musical atmosphere of the original X-COM: UFO Defense (1994) and X-COM: Terror from the Deep (1995), with subtle Lovecraftian cosmic horror influences.
+    Authentic vintage PC game synthesizer aesthetic, combining eerie FM synthesis, haunting digital synthesizer melodies, unsettling harmonic progressions, strange alien electronic textures, ethereal pads, metallic resonances, and deep abyssal atmospheres.
 
-  Authentic vintage PC game synthesizer aesthetic, combining eerie FM synthesis, haunting digital synthesizer melodies, unsettling harmonic progressions, strange alien electronic textures, ethereal pads, metallic resonances, and deep abyssal atmospheres.
+    **Prioritize musical variety, evolving melodic ideas, expressive phrasing, and atmospheric development over repetitive rhythmic patterns.**
 
-  **Prioritize musical variety, evolving melodic ideas, expressive phrasing, and atmospheric development over repetitive rhythmic patterns.**
+    Avoid continuous bass pulses, repetitive two-note ostinatos, monotonous four-on-the-floor rhythms, constant ticking percussion, and unchanging sequencer patterns. The music should not have a persistent "bum bum bum bum" rhythmic foundation.
 
-  Avoid continuous bass pulses, repetitive two-note ostinatos, monotonous four-on-the-floor rhythms, constant ticking percussion, and unchanging sequencer patterns. The music should not have a persistent "bum bum bum bum" rhythmic foundation.
+    Instead, use atmospheric passages without percussion, short memorable minor-key melodic phrases, unexpected harmonic shifts, irregular electronic accents, mysterious counter-melodies, subtle changes in instrumentation, and occasional dramatic moments of dissonance.
 
-  Instead, use atmospheric passages without percussion, short memorable minor-key melodic phrases, unexpected harmonic shifts, irregular electronic accents, mysterious counter-melodies, subtle changes in instrumentation, and occasional dramatic moments of dissonance.
+    Introduce distinctive musical motifs that evolve and return in altered forms. Alternate between eerie stillness, mysterious exploration, quiet suspense, brief moments of alien terror, and haunting melancholy. Allow instruments to enter and disappear naturally. Use silence, contrast, and unusual textures to create anticipation.
 
-  Introduce distinctive musical motifs that evolve and return in altered forms. Alternate between eerie stillness, mysterious exploration, quiet suspense, brief moments of alien terror, and haunting melancholy. Allow instruments to enter and disappear naturally. Use silence, contrast, and unusual textures to create anticipation.
+    Subtle Lovecraftian influences: forgotten underwater civilizations, incomprehensible cosmic entities, distant sonar-like resonances, submerged ruins, and the oppressive darkness of the deep ocean. These elements should enrich the X-COM science-fiction atmosphere rather than overwhelm it.
 
-  Subtle Lovecraftian influences: forgotten underwater civilizations, incomprehensible cosmic entities, distant sonar-like resonances, submerged ruins, and the oppressive darkness of the deep ocean. These elements should enrich the X-COM science-fiction atmosphere rather than overwhelm it.
+    The music should feel like an actual composed soundtrack with interesting musical ideas, not merely a repeating ambient loop. Create a mysterious, memorable, unsettling retro sci-fi composition with varied phrases and clear musical development.
 
-  The music should feel like an actual composed soundtrack with interesting musical ideas, not merely a repeating ambient loop. Create a mysterious, memorable, unsettling retro sci-fi composition with varied phrases and clear musical development.
+    Restrained 1990s DOS MIDI and Sound Blaster aesthetic, slightly lo-fi digital timbres, no modern Hollywood orchestration, no epic percussion, no vocals, no guitars.
 
-  Restrained 1990s DOS MIDI and Sound Blaster aesthetic, slightly lo-fi digital timbres, no modern Hollywood orchestration, no epic percussion, no vocals, no guitars.
-
-  Instrumental, suitable for extended tactical gameplay. Atmospheric and varied without becoming distracting. Gentle transitions and an unresolved, haunting conclusion.
+    Instrumental, suitable for extended tactical gameplay. Atmospheric and varied without becoming distracting. Gentle transitions and an unresolved, haunting conclusion.
