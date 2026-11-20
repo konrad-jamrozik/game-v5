@@ -160,7 +160,7 @@ Engine API
     │   └── addAgents(...)
     └── tools
         ├── fightCombat(setup)
-        └── fightCombatBatch(setup, count)
+        └── fightCombatBatch(setup, count, stop)
 ```
 
 The following table is the complete set of namespace placement rules. For each namespace it names what the namespace owns and where the behavior of its operations is specified. Every namespace below `session` belongs to exactly one Engine subsystem, under [Engine subsystems](#engine-subsystems).
