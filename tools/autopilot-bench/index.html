@@ -273,84 +273,104 @@
         letter-spacing: 0.12em;
         color: var(--muted);
       }
-      .tw {
+      /* The Campaign list: one block per Campaign, the Campaign and its progress on the left, and its three layers on the
+   right. Every stat has a fixed width, so each value stands under its label in the header and in every block. */
+      .clist {
         overflow-x: auto;
         min-width: 0;
       }
-      table {
-        border-collapse: collapse;
-        font-size: 13px;
-        width: 100%;
-      }
-      th {
-        font-weight: 600;
-        font-size: 13px;
-        letter-spacing: 0.1em;
-        color: var(--muted);
-        text-align: right;
-        padding: 2px 6px;
-        white-space: nowrap;
-        vertical-align: bottom;
-      }
-      thead tr:last-child th {
+      .crow {
+        display: grid;
+        grid-template-columns: 180px 250px max-content;
+        gap: 0 14px;
+        padding: 6px 0;
         border-bottom: 1px solid var(--border);
+        font-size: 13px;
       }
-      th.left,
-      td.left {
+      .crow.head {
+        border-bottom: 1px solid var(--border);
+        padding-top: 0;
+      }
+      .crow.head .lbl,
+      .crow.head .c {
+        font-family: var(--head);
+        font-weight: 600;
+        font-size: 12px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .cleft {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        min-width: 0;
+      }
+      .cname {
+        font-family: var(--body);
+        color: var(--text);
+      }
+      .cname b {
+        font-family: var(--mono);
+        font-weight: 500;
+        margin-right: 6px;
+      }
+      .cparams {
+        font-family: var(--mono);
+        font-size: 12px;
+        color: var(--text2);
+        line-height: 1.35;
+      }
+      .cparams b {
+        color: var(--accent-text);
+        font-weight: 500;
+      }
+      .cprog {
+        font-family: var(--mono);
+        font-variant-numeric: tabular-nums;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .cprog .btns {
+        display: flex;
+        gap: 4px;
+        margin-top: 2px;
+      }
+      .cprog button {
+        padding: 1px 7px;
+        font-size: 12px;
+      }
+      .line {
+        display: flex;
+        align-items: baseline;
+        height: 20px;
+      }
+      .line.l2 {
+        background: var(--band);
+      }
+      .c {
+        flex: none;
+        padding: 0 6px;
+        text-align: right;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-family: var(--mono);
+        font-variant-numeric: tabular-nums;
+      }
+      .c.left {
         text-align: left;
       }
-      td {
-        padding: 2px 6px;
-        text-align: right;
-        white-space: nowrap;
-      }
-      /* One Campaign is three rows, its three layers; the cells left of them span all three. */
-      tbody tr.l3 td,
-      td.span {
-        border-bottom: 1px solid var(--border);
-      }
-      td.span {
-        vertical-align: top;
-        padding-block: 5px;
-      }
-      tbody tr.l2 td:not(.span),
-      thead tr.l2 th:not(.span) {
-        background-image: linear-gradient(var(--band), var(--band));
-      }
-      th.layer,
-      td.layer {
+      .c.layer {
+        width: 74px;
+        text-align: left;
         font-family: var(--head);
         font-weight: 600;
         font-size: 11px;
         letter-spacing: 0.12em;
-        color: var(--muted);
         text-transform: uppercase;
-        text-align: left;
-        padding-right: 2px;
-      }
-      td.name {
-        font-family: var(--body);
-        color: var(--text);
-      }
-      td.params {
-        font-size: 12px;
-        color: var(--text2);
-        white-space: normal;
-        min-width: 150px;
-        max-width: 260px;
-      }
-      td.params b {
-        color: var(--accent-text);
-        font-weight: 500;
-      }
-      td.acts {
-        white-space: normal;
-        width: 1%;
-      }
-      td.acts button {
-        padding: 1px 8px;
-        font-size: 12px;
-        margin: 0 4px 4px 0;
+        color: var(--muted);
       }
       .sub {
         display: block;
@@ -667,7 +687,7 @@
       }
 
       function renderCampaignsSection() {
-        return `<section id="campaigns"><div class="shead"><h2>Campaigns</h2><p>Each row is one Campaign at its Current Turn, in three layers: the Agency, its strength, and its Missions. Its parameters are those it was launched with.</p></div>
+        return `<section id="campaigns"><div class="shead"><h2>Campaigns</h2><p>Each block is one Campaign at its Current Turn, in three layers: the Agency, its strength, and its Missions. Its parameters are those it was launched with.</p></div>
   <div class="panel read"><div class="ctl">
     <label><span class="lbl">Campaigns</span><input type="number" id="l_count" min="1" step="1" value="${esc(launchForm.count)}" /></label>
     <label><span class="lbl">Until turn</span><input type="number" id="l_until" min="1" step="1" value="${esc(launchForm.untilTurn)}" /></label>
@@ -681,22 +701,21 @@
     <button id="playAll">Play more · all</button><button id="stopAll">Stop all</button><button id="removeAll">Remove all</button>
     <span id="summary" style="align-self:center"></span>
   </div><span class="err" id="launchErr"></span></div>
-  <div class="panel"><div class="tw"><table id="ct"><thead></thead><tbody></tbody></table></div>
+  <div class="panel"><div class="clist" id="ct"><div class="crow head" id="chead"></div><div id="cbody"></div></div>
   <div class="note" id="legend"></div></div></section>`
       }
 
-      /** The three layers of a Campaign row, each a list of [header, title, cell(stats) → html, colspan]. */
+      /** The three layers of a Campaign, each a list of [label, title, cell(stats) → html, width in px, left-aligned]. */
       function layers() {
         const factions = STATE.campaigns.find((c) => c.stats)?.stats.factions ?? []
-        const ups = UPGRADES
         const ml = (m) =>
-          `<span class="good">${m.won}</span> / <span class="bad">${m.lost}</span> / <span class="dim">${m.expired}</span>`
+          `<span class="good">${m.won}</span><span class="dim">/</span><span class="bad">${m.lost}</span><span class="dim">/${m.expired}</span>`
         const work = (a) =>
           ['Contracting', 'Training', 'Investigation', 'Standby', 'Recovery', 'Deployed']
             .map((k) => `${k[0]}${a[k] ?? 0}`)
             .join(' ')
         const L1 = [
-          ['Turn', 'The Current Turn', (s) => fmt(s.turn)],
+          ['Turn', 'The Current Turn', (s) => fmt(s.turn), 56],
           [
             'Outcome',
             'The Campaign ending, and the Turn it came',
@@ -704,56 +723,52 @@
               s.ending === null
                 ? '<span class="dim">playing</span>'
                 : `<span class="${s.ending.ending === 'Victory' ? 'good' : 'bad'}" title="${esc(s.ending.reasons.join(', '))}">${esc(s.ending.ending)} T${s.ending.turn}</span>`,
+            120,
+            true,
           ],
-          ['Panic', 'Panic', (s) => `${(s.panicHundredths / 100).toFixed(1)}%`],
-          ['Money', 'Money', (s) => `<span class="${s.money < 0 ? 'bad' : ''}">${fmt(s.money)}</span>`],
-          ['Funding', 'Funding', (s) => fmt(s.funding)],
-          ['Income', 'Projected income', (s) => fmt(s.projectedIncome)],
-          ['Upkeep', 'Projected upkeep', (s) => fmt(s.projectedUpkeep)],
+          ['Panic', 'Panic', (s) => `${(s.panicHundredths / 100).toFixed(1)}%`, 64],
+          ['Money', 'Money', (s) => `<span class="${s.money < 0 ? 'bad' : ''}">${fmt(s.money)}</span>`, 84],
+          ['Funding', 'Funding', (s) => fmt(s.funding), 72],
+          ['Income', 'Projected income', (s) => fmt(s.projectedIncome), 72],
+          ['Upkeep', 'Projected upkeep', (s) => fmt(s.projectedUpkeep), 72],
           [
             'Agents',
             'Serving Agents / Agent cap',
-            (s) => `${fmt(s.agents)}<span class="dim"> / ${fmt(s.agentCap)}</span>`,
+            (s) => `${fmt(s.agents)}<span class="dim">/${fmt(s.agentCap)}</span>`,
+            84,
           ],
-          ['Hired', 'Agents hired in total, beyond those the Campaign started with', (s) => fmt(s.hired)],
+          ['Hired', 'Agents hired in total, beyond those the Campaign started with', (s) => fmt(s.hired), 60],
           [
             'Lost',
             'Agents Killed in total (Dismissed after the slash)',
             (s) =>
-              `<span class="${s.killed > 0 ? 'bad' : ''}">${fmt(s.killed)}</span>${s.dismissed ? `<span class="dim"> / ${s.dismissed}</span>` : ''}`,
+              `<span class="${s.killed > 0 ? 'bad' : ''}">${fmt(s.killed)}</span>${s.dismissed ? `<span class="dim">/${s.dismissed}</span>` : ''}`,
+            60,
           ],
           [
             'Work',
             'Serving Agents by Assignment, In transit included: Contracting, Training, Investigation, Standby, Recovery, Deployed',
             (s) => `<span class="dim">${work(s.assignments)}</span>`,
-            2,
+            200,
+            true,
           ],
         ]
         const L2 = [
-          ['CR now', 'Combat rating of every Serving Agent together, as they are now', (s) => fmt(s.ratingNow)],
+          ['CR now', 'Combat rating of every Serving Agent together, as they are now', (s) => fmt(s.ratingNow), 80],
           [
             'CR fresh',
             'Combat rating of every Serving Agent together at full health and exhaustion 0',
             (s) => `<span style="color:var(--accent-text)">${fmt(s.ratingFresh)}</span>`,
+            80,
           ],
-          ['Skill', 'Mean base skill of the Serving Agents', (s) => fmt1(s.meanSkill)],
-          ['Transp', 'Transport cap', (s) => fmt(s.transportCap)],
-          ['Train', 'Training cap', (s) => fmt(s.trainingCap)],
-          ...ups.map((u) => [abbr(u.name), `${u.name}: acquisitions`, (s) => fmt(s.upgrades[u.id] ?? 0)]),
+          ['Skill', 'Mean base skill of the Serving Agents', (s) => fmt1(s.meanSkill), 64],
+          ['Transp', 'Transport cap', (s) => fmt(s.transportCap), 64],
+          ['Train', 'Training cap', (s) => fmt(s.trainingCap), 56],
+          ...UPGRADES.map((u) => [abbr(u.name), `${u.name}: acquisitions`, (s) => fmt(s.upgrades[u.id] ?? 0), 48]),
         ]
         const L3 = [
-          [
-            'Response',
-            'Response Missions Won / Lost, and Response Mission sites Expired',
-            (s) => ml(s.missions.Response),
-            2,
-          ],
-          [
-            'Initiative',
-            'Initiative Missions Won / Lost, and Initiative Mission sites Expired',
-            (s) => ml(s.missions.Initiative),
-            2,
-          ],
+          ['Response', 'Response Missions Won / Lost / Expired', (s) => ml(s.missions.Response), 104],
+          ['Initiative', 'Initiative Missions Won / Lost / Expired', (s) => ml(s.missions.Initiative), 104],
           ...factions.map((f, i) => [
             f.name,
             `The Won Initiative Mission against ${f.name} with the highest Initiative operation level; ✕ once the Faction is Eliminated`,
@@ -766,40 +781,37 @@
                   : `<span class="dim">L${x.best.level ?? '?'}</span> ${esc(x.best.name)}`
               return `${best}${x.eliminated ? ' <span class="good" title="Eliminated">✕</span>' : ''}`
             },
-            3,
+            180,
+            true,
           ]),
-          ['Inv', 'Active Investigations', (s) => fmt(s.activeInvestigations)],
+          ['Inv', 'Active Investigations', (s) => fmt(s.activeInvestigations), 48],
         ]
-        const width = (L) => L.reduce((n, x) => n + (x[3] ?? 1), 0)
-        const n = Math.max(width(L1), width(L2), width(L3))
-        // Pad each layer to the same width, so that its columns line up under its own headers.
-        for (const L of [L1, L2, L3]) {
-          const w = width(L)
-          if (w < n) L.push(['', '', () => '', n - w])
-        }
         return [L1, L2, L3]
       }
 
+      const LAYER_NAMES = ['Agency', 'Strength', 'Missions']
       let LAYOUT = null
       let layoutKey = ''
 
+      const cell = (x, html, key) =>
+        `<span class="c${x[4] ? ' left' : ''}" style="width:${x[3]}px"${key ? ` data-k="${key}"` : ''}>${html}</span>`
+
       function renderHead() {
-        const names = ['Agency', 'Strength', 'Missions']
-        const left = `<th class="left span" rowspan="3">#</th><th class="left span" rowspan="3">Parameters</th><th class="left span" rowspan="3">Progress</th><th class="span" rowspan="3">Time</th><th class="span" rowspan="3"></th>`
-        $('ct').tHead.innerHTML = LAYOUT.map(
-          (L, i) =>
-            `<tr class="l${i + 1}">${i === 0 ? left : ''}<th class="layer">${names[i]}</th>${L.map((x) => `<th title="${esc(x[1])}"${x[3] > 1 ? ` colspan="${x[3]}"` : ''}${i === 2 && x[3] === 3 ? ' class="left"' : ''}>${esc(x[0])}</th>`).join('')}</tr>`,
-        ).join('')
+        $('chead').innerHTML =
+          `<div class="lbl">Campaign · parameters</div><div class="lbl">Progress · time</div><div>${LAYOUT.map(
+            (L, i) =>
+              `<div class="line"><span class="c layer">${LAYER_NAMES[i]}</span>${L.map((x) => cell(x, `<span title="${esc(x[1])}">${esc(x[0])}</span>`)).join('')}</div>`,
+          ).join('')}</div>`
         $('legend').innerHTML =
-          `<b>CR fresh</b> is the Combat rating the same Agents would have at full health and exhaustion 0. Upgrades: ${UPGRADES.map((u) => `${esc(abbr(u.name))} ${esc(u.name)}`).join(' · ')}. Missions: Won / Lost / Expired. Hover a header for its meaning. Time is the latest run's wall-clock time, and the total of every run below it.`
+          `<b>CR fresh</b> is the Combat rating the same Agents would have at full health and exhaustion 0. Upgrades: ${UPGRADES.map((u) => `${esc(abbr(u.name))} ${esc(u.name)}`).join(' · ')}. Work: Contracting, Training, Investigation, Standby, Recovery, Deployed. Missions: Won / Lost / Expired. Hover a label for its meaning. Time is the latest run's wall-clock time, and the total of every run. <b>Load params</b> copies a Campaign's parameters into the Parameters editor above, e.g. to launch a variant of it.`
       }
 
       const rows = new Map()
 
-      /** The cells of a Campaign, by key, so that only the cells that changed are written again. */
+      /** The parts of a Campaign block, by key, so that only the parts that changed are written again. */
       function cellsOf(c) {
         const cells = {}
-        cells.n = `<span class="name" style="font-family:var(--body)">${c.n}</span> <span class="sub">${esc(c.seed)}</span><span class="sub">launch ${c.batch}</span>`
+        cells.n = `<b>${c.n}</b>${esc(c.seed)} <span class="dim">· launch ${c.batch}</span>`
         cells.params = diffText(c.params) + (c.error ? `<div class="err">${esc(c.error)}</div>` : '')
         const run = c.run
         const turn = c.stats?.turn ?? null
@@ -812,16 +824,15 @@
                 ? 'starting'
                 : 'playing'
               : (RUN_LABEL[run.reason] ?? run.reason)
-          cells.progress = `<span class="meter"><i class="${run.endedAt === null ? '' : 'done'}" style="width:${pct.toFixed(1)}%"></i></span>${fmt(done)} / ${fmt(run.turns)} <span class="dim">${pct.toFixed(0)}%</span><span class="sub">${esc(label)}${run.detail ? ': ' + esc(run.detail) : ''}</span>`
+          cells.progress = `<span class="meter"><i class="${run.endedAt === null ? '' : 'done'}" style="width:${pct.toFixed(1)}%"></i></span>${fmt(done)}/${fmt(run.turns)} <span class="dim">${pct.toFixed(0)}% ${esc(label)}</span>${run.detail ? `<div class="err">${esc(run.detail)}</div>` : ''}`
         } else {
           cells.progress = ''
         }
-        cells.time = `<span data-t="run"></span><span class="sub" data-t="total"></span>`
         const ended = c.stats?.ending != null
         cells.acts =
           c.state === 'running' || c.state === 'starting'
             ? `<button data-act="stop">Stop</button>`
-            : `<button data-act="play"${ended || c.state === 'failed' ? ' disabled' : ''}>Play more</button><button data-act="use" title="Load its parameters into the editor">Use</button><button data-act="remove" title="Remove">✕</button>`
+            : `<button data-act="play"${ended || c.state === 'failed' ? ' disabled' : ''}>Play more</button><button data-act="use" title="Copy this Campaign's parameters into the Parameters editor above">Load params</button><button data-act="remove" title="Remove this Campaign">✕</button>`
         LAYOUT.forEach((L, i) =>
           L.forEach((x, j) => {
             cells[`${i}_${j}`] = c.stats === null ? '' : x[2](c.stats)
@@ -831,24 +842,23 @@
       }
 
       function rowSkeleton(c) {
-        const tb = $('ct').tBodies[0]
-        const trs = LAYOUT.map((L, i) => {
-          const tr = document.createElement('tr')
-          tr.className = `l${i + 1}`
-          if (i === 0) {
-            tr.innerHTML = `<td class="left span" rowspan="3" data-k="n"></td><td class="params span" rowspan="3" data-k="params"></td><td class="left span" rowspan="3" data-k="progress"></td><td class="span" rowspan="3" data-k="time"></td><td class="acts span" rowspan="3" data-k="acts"></td>`
-          }
-          tr.insertAdjacentHTML(
-            'beforeend',
-            `<td class="layer"></td>${L.map((x, j) => `<td data-k="${i}_${j}"${x[3] > 1 ? ` colspan="${x[3]}"` : ''}${i === 2 && x[3] === 3 ? ' class="left"' : ''}></td>`).join('')}`,
-          )
-          tr.dataset.id = c.id
-          tb.appendChild(tr)
-          return tr
-        })
+        const el = document.createElement('div')
+        el.className = 'crow'
+        el.dataset.id = c.id
+        el.innerHTML = `<div class="cleft"><div class="cname" data-k="n"></div><div class="cparams" data-k="params"></div></div><div class="cprog"><div data-k="progress"></div><div><span data-t="run"></span> <span class="dim" data-t="total"></span></div><div class="btns" data-k="acts"></div></div><div>${LAYOUT.map(
+          (L, i) =>
+            `<div class="line l${i + 1}"><span class="c layer">${LAYER_NAMES[i]}</span>${L.map((x, j) => cell(x, '', `${i}_${j}`)).join('')}</div>`,
+        ).join('')}</div>`
+        $('cbody').appendChild(el)
         const cells = {}
-        for (const tr of trs) for (const td of tr.querySelectorAll('[data-k]')) cells[td.dataset.k] = td
-        return { trs, cells, cache: {} }
+        for (const k of el.querySelectorAll('[data-k]')) cells[k.dataset.k] = k
+        return {
+          el,
+          cells,
+          cache: {},
+          run: el.querySelector('[data-t="run"]'),
+          total: el.querySelector('[data-t="total"]'),
+        }
       }
 
       function renderCampaigns() {
@@ -860,7 +870,7 @@
           LAYOUT = layers()
           layoutKey = key
           renderHead()
-          $('ct').tBodies[0].innerHTML = ''
+          $('cbody').innerHTML = ''
           rows.clear()
         }
         const seen = new Set()
@@ -882,7 +892,7 @@
         }
         for (const [id, row] of rows) {
           if (!seen.has(id)) {
-            row.trs.forEach((tr) => tr.remove())
+            row.el.remove()
             rows.delete(id)
           }
         }
@@ -906,9 +916,8 @@
           const c = row.campaign
           const run = c.run
           const runMs = run === null ? 0 : (run.endedAt ?? now) - run.startedAt
-          const el = row.cells.time
-          el.querySelector('[data-t="run"]').textContent = run === null ? '' : clock(runMs)
-          el.querySelector('[data-t="total"]').textContent = `total ${clock(c.priorMs + runMs)}`
+          row.run.textContent = run === null ? '' : clock(runMs)
+          row.total.textContent = `· total ${clock(c.priorMs + runMs)}`
           if (run !== null && run.endedAt === null) {
             active += 1
             wanted += run.turns
@@ -955,7 +964,7 @@
         const act = (e) => {
           const b = e.target.closest('button[data-act]')
           if (!b || b.disabled) return
-          const id = b.closest('tr').dataset.id
+          const id = b.closest('[data-id]').dataset.id
           const a = b.dataset.act
           if (a === 'play') post('api/play', { ids: [id], turns: num('more') })
           else if (a === 'stop') post('api/stop', { ids: [id] })

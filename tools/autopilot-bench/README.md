@@ -26,7 +26,7 @@ The page plays nothing by itself. Loading or reloading it only reads: it shows t
 
 - **Launch** creates the number of Campaigns given and plays each from Turn 1 until the Turn given. Campaign `i` of a launch has the Campaign seed `<prefix>-<i>`, so two launches with the same prefix play the same Campaigns and differ only by their parameters.
 - **Play more** plays the number of Turns given in More turns of one Campaign; **Play more · all** does so for every Campaign that is not playing and has not ended.
-- **Stop** disengages Autopilot after the Turn being played. **Use** loads a Campaign's parameters into the editor, e.g. to launch a variant of it.
+- **Stop** disengages Autopilot after the Turn being played. **Load params** copies a Campaign's parameters into the Parameters editor, e.g. to launch a variant of it.
 
 A Campaign that reaches a Campaign ending stops there.
 
