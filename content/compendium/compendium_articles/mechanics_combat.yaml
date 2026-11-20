@@ -5,13 +5,18 @@ title: Combat
 terms: [Combat, Combats, Combat rating, incapacitated]
 body: >-
   A Combat is fought in rounds. In each round every Agent attacks once, then every Enemy still able to fight attacks
-  once, and each attacker goes for the most skilled opponent. The Combat ends when one side can no longer fight or your
-  team retreats.
+  once, the most skilled of each side first. Enemies attack any Agent able to fight, at random. Agents choose at random
+  too, but favour an Enemy they are likely but not certain to hit. The Combat ends the moment one side can no longer
+  fight, or after a round in which your team retreats.
 formulas:
   - label: 'Chance to hit'
     text: 'A² ÷ (A² + D²), where A is the effective skill of the attacker and D that of the defender'
-  - label: 'Target'
-    text: 'The opponent with the highest effective skill that is able to fight'
+  - label: 'Order'
+    text: 'Within a side, from the highest to the lowest effective skill at the start of its part of the round'
+  - label: 'Enemy target'
+    text: 'Any Agent able to fight, each equally likely'
+  - label: 'Agent target'
+    text: 'Any Enemy able to fight, with a weight of {combat_parameters.target_base_weight} minus one for each whole hundredth by which the chance to hit it lies above or below {combat_parameters.target_preferred_hit_chance}'
   - label: 'Each attack'
     text: '+{agent_parameters.exhaustion_per_attack} exhaustion for the attacker and +{agent_parameters.exhaustion_per_defense} for the defender, hit or miss'
   - label: 'Incapacitated'
@@ -19,5 +24,5 @@ formulas:
   - label: 'Combat rating'
     text: 'The effective skill of everyone on a side who is able to fight, added up'
   - label: 'End of the Combat'
-    text: 'After a round in which no Enemy is able to fight, no Agent is able to fight, or the team retreats'
+    text: 'As soon as no Enemy or no Agent is able to fight, or after a round in which the team retreats'
 see_also: [mechanics_damage, mechanics_retreat, mechanics_skill, mechanics_missions]

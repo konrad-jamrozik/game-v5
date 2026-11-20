@@ -181,7 +181,7 @@ Type owner: [Combat](../mechanics/combat.md).
 | `heavy_rifle` | Weapon | Referenced GDR | Base weapon damage of the Weapon of `commander`. |
 | `machine_gun` | Weapon | Referenced GDR | Base weapon damage of the Weapon of `high_commander`. |
 | `anti_materiel_rifle` | Weapon | Referenced GDR | Base weapon damage of the Weapon of `cult_leader`. |
-| `combat_parameters` | CombatParameters | Calculation parameter | The spread of the damage outcome around base weapon damage, the two retreat thresholds, and the incapacitation threshold. |
+| `combat_parameters` | CombatParameters | Calculation parameter | The spread of the damage outcome around base weapon damage, the two retreat thresholds, the incapacitation threshold, and the two values from which an attacking Agent's [Selection weights](../mechanics/combat.md#combat-rounds-and-results) follow. |
 
 ## Agent Recovery GDRs
 
@@ -337,7 +337,6 @@ The Turn and Panic start from values that no GDR supplies: the Turn under [Turn 
 - TODO (later): Faction suppression after a Won Mission, under [Faction activity](../mechanics/factions.md#faction-activity) in Factions.
 - TODO (later): Partial success of a Lost Mission, under [Consequences](../mechanics/missions.md#consequences) in Missions.
 - TODO (later): The game-ts Lead Deep state, which had no effect in game-ts, under [Leads and Progression GDRs](#leads-and-progression-gdrs).
-- TODO (later): The redesign of target selection, under [Target selection](../mechanics/combat.md#target-selection) in Combat.
 
 # Appendix: Derivation from game-ts
 
@@ -350,7 +349,7 @@ Most Bootstrap GDR values are copied from game-ts. The following table is exhaus
 | Bootstrap GDR value | game-ts | Bootstrap | Informative rationale |
 | --- | --- | --- | --- |
 | Weapons | A weapon damage number on each enemy kind, with no weapon of its own | Eight Weapons, each shared by the EnemyArchetypes of equal base weapon damage | A Combatant's base weapon damage comes from a Weapon GDR. |
-| Target selection | Attacks spread over the opponents attacked least often, each attacker preferring an opponent near half its [effective skill](../mechanics/agents-spec.md#combatant-attributes), with wounded opponents dropping out at random | The opponent with the highest effective skill | The simpler rule stays until target selection is redesigned. |
+| Target selection | Attacks spread over the opponents attacked least often, each attacker preferring an opponent near half its [effective skill](../mechanics/agents-spec.md#combatant-attributes), with wounded opponents dropping out at random | An Enemy targets an Agent [able to fight](../mechanics/combat.md#combatant-condition-in-a-combat) at random, each equally likely; an Agent targets an Enemy at random, weighted by how near its hit [Probability](../foundation/numbers.md#glossary) lies to `target_preferred_hit_chance` 0.8, from `target_base_weight` 100 down to 21 | Enemies spread their attacks over the team, and Agents prefer fights they are likely but not certain to win, with every Enemy still a possible target. |
 | Starting transport cap | 6 | 4, raised by `transport_cap` | Transport capacity becomes something the Agency invests in. |
 | Starting training cap | 0 | 4, raised by `training_cap` | Training is available from the first Turn. |
 | `operation_level_6` when ignored or lost | Panic is set to 100% | A `defeat` [Effect](../foundation/effect-lists.md#glossary), which loses the Campaign and leaves Panic unchanged | The Campaign ends with the Panic it had, and no Panic reduction of the same Advance turn can undo the loss. |

@@ -266,7 +266,7 @@ The Player action `player.actions.deployAgents(missionSite, agents)` deploys a t
 | Parameter | Meaning |
 | --- | --- |
 | `missionSite` | An Instance ID, meant to identify one Mission site of the Campaign. |
-| `agents` | A list of Instance IDs, each meant to identify one Agent of the Campaign. Its order becomes the order of the Mission's Current team and so the fixed order of the Agents' side of the Combat. |
+| `agents` | A list of Instance IDs, each meant to identify one Agent of the Campaign. Its order becomes the order of the Mission's Current team; it does not decide the fixed order of the Agents' side of the Combat, under [Resolving one Mission](#resolving-one-mission). |
 
 Preconditions: the action is rejected, as a whole, when any of the following holds:
 
@@ -307,7 +307,7 @@ In the Turn advancement step Mission resolution, under [Turn advancement steps](
 
 For each Deployed Mission M, at Mission site S:
 
-1. **Combat:** A Combat is fought under [Combat](combat.md). Its Agents' side is M's Current team, in its order; its Enemies' side is S's Enemies list, in its order, under [Fixed order of each side](combat.md#fixed-order-of-each-side). The current values of every [Combatant](domain-model.md#combat) are their [Step-start values](turn-advancement.md#glossary) of this step, under [Combat inputs and outputs](combat.md#combat-inputs-and-outputs). Every Agent of M's Current team is Serving, Deployed on M, and [At assignment](domain-model.md#agency-and-agents), because no Player action or earlier step can change a Deployed Agent's lifecycle state or Assignment, so the lists are valid Combat inputs.
+1. **Combat:** A Combat is fought under [Combat](combat.md). Its Agents' side is M's Current team and its Enemies' side is S's Enemies, each in ascending order of the number of its [Instance IDs](../foundation/campaign-instances.md#glossary), which becomes the fixed order of the side under [Fixed order of each side](combat.md#fixed-order-of-each-side). E.g., a Current team of agent-12, agent-3, and agent-7 fights in the fixed order agent-3, agent-7, agent-12. The current values of every [Combatant](domain-model.md#combat) are their [Step-start values](turn-advancement.md#glossary) of this step, under [Combat inputs and outputs](combat.md#combat-inputs-and-outputs). Every Agent of M's Current team is Serving, Deployed on M, and [At assignment](domain-model.md#agency-and-agents), because no Player action or earlier step can change a Deployed Agent's lifecycle state or Assignment, so the lists are valid Combat inputs.
 2. **Combat report:** The Combat's Combat report, which names M as its Mission, becomes part of the Turn report of this Advance turn, under [Combat report](combat.md#combat-report) in Combat.
 3. **Lifecycle:** M becomes Won when the Combat outcome is Prevailed, and Lost when it is Retreated or Wiped, under [Combat outcomes](combat.md#combat-outcomes).
 4. **Killed Agents:** Every Agent whose [current health](agents-spec.md#combatant-attributes) reached 0 in the Combat is Killed under [Killed and Incapacitated](combat.md#killed-and-incapacitated) in Combat; [Agent status](agents-spec.md#agent-status) in Agents removes its Assignment and Agent status and records M in its Participation history.

@@ -94,16 +94,18 @@ See also: [Contracting](#contracting) · [Training](#training) · [Investigation
 
 Source: `content/compendium/compendium_articles/mechanics_combat.yaml`
 
-A Combat is fought in rounds. In each round every [Agent](#agents) attacks once, then every Enemy still able to fight attacks once, and each attacker goes for the most skilled opponent. The Combat ends when one side can no longer fight or your team [retreats](#retreat).
+A Combat is fought in rounds. In each round every [Agent](#agents) attacks once, then every Enemy still able to fight attacks once, the most skilled of each side first. Enemies attack any Agent able to fight, at random. Agents choose at random too, but favour an Enemy they are likely but not certain to hit. The Combat ends the moment one side can no longer fight, or after a round in which your team [retreats](#retreat).
 
 | Formulas |  |
 | --- | --- |
 | Chance to hit | A² ÷ (A² + D²), where A is the [effective skill](#skill) of the attacker and D that of the defender |
-| Target | The opponent with the highest effective skill that is able to fight |
+| Order | Within a side, from the highest to the lowest effective skill at the start of its part of the round |
+| Enemy target | Any Agent able to fight, each equally likely |
+| Agent target | Any Enemy able to fight, with a weight of 100 minus one for each whole hundredth by which the chance to hit it lies above or below 0.8 |
 | Each attack | +1 [exhaustion](#exhaustion) for the attacker and +1 for the defender, hit or miss |
 | Incapacitated | Alive but unable to fight: effective skill at or below 0.1 × skill, or exhaustion of 100 or more |
 | Combat rating | The effective skill of everyone on a side who is able to fight, added up |
-| End of the Combat | After a round in which no Enemy is able to fight, no Agent is able to fight, or the team retreats |
+| End of the Combat | As soon as no Enemy or no Agent is able to fight, or after a round in which the team retreats |
 
 See also: [Damage](#damage) · [Retreat](#retreat) · [Skill](#skill) · [Missions](#missions)
 

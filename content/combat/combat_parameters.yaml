@@ -4,3 +4,5 @@ weapon_damage_range: 0.5 # a damage roll is base damage ±50%
 retreat_below_agent_rating_fraction: 0.5 # of the team's starting combat rating
 retreat_at_enemy_to_agent_rating: 0.8
 incapacitation_skill_fraction: 0.1
+target_base_weight: 100 # an Agent's Selection weight for an Enemy it hits with exactly the preferred chance
+target_preferred_hit_chance: 0.8 # each percentage point away from it lowers the Selection weight by 1

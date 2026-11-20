@@ -30,10 +30,12 @@ How a Combat is divided, and how it ends.
 | --- | --- | --- |
 | Fighting a Combat | Producing a Combat's outputs from its inputs, under [Fighting a Combat](#fighting-a-combat): from Combat start through Combat rounds to its Combat outcome and [Combat report](domain-model.md#combat). It is one procedure, whoever has the Combat fought. Its verb is "fight", e.g. "the Mission resolution step has the Combat fought". | Resolving, running, computing, executing, or simulating a Combat. A Mission, not a Combat, is resolved. |
 | Detached Combat | A Combat fought by `developer.tools.fightCombat(setup)` on [Combatants](domain-model.md#combat) and values the caller supplies, outside every [World state](../foundation/engine-contract.md#player-actions-and-turns), whose outputs are returned and applied to nothing, under [Detached Combat](#detached-combat). | Simulated Combat; test Combat |
-| Combat round | One pass of a Combat in which every [Combatant](domain-model.md#combat) able to fight attacks once. | Round, naming a pass of a Combat |
-| Agents' phase | The first part of a Combat round, in which each [Agent](domain-model.md#agency-and-agents) of the Agents' side takes one Combat turn, in the fixed order of its side. |  |
-| Enemies' phase | The second part of a Combat round, in which each [Enemy](domain-model.md#combat) of the Enemies' side takes one Combat turn, in the fixed order of its side. |  |
+| Combat round | One pass of a Combat in which every [Combatant](domain-model.md#combat) able to fight attacks once, unless the Combat ends first. | Round, naming a pass of a Combat |
+| Agents' phase | The first part of a Combat round, in which each [Agent](domain-model.md#agency-and-agents) of the Agents' side takes one Combat turn, in the Phase order of its side. |  |
+| Enemies' phase | The second part of a Combat round, in which each [Enemy](domain-model.md#combat) of the Enemies' side takes one Combat turn, in the Phase order of its side. |  |
+| Phase order | The order in which the Combatants of one side take their Combat turns in one phase: from the highest to the lowest [effective skill](agents-spec.md#combatant-attributes) at the start of the phase, ties broken by the fixed order of the side. | Initiative, naming the order of Combat turns |
 | Combat turn | One Combatant's part in a phase: it attacks once if it is able to fight, and otherwise does nothing. | Turn, naming a Combatant's part in a phase |
+| Selection weight | How strongly an attacker is drawn to one opponent able to fight, as a whole number of at least 1; an attacker picks the opponent it attacks at random, in proportion to these weights. |  |
 | Combat log | The list of every attack of one Combat, in the order in which it was made, kept in its [Combat report](domain-model.md#combat). |  |
 | Health removed | The current health one attack takes from its defender: the smaller of the damage outcome and the defender's current health before the attack, or 0 on a miss. | Damage, as a noun on its own |
 | Damage dealt | The sum of the health removed by every attack one participant made in one Combat. |  |
@@ -85,9 +87,11 @@ CombatParameters bundles the scalar values that Combats read. The table below is
 | Property | Meaning | Read by |
 | --- | --- | --- |
 | `weapon_damage_range` | How far a damage outcome may lie below or above the attacker's effective weapon damage, as a fraction of that effective weapon damage. | [Damage outcome](#damage-outcome) |
-| `retreat_below_agent_rating_fraction` | The fraction of the Agents' side's Combat rating at Combat start below which the team considers retreating. | [End-of-Combat-round checks](#end-of-combat-round-checks) |
-| `retreat_at_enemy_to_agent_rating` | The ratio of the Enemies' side's Combat rating to the Agents' side's Combat rating at or above which a team that considers retreating retreats. | [End-of-Combat-round checks](#end-of-combat-round-checks) |
+| `retreat_below_agent_rating_fraction` | The fraction of the Agents' side's Combat rating at Combat start below which the team considers retreating. | [Combat end checks](#combat-end-checks) |
+| `retreat_at_enemy_to_agent_rating` | The ratio of the Enemies' side's Combat rating to the Agents' side's Combat rating at or above which a team that considers retreating retreats. | [Combat end checks](#combat-end-checks) |
 | `incapacitation_skill_fraction` | The fraction of a Combatant's base skill at or below which its effective skill makes it Incapacitated. | [Incapacitation condition](#incapacitation-condition) |
+| `target_base_weight` | The Selection weight of an Enemy that an attacking Agent would hit with exactly the preferred hit [Probability](../foundation/numbers.md#glossary). | [Target selection](#target-selection) |
+| `target_preferred_hit_chance` | The hit Probability an attacking Agent most prefers against its target. | [Target selection](#target-selection) |
 
 ## AgentParameters values this document reads
 
@@ -115,6 +119,7 @@ The GDRs a Game build supplies must satisfy every rule below. The list is exhaus
 6. **Incapacitation threshold is valid:** `incapacitation_skill_fraction` is a decimal number of at least 0 and less than 1.
 7. **Every attack tires someone:** `exhaustion_per_attack + exhaustion_per_defense` is at least 1.
 8. **Exact properties:** Each EnemyArchetype, Weapon, and CombatParameters GDR has exactly the properties its table above lists, apart from `id` and `type`: no listed property is missing and no other property is present.
+9. **Selection weights are valid:** `target_preferred_hit_chance` is a decimal number from 0 to 1, both included, and `target_base_weight` is a whole number of at least `100 × target_preferred_hit_chance` and of at least `100 × (1 − target_preferred_hit_chance)`. This guarantees that every Selection weight is at least 1, under [Target selection](#target-selection).
 
 Rule 7, together with the exhaustion clause of the [Incapacitation condition](#incapacitation-condition), guarantees that every Combat ends, under [Termination](#termination). [Agent GDR validation](agents-spec.md#agent-gdr-validation) in Agents makes `exhaustion_incapacitation` a whole number of at least 1.
 
@@ -179,8 +184,8 @@ A Combat is fully automatic: the player chooses who is deployed, under [Missions
 1. **The Agents' side:** a list of one or more distinct Agents, each [Serving](agents-spec.md#agent-statuses). This is the [Mission](domain-model.md#leads-investigations-mission-sites-and-missions)'s [Current team](domain-model.md#leads-investigations-mission-sites-and-missions).
 2. **The Enemies' side:** a list of zero or more distinct Enemies. These are the Mission site's Enemies.
 3. **Current values:** the base skill, current health, effective max health, exhaustion, and effective weapon damage of every Combatant in the two lists, as they are when the Combat begins.
-4. **GDR values:** the four values of CombatParameters, and `exhaustion_incapacitation`, `exhaustion_free_points`, `skill_penalty_pct_per_exhaustion`, `exhaustion_per_attack`, `exhaustion_per_defense`, `experience_per_attack_hit`, `experience_per_attack_miss`, `experience_per_defense_hit`, and `experience_per_defense_miss` of AgentParameters.
-5. **Random outcomes:** the named random outcomes of its attacks, under [Hit outcome](#hit-outcome) and [Damage outcome](#damage-outcome).
+4. **GDR values:** the six values of CombatParameters, and `exhaustion_incapacitation`, `exhaustion_free_points`, `skill_penalty_pct_per_exhaustion`, `exhaustion_per_attack`, `exhaustion_per_defense`, `experience_per_attack_hit`, `experience_per_attack_miss`, `experience_per_defense_hit`, and `experience_per_defense_miss` of AgentParameters.
+5. **Random outcomes:** the named random outcomes of its target selections, under [Target selection](#target-selection), and of its attacks, under [Hit outcome](#hit-outcome) and [Damage outcome](#damage-outcome).
 
 The order of each list is the fixed order of its side, under [Fixed order of each side](#fixed-order-of-each-side). Nothing else influences a Combat; e.g., the turn number, the Mission site's kind, and any other Agent or Enemy have no effect. Its outputs are exhaustive too:
 
@@ -244,13 +249,11 @@ Combat rating is a Derived value and is never stored, except where the Combat re
 
 # Combat flow
 
-A Combat proceeds in a fixed order, so the only chance in it comes from its attacks. These rules decide who acts when, and whom each Combatant attacks.
+The sides take turns, and the strongest of a side act first. Who acts when follows from the Combatants' values alone; chance enters only in whom each attacker targets and in its attacks. These rules decide who acts when, and whom each Combatant attacks.
 
 ## Fixed order of each side
 
-Each side has a fixed order for the whole Combat: the order of its input list under [Combat inputs and outputs](#combat-inputs-and-outputs). The Agents' side is ordered as the Current team's list is given, and the Enemies' side as the Mission site's list of Enemies is given. The fixed order never changes during the Combat; a Combatant that dies or becomes Incapacitated keeps its position and is skipped. The Combat report records both orders.
-
-**Informative rationale:** The order is not derived from Instance IDs, because the format of an Instance ID is the Implementer's choice and so defines no order.
+Each side has a fixed order for the whole Combat: the order of its input list under [Combat inputs and outputs](#combat-inputs-and-outputs). For a Combat fought in a Mission resolution step, each list is in ascending order of the number of its Instance IDs, under [Resolving one Mission](missions.md#resolving-one-mission) in Missions; for a [Detached Combat](#detached-combat), it is the order its caller gives. The fixed order never changes during the Combat; a Combatant that dies or becomes Incapacitated keeps its position. It breaks ties in the Phase order of [Combat rounds](#combat-rounds), and the Combat report records both orders.
 
 ## Combat start
 
@@ -266,22 +269,44 @@ A Combat that ends at its start makes no attack and changes no value of any Comb
 
 Combat rounds are numbered from 1. Each Combat round consists of two phases, in this order:
 
-1. **Agents' phase:** each Agent of the Agents' side takes one Combat turn, in the fixed order of its side.
-2. **Enemies' phase:** each Enemy of the Enemies' side takes one Combat turn, in the fixed order of its side.
+1. **Agents' phase:** each Agent of the Agents' side takes one Combat turn, in the Phase order of its side.
+2. **Enemies' phase:** each Enemy of the Enemies' side takes one Combat turn, in the Phase order of its side.
 
-On its Combat turn, a Combatant that is not able to fight at that moment does nothing. A Combatant that is able to fight selects a target under [Target selection](#target-selection); if no opponent is able to fight it does nothing, and otherwise it makes exactly one attack on the target, under [Attacks](#attacks). Every effect of an attack applies immediately, before the next Combat turn, so every later Combat turn, target selection, and attack in the same Combat round reads the changed values. E.g., an Enemy killed in the Agents' phase does not attack in the Enemies' phase of the same Combat round.
+The Phase order of a side is set when its phase begins: its Combatants from the highest to the lowest effective skill at that moment, and among Combatants of equal effective skill, the one earlier in the fixed order of the side first. It holds for the whole phase, even when an attack changes an effective skill during it. E.g., Agents of effective skill 90, 120, and 90, in this fixed order, take their Combat turns in the order 120, then the first 90, then the second 90.
 
-After the Enemies' phase, the [End-of-Combat-round checks](#end-of-combat-round-checks) decide whether the Combat ends or another Combat round begins.
+On its Combat turn, a Combatant that is not able to fight at that moment does nothing. A Combatant that is able to fight selects a target under [Target selection](#target-selection) and makes exactly one attack on it, under [Attacks](#attacks). Every effect of an attack applies immediately, before the next Combat turn, so every later Combat turn, target selection, and attack in the same Combat round reads the changed values. E.g., an Enemy killed in the Agents' phase does not attack in the Enemies' phase of the same Combat round.
+
+After every attack, and after the Enemies' phase, the [Combat end checks](#combat-end-checks) decide whether the Combat ends at once; when none holds after the Enemies' phase, another Combat round begins.
 
 ## Target selection
 
-An attacker's target is the opponent, i.e. the Combatant of the other side, that is able to fight at the moment of the attacker's Combat turn and has the highest effective skill at that moment. When several such opponents share the highest effective skill, the target is the one that comes earliest in the fixed order of its side. An opponent that is not able to fight is never a target, whatever its effective skill. When no opponent is able to fight, there is no target.
+Enemies strike at whichever Agent is in reach. Agents pick their fights: each prefers an Enemy it can hit about four times in five, so a sure hit on a weakened Enemy and a long shot at a strong one both draw it less, but every Enemy able to fight can be its target.
 
-**Informative rationale:** game-ts used a five-step target selection with random self-removal. Among four simple targeting rules simulated with the Bootstrap GDR values, targeting the strongest opponent was the only one under which the [Victory path](../content/bootstrap-gdrs.md#glossary) is winnable; this is evidence for the choice, not a requirement.
+An attacker selects its target at its Combat turn. Its candidates are the opponents, i.e. the Combatants of the other side, that are able to fight at that moment; an opponent that is not able to fight is never a target. An attacker always has at least one candidate, because the Combat ends as soon as a side has no Combatant able to fight, under [Combat end checks](#combat-end-checks). Each target selection has one named random outcome, its target outcome, whose possible values are the candidates. Each candidate is the target with the [Probability](../foundation/numbers.md#glossary) of its Selection weight divided by the sum of the Selection weights of all candidates, an exact ratio of whole numbers that is never rounded, under [Probabilities](../foundation/numbers.md#probabilities) in Numbers. Each target outcome is independent of every other random outcome. The Selection weight of a candidate depends on the attacker's side:
+
+- **Enemy attacker:** every candidate has Selection weight 1, so each Agent able to fight is equally likely, whatever its effective skill, current health, or the number of attacks it has already received.
+- **Agent attacker:** the Selection weight of a candidate Enemy is
+
+  ```text
+  Selection weight = target_base_weight − round down( | 100 × target_preferred_hit_chance − 100 × A² / (A² + D²) | )
+  ```
+
+  | Symbol | Meaning | Unit and domain |
+  | --- | --- | --- |
+  | A | The attacker's effective skill at the moment of the target selection. | Skill points; a whole number of at least 1. |
+  | D | The candidate's effective skill at the same moment. | Skill points; a whole number of at least 1. |
+  | `target_base_weight` | The CombatParameters value. | A whole number of at least 1. |
+  | `target_preferred_hit_chance` | The CombatParameters value. | An exact decimal number from 0 to 1, both included. |
+
+  `A² / (A² + D²)` is the hit Probability the attack would have on that candidate, under [Hit outcome](#hit-outcome), so the Selection weight falls by one for each whole percentage point by which that hit Probability lies from `target_preferred_hit_chance`, above or below it. The difference is evaluated exactly and rounded once, with [Round down](../foundation/numbers.md#glossary), under [Rounding](../foundation/numbers.md#rounding) in Numbers. The hit Probability lies strictly between 0 and 1, so rule 9 of [Combat GDR validation](#combat-gdr-validation) makes every Selection weight a whole number of at least 1. A candidate's Selection weight depends on nothing else, e.g. not on its current health or the number of attacks it has already received, except as they lower its effective skill.
+
+E.g., with the Bootstrap values `target_base_weight` 100 and `target_preferred_hit_chance` 0.8, an Agent of effective skill 200 hits an Enemy of effective skill 100 with the Probability 40000 / 50000, i.e. 80%, so that Enemy's Selection weight is 100. A hit Probability of 54.5% gives `100 − round down(25.5)`, i.e. 75; one of 98.1% gives `100 − round down(18.1)`, i.e. 82; one of 60% gives 80; and Selection weights therefore range from 21, for a hit Probability just above 0%, to 100. E.g., an Agent of effective skill 100 facing Enemies of effective skill 40, 50, and 100 hits them with the Probabilities 86.2%, 80%, and 50%, so their Selection weights are 94, 100, and 70, and it targets them with the Probabilities 94/264, 100/264, and 70/264. E.g., five Enemies that all have Selection weight 100 are each the target with the Probability 1/5.
+
+**Informative rationale:** An Agent that prefers an Enemy it is likely but not certain to hit neither wastes attacks on long shots nor spends them all finishing off the weakest Enemy, and Enemies, who have no such judgement, spread their attacks evenly over the team.
 
 # Attacks
 
-An attack is made by one attacker on one defender, its target. It has one hit outcome and, when the hit outcome is a hit, one damage outcome. These are its only random outcomes; no other part of a Combat is random. Each outcome depends only on the values its section names, and is independent of every other random outcome, except that a damage outcome exists only for an attack whose hit outcome is a hit. No random outcome of a Combat is hidden from the player.
+An attack is made by one attacker on one defender, its target. It has one hit outcome and, when the hit outcome is a hit, one damage outcome. These are the attack's own random outcomes; the only other random outcome of a Combat is the target outcome of each target selection, under [Target selection](#target-selection). Each outcome depends only on the values its section names, and is independent of every other random outcome, except that a damage outcome exists only for an attack whose hit outcome is a hit. No random outcome of a Combat is hidden from the player.
 
 ## Hit outcome
 
@@ -363,14 +388,17 @@ Within a Combat, base skill and effective max health are constant, current healt
 
 # Combat end
 
-A Combat stops when one side can no longer fight, or when the Agents are losing badly enough to withdraw. These rules decide when that happens and how the Combat ended, and show that every Combat ends.
+A Combat stops the moment one side can no longer fight, and that side has lost; it also stops when the Agents are losing badly enough to withdraw. These rules decide when that happens and how the Combat ended, and show that every Combat ends.
 
-## End-of-Combat-round checks
+## Combat end checks
 
-After the Enemies' phase of each Combat round, these checks are made in this order, and the first that holds ends the Combat with its Combat outcome:
+After every attack, these checks are made in this order, and the first that holds ends the Combat at once with its Combat outcome; no further Combat turn is taken, even in the middle of a phase:
 
 1. **Prevailed:** No Enemy is able to fight.
 2. **Wiped:** No Agent is able to fight.
+
+After the Enemies' phase of each Combat round, when the Combat has not ended, the Retreated check is made, and when it holds it ends the Combat with the Combat outcome Retreated:
+
 3. **Retreated:** Both of the following hold, each compared exactly under [Exact evaluation](../foundation/numbers.md#exact-evaluation) in Numbers, with no rounding:
 
    ```text
@@ -380,7 +408,9 @@ After the Enemies' phase of each Combat round, these checks are made in this ord
 
    where `R_agents` and `R_enemies` are the Combat ratings of the Agents' side and the Enemies' side at the end of the Combat round, and `R_start` is the starting Combat rating of the Agents' side under [Combat start](#combat-start).
 
-When none holds, the next Combat round begins. The checks are made only after the Enemies' phase; e.g., a Combat round whose Agents' phase leaves no Enemy able to fight still completes its Enemies' phase, in which no Enemy attacks, before the Combat ends as Prevailed. The number of Combat rounds of the Combat is the number of the Combat round after which a check held, or 0 when the Combat ended at its start.
+When the Retreated check does not hold, the next Combat round begins. Only an attack changes whether a Combatant is able to fight, so a side is left with no Combatant able to fight only by an attack, and the checks after it end the Combat before any Combatant could find no target. E.g., an attack in the Agents' phase that kills the last Enemy able to fight ends the Combat as Prevailed at once: no later Agent of that phase attacks, and no Enemies' phase follows. When one attack leaves no Combatant of either side able to fight, e.g. it kills the last Enemy able to fight while the exhaustion it adds Incapacitates the last Agent able to fight, the outcome is Prevailed, because that check comes first.
+
+The Combat round in which the Combat ends ends with it. The number of Combat rounds of the Combat is the number of that Combat round, or 0 when the Combat ended at its start.
 
 **Informative rationale:** The two retreat thresholds are taken from game-ts; the order of the checks is new in v5.
 
@@ -390,9 +420,9 @@ A Combat ends with exactly one Combat outcome. The set is exhaustive:
 
 | Combat outcome | When |
 | --- | --- |
-| Prevailed | No Enemy is able to fight, at Combat start or after a Combat round. Checked first, so it holds even when no Agent is able to fight either. |
-| Wiped | Some Enemy, but no Agent, is able to fight, at Combat start or after a Combat round. |
-| Retreated | After a Combat round, Agents and Enemies are both able to fight and the Retreated check of [End-of-Combat-round checks](#end-of-combat-round-checks) holds. |
+| Prevailed | No Enemy is able to fight, at Combat start or after an attack. Checked first, so it holds even when no Agent is able to fight either. |
+| Wiped | Some Enemy, but no Agent, is able to fight, at Combat start or after an attack. |
+| Retreated | After a Combat round, Agents and Enemies are both able to fight and the Retreated check of [Combat end checks](#combat-end-checks) holds. |
 
 A Combat outcome is final. Every Agent of a Combat that ends as Retreated or Wiped keeps the values the Combat left it; the Combat outcome itself changes no Combatant value. Whether the Mission is then Won or Lost, and what becomes of each surviving Agent, follows from the Combat outcome under [Missions](missions.md).
 
@@ -403,7 +433,7 @@ Every Combat ends, after at most `N × X` Combat rounds, where `N` is the number
 1. **Exhaustion of `X` or more ends fighting.** A Combatant alive with exhaustion of at least `X` meets the exhaustion clause of the [Incapacitation condition](#incapacitation-condition), so it is Incapacitated: at Combat start, or after the attack that raised its exhaustion to `X` or more. Every Combatant able to fight therefore has an exhaustion below `X`.
 2. **Every attack raises `T`.** Attacker and defender are both able to fight before the attack, so each has an exhaustion below `X`, and the attack raises the attacker's `min(exhaustion, X)` by at least `min(1, exhaustion_per_attack)` and the defender's by at least `min(1, exhaustion_per_defense)`. By rule 7 of [Combat GDR validation](#combat-gdr-validation) one of these is at least 1, so `T` rises by at least 1 with every attack.
 3. **`T` is bounded.** No rule lowers exhaustion during a Combat, and each Combatant adds at most `X` to `T`, so `T` starts at 0 or more and never exceeds `N × X`. At most `N × X` attacks can therefore happen in one Combat.
-4. **Every Combat round that is fought has an attack.** A Combat round begins only when an Agent and an Enemy are both able to fight, under [Combat start](#combat-start) and [End-of-Combat-round checks](#end-of-combat-round-checks). Let `a` be the first Agent in the fixed order of its side that is able to fight when the Combat round begins. Before `a`'s Combat turn only Agents that are not able to fight have had a Combat turn, so no attack has happened, `a` is still able to fight, and an Enemy is still able to fight; so `a` attacks.
+4. **Every Combat round that is fought has an attack.** A Combat round begins only when an Agent and an Enemy are both able to fight, under [Combat start](#combat-start) and [Combat end checks](#combat-end-checks). Let `a` be the first Agent in the Phase order of its side that is able to fight when the Combat round begins. Before `a`'s Combat turn only Agents that are not able to fight have had a Combat turn, so no attack has happened, `a` is still able to fight, and an Enemy is still able to fight; so `a` attacks.
 
 By 3 and 4 no Combat has more than `N × X` Combat rounds. A Combatant that is never attacked and never attacks plays no part in this argument: the bound counts attacks, not the exhaustion of each Combatant.
 
@@ -441,7 +471,7 @@ Balancing a Combat needs many Combats fought on chosen teams and chosen GDR valu
 The following rules are complete:
 
 - **Valid setup:** The operation is rejected, and fights nothing, when an Agents' side is empty, when one Agent or one Enemy of the Current campaign appears twice, when an Agent named by Instance ID is not [Serving](agents-spec.md#agent-statuses), when an Instance ID or identifier names nothing of its kind, when an explicit value lies outside [Attribute ranges](agents-spec.md#attribute-ranges) in Agents for its side, when a GDR value fails [Combat GDR validation](#combat-gdr-validation) or [Agent GDR validation](agents-spec.md#agent-gdr-validation) in Agents, or when the Detached seed is not a permitted Campaign seed. The rejection names the first such fault.
-- **Random outcomes:** Each attack has its hit outcome and damage outcome, with the distributions [Hit outcome](#hit-outcome) and [Damage outcome](#damage-outcome) state, derived from the Detached seed alone. The same `setup` therefore always gives the same outputs, and two Detached seeds give independent outcomes. No random outcome of the Current campaign is drawn, and no override under [Random outcome overrides](../foundation/developer-access.md#random-outcome-overrides) in Developer Access applies.
+- **Random outcomes:** Each target selection has its target outcome and each attack its hit outcome and damage outcome, with the distributions [Target selection](#target-selection), [Hit outcome](#hit-outcome), and [Damage outcome](#damage-outcome) state, derived from the Detached seed alone. The same `setup` therefore always gives the same outputs, and two Detached seeds give independent outcomes. No random outcome of the Current campaign is drawn, and no override under [Random outcome overrides](../foundation/developer-access.md#random-outcome-overrides) in Developer Access applies.
 - **Outputs:** It returns the Combat report under [Combat report](#combat-report), which records every attack, and the outputs under [Combat inputs and outputs](#combat-inputs-and-outputs): each Combatant's final current health and exhaustion and whether it is dead. Each participant is identified by its side and position in it, together with the Instance ID or identifier its entry named, if any.
 - **Changes nothing:** It is a Developer tool, not a [Player action](../foundation/engine-contract.md#player-actions-and-turns). No [Campaign state](../foundation/core-concepts.md#campaign-and-session) changes, including the Agents and Enemies it read, the [Timeline](../foundation/engine-contract.md#persisted-data), and the [Turn report](../foundation/campaign-state.md#glossary); a Killed participant is Killed only in the returned Combat report.
 
@@ -469,20 +499,20 @@ Incapacitated and a Combat in progress never exist in a World state, under [Comb
 - **Agent with lost current health or with exhaustion at Combat start:** The Combat starts from the Agent's current health and exhaustion. Its effective skill and the starting Combat rating reflect them, and it is Incapacitated from the start if it meets the incapacitation condition ([Combat start](#combat-start), [Combat rating](#combat-rating)).
 - **Enemy with effective skill 0:** An alive Enemy whose effective skill is 0, e.g. one with base skill 0, meets the incapacitation condition, so it is Incapacitated from Combat start, never attacks, and is never a target ([Incapacitation condition](#incapacitation-condition)).
 - **Enemy already dead at Combat start:** An Enemy with current health 0 is dead, not able to fight, and not Incapacitated ([Combat start](#combat-start)).
-- **Attacker with no target:** An attacker able to fight with no opponent able to fight does nothing on its Combat turn and gains no exhaustion and no combat experience ([Combat rounds](#combat-rounds), [Combat experience](#combat-experience)).
+- **No attacker without a target:** The attack that leaves a side with no Combatant able to fight ends the Combat at once, so no Combatant ever takes a Combat turn with no opponent able to fight; the Combatants after it in the Phase order take no Combat turn and gain no exhaustion from one ([Combat end checks](#combat-end-checks)).
+- **Last Combatants fall in one attack:** When one attack leaves neither side with a Combatant able to fight, the outcome is Prevailed ([Combat end checks](#combat-end-checks)).
 - **Combat experience of a Killed Agent:** The Combat report records it like any other Agent's, but it is never added to Experience or base skill ([Combat experience](#combat-experience)).
 - **Zero divisor:** The hit Probability's divisor is at least 2, because both effective skills are at least 1 ([Hit outcome](#hit-outcome)).
 - **Damage outcome above remaining current health:** Current health falls to 0, not below; the health removed is the defender's remaining current health ([Effects of an attack](#effects-of-an-attack)).
 - **Damage outcome of 0:** With a `weapon_damage_range` of 1 a damage outcome can be 0; the hit removes no current health but still raises exhaustion ([Damage outcome](#damage-outcome)).
 - **Exhaustion of `exhaustion_incapacitation` or more:** A Combatant reaching it is Incapacitated whatever its effective skill, and its exhaustion is not clamped; an Agent may start a Combat with exhaustion above it and is then Incapacitated from the start ([Incapacitation condition](#incapacitation-condition), [Termination](#termination)).
-- **Simultaneous end conditions:** When no Combatant of either side is able to fight, the outcome is Prevailed. When no Agent is able to fight and the Retreated check would also hold, the outcome is Wiped ([End-of-Combat-round checks](#end-of-combat-round-checks)).
-- **Ties in target selection:** The earliest opponent in the fixed order wins the tie ([Target selection](#target-selection)).
+- **Ties in Phase order:** Among Combatants of a side with equal effective skill at the start of a phase, the one earlier in the fixed order takes its Combat turn first ([Combat rounds](#combat-rounds)).
+- **Candidates with equal Selection weights:** Two candidates with equal Selection weights are equally likely targets, e.g. every Agent for an attacking Enemy ([Target selection](#target-selection)).
 - **Every attack misses:** The Combat still ends, through Incapacitated or Retreated, within `N × exhaustion_incapacitation` Combat rounds ([Termination](#termination)).
 - **Invalid inputs:** An empty Agents' side, a duplicate Combatant, or an Agent that is not Serving is an internal invariant violation in a Mission resolution step ([Combat inputs and outputs](#combat-inputs-and-outputs)), and a rejection of `developer.tools.fightCombat(setup)` ([Detached Combat](#detached-combat)).
 - **Detached Combat on Combatants of the Current campaign:** The Agents and Enemies it names keep their values; only the returned Combat report shows what the Combat did to them ([Detached Combat](#detached-combat)).
-- **Invalid GDRs:** A Game build that fails [Combat GDR validation](#combat-gdr-validation), e.g. with a Weapon `base_weapon_damage` of 0, a `weapon_damage_range` of 1.5, or `exhaustion_per_attack` and `exhaustion_per_defense` both 0, is defective and no Campaign is created from it.
+- **Invalid GDRs:** A Game build that fails [Combat GDR validation](#combat-gdr-validation), e.g. with a Weapon `base_weapon_damage` of 0, a `weapon_damage_range` of 1.5, `exhaustion_per_attack` and `exhaustion_per_defense` both 0, or a `target_base_weight` of 50 with a `target_preferred_hit_chance` of 0.8, is defective and no Campaign is created from it.
 
 # TODOs
 
 - TODO (later): Morale.
-- TODO (later): Target selection that matches attackers to defenders by base skill, under [Target selection](#target-selection).
