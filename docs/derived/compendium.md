@@ -94,14 +94,14 @@ See also: [Contracting](#contracting) · [Training](#training) · [Investigation
 
 Source: `content/compendium/compendium_articles/mechanics_combat.yaml`
 
-A Combat is fought in rounds. In each round every [Agent](#agents) attacks once, then every Enemy still able to fight attacks once, the most skilled of each side first. Enemies attack any Agent able to fight, at random. Agents choose at random too, but favour an Enemy they are likely but not certain to hit. The Combat ends the moment one side can no longer fight, or after a round in which your team [retreats](#retreat).
+A Combat is fought in rounds. In each round every [Agent](#agents) attacks once, then every Enemy still able to fight attacks once, the most skilled of each side first. Enemies attack any Agent able to fight, at random. Agents choose at random too, but favour an Enemy they are likely but not certain to hit, and one with enough [health](#health) left to take a full hit. The Combat ends the moment one side can no longer fight, or after a round in which your team [retreats](#retreat).
 
 | Formulas |  |
 | --- | --- |
 | Chance to hit | A² ÷ (A² + D²), where A is the [effective skill](#skill) of the attacker and D that of the defender |
 | Order | Within a side, from the highest to the lowest effective skill at the start of its part of the round |
 | Enemy target | Any Agent able to fight, each equally likely |
-| Agent target | Any Enemy able to fight, with a weight of 100 minus one for each whole hundredth by which the chance to hit it lies above or below 0.8 |
+| Agent target | Any Enemy able to fight, with a weight of 100 minus one for each whole hundredth by which the chance to hit it lies above or below 0.8, times the share of the Agent's [weapon damage](#damage) that the Enemy's health and armor can still take, rounded up |
 | Each attack | +1 [exhaustion](#exhaustion) for the attacker and +1 for the defender, hit or miss |
 | Incapacitated | Alive but unable to fight: effective skill at or below 0.1 × skill, or exhaustion of 100 or more |
 | Combat rating | The effective skill of everyone on a side who is able to fight, added up |
