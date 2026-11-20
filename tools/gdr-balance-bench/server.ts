@@ -228,6 +228,7 @@ function pump(): void {
         enemies: job.enemies,
         agent: job.agent,
         gdrValues: job.gdrValues,
+        ratingUpgrades: job.ratingUpgrades,
         target: job.target,
         trials: job.trials,
       })

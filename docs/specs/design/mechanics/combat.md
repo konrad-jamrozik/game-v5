@@ -5,7 +5,7 @@
 | Spec ID | COMBAT |
 | Family | Mechanics |
 | Audience | Engine designer, Content designer, AI designer, Implementer |
-| Owns | Enemies and the Combat GDRs, how a Combat is fought in Combat rounds, attacks and their random outcomes, Incapacitated, Combat rating, Combat outcomes, and the Combat report. |
+| Owns | Enemies and the Combat GDRs, how a Combat is fought in Combat rounds, attacks and their random outcomes, Incapacitated, Combat rating with base Combat rating and Rating Upgrades, Combat outcomes, and the Combat report. |
 | Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
@@ -53,7 +53,9 @@ Whether a Combatant still takes part in a Combat, and how strong it and its side
 | --- | --- | --- |
 | Incapacitated | Alive but too weakened to take further part in the current Combat. |  |
 | Able to fight | Alive and not Incapacitated, so still attacking and still liable to be attacked. |  |
-| Combat rating | How strong a Combatant or a side is in a Combat: the [effective skill](agents-spec.md#combatant-attributes) of one Combatant, or the sum of the effective skill of a side's Combatants able to fight. | Combat strength; combat power |
+| Base Combat rating | How strong a Combatant or a side is by effective skill alone: the [effective skill](agents-spec.md#combatant-attributes) of one Combatant, or the sum of the effective skill of a side's Combatants able to fight, under [Combat rating](#combat-rating). |  |
+| Rating Upgrades | How many purchases of the Agency's [Upgrades](domain-model.md#agency-and-agents) raise the Combat rating of a side above its base Combat rating: for the Agents' side, a whole number of at least 0 that the Upgrades counting toward it set, under [Combat rating](#combat-rating); for the Enemies' side, 0. |  |
+| Combat rating | How strong a Combatant or a side is in a Combat: its base Combat rating, raised by `rating_bonus_per_upgrade` for each of its side's Rating Upgrades and rounded down, under [Combat rating](#combat-rating). | Combat strength; combat power; effective Combat rating |
 
 # Combat GDRs
 
@@ -107,6 +109,7 @@ CombatParameters bundles the scalar values that Combats read. The table below is
 | `incapacitation_skill_fraction` | The fraction of a Combatant's base skill at or below which its effective skill makes it Incapacitated. | [Incapacitation condition](#incapacitation-condition) |
 | `target_base_weight` | The hit-chance weight of an Enemy that an attacking Agent would hit with exactly the preferred hit chance. | [Target selection](#target-selection) |
 | `target_preferred_hit_chance` | The hit chance, as a fraction from 0 to 1, that an attacking Agent most prefers against its target. | [Target selection](#target-selection) |
+| `rating_bonus_per_upgrade` | The fraction of its base Combat rating by which each Rating Upgrade raises the Combat rating of a side. | [Combat rating](#combat-rating) |
 
 ## AgentParameters values this document reads
 
@@ -130,7 +133,7 @@ The GDRs a Game build supplies must satisfy every rule below. The list is exhaus
 2. **EnemyArchetype values are valid:** Each EnemyArchetype's `base_skill` is a whole number of at least 0, its `base_health` is a whole number of at least 1, its `weapon` references a Weapon GDR the Game build supplies, and its `armor` references an Armor GDR the Game build supplies.
 3. **Weapon and Armor values are valid:** Each Weapon's `base_weapon_damage` is a whole number of at least 1, and each Armor's `base_armor` is a whole number of at least 0.
 4. **Damage range is valid:** `weapon_damage_range` is a decimal number from 0 to 1, both included. This guarantees that both bounds of every damage outcome are whole numbers of at least 0 with the lower bound at most the upper bound, under [Damage outcome](#damage-outcome).
-5. **Retreat thresholds are valid:** `retreat_below_agent_rating_fraction` and `retreat_at_enemy_to_agent_rating` are each a decimal number of at least 0.
+5. **Retreat thresholds and rating bonus are valid:** `retreat_below_agent_rating_fraction`, `retreat_at_enemy_to_agent_rating`, and `rating_bonus_per_upgrade` are each a decimal number of at least 0.
 6. **Incapacitation threshold is valid:** `incapacitation_skill_fraction` is a decimal number of at least 0 and less than 1.
 7. **Every attack tires someone:** `exhaustion_per_attack + exhaustion_per_defense` is at least 1.
 8. **Exact properties:** Each EnemyArchetype, Weapon, Armor, and CombatParameters GDR has exactly the properties its table above lists, apart from `id` and `type`: no listed property is missing and no other property is present.
@@ -203,8 +206,9 @@ A Combat is fully automatic: the player chooses who is deployed, under [Missions
 1. **The Agents' side:** a list of one or more distinct Agents, each [Serving](agents-spec.md#agent-statuses). This is the [Mission](domain-model.md#leads-investigations-mission-sites-and-missions)'s [Current team](domain-model.md#leads-investigations-mission-sites-and-missions).
 2. **The Enemies' side:** a list of zero or more distinct Enemies. These are the Mission site's Enemies.
 3. **Current values:** the base skill, current health, effective max health, exhaustion, effective weapon damage, and effective armor of every Combatant in the two lists, as they are when the Combat begins.
-4. **GDR values:** the six values of CombatParameters, and `exhaustion_incapacitation`, `exhaustion_free_points`, `skill_penalty_pct_per_exhaustion`, `exhaustion_per_attack`, `exhaustion_per_defense`, `experience_per_attack_hit`, `experience_per_attack_miss`, `experience_per_defense_hit`, and `experience_per_defense_miss` of AgentParameters.
-5. **Random outcomes:** the named random outcomes of its target selections, under [Target selection](#target-selection), and of its attacks, under [Hit outcome](#hit-outcome) and [Damage outcome](#damage-outcome).
+4. **Rating Upgrades:** the Rating Upgrades of the Agents' side, as they are when the Combat begins, under [Combat rating](#combat-rating).
+5. **GDR values:** the seven values of CombatParameters, and `exhaustion_incapacitation`, `exhaustion_free_points`, `skill_penalty_pct_per_exhaustion`, `exhaustion_per_attack`, `exhaustion_per_defense`, `experience_per_attack_hit`, `experience_per_attack_miss`, `experience_per_defense_hit`, and `experience_per_defense_miss` of AgentParameters.
+6. **Random outcomes:** the named random outcomes of its target selections, under [Target selection](#target-selection), and of its attacks, under [Hit outcome](#hit-outcome) and [Damage outcome](#damage-outcome).
 
 The order of each list is the fixed order of its side, under [Fixed order of each side](#fixed-order-of-each-side). Nothing else influences a Combat; e.g., the turn number, the Mission site's kind, and any other Agent or Enemy have no effect. Its outputs are exhaustive too:
 
@@ -219,7 +223,7 @@ Fighting a Combat is the one procedure that turns the inputs above into the outp
 
 - **One procedure:** Exactly three things have a Combat fought, and all use this procedure and no other: the Mission resolution step, under [Missions](missions.md), and `developer.tools.fightCombat(setup)` and `developer.tools.fightCombatBatch(setup, count, stop)`, under [Detached Combat](#detached-combat). What differs between them is only where the inputs come from, which outputs are recorded, and what is done with the outputs.
 - **Recording:** Building the Combat report is an option of the one procedure, which its caller turns on or off; the procedure always produces the Combat summary: the Combat outcome and the number of Agents that are dead when the Combat ends. With the option on, it also records the full outputs, i.e. the Combat report and each Combatant's final values. The Mission resolution step and `fightCombat` always turn it on, so that `fightCombat` shows a Combat exactly as play records it; `fightCombatBatch` never does. Turning it off leaves out only facts that nothing in the Combat reads: every target selection, attack, random outcome, and Combat end check happens exactly as with it on, so the Combat summary of a Combat always equals what its Combat report states.
-- **Pure in its inputs:** Given equal inputs, including equal values of every random outcome, fighting a Combat produces equal outputs, whoever has it fought. E.g., a Detached Combat given the starting values, GDR values, and random outcomes of a Combat fought in a Mission resolution step produces the same Combat report, apart from the Mission and the identification of its participants.
+- **Pure in its inputs:** Given equal inputs, including equal values of every random outcome, fighting a Combat produces equal outputs, whoever has it fought. E.g., a Detached Combat given the starting values, Rating Upgrades, GDR values, and random outcomes of a Combat fought in a Mission resolution step produces the same Combat report, apart from the Mission and the identification of its participants.
 - **Applying the outputs belongs to the caller:** Fighting a Combat changes no World state itself. The Mission resolution step applies the outputs to the Combatants, under [Missions](missions.md); a Detached Combat applies them to nothing.
 
 ## Combat-only properties
@@ -258,15 +262,23 @@ A Combat begins and ends within one [Turn advancement step](turn-advancement.md#
 
 # Combat rating
 
-The Combat rating of one Combatant is its effective skill, under [Effective skill](agents-spec.md#effective-skill) in Agents. The Combat rating of a side, i.e. of a list of Combatants, is the sum of the effective skills of those of its Combatants that are able to fight:
+A Combat rating measures how strong a team is, so that the Player and the Agents' retreat can weigh it against the Enemies. Effective skill carries most of that strength, and the Agency's Upgrades that strengthen every Agent in ways effective skill does not reflect carry the rest. The base Combat rating of one Combatant is its effective skill, under [Effective skill](agents-spec.md#effective-skill) in Agents, and the base Combat rating of a side, i.e. of a list of Combatants, is the sum of the effective skills of those of its Combatants that are able to fight. The Combat rating of a side raises its base Combat rating by `rating_bonus_per_upgrade` for each of its Rating Upgrades:
 
 ```text
-Combat rating of a side = Σ effective skill(c)   over every Combatant c of the side that is able to fight
+base Combat rating of a side = Σ effective skill(c)   over every Combatant c of the side that is able to fight
+Combat rating of a side      = ⌊ base Combat rating of the side × (1 + rating_bonus_per_upgrade × Rating Upgrades of the side) ⌋
+Rating Upgrades of the Enemies' side = 0
 ```
 
-Inputs: each effective skill is a whole number of at least 0; whether a Combatant is able to fight is decided under [Combat-only properties](#combat-only-properties) during a Combat and under [Incapacitation condition](#incapacitation-condition) outside one. No rounding occurs, because every term is a whole number. The result is a whole number of at least 0; it is 0 exactly when no Combatant of the side is able to fight, because every Combatant able to fight has an effective skill of at least 1.
+The Rating Upgrades of the Agents' side count the purchases of every Upgrade whose effect states that it counts toward them, each purchase once; which Upgrades count is stated with their effects, and no rule of Combat adds to it.
 
-Combat rating is a Derived value and is never stored, except where the Combat report records it under [Combat report](#combat-report). It is computed from the values at the moment it is read. **Informative rationale:** game-ts also weighted current health and base weapon damage; v5 uses effective skill alone, which already falls with lost current health and exhaustion.
+The base Combat rating and the Combat rating of one Combatant are those of a side holding that Combatant alone, except that its base Combat rating is its effective skill even when it is not able to fight; an Agent counts the Rating Upgrades of the Agents' side, and an Enemy counts none, so an Enemy's Combat rating always equals its base Combat rating. The Combat rating of a side is rounded once, for the side, so it can exceed the sum of the Combat ratings of its Combatants.
+
+Inputs: each effective skill is a whole number of at least 0; whether a Combatant is able to fight is decided under [Combat-only properties](#combat-only-properties) during a Combat and under [Incapacitation condition](#incapacitation-condition) outside one. The Rating Upgrades are a whole number of at least 0, those of the World state in which the value is read; within a Combat, the Rating Upgrades are its input under [Combat inputs and outputs](#combat-inputs-and-outputs). `rating_bonus_per_upgrade` is the CombatParameters value, a decimal number of at least 0. The base Combat rating needs no rounding, because every term is a whole number. The Combat rating is computed exactly, under [Exact evaluation](../foundation/numbers.md#exact-evaluation) in Numbers, and rounded down once to a whole number. Both results are whole numbers of at least 0, and each is 0 exactly when no Combatant of the side is able to fight, because every Combatant able to fight has an effective skill of at least 1 and the factor is at least 1.
+
+E.g., with the Bootstrap value `rating_bonus_per_upgrade` 0.01, a team whose base Combat rating is 5,000, with 19 Rating Upgrades, e.g. 8 purchases of one counting Upgrade and 11 of another, has a Combat rating of 5,000 × 1.19 = 5,950. E.g., a single Agent of effective skill 101 with 3 Rating Upgrades has a Combat rating of ⌊101 × 1.03⌋ = ⌊104.03⌋ = 104.
+
+Both are Derived values and are never stored, except where the Combat report records the Combat rating under [Combat report](#combat-report). They are computed from the values at the moment they are read. Every rule that weighs one side against another reads the Combat rating, never the base Combat rating, e.g. the Retreated check under [Combat end checks](#combat-end-checks). **Informative rationale:** game-ts also weighted current health and base weapon damage; v5 uses effective skill, which already falls with lost current health and exhaustion, and adds the Upgrades that strengthen every Agent in other ways, because effective skill does not reflect them.
 
 # Combat flow
 
@@ -501,12 +513,13 @@ Balancing a Combat needs many Combats fought on chosen teams and chosen GDR valu
 | --- | --- | --- |
 | Agents' side | A list of one or more entries, in the fixed order of the side. Each entry is either an Agent of the [Current campaign](../foundation/core-concepts.md#campaign-and-session) by Instance ID, which contributes that Agent's values in the [Current world state](../foundation/engine-contract.md#player-actions-and-turns), or explicit values: base skill, current health, effective max health, exhaustion, effective weapon damage, and effective armor, which is 0 when the entry leaves it out. | None; it is required. |
 | Enemies' side | A list of zero or more entries, in the fixed order of the side. Each entry is an Enemy of the Current campaign by Instance ID, an EnemyArchetype by identifier, which contributes the values [Enemy creation](#enemy-creation) gives a new Enemy of it, or explicit values as for an Agent. Instead of a list, the caller may name a MissionSiteArchetype, which contributes one entry for each Enemy a new Mission site of it would have, in their creation order under [Missions](missions.md). | None; it is required. |
+| Rating Upgrades | The Rating Upgrades of the Agents' side, a whole number of at least 0, under [Combat rating](#combat-rating). | The Rating Upgrades of the Agents' side in the Current world state. |
 | GDR values | A value for any of the GDR values that [Combat inputs and outputs](#combat-inputs-and-outputs) lists, e.g. a different `incapacitation_skill_fraction`. | The value the [Game build](../foundation/core-concepts.md#game-build-and-content) of the Current campaign supplies. |
 | Detached seed | Text that is a permitted [Campaign seed](../foundation/determinism-and-randomness.md#glossary), from which every random outcome of the Detached Combat derives. | None; it is required. |
 
 The following rules are complete:
 
-- **Valid setup:** The operation is rejected, and fights nothing, when an Agents' side is empty, when one Agent or one Enemy of the Current campaign appears twice, when an Agent named by Instance ID is not [Serving](agents-spec.md#agent-statuses), when an Instance ID or identifier names nothing of its kind, when an explicit value lies outside [Attribute ranges](agents-spec.md#attribute-ranges) in Agents for its side, when a GDR value fails [Combat GDR validation](#combat-gdr-validation) or [Agent GDR validation](agents-spec.md#agent-gdr-validation) in Agents, or when the Detached seed is not a permitted Campaign seed. The rejection names the first such fault.
+- **Valid setup:** The operation is rejected, and fights nothing, when an Agents' side is empty, when one Agent or one Enemy of the Current campaign appears twice, when an Agent named by Instance ID is not [Serving](agents-spec.md#agent-statuses), when an Instance ID or identifier names nothing of its kind, when an explicit value lies outside [Attribute ranges](agents-spec.md#attribute-ranges) in Agents for its side, when the Rating Upgrades are not a whole number of at least 0, when a GDR value fails [Combat GDR validation](#combat-gdr-validation) or [Agent GDR validation](agents-spec.md#agent-gdr-validation) in Agents, or when the Detached seed is not a permitted Campaign seed. The rejection names the first such fault.
 - **Random outcomes:** Each target selection has its target outcome and each attack its hit outcome and damage outcome, with the distributions [Target selection](#target-selection), [Hit outcome](#hit-outcome), and [Damage outcome](#damage-outcome) state, derived from the Detached seed alone. The same `setup` therefore always gives the same outputs, and two Detached seeds give independent outcomes. No random outcome of the Current campaign is drawn, and no override under [Random outcome overrides](../foundation/developer-access.md#random-outcome-overrides) in Developer Access applies.
 - **Outputs:** It returns the Combat summary, the Combat report under [Combat report](#combat-report), which records every attack, and the outputs under [Combat inputs and outputs](#combat-inputs-and-outputs): each Combatant's final current health and exhaustion and whether it is dead. Each participant is identified by its side and position in it, together with the Instance ID or identifier its entry named, if any.
 - **Changes nothing:** It is a Developer tool, not a [Player action](../foundation/engine-contract.md#player-actions-and-turns). No [Campaign state](../foundation/core-concepts.md#campaign-and-session) changes, including the Agents and Enemies it read, the [Timeline](../foundation/engine-contract.md#persisted-data), and the [Turn report](../foundation/campaign-state.md#glossary); a Killed participant is Killed only in the returned Combat report.
@@ -534,6 +547,7 @@ Every value below is [Player-visible information](../foundation/engine-contract.
 | An Enemy's Instance ID, its EnemyArchetype including the EnemyArchetype's `name`, and its Mission site | Yes |
 | An Enemy's base skill, current health, base health, exhaustion, Weapon, base weapon damage, Armor, base armor, and effective armor | Yes |
 | An Enemy's effective skill and Combat rating, and the Combat rating of any side, e.g. of a Mission site's Enemies | Yes |
+| An Agent's base Combat rating and Combat rating, the base Combat rating of any side, and the Rating Upgrades of the Agents' side | Yes |
 | Every fact of a Combat report, including every random outcome it records | Yes |
 | Every property of each EnemyArchetype, Weapon, Armor, and CombatParameters GDR, and the meaning of `exhaustion_per_attack`, `exhaustion_per_defense`, and the four combat experience amounts of AgentParameters | Yes |
 
@@ -548,6 +562,8 @@ Incapacitated, current armor, and a Combat in progress never exist in a World st
 - **Single Combatant on a side:** A side of one Combatant is valid. Every attacker of the other side targets it while it is able to fight ([Target selection](#target-selection)).
 - **Agent with lost current health or with exhaustion at Combat start:** The Combat starts from the Agent's current health and exhaustion. Its effective skill and the starting Combat rating reflect them, and it is Incapacitated from the start if it meets the incapacitation condition ([Combat start](#combat-start), [Combat rating](#combat-rating)).
 - **Enemy with effective skill 0:** An alive Enemy whose effective skill is 0, e.g. one with base skill 0, meets the incapacitation condition, so it is Incapacitated from Combat start, never attacks, and is never a target ([Incapacitation condition](#incapacitation-condition)).
+- **Rating Upgrades and retreat:** Rating Upgrades raise the Agents' starting Combat rating and their Combat rating after each Combat round by the same factor, so the first condition of the Retreated check barely changes, apart from rounding, while the second holds only against a stronger Enemies' side: an upgraded team retreats later against the same Enemies ([Combat rating](#combat-rating), [Combat end checks](#combat-end-checks)).
+- **No Rating Upgrades:** With no purchase of an Upgrade that counts toward the Rating Upgrades, or with `rating_bonus_per_upgrade` 0, every Combat rating equals its base Combat rating ([Combat rating](#combat-rating)).
 - **Enemy already dead at Combat start:** An Enemy with current health 0 is dead, not able to fight, and not Incapacitated ([Combat start](#combat-start)).
 - **No attacker without a target:** The attack that leaves a side with no Combatant able to fight ends the Combat at once, so no Combatant ever takes a Combat turn with no opponent able to fight; the Combatants after it in the Phase order take no Combat turn and gain no exhaustion from one ([Combat end checks](#combat-end-checks)).
 - **Last Combatants fall in one attack:** When one attack leaves neither side with a Combatant able to fight, the outcome is Prevailed ([Combat end checks](#combat-end-checks)).

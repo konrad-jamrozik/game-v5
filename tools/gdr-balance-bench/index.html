@@ -254,6 +254,31 @@
         font-size: 13px;
         line-height: 1.35;
       }
+      /* The test team's Combat rating, base and effective, which the Mission sites' Rating column is weighed against. */
+      .teamcr {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px 28px;
+        align-items: baseline;
+        margin-block: 4px 2px;
+      }
+      .teamcr .k {
+        font-weight: 600;
+        font-size: 13px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-right: 8px;
+      }
+      .teamcr .v {
+        font-family: var(--mono);
+        font-variant-numeric: tabular-nums;
+        font-size: 26px;
+        color: var(--text);
+      }
+      .teamcr .v.eff {
+        color: var(--accent-text);
+      }
       input,
       select {
         background: var(--bg);
@@ -577,6 +602,7 @@
           retreat_below_agent_rating_fraction: 0.5,
           retreat_at_enemy_to_agent_rating: 0.8,
           incapacitation_skill_fraction: 0.1,
+          rating_bonus_per_upgrade: 0.01,
         },
         recovery: { health_recovery_pct_per_turn: 2, exhaustion_recovery_per_turn: 5 },
         economy: {
@@ -952,10 +978,10 @@
   ${panel('Enemy archetypes', 'content/combat/enemy_archetypes.yaml', `<div class="tw"><table><tr><th>Enemy</th><th>base_skill</th><th>base_health</th><th>weapon</th><th class="d">damage roll</th></tr>${EN.map((e) => `<tr><td class="name">${title(e)}</td><td>${inp(e + '.base_skill')}</td><td>${inp(e + '.base_health', { min: 1 })}</td><td>${sel(e + '.weapon', WP)}</td><td class="d" id="dr_${e}"></td></tr>`).join('')}</table></div>`)}
   ${panel('Weapons', 'content/combat/weapons.yaml', `<div class="tw"><table><tr><th>Weapon</th><th>base_weapon_damage</th><th class="d">damage roll</th><th class="d">used by</th></tr>${WP.map((w) => `<tr><td class="name">${title(w)}</td><td>${inp(w + '.base_weapon_damage', { min: 1 })}</td><td class="d" id="wr_${w}"></td><td class="d" id="wu_${w}" style="font-family:var(--body);white-space:normal"></td></tr>`).join('')}</table></div>`)}
   </div><div class="col">
-  ${panel('Combat parameters', 'content/combat/combat_parameters.yaml', row(cp + '.weapon_damage_range', 'damage roll is base damage ± this fraction', { step: 0.05 }) + row(cp + '.retreat_below_agent_rating_fraction', 'Agents retreat below this fraction of their starting Combat rating…', { step: 0.05 }) + row(cp + '.retreat_at_enemy_to_agent_rating', "…while Enemies hold at least this ratio of the Agents' rating", { step: 0.05 }) + row(cp + '.incapacitation_skill_fraction', 'Incapacitated at this fraction of base skill or less', { step: 0.05 }) + extra(cp))}
+  ${panel('Combat parameters', 'content/combat/combat_parameters.yaml', row(cp + '.weapon_damage_range', 'damage roll is base damage ± this fraction', { step: 0.05 }) + row(cp + '.retreat_below_agent_rating_fraction', 'Agents retreat below this fraction of their starting Combat rating…', { step: 0.05 }) + row(cp + '.retreat_at_enemy_to_agent_rating', "…while Enemies hold at least this ratio of the Agents' rating", { step: 0.05 }) + row(cp + '.incapacitation_skill_fraction', 'Incapacitated at this fraction of base skill or less', { step: 0.05 }) + row(cp + '.rating_bonus_per_upgrade', "each Weapon damage or Armor Upgrade raises the Agents' Combat rating by this fraction", { step: 0.005 }) + extra(cp))}
   ${panel('Field agent and Combat exhaustion', 'content/agents/agent_archetypes.yaml · agent_parameters.yaml', `<div class="kv"><span class="k"><code>field_agent.base_skill</code><small>a newly hired Agent</small></span>${inp('field_agent.base_skill')}</div><div class="kv"><span class="k"><code>field_agent.base_health</code><small></small></span>${inp('field_agent.base_health', { min: 1 })}</div><div class="kv"><span class="k"><code>field_agent.weapon</code><small></small></span>${sel('field_agent.weapon', WP)}</div>` + row(ap + '.exhaustion_per_attack', 'to the attacker, hit or miss') + row(ap + '.exhaustion_per_defense', 'to the defender, hit or miss') + row(ap + '.exhaustion_free_points', 'exhaustion up to this costs no skill') + row(ap + '.skill_penalty_pct_per_exhaustion', '% of skill lost per point above the free points', { step: 0.5 }) + row(ap + '.exhaustion_incapacitation', 'Incapacitated at this exhaustion'))}
   </div></div>
-  ${panel('Test team', 'not a GDR: the team every Mission site below is fought with', `<div class="ctl">${tin('n', 'Agents', { min: 1, max: 300 })}${tin('skill', 'Base skill', { min: 1 })}${tin('ex', 'Starting exhaustion')}${tin('wu', 'Weapon damage upgrades')}${tin('au', 'Armor upgrades')}${tin('target', 'Target win %', { min: 1, max: 100 })}${tcheck('team', 'Find team for target')}</div><div class="note" id="teamnote"></div><div class="note" id="simstatus"></div>`, 'read')}
+  ${panel('Test team', 'not a GDR: the team every Mission site below is fought with', `<div class="ctl">${tin('n', 'Agents', { min: 1, max: 300 })}${tin('skill', 'Base skill', { min: 1 })}${tin('ex', 'Starting exhaustion')}${tin('wu', 'Weapon damage upgrades')}${tin('au', 'Armor upgrades')}${tin('target', 'Target win %', { min: 1, max: 100 })}${tcheck('team', 'Find team for target')}</div><div class="teamcr" id="teamcr"></div><div class="note" id="teamnote"></div><div class="note" id="simstatus"></div>`, 'read')}
   ${panel('Mission sites', 'content/missions/mission_site_archetypes.yaml', `<div class="tw"><table id="sites"><tr><th>MissionSiteArchetype</th><th style="text-align:left">Kind</th><th>expires</th>${EN.map((e) => `<th title="${e}">${EN_AB[e]}</th>`).join('')}<th class="d">Enemies</th><th class="d">Rating</th><th class="d">Test team wins, of ${TRIALS} Combats</th><th class="d">Agents killed</th><th class="d">Team for target</th><th class="d">Transport upgrades</th><th class="d">Search</th></tr>${SITES.map((s, i) => `<tr${rowClass(s, i)}><td class="name">${title(s)}</td><td id="sl_${s}" style="text-align:left;font-family:var(--body);color:var(--text2)">${BASE[s].level ? 'Response · operation level ' + BASE[s].level : 'Initiative'}</td><td>${inp(s + '.expires_in_turns', { min: 1 })}</td>${EN.map((e) => `<td class="w">${inp(s + '.enemies.' + e)}</td>`).join('')}<td class="d" id="sc_${s}"></td><td class="d" id="sr_${s}"></td><td class="d" id="sw_${s}" style="text-align:left"></td><td class="d" id="sk_${s}"></td><td class="d" id="sn_${s}"></td><td class="d" id="st_${s}"></td><td class="d" id="sx_${s}"></td></tr>`).join('')}</table></div><div class="note"><b>Every Combat is fought by the game-v5-impl-web engine itself</b>, through <code>developer.tools.fightCombatBatch</code>, with the values on this page passed as its Combatants and GDR values; this page has no Combat rules of its own. <b>Each win rate is the share of ${TRIALS} Combats the test team Prevailed in</b>, and Agents killed is the mean over those ${TRIALS}. A Mission is Won only when the Combat outcome is Prevailed, so a retreat counts as a loss. Team for target is the smallest team of the test team's skill and upgrades that reaches the target win rate, searched up to ${MAXN} Agents; the search starts from the team size that the Combat ratings estimate, and each team size tried is one batch of at most ${TRIALS} Combats that stops as soon as its answer is certain. Transport upgrades is how many it takes to deploy that team at once. The Initiative operation levels come from <code>developer.queries.getInitiativeOperationLevels</code>. Each Combat's Detached seed is fixed, so a changed number reflects your edit and not new dice: Combat <i>i</i> of a team of <i>n</i> at a Mission site has the Detached seed <code>&lt;site&gt;|&lt;n&gt;#&lt;i&gt;</code>, which <code>developer.tools.fightCombat</code> shows in full.</div>`)}
   </section>`)
         /* Agents */
@@ -1050,6 +1076,25 @@
         'exhaustion_per_attack',
         'exhaustion_per_defense',
       ]
+      /*
+       * COMBAT, Combat rating: the test team's base Combat rating, the sum of its Agents' effective skills, and its
+       * Combat rating, the base raised by rating_bonus_per_upgrade for each Rating Upgrade, i.e. each Weapon damage and
+       * Armor Upgrade, and rounded down. `agent` is one Agent's base Combat rating, its effective skill.
+       */
+      function teamRatings() {
+        const a = cur.agent_parameters,
+          u = Math.max(0, Math.round(T.wu)) + Math.max(0, Math.round(T.au)),
+          bonus = Number(cur.combat_parameters.rating_bonus_per_upgrade) || 0,
+          agent = Math.floor(
+            (T.skill *
+              Math.max(0, 100 - a.skill_penalty_pct_per_exhaustion * Math.max(0, T.ex - a.exhaustion_free_points))) /
+              100,
+          ),
+          base = T.n * agent
+        /* Hundredths keep the product exact for a bonus written with two decimals, e.g. 0.01. */
+        const factor100 = Math.round(100 + bonus * 100 * u)
+        return { u, bonus, agent, base, eff: Math.floor((base * factor100) / 100), factor: factor100 / 100 }
+      }
       function simParams() {
         const a = cur.agent_parameters,
           c = cur.combat_parameters,
@@ -1210,7 +1255,8 @@
             exhaustion: Math.round(T.ex),
             effectiveWeaponDamage: w,
           },
-          gdrValues = simParams()
+          gdrValues = simParams(),
+          ratings = teamRatings()
         /* Effective armor is 0 when an explicit entry leaves it out, so an engine without armor still fights a team with none. */
         if (ar > 0) agent.effectiveArmor = ar
         const jobs = SITES.map((s) => {
@@ -1239,7 +1285,7 @@
             0,
             100 - p.skill_penalty_pct_per_exhaustion * Math.max(0, agent.exhaustion - p.exhaustion_free_points),
           )
-          const agentRating = Math.floor((agent.baseSkill * penalty) / 100)
+          const agentRating = Math.floor((agent.baseSkill * penalty) / 100) * ratings.factor
           return {
             type: 'site',
             id: s,
@@ -1247,6 +1293,7 @@
             agent,
             n: T.n,
             gdrValues,
+            ratingUpgrades: ratings.u,
             target: T.target,
             findTeam: T.team !== false,
             trials: TRIALS,
@@ -1262,6 +1309,7 @@
           T.target,
           T.team,
           gdrValues,
+          ratings.u,
           cur.economy.base_transport_cap,
           cur.transport_cap,
         ])
@@ -1412,8 +1460,13 @@
           th = fa.base_health,
           ta = T.au * cur.armor.increment,
           [tlo, thi] = dmgRange(tw)
+        const tr = teamRatings()
+        $('teamcr').innerHTML =
+          `<span><span class="k">Team Combat rating</span><span class="v eff">${f(tr.eff, 0)}</span></span>` +
+          `<span><span class="k">Base, without Upgrades</span><span class="v">${f(tr.base, 0)}</span></span>` +
+          `<span class="note">${f(tr.u, 0)} Weapon damage and Armor Upgrades × ${f(tr.bonus * 100, 1)}% = +${f((tr.factor - 1) * 100, 1)}%; the Mission sites' Rating is weighed against the team Combat rating, as the game and its Autopilot AI do</span>`
         $('teamnote').textContent =
-          `Each Agent: health ${f(th, 0)}, armor ${f(ta, 0)}, damage roll ${tlo}–${thi}. Starting Combat rating ${f(T.n * Math.floor((T.skill * Math.max(0, 100 - a.skill_penalty_pct_per_exhaustion * Math.max(0, T.ex - a.exhaustion_free_points))) / 100), 0)}.`
+          `Each Agent: health ${f(th, 0)}, armor ${f(ta, 0)}, damage roll ${tlo}–${thi}, base Combat rating ${f(tr.agent, 0)}.`
         /* agents */
         const pen = (x) =>
           Math.max(0, 100 - a.skill_penalty_pct_per_exhaustion * Math.max(0, x - a.exhaustion_free_points))

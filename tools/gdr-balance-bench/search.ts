@@ -21,6 +21,8 @@ export interface SiteJob {
   agent: unknown
   n: number
   gdrValues: Record<string, number>
+  /** The Rating Upgrades of the Agents' side: the test team's Weapon damage and Armor Upgrades together. */
+  ratingUpgrades: number
   target: number
   /** Whether to search for the smallest team that reaches the target; without it, only the test team is fought. */
   findTeam: boolean
@@ -28,7 +30,7 @@ export interface SiteJob {
   maxn: number
   /** The Combat rating of the site's Enemies at full health, i.e. the sum of their effective skills. */
   rating: number
-  /** The effective skill of one Agent of the test team. */
+  /** The Combat rating of one Agent of the test team: its effective skill, raised by the team's Rating Upgrades. */
   agentRating: number
 }
 
@@ -64,6 +66,7 @@ export interface Probe {
   enemies: unknown[]
   agent: unknown
   gdrValues: Record<string, number>
+  ratingUpgrades: number
   target: number
   trials: number
 }
@@ -124,6 +127,7 @@ export function searchKey(job: SiteJob): string {
     job.agent,
     job.n,
     job.gdrValues,
+    job.ratingUpgrades,
     job.target,
     job.findTeam,
     job.trials,
