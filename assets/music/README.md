@@ -127,7 +127,7 @@ The following table lists every key a record may hold; the list is exhaustive. A
 | `suno.exclude_styles` |  | Suno's Exclude styles text: what the song must not sound like. |
 | `suno.weirdness` |  | Suno's Weirdness, from 0 to 1, e.g. Weirdness 40% is `0.4`. |
 | `suno.style_influence` |  | Suno's Style influence, from 0 to 1, e.g. Style influence 70% is `0.7`. |
-| `suno.variety` |  | Suno's Variety, as the number of its slider setting from left to right, each with its UI label and tooltip: `'0'` Off / Exact style, `'1'` Normal / Balanced variety, `'2'` High / Distinct styles, `'3'` Extra / Bold exploration, `'4'` Max / Unreasonably varied. At `'0'`, Suno keeps the Styles text as written; above it, Suno may rewrite it. |
+| `suno.variety` |  | Suno's Variety, as the number of its slider setting from left to right, each with its UI label and tooltip: `0` Off / Exact style, `1` Normal / Balanced variety, `2` High / Distinct styles, `3` Extra / Bold exploration, `4` Max / Unreasonably varied. At `0`, Suno keeps the Styles text as written; above it, Suno may rewrite it. |
 | `suno.max_mode` |  | Suno's Max Mode, `true` when on. |
 | `suno.personalize` |  | Suno's Personalize, `true` when on. |
 | `suno.duration` |  | Suno's Duration, e.g. `auto`. |

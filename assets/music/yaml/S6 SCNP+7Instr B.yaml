@@ -24,7 +24,7 @@ suno:
     Vocals, singing, choir, EDM, synthwave, upbeat, epic orchestral, trailer music, rock, pop, bright melodies, aggressive drums, heroic brass, jazz swing
   weirdness: 0.4
   style_influence: 0.7
-  variety: '2'
+  variety: 2
   max_mode: false
   personalize: false
   duration: auto

@@ -25,6 +25,6 @@ suno:
     Vocals, singing, EDM, upbeat, trailer music, rock, pop, bright melodies, jazz swing, synthesizer, electronic, chiptune, 8-bit, retro, lo-fi
   weirdness: 0.5
   style_influence: 0.7
-  variety: '0'
+  variety: 0
 notes: |-
   Claude Code rewrote the prompt of S6 XCOM+NoMIDI+NoDrones+AllowEpic on the Game designer's request. NoSynth replaced its synth chords, alien electronic textures, and pulsing bass sequences with orchestral strings and brass and military percussion; it supersedes NoMIDI and NoDrones, which are therefore not listed. ModMil replaced the 1990s framing with a modern military one. Claude Code added synthesizer, electronic, chiptune, 8-bit, retro, and lo-fi to the Exclude styles for NoSynth and ModMil; the rest of the Exclude styles and the sliders are those of S6 XCOM+NoMIDI+NoDrones+AllowEpic.

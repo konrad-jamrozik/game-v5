@@ -25,7 +25,7 @@ suno:
     Vocals, singing, EDM, upbeat, trailer music, rock, pop, bright melodies, jazz swing, synthesizer, chiptune, 8-bit, retro, lo-fi, military march, fast tempo
   weirdness: 0.5
   style_influence: 0.7
-  variety: '2'
+  variety: 2
 final_prompt_from_gen_tool: |-
   Contemporary science-fiction game soundtrack, instrumental; slow, restrained 65 BPM pulse, sparse and wide with deep reverberation and deliberate silences; glassy string harmonics, dissonant clusters, bowed metal, low cello and double bass sustains, muted brass swells, sonar-like pings, faint radio static, precise ticking percussion and distant sparse military snare.
 notes: |-

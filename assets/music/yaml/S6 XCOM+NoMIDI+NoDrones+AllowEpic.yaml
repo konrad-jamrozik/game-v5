@@ -25,6 +25,6 @@ suno:
     Vocals, singing, EDM, upbeat, trailer music, rock, pop, bright melodies, jazz swing
   weirdness: 0.5
   style_influence: 0.7
-  variety: '2'
+  variety: 2
 notes: |-
   The prompt is that of EL-M2 XCOM, which ChatGPT wrote, cut down by hand by the Game designer. The cuts are "Authentic retro MIDI and Amiga-era synthesizer sound" and "Vintage 1990s PC game synthesizer aesthetic, slightly lo-fi digital" (NoMIDI), and "eerie ambient electronic music, ominous low-frequency drones" and "occasional eerie high-pitched electronic tones" (NoDrones); the rest is word for word. The Game designer also edited Claude Code's draft Exclude styles, taking out choir, synthwave, epic orchestral, aggressive drums, and heroic brass, and named these removals as one adjustment, AllowEpic.

@@ -24,11 +24,11 @@ suno:
     Vocals, singing, choir, EDM, synthwave, upbeat, epic orchestral, trailer music, rock, pop, bright melodies, aggressive drums, heroic brass, jazz swing
   weirdness: 0.4
   style_influence: 0.7
-  variety: '2'
+  variety: 2
   max_mode: false
   personalize: false
   duration: auto
 final_prompt_from_gen_tool: |-
   Ambient soundtrack, instrumental; understated, seamlessly loopable mix with wide negative space and subtle dissonance; cold retro-futuristic synths and drones, low bowed double bass and muted trombone, sparse felt piano and bass clarinet answering faint pulses, cello and distant violins drifting over pads, bowed cymbal swells and faint electronic signals; unhurried suspended half-time feel, minimal percussion, each instrument entering and fading in turn.
 notes: |-
-  `final_prompt_from_gen_tool` is the Styles text Suno stored, not the one pasted in: Claude Code's `suno.prompt` was pasted into Styles, and Suno's Variety at High (`suno.variety: '2'`, stored by Suno as `aug_creativity: 2`) rewrote it, differently for each variation. Suno's UI shows the rewritten Styles text followed by the Exclude styles, each prefixed with a non-breaking hyphen, e.g. `‑Vocals`; the stored Styles text ends before them. `created`, `length`, `model`, and the sliders come from Suno's clip data for the song; `created` is its UTC creation time converted to Pacific time.
+  `final_prompt_from_gen_tool` is the Styles text Suno stored, not the one pasted in: Claude Code's `suno.prompt` was pasted into Styles, and Suno's Variety at High (`suno.variety: 2`, stored by Suno as `aug_creativity: 2`) rewrote it, differently for each variation. Suno's UI shows the rewritten Styles text followed by the Exclude styles, each prefixed with a non-breaking hyphen, e.g. `‑Vocals`; the stored Styles text ends before them. `created`, `length`, `model`, and the sliders come from Suno's clip data for the song; `created` is its UTC creation time converted to Pacific time.
