@@ -343,27 +343,43 @@
       }
       .line {
         display: flex;
-        align-items: baseline;
-        height: 20px;
+        align-items: flex-end;
+        padding: 2px 0 3px;
       }
       .line.l2 {
         background: var(--band);
       }
+      /* Each stat is its label over its value, at a fixed width so that it stands at the same place in every block. */
       .c {
         flex: none;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
         padding: 0 6px;
-        text-align: right;
         white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
         font-family: var(--mono);
         font-variant-numeric: tabular-nums;
       }
+      .c > span {
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .c .cl {
+        font-family: var(--head);
+        font-weight: 600;
+        font-size: 11px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted);
+        line-height: 1.2;
+      }
       .c.left {
-        text-align: left;
+        align-items: flex-start;
       }
       .c.layer {
         width: 74px;
+        align-self: center;
         text-align: left;
         font-family: var(--head);
         font-weight: 600;
@@ -565,6 +581,17 @@
           .join('')
           .toUpperCase()
       const isCap = (u) => u.effect.endsWith('_cap')
+      const SHORT = {
+        agent_cap: 'Agent cap',
+        transport_cap: 'Transport',
+        training_cap: 'Training',
+        weapon_damage: 'Weapon',
+        armor: 'Armor',
+        training_skill_gain: 'Train gain',
+        exhaustion_recovery: 'Exh recov',
+        health_recovery: 'HP recov',
+      }
+      const short = (u) => SHORT[u.id] ?? u.name
 
       function save() {
         try {
@@ -599,7 +626,7 @@
               const w = v?.[u.id] ?? 1
               const d = DEFAULTS.upgradeWeights?.[u.id] ?? 1
               if (w !== d) {
-                parts.push(`w ${esc(abbr(u.name))} <b>${esc(w)}</b>`)
+                parts.push(`weight ${esc(short(u))} <b>${esc(w)}</b>`)
               }
             }
           } else if (JSON.stringify(v) !== JSON.stringify(DEFAULTS[k])) {
@@ -701,7 +728,7 @@
     <button id="playAll">Play more · all</button><button id="stopAll">Stop all</button><button id="removeAll">Remove all</button>
     <span id="summary" style="align-self:center"></span>
   </div><span class="err" id="launchErr"></span></div>
-  <div class="panel"><div class="clist" id="ct"><div class="crow head" id="chead"></div><div id="cbody"></div></div>
+  <div class="panel"><div class="clist" id="ct"><div id="cbody"></div></div>
   <div class="note" id="legend"></div></div></section>`
       }
 
@@ -762,9 +789,14 @@
             80,
           ],
           ['Skill', 'Mean base skill of the Serving Agents', (s) => fmt1(s.meanSkill), 64],
-          ['Transp', 'Transport cap', (s) => fmt(s.transportCap), 64],
-          ['Train', 'Training cap', (s) => fmt(s.trainingCap), 56],
-          ...UPGRADES.map((u) => [abbr(u.name), `${u.name}: acquisitions`, (s) => fmt(s.upgrades[u.id] ?? 0), 48]),
+          ['Transport cap', 'Transport cap', (s) => fmt(s.transportCap), 96],
+          ['Training cap', 'Training cap', (s) => fmt(s.trainingCap), 90],
+          ...UPGRADES.map((u) => [
+            `+${short(u)}`,
+            `${u.name} Upgrade: times bought`,
+            (s) => fmt(s.upgrades[u.id] ?? 0),
+            82,
+          ]),
         ]
         const L3 = [
           ['Response', 'Response Missions Won / Lost / Expired', (s) => ml(s.missions.Response), 104],
@@ -793,17 +825,12 @@
       let LAYOUT = null
       let layoutKey = ''
 
-      const cell = (x, html, key) =>
-        `<span class="c${x[4] ? ' left' : ''}" style="width:${x[3]}px"${key ? ` data-k="${key}"` : ''}>${html}</span>`
+      const cell = (x, key) =>
+        `<span class="c${x[4] ? ' left' : ''}" style="width:${x[3]}px"><span class="cl" title="${esc(x[1])}">${esc(x[0])}</span><span data-k="${key}"></span></span>`
 
       function renderHead() {
-        $('chead').innerHTML =
-          `<div class="lbl">Campaign · parameters</div><div class="lbl">Progress · time</div><div>${LAYOUT.map(
-            (L, i) =>
-              `<div class="line"><span class="c layer">${LAYER_NAMES[i]}</span>${L.map((x) => cell(x, `<span title="${esc(x[1])}">${esc(x[0])}</span>`)).join('')}</div>`,
-          ).join('')}</div>`
         $('legend').innerHTML =
-          `<b>CR fresh</b> is the Combat rating the same Agents would have at full health and exhaustion 0. Upgrades: ${UPGRADES.map((u) => `${esc(abbr(u.name))} ${esc(u.name)}`).join(' · ')}. Work: Contracting, Training, Investigation, Standby, Recovery, Deployed. Missions: Won / Lost / Expired. Hover a label for its meaning. Time is the latest run's wall-clock time, and the total of every run. <b>Load params</b> copies a Campaign's parameters into the Parameters editor above, e.g. to launch a variant of it.`
+          `<b>CR fresh</b> is the Combat rating the same Agents would have at full health and exhaustion 0. A label with <b>+</b>, e.g. <b>+Weapon</b>, is how many times that Upgrade was bought. Work: Contracting, Training, Investigation, Standby, Recovery, Deployed. Missions: Won / Lost / Expired. Hover a label for its meaning. Time is the latest run's wall-clock time, and the total of every run. <b>Load params</b> copies a Campaign's parameters into the Parameters editor above, e.g. to launch a variant of it.`
       }
 
       const rows = new Map()
@@ -847,7 +874,7 @@
         el.dataset.id = c.id
         el.innerHTML = `<div class="cleft"><div class="cname" data-k="n"></div><div class="cparams" data-k="params"></div></div><div class="cprog"><div data-k="progress"></div><div><span data-t="run"></span> <span class="dim" data-t="total"></span></div><div class="btns" data-k="acts"></div></div><div>${LAYOUT.map(
           (L, i) =>
-            `<div class="line l${i + 1}"><span class="c layer">${LAYER_NAMES[i]}</span>${L.map((x, j) => cell(x, '', `${i}_${j}`)).join('')}</div>`,
+            `<div class="line l${i + 1}"><span class="c layer">${LAYER_NAMES[i]}</span>${L.map((x, j) => cell(x, `${i}_${j}`)).join('')}</div>`,
         ).join('')}</div>`
         $('cbody').appendChild(el)
         const cells = {}
