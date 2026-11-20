@@ -12,7 +12,7 @@
 
 The History View lets the Player find the [Turn](../../foundation/engine-contract.md#player-actions-and-turns) in which something changed in the [Campaign](../../foundation/core-concepts.md#campaign-and-session), and see what the player did in that Turn and what came of it. It is one of the Records [Detail views](../gui.md#glossary) of the [Campaign Screen](campaign-screen.md); the trends over the same Turns are in the [Charts View](charts-view.md).
 
-It shows one row for each [History entry](../../foundation/world-history.md#glossary) that `getHistory()` returns, under [Current state, Turn report, and history](../../foundation/world-history.md#current-state-turn-report-and-history) in History and Turn Report, and one row for the current Turn from its [Open History entry](../../foundation/world-history.md#glossary), so that the Player sees this Turn's decisions so far beside earlier Turns, as if the Turn ended now. The current Turn's row follows every Player action, undo, and redo, e.g. an undone `hireAgent` leaves its list and its Agent leaves its Agents count, and a redo puts both back.
+It shows one row for each [History entry](../../foundation/world-history.md#glossary) that `getHistory()` returns, under [Current world state, Turn report, and history](../../foundation/world-history.md#current-world-state-turn-report-and-history) in History and Turn Report, and one row for the current Turn from its [Open History entry](../../foundation/world-history.md#glossary), so that the Player sees this Turn's decisions so far beside earlier Turns, as if the Turn ended now. The current Turn's row follows every Player action, undo, and redo, e.g. an undone `hireAgent` leaves its list and its Agent leaves its Agents count, and a redo puts both back.
 
 # Turn by Turn table
 
@@ -78,7 +78,7 @@ Each line starts with the number of the Player action in the Turn, from 1, in th
 | `addAgents` | "Added N Agents (cheat)". |
 | Any other operation | The operation's name, e.g. that of a Player action a later Mechanics specification adds. |
 
-A count of 1 takes the singular, e.g. "Hired 1 Agent". No line names the Agents an action concerned; a line names only the Lead or Mission site it concerned, resolved through `getCurrentState()`, which returns it whether or not it is [Retired](../../foundation/world-history.md#glossary).
+A count of 1 takes the singular, e.g. "Hired 1 Agent". No line names the Agents an action concerned; a line names only the Lead or Mission site it concerned, resolved through `getCurrentLiveWorldState()`, or through `getCurrentRetiredWorldState()` when it is [Retired](../../foundation/world-history.md#glossary).
 
 # Artboard
 

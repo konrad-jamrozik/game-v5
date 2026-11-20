@@ -63,7 +63,7 @@ Every Campaign instance is part of a World state, never of the History or of Cam
 
 # What the Game rules read
 
-Every outcome of the Game rules, i.e. whether a [Player action](engine-contract.md#player-actions-and-turns) is permitted, what it changes, and what Advance turn does, depends only on the [Current world state](engine-contract.md#player-actions-and-turns), the History, the Campaign configuration, and the [GDRs](core-concepts.md#game-build-and-content) of the [Game build](core-concepts.md#game-build-and-content). The Game rules read no other World state the Timeline holds, and neither the Timeline pointer nor the Turn report affects an outcome. Queries read the same data, and also report the Turn report and what the Timeline holds of the current Turn, under [Current state, Turn report, and history](world-history.md#current-state-turn-report-and-history) in History and Turn Report.
+Every outcome of the Game rules, i.e. whether a [Player action](engine-contract.md#player-actions-and-turns) is permitted, what it changes, and what Advance turn does, depends only on the [Current world state](engine-contract.md#player-actions-and-turns), the History, the Campaign configuration, and the [GDRs](core-concepts.md#game-build-and-content) of the [Game build](core-concepts.md#game-build-and-content). The Game rules read no other World state the Timeline holds, and neither the Timeline pointer nor the Turn report affects an outcome. Queries read the same data, and also report the Turn report and what the Timeline holds of the current Turn, under [Current world state, Turn report, and history](world-history.md#current-world-state-turn-report-and-history) in History and Turn Report.
 
 # World state and History
 

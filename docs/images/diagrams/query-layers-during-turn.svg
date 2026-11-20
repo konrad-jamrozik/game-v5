@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="470" viewBox="0 0 1000 470" role="img" aria-label="What each Player API query returns during Turn 8 after two Player actions: getHistory() returns a reduced History entry for each ended Turn followed by the Open History entry of Turn 8, getTurnReport() returns the full report of the Advance turn that ended Turn 7, and getCurrentState() returns the Current world state">
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="470" viewBox="0 0 1000 470" role="img" aria-label="What each Player API query returns during Turn 8 after two Player actions: getHistory() returns a reduced History entry for each ended Turn followed by the Open History entry of Turn 8, getTurnReport() returns the full report of the Advance turn that ended Turn 7, and getCurrentLiveWorldState() and getCurrentRetiredWorldState() return the Current world state">
   <!-- Hand-kept diagram for docs/specs/design/foundation/world-history.md; not generated. -->
   <style>
     :root { --bg: #ffffff; --surface: #ffffff; --block: #f1f4f7; --fg: #1b2330; --muted: #5b6676; --line: #d5dae2; --turn: #2f7f95; --turntint: #e3f1f5; --hist: #6b5ca5; --histtint: #efecf8; --full: #2f7d4f; --fulltint: #e4f3ea; }
@@ -12,6 +12,7 @@
     .m { fill: var(--muted); }
     .mid { text-anchor: middle; }
     .code { font-family: "Cascadia Mono", Consolas, ui-monospace, monospace; font-size: 12.5px; font-weight: 600; }
+    .code-small { font-family: "Cascadia Mono", Consolas, ui-monospace, monospace; font-size: 9px; font-weight: 600; }
     .axis { stroke: var(--fg); stroke-width: 1.5; fill: none; }
     .future { stroke: var(--muted); stroke-width: 1.5; stroke-dasharray: 4 4; fill: none; }
     .block { fill: var(--block); stroke: var(--line); stroke-width: 1.5; }
@@ -63,7 +64,8 @@
   <path class="lane" d="M 24 182 H 976 M 24 262 H 976 M 24 318 H 976 M 24 374 H 976"/>
   <text class="code" x="24" y="214">getHistory()</text>
   <text class="code" x="24" y="294">getTurnReport()</text>
-  <text class="code" x="24" y="350">getCurrentState()</text>
+  <text class="code-small" x="20" y="346">getCurrentLiveWorldState()</text>
+  <text class="code-small" x="20" y="359">getCurrentRetiredWorldState()</text>
 
   <path class="guide" d="M 179 150 V 369 M 432 150 V 369 M 687 150 V 369 M 623 150 V 369 M 810 180 V 369"/>
 
@@ -99,5 +101,5 @@
   <rect class="full" x="870" y="394" width="26" height="16" rx="3"/>
   <text class="m" x="904" y="406">full detail</text>
   <text class="m" x="24" y="436">A History entry holds its Turn's Turn-start state, its Turn-end state, and the Turn report of the Advance turn that ended it, reduced.</text>
-  <text class="m" x="24" y="452">A Player action, undo, or redo changes getCurrentState() and the Open History entry; getTurnReport() and the History entries do not.</text>
+  <text class="m" x="24" y="452">A Player action, undo, or redo changes what the two World state queries return and the Open History entry; getTurnReport() and the History entries do not.</text>
 </svg>
