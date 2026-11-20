@@ -15,6 +15,7 @@ import path from 'node:path'
 import { Worker } from 'node:worker_threads'
 import { execFileSync } from 'node:child_process'
 import YAML from 'yaml'
+import { SiteSearch, type Hint, type ProbeResult, type SiteJob } from './search.ts'
 
 const arg = (name: string, fallback: string) => {
   const at = process.argv.indexOf(`--${name}`)
@@ -167,21 +168,80 @@ let pool: Slot[] = []
 let info: Promise<Info> = Promise.reject(new Error('not started'))
 info.catch(() => {})
 let gen = 0
-let queue: Record<string, unknown>[] = []
-let remaining = 0
+/** The searches of the current run, one for each Mission site, and the sites it has solved so far. */
+let searches: SiteSearch[] = []
+let hints: Hint[] = []
 let stream: http.ServerResponse | null = null
 
+/** Writes one message of the current run to the page. */
+function send(message: unknown): void {
+  stream?.write(`${JSON.stringify(message)}\n`)
+}
+
+/**
+ * Hands every idle worker thread the next probe of the current run. Each probe goes to the unfinished site with the
+ * fewest probes running, and among those to the one with the strongest Enemies, whose searches take longest; so every
+ * site starts at once, and the threads left over speed up the slowest searches.
+ */
 function pump(): void {
   for (const slot of pool) {
     if (!slot.ready || slot.busy) {
       continue
     }
-    const job = queue.shift()
-    if (job === undefined) {
+    const open = searches
+      .filter((search) => !search.done)
+      .sort((a, b) => a.running.size - b.running.size || b.job.rating - a.job.rating)
+    for (const search of open) {
+      const next = search.next(hints)
+      if (next === null) {
+        continue
+      }
+      const { job } = search
+      slot.busy = true
+      slot.worker.postMessage({
+        type: 'probe',
+        gen,
+        id: job.id,
+        size: next.size,
+        full: next.full,
+        enemies: job.enemies,
+        agent: job.agent,
+        gdrValues: job.gdrValues,
+        target: job.target,
+        trials: job.trials,
+      })
       break
     }
-    slot.busy = true
-    slot.worker.postMessage(job)
+  }
+  if (stream !== null && searches.length > 0 && searches.every((search) => search.done)) {
+    stream.end()
+    stream = null
+  }
+}
+
+/** Records a probe's result in its site's search and tells the page what became known. */
+function onProbe(result: ProbeResult): void {
+  if (result.gen !== gen) {
+    return
+  }
+  const search = searches.find((item) => item.job.id === result.id)
+  if (search === undefined || search.done) {
+    return
+  }
+  search.record(result)
+  if ('error' in result) {
+    send({ type: 'failed', gen, id: result.id, message: result.error })
+    return
+  }
+  if (result.full) {
+    send({ type: 'rate', gen, id: result.id, win: result.win, killed: result.killed })
+  }
+  if (search.need !== undefined) {
+    send({ type: 'need', gen, id: result.id, need: search.need })
+    // A solved site tells the searches still to come where to start.
+    if (search.need !== null) {
+      hints.push({ rating: search.job.rating, need: search.need })
+    }
   }
 }
 
@@ -190,7 +250,7 @@ function startPool(): void {
   for (const slot of pool) {
     void slot.worker.terminate()
   }
-  queue = []
+  searches = []
   stream?.end()
   stream = null
   const mine: Slot[] = []
@@ -200,49 +260,30 @@ function startPool(): void {
       const worker = new Worker(new URL('./worker.ts', import.meta.url), { workerData: { impl: IMPL } })
       const slot: Slot = { worker, ready: false, busy: false }
       mine.push(slot)
-      worker.on(
-        'message',
-        (
-          m: { type: string; gen?: number; message?: string; need?: number | null; rating?: number } & Partial<Info>,
-        ) => {
-          if (pool !== mine) {
-            return
-          }
-          if (m.type === 'ready') {
-            slot.ready = true
-            resolve({
-              initiativeLevels: m.initiativeLevels!,
-              enemyOrder: m.enemyOrder!,
-              combatGdrValueNames: m.combatGdrValueNames ?? null,
-            })
-            pump()
-            return
-          }
-          if (m.type === 'error') {
-            reject(new Error(m.message))
-            return
-          }
-          if (m.gen !== gen) {
-            return
-          }
-          stream?.write(`${JSON.stringify(m)}\n`)
-          // A solved site tells every worker thread where to start the searches still to come.
-          if (m.type === 'need' && typeof m.need === 'number' && typeof m.rating === 'number') {
-            for (const other of pool) {
-              other.worker.postMessage({ type: 'hint', gen, rating: m.rating, need: m.need })
-            }
-          }
-          if (m.type === 'need' || m.type === 'failed') {
-            slot.busy = false
-            remaining -= 1
-            if (remaining === 0) {
-              stream?.end()
-              stream = null
-            }
-            pump()
-          }
-        },
-      )
+      worker.on('message', (m: { type: string; message?: string } & Partial<Info>) => {
+        if (pool !== mine) {
+          return
+        }
+        if (m.type === 'ready') {
+          slot.ready = true
+          resolve({
+            initiativeLevels: m.initiativeLevels!,
+            enemyOrder: m.enemyOrder!,
+            combatGdrValueNames: m.combatGdrValueNames ?? null,
+          })
+          pump()
+          return
+        }
+        if (m.type === 'error') {
+          reject(new Error(m.message))
+          return
+        }
+        if (m.type === 'probe') {
+          slot.busy = false
+          onProbe(m as unknown as ProbeResult)
+          pump()
+        }
+      })
       worker.on('error', (e) => {
         console.error('engine worker failed:', e.message)
         reject(e)
@@ -289,7 +330,7 @@ const server = http.createServer((req, res) => {
       const loaded = await info.catch((e: unknown) => ({ engineError: e instanceof Error ? e.message : String(e) }))
       json(res, 200, { ...loaded, engine: engineVersion(), impl: IMPL, spec: SPEC, threads: THREADS, gdr: loadGdr() })
     } else if (req.method === 'POST' && url === '/api/run') {
-      const jobs = (JSON.parse(await body(req)) as { jobs: Record<string, unknown>[] }).jobs
+      const jobs = (JSON.parse(await body(req)) as { jobs: SiteJob[] }).jobs
       gen += 1
       stream?.end()
       stream = res
@@ -298,15 +339,8 @@ const server = http.createServer((req, res) => {
           stream = null
         }
       })
-      for (const job of jobs) {
-        job['gen'] = gen
-      }
-      queue = jobs
-      remaining = jobs.length
-      for (const slot of pool) {
-        slot.busy = false
-        slot.worker.postMessage({ type: 'cancel', gen })
-      }
+      searches = jobs.map((job) => new SiteSearch({ ...job, gen }))
+      hints = []
       res.writeHead(200, { 'content-type': 'application/x-ndjson', 'cache-control': 'no-store' })
       res.write('\n')
       pump()

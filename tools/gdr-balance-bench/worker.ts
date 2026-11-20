@@ -1,44 +1,17 @@
 /**
  * Worker thread of server.ts. It loads the engine straight from the TypeScript source of the game-v5-impl-web clone,
- * so it runs the engine as it is on disk when the thread starts, and fights Detached Combats with
- * `developer.tools.fightCombatBatch`.
- *
- * For one Mission site it reports the test team's win rate, then the smallest team that reaches the target win rate.
- * That search starts from a team size estimated from Combat ratings, steps outward from it until the answer is
- * bracketed, and then bisects; each team size tried stops its batch as soon as its answer is certain.
+ * so it runs the engine as it is on disk when the thread starts, and fights the probes server.ts hands it: each one
+ * batch of Detached Combats of one team size at one Mission site, `developer.tools.fightCombatBatch`. The search that
+ * chooses the probes is in search.ts and runs in server.ts, so one site's search can use several threads at once.
  */
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { parentPort, workerData } from 'node:worker_threads'
 
-interface SiteJob {
-  type: 'site'
-  gen: number
-  id: string
-  enemies: unknown[]
-  agent: unknown
-  n: number
-  gdrValues: Record<string, number>
-  target: number
-  trials: number
-  maxn: number
-  /** The Combat rating of the site's Enemies at full health, i.e. the sum of their effective skills. */
-  rating: number
-  /** The effective skill of one Agent of the test team. */
-  agentRating: number
-}
-
-/** A site already solved in this run: its Combat rating and the team size it needs. */
-interface Hint {
-  rating: number
-  need: number
-}
-
-type Rate = { win: number; killed: number; pass: boolean } | { error: string } | null
+import type { Probe, ProbeResult } from './search.ts'
 
 const impl = (workerData as { impl: string }).impl
 const port = parentPort!
-const tick = () => new Promise<void>((resolve) => setImmediate(resolve))
 
 async function boot() {
   const { MemoryStorage, createEngine } = await import(pathToFileURL(path.join(impl, 'src/engine/index.ts')).href)
@@ -128,147 +101,47 @@ booted.then(
   (e: unknown) => port.postMessage({ type: 'error', message: e instanceof Error ? e.message : String(e) }),
 )
 
-/** The newest run the server has announced; a job of an older run stops at its next check. */
-let gen = 0
-/** The sites solved in the newest run, which server.ts passes on to every worker thread. */
-let hints: Hint[] = []
-
 /**
- * Fights `trials` Combats of a team of `n` in one batch, Combat `i` with the Detached seed `<site>|<n>#<i>`, so
- * `fightCombat` with that seed shows any one of them in full. With `decideOnly`, the batch stops as soon as it is
- * certain whether the team reaches the target, so the rate it reports is over the Combats fought.
+ * Fights one probe: Combat `i` of a team of `size` has the Detached seed `<site>|<size>#<i>`, so `fightCombat` with
+ * that seed shows it in full. Unless `full`, the batch stops as soon as it is certain whether the team reaches the
+ * target, so the rate is over the Combats fought.
  */
-async function rate(job: SiteJob, n: number, decideOnly: boolean): Promise<Rate> {
-  await tick()
-  if (job.gen !== gen) {
-    return null
-  }
+async function fight(probe: Probe): Promise<ProbeResult> {
   const engine = await booted
-  const agents = new Array<unknown>(n).fill(job.agent)
-  const needWins = Math.ceil((job.target / 100) * job.trials - 1e-9)
+  const head = { type: 'probe', gen: probe.gen, id: probe.id, size: probe.size, full: probe.full } as const
+  const needWins = Math.ceil((probe.target / 100) * probe.trials - 1e-9)
   const r = engine.fightBatch(
-    { agents, enemies: job.enemies, gdrValues: job.gdrValues, seed: `${job.id}|${n}` },
-    job.trials,
-    decideOnly ? { prevailed: needWins, notPrevailed: job.trials - needWins + 1 } : undefined,
+    {
+      agents: new Array<unknown>(probe.size).fill(probe.agent),
+      enemies: probe.enemies,
+      gdrValues: probe.gdrValues,
+      seed: `${probe.id}|${probe.size}`,
+    },
+    probe.trials,
+    probe.full ? undefined : { prevailed: needWins, notPrevailed: probe.trials - needWins + 1 },
   )
   if ('error' in r) {
-    return { error: r.error }
+    return { ...head, error: r.error }
   }
-  return { win: (r.prevailed / r.fought) * 100, killed: r.agentsDead / r.fought, pass: r.prevailed >= needWins }
+  return {
+    ...head,
+    win: (r.prevailed / r.fought) * 100,
+    killed: r.agentsDead / r.fought,
+    pass: r.prevailed >= needWins,
+  }
 }
 
-/**
- * The team size to try first. Teams that need equal strength scale with the Enemies' Combat rating, so the estimate
- * is the need of the solved site whose Combat rating is closest, scaled by the ratio of the two ratings; with no site
- * solved yet, it is the team whose Combat rating equals the Enemies'.
- */
-function estimate(job: SiteJob): number {
-  let best: Hint | null = null
-  for (const hint of hints) {
-    if (best === null || Math.abs(Math.log(hint.rating / job.rating)) < Math.abs(Math.log(best.rating / job.rating))) {
-      best = hint
-    }
-  }
-  const guess =
-    best !== null && job.rating > 0 ? (best.need * job.rating) / best.rating : job.rating / Math.max(1, job.agentRating)
-  return Math.min(job.maxn, Math.max(1, Math.round(guess)))
-}
-
-async function run(job: SiteJob): Promise<void> {
-  const base = await rate(job, job.n, false)
-  if (base === null) {
-    return
-  }
-  if ('error' in base) {
-    port.postMessage({ type: 'failed', gen: job.gen, id: job.id, message: base.error })
-    return
-  }
-  port.postMessage({ type: 'rate', gen: job.gen, id: job.id, win: base.win, killed: base.killed })
-  // The smallest team known to pass is hi, and every team below lo is known to fail; hi of 0 means none passes yet.
-  let lo = base.pass ? 1 : job.n + 1
-  let hi = base.pass ? job.n : 0
-  /** Fights a team size of the search; null when the run was replaced. */
-  const passes = async (size: number): Promise<boolean | null> => {
-    const r = await rate(job, size, true)
-    return r === null ? null : !('error' in r) && r.pass
-  }
-  const start = Math.min(hi > 0 ? hi : job.maxn, Math.max(lo, estimate(job)))
-  // The first step is a few percent of the estimate, so the answer is usually bracketed by the first one or two tries.
-  const firstStep = Math.max(1, Math.round(start * 0.04))
-  if (hi === 0 || start < hi) {
-    const first = await passes(start)
-    if (first === null) {
-      return
-    }
-    if (first) {
-      hi = start
-      // Step down from the estimate, doubling the step, until a size fails.
-      for (let step = firstStep; hi - step >= lo; step *= 2) {
-        const result = await passes(hi - step)
-        if (result === null) {
-          return
-        }
-        if (!result) {
-          lo = hi - step + 1
-          break
-        }
-        hi -= step
-      }
-    } else {
-      lo = start + 1
-      // Step up from the estimate, doubling the step, until a size passes or the largest team fails.
-      for (let step = firstStep; lo <= job.maxn; step *= 2) {
-        const size = Math.min(job.maxn, start + step)
-        const result = await passes(size)
-        if (result === null) {
-          return
-        }
-        if (result) {
-          hi = size
-          break
-        }
-        lo = size + 1
-      }
-    }
-  }
-  let need: number | null = null
-  if (hi > 0) {
-    while (lo < hi) {
-      const mid = (lo + hi) >> 1
-      const result = await passes(mid)
-      if (result === null) {
-        return
-      }
-      if (result) {
-        hi = mid
-      } else {
-        lo = mid + 1
-      }
-    }
-    need = hi
-  }
-  port.postMessage({ type: 'need', gen: job.gen, id: job.id, need, rating: job.rating })
-}
-
-port.on('message', (message: SiteJob | { type: 'cancel'; gen: number } | ({ type: 'hint'; gen: number } & Hint)) => {
-  if (message.gen > gen) {
-    hints = []
-  }
-  gen = Math.max(gen, message.gen)
-  if (message.type === 'hint') {
-    if (message.gen === gen) {
-      hints.push({ rating: message.rating, need: message.need })
-    }
-    return
-  }
-  if (message.type === 'site') {
-    run(message).catch((e: unknown) =>
+port.on('message', (probe: Probe) => {
+  fight(probe).then(
+    (result) => port.postMessage(result),
+    (e: unknown) =>
       port.postMessage({
-        type: 'failed',
-        gen: message.gen,
-        id: message.id,
-        message: e instanceof Error ? e.message : String(e),
+        type: 'probe',
+        gen: probe.gen,
+        id: probe.id,
+        size: probe.size,
+        full: probe.full,
+        error: e instanceof Error ? e.message : String(e),
       }),
-    )
-  }
+  )
 })
