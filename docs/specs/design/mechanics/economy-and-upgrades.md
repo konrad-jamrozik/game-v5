@@ -72,7 +72,7 @@ An AgencyArchetype is the [Archetype](../foundation/core-concepts.md#campaign-in
 
 ## Economy GDR validation
 
-**Proposed rule:** The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for EconomyParameters, Upgrade, and AgencyArchetype GDRs. A Game build whose GDRs violate one of these rules is defective: no [Campaign](../foundation/core-concepts.md#campaign-and-session) is created from it, and the violation is reported as a data defect, never repaired into different gameplay, under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract.
+The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for EconomyParameters, Upgrade, and AgencyArchetype GDRs. A Game build whose GDRs violate one of these rules is defective: no [Campaign](../foundation/core-concepts.md#campaign-and-session) is created from it, and the violation is reported as a data defect, never repaired into different gameplay, under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract.
 
 1. **One AgencyArchetype:** The Game build supplies exactly one AgencyArchetype, so no rule selects among AgencyArchetypes.
 2. **One EconomyParameters:** The Game build supplies exactly one EconomyParameters GDR.
@@ -85,7 +85,7 @@ The Game build may supply any number of Upgrades, including none, and several Up
 
 # Campaign configuration values
 
-**Proposed rule:** The Agency's economy has exactly two [Campaign configuration](../foundation/campaign-state.md#glossary) values, Starting money and Starting funding, each stated as [What each Campaign configuration value must state](../foundation/configuration.md#what-each-campaign-configuration-value-must-state) in Configuration requires. Each [Campaign configuration preset](../foundation/configuration.md#glossary) supplies both, as the properties named below.
+The Agency's economy has exactly two [Campaign configuration](../foundation/campaign-state.md#glossary) values, Starting money and Starting funding, each stated as [What each Campaign configuration value must state](../foundation/configuration.md#what-each-campaign-configuration-value-must-state) in Configuration requires. Each [Campaign configuration preset](../foundation/configuration.md#glossary) supplies both, as the properties named below.
 
 | Campaign configuration value | Preset property | Type and permitted values | Class | How campaign creation uses it |
 | --- | --- | --- | --- | --- |
@@ -100,7 +100,7 @@ The Agency's [State](../foundation/core-concepts.md#campaign-instances) holds wh
 
 ## Agency properties
 
-**Proposed rule:** The Agency is a [Campaign instance](../foundation/core-concepts.md#campaign-instances) whose Archetype is the AgencyArchetype. Its Archetype reference is set when it is created and never changes. Its [Constants](../foundation/core-concepts.md#campaign-instances) are empty. Its State has exactly the following properties. This table is exhaustive.
+The Agency is a [Campaign instance](../foundation/core-concepts.md#campaign-instances) whose Archetype is the AgencyArchetype. Its Archetype reference is set when it is created and never changes. Its [Constants](../foundation/core-concepts.md#campaign-instances) are empty. Its State has exactly the following properties. This table is exhaustive.
 
 | Property | Part | Value | Classification and range |
 | --- | --- | --- | --- |
@@ -120,13 +120,13 @@ The following table is the exhaustive list of rules that change the Agency's Sta
 
 A rule of another specification that changes money adds a whole amount to it, positive or negative, and the result is never clamped.
 
-**Proposed rule:** In every [World state](../foundation/engine-contract.md#player-actions-and-turns) of a Campaign that has no [Campaign ending](domain-model.md#campaign-standing), money is at least 0. No [Player action](../foundation/engine-contract.md#player-actions-and-turns) takes money below 0: `hireAgent` and `purchaseUpgrade` require money of at least their cost, and `addMoney` is rejected when it would, under [Adding money](#adding-money). An Advance turn that leaves money below 0 records a Campaign ending, under [Upkeep](#upkeep). Money is therefore negative only within an Advance turn and in a Campaign that has a Campaign ending.
+In every [World state](../foundation/engine-contract.md#player-actions-and-turns) of a Campaign that has no [Campaign ending](domain-model.md#campaign-standing), money is at least 0. No [Player action](../foundation/engine-contract.md#player-actions-and-turns) takes money below 0: `hireAgent` and `purchaseUpgrade` require money of at least their cost, and `addMoney` is rejected when it would, under [Adding money](#adding-money). An Advance turn that leaves money below 0 records a Campaign ending, under [Upkeep](#upkeep). Money is therefore negative only within an Advance turn and in a Campaign that has a Campaign ending.
 
 The Agency is [retained](../foundation/world-history.md#glossary) for the whole Campaign and never removed.
 
 ## Agency creation
 
-**Proposed rule:** The initial [Campaign state](../foundation/core-concepts.md#campaign-and-session) contains exactly one Agency, as [Agency per Campaign](domain-model.md#agency-per-campaign) and [Initial Campaign state](domain-model.md#initial-campaign-state) in Domain Model require, and no rule creates another Agency during play. It has a fresh [Instance ID](../foundation/campaign-instances.md#glossary) under [Campaign instance identity scope](domain-model.md#campaign-instance-identity-scope) and the following initial values, under [Campaign instance creation](../foundation/campaign-instances.md#campaign-instance-creation) in Campaign Instances. This table is exhaustive.
+The initial [Campaign state](../foundation/core-concepts.md#campaign-and-session) contains exactly one Agency, as [Agency per Campaign](domain-model.md#agency-per-campaign) and [Initial Campaign state](domain-model.md#initial-campaign-state) in Domain Model require, and no rule creates another Agency during play. It has a fresh [Instance ID](../foundation/campaign-instances.md#glossary) under [Campaign instance identity scope](domain-model.md#campaign-instance-identity-scope) and the following initial values, under [Campaign instance creation](../foundation/campaign-instances.md#campaign-instance-creation) in Campaign Instances. This table is exhaustive.
 
 | Value | Initial value | Source |
 | --- | --- | --- |
@@ -139,7 +139,7 @@ Campaign creation also records the Agency's initial money as the value of Money 
 
 ## Funding changes
 
-**Proposed rule:** Funding is never below 0. Every rule of another specification that changes funding does so through this rule: it names a whole amount, positive, zero, or negative, by which funding changes, and funding becomes:
+Funding is never below 0. Every rule of another specification that changes funding does so through this rule: it names a whole amount, positive, zero, or negative, by which funding changes, and funding becomes:
 
 ```text
 funding after = max(0, funding before + sum of the amounts)
@@ -155,7 +155,7 @@ A funding change starts producing income in the first Agency income step that fo
 
 Game data changes the Agency's money and funding through two [Effect kinds](../foundation/effect-lists.md#glossary), so that every reward and every penalty changes them in the same way.
 
-**Proposed rule:** The following table defines both Effect kinds, under [Effect kinds](../foundation/effect-lists.md#effect-kinds) in Effect Lists. It is exhaustive for the Effect kinds that change the Agency.
+The following table defines both Effect kinds, under [Effect kinds](../foundation/effect-lists.md#effect-kinds) in Effect Lists. It is exhaustive for the Effect kinds that change the Agency.
 
 | Effect kind | Value | What applying one Effect changes | Several in one Turn advancement step |
 | --- | --- | --- | --- |
@@ -166,7 +166,7 @@ Neither Effect kind needs a supplied input, because a Campaign has exactly one A
 
 # Agency caps
 
-**Proposed rule:** The Agent cap, Transport cap, and Training cap are Derived values of the Agency, each computed by the same formula from a base value of EconomyParameters and the Upgrade bonus of the cap's effect identifier, under [Upgrade bonus](#upgrade-bonus):
+The Agent cap, Transport cap, and Training cap are Derived values of the Agency, each computed by the same formula from a base value of EconomyParameters and the Upgrade bonus of the cap's effect identifier, under [Upgrade bonus](#upgrade-bonus):
 
 ```text
 cap = base + Upgrade bonus of the cap's effect identifier
@@ -196,7 +196,7 @@ In every Advance turn the Agency earns money and pays for its Agents, and the di
 
 ## Agency income
 
-**Proposed rule:** In the Agency income step of every Advance turn, under [Turn advancement steps](turn-advancement.md#turn-advancement-steps), the Agency's money rises by its income:
+In the Agency income step of every Advance turn, under [Turn advancement steps](turn-advancement.md#turn-advancement-steps), the Agency's money rises by its income:
 
 ```text
 contribution of one Agent = contracting_income_per_agent × (1 + (effective skill − 100) / 500)
@@ -219,11 +219,11 @@ Evaluation: each contribution is evaluated exactly, under [Exact evaluation](../
 
 An Agent [In transit](domain-model.md#agency-and-agents) to Contracting is not in C, including one that arrives in the Previous turn transit arrivals step of the same Advance turn, because that step comes after the Agency income step. The Agency income step is the first step, so funding, C, and each effective skill equal their values in the [Turn-end state](../foundation/engine-contract.md#player-actions-and-turns). After the income is added, every Agent in C gains [exhaustion](agents-spec.md#combatant-attributes) and may have a [Forced return](agents-spec.md#assignments), under [Work exhaustion](agents-spec.md#work-exhaustion) and [Forced return](agents-spec.md#forced-return) in Agents; the income already added is kept.
 
-**Inherited behavior:** The contribution formula is the game-ts contracting income: work pays more for a skilled Agent and less for a worn-down one, but only gently, so that Contracting stays a dependable source of money.
+**Informative rationale:** The contribution formula is the game-ts contracting income: work pays more for a skilled Agent and less for a worn-down one, but only gently, so that Contracting stays a dependable source of money.
 
 ## Upkeep
 
-**Proposed rule:** In the Upkeep step of every Advance turn, under [Turn advancement steps](turn-advancement.md#turn-advancement-steps), the Agency's money falls by its upkeep:
+In the Upkeep step of every Advance turn, under [Turn advancement steps](turn-advancement.md#turn-advancement-steps), the Agency's money falls by its upkeep:
 
 ```text
 upkeep      = upkeep_per_agent × S
@@ -244,7 +244,7 @@ S counts every Serving Agent, including one that is [In transit](domain-model.md
 
 ## Projected income and upkeep
 
-**Proposed rule:** The Agency has two Derived values that state what the next Advance turn will add and charge if it is committed from the [Current world state](../foundation/engine-contract.md#player-actions-and-turns):
+The Agency has two Derived values that state what the next Advance turn will add and charge if it is committed from the [Current world state](../foundation/engine-contract.md#player-actions-and-turns):
 
 ```text
 projected income = funding + round down( sum of the contributions of the Agents in C' )
@@ -257,7 +257,7 @@ When Advance turn is committed from the Current world state, that state becomes 
 
 # Hiring Agents
 
-**Proposed rule:** The Player action `player.actions.hireAgent()` hires one Agent. It has no parameters.
+The Player action `player.actions.hireAgent()` hires one Agent. It has no parameters.
 
 Preconditions: the action is rejected when either of the following holds:
 
@@ -277,7 +277,7 @@ Nothing else changes. The new Agent counts toward the Agent cap and in projected
 
 # Dismissing Agents
 
-**Proposed rule:** The Player action `player.actions.dismissAgents(agents)` dismisses Agents from the Agency.
+The Player action `player.actions.dismissAgents(agents)` dismisses Agents from the Agency.
 
 | Parameter | Meaning                                                                   |
 | --------- | ------------------------------------------------------------------------- |
@@ -300,7 +300,7 @@ State changes: when every precondition holds, the action is one Player action th
 
 # Training cap on assigning Agents
 
-**Proposed rule:** The Player action `assignAgents` under [Assigning Agents](agents-spec.md#assigning-agents) in Agents has one further precondition. When its `assignment` is `Training`, the action is also rejected, as a whole, when:
+The Player action `assignAgents` under [Assigning Agents](agents-spec.md#assigning-agents) in Agents has one further precondition. When its `assignment` is `Training`, the action is also rejected, as a whole, when:
 
 ```text
 T + number of Agents in agents  >  Training cap
@@ -316,7 +316,7 @@ Upgrades let the Agency spend money on lasting improvements instead of on more A
 
 ## Purchasing Upgrades
 
-**Proposed rule:** The Player action `player.actions.purchaseUpgrade(upgrade)` buys one acquisition of one Upgrade.
+The Player action `player.actions.purchaseUpgrade(upgrade)` buys one acquisition of one Upgrade.
 
 | Parameter | Meaning                                                                |
 | --------- | ---------------------------------------------------------------------- |
@@ -341,7 +341,7 @@ Nothing else changes. The price is the GDR's `price` for every acquisition; it d
 
 ## Upgrade effects
 
-**Proposed rule:** Every Upgrade has exactly one effect, named by its `effect` property. The eight effect identifiers below are exhaustive, and they make an Upgrade one of four kinds.
+Every Upgrade has exactly one effect, named by its `effect` property. The eight effect identifiers below are exhaustive, and they make an Upgrade one of four kinds.
 
 | Effect identifier | Kind | What one acquisition does |
 | --- | --- | --- |
@@ -358,7 +358,7 @@ Acquisitions of every Upgrade stack by addition, without limit, and no effect de
 
 ### Upgrade bonus
 
-**Proposed rule:** Every value an Upgrade improves is computed by one formula, from the starting value that the value would have without any Upgrade and the Upgrade bonus of the effect identifier that improves it:
+Every value an Upgrade improves is computed by one formula, from the starting value that the value would have without any Upgrade and the Upgrade bonus of the effect identifier that improves it:
 
 ```text
 upgraded value = starting value + Upgrade bonus
@@ -411,7 +411,7 @@ Inputs: `training_skill_gain_per_turn` is that of AgentParameters, and `exhausti
 
 # Turn series of money
 
-**Proposed rule:** The Agency's money has exactly the following two [Turn series](../foundation/world-history.md#glossary), under [Turn series](../foundation/world-history.md#turn-series) in History and Turn Report. Each records the Agency's money, a whole number of money that may be negative.
+The Agency's money has exactly the following two [Turn series](../foundation/world-history.md#glossary), under [Turn series](../foundation/world-history.md#turn-series) in History and Turn Report. Each records the Agency's money, a whole number of money that may be negative.
 
 | Turn series | Recorded moment of each Turn |
 | --- | --- |
@@ -427,7 +427,7 @@ The current Turn has a recorded value of Money at the start of turn but none of 
 
 ## Money in the Action record
 
-**Proposed rule:** Every item of an [Action record](../foundation/world-history.md#glossary), under [Action record](../foundation/world-history.md#action-record) in History and Turn Report, also holds its money change: the Agency's money right after its Player action minus the Agency's money right before it. It is a whole number, negative for money spent and positive for money added; e.g., −`hire_cost` for `hireAgent`, minus the Upgrade's `price` for `purchaseUpgrade`, `amount` for `addMoney`, and 0 for a Player action that changes no money, e.g. `assignAgents`. The money changes are Player-visible information, so the money a Turn's Player actions spent can be read back after the Turn has ended.
+Every item of an [Action record](../foundation/world-history.md#glossary), under [Action record](../foundation/world-history.md#action-record) in History and Turn Report, also holds its money change: the Agency's money right after its Player action minus the Agency's money right before it. It is a whole number, negative for money spent and positive for money added; e.g., −`hire_cost` for `hireAgent`, minus the Upgrade's `price` for `purchaseUpgrade`, `amount` for `addMoney`, and 0 for a Player action that changes no money, e.g. `assignAgents`. The money changes are Player-visible information, so the money a Turn's Player actions spent can be read back after the Turn has ended.
 
 # Player cheat actions
 
@@ -435,7 +435,7 @@ A Player cheat action changes Campaign state in a way ordinary play does not all
 
 ## Adding money
 
-**Proposed rule:** The Player cheat action `developer.actions.addMoney(amount)` adds money to the Agency, or with a negative `amount` removes it. It follows every rule under [Player cheat actions](../foundation/developer-access.md#player-cheat-actions) in Developer Access, including that only the [Session controller](../foundation/engine-contract.md#principals-and-access) can call it, only with [Dev mode](../foundation/engine-contract.md#principals-and-access) enabled, and that each successful call is one Player action recorded as one [Timeline entry](../foundation/timeline.md#glossary).
+The Player cheat action `developer.actions.addMoney(amount)` adds money to the Agency, or with a negative `amount` removes it. It follows every rule under [Player cheat actions](../foundation/developer-access.md#player-cheat-actions) in Developer Access, including that only the [Session controller](../foundation/engine-contract.md#principals-and-access) can call it, only with [Dev mode](../foundation/engine-contract.md#principals-and-access) enabled, and that each successful call is one Player action recorded as one [Timeline entry](../foundation/timeline.md#glossary).
 
 | Parameter | Meaning                                                                                |
 | --------- | -------------------------------------------------------------------------------------- |
@@ -447,7 +447,7 @@ Effect: `amount` is added to the Agency's money. Nothing else changes; e.g., fun
 
 # Turn report
 
-**Proposed rule:** The [Turn report](../foundation/campaign-state.md#glossary) of an Advance turn holds, of the Agency's money and funding:
+The [Turn report](../foundation/campaign-state.md#glossary) of an Advance turn holds, of the Agency's money and funding:
 
 - **Agency income step:** the funding it used, the number of Agents in C, the income it added, and the Agency's money after it, under [Agency income](#agency-income).
 - **Upkeep step:** S, the upkeep it charged, and the Agency's money after it, under [Upkeep](#upkeep).
@@ -458,7 +458,7 @@ The [History entry](../foundation/world-history.md#glossary) of the Turn the Adv
 
 # Player-visible information
 
-**Proposed rule:** Every value below is Player-visible information under [Player-visible information](../foundation/player-api.md#player-visible-information) in [Player API](../foundation/engine-contract.md#api-surfaces), from the moment it exists, without a reveal condition. The table is exhaustive.
+Every value below is Player-visible information under [Player-visible information](../foundation/player-api.md#player-visible-information) in [Player API](../foundation/engine-contract.md#api-surfaces), from the moment it exists, without a reveal condition. The table is exhaustive.
 
 | Value | Player-visible information |
 | --- | --- |

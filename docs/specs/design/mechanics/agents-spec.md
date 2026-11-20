@@ -134,7 +134,7 @@ A [Weapon](combat.md#weapon) GDR describes the base weapon damage of the Combata
 
 ## Agent GDR validation
 
-**Proposed rule:** The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for AgentArchetype and AgentParameters. A Game build whose GDRs violate one of these rules is defective: no [Campaign](../foundation/core-concepts.md#campaign-and-session) is created from it, and the violation is reported as a data defect, never repaired into different gameplay, under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract.
+The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for AgentArchetype and AgentParameters. A Game build whose GDRs violate one of these rules is defective: no [Campaign](../foundation/core-concepts.md#campaign-and-session) is created from it, and the violation is reported as a data defect, never repaired into different gameplay, under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract.
 
 1. **One AgentArchetype:** The Game build supplies exactly one AgentArchetype. Every Agent has it as its Archetype, so no rule selects among AgentArchetypes.
 2. **One AgentParameters:** The Game build supplies exactly one AgentParameters GDR.
@@ -147,7 +147,7 @@ A [Weapon](combat.md#weapon) GDR describes the base weapon damage of the Combata
 
 # Agent properties
 
-**Proposed rule:** An Agent is a [Campaign instance](../foundation/core-concepts.md#campaign-instances) whose Archetype is the AgentArchetype. Its Archetype reference is set when it is created and never changes. Its [Constants](../foundation/core-concepts.md#campaign-instances) and [State](../foundation/core-concepts.md#campaign-instances) have exactly the following properties. This table is exhaustive.
+An Agent is a [Campaign instance](../foundation/core-concepts.md#campaign-instances) whose Archetype is the AgentArchetype. Its Archetype reference is set when it is created and never changes. Its [Constants](../foundation/core-concepts.md#campaign-instances) and [State](../foundation/core-concepts.md#campaign-instances) have exactly the following properties. This table is exhaustive.
 
 | Property | Part | Value | Classification and range |
 | --- | --- | --- | --- |
@@ -175,13 +175,13 @@ Base skill, health lost, base health, exhaustion, Weapon, and base weapon damage
 
 ## Participation history records
 
-**Proposed rule:** Whenever an Agent stops belonging to the Current team of an Investigation or of a Mission, for any reason, that Investigation or Mission is added to the Agent's Participation history, unless it is already there. E.g., the reason may be that the player assigns the Agent elsewhere, that the Investigation completes, or that the Mission's Combat is fought. Nothing is ever removed from a Participation history, and recording it neither assigns nor reserves the Agent, under [Current versus historical teams](domain-model.md#current-versus-historical-teams) in Domain Model.
+Whenever an Agent stops belonging to the Current team of an Investigation or of a Mission, for any reason, that Investigation or Mission is added to the Agent's Participation history, unless it is already there. E.g., the reason may be that the player assigns the Agent elsewhere, that the Investigation completes, or that the Mission's Combat is fought. Nothing is ever removed from a Participation history, and recording it neither assigns nor reserves the Agent, under [Current versus historical teams](domain-model.md#current-versus-historical-teams) in Domain Model.
 
 ## Service record
 
 An Agent that leaves the Agency keeps a record of how its service ended and what it achieved, so that the player can look back on it after the [Combat reports](domain-model.md#combat) that told the story are no longer kept in full.
 
-**Proposed rule:** Enemies killed, Turn terminated, Killed by, Final max health, and Final weapon damage change only as follows:
+Enemies killed, Turn terminated, Killed by, Final max health, and Final weapon damage change only as follows:
 
 - **Enemies killed** is 0 when the Agent is created, under [Agent creation](#agent-creation), and rises by 1 each time an attack the Agent makes leaves its defender dead, under [Killed and Incapacitated](combat.md#killed-and-incapacitated) in Combat. No rule lowers it.
 - **Turn terminated** is set when the Agent becomes Terminated, under [Agent status](#agent-status): for a Killed Agent, the turn number of the Turn that the Advance turn fighting its Combat ends; for a Dismissed Agent, the turn number of the Turn in which `dismissAgents` dismissed it.
@@ -193,7 +193,7 @@ Once set, Turn terminated, Killed by, Final max health, and Final weapon damage 
 
 # Agent status
 
-**Proposed rule:** An Agent has exactly one Agent status: At assignment, In transit, Recovering, Killed, or Dismissed. The set is exhaustive. An Agent is Serving exactly when its Agent status is At assignment, In transit, or Recovering, and Terminated exactly when it is Killed or Dismissed. Every Agent is Serving when it is created, under [Agent creation](#agent-creation).
+An Agent has exactly one Agent status: At assignment, In transit, Recovering, Killed, or Dismissed. The set is exhaustive. An Agent is Serving exactly when its Agent status is At assignment, In transit, or Recovering, and Terminated exactly when it is Killed or Dismissed. Every Agent is Serving when it is created, under [Agent creation](#agent-creation).
 
 A Serving Agent is In base exactly when it is At assignment on Standby or Training, or Recovering, and Away otherwise, i.e. when it is In transit, whatever its Assignment, Deployed, or At assignment on Contracting or an Investigation. Neither depends on its current health or its exhaustion, and a Terminated Agent is neither. Whether an Agent is In base or Away is a Derived value, never stored.
 
@@ -233,7 +233,7 @@ The Combatant Role Type is not a Campaign instance Type, so a Combatant is never
 
 ## Attribute ranges
 
-**Proposed rule:** In every World state, every Combatant, i.e. every Agent and every Enemy, satisfies these ranges:
+In every World state, every Combatant, i.e. every Agent and every Enemy, satisfies these ranges:
 
 - Base skill is at least 0. An Agent's is a [Decimal quantity](../foundation/numbers.md#glossary); an Enemy's is a whole number.
 - Base health is a whole number of at least 1.
@@ -250,7 +250,7 @@ Any rule of any specification that would lower exhaustion below 0 lowers it to e
 
 ## Exhaustion and Exact exhaustion
 
-**Proposed rule:** An Agent stores its Exact exhaustion, and its exhaustion is the following Derived value:
+An Agent stores its Exact exhaustion, and its exhaustion is the following Derived value:
 
 ```text
 exhaustion = round up( Exact exhaustion )
@@ -272,7 +272,7 @@ E.g., with a test exhaustion recovery of 1.6, an Agent on Standby with Exact exh
 
 A Combatant's health is kept as what it has lost, so that raising the most it can have never wounds it.
 
-**Proposed rule:** A Combatant's effective max health and its current health are Derived values. The following table states the effective max health of every Combatant, and is exhaustive.
+A Combatant's effective max health and its current health are Derived values. The following table states the effective max health of every Combatant, and is exhaustive.
 
 | Combatant | Effective max health |
 | --- | --- |
@@ -294,7 +294,7 @@ Buying an Upgrade that adds to max health therefore raises the effective max hea
 
 ## Effective skill
 
-**Inherited behavior:** A Combatant's effective skill is a Derived value computed by this formula. It is shared by Agents and Enemies through the [Combatant Role Type](#combatant-role-type), and every rule that uses a Combatant's capability, e.g. [Investigation progress](domain-model.md#leads-investigations-mission-sites-and-missions) or a Combat's hit probability, reads effective skill rather than base skill.
+A Combatant's effective skill is a Derived value computed by this formula. It is shared by Agents and Enemies through the [Combatant Role Type](#combatant-role-type), and every rule that uses a Combatant's capability, e.g. [Investigation progress](domain-model.md#leads-investigations-mission-sites-and-missions) or a Combat's hit probability, reads effective skill rather than base skill.
 
 ```text
 penalty factor  = max(0, 100 − p × max(0, exhaustion − f))
@@ -322,7 +322,7 @@ Effective skill is never stored. Whenever a rule reads it, it is computed from t
 
 ## Effective weapon damage
 
-**Proposed rule:** A Combatant's effective weapon damage is a Derived value. It is shared by Agents and Enemies through the [Combatant Role Type](#combatant-role-type), and it is the value around which a Combat rolls the damage outcome, under [Damage outcome](combat.md#damage-outcome) in Combat. It is kept apart from base weapon damage so that a rule can adjust weapon damage without changing the stored value, as effective skill does for base skill. The following table states it for every Combatant, and is exhaustive.
+A Combatant's effective weapon damage is a Derived value. It is shared by Agents and Enemies through the [Combatant Role Type](#combatant-role-type), and it is the value around which a Combat rolls the damage outcome, under [Damage outcome](combat.md#damage-outcome) in Combat. It is kept apart from base weapon damage so that a rule can adjust weapon damage without changing the stored value, as effective skill does for base skill. The following table states it for every Combatant, and is exhaustive.
 
 | Combatant | Effective weapon damage |
 | --- | --- |
@@ -336,7 +336,7 @@ The effective weapon damage of an Enemy and of a Serving Agent is never stored, 
 
 An Agent's attributes change only through a few named rules, so the cause of every change to them can be traced.
 
-**Proposed rule:** The following table is the exhaustive list of rules that change an Agent's attributes after its creation. A rule not listed here changes none of them.
+The following table is the exhaustive list of rules that change an Agent's attributes after its creation. A rule not listed here changes none of them.
 
 | Value | Raised by | Lowered by |
 | --- | --- | --- |
@@ -350,7 +350,7 @@ Standby, Recovery, and being In transit leave exhaustion unchanged except throug
 
 # Modifiable values
 
-**Proposed rule:** No [Upgrade](economy-and-upgrades.md#glossary) changes a stored Agent value. An Upgrade improves the Derived values of every Serving Agent instead: the [Max health Upgrade](economy-and-upgrades.md#max-health-upgrade) raises effective max health, and with it current health, under [Effective max health and current health](#effective-max-health-and-current-health), and the [Weapon damage Upgrade](economy-and-upgrades.md#weapon-damage-upgrade) raises effective weapon damage, under [Effective weapon damage](#effective-weapon-damage). No [Upgrade](domain-model.md#agency-and-agents) changes base skill, health lost, base health, exhaustion, Weapon, or base weapon damage, and no Upgrade bought after an Agent became Terminated changes any value of that Agent, e.g. its Final max health and its Final weapon damage. An Upgrade under [Rate Upgrades](economy-and-upgrades.md#rate-upgrades) changes no Agent value at once: it raises the training skill gain that [Training growth](#training-growth) reads, or a rate that [Agent Recovery](agent-recovery.md) reads.
+No [Upgrade](economy-and-upgrades.md#glossary) changes a stored Agent value. An Upgrade improves the Derived values of every Serving Agent instead: the [Max health Upgrade](economy-and-upgrades.md#max-health-upgrade) raises effective max health, and with it current health, under [Effective max health and current health](#effective-max-health-and-current-health), and the [Weapon damage Upgrade](economy-and-upgrades.md#weapon-damage-upgrade) raises effective weapon damage, under [Effective weapon damage](#effective-weapon-damage). No [Upgrade](domain-model.md#agency-and-agents) changes base skill, health lost, base health, exhaustion, Weapon, or base weapon damage, and no Upgrade bought after an Agent became Terminated changes any value of that Agent, e.g. its Final max health and its Final weapon damage. An Upgrade under [Rate Upgrades](economy-and-upgrades.md#rate-upgrades) changes no Agent value at once: it raises the training skill gain that [Training growth](#training-growth) reads, or a rate that [Agent Recovery](agent-recovery.md) reads.
 
 # Assignments and transit
 
@@ -358,7 +358,7 @@ An Agent's Assignment says what it is doing, and transit is the price of changin
 
 ## Assignment and Agent status
 
-**Proposed rule:** The Assignment of a Serving Agent is exactly one of the following, and this list is exhaustive: Standby; Contracting; Training; Recovery; an Investigation, with a reference to that Investigation; and Deployed, with a reference to the Mission the Agent is Deployed on. The Agent status of a Serving Agent says how it stands toward its Assignment: At assignment while carrying it out, In transit while still travelling to it, and Recovering when its Assignment is Recovery and it has arrived. An Agent In transit keeps the Assignment it is travelling to; transit is not a second Assignment.
+The Assignment of a Serving Agent is exactly one of the following, and this list is exhaustive: Standby; Contracting; Training; Recovery; an Investigation, with a reference to that Investigation; and Deployed, with a reference to the Mission the Agent is Deployed on. The Agent status of a Serving Agent says how it stands toward its Assignment: At assignment while carrying it out, In transit while still travelling to it, and Recovering when its Assignment is Recovery and it has arrived. An Agent In transit keeps the Assignment it is travelling to; transit is not a second Assignment.
 
 Recovery is an Assignment like the others, except that the player can neither assign an Agent to it nor assign a Recovering Agent elsewhere: only the rules under [Assignment changes](#assignment-changes) move an Agent onto or off Recovery. An Agent belongs to the Current team of an Investigation or of a Mission exactly as [Current versus historical teams](domain-model.md#current-versus-historical-teams) in Domain Model states, including while In transit.
 
@@ -366,7 +366,7 @@ A Deployed Agent is always At assignment, because deployment has no transit unde
 
 ## Agents that can be assigned
 
-**Proposed rule:** An Agent can be assigned exactly when all of the following hold:
+An Agent can be assigned exactly when all of the following hold:
 
 1. It is Serving.
 2. Its Agent status is At assignment.
@@ -385,7 +385,7 @@ A new Work Assignment also requires that the Agent is Fit for work, under [Start
 
 An Agent worn down by work or by a Combat must rest before it takes on new work, so that tiredness builds up only as far as the player lets it.
 
-**Proposed rule:** An Agent is Fit for work exactly when its exhaustion is at most `exhaustion_work_start_max`. Whether an Agent is Fit for work is a Derived value, never stored. Every Player action that gives an Agent a Work Assignment it does not already have requires that the Agent is Fit for work: `assignAgents` with `Contracting` or `Training` under [Assigning Agents](#assigning-agents), and `startInvestigation` and `assignAgentsToInvestigation` under [Investigations](investigations.md). No other Player action requires it; e.g., an Agent of any exhaustion can be assigned to Standby and can be deployed, under [Deploying Agents](missions.md#deploying-agents) in Missions.
+An Agent is Fit for work exactly when its exhaustion is at most `exhaustion_work_start_max`. Whether an Agent is Fit for work is a Derived value, never stored. Every Player action that gives an Agent a Work Assignment it does not already have requires that the Agent is Fit for work: `assignAgents` with `Contracting` or `Training` under [Assigning Agents](#assigning-agents), and `startInvestigation` and `assignAgentsToInvestigation` under [Investigations](investigations.md). No other Player action requires it; e.g., an Agent of any exhaustion can be assigned to Standby and can be deployed, under [Deploying Agents](missions.md#deploying-agents) in Missions.
 
 The gate applies only when the work starts. An Agent already on a Work Assignment keeps working whatever its exhaustion, until it is assigned elsewhere or until its [Forced return](#forced-return). E.g., with the Bootstrap values, an Agent on Contracting with exhaustion 45 keeps earning and can be recalled to Standby, and once In base cannot be assigned to Contracting, Training, or an Investigation until its exhaustion falls to 30.
 
@@ -393,7 +393,7 @@ The gate applies only when the work starts. An Agent already on a Work Assignmen
 
 An Agent changes what it is doing either because the player assigns it or because an Advance turn moves it, e.g. when its Investigation completes. Each such change has one trigger and one owner, so no Agent changes what it is doing without a stated cause.
 
-**Proposed rule:** The following table lists every allowed change of a Serving Agent's Assignment or Agent status, with its trigger and the owner of the trigger. An Assignment of "Investigation" in the table means an Investigation with its reference.
+The following table lists every allowed change of a Serving Agent's Assignment or Agent status, with its trigger and the owner of the trigger. An Assignment of "Investigation" in the table means an Investigation with its reference.
 
 | From | To | Trigger and who triggers it | Owner of the trigger and its conditions |
 | --- | --- | --- | --- |
@@ -422,7 +422,7 @@ A Serving Agent's Assignment also ends, without a replacement, when it becomes T
 
 ## Transit rule
 
-**Proposed rule:** This rule decides when an Agent with a new Assignment starts working. Every [Turn advancement step](domain-model.md#turn-advancement-steps) under [Turn advancement steps](turn-advancement.md#turn-advancement-steps) applies it. The following statements are complete:
+This rule decides when an Agent with a new Assignment starts working. Every [Turn advancement step](domain-model.md#turn-advancement-steps) under [Turn advancement steps](turn-advancement.md#turn-advancement-steps) applies it. The following statements are complete:
 
 1. **Starting In transit:** Every new Assignment starts In transit, with four exceptions: an Agent becomes Deployed At assignment at once; an Agent At assignment moved from one [Base Assignment](#assignments) to the other is At assignment at once; a Recovering Agent whose current health reaches effective max health becomes Standby At assignment at once; and an Agent of the [Initial roster](#initial-roster) starts At assignment.
 2. **Arrival:** An Agent that is In transit in the [Turn-end state](../foundation/engine-contract.md#player-actions-and-turns) of an Advance turn, i.e. in the World state in which that Advance turn began, and that still has the same Assignment, becomes At assignment in the Previous turn transit arrivals step of that Advance turn, or Recovering when its Assignment is Recovery. Completing its transit is all that happens to it in that Advance turn: it earns no income, trains nothing, adds no Investigation progress, fights in no Combat, and recovers neither current health nor exhaustion. This holds because the arrivals step comes after every step in which an Agent works, fights, or recovers, under [Transit across the steps](turn-advancement.md#transit-across-the-steps) in Turn Advancement.
@@ -444,7 +444,7 @@ Wherever the rule of a Turn advancement step applies to Agents At assignment or 
 
 A worn-down Agent learns less, so Training pays off in full only for an Agent whose effective skill is not lowered.
 
-**Proposed rule:** In the Training step of every Advance turn, each Working Agent whose Assignment is Training has one named random outcome, the **Training gain** outcome. Its possible values are "gains" and "does not gain". It takes the value "gains" with the [Probability](../foundation/numbers.md#glossary):
+In the Training step of every Advance turn, each Working Agent whose Assignment is Training has one named random outcome, the **Training gain** outcome. Its possible values are "gains" and "does not gain". It takes the value "gains" with the [Probability](../foundation/numbers.md#glossary):
 
 ```text
 training gain Probability = current health × penalty factor / (effective max health × 100)
@@ -466,7 +466,7 @@ The outcome of one Agent does not depend on any other Agent, so the result is th
 
 An Agent learns most from the Missions it lives through: every attack it makes or takes teaches it something, and surviving the Mission teaches it more, most of all in its first Missions. A Killed Agent takes what it learned with it, so deploying a veteran improves the odds of a Mission but risks losing its Experience.
 
-**Proposed rule:** Under step 7 of [Resolving one Mission](missions.md#resolving-one-mission) in Missions, every survivor of Mission M gains Experience, whether M is Won or Lost, and every point of it gives the survivor one point of base skill:
+Under step 7 of [Resolving one Mission](missions.md#resolving-one-mission) in Missions, every survivor of Mission M gains Experience, whether M is Won or Lost, and every point of it gives the survivor one point of base skill:
 
 ```text
 survival experience = entry n of experience_per_mission_survived, or its last entry when n exceeds the number of entries
@@ -497,7 +497,7 @@ E.g., with the Bootstrap values, a survivor of its first Mission that hit with t
 
 Work wears an Agent down a little in every Advance turn, so an Agent cannot work without end: it must be rotated to Standby to rest.
 
-**Proposed rule:** In each Advance turn, every Working Agent gains exhaustion in the [Turn advancement step](turn-advancement.md#glossary) of its work, after that step has read the Agent's values for the work itself. The following table is exhaustive:
+In each Advance turn, every Working Agent gains exhaustion in the [Turn advancement step](turn-advancement.md#glossary) of its work, after that step has read the Agent's values for the work itself. The following table is exhaustive:
 
 | Work Assignment | Its Working Agents | Step and the work read first | Exhaustion gained |
 | --- | --- | --- | --- |
@@ -515,7 +515,7 @@ Exhaustion before is the Agent's exhaustion at the start of the step and exhaust
 
 An Agent worn down too far stops working on its own, so that tiredness never reaches the point at which a Combat would find the Agent unable to fight.
 
-**Proposed rule:** In the same step, right after an Agent gains exhaustion under [Work exhaustion](#work-exhaustion), the Agent has a Forced return when both of the following hold:
+In the same step, right after an Agent gains exhaustion under [Work exhaustion](#work-exhaustion), the Agent has a Forced return when both of the following hold:
 
 1. Its exhaustion is at least `exhaustion_work_limit`.
 2. Its Assignment is still the Work Assignment it worked on; e.g., a member of an Investigation that completed in the same step is already on Standby, under [Completion](investigations.md#completion) in Investigations, and has no Forced return.
@@ -526,7 +526,7 @@ A Forced return makes the Agent Fit for work again only after it has rested, und
 
 # Agent creation
 
-**Proposed rule:** Every Agent is created by this rule, whichever rule causes the creation: the [Initial roster](#initial-roster), the `hireAgent` Player action of [Economy and Upgrades](economy-and-upgrades.md), or the [Player cheat action](../foundation/engine-contract.md#player-actions-and-turns) under [Adding Agents](#adding-agents). Each new Agent has a fresh Instance ID under [Campaign instance identity scope](domain-model.md#campaign-instance-identity-scope) in Domain Model, and the following initial values, under [Campaign instance creation](../foundation/campaign-instances.md#campaign-instance-creation) in Campaign Instances. This table is exhaustive.
+Every Agent is created by this rule, whichever rule causes the creation: the [Initial roster](#initial-roster), the `hireAgent` Player action of [Economy and Upgrades](economy-and-upgrades.md), or the [Player cheat action](../foundation/engine-contract.md#player-actions-and-turns) under [Adding Agents](#adding-agents). Each new Agent has a fresh Instance ID under [Campaign instance identity scope](domain-model.md#campaign-instance-identity-scope) in Domain Model, and the following initial values, under [Campaign instance creation](../foundation/campaign-instances.md#campaign-instance-creation) in Campaign Instances. This table is exhaustive.
 
 | Value | Initial value | Source |
 | --- | --- | --- |
@@ -553,11 +553,11 @@ No Upgrade changes an initial value above. A new Agent has no health lost, so it
 
 ## Initial roster
 
-**Proposed rule:** The initial Campaign state contains exactly `initial_roster_size` Agents, the value of AgentParameters, and no other Agent, as [Initial Campaign state](domain-model.md#initial-campaign-state) in Domain Model requires. Each is created under [Agent creation](#agent-creation) with Agent status At assignment and Turn hired equal to the turn number of the Campaign's first Turn. Because no Upgrade has been acquired at campaign creation, each has the Weapon `base_weapon_damage` as its effective weapon damage and the AgentArchetype's `base_health` as its effective max health and its current health. Every Agent of the initial roster can be assigned in the first Turn. An `initial_roster_size` of 0 is valid and gives an empty roster.
+The initial Campaign state contains exactly `initial_roster_size` Agents, the value of AgentParameters, and no other Agent, as [Initial Campaign state](domain-model.md#initial-campaign-state) in Domain Model requires. Each is created under [Agent creation](#agent-creation) with Agent status At assignment and Turn hired equal to the turn number of the Campaign's first Turn. Because no Upgrade has been acquired at campaign creation, each has the Weapon `base_weapon_damage` as its effective weapon damage and the AgentArchetype's `base_health` as its effective max health and its current health. Every Agent of the initial roster can be assigned in the first Turn. An `initial_roster_size` of 0 is valid and gives an empty roster.
 
 # Assigning Agents
 
-**Proposed rule:** The Player action `player.actions.assignAgents(agents, assignment)` assigns Agents to Standby, Contracting, or Training.
+The Player action `player.actions.assignAgents(agents, assignment)` assigns Agents to Standby, Contracting, or Training.
 
 Parameters:
 
@@ -594,7 +594,7 @@ A Player cheat action changes Campaign state in a way ordinary play does not all
 
 ## Adding Agents
 
-**Proposed rule:** The Player cheat action `developer.actions.addAgents(count)` adds Agents to the Agency. It follows every rule under [Player cheat actions](../foundation/developer-access.md#player-cheat-actions) in Developer Access, including that only the [Session controller](../foundation/engine-contract.md#principals-and-access) can call it, only with [Dev mode](../foundation/engine-contract.md#principals-and-access) enabled, and that each successful call is one Player action recorded as one [Timeline entry](../foundation/timeline.md#glossary).
+The Player cheat action `developer.actions.addAgents(count)` adds Agents to the Agency. It follows every rule under [Player cheat actions](../foundation/developer-access.md#player-cheat-actions) in Developer Access, including that only the [Session controller](../foundation/engine-contract.md#principals-and-access) can call it, only with [Dev mode](../foundation/engine-contract.md#principals-and-access) enabled, and that each successful call is one Player action recorded as one [Timeline entry](../foundation/timeline.md#glossary).
 
 | Parameter | Meaning                                               |
 | --------- | ----------------------------------------------------- |
@@ -606,7 +606,7 @@ Effect: the operation creates `count` Agents, each under [Agent creation](#agent
 
 # Turn report
 
-**Proposed rule:** The [Turn report](../foundation/campaign-state.md#glossary) of an Advance turn holds, of its Agents:
+The [Turn report](../foundation/campaign-state.md#glossary) of an Advance turn holds, of its Agents:
 
 - **Arrivals:** the Agents that arrived at their Assignment in its Previous turn transit arrivals step, under [Transit rule](#transit-rule).
 - **Training:** for each Agent with a Training gain outcome in it, that outcome and the Agent's base skill and exhaustion after its Training step, under [Training growth](#training-growth).
@@ -616,7 +616,7 @@ Each lists its Agents by Instance ID, in the order of the Agents in Campaign sta
 
 # Player-visible information
 
-**Proposed rule:** Every value below is [Player-visible information](../foundation/engine-contract.md#api-surfaces) under [Player-visible information](../foundation/player-api.md#player-visible-information) in [Player API](../foundation/engine-contract.md#api-surfaces), from the moment it exists, without a reveal condition, for every Agent whatever its Agent status. The table is exhaustive.
+Every value below is [Player-visible information](../foundation/engine-contract.md#api-surfaces) under [Player-visible information](../foundation/player-api.md#player-visible-information) in [Player API](../foundation/engine-contract.md#api-surfaces), from the moment it exists, without a reveal condition, for every Agent whatever its Agent status. The table is exhaustive.
 
 | Value | Player-visible information |
 | --- | --- |

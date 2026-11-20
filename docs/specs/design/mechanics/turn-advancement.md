@@ -32,7 +32,7 @@ Which Turn advancement step each rule applied during Advance turn belongs to, th
 
 # Turn advancement steps
 
-**Proposed rule:** Advance turn applies the following Turn advancement steps, each exactly once, in this order. The list is exhaustive. "[At assignment](agents-spec.md#agent-statuses)" in the table has the meaning stated under [Transit across the steps](#transit-across-the-steps). Every step applies in every Advance turn, including the one in which the [Campaign](../foundation/core-concepts.md#campaign-and-session) receives its [Campaign ending](domain-model.md#campaign-standing); Advance turn itself is rejected once the Campaign has a Campaign ending, under [After a Campaign ending](panic-and-endings.md#after-a-campaign-ending) in Panic and Endings, so then no step applies.
+Advance turn applies the following Turn advancement steps, each exactly once, in this order. The list is exhaustive. "[At assignment](agents-spec.md#agent-statuses)" in the table has the meaning stated under [Transit across the steps](#transit-across-the-steps). Every step applies in every Advance turn, including the one in which the [Campaign](../foundation/core-concepts.md#campaign-and-session) receives its [Campaign ending](domain-model.md#campaign-standing); Advance turn itself is rejected once the Campaign has a Campaign ending, under [After a Campaign ending](panic-and-endings.md#after-a-campaign-ending) in Panic and Endings, so then no step applies.
 
 | Order | Turn advancement step | Applies to | What its rules do | When there is nothing to apply to | Rules owned by |
 | --- | --- | --- | --- | --- | --- |
@@ -51,11 +51,11 @@ Which Turn advancement step each rule applied during Advance turn belongs to, th
 
 ## Turn number
 
-**Proposed rule:** The turn number is the number of the current [Turn](../foundation/engine-contract.md#glossary), as a whole number of at least 1. The initial [Campaign state](../foundation/core-concepts.md#campaign-and-session) has turn number 1, and step 12 (Turn close) raises it by 1 in every Advance turn, so the [World state](../foundation/engine-contract.md#player-actions-and-turns) after the Advance turn that ends Turn t has turn number t + 1. No other rule changes the turn number.
+The turn number is the number of the current [Turn](../foundation/engine-contract.md#glossary), as a whole number of at least 1. The initial [Campaign state](../foundation/core-concepts.md#campaign-and-session) has turn number 1, and step 12 (Turn close) raises it by 1 in every Advance turn, so the [World state](../foundation/engine-contract.md#player-actions-and-turns) after the Advance turn that ends Turn t has turn number t + 1. No other rule changes the turn number.
 
 ## Transit across the steps
 
-**Proposed rule:** Every step applies the [Transit rule](agents-spec.md#transit-rule) of Agents. Step 9, Previous turn transit arrivals, comes after every step in which an Agent works, fights, or recovers, so an Agent In transit stays In transit through all of them. The following statements are complete:
+Every step applies the [Transit rule](agents-spec.md#transit-rule) of Agents. Step 9, Previous turn transit arrivals, comes after every step in which an Agent works, fights, or recovers, so an Agent In transit stays In transit through all of them. The following statements are complete:
 
 1. **At assignment in a step:** Wherever the rule of a step applies to Agents that are At assignment, it applies to an Agent exactly when that Agent is At assignment when the step begins, as a Step-start value. An Agent In transit when the Advance turn begins is still In transit in steps 1 to 8, and so is an Agent that became In transit in an earlier step of the same Advance turn, i.e. an Agent with a Forced return from Contracting in step 1, an Investigation member sent to Standby in step 4, and a survivor sent back, or a member of an interrupted Investigation sent to Standby, in step 5.
 2. **Arrival:** An Agent that arrives in step 9 does nothing else in this Advance turn: it earns no income in step 1, gains no base skill in step 3, adds no Investigation progress in step 4, fights no Combat in step 5, and recovers neither current health nor exhaustion in step 8. Each of these steps comes before step 9, when the Agent is still In transit.
@@ -71,7 +71,7 @@ Which Turn advancement step each rule applied during Advance turn belongs to, th
 
 Because the steps run in one fixed order, something that happens early in an Advance turn can change what a later step of the same Advance turn does, e.g. a Faction Eliminated in Mission resolution no longer acts in Faction activity.
 
-**Proposed rule:** The following statements are complete for the interactions between steps of the same Advance turn that no other specification states:
+The following statements are complete for the interactions between steps of the same Advance turn that no other specification states:
 
 - **Mission sites created during Advance turn do not count down in it:** Only Mission sites that existed in the Turn-end state count down in step 6. An Initiative Mission site created in step 4 did not exist in the Turn-end state, and a Response Mission site created in step 7 does not exist yet when step 6 applies, so neither counts down in the Advance turn that creates it, under [Mission site expiration](missions.md#mission-site-expiration).
 - **A Mission site created for a Eliminated Faction:** An Initiative Mission site created in step 4 whose target Faction is Eliminated, already or in step 5 of the same Advance turn, is Cancelled in the cancellation part of step 5, so no World state shows it Active, under [Cancellation](missions.md#cancellation). The same holds for any Mission site created in step 4 that cannot exist, under [Whether a Mission site can exist](missions.md#whether-a-mission-site-can-exist).
@@ -104,7 +104,7 @@ The order in which an implementation processes the Campaign instances within one
 
 A few rules need something other than a Step-start value: a value from before the Advance turn began, or a result that an earlier part of the same step has just produced.
 
-**Proposed rule:** The following list of exceptions is exhaustive. Each one keeps the result independent of the order in which an implementation processes Campaign instances.
+The following list of exceptions is exhaustive. Each one keeps the result independent of the order in which an implementation processes Campaign instances.
 
 1. **Values of the Turn-end state:** Three rules read a value of the Turn-end state rather than a Step-start value: whether an Agent was In transit, and with which Assignment, in step 9, under [Transit across the steps](#transit-across-the-steps); whether a Mission site already existed, in step 6, under [Mission site expiration](missions.md#mission-site-expiration); and the money that Money at the end of turn records, in step 12, under [Turn series of money](economy-and-upgrades.md#turn-series-of-money).
 2. **Ordered parts for one Campaign instance:** Where an owning specification states the rule of a step for one Campaign instance as parts applied in order, each part reads the results of the earlier parts for that same Campaign instance, and never the results of this step for another Campaign instance. The list of such rules is exhaustive:
@@ -121,7 +121,7 @@ A few rules need something other than a Step-start value: a value from before th
 
 When several changes reach the same value within an Advance turn, the result must still be one well-defined value, whichever change an implementation applies first.
 
-**Proposed rule:** The following combined results are complete:
+The following combined results are complete:
 
 - **Money:** In step 5, the money changes of all Missions resolved in the step add up; the sum does not depend on order and is never clamped, under [Consequences](missions.md#consequences). Steps 1 and 2 each make one change.
 - **Funding:** The funding changes made in one step are summed and floored at 0 once, from the Step-start funding of that step, under [Funding changes](economy-and-upgrades.md#funding-changes). Steps 5 and 6 are separate steps, so each has its own sum and its own floor.
@@ -134,7 +134,7 @@ No Agent value is changed by the rules of two Campaign instances in one step: an
 
 ## Campaign instances created during Advance turn
 
-**Proposed rule:** Mission sites and their Enemies are the only Campaign instances created during Advance turn; a Mission is created only by a Player action, during a Turn, and the following statements about them are complete:
+Mission sites and their Enemies are the only Campaign instances created during Advance turn; a Mission is created only by a Player action, during a Turn, and the following statements about them are complete:
 
 - **An Initiative Mission site created in step 4** is Active from its creation. It takes part in the cancellation part of step 5, and in no other later step of the same Advance turn: it is not resolved in step 5, because it is not Deployed, and it does not count down in step 6, because it did not exist in the Turn-end state.
 - **A Response Mission site created in step 7** takes part in no later step of the same Advance turn.

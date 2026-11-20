@@ -40,7 +40,7 @@ Each property is the starting value of a rate that [Rate Upgrades](economy-and-u
 
 ## Recovery GDR validation
 
-**Proposed rule:** The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for RecoveryParameters. A Game build whose GDRs violate one of these rules is defective: no [Campaign](../foundation/core-concepts.md#campaign-and-session) is created from it, and the violation is reported as a data defect, never repaired into different gameplay, under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract.
+The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for RecoveryParameters. A Game build whose GDRs violate one of these rules is defective: no [Campaign](../foundation/core-concepts.md#campaign-and-session) is created from it, and the violation is reported as a data defect, never repaired into different gameplay, under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract.
 
 1. **One RecoveryParameters:** The Game build supplies exactly one RecoveryParameters GDR.
 2. **Exact properties:** The RecoveryParameters GDR has exactly the properties its table above lists, apart from `id` and `type`: no listed property is missing and no other property is present.
@@ -49,7 +49,7 @@ Each property is the starting value of a rate that [Rate Upgrades](economy-and-u
 
 # Which Agents recover
 
-**Proposed rule:** In the Agent recovery step of every Advance turn, the recovery rules below apply to an Agent exactly when all of the following hold:
+In the Agent recovery step of every Advance turn, the recovery rules below apply to an Agent exactly when all of the following hold:
 
 1. It is [Serving](agents-spec.md#agent-statuses).
 2. It is not [In transit](agents-spec.md#agent-statuses) at the start of the Agent recovery step: its [Agent status](domain-model.md#agency-and-agents) there is [At assignment](agents-spec.md#agent-statuses) or Recovering.
@@ -72,9 +72,9 @@ The recovery rules of the next two sections read each Agent's own values at the 
 
 # Health recovery
 
-**Inherited behavior:** An Agent recovers a percentage of its effective max health in each Advance turn. game-ts keeps the resulting current health fractional.
+An Agent recovers a percentage of its effective max health in each Advance turn. **Informative rationale:** game-ts recovered health the same way and kept the resulting current health fractional.
 
-**Proposed rule:** v5 keeps an Agent's current health as a Decimal quantity, under [Decimal quantities](../foundation/numbers.md#decimal-quantities) in Numbers, so the amount recovered in one Advance turn is rounded up to hundredths. The Health recovery rate of an Agent is the following [Derived value](../foundation/core-concepts.md#value-classification):
+v5 keeps an Agent's current health as a Decimal quantity, under [Decimal quantities](../foundation/numbers.md#decimal-quantities) in Numbers, so the amount recovered in one Advance turn is rounded up to hundredths. The Health recovery rate of an Agent is the following [Derived value](../foundation/core-concepts.md#value-classification):
 
 ```text
 Health recovery rate = round up to hundredths( p × effective max health / 100 )
@@ -107,7 +107,7 @@ An Agent on Recovery whose current health after is below its effective max healt
 
 # Exhaustion recovery
 
-**Proposed rule:** For each Agent that is on Standby or on Recovery and satisfies the conditions under [Which Agents recover](#which-agents-recover), the Agent recovery step sets
+For each Agent that is on Standby or on Recovery and satisfies the conditions under [Which Agents recover](#which-agents-recover), the Agent recovery step sets
 
 ```text
 Exact exhaustion after = max( 0, Exact exhaustion before − exhaustion recovery )
@@ -121,7 +121,7 @@ Exhaustion recovers on Standby and on Recovery alone. It does not recover on [Co
 
 One Advance turn can change an Agent's current health and exhaustion in more than one way, e.g. through Health recovery and [Exhaustion](agents-spec.md#combatant-attributes) recovery in the same step. These rules fix how such changes combine, so the result never depends on the order in which they are applied.
 
-**Proposed rule:** The following statements are complete.
+The following statements are complete.
 
 1. **One recovery per Agent per step:** The Agent recovery step is applied once per Advance turn, and each Agent recovers at most once in it. An Agent that moves from Recovery to Standby in the Agent recovery step has already been counted as an Agent on Recovery: it recovers current health, recovers exhaustion exactly once, and then becomes Standby. It does not recover exhaustion a second time as an Agent on Standby in the same step, because the Assignment that decides eligibility is the one at the start of the step.
 2. **[Current health](agents-spec.md#combatant-attributes) and exhaustion are independent:** The current health of an Agent on Recovery rises by the Health recovery rate and its Exact exhaustion falls by the exhaustion recovery in the same step. Neither amount depends on the other, and the current health reaching effective max health does not change how much exhaustion is recovered in that step. An Agent that reaches effective max health in the step may still have exhaustion above 0 when it becomes Standby.
@@ -132,11 +132,11 @@ One Advance turn can change an Agent's current health and exhaustion in more tha
 
 # Turn report
 
-**Proposed rule:** The [Turn report](../foundation/campaign-state.md#glossary) of an Advance turn holds, for each Agent that recovers in it under [Which Agents recover](#which-agents-recover), in the order of the Agents in [Campaign state](../foundation/core-concepts.md#campaign-and-session), its [Instance ID](../foundation/campaign-instances.md#glossary), its current health, Exact exhaustion, and exhaustion after its recovery step, and whether its Recovery ended in it. The [History entry](../foundation/world-history.md#glossary) of the Turn the Advance turn ends holds none of these. All are [Player-visible information](../foundation/engine-contract.md#api-surfaces), under [Turn report and history](../foundation/world-history.md#turn-report-and-history) in History and Turn Report.
+The [Turn report](../foundation/campaign-state.md#glossary) of an Advance turn holds, for each Agent that recovers in it under [Which Agents recover](#which-agents-recover), in the order of the Agents in [Campaign state](../foundation/core-concepts.md#campaign-and-session), its [Instance ID](../foundation/campaign-instances.md#glossary), its current health, Exact exhaustion, and exhaustion after its recovery step, and whether its Recovery ended in it. The [History entry](../foundation/world-history.md#glossary) of the Turn the Advance turn ends holds none of these. All are [Player-visible information](../foundation/engine-contract.md#api-surfaces), under [Turn report and history](../foundation/world-history.md#turn-report-and-history) in History and Turn Report.
 
 # Player-visible information
 
-**Proposed rule:** Every value below is [Player-visible information](../foundation/engine-contract.md#api-surfaces) under [Player-visible information](../foundation/player-api.md#player-visible-information) in [Player API](../foundation/engine-contract.md#api-surfaces), from the moment it exists, without a reveal condition. The table is exhaustive.
+Every value below is [Player-visible information](../foundation/engine-contract.md#api-surfaces) under [Player-visible information](../foundation/player-api.md#player-visible-information) in [Player API](../foundation/engine-contract.md#api-surfaces), from the moment it exists, without a reveal condition. The table is exhaustive.
 
 | Value | Player-visible information |
 | --- | --- |

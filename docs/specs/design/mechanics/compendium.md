@@ -91,7 +91,7 @@ A Subject article states no value of its subject in authored text: the values th
 
 Every article is shown, listed, and linked under one title, and a Subject article takes it from its subject, so that the name of a GDR is authored once.
 
-**Proposed rule:** The displayed title of a Guide article or a Mechanics article is its `title`. The displayed title of a Subject article is the `name` of its subject. No two Compendium articles of a Game build have displayed titles that are equal ignoring case, under [Compendium article GDR validation](#compendium-article-gdr-validation), so a displayed title identifies one article to the Player.
+The displayed title of a Guide article or a Mechanics article is its `title`. The displayed title of a Subject article is the `name` of its subject. No two Compendium articles of a Game build have displayed titles that are equal ignoring case, under [Compendium article GDR validation](#compendium-article-gdr-validation), so a displayed title identifies one article to the Player.
 
 Two texts are equal ignoring case exactly when they are equal after each is converted to lower case. This definition applies wherever a Compendium rule ignores case.
 
@@ -99,7 +99,7 @@ Two texts are equal ignoring case exactly when they are equal after each is conv
 
 A Placeholder keeps a value of the game out of authored text: the article says where the value lives, and the Game build supplies it.
 
-**Proposed rule:** A Placeholder is written in templated text in one of the following forms. This table is exhaustive.
+A Placeholder is written in templated text in one of the following forms. This table is exhaustive.
 
 | Form | It is replaced by |
 | --- | --- |
@@ -117,7 +117,7 @@ A Placeholder is replaced by a value of the Game build, never by a value of [Cam
 
 A Placeholder may show only what the Player may know wherever the article is shown, so it may name only GDR properties that are Player-visible in every World state in which the article is.
 
-**Proposed rule:** A Placeholder may name exactly the properties in the following table, which is exhaustive. The middle column lists the properties of a GDR of that Type that a Placeholder may name. The last column says which forms may name them: any form, or only `{subject.…}` in a Subject article whose subject is the GDR.
+A Placeholder may name exactly the properties in the following table, which is exhaustive. The middle column lists the properties of a GDR of that Type that a Placeholder may name. The last column says which forms may name them: any form, or only `{subject.…}` in a Subject article whose subject is the GDR.
 
 | Type                    | Properties a Placeholder may name | Forms              |
 | ----------------------- | --------------------------------- | ------------------ |
@@ -143,7 +143,7 @@ A specification that adds a GDR Type, or changes when a property is Player-visib
 
 A Placeholder shows a value as plain text in one fixed form, so that every user interface shows the same characters.
 
-**Proposed rule:** The value a Placeholder names is shown as follows. This table is exhaustive; a Placeholder that names a value of any other shape, e.g. a mapping, an absent value, or a whole list, is invalid.
+The value a Placeholder names is shown as follows. This table is exhaustive; a Placeholder that names a value of any other shape, e.g. a mapping, an absent value, or a whole list, is invalid.
 
 | Value | Shown as |
 | --- | --- |
@@ -157,7 +157,7 @@ The value is read as the exact decimal number the GDR file states, under [GDR au
 
 ## Compendium article GDR validation
 
-**Proposed rule:** The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for CompendiumArticle GDRs. A Game build whose GDRs violate one of these rules is defective: no [Campaign](../foundation/core-concepts.md#campaign-and-session) is created from it, and the violation is reported as a data defect, never repaired into different content, under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract.
+The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for CompendiumArticle GDRs. A Game build whose GDRs violate one of these rules is defective: no [Campaign](../foundation/core-concepts.md#campaign-and-session) is created from it, and the violation is reported as a data defect, never repaired into different content, under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract.
 
 1. **Category is valid:** Each CompendiumArticle has a `category` that is exactly `guide`, `mechanics`, or `subject`.
 2. **Exact properties:** Each CompendiumArticle has `body`, has `title`, `subject`, and `formulas` exactly as the table under [Article categories](#article-categories) requires for its `category`, and may have `terms`, `see_also`, and `visible_when`. Apart from `id` and `type`, no other property is present.
@@ -174,7 +174,7 @@ Rule 9 makes a renamed or removed GDR property a data defect of every article th
 
 # Article visibility
 
-**Proposed rule:** In each [World state](../foundation/engine-contract.md#player-actions-and-turns), a Compendium article is Player-visible exactly when its `visible_when`, if it has one, holds in that World state, under [Evaluating a Condition](../foundation/conditions.md#evaluating-a-condition) in Conditions, and one of the following holds:
+In each [World state](../foundation/engine-contract.md#player-actions-and-turns), a Compendium article is Player-visible exactly when its `visible_when`, if it has one, holds in that World state, under [Evaluating a Condition](../foundation/conditions.md#evaluating-a-condition) in Conditions, and one of the following holds:
 
 1. It is a Guide article or a Mechanics article.
 2. It is a Subject article and its subject is Player-visible in that World state: the specification that owns the subject's Type declares, as [Player-visible information](../foundation/engine-contract.md#api-surfaces) in that World state, a value that includes the subject GDR.
@@ -197,7 +197,7 @@ The following table restates, for the Types the [Bootstrap GDRs](../content/boot
 
 What the Player reads is the resolved article: its templated texts with every Placeholder replaced and every Article link found. The engine resolves it, so that every user interface, graphical or command-line, shows the same words, values, and links.
 
-**Proposed rule:** The resolved form of a Player-visible article in a World state consists of its resolved `body`, its resolved formula rows in authored order, each a resolved `label` and a resolved `text`, and its See also entries under [See also](#see-also). A resolved templated text is an ordered sequence of segments, each of exactly one of the following kinds. This table is exhaustive.
+The resolved form of a Player-visible article in a World state consists of its resolved `body`, its resolved formula rows in authored order, each a resolved `label` and a resolved `text`, and its See also entries under [See also](#see-also). A resolved templated text is an ordered sequence of segments, each of exactly one of the following kinds. This table is exhaustive.
 
 | Segment | It holds | It comes from |
 | --- | --- | --- |
@@ -211,7 +211,7 @@ Joined in order, the texts of the segments are the templated text with every Pla
 
 Links between articles are found by rule, as in a reference work in which the first mention of a topic links to its page: an author writes no link, and a new article is linked from every article that mentions it.
 
-**Proposed rule:** In a World state, let V be the Compendium articles that are Player-visible in it. The Article links of an article A in V are found by scanning the authored text of A, i.e. each run of text between Placeholders after `{{` and `}}` are replaced, in this order: the `body`, then each row of `formulas` in authored order, its `label` before its `text`. Each run is scanned from its first character to its last. The following statements are complete.
+In a World state, let V be the Compendium articles that are Player-visible in it. The Article links of an article A in V are found by scanning the authored text of A, i.e. each run of text between Placeholders after `{{` and `}}` are replaced, in this order: the `body`, then each row of `formulas` in authored order, its `label` before its `text`. Each run is scanned from its first character to its last. The following statements are complete.
 
 1. **Match:** An Article term of an article in V, A included, matches at a position when the text starting there equals the Article term ignoring case, the character before the position is neither a letter nor a digit or the position is the start of the run, and the character after the matched text is neither a letter nor a digit or the matched text ends the run. Letters and digits are those of every script.
 2. **Longest match:** When several Article terms match at one position, the longest one matches, e.g. "Mission site" rather than "Mission". Rule 7 of [Compendium article GDR validation](#compendium-article-gdr-validation) makes the longest one unique.
@@ -237,17 +237,17 @@ The word `Exhaustion` in the `body` matches the article's own Article term and s
 
 An author can also point from one article to others that the text does not mention.
 
-**Proposed rule:** The See also entries of a Player-visible article in a World state are the articles its `see_also` names that are Player-visible in that World state, in authored order. Each entry is an Article link whose text is the displayed title of the article it names. An article that `see_also` names and that is not Player-visible is left out, under [Player-visible information](#player-visible-information).
+The See also entries of a Player-visible article in a World state are the articles its `see_also` names that are Player-visible in that World state, in authored order. Each entry is an Article link whose text is the displayed title of the article it names. An article that `see_also` names and that is not Player-visible is left out, under [Player-visible information](#player-visible-information).
 
 # Coverage of parameter GDRs
 
 A reference is only useful if it is complete: a Player who wants to know how a mechanic works must find every number behind it.
 
-**Proposed rule:** The Compendium articles of the Bootstrap GDRs name, in a Placeholder of at least one article, every property of every parameter GDR, i.e. every GDR whose Type name ends in "Parameters", except the properties that the [Bootstrap GDRs](../content/bootstrap-gdrs.md#glossary) specification exempts because they describe no mechanic of the game. A new property of a parameter GDR therefore comes with the Mechanics article text that explains it. This is a requirement on the Bootstrap GDRs as authored, which the repository check `npm run compendium:check` enforces; it is not a rule of [Compendium article GDR validation](#compendium-article-gdr-validation), so a Game build whose articles leave a property out is not defective.
+The Compendium articles of the Bootstrap GDRs name, in a Placeholder of at least one article, every property of every parameter GDR, i.e. every GDR whose Type name ends in "Parameters", except the properties that the [Bootstrap GDRs](../content/bootstrap-gdrs.md#glossary) specification exempts because they describe no mechanic of the game. A new property of a parameter GDR therefore comes with the Mechanics article text that explains it. This is a requirement on the Bootstrap GDRs as authored, which the repository check `npm run compendium:check` enforces; it is not a rule of [Compendium article GDR validation](#compendium-article-gdr-validation), so a Game build whose articles leave a property out is not defective.
 
 # Player-visible information
 
-**Proposed rule:** Every value below is Player-visible information under [Player-visible information](../foundation/player-api.md#player-visible-information) in [Player API](../foundation/engine-contract.md#api-surfaces), with the reveal condition the table states. The table is exhaustive.
+Every value below is Player-visible information under [Player-visible information](../foundation/player-api.md#player-visible-information) in [Player API](../foundation/engine-contract.md#api-surfaces), with the reveal condition the table states. The table is exhaustive.
 
 | Value | Player-visible information |
 | --- | --- |

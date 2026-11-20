@@ -105,7 +105,7 @@ Combats read seven values of [AgentParameters](agents-spec.md#agentparameters), 
 
 ## Combat GDR validation
 
-**Proposed rule:** The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for EnemyArchetype, Weapon, CombatParameters, `exhaustion_per_attack`, and `exhaustion_per_defense`, and it adds to [Agent GDR validation](agents-spec.md#agent-gdr-validation) in Agents. A Game build whose GDRs violate one of these rules is defective: no [Campaign](../foundation/core-concepts.md#campaign-and-session) is created from it, and the violation is reported as a data defect, never repaired into different gameplay, under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract.
+The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for EnemyArchetype, Weapon, CombatParameters, `exhaustion_per_attack`, and `exhaustion_per_defense`, and it adds to [Agent GDR validation](agents-spec.md#agent-gdr-validation) in Agents. A Game build whose GDRs violate one of these rules is defective: no [Campaign](../foundation/core-concepts.md#campaign-and-session) is created from it, and the violation is reported as a data defect, never repaired into different gameplay, under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract.
 
 1. **One CombatParameters:** The Game build supplies exactly one CombatParameters GDR.
 2. **EnemyArchetype values are valid:** Each EnemyArchetype's `base_skill` is a whole number of at least 0, its `base_health` is a whole number of at least 1, and its `weapon` references a Weapon GDR the Game build supplies.
@@ -124,7 +124,7 @@ Enemies are the opponents the Agency's Agents fight at a Mission site. Each is a
 
 ## Enemy properties
 
-**Proposed rule:** An Enemy is a [Campaign instance](../foundation/core-concepts.md#campaign-instances) whose Archetype is an EnemyArchetype. Its Archetype reference is set when it is created and never changes. Its [Constants](../foundation/core-concepts.md#campaign-instances) and [State](../foundation/core-concepts.md#campaign-instances) have exactly the following properties. This table is exhaustive.
+An Enemy is a [Campaign instance](../foundation/core-concepts.md#campaign-instances) whose Archetype is an EnemyArchetype. Its Archetype reference is set when it is created and never changes. Its [Constants](../foundation/core-concepts.md#campaign-instances) and [State](../foundation/core-concepts.md#campaign-instances) have exactly the following properties. This table is exhaustive.
 
 | Property | Part | Value | Classification and range |
 | --- | --- | --- | --- |
@@ -142,7 +142,7 @@ These are exactly the properties the [Combatant Role Type](agents-spec.md#combat
 
 ## Enemy creation
 
-**Proposed rule:** Every Enemy is created together with the Mission site at which it is present, under [Missions](missions.md). Each new Enemy has a fresh [Instance ID](../foundation/campaign-instances.md#glossary) under [Campaign instance identity scope](domain-model.md#campaign-instance-identity-scope) in Domain Model, and the following initial values, under [Campaign instance creation](../foundation/campaign-instances.md#campaign-instance-creation) in Campaign Instances. This table is exhaustive.
+Every Enemy is created together with the Mission site at which it is present, under [Missions](missions.md). Each new Enemy has a fresh [Instance ID](../foundation/campaign-instances.md#glossary) under [Campaign instance identity scope](domain-model.md#campaign-instance-identity-scope) in Domain Model, and the following initial values, under [Campaign instance creation](../foundation/campaign-instances.md#campaign-instance-creation) in Campaign Instances. This table is exhaustive.
 
 | Value | Initial value | Source |
 | --- | --- | --- |
@@ -161,7 +161,7 @@ No [Upgrade](economy-and-upgrades.md#glossary) and no [Campaign configuration](.
 
 An Enemy changes only while it is fought, so an Enemy that no Combat reaches keeps the values it was created with.
 
-**Proposed rule:** The following list is the exhaustive set of rules that change an Enemy's values after its creation:
+The following list is the exhaustive set of rules that change an Enemy's values after its creation:
 
 - An attack on the Enemy in a Combat lowers its current health, under [Effects of an attack](#effects-of-an-attack).
 - An attack made by or on the Enemy in a Combat raises its exhaustion, under [Effects of an attack](#effects-of-an-attack).
@@ -174,7 +174,7 @@ A Combat turns a deployment into a result without any choice from the player. Th
 
 ## Combat inputs and outputs
 
-**Proposed rule:** A Combat is fully automatic: the player chooses who is deployed, under [Missions](missions.md), and makes no choice during the Combat. A Combat is a function of the following inputs only. This list is exhaustive.
+A Combat is fully automatic: the player chooses who is deployed, under [Missions](missions.md), and makes no choice during the Combat. A Combat is a function of the following inputs only. This list is exhaustive.
 
 1. **The Agents' side:** a list of one or more distinct Agents, each [Serving](agents-spec.md#agent-statuses). This is the [Mission](domain-model.md#leads-investigations-mission-sites-and-missions)'s [Current team](domain-model.md#leads-investigations-mission-sites-and-missions).
 2. **The Enemies' side:** a list of zero or more distinct Enemies. These are the Mission site's Enemies.
@@ -191,7 +191,7 @@ An Agents' side that is empty, contains an Agent twice, or contains an Agent tha
 
 ## Fighting a Combat
 
-**Proposed rule:** Fighting a Combat is the one procedure that turns the inputs above into the outputs above, by [Combat flow](#combat-flow), [Attacks](#attacks), [Combat end](#combat-end), and [Combat report](#combat-report). The following rules are complete:
+Fighting a Combat is the one procedure that turns the inputs above into the outputs above, by [Combat flow](#combat-flow), [Attacks](#attacks), [Combat end](#combat-end), and [Combat report](#combat-report). The following rules are complete:
 
 - **One procedure:** Exactly two things have a Combat fought, and both use this procedure and no other: the Mission resolution step, under [Missions](missions.md), and `developer.tools.fightCombat(setup)`, under [Detached Combat](#detached-combat). What differs between them is only where the inputs come from and what is done with the outputs.
 - **Pure in its inputs:** Given equal inputs, including equal values of every random outcome, fighting a Combat produces equal outputs, whoever has it fought. E.g., a Detached Combat given the starting values, GDR values, and random outcomes of a Combat fought in a Mission resolution step produces the same Combat report, apart from the Mission and the identification of its participants.
@@ -199,7 +199,7 @@ An Agents' side that is empty, contains an Agent twice, or contains an Agent tha
 
 ## Combat-only properties
 
-**Proposed rule:** The exhaustive set of gained properties of the [Combatant Role Type](agents-spec.md#combatant-role-type) is one property:
+The exhaustive set of gained properties of the [Combatant Role Type](agents-spec.md#combatant-role-type) is one property:
 
 | Gained property | Type | Initial value | Meaning |
 | --- | --- | --- | --- |
@@ -211,7 +211,7 @@ A Combatant is able to fight, during a Combat, exactly when its current health i
 
 ## Incapacitation condition
 
-**Inherited behavior** for the skill clause; **Proposed rule** for the exhaustion clause. A Combatant meets the incapacitation condition exactly when its current health is greater than 0 and at least one of the following holds:
+A Combatant meets the incapacitation condition exactly when its current health is greater than 0 and at least one of the following holds:
 
 ```text
 effective skill  ≤  incapacitation_skill_fraction × base skill        (skill clause)
@@ -222,15 +222,17 @@ where effective skill is computed under [Effective skill](agents-spec.md#effecti
 
 A Combatant of base skill 0 meets the condition whenever it is alive, because its effective skill is 0. A Combatant that does not meet it has an effective skill of at least 1, because its effective skill is greater than a value of at least 0.
 
+**Informative rationale:** The skill clause is taken from game-ts; the exhaustion clause is new in v5.
+
 Outside a Combat, a Combatant is able to fight exactly when its current health is greater than 0 and it does not meet the incapacitation condition. This is the definition [Combat rating](#combat-rating) uses outside a Combat, e.g. for a Mission site's Enemies before any team is deployed. Within a Combat the two definitions always agree, under [Monotonicity within a Combat](#monotonicity-within-a-combat).
 
 ## Combat timing
 
-**Proposed rule:** A Combat begins and ends within one [Turn advancement step](turn-advancement.md#glossary) of one Advance turn, the step in which [Missions](missions.md) has it fought; nothing else happens between its first and its last attack. A Detached Combat is the one exception: it begins and ends within one call of `developer.tools.fightCombat(setup)` and belongs to no Advance turn. No [World state](../foundation/engine-contract.md#player-actions-and-turns) therefore contains a Combat in progress, a Combat round, or the Incapacitated property. Only the Combat's outputs are ever part of a World state.
+A Combat begins and ends within one [Turn advancement step](turn-advancement.md#glossary) of one Advance turn, the step in which [Missions](missions.md) has it fought; nothing else happens between its first and its last attack. A Detached Combat is the one exception: it begins and ends within one call of `developer.tools.fightCombat(setup)` and belongs to no Advance turn. No [World state](../foundation/engine-contract.md#player-actions-and-turns) therefore contains a Combat in progress, a Combat round, or the Incapacitated property. Only the Combat's outputs are ever part of a World state.
 
 # Combat rating
 
-**Proposed rule:** The Combat rating of one Combatant is its effective skill, under [Effective skill](agents-spec.md#effective-skill) in Agents. The Combat rating of a side, i.e. of a list of Combatants, is the sum of the effective skills of those of its Combatants that are able to fight:
+The Combat rating of one Combatant is its effective skill, under [Effective skill](agents-spec.md#effective-skill) in Agents. The Combat rating of a side, i.e. of a list of Combatants, is the sum of the effective skills of those of its Combatants that are able to fight:
 
 ```text
 Combat rating of a side = Σ effective skill(c)   over every Combatant c of the side that is able to fight
@@ -246,13 +248,13 @@ A Combat proceeds in a fixed order, so the only chance in it comes from its atta
 
 ## Fixed order of each side
 
-**Proposed rule:** Each side has a fixed order for the whole Combat: the order of its input list under [Combat inputs and outputs](#combat-inputs-and-outputs). The Agents' side is ordered as the Current team's list is given, and the Enemies' side as the Mission site's list of Enemies is given. The fixed order never changes during the Combat; a Combatant that dies or becomes Incapacitated keeps its position and is skipped. The Combat report records both orders.
+Each side has a fixed order for the whole Combat: the order of its input list under [Combat inputs and outputs](#combat-inputs-and-outputs). The Agents' side is ordered as the Current team's list is given, and the Enemies' side as the Mission site's list of Enemies is given. The fixed order never changes during the Combat; a Combatant that dies or becomes Incapacitated keeps its position and is skipped. The Combat report records both orders.
 
 **Informative rationale:** The order is not derived from Instance IDs, because the format of an Instance ID is the Implementer's choice and so defines no order.
 
 ## Combat start
 
-**Proposed rule:** When a Combat begins, before any Combat round:
+When a Combat begins, before any Combat round:
 
 1. Every Combatant of both sides gains Incapacitated, set to yes exactly when the Combatant meets the [Incapacitation condition](#incapacitation-condition) with its current values, and to no otherwise. An Enemy whose current health is already 0 is dead and is not Incapacitated.
 2. The Combat report records each Combatant's starting values and the Combat rating of each side, under [Combat report](#combat-report). The Combat rating of the Agents' side at this moment is its starting Combat rating, which the Retreated check reads.
@@ -262,7 +264,7 @@ A Combat that ends at its start makes no attack and changes no value of any Comb
 
 ## Combat rounds
 
-**Proposed rule:** Combat rounds are numbered from 1. Each Combat round consists of two phases, in this order:
+Combat rounds are numbered from 1. Each Combat round consists of two phases, in this order:
 
 1. **Agents' phase:** each Agent of the Agents' side takes one Combat turn, in the fixed order of its side.
 2. **Enemies' phase:** each Enemy of the Enemies' side takes one Combat turn, in the fixed order of its side.
@@ -273,7 +275,7 @@ After the Enemies' phase, the [End-of-Combat-round checks](#end-of-combat-round-
 
 ## Target selection
 
-**Proposed rule:** An attacker's target is the opponent, i.e. the Combatant of the other side, that is able to fight at the moment of the attacker's Combat turn and has the highest effective skill at that moment. When several such opponents share the highest effective skill, the target is the one that comes earliest in the fixed order of its side. An opponent that is not able to fight is never a target, whatever its effective skill. When no opponent is able to fight, there is no target.
+An attacker's target is the opponent, i.e. the Combatant of the other side, that is able to fight at the moment of the attacker's Combat turn and has the highest effective skill at that moment. When several such opponents share the highest effective skill, the target is the one that comes earliest in the fixed order of its side. An opponent that is not able to fight is never a target, whatever its effective skill. When no opponent is able to fight, there is no target.
 
 **Informative rationale:** game-ts used a five-step target selection with random self-removal. Among four simple targeting rules simulated with the Bootstrap GDR values, targeting the strongest opponent was the only one under which the [Victory path](../content/bootstrap-gdrs.md#glossary) is winnable; this is evidence for the choice, not a requirement.
 
@@ -283,7 +285,7 @@ An attack is made by one attacker on one defender, its target. It has one hit ou
 
 ## Hit outcome
 
-**Inherited behavior:** Each attack has one named random outcome, the hit outcome, whose possible values are hit and miss. It is a hit with the [Probability](../foundation/numbers.md#glossary)
+Each attack has one named random outcome, the hit outcome, whose possible values are hit and miss. It is a hit with the [Probability](../foundation/numbers.md#glossary)
 
 ```text
 hit Probability = A² / (A² + D²)
@@ -298,7 +300,7 @@ The Probability is the exact ratio of the two whole numbers `A²` and `A² + D²
 
 ## Damage outcome
 
-**Proposed rule:** Each attack whose hit outcome is a hit has one named random outcome, the damage outcome. It is a uniform whole-number outcome, under [Uniform whole-number outcomes](../foundation/numbers.md#uniform-whole-number-outcomes) in Numbers, over the inclusive range from `lo` to `hi`:
+Each attack whose hit outcome is a hit has one named random outcome, the damage outcome. It is a uniform whole-number outcome, under [Uniform whole-number outcomes](../foundation/numbers.md#uniform-whole-number-outcomes) in Numbers, over the inclusive range from `lo` to `hi`:
 
 ```text
 lo = round up( w × (1 − weapon_damage_range) )
@@ -312,11 +314,11 @@ hi = round down( w × (1 + weapon_damage_range) )
 
 Each bound is evaluated exactly and rounded once, with [Round up](../foundation/numbers.md#glossary) for `lo` and [Round down](../foundation/numbers.md#glossary) for `hi`, under [Rounding](../foundation/numbers.md#rounding) in Numbers, before the range is formed. Because w is a whole number, `w × (1 − weapon_damage_range) ≤ w ≤ w × (1 + weapon_damage_range)` gives `0 ≤ lo ≤ w ≤ hi`, so the range is never empty. Each of the `hi − lo + 1` values has the Probability `1 / (hi − lo + 1)`. The damage outcome does not depend on the defender. [Effective weapon damage](agents-spec.md#combatant-attributes) does not change during a Combat, so the range of one attacker is the same for all its attacks.
 
-**Proposed rule:** A damage outcome supplied from outside the Combat, e.g. by a random outcome override under [Random outcome overrides](../foundation/developer-access.md#random-outcome-overrides) in Developer Access, must be one of the whole numbers from `lo` to `hi`; any other value is rejected and never applied.
+A damage outcome supplied from outside the Combat, e.g. by a random outcome override under [Random outcome overrides](../foundation/developer-access.md#random-outcome-overrides) in Developer Access, must be one of the whole numbers from `lo` to `hi`; any other value is rejected and never applied.
 
 ## Effects of an attack
 
-**Proposed rule:** One attack applies these effects, in this order, before the next Combat turn begins:
+One attack applies these effects, in this order, before the next Combat turn begins:
 
 1. **Read:** A and D are read, and the hit Probability is formed, under [Hit outcome](#hit-outcome).
 2. **Hit outcome:** The attack has its hit outcome. The damage outcome exists only when the hit outcome is a hit.
@@ -330,7 +332,7 @@ The order of steps 3 and 4 affects no result, because nothing reads the values b
 
 Every attack an Agent makes or takes teaches it something, a hit more than a miss when it attacks and a miss more than a hit when it defends, but the Agent keeps the lesson only if it lives through the Mission.
 
-**Proposed rule:** Every Agent of the Agents' side has a combat experience in each Combat: the sum, over every attack of the Combat log in which it is the attacker or the defender, of the amount in this table. The table is exhaustive.
+Every Agent of the Agents' side has a combat experience in each Combat: the sum, over every attack of the Combat log in which it is the attacker or the defender, of the amount in this table. The table is exhaustive.
 
 | The Agent's part in the attack | Hit outcome | Amount                        |
 | ------------------------------ | ----------- | ----------------------------- |
@@ -341,11 +343,11 @@ Every attack an Agent makes or takes teaches it something, a hit more than a mis
 
 Each amount is a whole number of at least 0 of AgentParameters, so the combat experience is a whole number of at least 0, and 0 for an Agent that neither attacked nor was attacked. It counts every attack whatever the health removed, the damage outcome, or whether the attack made someone dead, and an attack that made the Agent dead counts too. An Enemy has no combat experience. A Combat changes no base skill or Experience, under [Effects of an attack](#effects-of-an-attack), so combat experience earned early in a Combat does not strengthen the Agent later in the same Combat: the Combat reports it, and [Mission growth](agents-spec.md#mission-growth) in Agents adds it to a survivor's Experience, and with it to its base skill, after the Combat.
 
-**Inherited behavior:** The four amounts and the rule that only survivors keep them are taken from game-ts.
+**Informative rationale:** The four amounts and the rule that only survivors keep them are taken from game-ts.
 
 ## Killed and Incapacitated
 
-**Proposed rule:** Each evaluation of a Combatant under [Effects of an attack](#effects-of-an-attack) applies the first of these that holds:
+Each evaluation of a Combatant under [Effects of an attack](#effects-of-an-attack) applies the first of these that holds:
 
 1. **Dead:** Its current health is 0. It is dead and is not Incapacitated. A dead Agent becomes Killed at this moment, under [Agent status](agents-spec.md#agent-status) in Agents, and its Killed by references the attacker and the attacker's Mission site. A dead Enemy stays an Enemy with current health 0, and the Enemies killed of the attacking Agent rises by 1, under [Service record](agents-spec.md#service-record) in Agents.
 2. **Incapacitated:** It meets the [Incapacitation condition](#incapacitation-condition). Its Incapacitated property becomes yes, if it was not already.
@@ -353,7 +355,7 @@ Each amount is a whole number of at least 0 of AgentParameters, so the combat ex
 
 Only the defender can die in an attack, because only the defender loses current health. Both can become Incapacitated. A dead or Incapacitated Combatant is not able to fight: it makes no further attack and is never a target for the rest of the Combat, so its current health and exhaustion do not change again in that Combat. An Incapacitated Combatant is alive: an Incapacitated Agent survives the Combat and is not Killed.
 
-**Inherited behavior:** The incapacitation threshold, i.e. an effective skill at or below a fraction of base skill, is taken from game-ts.
+**Informative rationale:** The incapacitation threshold, i.e. an effective skill at or below a fraction of base skill, is taken from game-ts.
 
 ## Monotonicity within a Combat
 
@@ -365,7 +367,7 @@ A Combat stops when one side can no longer fight, or when the Agents are losing 
 
 ## End-of-Combat-round checks
 
-**Inherited behavior** for the two retreat thresholds; **Proposed rule** for the order. After the Enemies' phase of each Combat round, these checks are made in this order, and the first that holds ends the Combat with its Combat outcome:
+After the Enemies' phase of each Combat round, these checks are made in this order, and the first that holds ends the Combat with its Combat outcome:
 
 1. **Prevailed:** No Enemy is able to fight.
 2. **Wiped:** No Agent is able to fight.
@@ -380,9 +382,11 @@ A Combat stops when one side can no longer fight, or when the Agents are losing 
 
 When none holds, the next Combat round begins. The checks are made only after the Enemies' phase; e.g., a Combat round whose Agents' phase leaves no Enemy able to fight still completes its Enemies' phase, in which no Enemy attacks, before the Combat ends as Prevailed. The number of Combat rounds of the Combat is the number of the Combat round after which a check held, or 0 when the Combat ended at its start.
 
+**Informative rationale:** The two retreat thresholds are taken from game-ts; the order of the checks is new in v5.
+
 ## Combat outcomes
 
-**Proposed rule:** A Combat ends with exactly one Combat outcome. The set is exhaustive:
+A Combat ends with exactly one Combat outcome. The set is exhaustive:
 
 | Combat outcome | When |
 | --- | --- |
@@ -394,7 +398,7 @@ A Combat outcome is final. Every Agent of a Combat that ends as Retreated or Wip
 
 ## Termination
 
-**Proposed rule:** Every Combat ends, after at most `N × X` Combat rounds, where `N` is the number of Combatants of both sides and `X` is `exhaustion_incapacitation`. This holds for every Game build that passes [Combat GDR validation](#combat-gdr-validation) and [Agent GDR validation](agents-spec.md#agent-gdr-validation), whatever the random outcomes, including when every hit outcome is a miss, and including Combatants that never attack or are never attacked. The argument counts the capped total exhaustion `T`, the sum over every Combatant of the Combat of `min(exhaustion, X)`:
+Every Combat ends, after at most `N × X` Combat rounds, where `N` is the number of Combatants of both sides and `X` is `exhaustion_incapacitation`. This holds for every Game build that passes [Combat GDR validation](#combat-gdr-validation) and [Agent GDR validation](agents-spec.md#agent-gdr-validation), whatever the random outcomes, including when every hit outcome is a miss, and including Combatants that never attack or are never attacked. The argument counts the capped total exhaustion `T`, the sum over every Combatant of the Combat of `min(exhaustion, X)`:
 
 1. **Exhaustion of `X` or more ends fighting.** A Combatant alive with exhaustion of at least `X` meets the exhaustion clause of the [Incapacitation condition](#incapacitation-condition), so it is Incapacitated: at Combat start, or after the attack that raised its exhaustion to `X` or more. Every Combatant able to fight therefore has an exhaustion below `X`.
 2. **Every attack raises `T`.** Attacker and defender are both able to fight before the attack, so each has an exhaustion below `X`, and the attack raises the attacker's `min(exhaustion, X)` by at least `min(1, exhaustion_per_attack)` and the defender's by at least `min(1, exhaustion_per_defense)`. By rule 7 of [Combat GDR validation](#combat-gdr-validation) one of these is at least 1, so `T` rises by at least 1 with every attack.
@@ -405,7 +409,7 @@ By 3 and 4 no Combat has more than `N × X` Combat rounds. A Combatant that is n
 
 # Combat report
 
-**Proposed rule:** Every Combat produces exactly one Combat report. It holds exactly the following facts, and this list is exhaustive:
+Every Combat produces exactly one Combat report. It holds exactly the following facts, and this list is exhaustive:
 
 1. **Combat outcome:** Prevailed, Retreated, or Wiped.
 2. **Number of Combat rounds:** a whole number of at least 0.
@@ -425,7 +429,7 @@ The Combat report is an Authoritative value. It is part of the [Turn report](../
 
 Balancing a Combat needs many Combats fought on chosen teams and chosen GDR values, and its results are worth something only if they are exactly what a Campaign would produce. `developer.tools.fightCombat(setup)` therefore has a Combat fought on what its caller supplies, by the same procedure as the Mission resolution step, and changes nothing.
 
-**Proposed rule:** `developer.tools.fightCombat(setup)` is a [Developer tool](../foundation/engine-contract.md#api-surfaces), available as [Developer API](../foundation/engine-contract.md#api-surfaces) is, under [API hierarchy](../foundation/engine-contract.md#api-hierarchy) in Engine Contract. It fights one Detached Combat under [Fighting a Combat](#fighting-a-combat) and returns its outputs. `setup` holds the following, and this list is exhaustive:
+`developer.tools.fightCombat(setup)` is a [Developer tool](../foundation/engine-contract.md#api-surfaces), available as [Developer API](../foundation/engine-contract.md#api-surfaces) is, under [API hierarchy](../foundation/engine-contract.md#api-hierarchy) in Engine Contract. It fights one Detached Combat under [Fighting a Combat](#fighting-a-combat) and returns its outputs. `setup` holds the following, and this list is exhaustive:
 
 | Part | What the caller supplies | Default |
 | --- | --- | --- |
@@ -445,7 +449,7 @@ E.g., a balancing tool fights 150 Detached Combats of four explicit Agents of ba
 
 # Player-visible information
 
-**Proposed rule:** Every value below is [Player-visible information](../foundation/engine-contract.md#api-surfaces) under [Player-visible information](../foundation/player-api.md#player-visible-information) in [Player API](../foundation/engine-contract.md#api-surfaces) from the moment it exists, without a reveal condition. The table is exhaustive.
+Every value below is [Player-visible information](../foundation/engine-contract.md#api-surfaces) under [Player-visible information](../foundation/player-api.md#player-visible-information) in [Player API](../foundation/engine-contract.md#api-surfaces) from the moment it exists, without a reveal condition. The table is exhaustive.
 
 | Value | Player-visible information |
 | --- | --- |

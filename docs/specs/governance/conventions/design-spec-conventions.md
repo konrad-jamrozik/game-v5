@@ -140,7 +140,7 @@ Test derivation must follow the specification; current code output is not an ind
 
 For inherited-game evidence, identify relevant paths and, when a behavioral claim is carried into a drafted specification, the inspected revision where practical.
 
-Label evidence or proposals as **Inherited behavior**, **v5 requirement**, **Proposed rule**, or **Informative rationale** when the distinction could be unclear. Legacy bugs and undocumented implementation quirks are not requirements. A legacy formula can become a proposed rule only by being stated explicitly.
+Every statement of a Design specification is normative unless it is labelled **Informative rationale** or stands in a section or appendix that declares itself informative. A rule carries no label of its own, and in particular none that records where it came from or whether it has been reviewed. Where a rule's origin is worth recording, e.g. that it is taken from the inherited game, an Informative rationale states it. Legacy bugs and undocumented implementation quirks are not requirements. A legacy formula becomes a requirement only by being stated explicitly.
 
 ## Consistency of rules and examples
 

@@ -287,7 +287,7 @@ The following table is exhaustive: it lists every Bootstrap GDR file, and the on
 
 The Compendium is a complete reference only if every number behind a mechanic can be looked up in it, so the Compendium articles must keep up with the parameter GDRs as mechanics are added.
 
-**Proposed rule:** Every property, other than `id` and `type`, of every parameter GDR of the Bootstrap GDRs, i.e. of every GDR whose Type name ends in "Parameters", is named by a [Placeholder](../mechanics/compendium.md#glossary) of at least one Compendium article of the Bootstrap GDRs, as [Coverage of parameter GDRs](../mechanics/compendium.md#coverage-of-parameter-gdrs) in Compendium requires. A Placeholder with an index names the list property it indexes. The following properties are exempt, because none of them is part of a mechanic the Player plays with. The table is exhaustive, and a Placeholder must not name an exempt property.
+Every property, other than `id` and `type`, of every parameter GDR of the Bootstrap GDRs, i.e. of every GDR whose Type name ends in "Parameters", is named by a [Placeholder](../mechanics/compendium.md#glossary) of at least one Compendium article of the Bootstrap GDRs, as [Coverage of parameter GDRs](../mechanics/compendium.md#coverage-of-parameter-gdrs) in Compendium requires. A Placeholder with an index names the list property it indexes. The following properties are exempt, because none of them is part of a mechanic the Player plays with. The table is exhaustive, and a Placeholder must not name an exempt property.
 
 | GDR | Property | Why it is exempt |
 | --- | --- | --- |
@@ -341,7 +341,7 @@ The Turn and Panic start from values that no GDR supplies: the Turn under [Turn 
 
 # Appendix: Derivation from game-ts
 
-This appendix is informative. **Inherited behavior** evidence comes from game-ts revision `f1835a29`, in its data tables and its initial game state factory.
+This appendix is informative. Its evidence comes from game-ts revision `f1835a29`, in its data tables and its initial game state factory.
 
 The items under [TODOs](#todos) list exhaustively what the Bootstrap GDRs leave out of game-ts or leave for later, in the order in which it is expected to return.
 

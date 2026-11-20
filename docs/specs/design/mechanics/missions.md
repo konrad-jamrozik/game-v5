@@ -66,7 +66,7 @@ Two properties of [FactionOperationLevel](factions.md#factionoperationlevel) app
 
 ## MissionSiteArchetype validation
 
-**Proposed rule:** The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for the GDR Type MissionSiteArchetype and the FactionOperationLevel properties `on_win` and `on_ignored_or_lost`, and it adds to [Faction GDR validation](factions.md#faction-gdr-validation) in Factions and [Combat GDR validation](combat.md#combat-gdr-validation) in [Combat](domain-model.md#combat). A Game build whose GDRs violate one of these rules is defective: no [Campaign](../foundation/core-concepts.md#campaign-and-session) is created from it, and the violation is reported as a data defect, never repaired into different gameplay, under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract.
+The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for the GDR Type MissionSiteArchetype and the FactionOperationLevel properties `on_win` and `on_ignored_or_lost`, and it adds to [Faction GDR validation](factions.md#faction-gdr-validation) in Factions and [Combat GDR validation](combat.md#combat-gdr-validation) in [Combat](domain-model.md#combat). A Game build whose GDRs violate one of these rules is defective: no [Campaign](../foundation/core-concepts.md#campaign-and-session) is created from it, and the violation is reported as a data defect, never repaired into different gameplay, under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract.
 
 1. **Known properties:** Each MissionSiteArchetype has `name`, `kind`, `expires_in_turns`, and `enemies`, and no property other than those listed in its table above, apart from `id` and `type`. Its `name` is non-empty text.
 2. **Kind is valid:** `kind` is exactly `initiative` or `response`.
@@ -82,7 +82,7 @@ These rules guarantee that every Mission site has at least one [Enemy](domain-mo
 
 ## MissionArchetype validation
 
-**Proposed rule:** The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for the MissionArchetype Type. A Game build whose GDRs violate one of these rules is defective, under the same handling as [MissionSiteArchetype validation](#missionsitearchetype-validation).
+The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for the MissionArchetype Type. A Game build whose GDRs violate one of these rules is defective, under the same handling as [MissionSiteArchetype validation](#missionsitearchetype-validation).
 
 1. **One MissionArchetype:** The Game build supplies exactly one MissionArchetype. Every Mission has it as its Archetype, so no rule selects among MissionArchetypes.
 2. **Known properties:** The MissionArchetype has `name`, and no property other than `name`, `id`, and `type`. Its `name` is non-empty text.
@@ -93,7 +93,7 @@ A Mission site is the [Campaign instance](../foundation/core-concepts.md#campaig
 
 ## Mission site properties
 
-**Proposed rule:** A Mission site is a Campaign instance whose Archetype is a MissionSiteArchetype. Its Archetype reference is set when it is created and never changes. Its [Constants](../foundation/core-concepts.md#campaign-instances) and [State](../foundation/core-concepts.md#campaign-instances) have exactly the following properties. This table is exhaustive.
+A Mission site is a Campaign instance whose Archetype is a MissionSiteArchetype. Its Archetype reference is set when it is created and never changes. Its [Constants](../foundation/core-concepts.md#campaign-instances) and [State](../foundation/core-concepts.md#campaign-instances) have exactly the following properties. This table is exhaustive.
 
 | Property | Part | Value | Classification and range |
 | --- | --- | --- | --- |
@@ -125,11 +125,11 @@ A Mission has the kind of its Mission site: a Mission at an Initiative Mission s
 
 ## Initial Mission sites
 
-**Proposed rule:** The initial [Campaign state](../foundation/core-concepts.md#campaign-and-session) contains no Mission site, and therefore no Mission and no Enemy, as [Initial Campaign state](domain-model.md#initial-campaign-state) in Domain Model requires. No [Campaign configuration](../foundation/campaign-state.md#glossary) value adds a Mission site to it. Every Mission site comes into existence during an Advance turn, under [Mission site creation](#mission-site-creation).
+The initial [Campaign state](../foundation/core-concepts.md#campaign-and-session) contains no Mission site, and therefore no Mission and no Enemy, as [Initial Campaign state](domain-model.md#initial-campaign-state) in Domain Model requires. No [Campaign configuration](../foundation/campaign-state.md#glossary) value adds a Mission site to it. Every Mission site comes into existence during an Advance turn, under [Mission site creation](#mission-site-creation).
 
 # Mission site creation
 
-**Proposed rule:** A Mission site is created on exactly two occasions, and this list is exhaustive:
+A Mission site is created on exactly two occasions, and this list is exhaustive:
 
 1. **From a completed Investigation:** in the [Turn advancement step](turn-advancement.md#glossary) [Investigation progress](domain-model.md#leads-investigations-mission-sites-and-missions), when a creating rule supplies the following three inputs, and this list is exhaustive: a MissionSiteArchetype whose `kind` is `initiative`; the origin Investigation, i.e. the Investigation whose completion created the Mission site; and the target Faction, a Faction of the Campaign. The Mission site created is an Initiative Mission site. Nothing else about the creating rule is read. The creating rule is an Effect of the kind `create_mission_site`, under [Mission site Effect kind](#mission-site-effect-kind); the completion effect under [Leads and Progression](leads-and-progression.md) applies it, and the completion that triggers it is under [Investigations](investigations.md).
 2. **From a Faction operation occurrence:** in the [Turn advancement step](domain-model.md#turn-advancement-steps) Faction activity, under item 2 of [Faction operation occurrence generation](factions.md#faction-operation-occurrence-generation) in Factions, which supplies the initiating Faction, the Faction operation level, and the turn number. The MissionSiteArchetype is the value of the occurrence's [MissionSiteArchetype selection](#missionsitearchetype-selection) outcome. The Mission site created is a Response Mission site.
@@ -153,7 +153,7 @@ Each Mission site created by an Advance turn is listed in its [Turn report](../f
 
 Game data creates an Initiative Mission site through one Effect kind, so that what creating it means is stated once, whichever rule applies the Effect.
 
-**Proposed rule:** The Effect kind `create_mission_site` is defined as follows, under [Effect kinds](../foundation/effect-lists.md#effect-kinds) in Effect Lists:
+The Effect kind `create_mission_site` is defined as follows, under [Effect kinds](../foundation/effect-lists.md#effect-kinds) in Effect Lists:
 
 - **Value:** the identifier of a MissionSiteArchetype the Game build supplies whose `kind` is `initiative`. The identifier of a MissionSiteArchetype of kind `response`, or of no MissionSiteArchetype, is invalid.
 - **Change:** applying one Effect is the creating rule of the first occasion under [Mission site creation](#mission-site-creation): it creates exactly one Initiative Mission site, from the MissionSiteArchetype the value names, in the Turn advancement step that applies the Effect.
@@ -162,19 +162,19 @@ Game data creates an Initiative Mission site through one Effect kind, so that wh
 
 ## MissionSiteArchetype selection
 
-**Proposed rule:** Each Faction operation occurrence has exactly one **MissionSiteArchetype selection** outcome, a named random outcome. Its candidates are the MissionSiteArchetypes the Game build supplies whose `kind` is `response` and whose `operation_level` equals the `level` of the occurrence's Faction operation level; there is at least one under rule 8 of [MissionSiteArchetype validation](#missionsitearchetype-validation). Its possible values are the candidates, except that when there are two or more candidates, the initiating Faction's previous operation is not a possible value. The initiating Faction's previous operation is the MissionSiteArchetype of the Response Mission site that the Faction's latest earlier Faction operation occurrence created, read from that Mission site, which is [retained](../foundation/world-history.md#glossary) for the whole Campaign under [Mission site properties](#mission-site-properties); a Faction with no earlier occurrence has none. Let `n` be the number of possible values, which is at least 1. The distribution is uniform: each of the `n` MissionSiteArchetypes has [Probability](../foundation/numbers.md#glossary) `1 / n`, exact and never rounded, under [Probabilities](../foundation/numbers.md#probabilities) in Numbers. When `n` is 1, the outcome is that MissionSiteArchetype with Probability 1 and is still a distinct named random outcome.
+Each Faction operation occurrence has exactly one **MissionSiteArchetype selection** outcome, a named random outcome. Its candidates are the MissionSiteArchetypes the Game build supplies whose `kind` is `response` and whose `operation_level` equals the `level` of the occurrence's Faction operation level; there is at least one under rule 8 of [MissionSiteArchetype validation](#missionsitearchetype-validation). Its possible values are the candidates, except that when there are two or more candidates, the initiating Faction's previous operation is not a possible value. The initiating Faction's previous operation is the MissionSiteArchetype of the Response Mission site that the Faction's latest earlier Faction operation occurrence created, read from that Mission site, which is [retained](../foundation/world-history.md#glossary) for the whole Campaign under [Mission site properties](#mission-site-properties); a Faction with no earlier occurrence has none. Let `n` be the number of possible values, which is at least 1. The distribution is uniform: each of the `n` MissionSiteArchetypes has [Probability](../foundation/numbers.md#glossary) `1 / n`, exact and never rounded, under [Probabilities](../foundation/numbers.md#probabilities) in Numbers. When `n` is 1, the outcome is that MissionSiteArchetype with Probability 1 and is still a distinct named random outcome.
 
-The outcome depends on the occurrence's Faction operation level, i.e. on the value of the Faction's Operation level outcome under [Operation level](factions.md#operation-level) in Factions, and on the MissionSiteArchetypes the Game build supplies; given that Faction operation level, it depends on nothing else but the initiating Faction's previous operation, i.e. on that Faction's previous MissionSiteArchetype selection outcome. A Faction therefore never carries out the same operation twice in a row when its Faction operation level offers another, and it may repeat an operation after a different one, or at once when the level offers no other; the previous operation of another Faction plays no part. E.g., with the Bootstrap values, a Faction whose previous operation is `foil_sabotage` and whose next occurrence has level 2 selects `foil_vip_assassination` or `defend_against_office_raid`, each with Probability 1/2, while a next occurrence of level 1 selects any of the three MissionSiteArchetypes of level 1, each with Probability 1/3. **Inherited behavior:** game-ts avoided a repeat in the same way. It is Player-visible once it has a value, as the Response Mission site's MissionSiteArchetype under [Player-visible information](#player-visible-information).
+The outcome depends on the occurrence's Faction operation level, i.e. on the value of the Faction's Operation level outcome under [Operation level](factions.md#operation-level) in Factions, and on the MissionSiteArchetypes the Game build supplies; given that Faction operation level, it depends on nothing else but the initiating Faction's previous operation, i.e. on that Faction's previous MissionSiteArchetype selection outcome. A Faction therefore never carries out the same operation twice in a row when its Faction operation level offers another, and it may repeat an operation after a different one, or at once when the level offers no other; the previous operation of another Faction plays no part. E.g., with the Bootstrap values, a Faction whose previous operation is `foil_sabotage` and whose next occurrence has level 2 selects `foil_vip_assassination` or `defend_against_office_raid`, each with Probability 1/2, while a next occurrence of level 1 selects any of the three MissionSiteArchetypes of level 1, each with Probability 1/3, as game-ts did when it avoided a repeat. It is Player-visible once it has a value, as the Response Mission site's MissionSiteArchetype under [Player-visible information](#player-visible-information).
 
 ## Enemy creation
 
-**Proposed rule:** The Enemies of a new Mission site are created together with it, each under [Enemy creation](combat.md#enemy-creation) in Combat, which takes from this rule the EnemyArchetype and the Mission site being created. They are created in this order, which is the order of the Mission site's Enemies list: the keys of the MissionSiteArchetype's `enemies` in their authored order, and for each key as many Enemies of that EnemyArchetype as its count, one after another. E.g., a MissionSiteArchetype whose `enemies` is `initiate: 8` followed by `soldier: 1` has the Enemies list of eight Enemies of `initiate` and then one of `soldier`.
+The Enemies of a new Mission site are created together with it, each under [Enemy creation](combat.md#enemy-creation) in Combat, which takes from this rule the EnemyArchetype and the Mission site being created. They are created in this order, which is the order of the Mission site's Enemies list: the keys of the MissionSiteArchetype's `enemies` in their authored order, and for each key as many Enemies of that EnemyArchetype as its count, one after another. E.g., a MissionSiteArchetype whose `enemies` is `initiate: 8` followed by `soldier: 1` has the Enemies list of eight Enemies of `initiate` and then one of `soldier`.
 
 # Whether a Mission site can exist
 
 A Mission site is a place worth going to only while there is something there to act on, so the game can say that a Mission site of some kind has no reason to exist, e.g. because the Faction it targets is gone.
 
-**Proposed rule:** Whether a Mission site of a MissionSiteArchetype A targeting a Faction F can exist is a Derived value, calculated from the World state in which it is read. It can exist exactly when both of the following hold. The list is exhaustive.
+Whether a Mission site of a MissionSiteArchetype A targeting a Faction F can exist is a Derived value, calculated from the World state in which it is read. It can exist exactly when both of the following hold. The list is exhaustive.
 
 1. **Its target Faction is not [Eliminated](domain-model.md#factions):** F is not Eliminated.
 2. **Its existence Condition holds:** A has no `can_exist_when`, or its `can_exist_when` holds, under [Evaluating a Condition](../foundation/conditions.md#evaluating-a-condition) in Conditions. The evaluating rule supplies F to every `mission_won` Condition. `can_exist_when` may use the Condition kinds `mission_won`, under [Mission won Condition kind](#mission-won-condition-kind), and `lead_completed`, under [Lead completed Condition kind](leads-and-progression.md#lead-completed-condition-kind) in Leads and Progression.
@@ -190,7 +190,7 @@ It does not decide whether a Mission site is created: a rule that creates a Miss
 
 Game data asks whether a Mission of some kind has been Won through one Condition kind, so that a win can open the way to what comes next.
 
-**Proposed rule:** The Condition kind `mission_won` is defined as follows, under [Condition kinds](../foundation/conditions.md#condition-kinds) in Conditions:
+The Condition kind `mission_won` is defined as follows, under [Condition kinds](../foundation/conditions.md#condition-kinds) in Conditions:
 
 - **Value:** the identifier of a MissionSiteArchetype the Game build supplies, of either kind. The identifier of no MissionSiteArchetype is invalid.
 - **Supplied inputs:** a Faction, which the rule that evaluates the Condition supplies.
@@ -200,7 +200,7 @@ The Condition concerns exactly the MissionSiteArchetype it names and exactly the
 
 # Mission site lifecycle
 
-**Proposed rule:** A Mission site is in exactly one of the lifecycle states Active, Deployed, Concluded, Expired, and Cancelled. The set is exhaustive. Every Mission site is Active when it is created. The transition table is:
+A Mission site is in exactly one of the lifecycle states Active, Deployed, Concluded, Expired, and Cancelled. The set is exhaustive. Every Mission site is Active when it is created. The transition table is:
 
 | Source state | Target state | Trigger | Condition | Effects |
 | --- | --- | --- | --- | --- |
@@ -217,7 +217,7 @@ A Mission is the Campaign instance that holds one attempt at a Mission site: the
 
 ## Mission properties
 
-**Proposed rule:** A Mission is a Campaign instance whose Archetype is the MissionArchetype. Its Archetype reference is set when it is created and never changes. It is created only by the `deployAgents` Player action, under [Deploying Agents](#deploying-agents), and always at a Mission site, under [Mission at a Mission site](#mission-at-a-mission-site). Its Constants and State have exactly the following properties. This table is exhaustive.
+A Mission is a Campaign instance whose Archetype is the MissionArchetype. Its Archetype reference is set when it is created and never changes. It is created only by the `deployAgents` Player action, under [Deploying Agents](#deploying-agents), and always at a Mission site, under [Mission at a Mission site](#mission-at-a-mission-site). Its Constants and State have exactly the following properties. This table is exhaustive.
 
 | Property | Part | Value | Classification and range |
 | --- | --- | --- | --- |
@@ -248,7 +248,7 @@ The Mission site and its Mission have separate lifecycles, under [Mission site l
 
 # Mission lifecycle
 
-**Proposed rule:** A Mission is in exactly one of the lifecycle states Deployed, Won, and Lost. The set is exhaustive. Every Mission is Deployed when it is created, under [Deploying Agents](#deploying-agents). The transition table is:
+A Mission is in exactly one of the lifecycle states Deployed, Won, and Lost. The set is exhaustive. Every Mission is Deployed when it is created, under [Deploying Agents](#deploying-agents). The transition table is:
 
 | Source state | Target state | Trigger | Condition | Effects |
 | --- | --- | --- | --- | --- |
@@ -261,7 +261,7 @@ Every transition not listed is impossible; e.g., nothing leaves Won or Lost. Won
 
 # Deploying Agents
 
-**Proposed rule:** The Player action `player.actions.deployAgents(missionSite, agents)` deploys a team of Agents to a Mission site.
+The Player action `player.actions.deployAgents(missionSite, agents)` deploys a team of Agents to a Mission site.
 
 | Parameter | Meaning |
 | --- | --- |
@@ -301,7 +301,7 @@ Nothing else changes; e.g., no money is spent, the Mission site's Turns until ex
 
 # Mission resolution
 
-**Proposed rule:** In the Turn advancement step Mission resolution, under [Turn advancement steps](turn-advancement.md#turn-advancement-steps) in Turn Advancement, every Mission that is Deployed when the step begins is resolved, and then Mission sites are cancelled. Because a team is Deployed at once and resolved in the next Advance turn, the Missions resolved are exactly those the player created by deploying Agents since the previous Advance turn. When no Mission is Deployed, the resolution part does nothing and only the cancellation part applies.
+In the Turn advancement step Mission resolution, under [Turn advancement steps](turn-advancement.md#turn-advancement-steps) in Turn Advancement, every Mission that is Deployed when the step begins is resolved, and then Mission sites are cancelled. Because a team is Deployed at once and resolved in the next Advance turn, the Missions resolved are exactly those the player created by deploying Agents since the previous Advance turn. When no Mission is Deployed, the resolution part does nothing and only the cancellation part applies.
 
 ## Resolving one Mission
 
@@ -323,7 +323,7 @@ S becomes Concluded. A Won Mission can also change Lead discovery and [Lead avai
 
 A Mission wears out its survivors beyond the attacks of its Combat, and a Mission that costs lives wears them out much more, so that a bloody Mission takes its survivors out of action for a long rest.
 
-**Proposed rule:** Under step 6 of [Resolving one Mission](#resolving-one-mission), every survivor of Mission M gains exhaustion, whatever M's Combat outcome:
+Under step 6 of [Resolving one Mission](#resolving-one-mission), every survivor of Mission M gains exhaustion, whatever M's Combat outcome:
 
 ```text
 exhaustion gained = exhaustion_per_mission + round up( exhaustion_per_pct_killed × 100 × K / D )
@@ -361,7 +361,7 @@ The result of the step is the same whichever order an implementation resolves th
 
 # Mission site expiration
 
-**Proposed rule:** In the Turn advancement step Mission site expiration, under [Turn advancement steps](turn-advancement.md#turn-advancement-steps) in Turn Advancement, each Mission site that is Active when the step begins and that already existed in the Turn-end state of this Advance turn counts down:
+In the Turn advancement step Mission site expiration, under [Turn advancement steps](turn-advancement.md#turn-advancement-steps) in Turn Advancement, each Mission site that is Active when the step begins and that already existed in the Turn-end state of this Advance turn counts down:
 
 ```text
 Turns until expiration after = Turns until expiration before − 1
@@ -382,7 +382,7 @@ Each Mission site counts down independently of every other, and the funding chan
 
 Consequences are what a Mission site and its Mission change in the Campaign once they reach a final state, e.g. the money a Won Mission brings or the Panic an ignored Response Mission site raises.
 
-**Proposed rule:** The following table states the complete Consequences for the Campaign of each final state of a Mission and of a Mission site, by the kind of the Mission site. It is exhaustive: no other rule of any specification adds a Consequence of these final states, apart from Lead discovery and Lead availability under [Leads and Progression](leads-and-progression.md) and the changes to Agents under [Resolving one Mission](#resolving-one-mission). The Final Mission site state Concluded has no Consequence of its own. "The operation level" is the FactionOperationLevel in the Response Mission site's origin.
+The following table states the complete Consequences for the Campaign of each final state of a Mission and of a Mission site, by the kind of the Mission site. It is exhaustive: no other rule of any specification adds a Consequence of these final states, apart from Lead discovery and Lead availability under [Leads and Progression](leads-and-progression.md) and the changes to Agents under [Resolving one Mission](#resolving-one-mission). The Final Mission site state Concluded has no Consequence of its own. "The operation level" is the FactionOperationLevel in the Response Mission site's origin.
 
 | Final state | Initiative | Response |
 | --- | --- | --- |
@@ -411,7 +411,7 @@ Every amount a Consequence applies is read from GDRs when the transition happens
 
 # Turn report
 
-**Proposed rule:** Besides the [Combat report](domain-model.md#combat) of each Mission it resolves, under [Resolving one Mission](#resolving-one-mission), the [Turn report](../foundation/campaign-state.md#glossary) of an Advance turn holds three lists of Mission sites, each by Instance ID: the Mission sites created in it, under [Mission site creation](#mission-site-creation); the Mission sites that became Expired in it, under [Mission site expiration](#mission-site-expiration); and the Mission sites that became Cancelled in it, under [Cancellation](#cancellation). The [History entry](../foundation/world-history.md#glossary) of the Turn the Advance turn ends holds the same three lists, unreduced. Both are [Player-visible information](../foundation/engine-contract.md#api-surfaces), under [Turn report and history](../foundation/world-history.md#turn-report-and-history) in History and Turn Report. A list with no Mission site is empty. The [Initial Mission sites](#initial-mission-sites) are created with the Campaign, not by an Advance turn, so no Turn report lists them.
+Besides the [Combat report](domain-model.md#combat) of each Mission it resolves, under [Resolving one Mission](#resolving-one-mission), the [Turn report](../foundation/campaign-state.md#glossary) of an Advance turn holds three lists of Mission sites, each by Instance ID: the Mission sites created in it, under [Mission site creation](#mission-site-creation); the Mission sites that became Expired in it, under [Mission site expiration](#mission-site-expiration); and the Mission sites that became Cancelled in it, under [Cancellation](#cancellation). The [History entry](../foundation/world-history.md#glossary) of the Turn the Advance turn ends holds the same three lists, unreduced. Both are [Player-visible information](../foundation/engine-contract.md#api-surfaces), under [Turn report and history](../foundation/world-history.md#turn-report-and-history) in History and Turn Report. A list with no Mission site is empty. The [Initial Mission sites](#initial-mission-sites) are created with the Campaign, not by an Advance turn, so no Turn report lists them.
 
 The Turn report also holds:
 
@@ -422,7 +422,7 @@ The History entry holds, for each Mission resolved, in the same order, the Missi
 
 # Player-visible information
 
-**Proposed rule:** Every value below is Player-visible information under [Player-visible information](../foundation/player-api.md#player-visible-information) in [Player API](../foundation/engine-contract.md#api-surfaces), from the moment it exists, without a reveal condition, for every Mission site and every Mission whatever its lifecycle state. The table is exhaustive.
+Every value below is Player-visible information under [Player-visible information](../foundation/player-api.md#player-visible-information) in [Player API](../foundation/engine-contract.md#api-surfaces), from the moment it exists, without a reveal condition, for every Mission site and every Mission whatever its lifecycle state. The table is exhaustive.
 
 | Value | Player-visible information |
 | --- | --- |

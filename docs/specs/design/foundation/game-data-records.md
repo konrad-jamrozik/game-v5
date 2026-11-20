@@ -42,7 +42,7 @@ GDRs are authored as YAML files that the [Game build](core-concepts.md#game-buil
 
 Each of the following GDR purpose sections shows one GDR of its worked example as YAML. The snippets illustrate the format: each states an identifier, a Type, and the values of that Type's properties. Their property names and values are illustrative. The properties of a Type are decided where the Type is specified, and [TODOs](#todos) lists the parts of the format that are undecided.
 
-**v5 requirement:** The key order of a mapping in a GDR file, as authored, is significant: it is preserved when the GDR is read, and a specification may rely on it. E.g., [Missions](../mechanics/missions.md) relies on the authored order of the `enemies` mapping of a MissionSiteArchetype for the fixed order of the Enemies of a [Combat](../mechanics/domain-model.md#combat). A decimal value in a GDR file is read as the exact decimal number it is written as, never as a binary floating-point approximation, under [Whole-number quantities](numbers.md#whole-number-quantities) in Numbers.
+The key order of a mapping in a GDR file, as authored, is significant: it is preserved when the GDR is read, and a specification may rely on it. E.g., [Missions](../mechanics/missions.md) relies on the authored order of the `enemies` mapping of a MissionSiteArchetype for the fixed order of the Enemies of a [Combat](../mechanics/domain-model.md#combat). A decimal value in a GDR file is read as the exact decimal number it is written as, never as a binary floating-point approximation, under [Whole-number quantities](numbers.md#whole-number-quantities) in Numbers.
 
 ## GDR file layout
 

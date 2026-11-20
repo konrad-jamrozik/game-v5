@@ -63,7 +63,7 @@ A FactionOperationLevel describes one Faction operation level. This property tab
 
 ## Faction GDR validation
 
-**Proposed rule:** The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for the Faction GDRs. A Game build whose GDRs violate one of these rules is defective: no Campaign is created from it, and the violation is reported as a data defect, never repaired into different gameplay, under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract.
+The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for the Faction GDRs. A Game build whose GDRs violate one of these rules is defective: no Campaign is created from it, and the violation is reported as a data defect, never repaired into different gameplay, under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract.
 
 1. **Known properties:** Each FactionArchetype, FactionActivityLevel, and FactionOperationLevel has every property its table above lists and no property other than those, apart from `id` and `type`. Each `name` is non-empty text. The content of a FactionOperationLevel's `on_win` and `on_ignored_or_lost` is validated by [MissionSiteArchetype validation](missions.md#missionsitearchetype-validation) in Missions.
 2. **Initial level resolves:** Every FactionArchetype's `initial_activity_level` references a FactionActivityLevel the Game build supplies.
@@ -78,7 +78,7 @@ These rules guarantee that every uniform whole-number outcome below has a valid 
 
 # Faction State
 
-**Proposed rule:** A Faction is a [Campaign instance](../foundation/core-concepts.md#campaign-instances) whose Archetype is a FactionArchetype. Its Archetype reference is set when it is created and never changes. Its [Constants](../foundation/core-concepts.md#campaign-instances) are empty: everything fixed about a Faction is supplied by its FactionArchetype. Its [State](../foundation/core-concepts.md#campaign-instances) has exactly the following properties. This table is exhaustive.
+A Faction is a [Campaign instance](../foundation/core-concepts.md#campaign-instances) whose Archetype is a FactionArchetype. Its Archetype reference is set when it is created and never changes. Its [Constants](../foundation/core-concepts.md#campaign-instances) are empty: everything fixed about a Faction is supplied by its FactionArchetype. Its [State](../foundation/core-concepts.md#campaign-instances) has exactly the following properties. This table is exhaustive.
 
 | Property | Value | Classification and range |
 | --- | --- | --- |
@@ -96,7 +96,7 @@ A Faction's name is not a State property: it is the `name` of its FactionArchety
 
 # Initial Factions
 
-**Proposed rule:** The initial [Campaign state](../foundation/core-concepts.md#campaign-and-session) contains exactly one Faction for each FactionArchetype the Game build supplies, and no other Faction, as [Initial Campaign state](domain-model.md#initial-campaign-state) in Domain Model requires. No Faction is created after campaign creation. The initial Factions are created in the order in which their FactionArchetypes are authored in the Game build, under [GDR authoring format](../foundation/game-data-records.md#gdr-authoring-format) in Game Data Records, so the first FactionArchetype's Faction takes the [Instance ID](../foundation/campaign-instances.md#glossary) with the number 1. Each initial Faction has a fresh [Instance ID](../foundation/campaign-instances.md#glossary) under [Campaign instance identity scope](domain-model.md#campaign-instance-identity-scope) in Domain Model, and the following initial values, under [Campaign instance creation](../foundation/campaign-instances.md#campaign-instance-creation) in Campaign Instances. This table is exhaustive.
+The initial [Campaign state](../foundation/core-concepts.md#campaign-and-session) contains exactly one Faction for each FactionArchetype the Game build supplies, and no other Faction, as [Initial Campaign state](domain-model.md#initial-campaign-state) in Domain Model requires. No Faction is created after campaign creation. The initial Factions are created in the order in which their FactionArchetypes are authored in the Game build, under [GDR authoring format](../foundation/game-data-records.md#gdr-authoring-format) in Game Data Records, so the first FactionArchetype's Faction takes the [Instance ID](../foundation/campaign-instances.md#glossary) with the number 1. Each initial Faction has a fresh [Instance ID](../foundation/campaign-instances.md#glossary) under [Campaign instance identity scope](domain-model.md#campaign-instance-identity-scope) in Domain Model, and the following initial values, under [Campaign instance creation](../foundation/campaign-instances.md#campaign-instance-creation) in Campaign Instances. This table is exhaustive.
 
 | Value | Initial value | Source |
 | --- | --- | --- |
@@ -128,7 +128,7 @@ An Operation level outcome belongs to one Faction operation occurrence. Its poss
 
 # Faction activity
 
-**Proposed rule:** During each Advance turn, in the [Turn advancement step](domain-model.md#turn-advancement-steps) Faction activity under [Turn advancement steps](turn-advancement.md#turn-advancement-steps) in Turn Advancement, every Faction whose Eliminated is no applies [Escalation](#escalation) and then [Faction operation occurrence generation](#faction-operation-occurrence-generation), in that order. A Faction whose Eliminated is yes applies neither; nothing about it changes in this step. Nothing slows a Faction's escalation or its operations except becoming Eliminated. The following pseudocode states the complete rule for one Faction F whose Eliminated is no; "level" means F's Faction activity level at the moment it is read:
+During each Advance turn, in the [Turn advancement step](domain-model.md#turn-advancement-steps) Faction activity under [Turn advancement steps](turn-advancement.md#turn-advancement-steps) in Turn Advancement, every Faction whose Eliminated is no applies [Escalation](#escalation) and then [Faction operation occurrence generation](#faction-operation-occurrence-generation), in that order. A Faction whose Eliminated is yes applies neither; nothing about it changes in this step. Nothing slows a Faction's escalation or its operations except becoming Eliminated. The following pseudocode states the complete rule for one Faction F whose Eliminated is no; "level" means F's Faction activity level at the moment it is read:
 
 ```text
 if Turns until the next level is present:
@@ -169,7 +169,7 @@ A Faction at a final level, i.e. one whose `next` is `null`, has no Turns until 
 
 # Faction operation occurrence generation
 
-**Proposed rule:** A Faction operation occurrence of a Faction F happens exactly when F's Turns until the next operation reaches zero under [Faction activity](#faction-activity). It has the following complete effects, all in the Faction activity step of the same Advance turn:
+A Faction operation occurrence of a Faction F happens exactly when F's Turns until the next operation reaches zero under [Faction activity](#faction-activity). It has the following complete effects, all in the Faction activity step of the same Advance turn:
 
 1. F's [Operation level](#operation-level) outcome for this occurrence takes a value, a key of the `operation_level_weights` of the Faction activity level F is at after [Escalation](#escalation) in this step. The occurrence's Faction operation level is the FactionOperationLevel whose `level` equals that value.
 2. The occurrence has the following facts, and this list is exhaustive:
@@ -185,11 +185,11 @@ A Faction operation occurrence is not a separate Campaign instance, and its Resp
 
 A Faction operation occurrence does not depend on any existing Mission site. In particular, an Active Response Mission site of the same Faction, including one of the same Faction operation level, neither prevents nor delays a new occurrence, and consecutive occurrences may have the same Faction operation level. Which MissionSiteArchetype the Response Mission site has does depend on the Response Mission site of the same Faction's previous occurrence, under [MissionSiteArchetype selection](missions.md#missionsitearchetype-selection) in Missions.
 
-**Informative rationale:** game-ts also escalated Factions through activity levels and drew operations from per-level frequencies and severity weights. Factions keep that structure, as a Proposed rule.
+**Informative rationale:** game-ts also escalated Factions through activity levels and drew operations from per-level frequencies and severity weights. Factions keep that structure.
 
 # Elimination
 
-**Proposed rule:** Eliminated is a permanent fact of a Faction. It changes exactly once at most, from no to yes, and never back. Only an `eliminate_faction` [Effect](../foundation/effect-lists.md#glossary) makes a Faction Eliminated: one applied by the [Completion effect](leads-and-progression.md#completion-effect) of a [Lead](domain-model.md#leads-investigations-mission-sites-and-missions), or one applied as a Mission consequence under [Consequences](missions.md#consequences).
+Eliminated is a permanent fact of a Faction. It changes exactly once at most, from no to yes, and never back. Only an `eliminate_faction` [Effect](../foundation/effect-lists.md#glossary) makes a Faction Eliminated: one applied by the [Completion effect](leads-and-progression.md#completion-effect) of a [Lead](domain-model.md#leads-investigations-mission-sites-and-missions), or one applied as a Mission consequence under [Consequences](missions.md#consequences).
 
 Making a Faction F Eliminated during an Advance turn has the following complete effects on F, applied at once:
 
@@ -199,7 +199,7 @@ Making a Faction F Eliminated during an Advance turn has the following complete 
 
 When the effect is applied to a Faction whose Eliminated is already yes, nothing changes; in particular, its Eliminated turn keeps its first value.
 
-**Proposed rule:** Game data makes a Faction Eliminated through the [Effect kind](../foundation/effect-lists.md#glossary) `eliminate_faction`, defined as follows, under [Effect kinds](../foundation/effect-lists.md#effect-kinds) in Effect Lists:
+Game data makes a Faction Eliminated through the [Effect kind](../foundation/effect-lists.md#glossary) `eliminate_faction`, defined as follows, under [Effect kinds](../foundation/effect-lists.md#effect-kinds) in Effect Lists:
 
 - **Value:** always `true`. Any other value is invalid; an [Effect list](../foundation/effect-lists.md#glossary) that eliminates no Faction holds no [Effect](../foundation/effect-lists.md#glossary) of this kind.
 - **Change:** applying one Effect makes one Faction Eliminated, with the complete effects stated above.
@@ -221,11 +221,11 @@ What becomes of Mission sites that target a Eliminated Faction, whether a [Lead]
 
 # Turn report
 
-**Proposed rule:** The [Turn report](../foundation/campaign-state.md#glossary) of an Advance turn holds, for each Faction that had a Faction operation occurrence in it, in the order of the Factions' Instance IDs, from the lowest number, its Instance ID and the Response Mission site its Faction operation occurrence created with that occurrence's FactionOperationLevel. The [History entry](../foundation/world-history.md#glossary) of the Turn the Advance turn ends holds nothing of a Faction beyond what [Missions](missions.md) holds of that Response Mission site. Both are [Player-visible information](../foundation/engine-contract.md#api-surfaces), under [Turn report and history](../foundation/world-history.md#turn-report-and-history) in History and Turn Report. Neither holds whether a Faction escalated, and neither reveals either countdown, under [Player-visible information](#player-visible-information).
+The [Turn report](../foundation/campaign-state.md#glossary) of an Advance turn holds, for each Faction that had a Faction operation occurrence in it, in the order of the Factions' Instance IDs, from the lowest number, its Instance ID and the Response Mission site its Faction operation occurrence created with that occurrence's FactionOperationLevel. The [History entry](../foundation/world-history.md#glossary) of the Turn the Advance turn ends holds nothing of a Faction beyond what [Missions](missions.md) holds of that Response Mission site. Both are [Player-visible information](../foundation/engine-contract.md#api-surfaces), under [Turn report and history](../foundation/world-history.md#turn-report-and-history) in History and Turn Report. Neither holds whether a Faction escalated, and neither reveals either countdown, under [Player-visible information](#player-visible-information).
 
 # Player-visible information
 
-**Proposed rule:** Each Faction value below is [Player-visible information](../foundation/engine-contract.md#api-surfaces), or not, as the table states, under [Player-visible information](../foundation/player-api.md#player-visible-information) in [Player API](../foundation/engine-contract.md#api-surfaces). The table is exhaustive. Each Player-visible value is visible from campaign creation, without a reveal condition, for every Faction, whether or not it is Eliminated. How dangerous a Faction has become is never shown: the player judges it from the operations the Faction carries out.
+Each Faction value below is [Player-visible information](../foundation/engine-contract.md#api-surfaces), or not, as the table states, under [Player-visible information](../foundation/player-api.md#player-visible-information) in [Player API](../foundation/engine-contract.md#api-surfaces). The table is exhaustive. Each Player-visible value is visible from campaign creation, without a reveal condition, for every Faction, whether or not it is Eliminated. How dangerous a Faction has become is never shown: the player judges it from the operations the Faction carries out.
 
 | Value | Player-visible information |
 | --- | --- |

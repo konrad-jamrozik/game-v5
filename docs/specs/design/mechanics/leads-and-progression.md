@@ -52,7 +52,7 @@ A Lead names its Faction, a MissionSiteArchetype it creates, and every GDR its C
 
 ## Lead GDR validation
 
-**Proposed rule:** The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for the Lead [Type](../foundation/core-concepts.md#data-modeling), and it adds to [MissionSiteArchetype validation](missions.md#missionsitearchetype-validation) in Missions and [Faction GDR validation](factions.md#faction-gdr-validation) in Factions. A Game build whose GDRs violate one of these rules is defective: no Campaign is created from it, and the violation is reported as a data defect, never repaired into different gameplay, under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract.
+The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for the Lead [Type](../foundation/core-concepts.md#data-modeling), and it adds to [MissionSiteArchetype validation](missions.md#missionsitearchetype-validation) in Missions and [Faction GDR validation](factions.md#faction-gdr-validation) in Factions. A Game build whose GDRs violate one of these rules is defective: no Campaign is created from it, and the violation is reported as a data defect, never repaired into different gameplay, under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract.
 
 1. **Known properties:** Each Lead has `name`, `description`, and `required_progress`, may have `faction`, `discovered_when`, `investigate_again`, and `on_completion`, and has no other property, apart from `id` and `type`. Its `name` and `description` are non-empty text.
 2. **Faction resolves:** `faction`, when present, is the identifier of a FactionArchetype the Game build supplies.
@@ -65,7 +65,7 @@ These rules guarantee that every Lead that creates a Mission site or eliminates 
 
 # Missions from a Lead
 
-**Proposed rule:** A Mission site is created by a Lead L exactly when it is an Initiative Mission site whose origin Investigation, under [Mission site properties](missions.md#mission-site-properties) in Missions, is an Investigation of L, i.e. retains a reference to L under [How concepts relate](domain-model.md#how-concepts-relate) in Domain Model. A [Response Mission site](domain-model.md#leads-investigations-mission-sites-and-missions) is created by no Lead. A [Mission](domain-model.md#leads-investigations-mission-sites-and-missions) is from Lead L exactly when its Mission site was created by L.
+A Mission site is created by a Lead L exactly when it is an Initiative Mission site whose origin Investigation, under [Mission site properties](missions.md#mission-site-properties) in Missions, is an Investigation of L, i.e. retains a reference to L under [How concepts relate](domain-model.md#how-concepts-relate) in Domain Model. A [Response Mission site](domain-model.md#leads-investigations-mission-sites-and-missions) is created by no Lead. A [Mission](domain-model.md#leads-investigations-mission-sites-and-missions) is from Lead L exactly when its Mission site was created by L.
 
 [Lead availability](#lead-availability) reads the Investigations, the Missions, and their Mission sites, which are [retained](../foundation/world-history.md#glossary) for the whole Campaign with their final lifecycle states, under [Mission properties](missions.md#mission-properties) in Missions. A Won Mission stays Won and a Completed Investigation stays Completed for the rest of the Campaign, even if the Faction of the Lead later becomes Eliminated.
 
@@ -75,7 +75,7 @@ A Lead's completion count, i.e. the number of Completed Investigations of the Le
 
 Game data asks whether a Lead has been completed through one Condition kind, so that one Lead can open the way to another.
 
-**Proposed rule:** The Condition kind `lead_completed` is defined as follows, under [Condition kinds](../foundation/conditions.md#condition-kinds) in Conditions:
+The Condition kind `lead_completed` is defined as follows, under [Condition kinds](../foundation/conditions.md#condition-kinds) in Conditions:
 
 - **Value:** the identifier of a Lead the Game build supplies. The identifier of no Lead is invalid.
 - **When it holds:** exactly when that Lead is a Completed Lead in the [World state](../foundation/engine-contract.md#player-actions-and-turns) in which the Condition is evaluated. Once it holds it holds for the rest of the Campaign.
@@ -85,7 +85,7 @@ Game data asks whether a Lead has been completed through one Condition kind, so 
 
 A Lead is hidden until the player has earned the knowledge of it, and what the player has learned is never taken away again.
 
-**Proposed rule:** Which Leads are discovered is a Campaign-wide [Authoritative value](../foundation/core-concepts.md#value-classification): the set of discovered Leads, each by its GDR identifier. The set has no order of its own, and no rule reads one, so an Implementation that stores it as a list may keep it in any order. It belongs to the [Retired world state](../foundation/campaign-state.md#glossary) of every World state, because a Lead in it never leaves it. The following rules are complete:
+Which Leads are discovered is a Campaign-wide [Authoritative value](../foundation/core-concepts.md#value-classification): the set of discovered Leads, each by its GDR identifier. The set has no order of its own, and no rule reads one, so an Implementation that stores it as a list may keep it in any order. It belongs to the [Retired world state](../foundation/campaign-state.md#glossary) of every World state, because a Lead in it never leaves it. The following rules are complete:
 
 - **Becoming discovered:** A Lead L joins the set in the first World state in which its `discovered_when` holds, under [Evaluating a Condition](../foundation/conditions.md#evaluating-a-condition) in Conditions. The evaluating rule supplies the Faction whose Archetype is the FactionArchetype named by the `faction` of L to every `mission_won` Condition; a Lead without `faction` has no such Condition, under [Lead GDR validation](#lead-gdr-validation). A Lead without `discovered_when` is in the set of the initial [Campaign state](../foundation/core-concepts.md#campaign-and-session).
 - **When it is evaluated:** `discovered_when` is evaluated for every Lead not yet in the set in the initial Campaign state and in the World state that every [Player action](../foundation/engine-contract.md#player-actions-and-turns) and every Advance turn produces. Within an Advance turn only the World state it produces counts.
@@ -98,7 +98,7 @@ In scope only a Won Mission and a Completed Investigation can make a Condition h
 
 The Agency reaches a Faction's harder Initiative Mission sites only by winning easier ones first, because a Won Mission discovers the Leads that lead on. The Initiative operation level counts those steps, so that an interface, an [Autopilot AI](../foundation/engine-contract.md#principals-and-access), and balancing tools can tell how far along a Lead or a Mission site is without reading the Conditions that discover Leads.
 
-**Proposed rule:** The Initiative operation level is a [Derived value](../foundation/core-concepts.md#value-classification) of the [Game build](../foundation/core-concepts.md#game-build-and-content): it is calculated from the Lead and MissionSiteArchetype GDRs alone, reads no Campaign state, and so never changes during a [Campaign](../foundation/core-concepts.md#campaign-and-session). It is defined for the following three things, and this list is exhaustive:
+The Initiative operation level is a [Derived value](../foundation/core-concepts.md#value-classification) of the [Game build](../foundation/core-concepts.md#game-build-and-content): it is calculated from the Lead and MissionSiteArchetype GDRs alone, reads no Campaign state, and so never changes during a [Campaign](../foundation/core-concepts.md#campaign-and-session). It is defined for the following three things, and this list is exhaustive:
 
 - **A Lead:** for a Lead L that creates a Mission site, its Required level plus 1; for a Lead that creates none, its Required level. The Required level of L is the Required level of its `discovered_when`, under the table below, or 0 for a Lead without `discovered_when`. It is the highest Initiative operation level of an [Initiative Mission](domain-model.md#leads-investigations-mission-sites-and-missions) that must be Won before L can be discovered, and it counts only Initiative Missions against the Faction of L.
 - **An Initiative Mission site:** the Initiative operation level of the Lead that created it, under [Missions from a Lead](#missions-from-a-lead).
@@ -125,14 +125,14 @@ E.g., with the Bootstrap GDRs, `locate_red_dawn_member` is discovered once `crim
 
 ## Reading Initiative operation levels
 
-**Proposed rule:** The Initiative operation level reaches its readers through two API surfaces, under [API hierarchy](../foundation/engine-contract.md#api-hierarchy) in Engine Contract, and through no other:
+The Initiative operation level reaches its readers through two API surfaces, under [API hierarchy](../foundation/engine-contract.md#api-hierarchy) in Engine Contract, and through no other:
 
 - **[Player API](../foundation/engine-contract.md#api-surfaces):** the level of every discovered Lead and of every Initiative Mission site, under [Player-visible information](#player-visible-information), so that a user interface and an Autopilot AI read it rather than derive it. Each level is returned with the Lead or Mission site it belongs to, under [Current state, Turn report, and history](../foundation/world-history.md#current-state-turn-report-and-history) in History and Turn Report: `player.queries.getCurrentState()` returns every discovered Lead and every Initiative Mission site, [Retired](../foundation/world-history.md#glossary) or not, each with its level.
 - **[Developer API](../foundation/engine-contract.md#api-surfaces):** `developer.queries.getInitiativeOperationLevels()` reports the level of every Lead and of every MissionSiteArchetype of kind initiative the Game build of the [Current campaign](../foundation/core-concepts.md#campaign-and-session) supplies, discovered or not, and names each one that has none. It reads no Campaign state, so a balancing tool reads the levels of a Game build from any Campaign created from it. It is a query: it changes no Campaign state and is not a [Player action](../foundation/engine-contract.md#player-actions-and-turns).
 
 # Lead availability
 
-**Proposed rule:** Whether a Lead is available, i.e. can be investigated now, is a Derived value, calculated from the World state in which it is read; it is never stored, and it is not a state. A Lead L creates a Mission site exactly when its `on_completion` holds a `create_mission_site` Effect. L is available exactly when all of the following five conditions hold. The list is exhaustive.
+Whether a Lead is available, i.e. can be investigated now, is a Derived value, calculated from the World state in which it is read; it is never stored, and it is not a state. A Lead L creates a Mission site exactly when its `on_completion` holds a `create_mission_site` Effect. L is available exactly when all of the following five conditions hold. The list is exhaustive.
 
 | Condition | It holds exactly when |
 | --- | --- |
@@ -180,7 +180,7 @@ A situation not listed changes none of the conditions of a discovered Lead. In p
 
 # Lead status
 
-**Proposed rule:** Every discovered Lead has exactly one Lead status, a Derived value decided in the order of the following table, which is exhaustive. It tells the player whether a Lead that cannot be investigated now is gone for good or only for now.
+Every discovered Lead has exactly one Lead status, a Derived value decided in the order of the following table, which is exhaustive. It tells the player whether a Lead that cannot be investigated now is gone for good or only for now.
 
 | Lead status | It holds exactly when | Meaning for the player |
 | --- | --- | --- |
@@ -192,7 +192,7 @@ An undiscovered Lead has no Lead status. A Lead that is Inactive because its Mis
 
 # Completion effect
 
-**Proposed rule:** When an Investigation of a Lead L completes, the Effect list `on_completion` of L is applied, under [Applying an Effect list](../foundation/effect-lists.md#applying-an-effect-list) in Effect Lists. The completion itself, i.e. in which Advance turn an Investigation becomes Completed, is decided under [Completion](investigations.md#completion); it happens in the [Turn advancement step](domain-model.md#turn-advancement-steps) [Investigation progress](domain-model.md#leads-investigations-mission-sites-and-missions), and every Effect of `on_completion` is applied once for that completion, in the same step. The following table states the complete effect of each Effect kind that `on_completion` may hold, and what this rule supplies to it. It is exhaustive.
+When an Investigation of a Lead L completes, the Effect list `on_completion` of L is applied, under [Applying an Effect list](../foundation/effect-lists.md#applying-an-effect-list) in Effect Lists. The completion itself, i.e. in which Advance turn an Investigation becomes Completed, is decided under [Completion](investigations.md#completion); it happens in the [Turn advancement step](domain-model.md#turn-advancement-steps) [Investigation progress](domain-model.md#leads-investigations-mission-sites-and-missions), and every Effect of `on_completion` is applied once for that completion, in the same step. The following table states the complete effect of each Effect kind that `on_completion` may hold, and what this rule supplies to it. It is exhaustive.
 
 | Effect kind | Complete effect | Supplied by this rule |
 | --- | --- | --- |
@@ -210,13 +210,13 @@ The Effect list applies once for each completion of an Investigation of L. Anoth
 
 # Turn report
 
-**v5 requirement:** The [Turn report](../foundation/campaign-state.md#glossary) of an Advance turn holds the Leads discovered in it: every Lead that is in the set of discovered Leads of the World state that Advance turn produces and not in that of the World state before it, each by its GDR identifier, in the authored order of the Lead GDRs, under [GDR file layout](../foundation/game-data-records.md#gdr-file-layout) in Game Data Records. E.g., with the Bootstrap GDRs, the Advance turn in which `criminal_organizations` completes lists `locate_red_dawn_member`, `locate_exalt_member`, and `locate_black_lotus_member`, in that order. The [History entry](../foundation/world-history.md#glossary) of the [Turn](../foundation/engine-contract.md#player-actions-and-turns) the Advance turn ends holds the same list, unreduced. Both are [Player-visible information](../foundation/engine-contract.md#api-surfaces), under [Turn report and history](../foundation/world-history.md#turn-report-and-history) in History and Turn Report. An Advance turn that discovers no Lead holds an empty list.
+The [Turn report](../foundation/campaign-state.md#glossary) of an Advance turn holds the Leads discovered in it: every Lead that is in the set of discovered Leads of the World state that Advance turn produces and not in that of the World state before it, each by its GDR identifier, in the authored order of the Lead GDRs, under [GDR file layout](../foundation/game-data-records.md#gdr-file-layout) in Game Data Records. E.g., with the Bootstrap GDRs, the Advance turn in which `criminal_organizations` completes lists `locate_red_dawn_member`, `locate_exalt_member`, and `locate_black_lotus_member`, in that order. The [History entry](../foundation/world-history.md#glossary) of the [Turn](../foundation/engine-contract.md#player-actions-and-turns) the Advance turn ends holds the same list, unreduced. Both are [Player-visible information](../foundation/engine-contract.md#api-surfaces), under [Turn report and history](../foundation/world-history.md#turn-report-and-history) in History and Turn Report. An Advance turn that discovers no Lead holds an empty list.
 
 # Player-visible information
 
 The player is told what a Lead is and whether it can be investigated, and never why.
 
-**Proposed rule:** Every value below is Player-visible information under [Player-visible information](../foundation/player-api.md#player-visible-information) in [Player API](../foundation/engine-contract.md#api-surfaces), for every discovered Lead, from the World state in which it is discovered, whether or not the Lead is available. The table is exhaustive.
+Every value below is Player-visible information under [Player-visible information](../foundation/player-api.md#player-visible-information) in [Player API](../foundation/engine-contract.md#api-surfaces), for every discovered Lead, from the World state in which it is discovered, whether or not the Lead is available. The table is exhaustive.
 
 | Value | Player-visible information |
 | --- | --- |

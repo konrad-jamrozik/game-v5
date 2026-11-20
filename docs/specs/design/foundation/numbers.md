@@ -31,7 +31,7 @@ These terms are specific to numbers. General terms are in the [Core Concepts glo
 
 # Whole-number quantities
 
-**v5 requirement:** Every stored quantity is held as a whole number, with no exception. A stored quantity is any value that [Campaign state](core-concepts.md#campaign-and-session) holds or that a [Campaign save](engine-contract.md#persisted-data) keeps, whatever it measures, e.g. an amount of money, a count, or a number of percent. It is one of two kinds: a Whole quantity, whose whole number counts its units, or a Decimal quantity, whose whole number counts hundredths of a unit, under [Decimal quantities](#decimal-quantities). The specification that defines a quantity names it a Decimal quantity where it is one; every other stored quantity is a Whole quantity. E.g., a Whole quantity of 12 percent is stored as the whole number 12, never as 0.12 or 12.0 with a fractional part. A whole number is an integer: it has no fractional part, and its size is limited only by a range stated for its quantity.
+Every stored quantity is held as a whole number, with no exception. A stored quantity is any value that [Campaign state](core-concepts.md#campaign-and-session) holds or that a [Campaign save](engine-contract.md#persisted-data) keeps, whatever it measures, e.g. an amount of money, a count, or a number of percent. It is one of two kinds: a Whole quantity, whose whole number counts its units, or a Decimal quantity, whose whole number counts hundredths of a unit, under [Decimal quantities](#decimal-quantities). The specification that defines a quantity names it a Decimal quantity where it is one; every other stored quantity is a Whole quantity. E.g., a Whole quantity of 12 percent is stored as the whole number 12, never as 0.12 or 12.0 with a fractional part. A whole number is an integer: it has no fractional part, and its size is limited only by a range stated for its quantity.
 
 **Informative rationale:** The inherited game stored some quantities as numbers of differing precision and rounded at several different places. v5 replaces that with a single scheme: whole numbers that count either units or hundredths, named rounding, and exact evaluation, so that every result is exact. Whole quantities alone proved too coarse: a rate rounded to a whole unit in every Turn cannot rise by less than one unit, e.g. a health recovery of 0.6 and one of 0.9 both became 1, so an Upgrade between them changed nothing.
 
@@ -39,11 +39,11 @@ No Campaign state, Campaign save, or engine API value that represents a stored q
 
 **Ranges.** Unless the Mechanics specification that defines a quantity states otherwise, a stored quantity is nonnegative. A Mechanics specification that allows a quantity to be negative, or bounds it above, states so where it defines the quantity. E.g., one quantity may be allowed to be negative, another may be capped at 100, and another may count from 1. Arithmetic that would take a stored quantity outside its stated range is handled by a rule of the specification that defines the quantity, e.g. by clamping or by rejecting a Player action; it is never silently clamped.
 
-**Fractional [GDR](core-concepts.md#game-build-and-content) values.** A Game Data Record (GDR) value that is a ratio rather than a quantity, e.g. a damage range of 0.5, is not a stored quantity. It is read as the exact decimal number it is written as, i.e. as the ratio of whole numbers it denotes (0.5 is 1 over 2), never as a binary floating-point approximation. **Proposed rule:** a formula that reads such a value computes with it exactly, under [Exact evaluation](#exact-evaluation).
+**Fractional [GDR](core-concepts.md#game-build-and-content) values.** A Game Data Record (GDR) value that is a ratio rather than a quantity, e.g. a damage range of 0.5, is not a stored quantity. It is read as the exact decimal number it is written as, i.e. as the ratio of whole numbers it denotes (0.5 is 1 over 2), never as a binary floating-point approximation. a formula that reads such a value computes with it exactly, under [Exact evaluation](#exact-evaluation).
 
 # Decimal quantities
 
-**v5 requirement:** A Decimal quantity is a number with exactly two decimal places, i.e. a whole multiple of 0.01 of its unit. Two decimal places is the only precision: no quantity has one, three, or more. The following rules are complete.
+A Decimal quantity is a number with exactly two decimal places, i.e. a whole multiple of 0.01 of its unit. Two decimal places is the only precision: no quantity has one, three, or more. The following rules are complete.
 
 - **Held as hundredths:** Campaign state, a Campaign save, and every engine API value hold a Decimal quantity as its whole number of hundredths, e.g. 1.33 as 133, 2.75 as 275, and 30 as 3000. No binary floating-point number ever represents one.
 - **Written in units:** A specification writes a Decimal quantity in its unit, with a decimal point where it has a fractional part, e.g. 1.33 health points; 30 and 30.00 are the same Decimal quantity. A specification that states a value in hundredths says so.
@@ -73,13 +73,13 @@ Both operations leave an exact whole value unchanged: Round down of 2 is 2, and 
 | Round down to hundredths | 0.66           | 1.32            | 0.60         | 2.00       | -0.01           |
 | Round up to hundredths   | 0.67           | 1.33            | 0.60         | 2.00       | 0.00            |
 
-**Every formula names its rounding.** **v5 requirement:** A formula that can produce a fraction must state which operation it applies and at which point of the expression. A formula that omits the rounding of a possible fraction is incomplete and must not be implemented by guessing. A formula whose every possible result is a whole number states that no rounding occurs. E.g., `round down((8 × 2) / 3)` is 5, but rounding 8 / 3 first and then multiplying by 2 gives 4, so the formula's own wording decides where rounding occurs.
+**Every formula names its rounding.** A formula that can produce a fraction must state which operation it applies and at which point of the expression. A formula that omits the rounding of a possible fraction is incomplete and must not be implemented by guessing. A formula whose every possible result is a whole number states that no rounding occurs. E.g., `round down((8 × 2) / 3)` is 5, but rounding 8 / 3 first and then multiplying by 2 gives 4, so the formula's own wording decides where rounding occurs.
 
 In every specification, the notation `round down( … )` and `round up( … )` names these operations, `round down to hundredths( … )` and `round up to hundredths( … )` name their forms for hundredths, and the rounding is applied exactly once at the point where the notation encloses the expression, to the exact value of that expression.
 
 # Exact evaluation
 
-**v5 requirement:** A formula is evaluated exactly, as if with unlimited-precision rational arithmetic, and is rounded only where the formula names a rounding. The result must equal the result of that exact evaluation. In particular:
+A formula is evaluated exactly, as if with unlimited-precision rational arithmetic, and is rounded only where the formula names a rounding. The result must equal the result of that exact evaluation. In particular:
 
 - No intermediate result is rounded, truncated, or converted to a binary floating-point number. E.g., computing `10 × (1 − 0.5)` through a floating-point number is not permitted, even where it happens to give the same result.
 - Multiplication happens before division within a term, so that no precision is lost, and the order in which the formula states its terms does not change the result, because exact arithmetic is associative and commutative for the operations used.
@@ -88,7 +88,7 @@ In every specification, the notation `round down( … )` and `round up( … )` n
 
 # Percent values
 
-**v5 requirement:** A percentage is a Percent value: a whole number of percent, or a [Decimal quantity](#glossary) of percent where the specification that defines it names it one, e.g. 2.20 percent. No finer fraction of percent exists. A Percent value may exceed 100 or be negative only where the specification that defines it states so.
+A percentage is a Percent value: a whole number of percent, or a [Decimal quantity](#glossary) of percent where the specification that defines it names it one, e.g. 2.20 percent. No finer fraction of percent exists. A Percent value may exceed 100 or be negative only where the specification that defines it states so.
 
 **p percent of x** means `(p × x) / 100`, evaluated exactly: multiply first, then divide by 100, then apply the rounding the formula names. E.g., 2 percent of 30 is `(2 × 30) / 100 = 0.6`; with Round up it is 1, and with Round down it is 0. When p and x are both whole numbers the exact result has at most two decimal digits, so it is a whole multiple of 0.01; in every case the named rounding is the only source of imprecision.
 
@@ -98,7 +98,7 @@ A formula never divides by 100 first and rounds the result before multiplying, u
 
 # Probabilities
 
-**v5 requirement:** A Probability is an exact ratio `n / d` of two whole numbers with `d` greater than zero, as the glossary defines. The following rules are complete:
+A Probability is an exact ratio `n / d` of two whole numbers with `d` greater than zero, as the glossary defines. The following rules are complete:
 
 - **Whole numbers throughout:** A formula that forms a Probability from [Decimal quantities](#decimal-quantities) is evaluated exactly, so the Probability is the ratio of two whole numbers that the exact value denotes, e.g. 28.67 / 30 is 2867 / 3000. No Probability depends on a rounded Decimal quantity unless its formula names that rounding.
 - **Never stored:** A Probability is a [Derived value](core-concepts.md#value-classification) computed when needed. No Campaign state, Campaign save, or engine API value holds a Probability as a stored quantity; where the engine API reports one, e.g. in a query, it reports the pair `n` and `d` of whole numbers, not a rounded decimal. A Mechanics specification that shows a Probability to the player states its presentation under its [Player-visible information](engine-contract.md#api-surfaces).
