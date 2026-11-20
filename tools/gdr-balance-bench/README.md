@@ -29,14 +29,14 @@ An engine that does not start, e.g. because the Implementation is in the middle 
 
 ## How the Combat numbers are made
 
-The page has no Combat rules of its own. For each Mission site, it sends the test team and the site's Enemies, with the values as edited on the page, to the engine's `developer.tools.fightCombat`, which fights one Detached Combat by the procedure the game itself uses.
+The page has no Combat rules of its own. For each Mission site, it sends the test team and the site's Enemies, with the values as edited on the page, to the engine's `developer.tools.fightCombatBatch`, which fights a batch of Detached Combats by the procedure the game itself uses, without building their Combat reports.
 
 - **Test team wins** is the share of 100 Combats in which the Combat outcome was Prevailed, and **Agents killed** is the mean over those 100. A retreat counts as a loss, because a Mission is Won only when its Combat is Prevailed.
-- **Team for target** is the smallest team, of the test team's skill and upgrades, that reaches the target win rate, searched up to 300 Agents. Each team size tried is fought until the result is decided, at most 100 Combats.
+- **Team for target** is the smallest team, of the test team's skill and upgrades, that reaches the target win rate, searched up to 300 Agents. Each team size tried is fought in one batch of 100 Combats.
 - **Initiative operation levels** come from the engine's `developer.queries.getInitiativeOperationLevels`.
-- Every Combat's Detached seed is fixed, so a changed number reflects an edit, not new dice.
+- Every Combat's Detached seed is fixed, so a changed number reflects an edit, not new dice. The batch for a team of `n` at a Mission site has the Detached seed `<site>|<n>`, so its Combat `i` has `<site>|<n>#<i>`, e.g. `raid_hq|40#7`; `developer.tools.fightCombat` with that seed, e.g. through the Implementation's CLI command `fight`, shows that Combat in full.
 
-The Combats run on one worker thread per spare CPU core. A Combat of 300 Agents takes about a tenth of a second in the engine, because it produces the full Combat report with its Combat log, so a full pass over the Mission sites with a search for each team size takes about a minute.
+The Combats run on one worker thread per spare CPU core. A Combat of 300 Agents against `raid_hq` takes about 12 ms in the engine, most of it in drawing each attacker's target among its candidates.
 
 The other readouts, e.g. the Turns an Investigation takes and the expected Panic by Turn, are computed in the page from the formulas of the specifications; the page says where one is an estimate.
 

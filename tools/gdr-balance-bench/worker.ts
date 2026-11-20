@@ -80,19 +80,16 @@ async function boot() {
     enemyOrder[site.id] = order
   }
   return {
-    /** One Detached Combat: its Combat outcome and how many Agents are dead. */
-    fight(setup: unknown): { error: string } | { outcome: string; killed: number } {
-      const result = engine.developer.tools.fightCombat(setup)
+    /**
+     * One batch of Detached Combats, `developer.tools.fightCombatBatch(setup, count)`: how many Combats Prevailed and
+     * how many Agents are dead over the batch. It builds no Combat report.
+     */
+    fightBatch(setup: unknown, count: number): { error: string } | { prevailed: number; agentsDead: number } {
+      const result = engine.developer.tools.fightCombatBatch(setup, count)
       if (!result.ok) {
         return { error: result.error.message }
       }
-      let killed = 0
-      for (const p of result.value.participants) {
-        if (p.side === 'agent' && p.dead) {
-          killed += 1
-        }
-      }
-      return { outcome: String(result.value.combatReport.outcome), killed }
+      return { prevailed: result.value.totals.prevailed, agentsDead: result.value.totals.agentsDead }
     },
     initiativeLevels: Object.fromEntries(
       levels.value.missionSiteArchetypes.map((item: { id: string; level: number | null }) => [item.id, item.level]),
@@ -117,8 +114,11 @@ booted.then(
 /** The newest run the server has announced; a job of an older run stops at its next check. */
 let gen = 0
 
-/** Fights up to `trials` Combats; with `decideOnly`, stops as soon as reaching the target is decided. */
-async function rate(job: SiteJob, n: number, decideOnly: boolean): Promise<Rate> {
+/**
+ * Fights `trials` Combats of a team of `n` in one batch, Combat `i` with the Detached seed `<site>|<n>#<i>`, so
+ * `fightCombat` with that seed shows any one of them in full.
+ */
+async function rate(job: SiteJob, n: number): Promise<Rate> {
   await tick()
   if (job.gen !== gen) {
     return null
@@ -126,34 +126,18 @@ async function rate(job: SiteJob, n: number, decideOnly: boolean): Promise<Rate>
   const engine = await booted
   const agents = new Array<unknown>(n).fill(job.agent)
   const needWins = Math.ceil((job.target / 100) * job.trials - 1e-9)
-  let wins = 0
-  let killed = 0
-  let fought = 0
-  let last = performance.now()
-  for (let i = 0; i < job.trials; i += 1) {
-    const r = engine.fight({ agents, enemies: job.enemies, gdrValues: job.gdrValues, seed: `${job.id}|${n}|${i}` })
-    if ('error' in r) {
-      return { error: r.error }
-    }
-    fought += 1
-    wins += r.outcome === 'Prevailed' ? 1 : 0
-    killed += r.killed
-    if (decideOnly && (wins >= needWins || fought - wins > job.trials - needWins)) {
-      break
-    }
-    if (performance.now() - last > 80) {
-      await tick()
-      last = performance.now()
-      if (job.gen !== gen) {
-        return null
-      }
-    }
+  const r = engine.fightBatch(
+    { agents, enemies: job.enemies, gdrValues: job.gdrValues, seed: `${job.id}|${n}` },
+    job.trials,
+  )
+  if ('error' in r) {
+    return { error: r.error }
   }
-  return { win: (wins / fought) * 100, killed: killed / fought, pass: wins >= needWins }
+  return { win: (r.prevailed / job.trials) * 100, killed: r.agentsDead / job.trials, pass: r.prevailed >= needWins }
 }
 
 async function run(job: SiteJob): Promise<void> {
-  const base = await rate(job, job.n, false)
+  const base = await rate(job, job.n)
   if (base === null) {
     return
   }
@@ -172,7 +156,7 @@ async function run(job: SiteJob): Promise<void> {
     let size = job.n
     while (size < job.maxn) {
       size = Math.min(job.maxn, size * 2)
-      const r = await rate(job, size, true)
+      const r = await rate(job, size)
       if (r === null) {
         return
       }
@@ -187,7 +171,7 @@ async function run(job: SiteJob): Promise<void> {
   if (hi > 0) {
     while (lo < hi) {
       const mid = (lo + hi) >> 1
-      const r = await rate(job, mid, true)
+      const r = await rate(job, mid)
       if (r === null) {
         return
       }
