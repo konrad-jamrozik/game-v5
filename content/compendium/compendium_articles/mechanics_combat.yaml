@@ -10,7 +10,7 @@ body: >-
   fight, or after a round in which your team retreats.
 formulas:
   - label: 'Chance to hit'
-    text: 'A² ÷ (A² + D²), where A is the effective skill of the attacker and D that of the defender'
+    text: 'A² ÷ (A² + D²), rounded down to a tenth of a percent and kept from 0.1% to 99.9%, where A is the effective skill of the attacker and D that of the defender'
   - label: 'Order'
     text: 'Within a side, from the highest to the lowest effective skill at the start of its part of the round'
   - label: 'Enemy target'

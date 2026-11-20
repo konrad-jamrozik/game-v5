@@ -307,7 +307,7 @@ Buying an Upgrade that adds to max health therefore raises the effective max hea
 
 ## Effective skill
 
-A Combatant's effective skill is a Derived value computed by this formula. It is shared by Agents and Enemies through the [Combatant Role Type](#combatant-role-type), and every rule that uses a Combatant's capability, e.g. [Investigation progress](domain-model.md#leads-investigations-mission-sites-and-missions) or a Combat's hit probability, reads effective skill rather than base skill.
+A Combatant's effective skill is a Derived value computed by this formula. It is shared by Agents and Enemies through the [Combatant Role Type](#combatant-role-type), and every rule that uses a Combatant's capability, e.g. [Investigation progress](domain-model.md#leads-investigations-mission-sites-and-missions) or a Combat's hit chance, reads effective skill rather than base skill.
 
 ```text
 penalty factor  = max(0, 100 − p × max(0, exhaustion − f))

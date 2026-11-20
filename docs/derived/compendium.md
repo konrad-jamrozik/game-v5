@@ -98,7 +98,7 @@ A Combat is fought in rounds. In each round every [Agent](#agents) attacks once,
 
 | Formulas |  |
 | --- | --- |
-| Chance to hit | A² ÷ (A² + D²), where A is the [effective skill](#skill) of the attacker and D that of the defender |
+| Chance to hit | A² ÷ (A² + D²), rounded down to a tenth of a percent and kept from 0.1% to 99.9%, where A is the [effective skill](#skill) of the attacker and D that of the defender |
 | Order | Within a side, from the highest to the lowest effective skill at the start of its part of the round |
 | Enemy target | Any Agent able to fight, each equally likely |
 | Agent target | Any Enemy able to fight, with a weight of 100 minus one for each whole hundredth by which the chance to hit it lies above or below 0.8, times the share of the Agent's [weapon damage](#damage) that the Enemy's health and armor can still take, rounded up |
