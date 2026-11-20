@@ -20,7 +20,7 @@ The [Main menu](../../foundation/campaign-lifecycle.md#glossary) lists the [Camp
 
 The New Campaign panel sets up a Campaign and creates it, under [Preset selection and edits](../../foundation/configuration.md#preset-selection-and-edits) in Configuration. It holds, from top to bottom:
 
-1. **Preset:** a selector of every [Campaign configuration preset](../../foundation/game-data-records.md#glossary) the [Game build](../../foundation/core-concepts.md#game-build-and-content) supplies, marking the [Game build default preset](../../foundation/configuration.md#glossary) and each preset that has [Preset edits](../../foundation/configuration.md#glossary). Choosing a preset selects it.
+1. **Preset:** a selector of every [Campaign configuration preset](../../foundation/game-data-records.md#glossary) the [Game build](../../foundation/core-concepts.md#game-build-and-content) supplies, each shown by its `name`, under [CampaignConfiguration](../../foundation/configuration.md#campaignconfiguration) in Configuration, marking the [Game build default preset](../../foundation/configuration.md#glossary) and each preset that has [Preset edits](../../foundation/configuration.md#glossary). Choosing a preset selects it.
 2. **Preset edits:** one field for each [Campaign configuration](../../foundation/campaign-state.md#glossary) value of the selected preset, labelled with the value's name, showing the preset's own value as its placeholder and its Preset edit, if any, as its content. Entering a value sets a Preset edit, and emptying the field removes it. A value the engine rejects changes nothing, and the field shows the reason the engine reports.
 3. **Seed:** an optional [Campaign seed](../../foundation/determinism-and-randomness.md#glossary). When it is left empty, campaign creation receives none and the engine chooses one, under [Campaign seed](../../foundation/determinism-and-randomness.md#campaign-seed) in Determinism and Randomness.
 4. **Start Campaign:** the primary button, which creates the Campaign with `session.campaign.create(options)` and shows the Campaign screen.
@@ -42,4 +42,4 @@ The layout puts what the Player most often wants, the Campaign saves, in the wid
 
 The following appear only on the [Artboard](../visual-design.md#glossary) and must not be implemented, under [Reading Artboards](../visual-design.md#reading-artboards) in Visual Design:
 
-- The sample values, e.g. the Campaign IDs, T16 A3, the Track title GEO-4, the Music volume 50, the preset `standard`, and its values 500 and 20.
+- The sample values, e.g. the Campaign IDs, T16 A3, the Track title GEO-4, the Music volume 50, the preset Standard, and its values 500 and 20.

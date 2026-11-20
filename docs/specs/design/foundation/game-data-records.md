@@ -100,7 +100,7 @@ If training later raises the Agent's base skill to 110, the engine reads 110 fro
 
 When serving the Campaign configuration preset purpose, a GDR supplies one value for every Campaign configuration value, and campaign creation takes those values as the initial Campaign configuration. The Game build can supply several such GDRs, and the player selects one of them. Unlike every other purpose, this one comes with a built-in engine capability: before the Campaign is created, the player may override individual values of the selected preset.
 
-A value belongs to Campaign configuration if and only if the preset GDRs supply it. Whatever no preset can change is not Campaign configuration. It is either a GDR serving another purpose, e.g. the new-base-Agent-skill GDR, or part of the Game rules, e.g. a starting [Turn](engine-contract.md#player-actions-and-turns) that is the same for every Campaign.
+A value belongs to Campaign configuration if and only if the preset GDRs supply it, apart from the display name every preset has. Whatever no preset can change is not Campaign configuration. It is either a GDR serving another purpose, e.g. the new-base-Agent-skill GDR, or part of the Game rules, e.g. a starting [Turn](engine-contract.md#player-actions-and-turns) that is the same for every Campaign.
 
 ## Worked example: campaign configuration preset
 
@@ -108,7 +108,7 @@ E.g., an illustrative Game build with two presets and two Campaign configuration
 
 | Element | Modeling role | Meaning in this example |
 | --- | --- | --- |
-| CampaignConfiguration | Type | Describes one value for every Campaign configuration value: starting money and an investigation difficulty multiplier. |
+| CampaignConfiguration | Type | Describes a display name and one value for every Campaign configuration value: starting money and an investigation difficulty multiplier. |
 | Standard | GDR serving the Campaign configuration preset purpose | Has Type CampaignConfiguration, starting money 100, and investigation difficulty multiplier 1. It is the default preset. |
 | Hard | GDR serving the Campaign configuration preset purpose | Has Type CampaignConfiguration, starting money 60, and investigation difficulty multiplier 2. |
 | Preset selection | Player choice before creation | The player selects Hard instead of the default Standard. |
@@ -123,6 +123,7 @@ E.g., the Hard GDR as YAML:
 ```yaml
 id: hard
 type: CampaignConfiguration
+name: Hard
 starting_money: 60
 investigation_difficulty_multiplier: 2
 ```

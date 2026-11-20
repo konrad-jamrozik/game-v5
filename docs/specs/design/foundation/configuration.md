@@ -30,12 +30,20 @@ Settings differ in whom they serve and how long they last, so each kind lives in
 | Kind | Examples | Where it lives | Persisted |
 | --- | --- | --- | --- |
 | Session access setting | E.g., Dev mode | Session | Never |
-| [Global configuration](engine-contract.md#persisted-data) | E.g., volume, language | [Game storage](engine-contract.md#persisted-data) | Yes, one set |
+| [Global configuration](engine-contract.md#persisted-data) | E.g., Music volume, the Autosave limit | [Game storage](engine-contract.md#persisted-data) | Yes, one set |
 | Campaign configuration | E.g., an investigation difficulty multiplier | [Campaign state](core-concepts.md#campaign-and-session), within each [Campaign save](engine-contract.md#persisted-data) | Yes, per Campaign |
 
 # Global configuration
 
-Global configuration is read when a Session starts, so its settings apply at the main menu before any Campaign is selected. Selecting, creating, or loading a Campaign never replaces Global configuration, and a Campaign save does not contain it. Interface preferences belong to Global configuration, e.g. volume, language, and tutorial popups. So does a setting that governs the engine without being read by the [Game rules](core-concepts.md#game-build-and-content), e.g. the [Autosave limit](saves.md#limits), under [Autosaves](saves.md#autosaves).
+Global configuration is read when a Session starts, so its settings apply at the main menu before any Campaign is selected. Selecting, creating, or loading a Campaign never replaces Global configuration, and a Campaign save does not contain it. Interface preferences belong to Global configuration, e.g. the volume of music and of Sounds. So does a setting that governs the engine without being read by the [Game rules](core-concepts.md#game-build-and-content), e.g. the [Autosave limit](saves.md#limits), under [Autosaves](saves.md#autosaves).
+
+A Game build has exactly the following Global configuration settings. Each is stated in full, with its permitted values and its [Game build default](engine-contract.md#persisted-data), where the table says. This table is exhaustive, and a new setting joins it in the same change that defines it.
+
+| Setting                           | Stated in                                                  |
+| --------------------------------- | ---------------------------------------------------------- |
+| [Autosave limit](saves.md#limits) | [Limits](saves.md#limits) in Saves                         |
+| Music on, Music volume            | [Music settings](../ui/music.md#music-settings) in Music   |
+| Sounds on, Sounds volume          | [Sound settings](../ui/sounds.md#sound-settings) in Sounds |
 
 Global configuration stores only values the player has set. A setting the player has not set follows the current [Game build default](engine-contract.md#persisted-data), so a changed Game build default in a later Game build reaches it. Resetting a setting removes its stored value.
 
@@ -55,7 +63,18 @@ Global configuration holds nothing that campaign creation uses: creating a Campa
 
 The Game build supplies one or more Campaign configuration presets. Each preset is one [GDR](core-concepts.md#game-build-and-content) serving the Campaign configuration preset purpose under [Purposes of GDRs](game-data-records.md#purposes-of-gdrs) and supplies a value for every Campaign configuration value. A preset is never partial, and presets do not combine. Exactly one preset is the Game build default preset.
 
-A value is a Campaign configuration value if and only if the presets supply it. E.g., starting money, enemy difficulty, and a multiplier of how often [Mission sites](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) appear can be Campaign configuration values. Whatever no preset can change about a new Campaign is not Campaign configuration. It is either a GDR serving another purpose, e.g. a new base [Agent](../mechanics/domain-model.md#agency-and-agents) base skill value, or part of the Game rules, e.g. a starting [Turn](engine-contract.md#player-actions-and-turns) that is the same for every Campaign, and the rule determining which [Campaign instances](core-concepts.md#campaign-instances) the initial Campaign state contains, under [Initial Campaign state](../mechanics/domain-model.md#initial-campaign-state). The [Campaign seed](determinism-and-randomness.md#campaign-seed) is the one exception: no preset supplies it and no Preset edit sets it, yet it differs between Campaigns. It is neither Campaign configuration nor part of the new-Campaign setup; campaign creation receives it separately, under [Campaign seed](determinism-and-randomness.md#campaign-seed). A preset supplies both the values that are adjustable during play and the values that are fixed after creation, under the [Campaign State glossary](campaign-state.md#glossary).
+A value is a Campaign configuration value if and only if the presets supply it, apart from their `name`, under [CampaignConfiguration](#campaignconfiguration). E.g., starting money, enemy difficulty, and a multiplier of how often [Mission sites](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) appear can be Campaign configuration values. Whatever no preset can change about a new Campaign is not Campaign configuration. It is either a GDR serving another purpose, e.g. a new base [Agent](../mechanics/domain-model.md#agency-and-agents) base skill value, or part of the Game rules, e.g. a starting [Turn](engine-contract.md#player-actions-and-turns) that is the same for every Campaign, and the rule determining which [Campaign instances](core-concepts.md#campaign-instances) the initial Campaign state contains, under [Initial Campaign state](../mechanics/domain-model.md#initial-campaign-state). The [Campaign seed](determinism-and-randomness.md#campaign-seed) is the one exception: no preset supplies it and no Preset edit sets it, yet it differs between Campaigns. It is neither Campaign configuration nor part of the new-Campaign setup; campaign creation receives it separately, under [Campaign seed](determinism-and-randomness.md#campaign-seed). A preset supplies both the values that are adjustable during play and the values that are fixed after creation, under the [Campaign State glossary](campaign-state.md#glossary).
+
+## CampaignConfiguration
+
+A Campaign configuration preset is a GDR of [Type](core-concepts.md#data-modeling) CampaignConfiguration. The following table is exhaustive apart from the `id` and `type` that every GDR has.
+
+| Property | Shape | Meaning |
+| --- | --- | --- |
+| `name` | Non-empty text. | The display name of the preset, which an interface shows, e.g. "Standard". It is not a Campaign configuration value. |
+| One property for each Campaign configuration value | As the specification that owns the value states. | The preset's value of that Campaign configuration value, e.g. `starting_money` and `starting_funding` under [Campaign configuration values](../mechanics/economy-and-upgrades.md#campaign-configuration-values) in Economy and Upgrades. |
+
+A Game build is defective, and no Campaign is created from it, if a CampaignConfiguration has no `name`, a `name` that is not non-empty text, no property for some Campaign configuration value, or any property other than `id`, `type`, `name`, and one for each Campaign configuration value. The violation is reported as a data defect, under [World state integrity](engine-contract.md#world-state-integrity) in Engine Contract.
 
 ## Game build default preset
 
@@ -98,7 +117,7 @@ The Session controller reads and changes the preset selection and the Preset edi
 
 | Operation | Effect |
 | --- | --- |
-| `session.newCampaignSetup.listPresets()` | Reports every preset the Game build supplies, which one is the Game build default preset, which one is selected, and which have Preset edits. |
+| `session.newCampaignSetup.listPresets()` | Reports every preset the Game build supplies, with its `name`, which one is the Game build default preset, which one is selected, and which have Preset edits. |
 | `session.newCampaignSetup.getPreset(preset)` | Reports every Campaign configuration value of `preset`: the preset's own value, its Preset edit if one exists, the permitted values a Preset edit may set, and whether the value is adjustable during play or fixed after creation. `preset` need not be selected. |
 | `session.newCampaignSetup.getSetup()` | Reports the selected preset and the value campaign creation would use for each of its Campaign configuration values, i.e. its Preset edit where one exists and the preset's own value otherwise. |
 | `session.newCampaignSetup.selectPreset(preset)` | Selects `preset`, under the Selection rule. |

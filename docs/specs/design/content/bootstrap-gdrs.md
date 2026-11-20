@@ -55,7 +55,7 @@ Type owner: [Configuration](../foundation/configuration.md).
 
 | GDR | Type | GDR purpose | What it supplies |
 | --- | --- | --- | --- |
-| `standard` | CampaignConfiguration | [Campaign configuration preset](../foundation/game-data-records.md#glossary) | The [Game build default preset](../foundation/configuration.md#game-build-default-preset) under [Campaign configuration presets](../foundation/configuration.md#campaign-configuration-presets): the Agency's starting money and starting recurring funding. |
+| `standard` | CampaignConfiguration | [Campaign configuration preset](../foundation/game-data-records.md#glossary) | The [Game build default preset](../foundation/configuration.md#game-build-default-preset) under [Campaign configuration presets](../foundation/configuration.md#campaign-configuration-presets), named Standard: the Agency's starting money and starting recurring funding. |
 | `configuration_parameters` | ConfigurationParameters | None of the listed purposes | Which preset is the [Game build default preset](../foundation/configuration.md#glossary), under [Game build default preset](../foundation/configuration.md#game-build-default-preset). |
 
 ## Agents GDRs
