@@ -62,7 +62,7 @@ A Combat, its participants, and its [retained](../foundation/world-history.md#gl
 
 | Term | Definition | Prohibited synonyms |
 | --- | --- | --- |
-| Combat | One armed clash between the Agents deployed to a Mission site and the Enemies there, resolved in full within one Advance turn. | Battle; skirmish; fight, as a noun. Ordinary verbs, e.g. "Agents fight Enemies", remain valid. |
+| Combat | One armed clash between the Agents deployed to a Mission site and the Enemies there, fought in full within one Advance turn, or the same clash fought for a developer tool on Agents and Enemies it supplies. | Battle; skirmish; fight, as a noun. Ordinary verbs, e.g. "Agents fight Enemies", remain valid. |
 | Combatant | An Agent or an Enemy as a participant in a Combat. |  |
 | Combatant Role Type | What an Agent or an Enemy must have in order to be a Combatant, and what it gains while a Combat lasts. |  |
 | Enemy | An opponent present at one Mission site, whom the Agency's Agents fight in a Combat. |  |

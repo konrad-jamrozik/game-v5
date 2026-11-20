@@ -10,7 +10,7 @@
 
 # Overview
 
-A [Combat](domain-model.md#combat) is where preparation is tested. The player decides which [Agents](agents-spec.md) to deploy to a [Mission site](domain-model.md#leads-investigations-mission-sites-and-missions) and then has no further say: the Agents and the [Enemies](domain-model.md#glossary) there fight automatically, and the whole Combat is resolved within one Advance turn.
+A [Combat](domain-model.md#combat) is where preparation is tested. The player decides which [Agents](agents-spec.md) to deploy to a [Mission site](domain-model.md#leads-investigations-mission-sites-and-missions) and then has no further say: the Agents and the [Enemies](domain-model.md#glossary) there fight automatically, and the whole Combat is fought within one Advance turn. A tool that studies Combat, e.g. one that balances Enemies, can have a Combat fought on Combatants it supplies, by the very same procedure, without touching any Campaign.
 
 Everything about a Combat follows from one rule: fighting only wears [Combatants](domain-model.md#combat) down. Every attack, hit or miss, raises exhaustion, and a hit removes current health, so effective skill can only fall while a Combat lasts. A Combatant whose current health reaches zero is [Killed](agents-spec.md#agent-statuses), and one whose effective skill falls too far or whose exhaustion grows too high is Incapacitated and stops fighting. The Combat is fought in Combat rounds until no [Enemy](domain-model.md#combat) can fight on, no [Agent](domain-model.md#agency-and-agents) can, or the Agents retreat, and because exhaustion keeps rising, every Combat ends. Its [Combat report](domain-model.md#combat) records every attack.
 
@@ -28,6 +28,8 @@ How a Combat is divided, and how it ends.
 
 | Term | Definition | Prohibited synonyms |
 | --- | --- | --- |
+| Fighting a Combat | Producing a Combat's outputs from its inputs, under [Fighting a Combat](#fighting-a-combat): from Combat start through Combat rounds to its Combat outcome and [Combat report](domain-model.md#combat). It is one procedure, whoever has the Combat fought. Its verb is "fight", e.g. "the Mission resolution step has the Combat fought". | Resolving, running, computing, executing, or simulating a Combat. A Mission, not a Combat, is resolved. |
+| Detached Combat | A Combat fought by `developer.tools.fightCombat(setup)` on [Combatants](domain-model.md#combat) and values the caller supplies, outside every [World state](../foundation/engine-contract.md#player-actions-and-turns), whose outputs are returned and applied to nothing, under [Detached Combat](#detached-combat). | Simulated Combat; test Combat |
 | Combat round | One pass of a Combat in which every [Combatant](domain-model.md#combat) able to fight attacks once. | Round, naming a pass of a Combat |
 | Agents' phase | The first part of a Combat round, in which each [Agent](domain-model.md#agency-and-agents) of the Agents' side takes one Combat turn, in the fixed order of its side. |  |
 | Enemies' phase | The second part of a Combat round, in which each [Enemy](domain-model.md#combat) of the Enemies' side takes one Combat turn, in the fixed order of its side. |  |
@@ -185,7 +187,15 @@ The order of each list is the fixed order of its side, under [Fixed order of eac
 1. The Combat report, under [Combat report](#combat-report), which also holds the combat experience of every Agent, under [Combat experience](#combat-experience).
 2. The changed current health and exhaustion of the Combatants of both lists, and the [Agent status](domain-model.md#agency-and-agents) [Killed](agents-spec.md#agent-statuses) of every Agent whose current health reached 0, under [Killed and Incapacitated](#killed-and-incapacitated).
 
-An Agents' side that is empty, contains an Agent twice, or contains an Agent that is not Serving, and an Enemies' side that contains an Enemy twice, are internal invariant violations under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract, not expected cases. [Missions](missions.md) guarantees valid lists when it has a Combat fought.
+An Agents' side that is empty, contains an Agent twice, or contains an Agent that is not Serving, and an Enemies' side that contains an Enemy twice, are internal invariant violations under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract, not expected cases. [Missions](missions.md) guarantees valid lists when it has a Combat fought. A [Detached Combat](#detached-combat) takes its inputs from its caller instead and rejects invalid ones, under [Detached Combat](#detached-combat).
+
+## Fighting a Combat
+
+**Proposed rule:** Fighting a Combat is the one procedure that turns the inputs above into the outputs above, by [Combat flow](#combat-flow), [Attacks](#attacks), [Combat end](#combat-end), and [Combat report](#combat-report). The following rules are complete:
+
+- **One procedure:** Exactly two things have a Combat fought, and both use this procedure and no other: the Mission resolution step, under [Missions](missions.md), and `developer.tools.fightCombat(setup)`, under [Detached Combat](#detached-combat). What differs between them is only where the inputs come from and what is done with the outputs.
+- **Pure in its inputs:** Given equal inputs, including equal values of every random outcome, fighting a Combat produces equal outputs, whoever has it fought. E.g., a Detached Combat given the starting values, GDR values, and random outcomes of a Combat fought in a Mission resolution step produces the same Combat report, apart from the Mission and the identification of its participants.
+- **Applying the outputs belongs to the caller:** Fighting a Combat changes no World state itself. The Mission resolution step applies the outputs to the Combatants, under [Missions](missions.md); a Detached Combat applies them to nothing.
 
 ## Combat-only properties
 
@@ -216,7 +226,7 @@ Outside a Combat, a Combatant is able to fight exactly when its current health i
 
 ## Combat timing
 
-**Proposed rule:** A Combat begins and ends within one [Turn advancement step](turn-advancement.md#glossary) of one Advance turn, the step in which [Missions](missions.md) has it fought; nothing else happens between its first and its last attack. No [World state](../foundation/engine-contract.md#player-actions-and-turns) therefore contains a Combat in progress, a Combat round, or the Incapacitated property. Only the Combat's outputs are ever part of a World state.
+**Proposed rule:** A Combat begins and ends within one [Turn advancement step](turn-advancement.md#glossary) of one Advance turn, the step in which [Missions](missions.md) has it fought; nothing else happens between its first and its last attack. A Detached Combat is the one exception: it begins and ends within one call of `developer.tools.fightCombat(setup)` and belongs to no Advance turn. No [World state](../foundation/engine-contract.md#player-actions-and-turns) therefore contains a Combat in progress, a Combat round, or the Incapacitated property. Only the Combat's outputs are ever part of a World state.
 
 # Combat rating
 
@@ -405,11 +415,33 @@ By 3 and 4 no Combat has more than `N × X` Combat rounds. A Combatant that is n
 6. **Damage dealt and damage taken:** for each participant, its damage dealt, i.e. the sum of the health removed by its attacks, and its damage taken, i.e. the sum of the health removed by attacks on it; and for each Agent, its combat experience, under [Combat experience](#combat-experience).
 7. **Combat ratings:** the Combat rating of each side at Combat start and at the end of every Combat round.
 8. **Combat log:** every attack, in the order in which it was made, each with its Combat round number, its attacker and defender by Instance ID, A and D, the hit Probability as the pair of whole numbers `A²` and `A² + D²`, the hit outcome, the damage outcome when there is one, the health removed, the current health and exhaustion of the attacker and the defender after the attack, and whether the attack made the defender dead or the defender or the attacker Incapacitated.
-9. **Mission:** the Instance ID of the Mission whose Combat it records, which [Missions](missions.md) supplies when it has the Combat fought. It influences nothing in the Combat.
+9. **Mission:** the Instance ID of the Mission whose Combat it records, which [Missions](missions.md) supplies when it has the Combat fought. It influences nothing in the Combat. The Combat report of a Detached Combat has no Mission, and identifies each participant as [Detached Combat](#detached-combat) states rather than only by Instance ID.
 
 A participant's base skill, effective max health, and effective weapon damage do not change in a Combat, so its final values need not repeat them. All values are whole numbers, except that each hit Probability is the pair of whole numbers named above, and that an Agent's base skill and current health, and so the health removed from an Agent and the damage dealt and damage taken that sum it, are [Decimal quantities](../foundation/numbers.md#glossary), under [Attribute ranges](agents-spec.md#attribute-ranges) in Agents. E.g., a damage outcome of 10 against an Agent with current health 5.60 removes 5.60.
 
 The Combat report is an Authoritative value. It is part of the [Turn report](../foundation/campaign-state.md#glossary) of the Advance turn in which its Combat was fought, and no Mission or other Campaign instance holds it. `player.queries.getTurnReport()` returns every fact above until the next Advance turn replaces that Turn report, under [Current state, Turn report, and history](../foundation/world-history.md#current-state-turn-report-and-history) in Engine Contract. How the Turn report organizes its Combat reports is left to the implementation. Once produced, a Combat report is never rewritten or recomputed, even when the values of its participants change later, under [Historical fact preservation](../foundation/world-history.md#historical-fact-preservation) in History and Turn Report. Whatever presents a Combat later uses the [retained](../foundation/world-history.md#glossary) values. After the next Advance turn, only the facts that its [History entry](../foundation/world-history.md#glossary) holds need to remain available, under [Turn report and history](../foundation/world-history.md#turn-report-and-history) in History and Turn Report. The History entry of the [Turn](../foundation/engine-contract.md#player-actions-and-turns) the Advance turn ends holds, of each Combat report, only its Combat outcome, its number of Combat rounds, its participants, for each participant its current health and effective skill at Combat start and at Combat end and its final condition, and the Combat rating of each side at Combat start and at Combat end, beside what [Turn report](missions.md#turn-report) in Missions states it holds of that Combat's Mission. Combat end is the end of the last Combat round, or Combat start when the Combat had no Combat round. These are the values a Concluded Mission site is shown with for the rest of the Campaign, so the [History](../foundation/campaign-state.md#glossary) keeps what each participant came in with and left with, but not the Combat log, the damage dealt and taken, or the other starting values.
+
+# Detached Combat
+
+Balancing a Combat needs many Combats fought on chosen teams and chosen GDR values, and its results are worth something only if they are exactly what a Campaign would produce. `developer.tools.fightCombat(setup)` therefore has a Combat fought on what its caller supplies, by the same procedure as the Mission resolution step, and changes nothing.
+
+**Proposed rule:** `developer.tools.fightCombat(setup)` is a [Developer tool](../foundation/engine-contract.md#api-surfaces), available as [Developer API](../foundation/engine-contract.md#api-surfaces) is, under [API hierarchy](../foundation/engine-contract.md#api-hierarchy) in Engine Contract. It fights one Detached Combat under [Fighting a Combat](#fighting-a-combat) and returns its outputs. `setup` holds the following, and this list is exhaustive:
+
+| Part | What the caller supplies | Default |
+| --- | --- | --- |
+| Agents' side | A list of one or more entries, in the fixed order of the side. Each entry is either an Agent of the [Current campaign](../foundation/core-concepts.md#campaign-and-session) by Instance ID, which contributes that Agent's values in the [Current world state](../foundation/engine-contract.md#player-actions-and-turns), or explicit values: base skill, current health, effective max health, exhaustion, and effective weapon damage. | None; it is required. |
+| Enemies' side | A list of zero or more entries, in the fixed order of the side. Each entry is an Enemy of the Current campaign by Instance ID, an EnemyArchetype by identifier, which contributes the values [Enemy creation](#enemy-creation) gives a new Enemy of it, or explicit values as for an Agent. Instead of a list, the caller may name a MissionSiteArchetype, which contributes one entry for each Enemy a new Mission site of it would have, in their creation order under [Missions](missions.md). | None; it is required. |
+| GDR values | A value for any of the GDR values that [Combat inputs and outputs](#combat-inputs-and-outputs) lists, e.g. a different `incapacitation_skill_fraction`. | The value the [Game build](../foundation/core-concepts.md#game-build-and-content) of the Current campaign supplies. |
+| Detached seed | Text that is a permitted [Campaign seed](../foundation/determinism-and-randomness.md#glossary), from which every random outcome of the Detached Combat derives. | None; it is required. |
+
+The following rules are complete:
+
+- **Valid setup:** The operation is rejected, and fights nothing, when an Agents' side is empty, when one Agent or one Enemy of the Current campaign appears twice, when an Agent named by Instance ID is not [Serving](agents-spec.md#agent-statuses), when an Instance ID or identifier names nothing of its kind, when an explicit value lies outside [Attribute ranges](agents-spec.md#attribute-ranges) in Agents for its side, when a GDR value fails [Combat GDR validation](#combat-gdr-validation) or [Agent GDR validation](agents-spec.md#agent-gdr-validation) in Agents, or when the Detached seed is not a permitted Campaign seed. The rejection names the first such fault.
+- **Random outcomes:** Each attack has its hit outcome and damage outcome, with the distributions [Hit outcome](#hit-outcome) and [Damage outcome](#damage-outcome) state, derived from the Detached seed alone. The same `setup` therefore always gives the same outputs, and two Detached seeds give independent outcomes. No random outcome of the Current campaign is drawn, and no override under [Random outcome overrides](../foundation/developer-access.md#random-outcome-overrides) in Developer Access applies.
+- **Outputs:** It returns the Combat report under [Combat report](#combat-report), which records every attack, and the outputs under [Combat inputs and outputs](#combat-inputs-and-outputs): each Combatant's final current health and exhaustion and whether it is dead. Each participant is identified by its side and position in it, together with the Instance ID or identifier its entry named, if any.
+- **Changes nothing:** It is a Developer tool, not a [Player action](../foundation/engine-contract.md#player-actions-and-turns). No [Campaign state](../foundation/core-concepts.md#campaign-and-session) changes, including the Agents and Enemies it read, the [Timeline](../foundation/engine-contract.md#persisted-data), and the [Turn report](../foundation/campaign-state.md#glossary); a Killed participant is Killed only in the returned Combat report.
+
+E.g., a balancing tool fights 150 Detached Combats of four explicit Agents of base skill 100 against the Enemies of `raid_outpost`, with Detached seeds `1` to `150`, and counts the Combat outcomes Prevailed.
 
 # Player-visible information
 
@@ -442,7 +474,8 @@ Incapacitated and a Combat in progress never exist in a World state, under [Comb
 - **Simultaneous end conditions:** When no Combatant of either side is able to fight, the outcome is Prevailed. When no Agent is able to fight and the Retreated check would also hold, the outcome is Wiped ([End-of-Combat-round checks](#end-of-combat-round-checks)).
 - **Ties in target selection:** The earliest opponent in the fixed order wins the tie ([Target selection](#target-selection)).
 - **Every attack misses:** The Combat still ends, through Incapacitated or Retreated, within `N × exhaustion_incapacitation` Combat rounds ([Termination](#termination)).
-- **Invalid inputs:** An empty Agents' side, a duplicate Combatant, or an Agent that is not Serving is an internal invariant violation ([Combat inputs and outputs](#combat-inputs-and-outputs)).
+- **Invalid inputs:** An empty Agents' side, a duplicate Combatant, or an Agent that is not Serving is an internal invariant violation in a Mission resolution step ([Combat inputs and outputs](#combat-inputs-and-outputs)), and a rejection of `developer.tools.fightCombat(setup)` ([Detached Combat](#detached-combat)).
+- **Detached Combat on Combatants of the Current campaign:** The Agents and Enemies it names keep their values; only the returned Combat report shows what the Combat did to them ([Detached Combat](#detached-combat)).
 - **Invalid GDRs:** A Game build that fails [Combat GDR validation](#combat-gdr-validation), e.g. with a Weapon `base_weapon_damage` of 0, a `weapon_damage_range` of 1.5, or `exhaustion_per_attack` and `exhaustion_per_defense` both 0, is defective and no Campaign is created from it.
 
 # TODOs

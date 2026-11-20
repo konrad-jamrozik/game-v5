@@ -19,7 +19,7 @@ These informative views are derived from the registered Markdown specifications.
 | Design             | Content       | 1              |
 | Design             | UI            | 17             |
 | Design             | Autopilot AIs | 1              |
-| Implementation     | Mandatory     | 4              |
+| Implementation     | Mandatory     | 5              |
 | Implementation     | Guidance      | 4              |
 | Implementation     | Recipes       | 3              |
 
@@ -55,7 +55,7 @@ These informative views are derived from the registered Markdown specifications.
 | CORE | [Core Concepts](../specs/design/foundation/core-concepts.md) | Shared vocabulary for modeling and engine execution, e.g. Campaign, Session, and Game build. |
 | CSTATE | [Campaign State](../specs/design/foundation/campaign-state.md) | What Campaign state is made of, what the Game rules read of it, and how Campaign initialization produces it. |
 | DETERM | [Determinism and Randomness](../specs/design/foundation/determinism-and-randomness.md) | The determinism guarantee, the Campaign seed, rules for every random outcome, and unique identifiers under replay. |
-| DEV | [Developer Access](../specs/design/foundation/developer-access.md) | Dev mode, full Campaign state inspection, Player cheat actions, and random outcome overrides. |
+| DEV | [Developer Access](../specs/design/foundation/developer-access.md) | Dev mode, full Campaign state inspection, Player cheat actions, random outcome overrides, and the rules every Developer tool follows. |
 | EFFECT | [Effect Lists](../specs/design/foundation/effect-lists.md) | How game data declares the changes the Game rules make on one occasion: Effects, Effect kinds, and Effect lists. |
 | ENG | [Engine Contract](../specs/design/foundation/engine-contract.md) | The engine as a whole: how it divides, who may call what, and the guarantees every engine subsystem keeps. |
 | GDR | [Game Data Records](../specs/design/foundation/game-data-records.md) | The purposes a GDR can serve relative to the Game rules and Campaign state, with a worked example of each. |
@@ -124,6 +124,7 @@ These informative views are derived from the registered Markdown specifications.
 | FEEDBACK | [Implementation Feedback](../specs/implementation/mandatory/implementation-feedback.md) | The feedback files of Specification problems and Implementation decisions that each Implementation keeps. |
 | LICENSE | [Implementation License](../specs/implementation/mandatory/implementation-license.md) | The license under which each Implementation is published, and the files that state it. |
 | PLACE | [Implementation Placement](../specs/implementation/mandatory/implementation-placement.md) | Where each implementation and everything it needs reside, relative to the Spec repo. |
+| REUSE | [Rule Reuse](../specs/implementation/mandatory/rule-reuse.md) | That each Developer tool runs the code that play runs, and the test that shows it. |
 | TRACK | [Specification Tracking](../specs/implementation/mandatory/specification-tracking.md) | The Specification baseline and Specification map records that tie each Implementation to the specifications it conforms to. |
 
 ## Guidance

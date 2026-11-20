@@ -57,7 +57,8 @@ The separately authorized parts of the engine API, detailed in [API hierarchy](#
 | Session API | The API surface for Session controller operations over Global configuration, campaign selection, new-[Campaign](core-concepts.md#campaign-and-session) setup, adjusting the Current campaign under [Changing Campaign configuration during play](configuration.md#changing-campaign-configuration-during-play), Campaign saves, Timeline navigation, Dev mode, and Autopilot. |  |
 | Player API | The API surface for ordinary gameplay queries and actions; all returned information remains Player-visible information regardless of Dev mode. |  |
 | Player-visible information | Information deliberately exposed by the engine to an ordinary player. Player-visible is its adjective, e.g. "this value is Player-visible"; it names no separate concept. | Player observation; Player observations |
-| Developer API | The separate API surface for full [Campaign state](core-concepts.md#campaign-and-session) inspection and validated Player cheat actions, available only to the Session controller while Dev mode is enabled. |  |
+| Developer API | The separate API surface for full [Campaign state](core-concepts.md#campaign-and-session) inspection, validated Player cheat actions, and Developer tools, available only to the Session controller while Dev mode is enabled. |  |
+| Developer tool | A Developer API operation that runs one part of the [Game rules](core-concepts.md#game-build-and-content) on inputs its caller supplies and returns what that part produced, changing no Campaign state, e.g. for a balancing tool. It runs the same part of the Game rules that play runs, never a copy of it. | Simulator; sandbox |
 
 ## Persisted data
 
@@ -152,9 +153,11 @@ Engine API
     ├── queries
     │   ├── getCampaignState()
     │   └── getInitiativeOperationLevels()
-    └── actions
-        ├── addMoney(amount)
-        └── addAgents(...)
+    ├── actions
+    │   ├── addMoney(amount)
+    │   └── addAgents(...)
+    └── tools
+        └── fightCombat(setup)
 ```
 
 The following table is the complete set of namespace placement rules. For each namespace it names what the namespace owns and where the behavior of its operations is specified. Every namespace below `session` belongs to exactly one Engine subsystem, under [Engine subsystems](#engine-subsystems).
@@ -174,6 +177,7 @@ The following table is the complete set of namespace placement rules. For each n
 | `player.actions` | Normal gameplay mutations, including Advance turn. | The mechanics specification owning each action, under [Gameplay actions](player-api.md#gameplay-actions) in Player API; [Turn Advancement](../mechanics/turn-advancement.md) for Advance turn |
 | `developer.queries` | Read-only inspection of full Campaign state and of values derived from the Game build that are not Player-visible. Its `getCampaignState()` returns Campaign state in full; every other operation is owned by the Mechanics specification that defines the values it returns, e.g. `getInitiativeOperationLevels()`. | [Inspection contract](developer-access.md#inspection-contract) in Developer Access, and the Mechanics specification owning each value |
 | `developer.actions` | Validated, recorded Player cheat actions; e.g., adding money or adding Agents. | [Player cheat actions](developer-access.md#player-cheat-actions) in Developer Access, and the Mechanics specification owning each Player cheat action |
+| `developer.tools` | Developer tools: running one part of the Game rules on inputs the caller supplies, for analysis outside play, e.g. `fightCombat(setup)` for balancing. | [Developer tools](developer-access.md#developer-tools) in Developer Access, and the Mechanics specification owning the part of the Game rules each runs |
 
 The complete Principal access matrix is:
 

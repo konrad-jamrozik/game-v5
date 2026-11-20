@@ -4,7 +4,7 @@
 
 # What this family is for
 
-The Development loop needs a few things from every Implementation, whatever its platform: that it lives where it can be found and rebuilt, that it writes down what it learned about the specifications, that it records which specifications it follows, and that it is published on the same terms as the specifications. Mandatory specifications state those repository constraints. They are checked against the files of an Implementation rather than through the engine API.
+The Development loop needs a few things from every Implementation, whatever its platform: that it lives where it can be found and rebuilt, that it writes down what it learned about the specifications, that it records which specifications it follows, that its developer tools run the same code as play, and that it is published on the same terms as the specifications. Mandatory specifications state those repository constraints. They are checked against the files of an Implementation rather than through the engine API.
 
 # Documents
 
@@ -24,9 +24,13 @@ The Development loop needs a few things from every Implementation, whatever its 
 
 [Implementation License](implementation-license.md) answers _under which license is an implementation published?_ It requires each implementation to be published under the license of the specifications, CC BY-NC 4.0, and to state it in its `LICENSE` file, its README, and its project metadata.
 
+## Rule Reuse
+
+[Rule Reuse](rule-reuse.md) answers _how does a developer tool stay true to play?_ It requires each Developer tool to call the very code that play runs for the same rule, e.g. one function that fights a Combat for both the Mission resolution step and `fightCombat`, and a test that shows the two agree.
+
 # How they relate
 
-Implementation Feedback and Specification Tracking use Implementation Placement: their files are kept in its Implementation repo. Specification Tracking also uses Implementation Feedback, whose Specification problems are the only exceptions to conformance it allows. Implementation Placement uses Bootstrap GDRs from the Content family and Music and Visual Design from the UI family, whose files each implementation copies. Implementation License uses Implementation Placement for the Implementation repo whose files state the license.
+Implementation Feedback and Specification Tracking use Implementation Placement: their files are kept in its Implementation repo. Specification Tracking also uses Implementation Feedback, whose Specification problems are the only exceptions to conformance it allows. Implementation Placement uses Bootstrap GDRs from the Content family and Music and Visual Design from the UI family, whose files each implementation copies. Implementation License uses Implementation Placement for the Implementation repo whose files state the license. Rule Reuse uses Specification Tracking, whose Specification map names the shared code, and Developer Access and Combat from the Design families, which define the Developer tools it constrains.
 
 <!-- generated:family-diagram:start -->
 

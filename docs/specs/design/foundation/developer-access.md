@@ -5,14 +5,14 @@
 | Spec ID | DEV |
 | Family | Foundation |
 | Audience | Engine designer, Implementer |
-| Owns | Dev mode, full Campaign state inspection, Player cheat actions, and random outcome overrides. |
+| Owns | Dev mode, full Campaign state inspection, Player cheat actions, random outcome overrides, and the rules every Developer tool follows. |
 | Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 
 Building and testing a game needs ways around its own rules: seeing what the player cannot, and setting up a situation by hand instead of playing toward it. Developer access gives the [Session controller](engine-contract.md#principals-and-access) these powers through [Developer API](engine-contract.md#api-surfaces), on top of the [Engine Contract](engine-contract.md).
 
-The guiding principle is that these powers stay apart from ordinary play. They are available only while [Dev mode](engine-contract.md#principals-and-access) is enabled, a [Session](core-concepts.md#campaign-and-session) access setting that starts disabled and is disabled again whenever a [Campaign](core-concepts.md#campaign-and-session) is created, loaded, or closed. Full [Campaign state](core-concepts.md#campaign-and-session) inspection shows what [Player API](engine-contract.md#api-surfaces) hides, and a [Player cheat action](engine-contract.md#player-actions-and-turns) changes Campaign state in a way ordinary play does not allow, e.g. a random outcome override, which fixes a random outcome in advance. Player API still exposes only [Player-visible information](engine-contract.md#api-surfaces), an [Autopilot AI](engine-contract.md#principals-and-access) never reaches Developer API, and every Player cheat action is an ordinary [Player action](engine-contract.md#player-actions-and-turns) that undo and redo treat like any other.
+The guiding principle is that these powers stay apart from ordinary play. They are available only while [Dev mode](engine-contract.md#principals-and-access) is enabled, a [Session](core-concepts.md#campaign-and-session) access setting that starts disabled and is disabled again whenever a [Campaign](core-concepts.md#campaign-and-session) is created, loaded, or closed. Full [Campaign state](core-concepts.md#campaign-and-session) inspection shows what [Player API](engine-contract.md#api-surfaces) hides, and a [Player cheat action](engine-contract.md#player-actions-and-turns) changes Campaign state in a way ordinary play does not allow, e.g. a random outcome override, which fixes a random outcome in advance. A [Developer tool](engine-contract.md#api-surfaces) runs part of the game's rules on inputs of the Session controller's choosing and changes nothing. Player API still exposes only [Player-visible information](engine-contract.md#api-surfaces), an [Autopilot AI](engine-contract.md#principals-and-access) never reaches Developer API, and every Player cheat action is an ordinary [Player action](engine-contract.md#player-actions-and-turns) that undo and redo treat like any other.
 
 # Dev mode
 
@@ -40,6 +40,18 @@ A Player cheat action changes Campaign state in a way ordinary play does not all
 Developer API must let an authorized Session controller override a random outcome: the Session controller names a random outcome and one of its possible values, and when that random outcome is next decided it takes the supplied value instead of a value derived from the [Campaign seed](determinism-and-randomness.md#glossary). E.g., the Session controller fixes the hit outcome of an [Agent](../mechanics/domain-model.md#agency-and-agents)'s next attack to "hit" and then commits Advance turn. The random outcomes that can be overridden are the named random outcomes that each Mechanics specification states for its rules. This makes every random outcome controllable by hand, without relying on a prepared acceptance test.
 
 An override is a Player cheat action under [Player cheat actions](#player-cheat-actions): it belongs in `developer.actions`, and each successful one is one atomic Player action in the Timeline. The guarantee under [Determinism](determinism-and-randomness.md#determinism) therefore still holds, because replaying the same ordered Player actions replays the same overrides.
+
+# Developer tools
+
+A tool that studies the game, e.g. one that balances GDR values, is only as good as its agreement with play: a result computed by different code than the Campaign runs says nothing about the Campaign. A [Developer tool](engine-contract.md#api-surfaces) therefore runs a part of the [Game rules](core-concepts.md#game-build-and-content) itself on inputs its caller supplies. The following rules of every Developer tool are complete:
+
+- **Who and when:** Only the Session controller can call a Developer tool, only with Dev mode enabled, under [Dev mode](#dev-mode). An Autopilot AI never can. It belongs in `developer.tools`.
+- **Same rules as play:** It runs the part of the Game rules it names by the very procedure that play uses for that part, under the Mechanics specification that owns the part, and never by a copy or an approximation of it. Given the inputs that play gave that part, including the values of its random outcomes, it produces what play produced.
+- **Changes nothing:** It is not a [Player action](engine-contract.md#player-actions-and-turns). It changes no [Campaign state](core-concepts.md#campaign-and-session), adds no [Timeline entry](timeline.md#glossary), and draws no random outcome of the Current campaign; the random outcomes it needs derive from a seed its caller supplies.
+- **Validated:** It rejects inputs that the part of the Game rules it runs does not accept, and then runs nothing.
+- **Reads the Current campaign only when asked:** It may read [Game build](core-concepts.md#game-build-and-content) values and Campaign instances of the [Current campaign](core-concepts.md#campaign-and-session) as inputs, when its caller names them, and reads nothing else of it.
+
+The Mechanics specification owning each part of the Game rules states each Developer tool that runs it: its inputs, its rejections, and its result.
 
 # Isolation and Timeline navigation
 
