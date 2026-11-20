@@ -4,9 +4,12 @@
  * The search is a set of probes, each one batch of Combats of one team size, which server.ts hands to whichever worker
  * thread is idle, so that one site's search uses several threads at once. A probe that passes shows that every larger
  * team passes too, and one that fails that every smaller team fails, so the answer lies in [lo, hi]. The first probe is
- * the test team itself, fought in full for its win rate; the search then starts from a size estimated from Combat
- * ratings, steps outward from it with a doubling step until the answer is bracketed, and bisects the largest gap that
- * no probe covers yet, counting the probes still running as covering their size.
+ * the test team itself, fought in full for its win rate. The search then starts from a size estimated from Combat
+ * ratings, waiting for a solved site to estimate from when one is on its way; tries the estimate and a size a little
+ * either side of it at once; then aims at the size where the probes' win rates cross the target, extrapolated while
+ * the answer is not bracketed and interpolated once it is. It steps outward blindly, one size at a time with a doubling
+ * step, only when the win rates cannot tell, and bisects the largest gap that no probe covers yet, counting the probes
+ * still running as covering their size, only when the aimed sizes are taken.
  */
 
 /** One Mission site of a run, as the page sends it. */
@@ -33,8 +36,14 @@ export interface SiteJob {
  */
 export const MAX_RUNNING_PER_SITE = 3
 
-/** A solved site's need is used for estimates only from this size up, below which it is too coarse to scale. */
-export const MIN_HINT_NEED = 8
+/**
+ * A solved site's need is used for estimates only from this size up. Below it, a need is too coarse to scale and the
+ * need per Combat rating point is higher, e.g. 14 Agents for 1,100 points against 218 for 19,980.
+ */
+export const MIN_HINT_NEED = 15
+
+/** The first round probes the estimate and this fraction of it either side, since estimates are within about 5%. */
+export const FIRST_ROUND_SPREAD = 0.025
 
 /** A site already solved in this run: its Combat rating and the team size it needs. */
 export interface Hint {
@@ -78,10 +87,19 @@ export type ProbeResult =
  * is the need of the solved site whose Combat rating is closest, scaled by the ratio of the two ratings; with no such
  * site solved yet, it is the team whose Combat rating equals the Enemies'.
  */
+export function defaultEstimate(job: SiteJob): number {
+  return Math.min(job.maxn, Math.max(1, Math.round(job.rating / Math.max(1, job.agentRating))))
+}
+
+/** Whether a hint can serve as an estimate for other sites. */
+export function isUsableHint(hint: Hint): boolean {
+  return hint.need >= MIN_HINT_NEED
+}
+
 export function estimate(job: SiteJob, hints: readonly Hint[]): number {
   let best: Hint | null = null
   for (const hint of hints) {
-    if (hint.need < MIN_HINT_NEED) {
+    if (!isUsableHint(hint)) {
       continue
     }
     if (best === null || Math.abs(Math.log(hint.rating / job.rating)) < Math.abs(Math.log(best.rating / job.rating))) {
@@ -119,6 +137,8 @@ export class SiteSearch {
   readonly running = new Set<number>()
   /** The sizes probed so far, finished or running. */
   readonly tried = new Set<number>()
+  /** The win rate, in percent, each finished probe saw over the Combats it fought. */
+  private readonly wins = new Map<number, number>()
   /** The answer once known: a team size, or null when no team up to maxn reaches the target. */
   need: number | null | undefined = undefined
   failed: string | null = null
@@ -130,7 +150,11 @@ export class SiteSearch {
   /** Whether a probe of the search, rather than the test team, has failed; until then the search steps down. */
   private lowFromSearch = false
   private start = 0
-  private step = 1
+  /** The distance of the first round's outer probes from the estimate. */
+  private spread = 1
+  /** The next steps up and down while the answer is not bracketed on that side; each doubles once used. */
+  private upStep = 1
+  private downStep = 1
 
   readonly job: SiteJob
 
@@ -143,74 +167,129 @@ export class SiteSearch {
     return this.need !== undefined || this.failed !== null
   }
 
-  /** The next size to probe, or null when every useful size is already running; `full` for the test team's own. */
-  next(hints: readonly Hint[]): { size: number; full: boolean } | null {
+  /**
+   * The next size to probe, or null when every useful size is already running, or when the search waits for an
+   * estimate; `full` for the test team's own. With `waitForHint`, a search that has not started yet waits, because a
+   * smaller site whose answer will make a usable hint is still being searched.
+   */
+  next(hints: readonly Hint[], waitForHint: boolean): { size: number; full: boolean } | null {
     if (this.done) {
       return null
     }
     if (!this.baseSent) {
       this.baseSent = true
-      this.tried.add(this.job.n)
-      this.running.add(this.job.n)
-      return { size: this.job.n, full: true }
+      return this.issue(this.job.n, true)
     }
     if (!this.baseDone || this.running.size >= MAX_RUNNING_PER_SITE) {
       return null
     }
     if (this.start === 0) {
+      if (waitForHint) {
+        return null
+      }
       this.start = Math.min(this.hi > 0 ? this.hi : this.job.maxn, Math.max(this.lo, estimate(this.job, hints)))
-      // The first step is a few percent of the estimate, so the answer is usually bracketed by the first tries.
-      this.step = Math.max(1, Math.round(this.start * 0.04))
+      this.spread = Math.max(1, Math.round(this.start * FIRST_ROUND_SPREAD))
+      this.upStep = 2 * this.spread
+      this.downStep = 2 * this.spread
     }
     const top = this.hi > 0 ? this.hi - 1 : this.job.maxn
     const open = (size: number): boolean => size >= this.lo && size <= top && !this.tried.has(size)
+    // The first round: the estimate and a size a little either side of it, all at once.
+    for (const size of [this.start, this.start - this.spread, this.start + this.spread]) {
+      if (open(size)) {
+        return this.issue(size, false)
+      }
+    }
+    const unresolved = [...this.running].filter((size) => size >= this.lo && (this.hi === 0 || size < this.hi))
+    // While every finished probe fails, or every one passes, the win rates of the two nearest still point at the
+    // size where the target is crossed; that size and the next one are probed before any blind step.
+    const aim = this.extrapolate()
+    if (aim !== null) {
+      for (const size of this.hi === 0 ? [aim, aim + 1] : [aim, aim - 1]) {
+        if (open(size) && !this.running.has(size)) {
+          return this.issue(size, false)
+        }
+      }
+    }
+    if (this.hi === 0) {
+      // Nothing passes yet: step up from the largest size tried, one probe at a time, so no far size is fought before
+      // a closer one has failed.
+      if (unresolved.length > 0) {
+        return null
+      }
+      const size = Math.min(this.job.maxn, Math.max(this.lo, Math.max(...this.tried)) + this.upStep)
+      this.upStep *= 2
+      return open(size) ? this.issue(size, false) : null
+    }
+    if (!this.lowFromSearch) {
+      // Nothing near the estimate fails yet: step down from the smallest size that passes, one probe at a time.
+      if (unresolved.length > 0) {
+        return null
+      }
+      const size = Math.max(this.lo, this.hi - this.downStep)
+      this.downStep *= 2
+      return open(size) ? this.issue(size, false) : null
+    }
+    // The answer is bracketed. Win rates rise with team size, so the size where the target is crossed is interpolated
+    // between the largest size that fails and the smallest that passes; that size and its neighbours settle the answer
+    // in one round when the interpolation is right.
+    const below = this.wins.get(this.lo - 1)
+    const above = this.wins.get(this.hi)
+    if (below !== undefined && above !== undefined && above > below) {
+      const fraction = (this.job.target - below) / (above - below)
+      const aim = Math.round(this.lo - 1 + fraction * (this.hi - this.lo + 1))
+      for (const size of [aim, aim - 1, aim + 1]) {
+        if (open(size) && !this.running.has(size)) {
+          return this.issue(size, false)
+        }
+      }
+    }
+    // Otherwise bisect the largest gap of [lo, hi) that no finished or running probe covers.
+    const marks = [this.lo - 1, ...unresolved, this.hi].sort((a, b) => a - b)
+    let gap = 1
     let size: number | null = null
-    if (open(this.start)) {
-      size = this.start
-    } else if (this.hi === 0) {
-      // Step up from the estimate, doubling the step, up to the largest team.
-      for (let k = 1; size === null; k += 1) {
-        const candidate = Math.min(this.job.maxn, this.start + (2 ** k - 1) * this.step)
-        if (open(candidate)) {
-          size = candidate
-        }
-        if (candidate >= this.job.maxn) {
-          break
-        }
-      }
-    } else if (!this.lowFromSearch) {
-      // Step down from the estimate, doubling the step, until a size fails.
-      for (let k = 1; size === null; k += 1) {
-        const candidate = Math.max(this.lo, this.start - (2 ** k - 1) * this.step)
-        if (open(candidate)) {
-          size = candidate
-        }
-        if (candidate <= this.lo) {
-          break
-        }
+    for (let i = 1; i < marks.length; i += 1) {
+      const a = marks[i - 1]!
+      const b = marks[i]!
+      if (b - a > gap) {
+        gap = b - a
+        size = Math.floor((a + b) / 2)
       }
     }
-    if (size === null && this.hi > 0) {
-      // Bisect the largest gap of [lo, hi) that no finished or running probe covers.
-      const marks = [this.lo - 1, ...[...this.running].filter((s) => s >= this.lo && s < this.hi), this.hi].sort(
-        (a, b) => a - b,
-      )
-      let gap = 1
-      for (let i = 1; i < marks.length; i += 1) {
-        const a = marks[i - 1]!
-        const b = marks[i]!
-        if (b - a > gap) {
-          gap = b - a
-          size = Math.floor((a + b) / 2)
-        }
-      }
-    }
-    if (size === null) {
+    return size === null ? null : this.issue(size, false)
+  }
+
+  /**
+   * The size where the target win rate is crossed, extrapolated from the two finished probes nearest to it, when no
+   * probe has passed yet (the two largest failing sizes) or none of the search has failed yet (the two smallest passing
+   * sizes); null when that cannot be told, e.g. with fewer than two such probes or win rates that do not rise.
+   */
+  private extrapolate(): number | null {
+    if (this.hi > 0 && this.lowFromSearch) {
       return null
     }
+    const sizes = [...this.wins.keys()]
+      .filter((size) => (this.hi === 0 ? size < this.lo : size >= this.hi))
+      .sort((a, b) => (this.hi === 0 ? b - a : a - b))
+    const [near, far] = sizes
+    if (near === undefined || far === undefined) {
+      return null
+    }
+    const slope = (this.wins.get(near)! - this.wins.get(far)!) / (near - far)
+    if (!(slope > 0)) {
+      return null
+    }
+    const size = Math.round(near + (this.job.target - this.wins.get(near)!) / slope)
+    // Never further than the next blind step would go.
+    return this.hi === 0
+      ? Math.min(this.job.maxn, Math.max(this.lo, Math.min(size, near + this.upStep)))
+      : Math.max(this.lo, Math.min(this.hi - 1, Math.max(size, near - this.downStep)))
+  }
+
+  private issue(size: number, full: boolean): { size: number; full: boolean } {
     this.tried.add(size)
     this.running.add(size)
-    return { size, full: false }
+    return { size, full }
   }
 
   /** Records a probe's result; stale results of sizes already decided change nothing. */
@@ -226,6 +305,9 @@ export class SiteSearch {
     }
     if (result.full) {
       this.baseDone = true
+    }
+    if (!('error' in result)) {
+      this.wins.set(result.size, result.win)
     }
     if (result.pass) {
       this.hi = this.hi === 0 ? result.size : Math.min(this.hi, result.size)

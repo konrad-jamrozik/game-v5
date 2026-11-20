@@ -15,7 +15,16 @@ import path from 'node:path'
 import { Worker } from 'node:worker_threads'
 import { execFileSync } from 'node:child_process'
 import YAML from 'yaml'
-import { SiteSearch, searchKey, type Hint, type ProbeResult, type SiteJob } from './search.ts'
+import {
+  SiteSearch,
+  defaultEstimate,
+  isUsableHint,
+  searchKey,
+  MIN_HINT_NEED,
+  type Hint,
+  type ProbeResult,
+  type SiteJob,
+} from './search.ts'
 
 const arg = (name: string, fallback: string) => {
   const at = process.argv.indexOf(`--${name}`)
@@ -202,7 +211,7 @@ function pump(): void {
       .filter((search) => !search.done)
       .sort((a, b) => a.running.size - b.running.size || b.job.rating - a.job.rating)
     for (const search of open) {
-      const next = search.next(hints)
+      const next = search.next(hints, waitsForHint(search))
       if (next === null) {
         continue
       }
@@ -229,6 +238,21 @@ function pump(): void {
     stream.end()
     stream = null
   }
+}
+
+/**
+ * Whether a search should wait for an estimate: no usable hint exists yet, and a site smaller than it that will need at
+ * least MIN_HINT_NEED Agents is still being searched. The smallest such site never waits, so a hint always comes.
+ */
+function waitsForHint(search: SiteSearch): boolean {
+  if (hints.some(isUsableHint)) {
+    return false
+  }
+  const own = defaultEstimate(search.job)
+  return searches.some((other) => {
+    const its = defaultEstimate(other.job)
+    return other !== search && !other.done && its >= MIN_HINT_NEED && its < own
+  })
 }
 
 /** Records a probe's result in its site's search and tells the page what became known. */
