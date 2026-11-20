@@ -93,7 +93,24 @@ export function estimate(job: SiteJob, hints: readonly Hint[]): number {
   return Math.min(job.maxn, Math.max(1, Math.round(guess)))
 }
 
+/**
+ * What a site's answer depends on: its Enemies, the test team, the GDR values, and the target, but not the other sites.
+ * Two runs whose job has the same key reuse one search.
+ */
+export function searchKey(job: SiteJob): string {
+  return JSON.stringify([job.id, job.enemies, job.agent, job.n, job.gdrValues, job.target, job.trials, job.maxn])
+}
+
+/** Gives every search its own number, which its probes carry, so a probe's result finds its search across runs. */
+let nextToken = 0
+
 export class SiteSearch {
+  readonly key: string
+  readonly token: number = (nextToken += 1)
+  /** When the search started, in milliseconds of `performance.now()`. */
+  readonly startedAt = performance.now()
+  /** Every message the search has sent to the page, so a later run that keeps the search can send them again. */
+  readonly sent: unknown[] = []
   /** Every size below lo fails. */
   lo = 1
   /** The smallest size known to pass; 0 while none is known. */
@@ -119,6 +136,7 @@ export class SiteSearch {
 
   constructor(job: SiteJob) {
     this.job = job
+    this.key = searchKey(job)
   }
 
   get done(): boolean {

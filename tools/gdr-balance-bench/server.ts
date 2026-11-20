@@ -15,7 +15,7 @@ import path from 'node:path'
 import { Worker } from 'node:worker_threads'
 import { execFileSync } from 'node:child_process'
 import YAML from 'yaml'
-import { SiteSearch, type Hint, type ProbeResult, type SiteJob } from './search.ts'
+import { SiteSearch, searchKey, type Hint, type ProbeResult, type SiteJob } from './search.ts'
 
 const arg = (name: string, fallback: string) => {
   const at = process.argv.indexOf(`--${name}`)
@@ -167,18 +167,20 @@ interface Info {
 let pool: Slot[] = []
 let info: Promise<Info> = Promise.reject(new Error('not started'))
 info.catch(() => {})
-let gen = 0
 /** The searches of the current run, one for each Mission site, and the sites it has solved so far. */
 let searches: SiteSearch[] = []
 let hints: Hint[] = []
 let stream: http.ServerResponse | null = null
 
-/** When the current run started, for the time each site's search took. */
-let runStart = 0
-
 /** What a site's search took: the time since the run started, the team sizes tried, and the Combats fought. */
 function effort(search: SiteSearch): { ms: number; probes: number; combats: number } {
-  return { ms: Math.round(performance.now() - runStart), probes: search.probes, combats: search.combats }
+  return { ms: Math.round(performance.now() - search.startedAt), probes: search.probes, combats: search.combats }
+}
+
+/** Sends a message of a search to the page and keeps it, so that a later run that keeps the search can resend it. */
+function tell(search: SiteSearch, message: unknown): void {
+  search.sent.push(message)
+  send(message)
 }
 
 /** Writes one message of the current run to the page. */
@@ -208,7 +210,9 @@ function pump(): void {
       slot.busy = true
       slot.worker.postMessage({
         type: 'probe',
-        gen,
+        // The probe carries its search's token in place of the run, so that its result reaches the search even when a
+        // later run keeps it.
+        gen: search.token,
         id: job.id,
         size: next.size,
         full: next.full,
@@ -229,23 +233,20 @@ function pump(): void {
 
 /** Records a probe's result in its site's search and tells the page what became known. */
 function onProbe(result: ProbeResult): void {
-  if (result.gen !== gen) {
-    return
-  }
-  const search = searches.find((item) => item.job.id === result.id)
+  const search = searches.find((item) => item.token === result.gen)
   if (search === undefined || search.done) {
     return
   }
   search.record(result)
   if ('error' in result) {
-    send({ type: 'failed', gen, id: result.id, message: result.error, ...effort(search) })
+    tell(search, { type: 'failed', id: result.id, message: result.error, ...effort(search) })
     return
   }
   if (result.full) {
-    send({ type: 'rate', gen, id: result.id, win: result.win, killed: result.killed })
+    tell(search, { type: 'rate', id: result.id, win: result.win, killed: result.killed })
   }
   if (search.need !== undefined) {
-    send({ type: 'need', gen, id: result.id, need: search.need, ...effort(search) })
+    tell(search, { type: 'need', id: result.id, need: search.need, ...effort(search) })
     // A solved site tells the searches still to come where to start.
     if (search.need !== null) {
       hints.push({ rating: search.job.rating, need: search.need })
@@ -339,7 +340,6 @@ const server = http.createServer((req, res) => {
       json(res, 200, { ...loaded, engine: engineVersion(), impl: IMPL, spec: SPEC, threads: THREADS, gdr: loadGdr() })
     } else if (req.method === 'POST' && url === '/api/run') {
       const jobs = (JSON.parse(await body(req)) as { jobs: SiteJob[] }).jobs
-      gen += 1
       stream?.end()
       stream = res
       res.on('close', () => {
@@ -347,11 +347,22 @@ const server = http.createServer((req, res) => {
           stream = null
         }
       })
-      searches = jobs.map((job) => new SiteSearch({ ...job, gen }))
-      runStart = performance.now()
-      hints = []
+      // A site whose inputs did not change keeps its search, finished or still running, and its results are sent again;
+      // only the other sites are searched anew.
+      const previous = new Map(
+        searches.filter((search) => search.failed === null).map((search) => [search.key, search]),
+      )
+      searches = jobs.map((job) => previous.get(searchKey(job)) ?? new SiteSearch(job))
+      hints = searches.flatMap((search) =>
+        typeof search.need === 'number' ? [{ rating: search.job.rating, need: search.need }] : [],
+      )
       res.writeHead(200, { 'content-type': 'application/x-ndjson', 'cache-control': 'no-store' })
       res.write('\n')
+      for (const search of searches) {
+        for (const message of search.sent) {
+          send(message)
+        }
+      }
       pump()
     } else {
       json(res, 404, { error: 'not found' })

@@ -1033,6 +1033,8 @@
       setInterval(() => {
         if (runStarted && !runEnded && !engineErr) paintStatus()
       }, 250)
+      /* The inputs of each site at the last run, by site. */
+      let siteKeys = {}
       function paintStatus() {
         const e = document.getElementById('simstatus')
         if (!e) return
@@ -1203,7 +1205,14 @@
         gen++
         doneSites = 0
         engineErr = ''
-        SITES.forEach((s) => {
+        /* Only a site whose own inputs changed is searched anew; server.ts resends the others' results. */
+        const keys = {}
+        jobs.forEach(
+          (j) => (keys[j.id] = JSON.stringify([j.enemies, j.agent, j.n, j.gdrValues, j.target, j.trials, j.maxn])),
+        )
+        const changed = SITES.filter((s) => keys[s] !== siteKeys[s])
+        siteKeys = keys
+        changed.forEach((s) => {
           cell('sw', s).textContent = '…'
           cell('sw', s).title = ''
           cell('sk', s).textContent = ''
