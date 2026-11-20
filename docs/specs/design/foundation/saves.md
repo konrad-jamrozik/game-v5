@@ -36,6 +36,7 @@ The Campaign saves the engine writes itself.
 | Autosave | A Campaign save that the engine writes without a save request from the [Session controller](engine-contract.md#principals-and-access), under [Autosaves](#autosaves). |
 | Current Autosave | The Autosave holding the Campaign state the Campaign has now, with the [World state](engine-contract.md#player-actions-and-turns) it is at, kept up to date at all times so that play can resume after the [Session](core-concepts.md#campaign-and-session) ends for whatever reason. |
 | Turn-end Autosave | The Autosave holding the [Turn-end state](engine-contract.md#player-actions-and-turns) of one [Turn](engine-contract.md#player-actions-and-turns), written when the player ends the Turn. |
+| Autopilot Autosave | The Autosave holding the Turn-end state of one Turn that an [Autopilot AI](engine-contract.md#principals-and-access) ended during an [Autopilot engagement](engine-contract.md#autopilot). |
 | Engagement Autosave | The Autosave holding the World state in which the most recent [Autopilot engagement](engine-contract.md#autopilot) began. |
 | Disengagement Autosave | The Autosave holding the World state in which the most recent Autopilot engagement ended. |
 
@@ -47,6 +48,7 @@ The bounds on Campaign saves.
 | --- | --- |
 | Save size limit | The maximum size of one Campaign save, fixed by the [Game build](core-concepts.md#game-build-and-content). |
 | Autosave limit | The number of Turns whose Turn-end Autosave is kept for one Campaign. It is a setting in [Global configuration](engine-contract.md#persisted-data). |
+| Autopilot Autosave limit | The number of Turns whose Autopilot Autosave is kept for one Campaign. It is a setting in Global configuration. |
 
 # Campaign save contents
 
@@ -90,6 +92,7 @@ The following list of Autosaves is complete.
 | --- | --- | --- | --- |
 | Current Autosave | When a Campaign is created or loaded, and whenever the Campaign state of the Current campaign changes | The current Campaign state of the Current campaign | One for each Campaign |
 | Turn-end Autosave | When an Advance turn commits outside an Autopilot engagement | The Turn-end state of the Turn that Advance turn ends | One for each of the most recent Turns, up to the Autosave limit |
+| Autopilot Autosave | When an Advance turn commits during an Autopilot engagement | The Turn-end state of the Turn that Advance turn ends | One for each of the most recent Turns, up to the Autopilot Autosave limit |
 | Engagement Autosave | When [Autopilot](engine-contract.md#autopilot) is engaged | The World state in which the Autopilot engagement begins | One for each Campaign |
 | Disengagement Autosave | When an Autopilot engagement ends, whatever ends it | The World state in which the Autopilot engagement ended | One for each Campaign |
 
@@ -98,10 +101,11 @@ The following list of Autosaves is complete.
 The following rules are complete.
 
 - **The Current Autosave is always current:** The engine replaces the Current Autosave whenever the Campaign state of the Current campaign changes, whichever operation changes it; e.g., a Player action of the Session controller, each Player action of an [Autopilot AI](engine-contract.md#principals-and-access), an undo, a load, or a change of Campaign configuration. Loading the Current Autosave therefore resumes the Campaign exactly where the Session that wrote it left it, e.g. after the player quit without saving or the application stopped unexpectedly.
-- **The Current Autosave cannot be turned off:** No setting disables the Current Autosave, and it does not count toward the Autosave limit.
+- **The Current Autosave cannot be turned off:** No setting disables the Current Autosave, and it counts toward neither the Autosave limit nor the Autopilot Autosave limit.
 - **Autosave limit:** The Autosave limit is a whole number of at least 0, and its [Game build default](engine-contract.md#persisted-data) is 5. Writing a Turn-end Autosave that brings the Campaign above the Autosave limit removes the Turn-end Autosave of the earliest Turn. With an Autosave limit of 0, no Turn-end Autosave is written. The Autosave limit counts only Turn-end Autosaves.
-- **One Turn-end Autosave for each Turn:** A Turn-end Autosave written for a Turn that already has one replaces it.
-- **Autopilot engagements:** No Turn-end Autosave is written during an Autopilot engagement, however many Advance turn actions the [Autopilot AI](engine-contract.md#principals-and-access) commits. Engaging Autopilot replaces the Engagement Autosave, and completing disengagement replaces the Disengagement Autosave. This holds for every Autopilot engagement, including one that ends no Turn, one that commits no Player action, and a second one in the same Turn. The Current Autosave is replaced during an Autopilot engagement as at any other time.
+- **Autopilot Autosave limit:** The Autopilot Autosave limit is a whole number of at least 0, and its Game build default is 5. Writing an Autopilot Autosave that brings the Campaign above the Autopilot Autosave limit removes the Autopilot Autosave of the earliest Turn, so a long Autopilot engagement leaves the Autopilot Autosaves of the last Turns it ended. With an Autopilot Autosave limit of 0, no Autopilot Autosave is written. The Autopilot Autosave limit counts only Autopilot Autosaves.
+- **One Autosave for each Turn end:** A Turn-end Autosave or an Autopilot Autosave written for a Turn that already has either replaces it.
+- **Autopilot engagements:** No Turn-end Autosave is written during an Autopilot engagement, however many Advance turn actions the Autopilot AI commits; each Turn it ends gets an Autopilot Autosave instead, so the Turns played by an Autopilot AI never displace those the player played. Engaging Autopilot replaces the Engagement Autosave, and completing disengagement replaces the Disengagement Autosave. This holds for every Autopilot engagement, including one that ends no Turn, one that commits no Player action, and a second one in the same Turn. The Current Autosave is replaced during an Autopilot engagement as at any other time.
 
 # Listing Campaign saves
 
@@ -158,4 +162,4 @@ A failed load, save, or delete reports the failure to the Session controller, wi
 
 A failed operation is not retried automatically, and it is not an engine defect. An interface shows the reason and message and takes no further action; e.g., a user interface shows an error message and stays on the screen the load or save was requested from. The message follows the [Information boundary](player-api.md#information-boundary).
 
-An Autosave fails to be written for the same reasons as a save. The operation that causes a Current Autosave, a Turn-end Autosave, an Engagement Autosave, or a Disengagement Autosave still completes, and its result reports the Save reason. That Autosave is then missing, and an existing Autosave it would have replaced is removed; e.g., a Current Autosave that cannot be replaced is removed rather than left holding an earlier World state.
+An Autosave fails to be written for the same reasons as a save. The operation that causes a Current Autosave, a Turn-end Autosave, an Autopilot Autosave, an Engagement Autosave, or a Disengagement Autosave still completes, and its result reports the Save reason. That Autosave is then missing, and an existing Autosave it would have replaced is removed; e.g., a Current Autosave that cannot be replaced is removed rather than left holding an earlier World state.

@@ -39,11 +39,11 @@ Global configuration is read when a Session starts, so its settings apply at the
 
 A Game build has exactly the following Global configuration settings. Each is stated in full, with its permitted values and its [Game build default](engine-contract.md#persisted-data), where the table says. This table is exhaustive, and a new setting joins it in the same change that defines it.
 
-| Setting                           | Stated in                                                  |
-| --------------------------------- | ---------------------------------------------------------- |
-| [Autosave limit](saves.md#limits) | [Limits](saves.md#limits) in Saves                         |
-| Music on, Music volume            | [Music settings](../ui/music.md#music-settings) in Music   |
-| Sounds on, Sounds volume          | [Sound settings](../ui/sounds.md#sound-settings) in Sounds |
+| Setting | Stated in |
+| --- | --- |
+| [Autosave limit](saves.md#limits), [Autopilot Autosave limit](saves.md#limits) | [Limits](saves.md#limits) in Saves |
+| Music on, Music volume | [Music settings](../ui/music.md#music-settings) in Music |
+| Sounds on, Sounds volume | [Sound settings](../ui/sounds.md#sound-settings) in Sounds |
 
 Global configuration stores only values the player has set. A setting the player has not set follows the current [Game build default](engine-contract.md#persisted-data), so a changed Game build default in a later Game build reaches it. Resetting a setting removes its stored value.
 

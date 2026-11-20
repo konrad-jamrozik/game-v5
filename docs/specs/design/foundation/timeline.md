@@ -92,9 +92,9 @@ Action navigation never leaves the current Turn: undo stops at the Turn-start st
 
 # Autosave navigation
 
-Autosave navigation is undo and redo across Turns. It moves the [Current campaign](core-concepts.md#campaign-and-session) between Autosaves and never applies or reverses a Player action itself. The Turn-end Autosave, the [Engagement Autosave](saves.md#autosave-kinds), and the [Disengagement Autosave](saves.md#autosave-kinds) are written under [Autosaves](saves.md#autosaves); this section adds the Furthest progress Autosave.
+Autosave navigation is undo and redo across Turns. It moves the [Current campaign](core-concepts.md#campaign-and-session) between Autosaves and never applies or reverses a Player action itself. The Turn-end Autosave, the [Autopilot Autosave](saves.md#autosave-kinds), the [Engagement Autosave](saves.md#autosave-kinds), and the [Disengagement Autosave](saves.md#autosave-kinds) are written under [Autosaves](saves.md#autosaves); this section adds the Furthest progress Autosave.
 
-The targets of Autosave navigation are the Turn-end Autosaves, the Engagement Autosave, the Disengagement Autosave, and the Furthest progress Autosave of the Current campaign, limited to those whose saved World state is earlier or later than the Current world state. The Current Autosave is never a target: it holds the Current world state.
+The targets of Autosave navigation are the Turn-end Autosaves, the Autopilot Autosaves, the Engagement Autosave, the Disengagement Autosave, and the Furthest progress Autosave of the Current campaign, limited to those whose saved World state is earlier or later than the Current world state. The Current Autosave is never a target: it holds the Current world state.
 
 The following list of operations is complete.
 
@@ -111,30 +111,32 @@ The following rules are complete.
 - **Furthest progress Autosave:** `undoToAutosave()` writes the Furthest progress Autosave, holding the current Campaign state, before going back, unless the Campaign has a Furthest progress Autosave holding a later World state than the current one. A Campaign has at most one Furthest progress Autosave. Loading the Furthest progress Autosave through `redoToAutosave()` removes it.
 - **A new action removes Autosaves of abandoned play:** When a Player action commits, every Autosave of the Campaign is removed unless its saved World state is the World state in which that action began or an earlier World state. The removal happens before any Autosave that the action itself causes is written.
 - **Loading a target:** Loading a target makes the Campaign state it holds current, as [Loading](saves.md#loading) in Saves states, with two differences. [Dev mode](engine-contract.md#principals-and-access) stays unchanged. The [Campaign configuration](campaign-state.md#glossary) stays that of the Current campaign, whatever Campaign configuration the target holds, because the Campaign configuration in the [Session](core-concepts.md#campaign-and-session) always takes precedence over that of an Autosave. Every Campaign save of one Campaign holds the same values fixed after creation, so only values adjustable during play can differ.
-- **Crossing an Autopilot engagement:** A call crosses an Autopilot engagement when it undoes or redoes every Player action of the most recent one at once: `undoToAutosave()` does when it loads the Engagement Autosave, and `redoToAutosave()` does when the Current world state is the World state the Engagement Autosave holds. It is reported so that an interface can name such a call before it is used, because one call then reverses or replays many Player actions that the player did not choose.
+- **An Autopilot Autosave is a step like a Turn-end Autosave:** Going back from the end of an Autopilot engagement, the calls load its Disengagement Autosave, then the Autopilot Autosave of each Turn it ended that still has one, latest first, and only then its Engagement Autosave; going forward lands on the same targets in reverse. E.g., with an Autopilot Autosave limit of 5, after Autopilot is engaged in Turn 15 and disengaged in Turn 105, calls of `undoToAutosave()` from the Disengagement Autosave load the Autopilot Autosaves of Turns 104 down to 100 one by one, and the next call loads the Engagement Autosave in Turn 15.
+- **Crossing an Autopilot engagement:** A call crosses an Autopilot engagement when it undoes or redoes at once the Player actions of the most recent one that lie between its start and its earliest Autopilot Autosave, or all of them when it has none: `undoToAutosave()` does when it loads the Engagement Autosave, and `redoToAutosave()` does when the Current world state is the World state the Engagement Autosave holds. It is reported so that an interface can name such a call before it is used, because one call then reverses or replays many Player actions that the player did not choose.
 - **Never a side effect:** Autosave navigation is never a side effect of another operation. In particular, `undoAction()` at a Turn-start state is rejected and does not load an Autosave, under [Edge cases and failure behavior](#edge-cases-and-failure-behavior). An interface may offer one undo control and one redo control for both forms, provided each control names the form it takes before it is used, because one call of Autosave navigation can cross many Turns; e.g., the GUI labels its undo control Undo Action, Undo Turn, or Undo Autopilot.
 
 Each target holds a whole Campaign state, including the Timeline of its Turn with its Undone actions and its Timeline pointer, under [Campaign save contents](saves.md#campaign-save-contents). Loading a target therefore restores undo and redo of that Turn's Timeline entries, under [Action navigation](#action-navigation).
 
 Going back and going forward land on the same targets. Consequently, calling `undoToAutosave()` N times and then `redoToAutosave()` M times, with M no greater than N and no Player action in between, leaves the Current campaign where N minus M calls of `undoToAutosave()` leave it. With M equal to N, it is where it started, including its Timeline entries and Undone actions, because the last `redoToAutosave()` loads the Furthest progress Autosave.
 
-The following two hand-kept diagrams show one example Campaign. They illustrate the rules of this section and of [Autosaves](saves.md#autosaves), and they add no rule of their own. The player played Turn 3 and Turn 4, engaged [Autopilot](engine-contract.md#autopilot) in Turn 5, took over again in Turn 9, and has committed three actions in Turn 10.
+The following two hand-kept diagrams show one example Campaign. They illustrate the rules of this section and of [Autosaves](saves.md#autosaves), and they add no rule of their own. The player played Turn 4, engaged [Autopilot](engine-contract.md#autopilot) at the start of Turn 5 with an [Autopilot Autosave limit](saves.md#limits) of 1, took over again at the start of Turn 9, ended Turn 9 after one action, and has committed three actions in Turn 10. The diagrams leave out the Turns before Turn 4.
 
-The first diagram shows `undoToAutosave()` called four times.
+The first diagram shows `undoToAutosave()` called five times.
 
-![Autosave navigation going back: four undoToAutosave() calls from Turn 10](../../../images/diagrams/autosave-navigation-undo.svg)
+![Autosave navigation going back: five undoToAutosave() calls from Turn 10](../../../images/diagrams/autosave-navigation-undo.svg)
 
-The second diagram starts where the first one ends and shows `redoToAutosave()` called four times.
+The second diagram starts where the first one ends and shows `redoToAutosave()` called five times.
 
-![Autosave navigation going forward: four redoToAutosave() calls back to Turn 10](../../../images/diagrams/autosave-navigation-redo.svg)
+![Autosave navigation going forward: five redoToAutosave() calls back to Turn 10](../../../images/diagrams/autosave-navigation-redo.svg)
 
 The diagrams read as follows:
 
 - **Horizontal lines:** each line is one Turn, drawn as in [Timeline structure](#timeline-structure). Each circle is one Timeline entry.
 - **Rectangles:** each rectangle is the engine applying a committed Advance turn.
-- **Filled diamonds:** each is a Turn-end Autosave, written just before the rectangle that follows it.
-- **The Autopilot engagement:** the Engagement Autosave is written where it begins, and no Turn-end Autosave is written inside it. One call therefore crosses the whole Autopilot engagement. No Autosave marks where it ends: the Turn-end Autosave of Turn 9 holds that Turn's Timeline, which reaches back to it.
-- **The Furthest progress Autosave:** the first `undoToAutosave()` writes it in Turn 10, and the fourth `redoToAutosave()` loads it.
+- **Filled diamonds:** each is a Turn-end Autosave or an Autopilot Autosave, written just before the rectangle that follows it.
+- **Squares:** the Engagement Autosave is written where the Autopilot engagement begins, and the Disengagement Autosave where it ends.
+- **The Autopilot engagement:** the Autopilot AI ended Turns 5 to 8, and each got an Autopilot Autosave; with an Autopilot Autosave limit of 1, only that of Turn 8 is kept. One call therefore crosses the Turns from the Engagement Autosave to the Autopilot Autosave of Turn 8.
+- **The Furthest progress Autosave:** the first `undoToAutosave()` writes it in Turn 10, and the fifth `redoToAutosave()` loads it.
 - **After a call:** the loaded Autosave holds its own Turn's Timeline, so the player can then undo that Turn's Timeline entries one by one.
 
 # Returning to a World state
