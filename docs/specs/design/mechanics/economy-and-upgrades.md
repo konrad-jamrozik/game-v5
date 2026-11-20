@@ -28,6 +28,7 @@ These terms are specific to the [Agency](domain-model.md#agency-and-agents)'s ec
 | Cap Upgrade | An Upgrade that raises the [Agent cap](domain-model.md#agency-and-agents), the Transport cap, or the Training cap. | Cap effect |
 | Weapon damage Upgrade | An Upgrade that raises the [effective weapon damage](agents-spec.md#combatant-attributes) of [Serving](agents-spec.md#agent-statuses) Agents. | Base weapon damage effect; Agent value effect |
 | Max health Upgrade | An Upgrade that raises the [effective max health](agents-spec.md#combatant-attributes) of Serving Agents. | Hit points upgrade |
+| Armor Upgrade | An Upgrade that raises the [effective armor](agents-spec.md#combatant-attributes) of Serving Agents. |  |
 | Rate Upgrade | An Upgrade that raises one rate every [Agent](domain-model.md#agency-and-agents) shares: the [training skill gain](agents-spec.md#growth), the [exhaustion](agents-spec.md#combatant-attributes) recovery, or the health recovery percentage. |  |
 | Transport cap | The most Agents the Agency can have [Deployed](agents-spec.md#assignments) at the same time. |  |
 | Training cap | The most Agents the Agency can have assigned to [Training](agents-spec.md#assignments) at the same time. |  |
@@ -57,7 +58,7 @@ Each Upgrade is one GDR of [Type](../foundation/core-concepts.md#data-modeling) 
 | --- | --- | --- |
 | `name` | The display name of the Upgrade. | [Player-visible information](#player-visible-information) |
 | `price` | The money one acquisition of the Upgrade costs. | [Purchasing Upgrades](#purchasing-upgrades) |
-| `effect` | The identifier of what the Upgrade improves: one of the eight effect identifiers under [Upgrade effects](#upgrade-effects). | [Upgrade effects](#upgrade-effects) |
+| `effect` | The identifier of what the Upgrade improves: one of the nine effect identifiers under [Upgrade effects](#upgrade-effects). | [Upgrade effects](#upgrade-effects) |
 | `increment` | How much one acquisition of the Upgrade raises the value its `effect` improves. | [Upgrade effects](#upgrade-effects) |
 
 An Upgrade's effect is decided only by its `effect` property, never by its `id` or `name`, under [References](../foundation/campaign-instances.md#references) in Campaign Instances. E.g., the Upgrade whose `id` is `agent_cap` raises the Agent cap because its `effect` is `agent_cap`, and would raise the Transport cap if its `effect` were `transport_cap`.
@@ -78,7 +79,7 @@ The GDRs a Game build supplies must satisfy every rule below. The list is exhaus
 2. **One EconomyParameters:** The Game build supplies exactly one EconomyParameters GDR.
 3. **Exact properties:** Each GDR of the three Types has exactly the properties its table above lists, apart from `id` and `type`: no listed property is missing and no other property is present.
 4. **Parameters are valid:** Each of `hire_cost`, `upkeep_per_agent`, `contracting_income_per_agent`, `base_agent_cap`, `base_transport_cap`, and `base_training_cap` is a whole number of at least 0.
-5. **Upgrades are valid:** Each Upgrade's `price` is a whole number of at least 0. Its `increment` is a whole number of at least 0, except that the `increment` of a Rate Upgrade is a number of at least 0 written with at most two digits after the decimal point, under [Decimal quantities](../foundation/numbers.md#decimal-quantities) in Numbers. Its `effect` is exactly one of `agent_cap`, `transport_cap`, `training_cap`, `agent_weapon_damage`, `agent_max_health`, `training_skill_gain`, `exhaustion_recovery`, and `health_recovery`.
+5. **Upgrades are valid:** Each Upgrade's `price` is a whole number of at least 0. Its `increment` is a whole number of at least 0, except that the `increment` of a Rate Upgrade is a number of at least 0 written with at most two digits after the decimal point, under [Decimal quantities](../foundation/numbers.md#decimal-quantities) in Numbers. Its `effect` is exactly one of `agent_cap`, `transport_cap`, `training_cap`, `agent_weapon_damage`, `agent_max_health`, `agent_armor`, `training_skill_gain`, `exhaustion_recovery`, and `health_recovery`.
 6. **Names are present:** The `name` of the AgencyArchetype and of each Upgrade is non-empty text.
 
 The Game build may supply any number of Upgrades, including none, and several Upgrades may share one `effect`; the rules under [Upgrade bonus](#upgrade-bonus) add up the contributions of every Upgrade with the same `effect`.
@@ -341,7 +342,7 @@ Nothing else changes. The price is the GDR's `price` for every acquisition; it d
 
 ## Upgrade effects
 
-Every Upgrade has exactly one effect, named by its `effect` property. The eight effect identifiers below are exhaustive, and they make an Upgrade one of four kinds.
+Every Upgrade has exactly one effect, named by its `effect` property. The nine effect identifiers below are exhaustive, and they make an Upgrade one of five kinds.
 
 | Effect identifier | Kind | What one acquisition does |
 | --- | --- | --- |
@@ -350,6 +351,7 @@ Every Upgrade has exactly one effect, named by its `effect` property. The eight 
 | `training_cap` | Cap Upgrade | Raises the Training cap by the Upgrade's Increment, under [Cap Upgrades](#cap-upgrades). |
 | `agent_weapon_damage` | Weapon damage Upgrade | Raises the effective weapon damage of every Serving Agent by the Upgrade's Increment, under [Weapon damage Upgrade](#weapon-damage-upgrade). |
 | `agent_max_health` | Max health Upgrade | Raises the effective max health and the [current health](agents-spec.md#combatant-attributes) of every Serving Agent by the Upgrade's Increment, under [Max health Upgrade](#max-health-upgrade). |
+| `agent_armor` | Armor Upgrade | Raises the effective armor of every Serving Agent by the Upgrade's Increment, under [Armor Upgrade](#armor-upgrade). |
 | `training_skill_gain` | Rate Upgrade | Raises the training skill gain by the Upgrade's Increment, under [Rate Upgrades](#rate-upgrades). |
 | `exhaustion_recovery` | Rate Upgrade | Raises the exhaustion recovery by the Upgrade's Increment, under [Rate Upgrades](#rate-upgrades). |
 | `health_recovery` | Rate Upgrade | Raises the health recovery percentage by the Upgrade's Increment, under [Rate Upgrades](#rate-upgrades). |
@@ -365,7 +367,7 @@ upgraded value = starting value + Upgrade bonus
 Upgrade bonus  = sum over every Upgrade U whose effect is the effect identifier of ( Increment of U × Acquisitions of U )
 ```
 
-Inputs: each Acquisitions is a whole number of at least 0, each Increment is a whole number of at least 0 or, for a Rate Upgrade, a [Decimal quantity](../foundation/numbers.md#glossary) of at least 0, and the Acquisitions are those of the World state in which the value is read or set. The Upgrade bonus of an effect identifier that no Upgrade has is 0. No rounding occurs, because the product of a Decimal quantity and a whole number is a Decimal quantity, under [Decimal quantities](../foundation/numbers.md#decimal-quantities) in Numbers. The starting value and where the upgraded value applies are stated for each kind: [Agency caps](#agency-caps) for a Cap Upgrade, [Weapon damage Upgrade](#weapon-damage-upgrade) for a Weapon damage Upgrade, [Max health Upgrade](#max-health-upgrade) for a Max health Upgrade, and [Rate Upgrades](#rate-upgrades) for a Rate Upgrade.
+Inputs: each Acquisitions is a whole number of at least 0, each Increment is a whole number of at least 0 or, for a Rate Upgrade, a [Decimal quantity](../foundation/numbers.md#glossary) of at least 0, and the Acquisitions are those of the World state in which the value is read or set. The Upgrade bonus of an effect identifier that no Upgrade has is 0. No rounding occurs, because the product of a Decimal quantity and a whole number is a Decimal quantity, under [Decimal quantities](../foundation/numbers.md#decimal-quantities) in Numbers. The starting value and where the upgraded value applies are stated for each kind: [Agency caps](#agency-caps) for a Cap Upgrade, [Weapon damage Upgrade](#weapon-damage-upgrade) for a Weapon damage Upgrade, [Max health Upgrade](#max-health-upgrade) for a Max health Upgrade, [Armor Upgrade](#armor-upgrade) for an Armor Upgrade, and [Rate Upgrades](#rate-upgrades) for a Rate Upgrade.
 
 ### Cap Upgrades
 
@@ -396,6 +398,18 @@ Inputs: [base health](agents-spec.md#combatant-attributes) is the Agent's own, a
 The formula holds for every Serving Agent alike, whatever its Assignment and Agent status and whichever Turn it was created in, and it rises by the Increment at once, within the same Turn. An Agent stores its [health lost](agents-spec.md#combatant-attributes), not its [current health](agents-spec.md#combatant-attributes), so its current health rises by the same Increment and its health lost is unchanged: an Agent at full current health stays at full current health, and an Agent on Recovery still has the same current health to regain. [Attribute ranges](agents-spec.md#attribute-ranges) therefore hold after every purchase. A Terminated Agent is not affected: it keeps the Final max health recorded when it became Terminated, under [Service record](agents-spec.md#service-record) in Agents.
 
 A higher effective max health changes no effective skill of an Agent at full current health, because effective skill reads current health relative to effective max health, under [Effective skill](agents-spec.md#effective-skill); it lets an Agent take more harm in a [Combat](domain-model.md#combat), and it raises the current health the Agent regains in each Advance turn on Recovery when the rounding of [Health recovery](agent-recovery.md#health-recovery) allows. The effect changes no stored Agent value, no AgentArchetype, and no Enemy.
+
+### Armor Upgrade
+
+An Armor Upgrade, i.e. an Upgrade whose `effect` is `agent_armor`, changes no stored value beyond the Acquisitions. The [effective armor](agents-spec.md#combatant-attributes) of every Serving Agent is a Derived value, computed by [Upgrade bonus](#upgrade-bonus), under [Effective armor](agents-spec.md#effective-armor) in Agents:
+
+```text
+effective armor = base armor + Upgrade bonus of agent_armor
+```
+
+Inputs: [base armor](agents-spec.md#combatant-attributes) is the Agent's own, a whole number of at least 0, which no Upgrade changes, and is the starting value under [Upgrade bonus](#upgrade-bonus); the Upgrade bonus is that of the World state in which the value is read. The result is a whole number of at least the Agent's base armor. E.g., with the Bootstrap GDRs every Agent's base armor is 0, so its effective armor is 0 until the first acquisition of an Armor Upgrade with Increment 1, then 1 for every Serving Agent, then 2 after the second, and so on.
+
+The formula holds for every Serving Agent alike, whatever its Assignment and Agent status and whichever Turn it was created in, and it rises by the Increment at once, within the same Turn, so the first [Combat](domain-model.md#combat) fought after a purchase already starts every Agent with the raised [current armor](agents-spec.md#combatant-attributes). Effective armor lets an Agent take hits in a Combat without losing current health, and so without losing effective skill, under [Effects of an attack](combat.md#effects-of-an-attack) in Combat; it changes no current health, no effective max health, and no effective skill. A Terminated Agent is not affected: it keeps the Final armor recorded when it became Terminated, under [Service record](agents-spec.md#service-record) in Agents. The effect changes no stored Agent value, no Armor GDR, and no Enemy.
 
 ### Rate Upgrades
 
@@ -496,7 +510,8 @@ Every value below is Player-visible information under [Player-visible informatio
 - **Damaged Agent and a Max health Upgrade:** An Agent on Recovery with current health 20 of 30 has 21 of 31 after a purchase with Increment 1, and stays on Recovery; the purchase never ends Recovery and never puts an Agent below full current health ([Max health Upgrade](#max-health-upgrade)).
 - **Rate Upgrade purchased during a Turn:** The raised rate applies from the next Advance turn and changes no Agent value at once ([Rate Upgrades](#rate-upgrades)).
 - **Upgrade with increment 0 or price 0:** Valid GDRs; a purchase of the first raises Acquisitions but no value it improves, and a purchase of the second costs no money ([Economy GDR validation](#economy-gdr-validation)).
-- **Large values:** Money, Acquisitions, caps, effective weapon damage, effective max health, and the rates a Rate Upgrade raises have no upper bound, and every computation is exact, under [Exact evaluation](../foundation/numbers.md#exact-evaluation) in Numbers.
+- **Armor of Agents who are not Serving:** A Killed or Dismissed Agent keeps its Final armor when an Armor Upgrade is purchased ([Armor Upgrade](#armor-upgrade)).
+- **Large values:** Money, Acquisitions, caps, effective weapon damage, effective max health, effective armor, and the rates a Rate Upgrade raises have no upper bound, and every computation is exact, under [Exact evaluation](../foundation/numbers.md#exact-evaluation) in Numbers.
 - **Invalid GDRs:** A Game build with an unknown `effect`, a missing or extra property, a negative or fractional value, a second EconomyParameters or AgencyArchetype, or a preset `starting_money` below 0 is defective, and no Campaign is created from it ([Economy GDR validation](#economy-gdr-validation), [Campaign configuration values](#campaign-configuration-values)). A World state violating an invariant of the Agency, e.g. negative funding, is an internal invariant violation, reported under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract.
 - **Campaign ended:** Once the Campaign has a Campaign ending, `hireAgent`, `dismissAgents`, `purchaseUpgrade`, `addMoney`, and Advance turn are rejected, under [After a Campaign ending](panic-and-endings.md#after-a-campaign-ending).
 

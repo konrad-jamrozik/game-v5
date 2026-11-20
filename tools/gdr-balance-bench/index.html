@@ -490,6 +490,7 @@
         cult_leader: 'Cult',
       }
       const WP = [
+        'service_weapon',
         'pistol',
         'sidearm',
         'rifle',
@@ -504,7 +505,7 @@
         'transport_cap',
         'training_cap',
         'weapon_damage',
-        'max_health',
+        'armor',
         'training_skill_gain',
         'exhaustion_recovery',
         'health_recovery',
@@ -527,7 +528,7 @@
       }
       const BASE = {
         standard: { starting_money: 500, starting_funding: 20 },
-        field_agent: { base_skill: 100, base_health: 30, weapon: 'sidearm' },
+        field_agent: { base_skill: 100, base_health: 30, weapon: 'service_weapon' },
         agent_parameters: {
           initial_roster_size: 4,
           exhaustion_incapacitation: 100,
@@ -580,6 +581,7 @@
         high_commander: { base_skill: 500, base_health: 50, weapon: 'machine_gun' },
         cult_leader: { base_skill: 800, base_health: 80, weapon: 'anti_materiel_rifle' },
         pistol: { base_weapon_damage: 8 },
+        service_weapon: { base_weapon_damage: 10 },
         sidearm: { base_weapon_damage: 10 },
         rifle: { base_weapon_damage: 14 },
         battle_rifle: { base_weapon_damage: 16 },
@@ -591,7 +593,7 @@
         transport_cap: { price: 1000, increment: 2 },
         training_cap: { price: 200, increment: 4 },
         weapon_damage: { price: 500, increment: 1 },
-        max_health: { price: 500, increment: 1 },
+        armor: { price: 500, increment: 1 },
         training_skill_gain: { price: 500, increment: 0.1 },
         exhaustion_recovery: { price: 500, increment: 0.5 },
         health_recovery: { price: 500, increment: 0.2 },
@@ -827,7 +829,7 @@
       /* ---------- state ---------- */
       const clone = (o) => JSON.parse(JSON.stringify(o))
       let cur = clone(BASE)
-      const TEAM0 = { n: 4, skill: 100, ex: 0, wu: 0, hu: 0, target: 90, inv_n: 4, inv_skill: 100, ign: 100 }
+      const TEAM0 = { n: 4, skill: 100, ex: 0, wu: 0, au: 0, target: 90, inv_n: 4, inv_skill: 100, ign: 100 }
       let T = clone(TEAM0)
       const get = (o, p) => p.split('.').reduce((a, k) => (a == null ? a : a[k]), o)
       const set = (o, p, v) => {
@@ -898,7 +900,7 @@
   ${panel('Combat parameters', 'content/combat/combat_parameters.yaml', row(cp + '.weapon_damage_range', 'damage roll is base damage ± this fraction', { step: 0.05 }) + row(cp + '.retreat_below_agent_rating_fraction', 'Agents retreat below this fraction of their starting Combat rating…', { step: 0.05 }) + row(cp + '.retreat_at_enemy_to_agent_rating', "…while Enemies hold at least this ratio of the Agents' rating", { step: 0.05 }) + row(cp + '.incapacitation_skill_fraction', 'Incapacitated at this fraction of base skill or less', { step: 0.05 }) + extra(cp))}
   ${panel('Field agent and Combat exhaustion', 'content/agents/agent_archetypes.yaml · agent_parameters.yaml', `<div class="kv"><span class="k"><code>field_agent.base_skill</code><small>a newly hired Agent</small></span>${inp('field_agent.base_skill')}</div><div class="kv"><span class="k"><code>field_agent.base_health</code><small></small></span>${inp('field_agent.base_health', { min: 1 })}</div><div class="kv"><span class="k"><code>field_agent.weapon</code><small></small></span>${sel('field_agent.weapon', WP)}</div>` + row(ap + '.exhaustion_per_attack', 'to the attacker, hit or miss') + row(ap + '.exhaustion_per_defense', 'to the defender, hit or miss') + row(ap + '.exhaustion_free_points', 'exhaustion up to this costs no skill') + row(ap + '.skill_penalty_pct_per_exhaustion', '% of skill lost per point above the free points', { step: 0.5 }) + row(ap + '.exhaustion_incapacitation', 'Incapacitated at this exhaustion'))}
   </div></div>
-  ${panel('Test team', 'not a GDR: the team every Mission site below is fought with', `<div class="ctl">${tin('n', 'Agents', { min: 1, max: 300 })}${tin('skill', 'Base skill', { min: 1 })}${tin('ex', 'Starting exhaustion')}${tin('wu', 'Weapon damage upgrades')}${tin('hu', 'Max health upgrades')}${tin('target', 'Target win %', { min: 1, max: 100 })}</div><div class="note" id="teamnote"></div><div class="note" id="simstatus"></div>`, 'read')}
+  ${panel('Test team', 'not a GDR: the team every Mission site below is fought with', `<div class="ctl">${tin('n', 'Agents', { min: 1, max: 300 })}${tin('skill', 'Base skill', { min: 1 })}${tin('ex', 'Starting exhaustion')}${tin('wu', 'Weapon damage upgrades')}${tin('au', 'Armor upgrades')}${tin('target', 'Target win %', { min: 1, max: 100 })}</div><div class="note" id="teamnote"></div><div class="note" id="simstatus"></div>`, 'read')}
   ${panel('Mission sites', 'content/missions/mission_site_archetypes.yaml', `<div class="tw"><table id="sites"><tr><th>MissionSiteArchetype</th><th style="text-align:left">Kind</th><th>expires</th>${EN.map((e) => `<th title="${e}">${EN_AB[e]}</th>`).join('')}<th class="d">Enemies</th><th class="d">Rating</th><th class="d">Test team wins, of ${TRIALS} Combats</th><th class="d">Agents killed</th><th class="d">Team for target</th><th class="d">Transport upgrades</th></tr>${SITES.map((s, i) => `<tr${i === INIT.length ? ' class="sep"' : ''}><td class="name">${title(s)}</td><td id="sl_${s}" style="text-align:left;font-family:var(--body);color:var(--text2)">${BASE[s].level ? 'Response · operation level ' + BASE[s].level : 'Initiative'}</td><td>${inp(s + '.expires_in_turns', { min: 1 })}</td>${EN.map((e) => `<td class="w">${inp(s + '.enemies.' + e)}</td>`).join('')}<td class="d" id="sc_${s}"></td><td class="d" id="sr_${s}"></td><td class="d" id="sw_${s}" style="text-align:left"></td><td class="d" id="sk_${s}"></td><td class="d" id="sn_${s}"></td><td class="d" id="st_${s}"></td></tr>`).join('')}</table></div><div class="note"><b>Every Combat is fought by the game-v5-impl-web engine itself</b>, through <code>developer.tools.fightCombatBatch</code>, with the values on this page passed as its Combatants and GDR values; this page has no Combat rules of its own. <b>Each win rate is the share of ${TRIALS} Combats the test team Prevailed in</b>, and Agents killed is the mean over those ${TRIALS}. A Mission is Won only when the Combat outcome is Prevailed, so a retreat counts as a loss. Team for target is the smallest team of the test team's skill and upgrades that reaches the target win rate, searched up to ${MAXN} Agents; each team size tried is fought in one batch of ${TRIALS} Combats. Transport upgrades is how many it takes to deploy that team at once. The Initiative operation levels come from <code>developer.queries.getInitiativeOperationLevels</code>. Each Combat's Detached seed is fixed, so a changed number reflects your edit and not new dice: Combat <i>i</i> of a team of <i>n</i> at a Mission site has the Detached seed <code>&lt;site&gt;|&lt;n&gt;#&lt;i&gt;</code>, which <code>developer.tools.fightCombat</code> shows in full.</div>`)}
   </section>`)
         /* Agents */
@@ -1117,7 +1119,8 @@
           return
         }
         const fa = cur.field_agent,
-          mh = Math.max(1, Math.round(fa.base_health + T.hu * cur.max_health.increment)),
+          mh = Math.max(1, Math.round(fa.base_health)),
+          ar = Math.max(0, Math.round(T.au * cur.armor.increment)),
           w = Math.max(1, Math.round(wdmg(fa.weapon) + T.wu * cur.weapon_damage.increment))
         const agent = {
             kind: 'explicit',
@@ -1128,6 +1131,8 @@
             effectiveWeaponDamage: w,
           },
           gdrValues = simParams()
+        /* Effective armor is 0 when an explicit entry leaves it out, so an engine without armor still fights a team with none. */
+        if (ar > 0) agent.effectiveArmor = ar
         const jobs = SITES.map((s) => {
           /* Enemies in the order a new Mission site creates them, as the engine reported it. */
           const order = (ENG.enemyOrder[s] || []).filter((e) => EN.includes(e))
@@ -1302,10 +1307,11 @@
         })
         const fa = cur.field_agent,
           tw = wdmg(fa.weapon) + T.wu * cur.weapon_damage.increment,
-          th = fa.base_health + T.hu * cur.max_health.increment,
+          th = fa.base_health,
+          ta = T.au * cur.armor.increment,
           [tlo, thi] = dmgRange(tw)
         $('teamnote').textContent =
-          `Each Agent: health ${f(th, 0)}, damage roll ${tlo}–${thi}. Starting Combat rating ${f(T.n * Math.floor((T.skill * Math.max(0, 100 - a.skill_penalty_pct_per_exhaustion * Math.max(0, T.ex - a.exhaustion_free_points))) / 100), 0)}.`
+          `Each Agent: health ${f(th, 0)}, armor ${f(ta, 0)}, damage roll ${tlo}–${thi}. Starting Combat rating ${f(T.n * Math.floor((T.skill * Math.max(0, 100 - a.skill_penalty_pct_per_exhaustion * Math.max(0, T.ex - a.exhaustion_free_points))) / 100), 0)}.`
         /* agents */
         const pen = (x) =>
           Math.max(0, 100 - a.skill_penalty_pct_per_exhaustion * Math.max(0, x - a.exhaustion_free_points))

@@ -128,6 +128,7 @@ A Placeholder may name exactly the properties in the following table, which is e
 | RecoveryParameters      | Every property                    | Any                |
 | EnemyArchetype          | Every property                    | Any                |
 | Weapon                  | Every property                    | Any                |
+| Armor                   | Every property                    | Any                |
 | CombatParameters        | Every property                    | Any                |
 | EconomyParameters       | Every property                    | Any                |
 | Upgrade                 | Every property                    | Any                |
@@ -190,6 +191,7 @@ The following table restates, for the Types the [Bootstrap GDRs](../content/boot
 | AgentArchetype | [Player-visible information](agents-spec.md#player-visible-information) in Agents | In every World state. |
 | EnemyArchetype | [Player-visible information](combat.md#player-visible-information) in [Combat](domain-model.md#combat) | In every World state; its article also needs it to be a Met subject. |
 | Weapon | [Player-visible information](combat.md#player-visible-information) in Combat | In every World state; its article also needs it to be a Met subject. |
+| Armor | [Player-visible information](combat.md#player-visible-information) in Combat | In every World state. |
 | Upgrade | [Player-visible information](economy-and-upgrades.md#player-visible-information) in Economy and Upgrades | In every World state. |
 | FactionArchetype | [Player-visible information](factions.md#player-visible-information) in Factions | While a [Faction](domain-model.md#factions) whose [Archetype](../foundation/core-concepts.md#campaign-instances) it is exists, i.e. in every World state for an initial Faction's Archetype. |
 | Lead | [Player-visible information](leads-and-progression.md#player-visible-information) in Leads and Progression | Once the [Lead](domain-model.md#leads-investigations-mission-sites-and-missions) is discovered, which is permanent, under [Lead discovery](leads-and-progression.md#lead-discovery). |

@@ -73,6 +73,7 @@ export const PLACEHOLDER_SOURCES: Readonly<Record<string, PlaceholderSource>> = 
   RecoveryParameters: { properties: 'every', subjectOnly: false },
   EnemyArchetype: { properties: 'every', subjectOnly: false },
   Weapon: { properties: 'every', subjectOnly: false },
+  Armor: { properties: 'every', subjectOnly: false },
   CombatParameters: { properties: 'every', subjectOnly: false },
   EconomyParameters: { properties: 'every', subjectOnly: false },
   Upgrade: { properties: 'every', subjectOnly: false },
@@ -85,8 +86,8 @@ export const PLACEHOLDER_SOURCES: Readonly<Record<string, PlaceholderSource>> = 
 
 /** The properties whose value is a reference to a GDR, which a placeholder replaces by that GDR's `name`. */
 const REFERENCE_PROPERTIES: Readonly<Record<string, readonly string[]>> = {
-  AgentArchetype: ['weapon'],
-  EnemyArchetype: ['weapon'],
+  AgentArchetype: ['weapon', 'armor'],
+  EnemyArchetype: ['weapon', 'armor'],
 }
 
 const ARTICLE_PROPERTIES = ['category', 'title', 'body', 'subject', 'formulas', 'terms', 'see_also', 'visible_when']

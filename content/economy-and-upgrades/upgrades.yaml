@@ -26,11 +26,11 @@ price: 500
 effect: agent_weapon_damage
 increment: 1
 ---
-id: max_health
+id: armor
 type: Upgrade
-name: Max health
+name: Armor
 price: 500
-effect: agent_max_health
+effect: agent_armor
 increment: 1
 ---
 id: training_skill_gain

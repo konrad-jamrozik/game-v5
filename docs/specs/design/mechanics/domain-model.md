@@ -114,6 +114,7 @@ Each game concept has the following modeling role and multiplicity. This table i
 | Combat report | Part of the Turn report of the Advance turn in which its Combat was fought; not a Campaign instance and not part of any Mission | Exactly one per fought Combat, so at most one per Mission | [Combat report](combat.md#combat-report) in Combat |
 | Faction operation occurrence | Values in the [Constants](../foundation/core-concepts.md#campaign-instances) of the Response Mission site it creates, whose [Instance ID](../foundation/campaign-instances.md#glossary) identifies it; not a Campaign instance | Exactly one per Response Mission site | [Faction operation occurrence generation](factions.md#faction-operation-occurrence-generation) in Factions |
 | Weapon GDRs | GDRs | Not Campaign instances | [Weapon](combat.md#weapon) in Combat |
+| Armor GDRs | GDRs | Not Campaign instances | [Armor](combat.md#armor) in Combat |
 | Upgrade GDRs | GDRs | Not Campaign instances | [Upgrades](economy-and-upgrades.md#upgrades) in Economy and Upgrades |
 | CompendiumArticle GDRs | GDRs serving the Display content purpose | Not Campaign instances | [CompendiumArticle](compendium.md#compendiumarticle) in Compendium |
 | Archetypes of the seven Campaign instance Types | GDRs serving the [Archetype](../foundation/core-concepts.md#campaign-instances) purpose | Not Campaign instances; sharing an Archetype does not limit how many Campaign instances exist | The specification that details each Campaign instance Type |

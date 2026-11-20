@@ -4,17 +4,16 @@ category: mechanics
 title: Health
 terms: [health, max health]
 body: >-
-  Health is how much harm an Agent or an Enemy can still take. Hits in a Combat remove it, and an Agent whose health
-  reaches zero is killed for good. An Agent that has lost health also fights worse until it has healed.
+  Health is how much harm an Agent or an Enemy can still take. Hits in a Combat remove it once armor stops absorbing
+  them, and an Agent whose health reaches zero is killed for good. An Agent that has lost health also fights worse until
+  it has healed.
 formulas:
   - label: 'Max health of an Agent'
-    text: '{field_agent.base_health}, plus Upgrades'
+    text: '{field_agent.base_health}'
   - label: 'Health at zero'
     text: 'An Agent is killed; an Enemy is dead'
   - label: 'Lost health'
     text: 'Lowers effective skill in proportion: half the health, half the skill'
   - label: 'Healing'
     text: 'Only on Recovery, where every Agent that survives a Mission below max health is sent'
-  - label: 'Raising max health'
-    text: 'An Upgrade raises the max health and the health of every Agent by the same amount, at once'
-see_also: [mechanics_recovery, mechanics_damage, mechanics_skill, max_health_article]
+see_also: [mechanics_recovery, mechanics_damage, mechanics_skill, armor_article]

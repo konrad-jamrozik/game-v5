@@ -85,6 +85,7 @@ The following table gives the category name and the Data sheet heading of each s
 | AgentArchetype | Agents | New [Agent](../../mechanics/domain-model.md#agency-and-agents) |
 | EnemyArchetype | Enemies | Enemy |
 | Weapon | Weapons | Weapon |
+| Armor | Armor | Armor |
 | Upgrade | Upgrades | Upgrade |
 | FactionArchetype | Factions | Faction |
 | Lead | Leads | Lead |
@@ -100,7 +101,8 @@ The Data sheet of an AgentArchetype shows what a newly hired Agent starts with, 
 | --- | --- |
 | Skill | `base_skill`. |
 | Health | `base_health`. |
-| Weapon | The Weapon that `weapon` references, followed by "· damage" and its `base_weapon_damage`, e.g. "Sidearm · damage 10". |
+| Weapon | The Weapon that `weapon` references, followed by "· damage" and its `base_weapon_damage`, e.g. "Service weapon · damage 10". |
+| Armor | The Armor that `armor` references, followed by "· armor" and its `base_armor`, e.g. "Service armor · armor 0". |
 
 ## Enemy data sheet
 
@@ -111,6 +113,7 @@ The Data sheet of an EnemyArchetype shows what every [Enemy](../../mechanics/dom
 | Skill | `base_skill`. |
 | Health | `base_health`. |
 | Weapon | The Weapon that `weapon` references, followed by "· damage" and its `base_weapon_damage`, e.g. "Rifle · damage 14". |
+| Armor | The Armor that `armor` references, followed by "· armor" and its `base_armor`, e.g. "None · armor 0". |
 | Appears at | The Player-visible Subject articles whose subject is a MissionSiteArchetype whose `enemies` names this EnemyArchetype. |
 
 ## Weapon data sheet
@@ -122,6 +125,15 @@ The Data sheet of a Weapon shows how hard it hits in the hands of a [Combatant](
 | Damage | `base_weapon_damage`. |
 | Damage of a hit | The range of the damage outcome for an [effective weapon damage](../../mechanics/agents-spec.md#combatant-attributes) equal to `base_weapon_damage`, as its two bounds joined by an en dash, e.g. "5–15" for a `base_weapon_damage` of 10 and a `weapon_damage_range` of 0.5. |
 | Carried by | The Player-visible Subject articles whose subject is an AgentArchetype or an EnemyArchetype whose `weapon` references this Weapon. |
+
+## Armor data sheet
+
+The Data sheet of an Armor shows how much of the damage of hits it absorbs in each [Combat](../../mechanics/domain-model.md#combat) on a Combatant without an Upgrade, under [Effects of an attack](../../mechanics/combat.md#effects-of-an-attack) in Combat.
+
+| Label | Value |
+| --- | --- |
+| Armor | `base_armor`. |
+| Worn by | The Player-visible Subject articles whose subject is an AgentArchetype or an EnemyArchetype whose `armor` references this Armor. |
 
 ## Upgrade data sheet
 
@@ -139,6 +151,7 @@ The Data sheet of an Upgrade shows what one acquisition costs and adds, under [U
 | `training_cap` | "+4 to the [Training cap](../../mechanics/economy-and-upgrades.md#glossary)" |
 | `agent_weapon_damage` | "+1 weapon damage for every Agent" |
 | `agent_max_health` | "+1 max health for every Agent" |
+| `agent_armor` | "+1 armor for every Agent" |
 | `training_skill_gain` | "+0.10 skill for each turn of [Training](../../mechanics/agents-spec.md#assignments)" |
 | `exhaustion_recovery` | "+0.50 [exhaustion](../../mechanics/agents-spec.md#combatant-attributes) recovered each turn" |
 | `health_recovery` | "+0.20% of max health recovered each turn" |
@@ -196,7 +209,7 @@ The minus sign is "−" (U+2212). A gain for the Player, i.e. positive money or 
 
 ![Compendium View panel Artboard with a Mechanics article: a search field above three panes, the categories Guide, Mechanics, and one for each kind of subject with their counts, the articles of the Mechanics category, and the selected article with the Previous article and Next article buttons, its body with underlined Article links, its Formulas table, and its See also line](../../../../images/artboards/compendium-view.png)
 
-![Compendium View panel Artboard with a Subject article: the Enemies category selected, and the article of one Enemy with its description, its Data sheet with linked labels, a linked Weapon, and the Mission sites it appears at, after an Article link was followed, so that the Previous article button is enabled](../../../../images/artboards/compendium-view-subject.png)
+![Compendium View panel Artboard with a Subject article: the Enemies category selected, and the article of one Enemy with its description, its Data sheet with linked labels, a linked Weapon, its Armor, and the Mission sites it appears at, after an Article link was followed, so that the Previous article button is enabled](../../../../images/artboards/compendium-view-subject.png)
 
 The sample values, e.g. the article titles, texts, counts, and Data sheet values, appear only on the Artboards, under [Reading Artboards](../visual-design.md#reading-artboards) in Visual Design.
 

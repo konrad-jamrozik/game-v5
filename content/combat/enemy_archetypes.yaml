@@ -4,6 +4,7 @@ name: Initiate
 base_skill: 40
 base_health: 20
 weapon: pistol
+armor: no_armor
 ---
 id: operative
 type: EnemyArchetype
@@ -11,6 +12,7 @@ name: Operative
 base_skill: 60
 base_health: 25
 weapon: sidearm
+armor: no_armor
 ---
 id: handler
 type: EnemyArchetype
@@ -18,6 +20,7 @@ name: Handler
 base_skill: 80
 base_health: 25
 weapon: sidearm
+armor: no_armor
 ---
 id: soldier
 type: EnemyArchetype
@@ -25,6 +28,7 @@ name: Soldier
 base_skill: 120
 base_health: 30
 weapon: rifle
+armor: no_armor
 ---
 id: lieutenant
 type: EnemyArchetype
@@ -32,6 +36,7 @@ name: Lieutenant
 base_skill: 140
 base_health: 30
 weapon: battle_rifle
+armor: no_armor
 ---
 id: elite
 type: EnemyArchetype
@@ -39,6 +44,7 @@ name: Elite
 base_skill: 250
 base_health: 40
 weapon: assault_rifle
+armor: no_armor
 ---
 id: commander
 type: EnemyArchetype
@@ -46,6 +52,7 @@ name: Commander
 base_skill: 300
 base_health: 40
 weapon: heavy_rifle
+armor: no_armor
 ---
 id: high_commander
 type: EnemyArchetype
@@ -53,6 +60,7 @@ name: High commander
 base_skill: 500
 base_health: 50
 weapon: machine_gun
+armor: no_armor
 ---
 id: cult_leader
 type: EnemyArchetype
@@ -60,3 +68,4 @@ name: Cult leader
 base_skill: 800
 base_health: 80
 weapon: anti_materiel_rifle
+armor: no_armor

@@ -5,14 +5,14 @@ title: Upgrades
 terms: [Upgrade, Upgrades]
 body: >-
   Upgrades are permanent improvements bought with money. Each purchase adds a fixed amount to one thing: a cap of the
-  Agency, the weapon damage or max health of every Agent, or how fast every Agent trains, rests, or heals. An Upgrade
+  Agency, the weapon damage or armor of every Agent, or how fast every Agent trains, rests, or heals. An Upgrade
   can be bought any number of times.
 formulas:
   - label: 'Price'
     text: 'Fixed for each Upgrade; it never rises'
   - label: 'Buying again'
     text: 'Every purchase adds the same amount, without limit'
-  - label: 'Caps, weapon damage, and max health'
+  - label: 'Caps, weapon damage, and armor'
     text: 'Raised at once'
   - label: 'Training, rest, and healing'
     text: 'Faster from the next turn'
@@ -24,7 +24,7 @@ see_also:
     transport_cap_article,
     training_cap_article,
     weapon_damage_article,
-    max_health_article,
+    armor_article,
     training_skill_gain_article,
     exhaustion_recovery_article,
     health_recovery_article,

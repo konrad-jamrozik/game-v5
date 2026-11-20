@@ -1,0 +1,9 @@
+id: service_armor
+type: Armor
+name: Service armor
+base_armor: 0 # the Agency issues it unrated; the armor Upgrade raises every Agent's effective armor
+---
+id: no_armor
+type: Armor
+name: None
+base_armor: 0

@@ -12,7 +12,7 @@
 
 A [Combat](domain-model.md#combat) is where preparation is tested. The player decides which [Agents](agents-spec.md) to deploy to a [Mission site](domain-model.md#leads-investigations-mission-sites-and-missions) and then has no further say: the Agents and the [Enemies](domain-model.md#glossary) there fight automatically, and the whole Combat is fought within one Advance turn. A tool that studies Combat, e.g. one that balances Enemies, can have a Combat fought on Combatants it supplies, by the very same procedure, without touching any Campaign.
 
-Everything about a Combat follows from one rule: fighting only wears [Combatants](domain-model.md#combat) down. Every attack, hit or miss, raises exhaustion, and a hit removes current health, so effective skill can only fall while a Combat lasts. A Combatant whose current health reaches zero is [Killed](agents-spec.md#agent-statuses), and one whose effective skill falls too far or whose exhaustion grows too high is Incapacitated and stops fighting. The Combat is fought in Combat rounds until no [Enemy](domain-model.md#combat) can fight on, no [Agent](domain-model.md#agency-and-agents) can, or the Agents retreat, and because exhaustion keeps rising, every Combat ends. Its [Combat report](domain-model.md#combat) records every attack.
+Everything about a Combat follows from one rule: fighting only wears [Combatants](domain-model.md#combat) down. Every attack, hit or miss, raises exhaustion, and a hit removes what the defender's armor does not absorb from its current health, so effective skill can only fall while a Combat lasts. A Combatant whose current health reaches zero is [Killed](agents-spec.md#agent-statuses), and one whose effective skill falls too far or whose exhaustion grows too high is Incapacitated and stops fighting. The Combat is fought in Combat rounds until no [Enemy](domain-model.md#combat) can fight on, no [Agent](domain-model.md#agency-and-agents) can, or the Agents retreat, and because exhaustion keeps rising, every Combat ends. Its [Combat report](domain-model.md#combat) records every attack.
 
 Combat builds on [Agents](agents-spec.md): Agents says what makes a Combatant strong, and Combat says how that strength is spent against an opponent.
 
@@ -38,7 +38,8 @@ How a Combat is divided, and how it ends.
 | Combat turn | One Combatant's part in a phase: it attacks once if it is able to fight, and otherwise does nothing. | Turn, naming a Combatant's part in a phase |
 | Selection weight | How strongly an attacker is drawn to one opponent able to fight, as a whole number of at least 1; an attacker picks the opponent it attacks at random, in proportion to these weights. |  |
 | Combat log | The list of every attack of one Combat, in the order in which it was made, kept in its [Combat report](domain-model.md#combat). |  |
-| Health removed | The current health one attack takes from its defender: the smaller of the damage outcome and the defender's current health before the attack, or 0 on a miss. | Damage, as a noun on its own |
+| Armor removed | The [current armor](agents-spec.md#combatant-attributes) one attack takes from its defender: the smaller of the damage outcome and the defender's current armor before the attack, or 0 on a miss, under [Effects of an attack](#effects-of-an-attack). | Armor damage |
+| Health removed | The current health one attack takes from its defender: the smaller of the damage outcome less the armor removed and the defender's current health before the attack, or 0 on a miss. | Damage, as a noun on its own |
 | Damage dealt | The sum of the health removed by every attack one participant made in one Combat. |  |
 | Damage taken | The sum of the health removed by every attack on one participant in one Combat. It is equivalent to the participant's [health lost](agents-spec.md#combatant-attributes): the current health it lost in that Combat. |  |
 | Combat outcome | How a Combat ended for the [Agency](domain-model.md#agency-and-agents)'s team: Prevailed, when no Enemy can fight on; Wiped, when no Agent can fight on; or Retreated, when the team withdrew. | Battle outcome |
@@ -55,7 +56,7 @@ Whether a Combatant still takes part in a Combat, and how strong it and its side
 
 # Combat GDRs
 
-Enemies and Combats are configured by the three [Game Data Record](../foundation/core-concepts.md#game-build-and-content) (GDR) [Types](../foundation/core-concepts.md#data-modeling) below and by three AgentParameters values. The GDRs a [Game build](../foundation/core-concepts.md#game-build-and-content) supplies, and their values, are listed by [Bootstrap GDRs](../content/bootstrap-gdrs.md#glossary) and the YAML files it names.
+Enemies and Combats are configured by the four [Game Data Record](../foundation/core-concepts.md#game-build-and-content) (GDR) [Types](../foundation/core-concepts.md#data-modeling) below and by three AgentParameters values. The GDRs a [Game build](../foundation/core-concepts.md#game-build-and-content) supplies, and their values, are listed by [Bootstrap GDRs](../content/bootstrap-gdrs.md#glossary) and the YAML files it names.
 
 ## EnemyArchetype
 
@@ -67,6 +68,7 @@ An EnemyArchetype is the [Archetype](../foundation/core-concepts.md#campaign-ins
 | `base_skill` | The base skill of a newly created Enemy. | [Enemy creation](#enemy-creation) |
 | `base_health` | The [base health](agents-spec.md#combatant-attributes) of a newly created Enemy, which starts with no health lost. | [Enemy creation](#enemy-creation) |
 | `weapon` | A reference to the Weapon GDR a newly created Enemy is equipped with. | [Enemy creation](#enemy-creation) |
+| `armor` | A reference to the Armor GDR a newly created Enemy is equipped with. | [Enemy creation](#enemy-creation) |
 
 Which EnemyArchetypes a [Mission site](domain-model.md#leads-investigations-mission-sites-and-missions)'s Enemies have, and how many of each, is supplied by the Mission site's MissionSiteArchetype, under [Missions](missions.md).
 
@@ -80,6 +82,17 @@ A Weapon GDR describes the base weapon damage of the Combatants equipped with it
 | `base_weapon_damage` | The base weapon damage of a newly created Combatant equipped with this Weapon, in health points. | [Enemy creation](#enemy-creation); [Agent creation](agents-spec.md#agent-creation) in Agents, for Agents |
 
 A Combatant's base weapon damage is a value of the Combatant, set from `base_weapon_damage` at creation; a Combat reads the Combatant's [effective weapon damage](agents-spec.md#combatant-attributes), never the Weapon's `base_weapon_damage`. An Agent's effective weapon damage can exceed its Weapon's `base_weapon_damage`, under [Effective weapon damage](agents-spec.md#effective-weapon-damage) in Agents. Individual inventory items are out of scope.
+
+## Armor
+
+An Armor GDR describes the [base armor](agents-spec.md#combatant-attributes) of the Combatants equipped with it. Every Combatant is equipped with exactly one Armor; a Combatant that wears none is equipped with an Armor whose `base_armor` is 0. The table below is exhaustive apart from `id` and `type`.
+
+| Property | Meaning | Read by |
+| --- | --- | --- |
+| `name` | The display name of the Armor. | [Player-visible information](#player-visible-information) |
+| `base_armor` | The base armor of a newly created Combatant equipped with this Armor, in health points. | [Enemy creation](#enemy-creation); [Agent creation](agents-spec.md#agent-creation) in Agents, for Agents |
+
+A Combatant's base armor is a value of the Combatant, set from `base_armor` at creation; a Combat reads the Combatant's [effective armor](agents-spec.md#combatant-attributes), never the Armor's `base_armor`. An Agent's effective armor can exceed its Armor's `base_armor`, under [Effective armor](agents-spec.md#effective-armor) in Agents.
 
 ## CombatParameters
 
@@ -110,16 +123,16 @@ Combats read seven values of [AgentParameters](agents-spec.md#agentparameters), 
 
 ## Combat GDR validation
 
-The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for EnemyArchetype, Weapon, CombatParameters, `exhaustion_per_attack`, and `exhaustion_per_defense`, and it adds to [Agent GDR validation](agents-spec.md#agent-gdr-validation) in Agents. A Game build whose GDRs violate one of these rules is defective: no [Campaign](../foundation/core-concepts.md#campaign-and-session) is created from it, and the violation is reported as a data defect, never repaired into different gameplay, under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract.
+The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for EnemyArchetype, Weapon, Armor, CombatParameters, `exhaustion_per_attack`, and `exhaustion_per_defense`, and it adds to [Agent GDR validation](agents-spec.md#agent-gdr-validation) in Agents. A Game build whose GDRs violate one of these rules is defective: no [Campaign](../foundation/core-concepts.md#campaign-and-session) is created from it, and the violation is reported as a data defect, never repaired into different gameplay, under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract.
 
 1. **One CombatParameters:** The Game build supplies exactly one CombatParameters GDR.
-2. **EnemyArchetype values are valid:** Each EnemyArchetype's `base_skill` is a whole number of at least 0, its `base_health` is a whole number of at least 1, and its `weapon` references a Weapon GDR the Game build supplies.
-3. **Weapon values are valid:** Each Weapon's `base_weapon_damage` is a whole number of at least 1.
+2. **EnemyArchetype values are valid:** Each EnemyArchetype's `base_skill` is a whole number of at least 0, its `base_health` is a whole number of at least 1, its `weapon` references a Weapon GDR the Game build supplies, and its `armor` references an Armor GDR the Game build supplies.
+3. **Weapon and Armor values are valid:** Each Weapon's `base_weapon_damage` is a whole number of at least 1, and each Armor's `base_armor` is a whole number of at least 0.
 4. **Damage range is valid:** `weapon_damage_range` is a decimal number from 0 to 1, both included. This guarantees that both bounds of every damage outcome are whole numbers of at least 0 with the lower bound at most the upper bound, under [Damage outcome](#damage-outcome).
 5. **Retreat thresholds are valid:** `retreat_below_agent_rating_fraction` and `retreat_at_enemy_to_agent_rating` are each a decimal number of at least 0.
 6. **Incapacitation threshold is valid:** `incapacitation_skill_fraction` is a decimal number of at least 0 and less than 1.
 7. **Every attack tires someone:** `exhaustion_per_attack + exhaustion_per_defense` is at least 1.
-8. **Exact properties:** Each EnemyArchetype, Weapon, and CombatParameters GDR has exactly the properties its table above lists, apart from `id` and `type`: no listed property is missing and no other property is present.
+8. **Exact properties:** Each EnemyArchetype, Weapon, Armor, and CombatParameters GDR has exactly the properties its table above lists, apart from `id` and `type`: no listed property is missing and no other property is present.
 9. **Selection weights are valid:** `target_preferred_hit_chance` is a decimal number from 0 to 1, both included, and `target_base_weight` is a whole number of at least `100 × target_preferred_hit_chance` and of at least `100 × (1 − target_preferred_hit_chance)`. This guarantees that every Selection weight is at least 1, under [Target selection](#target-selection).
 
 Rule 7, together with the exhaustion clause of the [Incapacitation condition](#incapacitation-condition), guarantees that every Combat ends, under [Termination](#termination). [Agent GDR validation](agents-spec.md#agent-gdr-validation) in Agents makes `exhaustion_incapacitation` a whole number of at least 1.
@@ -141,8 +154,10 @@ An Enemy is a [Campaign instance](../foundation/core-concepts.md#campaign-instan
 | Exhaustion | State | The Enemy's exhaustion. | Authoritative value. A whole number under [Attribute ranges](agents-spec.md#attribute-ranges). |
 | Weapon | State | A reference to the Weapon GDR the Enemy is equipped with. | Authoritative value. Always resolves to a Weapon GDR the Game build supplies. No rule changes it after creation. |
 | [Base weapon damage](agents-spec.md#combatant-attributes) | State | The Enemy's base weapon damage. | Authoritative value. A whole number of at least 1. No rule changes it after creation. |
+| Armor | State | A reference to the Armor GDR the Enemy is equipped with. | Authoritative value. Always resolves to an Armor GDR the Game build supplies. No rule changes it after creation. |
+| [Base armor](agents-spec.md#combatant-attributes) | State | The Enemy's base armor. | Authoritative value. A whole number of at least 0. No rule changes it after creation. |
 
-These are exactly the properties the [Combatant Role Type](agents-spec.md#combatant-role-type) requires; Weapon and base weapon damage together are the equipped weapon values. An Enemy also has four [Derived values](../foundation/core-concepts.md#value-classification), which are never stored: its [effective max health](agents-spec.md#combatant-attributes), which equals its base health, and its current health, under [Effective max health and current health](agents-spec.md#effective-max-health-and-current-health) in Agents; its effective skill, under [Effective skill](agents-spec.md#effective-skill) in Agents, and its Combat rating, under [Combat rating](#combat-rating). An Enemy has no lifecycle, no [Assignment](domain-model.md#agency-and-agents), and no [Turn series](../foundation/world-history.md#glossary). An Enemy whose current health is 0 is dead; being dead is a Derived value of its current health, not a stored state.
+These are exactly the properties the [Combatant Role Type](agents-spec.md#combatant-role-type) requires; Weapon and base weapon damage together are the equipped weapon values, and Armor and base armor the equipped armor values. An Enemy also has five [Derived values](../foundation/core-concepts.md#value-classification), which are never stored: its [effective max health](agents-spec.md#combatant-attributes), which equals its base health, and its current health, under [Effective max health and current health](agents-spec.md#effective-max-health-and-current-health) in Agents; its effective skill, under [Effective skill](agents-spec.md#effective-skill) in Agents; its [effective armor](agents-spec.md#combatant-attributes), which equals its base armor, under [Effective armor](agents-spec.md#effective-armor) in Agents; and its Combat rating, under [Combat rating](#combat-rating). An Enemy has no lifecycle, no [Assignment](domain-model.md#agency-and-agents), and no [Turn series](../foundation/world-history.md#glossary). An Enemy whose current health is 0 is dead; being dead is a Derived value of its current health, not a stored state.
 
 **Retention:** An Enemy keeps every property above for the whole Campaign, so that every reference to it resolves, e.g. from a Combat report. An Enemy becomes [Retired](../foundation/world-history.md#glossary) when its Mission site becomes Retired, and is kept in the [Retired world state](../foundation/campaign-state.md#glossary) with its final values, under [Historical fact preservation](../foundation/world-history.md#historical-fact-preservation) in History and Turn Report. No Enemy is ever removed.
 
@@ -160,6 +175,8 @@ Every Enemy is created together with the Mission site at which it is present, un
 | Exhaustion | 0. | This rule. |
 | Weapon | The Weapon GDR that the EnemyArchetype's `weapon` references. | `weapon` of the EnemyArchetype. |
 | Base weapon damage | The `base_weapon_damage` of that Weapon GDR. | `base_weapon_damage` of the Weapon GDR. |
+| Armor | The Armor GDR that the EnemyArchetype's `armor` references. | `armor` of the EnemyArchetype. |
+| Base armor | The `base_armor` of that Armor GDR. | `base_armor` of the Armor GDR. |
 
 No [Upgrade](economy-and-upgrades.md#glossary) and no [Campaign configuration](../foundation/campaign-state.md#glossary) value changes any initial value above. Two Enemies created from the same EnemyArchetype are distinct Campaign instances that share neither Instance ID nor current health.
 
@@ -172,7 +189,7 @@ The following list is the exhaustive set of rules that change an Enemy's values 
 - An attack on the Enemy in a Combat lowers its current health, under [Effects of an attack](#effects-of-an-attack).
 - An attack made by or on the Enemy in a Combat raises its exhaustion, under [Effects of an attack](#effects-of-an-attack).
 
-No rule raises an Enemy's current health or lowers its exhaustion: Enemies never recover. Base skill, base health, Weapon, and base weapon damage never change. An Enemy's values after its Combat are therefore its final values, and an Enemy whose Mission site is never fought over keeps its initial values.
+No rule raises an Enemy's current health or lowers its exhaustion: Enemies never recover. Base skill, base health, Weapon, base weapon damage, Armor, and base armor never change; an attack lowers only the Enemy's current armor, which no World state holds. An Enemy's values after its Combat are therefore its final values, and an Enemy whose Mission site is never fought over keeps its initial values.
 
 # Combats
 
@@ -184,7 +201,7 @@ A Combat is fully automatic: the player chooses who is deployed, under [Missions
 
 1. **The Agents' side:** a list of one or more distinct Agents, each [Serving](agents-spec.md#agent-statuses). This is the [Mission](domain-model.md#leads-investigations-mission-sites-and-missions)'s [Current team](domain-model.md#leads-investigations-mission-sites-and-missions).
 2. **The Enemies' side:** a list of zero or more distinct Enemies. These are the Mission site's Enemies.
-3. **Current values:** the base skill, current health, effective max health, exhaustion, and effective weapon damage of every Combatant in the two lists, as they are when the Combat begins.
+3. **Current values:** the base skill, current health, effective max health, exhaustion, effective weapon damage, and effective armor of every Combatant in the two lists, as they are when the Combat begins.
 4. **GDR values:** the six values of CombatParameters, and `exhaustion_incapacitation`, `exhaustion_free_points`, `skill_penalty_pct_per_exhaustion`, `exhaustion_per_attack`, `exhaustion_per_defense`, `experience_per_attack_hit`, `experience_per_attack_miss`, `experience_per_defense_hit`, and `experience_per_defense_miss` of AgentParameters.
 5. **Random outcomes:** the named random outcomes of its target selections, under [Target selection](#target-selection), and of its attacks, under [Hit outcome](#hit-outcome) and [Damage outcome](#damage-outcome).
 
@@ -206,13 +223,14 @@ Fighting a Combat is the one procedure that turns the inputs above into the outp
 
 ## Combat-only properties
 
-The exhaustive set of gained properties of the [Combatant Role Type](agents-spec.md#combatant-role-type) is one property:
+The exhaustive set of gained properties of the [Combatant Role Type](agents-spec.md#combatant-role-type) is two properties:
 
 | Gained property | Type | Initial value | Meaning |
 | --- | --- | --- | --- |
 | Incapacitated | Yes or no | Set at Combat start under [Combat start](#combat-start) | Whether the Combatant is Incapacitated, under [Killed and Incapacitated](#killed-and-incapacitated). |
+| [Current armor](agents-spec.md#combatant-attributes) | A whole number of at least 0 | The Combatant's effective armor, set under [Combat start](#combat-start) | How much more of the damage of hits the Combatant's armor absorbs in this Combat, under [Effects of an attack](#effects-of-an-attack). |
 
-Every Combatant in either list gains Incapacitated when the Combat begins and loses it when the Combat ends, whatever its value then. Its value at the end of the Combat is recorded in the Combat report, under [Combat report](#combat-report); it affects nothing after the Combat. E.g., an Agent that was Incapacitated at the end of a Combat is an ordinary Serving Agent afterward, with the current health and exhaustion the Combat left it.
+Every Combatant in either list gains both when the Combat begins and loses both when the Combat ends, whatever their values then. Their values at the end of the Combat are recorded in the Combat report, under [Combat report](#combat-report); they affect nothing after the Combat. E.g., an Agent that was Incapacitated at the end of a Combat is an ordinary Serving Agent afterward, with the current health and exhaustion the Combat left it, and an Agent whose current armor a Combat lowered to 0 starts its next Combat with its full effective armor again.
 
 A Combatant is able to fight, during a Combat, exactly when its current health is greater than 0 and it is not Incapacitated. Being able to fight is a Derived value.
 
@@ -235,7 +253,7 @@ Outside a Combat, a Combatant is able to fight exactly when its current health i
 
 ## Combat timing
 
-A Combat begins and ends within one [Turn advancement step](turn-advancement.md#glossary) of one Advance turn, the step in which [Missions](missions.md) has it fought; nothing else happens between its first and its last attack. A Detached Combat is the one exception: it begins and ends within one call of `developer.tools.fightCombat(setup)` or `developer.tools.fightCombatBatch(setup, count, stop)` and belongs to no Advance turn. No [World state](../foundation/engine-contract.md#player-actions-and-turns) therefore contains a Combat in progress, a Combat round, or the Incapacitated property. Only the Combat's outputs are ever part of a World state.
+A Combat begins and ends within one [Turn advancement step](turn-advancement.md#glossary) of one Advance turn, the step in which [Missions](missions.md) has it fought; nothing else happens between its first and its last attack. A Detached Combat is the one exception: it begins and ends within one call of `developer.tools.fightCombat(setup)` or `developer.tools.fightCombatBatch(setup, count, stop)` and belongs to no Advance turn. No [World state](../foundation/engine-contract.md#player-actions-and-turns) therefore contains a Combat in progress, a Combat round, the Incapacitated property, or current armor. Only the Combat's outputs are ever part of a World state.
 
 # Combat rating
 
@@ -261,7 +279,7 @@ Each side has a fixed order for the whole Combat: the order of its input list un
 
 When a Combat begins, before any Combat round:
 
-1. Every Combatant of both sides gains Incapacitated, set to yes exactly when the Combatant meets the [Incapacitation condition](#incapacitation-condition) with its current values, and to no otherwise. An Enemy whose current health is already 0 is dead and is not Incapacitated.
+1. Every Combatant of both sides gains Incapacitated, set to yes exactly when the Combatant meets the [Incapacitation condition](#incapacitation-condition) with its current values, and to no otherwise. An Enemy whose current health is already 0 is dead and is not Incapacitated. Every Combatant also gains current armor, set to its effective armor.
 2. The Combat report records each Combatant's starting values and the Combat rating of each side, under [Combat report](#combat-report). The Combat rating of the Agents' side at this moment is its starting Combat rating, which the Retreated check reads.
 3. If no Enemy is able to fight, the Combat ends with the Combat outcome Prevailed after 0 Combat rounds. Otherwise, if no Agent is able to fight, it ends with the Combat outcome Wiped after 0 Combat rounds. Otherwise the first Combat round begins.
 
@@ -351,11 +369,14 @@ One attack applies these effects, in this order, before the next Combat turn beg
 
 1. **Read:** A and D are read, and the hit Probability is formed, under [Hit outcome](#hit-outcome).
 2. **Hit outcome:** The attack has its hit outcome. The damage outcome exists only when the hit outcome is a hit.
-3. **Health removed:** On a hit, the defender's current health falls by the damage outcome, under [Damage outcome](#damage-outcome), but not below 0. The health removed is the smaller of the damage outcome and the defender's current health before this step. On a miss, current health does not change and the health removed is 0.
-4. **Exhaustion:** The attacker gains `exhaustion_per_attack` exhaustion and the defender gains `exhaustion_per_defense` exhaustion, hit or miss. No upper clamp applies, under [Attribute ranges](agents-spec.md#attribute-ranges) in Agents.
-5. **Evaluation:** The defender and then the attacker are evaluated under [Killed and Incapacitated](#killed-and-incapacitated), with their values after steps 3 and 4.
+3. **Armor removed:** On a hit, the defender's current armor falls by the damage outcome, under [Damage outcome](#damage-outcome), but not below 0. The armor removed is the smaller of the damage outcome and the defender's current armor before this step.
+4. **Health removed:** On a hit, the defender's current health falls by the damage outcome less the armor removed, but not below 0. The health removed is the smaller of that remainder and the defender's current health before this step. On a miss, neither current armor nor current health changes, and the armor removed and the health removed are both 0.
+5. **Exhaustion:** The attacker gains `exhaustion_per_attack` exhaustion and the defender gains `exhaustion_per_defense` exhaustion, hit or miss. No upper clamp applies, under [Attribute ranges](agents-spec.md#attribute-ranges) in Agents.
+6. **Evaluation:** The defender and then the attacker are evaluated under [Killed and Incapacitated](#killed-and-incapacitated), with their values after steps 3 to 5.
 
-The order of steps 3 and 4 affects no result, because nothing reads the values between them. No other value changes; in particular base skill, [Experience](agents-spec.md#growth), base health, and base weapon damage are unchanged, and no Combatant other than the attacker and the defender is affected.
+The order of steps 4 and 5 affects no result, because nothing reads the values between them. No other value changes; in particular base skill, [Experience](agents-spec.md#growth), base health, base weapon damage, and base armor are unchanged, and no Combatant other than the attacker and the defender is affected.
+
+Armor removed lowers no current health, so it raises no health lost and lowers no effective skill: a hit that its defender's current armor absorbs whole changes the defender's effective skill only through the exhaustion of step 5. The armor removed and the health removed always add up to the damage outcome, except when the defender's current health falls to 0. E.g., a defender with current health 30 and current armor 25 that is hit four times, with damage outcomes 7, 10, 15, and 4, is left with current health 30 and current armor 18, then 30 and 8, then 23 and 0, because its current armor absorbs 8 of the 15 and the other 7 are health removed, and then 19 and 0.
 
 ## Combat experience
 
@@ -388,7 +409,7 @@ Only the defender can die in an attack, because only the defender loses current 
 
 ## Monotonicity within a Combat
 
-Within a Combat, base skill and effective max health are constant, current health never rises, and exhaustion never falls. Every factor of the [Effective skill](agents-spec.md#effective-skill) formula that can change therefore never rises, so a Combatant's effective skill never rises during a Combat. It follows that a Combatant that meets the [Incapacitation condition](#incapacitation-condition) keeps meeting it, that no Combatant becomes able to fight again once it is not, and that only the attacker and defender of an attack can change whether they meet the condition. The evaluations under [Combat start](#combat-start) and [Killed and Incapacitated](#killed-and-incapacitated) therefore keep Incapacitated equal, at every moment of a Combat, to "alive and meets the incapacitation condition".
+Within a Combat, base skill and effective max health are constant, current health and current armor never rise, and exhaustion never falls. Effective skill does not read current armor. Every factor of the [Effective skill](agents-spec.md#effective-skill) formula that can change therefore never rises, so a Combatant's effective skill never rises during a Combat. It follows that a Combatant that meets the [Incapacitation condition](#incapacitation-condition) keeps meeting it, that no Combatant becomes able to fight again once it is not, and that only the attacker and defender of an attack can change whether they meet the condition. The evaluations under [Combat start](#combat-start) and [Killed and Incapacitated](#killed-and-incapacitated) therefore keep Incapacitated equal, at every moment of a Combat, to "alive and meets the incapacitation condition".
 
 # Combat end
 
@@ -448,14 +469,14 @@ Every Combat produces exactly one Combat report. It holds exactly the following 
 1. **Combat outcome:** Prevailed, Retreated, or Wiped.
 2. **Number of Combat rounds:** a whole number of at least 0.
 3. **Participants:** the Agents' side and the Enemies' side, each as the list of Instance IDs in its fixed order.
-4. **Starting values:** for each participant, its base skill, current health, effective max health, exhaustion, effective weapon damage, effective skill, and Incapacitated value when the Combat began, after [Combat start](#combat-start) step 1.
-5. **Final values:** for each participant, its current health, exhaustion, and effective skill when the Combat ended, and its final condition: able to fight, Incapacitated, or dead. A dead Agent is Killed.
-6. **Damage dealt and damage taken:** for each participant, its damage dealt, i.e. the sum of the health removed by its attacks, and its damage taken, i.e. the sum of the health removed by attacks on it; and for each Agent, its combat experience, under [Combat experience](#combat-experience).
+4. **Starting values:** for each participant, its base skill, current health, effective max health, exhaustion, effective weapon damage, effective armor, effective skill, and Incapacitated value when the Combat began, after [Combat start](#combat-start) step 1. Its effective armor is also its current armor at that moment.
+5. **Final values:** for each participant, its current health, current armor, exhaustion, and effective skill when the Combat ended, and its final condition: able to fight, Incapacitated, or dead. A dead Agent is Killed.
+6. **Damage dealt and damage taken:** for each participant, its damage dealt, i.e. the sum of the health removed by its attacks, and its damage taken, i.e. the sum of the health removed by attacks on it; and for each Agent, its combat experience, under [Combat experience](#combat-experience). Neither counts armor removed.
 7. **Combat ratings:** the Combat rating of each side at Combat start and at the end of every Combat round.
-8. **Combat log:** every attack, in the order in which it was made, each with its Combat round number, its attacker and defender by Instance ID, A and D, the hit Probability as the pair of whole numbers `A²` and `A² + D²`, the hit outcome, the damage outcome when there is one, the health removed, the current health and exhaustion of the attacker and the defender after the attack, and whether the attack made the defender dead or the defender or the attacker Incapacitated.
+8. **Combat log:** every attack, in the order in which it was made, each with its Combat round number, its attacker and defender by Instance ID, A and D, the hit Probability as the pair of whole numbers `A²` and `A² + D²`, the hit outcome, the damage outcome when there is one, the armor removed, the health removed, the defender's current armor after the attack, the current health and exhaustion of the attacker and the defender after the attack, and whether the attack made the defender dead or the defender or the attacker Incapacitated.
 9. **Mission:** the Instance ID of the Mission whose Combat it records, which [Missions](missions.md) supplies when it has the Combat fought. It influences nothing in the Combat. The Combat report of a Detached Combat has no Mission, and identifies each participant as [Detached Combat](#detached-combat) states rather than only by Instance ID.
 
-A participant's base skill, effective max health, and effective weapon damage do not change in a Combat, so its final values need not repeat them. All values are whole numbers, except that each hit Probability is the pair of whole numbers named above, and that an Agent's base skill and current health, and so the health removed from an Agent and the damage dealt and damage taken that sum it, are [Decimal quantities](../foundation/numbers.md#glossary), under [Attribute ranges](agents-spec.md#attribute-ranges) in Agents. E.g., a damage outcome of 10 against an Agent with current health 5.60 removes 5.60.
+A participant's base skill, effective max health, effective weapon damage, and effective armor do not change in a Combat, so its final values need not repeat them. All values are whole numbers, except that each hit Probability is the pair of whole numbers named above, and that an Agent's base skill and current health, and so the health removed from an Agent and the damage dealt and damage taken that sum it, are [Decimal quantities](../foundation/numbers.md#glossary), under [Attribute ranges](agents-spec.md#attribute-ranges) in Agents. E.g., a damage outcome of 10 against an Agent with current health 5.60 removes 5.60.
 
 The Combat report is an Authoritative value. It is part of the [Turn report](../foundation/campaign-state.md#glossary) of the Advance turn in which its Combat was fought, and no Mission or other Campaign instance holds it. `player.queries.getTurnReport()` returns every fact above until the next Advance turn replaces that Turn report, under [Current world state, Turn report, and history](../foundation/world-history.md#current-world-state-turn-report-and-history) in History and Turn Report. How the Turn report organizes its Combat reports is left to the implementation. Once produced, a Combat report is never rewritten or recomputed, even when the values of its participants change later, under [Historical fact preservation](../foundation/world-history.md#historical-fact-preservation) in History and Turn Report. Whatever presents a Combat later uses the [retained](../foundation/world-history.md#glossary) values. After the next Advance turn, only the facts that its [History entry](../foundation/world-history.md#glossary) holds need to remain available, under [Turn report and history](../foundation/world-history.md#turn-report-and-history) in History and Turn Report. The History entry of the [Turn](../foundation/engine-contract.md#player-actions-and-turns) the Advance turn ends holds, of each Combat report, only its Combat outcome, its number of Combat rounds, its participants, for each participant its current health and effective skill at Combat start and at Combat end and its final condition, and the Combat rating of each side at Combat start and at Combat end, beside what [Turn report](missions.md#turn-report) in Missions states it holds of that Combat's Mission. Combat end is the end of the last Combat round, or Combat start when the Combat had no Combat round. These are the values a Concluded Mission site is shown with for the rest of the Campaign, so the [History](../foundation/campaign-state.md#glossary) keeps what each participant came in with and left with, but not the Combat log, the damage dealt and taken, or the other starting values.
 
@@ -467,7 +488,7 @@ Balancing a Combat needs many Combats fought on chosen teams and chosen GDR valu
 
 | Part | What the caller supplies | Default |
 | --- | --- | --- |
-| Agents' side | A list of one or more entries, in the fixed order of the side. Each entry is either an Agent of the [Current campaign](../foundation/core-concepts.md#campaign-and-session) by Instance ID, which contributes that Agent's values in the [Current world state](../foundation/engine-contract.md#player-actions-and-turns), or explicit values: base skill, current health, effective max health, exhaustion, and effective weapon damage. | None; it is required. |
+| Agents' side | A list of one or more entries, in the fixed order of the side. Each entry is either an Agent of the [Current campaign](../foundation/core-concepts.md#campaign-and-session) by Instance ID, which contributes that Agent's values in the [Current world state](../foundation/engine-contract.md#player-actions-and-turns), or explicit values: base skill, current health, effective max health, exhaustion, effective weapon damage, and effective armor, which is 0 when the entry leaves it out. | None; it is required. |
 | Enemies' side | A list of zero or more entries, in the fixed order of the side. Each entry is an Enemy of the Current campaign by Instance ID, an EnemyArchetype by identifier, which contributes the values [Enemy creation](#enemy-creation) gives a new Enemy of it, or explicit values as for an Agent. Instead of a list, the caller may name a MissionSiteArchetype, which contributes one entry for each Enemy a new Mission site of it would have, in their creation order under [Missions](missions.md). | None; it is required. |
 | GDR values | A value for any of the GDR values that [Combat inputs and outputs](#combat-inputs-and-outputs) lists, e.g. a different `incapacitation_skill_fraction`. | The value the [Game build](../foundation/core-concepts.md#game-build-and-content) of the Current campaign supplies. |
 | Detached seed | Text that is a permitted [Campaign seed](../foundation/determinism-and-randomness.md#glossary), from which every random outcome of the Detached Combat derives. | None; it is required. |
@@ -500,12 +521,12 @@ Every value below is [Player-visible information](../foundation/engine-contract.
 | Value | Player-visible information |
 | --- | --- |
 | An Enemy's Instance ID, its EnemyArchetype including the EnemyArchetype's `name`, and its Mission site | Yes |
-| An Enemy's base skill, current health, base health, exhaustion, Weapon, and base weapon damage | Yes |
+| An Enemy's base skill, current health, base health, exhaustion, Weapon, base weapon damage, Armor, base armor, and effective armor | Yes |
 | An Enemy's effective skill and Combat rating, and the Combat rating of any side, e.g. of a Mission site's Enemies | Yes |
 | Every fact of a Combat report, including every random outcome it records | Yes |
-| Every property of each EnemyArchetype, Weapon, and CombatParameters GDR, and the meaning of `exhaustion_per_attack`, `exhaustion_per_defense`, and the four combat experience amounts of AgentParameters | Yes |
+| Every property of each EnemyArchetype, Weapon, Armor, and CombatParameters GDR, and the meaning of `exhaustion_per_attack`, `exhaustion_per_defense`, and the four combat experience amounts of AgentParameters | Yes |
 
-Incapacitated and a Combat in progress never exist in a World state, under [Combat timing](#combat-timing), so the player observes them only through the Combat report. **Unknown versus absent:** No value in the table above is hidden, so Player API never reports one as unknown. A damage outcome is absent, not zero, for an attack whose hit outcome is a miss; its health removed is 0. A Turn report holds a Combat report only for each Combat its Advance turn fought; a Mission whose Combat has not been fought has no Combat report anywhere.
+Incapacitated, current armor, and a Combat in progress never exist in a World state, under [Combat timing](#combat-timing), so the player observes them only through the Combat report. **Unknown versus absent:** No value in the table above is hidden, so Player API never reports one as unknown. A damage outcome is absent, not zero, for an attack whose hit outcome is a miss; its health removed is 0. A Turn report holds a Combat report only for each Combat its Advance turn fought; a Mission whose Combat has not been fought has no Combat report anywhere.
 
 # Edge cases and failure behavior
 
@@ -520,6 +541,10 @@ Incapacitated and a Combat in progress never exist in a World state, under [Comb
 - **Combat experience of a Killed Agent:** The Combat report records it like any other Agent's, but it is never added to Experience or base skill ([Combat experience](#combat-experience)).
 - **Zero divisor:** The hit Probability's divisor is at least 2, because both effective skills are at least 1 ([Hit outcome](#hit-outcome)).
 - **Damage outcome above remaining current health:** Current health falls to 0, not below; the health removed is the defender's remaining current health ([Effects of an attack](#effects-of-an-attack)).
+- **Hit absorbed by armor:** A damage outcome no greater than the defender's current armor lowers only its current armor; its current health and effective skill do not change, and the health removed is 0 ([Effects of an attack](#effects-of-an-attack)).
+- **Hit that breaks through armor:** A damage outcome greater than the defender's current armor lowers current armor to 0 and current health by the rest, e.g. 15 against current armor 8 removes 8 armor and 7 health ([Effects of an attack](#effects-of-an-attack)).
+- **No armor:** A Combatant with effective armor 0 starts with current armor 0, so every hit on it removes health as if armor did not exist ([Combat start](#combat-start), [Effects of an attack](#effects-of-an-attack)).
+- **Armor after a Combat:** Current armor is lost when the Combat ends, and the next Combat starts it at the Combatant's effective armor again, however much the last one removed ([Combat-only properties](#combat-only-properties)).
 - **Damage outcome of 0:** With a `weapon_damage_range` of 1 a damage outcome can be 0; the hit removes no current health but still raises exhaustion ([Damage outcome](#damage-outcome)).
 - **Exhaustion of `exhaustion_incapacitation` or more:** A Combatant reaching it is Incapacitated whatever its effective skill, and its exhaustion is not clamped; an Agent may start a Combat with exhaustion above it and is then Incapacitated from the start ([Incapacitation condition](#incapacitation-condition), [Termination](#termination)).
 - **Ties in Phase order:** Among Combatants of a side with equal effective skill at the start of a phase, the one earlier in the fixed order takes its Combat turn first ([Combat rounds](#combat-rounds)).

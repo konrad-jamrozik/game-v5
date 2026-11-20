@@ -1,0 +1,8 @@
+id: service_weapon_article
+type: CompendiumArticle
+category: subject
+subject: service_weapon
+terms: [Service weapon, Service weapons]
+body: >-
+  The handgun the Agency issues to every Agent. It starts as good as an ordinary sidearm, and every Upgrade to weapon
+  damage makes it hit harder in the hands of every Agent.

@@ -20,7 +20,7 @@ See also: [Turns](#turns) · [Money and funding](#money-and-funding) · [Winning
 
 Source: `content/compendium/compendium_articles/guide_upgrades.yaml`
 
-[Upgrades](#upgrades) are permanent improvements bought with [money](#money-and-funding). Each purchase raises one cap of the Agency, the [weapon damage](#damage) or [max health](#health) of every [Agent](#agents), or how fast every Agent trains, rests, or heals. An Upgrade can be bought again and again at the same price.
+[Upgrades](#upgrades) are permanent improvements bought with [money](#money-and-funding). Each purchase raises one cap of the Agency, the [weapon damage](#damage) or armor of every [Agent](#agents), or how fast every Agent trains, rests, or heals. An Upgrade can be bought again and again at the same price.
 
 See also: [Upgrades](#upgrades) · [Money and funding](#money-and-funding)
 
@@ -64,12 +64,12 @@ Source: `content/compendium/compendium_articles/mechanics_agents.yaml`
 
 Agents are the people of your Agency. Each one has [skill](#skill), [health](#health), and [exhaustion](#exhaustion), carries a weapon, and has one [Assignment](#assignments) at a time. You start with a small team and [hire](#hiring-and-upkeep) more as your [money](#money-and-funding) allows.
 
-| Formulas            |                                                           |
-| ------------------- | --------------------------------------------------------- |
-| Starting team       | 4 Agents, ready for orders on the first [turn](#turns)    |
-| A new Agent         | Skill 100, health 30, no exhaustion, armed with a Sidearm |
-| A hired Agent       | Starts on Standby and arrives next turn                   |
-| Killed or dismissed | The Agent is gone for good, and its skill with it         |
+| Formulas            |                                                                  |
+| ------------------- | ---------------------------------------------------------------- |
+| Starting team       | 4 Agents, ready for orders on the first [turn](#turns)           |
+| A new Agent         | Skill 100, health 30, no exhaustion, armed with a Service weapon |
+| A hired Agent       | Starts on Standby and arrives next turn                          |
+| Killed or dismissed | The Agent is gone for good, and its skill with it                |
 
 See also: [Skill](#skill) · [Health](#health) · [Exhaustion](#exhaustion) · [Assignments](#assignments) · [Hiring and upkeep](#hiring-and-upkeep) · [Field agent](#field-agent)
 
@@ -128,15 +128,19 @@ See also: [Money and funding](#money-and-funding) · [Exhaustion](#exhaustion) �
 
 Source: `content/compendium/compendium_articles/mechanics_damage.yaml`
 
-A hit removes [health](#health) from its target. How much depends on the weapon of the attacker, with some luck either way. [Upgrades](#upgrades) make the weapons of your [Agents](#agents) hit harder; an Enemy always deals the damage of the weapon it carries.
+A hit deals damage to its target. How much depends on the weapon of the attacker, with some luck either way. The armor of the target absorbs the damage first, and only what armor does not absorb removes [health](#health). [Upgrades](#upgrades) make the [Service weapons](#service-weapon) of your [Agents](#agents) hit harder and their [Service armor](#service-armor) absorb more; an Enemy always deals the damage of the weapon it carries.
 
 | Formulas |  |
 | --- | --- |
 | Damage of a hit | A whole number from weapon damage × (1 − 0.5), rounded up, to weapon damage × (1 + 0.5), rounded down; each is equally likely |
-| Weapon damage of an Agent | That of its weapon, plus Upgrades |
+| Weapon damage of an Agent | That of its Service weapon, plus Upgrades |
+| Armor of an Agent | That of its Service armor, plus Upgrades |
+| Armor of an Enemy | That of the armor it wears |
+| Armor in a hit | The damage first lowers armor, down to zero; only the rest removes health |
+| Lost armor | Costs no health and no [effective skill](#skill), and is whole again at the start of the next [Combat](#combat) |
 | A miss | No damage |
 
-See also: [Combat](#combat) · [Health](#health) · [Weapon damage](#weapon-damage) · [Pistol](#pistol) · [Sidearm](#sidearm) · [Rifle](#rifle) · [Battle rifle](#battle-rifle) · [Assault rifle](#assault-rifle) · [Heavy rifle](#heavy-rifle) · [Machine gun](#machine-gun)
+See also: [Combat](#combat) · [Health](#health) · [Weapon damage](#weapon-damage) · [Armor](#armor) · [Service weapon](#service-weapon) · [Service armor](#service-armor) · [Pistol](#pistol) · [Sidearm](#sidearm) · [Rifle](#rifle) · [Battle rifle](#battle-rifle) · [Assault rifle](#assault-rifle) · [Heavy rifle](#heavy-rifle) · [Machine gun](#machine-gun)
 
 ### Exhaustion
 
@@ -220,17 +224,16 @@ See also: [Faction operations](#faction-operations) · [Panic](#panic) · [Winni
 
 Source: `content/compendium/compendium_articles/mechanics_health.yaml`
 
-Health is how much harm an [Agent](#agents) or an Enemy can still take. Hits in a [Combat](#combat) remove it, and an Agent whose health reaches zero is killed for good. An Agent that has lost health also fights worse until it has healed.
+Health is how much harm an [Agent](#agents) or an Enemy can still take. Hits in a [Combat](#combat) remove it once [armor](#damage) stops absorbing them, and an Agent whose health reaches zero is killed for good. An Agent that has lost health also fights worse until it has healed.
 
 | Formulas |  |
 | --- | --- |
-| Max health of an Agent | 30, plus [Upgrades](#upgrades) |
+| Max health of an Agent | 30 |
 | Health at zero | An Agent is killed; an Enemy is dead |
 | Lost health | Lowers [effective skill](#skill) in proportion: half the health, half the skill |
 | Healing | Only on [Recovery](#recovery), where every Agent that survives a [Mission](#missions) below max health is sent |
-| Raising max health | An Upgrade raises the max health and the health of every Agent by the same amount, at once |
 
-See also: [Recovery](#recovery) · [Damage](#damage) · [Skill](#skill) · [Max health](#max-health)
+See also: [Recovery](#recovery) · [Damage](#damage) · [Skill](#skill) · [Armor](#armor)
 
 ### Hiring and upkeep
 
@@ -471,17 +474,17 @@ See also: [A turn at the Agency](#a-turn-at-the-agency) · [Winning and losing](
 
 Source: `content/compendium/compendium_articles/mechanics_upgrades.yaml`
 
-Upgrades are permanent improvements bought with [money](#money-and-funding). Each purchase adds a fixed amount to one thing: a cap of the Agency, the [weapon damage](#damage) or [max health](#health) of every [Agent](#agents), or how fast every Agent trains, rests, or heals. An Upgrade can be bought any number of times.
+Upgrades are permanent improvements bought with [money](#money-and-funding). Each purchase adds a fixed amount to one thing: a cap of the Agency, the [weapon damage](#damage) or armor of every [Agent](#agents), or how fast every Agent trains, rests, or heals. An Upgrade can be bought any number of times.
 
 | Formulas                                 |                                                                |
 | ---------------------------------------- | -------------------------------------------------------------- |
 | Price                                    | Fixed for each Upgrade; it never rises                         |
 | Buying again                             | Every purchase adds the same amount, without limit             |
-| Caps, weapon damage, and max health      | Raised at once                                                 |
+| Caps, weapon damage, and armor           | Raised at once                                                 |
 | [Training](#training), rest, and healing | Faster from the next [turn](#turns)                            |
 | Who benefits                             | Every Agent, including those [hired](#hiring-and-upkeep) later |
 
-See also: [Agent cap](#agent-cap) · [Transport cap](#transport-cap) · [Training cap](#training-cap) · [Weapon damage](#weapon-damage) · [Max health](#max-health) · [Training skill gain](#training-skill-gain) · [Exhaustion recovery](#exhaustion-recovery) · [Health recovery](#health-recovery)
+See also: [Agent cap](#agent-cap) · [Transport cap](#transport-cap) · [Training cap](#training-cap) · [Weapon damage](#weapon-damage) · [Armor](#armor) · [Training skill gain](#training-skill-gain) · [Exhaustion recovery](#exhaustion-recovery) · [Health recovery](#health-recovery)
 
 ### Winning and losing
 
@@ -507,12 +510,26 @@ Source: `content/compendium/compendium_articles/field_agent_article.yaml`
 
 The backbone of the Agency: a trained [operative](#operative) who can investigate, earn [money](#money-and-funding) on contract, train, or fight. Every [Agent](#agents) you [hire](#hiring-and-upkeep) starts as a Field agent and grows through [Training](#training) and the [Missions](#missions) it survives.
 
-| `field_agent` | AgentArchetype |
-| ------------- | -------------- |
-| `name`        | `Field agent`  |
-| `base_skill`  | `100`          |
-| `base_health` | `30`           |
-| `weapon`      | `sidearm`      |
+| `field_agent` | AgentArchetype   |
+| ------------- | ---------------- |
+| `name`        | `Field agent`    |
+| `base_skill`  | `100`            |
+| `base_health` | `30`             |
+| `weapon`      | `service_weapon` |
+| `armor`       | `service_armor`  |
+
+## Subject articles: Armor
+
+### Service armor
+
+Source: `content/compendium/compendium_articles/service_armor_article.yaml`
+
+The protective gear the Agency issues to every [Agent](#agents). It is issued with an [armor](#damage) of 0, and every [Upgrade](#upgrades) to armor raises the armor of every Agent. In a [Combat](#combat), a hit wears down armor before it removes any [health](#health), and armor is whole again for the next Combat.
+
+| `service_armor` | Armor           |
+| --------------- | --------------- |
+| `name`          | `Service armor` |
+| `base_armor`    | `0`             |
 
 ## Subject articles: EnemyArchetype
 
@@ -528,6 +545,7 @@ A senior officer who directs the larger [operations](#faction-operations) of a c
 | `base_skill`  | `300`          |
 | `base_health` | `40`           |
 | `weapon`      | `heavy_rifle`  |
+| `armor`       | `no_armor`     |
 
 ### Cult leader
 
@@ -541,6 +559,7 @@ The heart of a cult, guarded in its headquarters. Only a strong, rested team sho
 | `base_skill`  | `800`                 |
 | `base_health` | `80`                  |
 | `weapon`      | `anti_materiel_rifle` |
+| `armor`       | `no_armor`            |
 
 ### Elite
 
@@ -554,6 +573,7 @@ A hand-picked veteran, far more dangerous than a [Soldier](#soldier). Only well-
 | `base_skill`  | `250`           |
 | `base_health` | `40`            |
 | `weapon`      | `assault_rifle` |
+| `armor`       | `no_armor`      |
 
 ### Handler
 
@@ -567,6 +587,7 @@ A junior officer who runs a cell of [Initiates](#initiate) and [Operatives](#ope
 | `base_skill`  | `80`           |
 | `base_health` | `25`           |
 | `weapon`      | `sidearm`      |
+| `armor`       | `no_armor`     |
 
 ### High commander
 
@@ -580,6 +601,7 @@ One of the few who answer only to the [Cult leader](#cult-leader). A High comman
 | `base_skill`     | `500`            |
 | `base_health`    | `50`             |
 | `weapon`         | `machine_gun`    |
+| `armor`          | `no_armor`       |
 
 ### Initiate
 
@@ -593,6 +615,7 @@ A new recruit of a hostile cult, with more zeal than [skill](#skill). Initiates 
 | `base_skill`  | `40`           |
 | `base_health` | `20`           |
 | `weapon`      | `pistol`       |
+| `armor`       | `no_armor`     |
 
 ### Lieutenant
 
@@ -606,6 +629,7 @@ An officer who [leads](#leads) [Soldiers](#soldier) in the field, and fights a l
 | `base_skill`  | `140`          |
 | `base_health` | `30`           |
 | `weapon`      | `battle_rifle` |
+| `armor`       | `no_armor`     |
 
 ### Operative
 
@@ -619,6 +643,7 @@ A cult member trusted with real work. Operatives shoot straighter than [Initiate
 | `base_skill`  | `60`           |
 | `base_health` | `25`           |
 | `weapon`      | `sidearm`      |
+| `armor`       | `no_armor`     |
 
 ### Soldier
 
@@ -632,6 +657,7 @@ A seasoned fighter, roughly a match for a newly [hired](#hiring-and-upkeep) [Age
 | `base_skill`  | `120`          |
 | `base_health` | `30`           |
 | `weapon`      | `rifle`        |
+| `armor`       | `no_armor`     |
 
 ## Subject articles: FactionArchetype
 
@@ -1853,6 +1879,19 @@ Expands the barracks so that the Agency can employ more [Agents](#agents) at onc
 | `effect`    | `agent_cap` |
 | `increment` | `4`         |
 
+### Armor
+
+Source: `content/compendium/compendium_articles/armor_article.yaml`
+
+Better plates and padding for the [Service armor](#service-armor) of every [Agent](#agents), so that it absorbs more of the hits an Agent takes in each [Combat](#combat) before any [health](#health) is lost.
+
+| `armor`     | Upgrade       |
+| ----------- | ------------- |
+| `name`      | `Armor`       |
+| `price`     | `500`         |
+| `effect`    | `agent_armor` |
+| `increment` | `1`           |
+
 ### Exhaustion recovery
 
 Source: `content/compendium/compendium_articles/exhaustion_recovery_article.yaml`
@@ -1878,19 +1917,6 @@ A better infirmary lets every [Agent](#agents) on [Recovery](#recovery) heal fas
 | `price`           | `500`             |
 | `effect`          | `health_recovery` |
 | `increment`       | `0.2`             |
-
-### Max health
-
-Source: `content/compendium/compendium_articles/max_health_article.yaml`
-
-Body armor and field medicine let every [Agent](#agents) take more harm before going down.
-
-| `max_health` | Upgrade            |
-| ------------ | ------------------ |
-| `name`       | `Max health`       |
-| `price`      | `500`              |
-| `effect`     | `agent_max_health` |
-| `increment`  | `1`                |
 
 ### Training cap
 
@@ -1935,7 +1961,7 @@ Adds vehicles so that more [Agents](#agents) can be [deployed](#missions) to [Mi
 
 Source: `content/compendium/compendium_articles/weapon_damage_article.yaml`
 
-Better ammunition and gunsmithing make the weapons of every [Agent](#agents) hit harder.
+Better ammunition and gunsmithing make the [Service weapon](#service-weapon) of every [Agent](#agents) hit harder.
 
 | `weapon_damage` | Upgrade               |
 | --------------- | --------------------- |
@@ -2023,11 +2049,22 @@ A reliable long gun for trained fighters.
 | `name`               | `Rifle` |
 | `base_weapon_damage` | `14`    |
 
+### Service weapon
+
+Source: `content/compendium/compendium_articles/service_weapon_article.yaml`
+
+The handgun the Agency issues to every [Agent](#agents). It starts as good as an ordinary [sidearm](#sidearm), and every [Upgrade](#upgrades) to [weapon damage](#damage) makes it hit harder in the hands of every Agent.
+
+| `service_weapon`     | Weapon           |
+| -------------------- | ---------------- |
+| `name`               | `Service weapon` |
+| `base_weapon_damage` | `10`             |
+
 ### Sidearm
 
 Source: `content/compendium/compendium_articles/sidearm_article.yaml`
 
-A compact service handgun, easy to carry and easy to hide. [Upgrades](#upgrades) to [weapon damage](#damage) make it hit harder in [Agent](#agents) hands.
+A compact handgun, easy to carry and easy to hide.
 
 | `sidearm`            | Weapon    |
 | -------------------- | --------- |
