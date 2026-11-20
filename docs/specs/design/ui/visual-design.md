@@ -208,6 +208,20 @@ A table's columns sit side by side from its left edge, and no column stretches t
 
 Every row of a table is one line tall, so that rows line up and a long value does not push the rows below it down. Each column is wide enough to hold on one line every value that the specifications list for it, e.g. the Blocked by "Already on Contracting" in the [Agents View](screens/agents-view.md). A value of free text that can still be too long for its column, e.g. the message of an engine rejection, is cut short with "…" and shown in full while the pointer rests on it.
 
+A column that shows a game quantity is wide enough for the widest value that quantity can take, in every table and whatever values the [GDRs](../foundation/core-concepts.md#game-build-and-content) give, so that a veteran Agent's row late in a long Campaign is never cut short. The widest values are these, and this list is exhaustive:
+
+| Quantity | Widest value |
+| --- | --- |
+| Skill, base or effective | Four digits, e.g. "1234". |
+| Exhaustion | Three digits, e.g. "123". |
+| Health | Three digits, followed by the max health it is out of when the column shows both, e.g. "123/123". |
+| Armor | Three digits, e.g. "123". |
+| Damage, e.g. a Weapon's damage or the damage a participant dealt or took in a Combat | Three digits, e.g. "123". |
+| Experience gained, e.g. Mission experience | Three digits after its sign, e.g. "+123". |
+| Chance, e.g. a hit chance | Two digits and one decimal before the percent sign, e.g. "99.9%". |
+
+A column that shows a value at two moments joined by "→" holds the widest value on both sides, e.g. "1234 → 1234" for an effective skill, "123 → 123/123" for a health, and "123 → 123" for an armor. A column that shows several quantities in one value holds the widest value of each, e.g. "99.9% (1234 vs 1234)" for a hit chance with the effective skills it compares.
+
 A table whose rows each have a selection checkbox lets the Player select several rows at once, in these ways:
 
 - **Click:** clicking a row's checkbox, or the row outside its links and buttons, selects or clears that row and makes it the anchor.
