@@ -33,7 +33,7 @@ Under the title row, the header holds these controls, in this order:
 2. **Assign to,** a group under that label holding the buttons **[Standby](../../mechanics/agents-spec.md#assignments),** **[Contracting](../../mechanics/agents-spec.md#assignments),** and **[Training](../../mechanics/agents-spec.md#assignments),** each followed by its Assignment filter. Each button makes one `assignAgents` with the selected Agents and that [Assignment](../../mechanics/domain-model.md#agency-and-agents), under [Assigning Agents](../../mechanics/agents-spec.md#assigning-agents) in Agents, at once and without a confirmation, because Undo Action takes it back.
 3. **Dismiss,** a destructive button, which makes one `dismissAgents` with the selected Agents, under [Dismissing Agents](../../mechanics/economy-and-upgrades.md#dismissing-agents) in Economy and Upgrades, after the Player confirms the Agents it names.
 
-A button is enabled only when pressing it would succeed with the current selection, and is disabled otherwise. It would succeed when the engine would accept the Player action it makes, e.g. Hire is disabled while money is below `hire_cost` or the Agent cap is reached, and Dismiss while a selected Agent is not on Standby and [At assignment](../../mechanics/domain-model.md#agency-and-agents). E.g., with agent-1 on Contracting and agent-5 on Standby selected, only Standby is enabled, because an Agent on Contracting can be assigned only to Standby, under [Assigning Agents](../../mechanics/agents-spec.md#assigning-agents) in Agents, and with an Agent [In transit](../../mechanics/domain-model.md#agency-and-agents) among the selected ones, every button of Assign to and Dismiss is disabled.
+A button is enabled only when pressing it would succeed with the current selection, and is disabled otherwise. It would succeed when the engine would accept the Player action it makes, as [Action preview](../../foundation/player-api.md#action-preview) in [Player API](../../foundation/engine-contract.md#api-surfaces) reports it for that action with the current selection, so that no button repeats a precondition of the action, e.g. Hire is disabled while money is below `hire_cost` or the Agent cap is reached, and Dismiss while a selected Agent is not on Standby and [At assignment](../../mechanics/domain-model.md#agency-and-agents). E.g., with agent-1 on Contracting and agent-5 on Standby selected, only Standby is enabled, because an Agent on Contracting can be assigned only to Standby, under [Assigning Agents](../../mechanics/agents-spec.md#assigning-agents) in Agents, and with an Agent [In transit](../../mechanics/domain-model.md#agency-and-agents) among the selected ones, every button of Assign to and Dismiss is disabled.
 
 # Filters
 
@@ -54,7 +54,7 @@ In base and Away split the Serving Agents, so their counts add up to the count o
 
 The Assignment filter after each button of Assign to is a square button holding a funnel icon, drawn as on while it is on. At most one is on at a time: turning one on turns off the one that was on, and pressing the one that is on turns it off. No Assignment filter is on whenever the Agents View opens.
 
-While an Assignment filter is on, the table keeps showing every Agent its row filter shows, but only the Agents that its button would succeed with if that Agent alone were selected can be selected. E.g., the Contracting Assignment filter leaves selectable only the Agents on Standby or Training, At assignment, that are Fit for work, and the Standby Assignment filter leaves selectable also the Agents on Contracting or an Investigation, At assignment.
+While an Assignment filter is on, the table keeps showing every Agent its row filter shows, but only the Agents that its button would succeed with if that Agent alone were selected can be selected, as Action preview reports it for `assignAgents` with that Agent alone and that Assignment. E.g., the Contracting Assignment filter leaves selectable only the Agents on Standby or Training, At assignment, that are Fit for work, and the Standby Assignment filter leaves selectable also the Agents on Contracting or an Investigation, At assignment.
 
 While no Assignment filter is on, every shown Serving Agent can be selected, and each button is enabled or disabled by the whole selection, under [Header](#header). E.g., selecting an Agent on Contracting disables Contracting and Training, and selecting an Agent In transit disables every button of Assign to and Dismiss.
 
@@ -75,7 +75,7 @@ A row whose Agent cannot be selected, under [Filters](#filters), has its checkbo
 5. **Already on Standby, Contracting, or Training:** the Assignment filter that is on is for the Assignment it has.
 6. **Too exhausted:** it is not [Fit for work](../../mechanics/agents-spec.md#assignments) and the Assignment filter that is on is for Contracting or Training.
 7. **Training full:** the Training Assignment filter is on and the [Training cap](../../mechanics/economy-and-upgrades.md#glossary) has no place left.
-8. **Otherwise:** the message of the engine's rejection.
+8. **Otherwise:** the message of the rejection that Action preview reports.
 
 # Memorial
 

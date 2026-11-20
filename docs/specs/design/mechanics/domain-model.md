@@ -54,7 +54,7 @@ The work the Agency discovers and undertakes. [Investigations](investigations.md
 | Current team | The Agents currently assigned to a given Investigation or Mission. |  |
 | Investigation progress | The work a team has done on an Investigation so far, counted in progress points. |  |
 | Progress point | The unit in which Investigation progress, and the work a Lead takes to investigate, are counted. |  |
-| Lead availability | Whether a Lead may be investigated, as far as its prerequisites, its own earlier results, and its Faction allow. |  |
+| Lead availability | Whether a Lead may be investigated now, as far as its discovery, its own earlier results, and its Faction allow. |  |
 
 ## Combat
 

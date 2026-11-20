@@ -30,7 +30,7 @@ Mechanics specifications own the player-facing game systems: their rules, transi
 
 ## Leads and Progression
 
-[Leads and Progression](leads-and-progression.md) answers _what becomes available, and when?_ It owns what a Lead describes, Lead prerequisites, Lead availability, and the effect of completing a Lead, separately from the Investigations that pursue it.
+[Leads and Progression](leads-and-progression.md) answers _what becomes available, and when?_ It owns what a Lead describes, Lead discovery, Lead availability, and the effect of completing a Lead, separately from the Investigations that pursue it.
 
 ## Investigations
 

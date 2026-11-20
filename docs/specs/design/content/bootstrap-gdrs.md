@@ -119,7 +119,7 @@ The Leads of each Faction form one chain of eight tiers. In each tier a locate L
 
 Every locate Lead of tiers 1 to 7 has `investigate_again` `always`; `locate_<faction>_hq` has the default for a Lead that creates a Mission site, `until_mission_won`; and every Lead that creates no Mission site has the default `never`, under [Lead availability](../mechanics/leads-and-progression.md#lead-availability).
 
-Each Lead of a Faction references that Faction, e.g. `red_dawn`, explicitly through its `faction` property, and every Lead names its prerequisite Leads and the MissionSiteArchetype it creates by GDR identifier, so no relationship is inferred from identifier text under [References](../foundation/campaign-instances.md#references) in Campaign Instances.
+Each Lead of a Faction references that Faction, e.g. `red_dawn`, explicitly through its `faction` property, and every Lead names every GDR its `discovered_when` reads, and the MissionSiteArchetype it creates, if any, by GDR identifier, so no relationship is inferred from identifier text under [References](../foundation/campaign-instances.md#references) in Campaign Instances.
 
 ## Investigations GDRs
 
