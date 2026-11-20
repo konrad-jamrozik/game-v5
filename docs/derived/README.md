@@ -115,7 +115,7 @@ These informative views are derived from the registered Markdown specifications.
 
 | ID | Document | Owns |
 | --- | --- | --- |
-| BASICAI | [Basic Autopilot AI](../specs/design/autopilot-ais/basic-autopilot-ai.md) | The goals the Basic Autopilot AI pursues, how it prioritizes them within a Turn, and what it deliberately leaves alone. |
+| BASICAI | [Basic Autopilot AI](../specs/design/autopilot-ais/basic-autopilot-ai.md) | The goals the Basic Autopilot AI pursues, how it prioritizes them within a Turn, what it deliberately leaves alone, and the Tuning parameters it is built with. |
 
 ## Mandatory
 

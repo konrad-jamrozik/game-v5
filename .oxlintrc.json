@@ -8,7 +8,15 @@
   "options": {
     "typeAware": true
   },
-  "ignorePatterns": ["node_modules", "dist", "coverage", ".claude/worktrees", "lib/globe", "tools/gdr-balance-bench"],
+  "ignorePatterns": [
+    "node_modules",
+    "dist",
+    "coverage",
+    ".claude/worktrees",
+    "lib/globe",
+    "tools/gdr-balance-bench",
+    "tools/autopilot-bench"
+  ],
   "rules": {
     "import/no-unassigned-import": ["error", { "allow": ["**/*.css"] }],
     "typescript/no-explicit-any": "error",

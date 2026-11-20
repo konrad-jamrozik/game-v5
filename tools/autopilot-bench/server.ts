@@ -1,0 +1,366 @@
+/**
+ * Local server of the Autopilot Bench.
+ *
+ *   node tools/autopilot-bench/server.ts [--impl <game-v5-impl-web clone>] [--port <number>]
+ *
+ * It serves the bench page at http://127.0.0.1:<port>/ and plays Campaigns with the Basic Autopilot AI of the
+ * Implementation clone, built with the parameters the page sends. Campaigns are played only when the page asks: a
+ * launch plays new Campaigns up to a Turn, and Play plays more Turns of existing ones. Everything else only reads.
+ * The Campaigns live in this process, so they last until the server stops.
+ */
+import http from 'node:http'
+import os from 'node:os'
+import fs from 'node:fs'
+import path from 'node:path'
+import { Worker } from 'node:worker_threads'
+import { execFileSync } from 'node:child_process'
+
+import type { CampaignStats, FromWorker, ToWorker, UpgradeInfo } from './protocol.ts'
+
+const arg = (name: string, fallback: string) => {
+  const at = process.argv.indexOf(`--${name}`)
+  return at >= 0 && process.argv[at + 1] !== undefined ? process.argv[at + 1]! : fallback
+}
+const HERE = import.meta.dirname
+const SPEC = path.resolve(HERE, '../..')
+const IMPL = path.resolve(arg('impl', path.join(SPEC, '../game-v5-impl-web')))
+const PORT = Number(arg('port', '4718'))
+const THREADS = Math.max(1, os.availableParallelism() - 1)
+const MAX_CAMPAIGNS = 500
+const MAX_TURNS = 100_000
+
+/** One run: the Turns one Play, or the launch, asked a Campaign to play. */
+interface Run {
+  turns: number
+  startTurn: number
+  readonly startedAt: number
+  endedAt: number | null
+  /** The disengagement reason, once the run has ended, e.g. `limitReached` or `campaignEnded`. */
+  reason: string | null
+  detail: string | null
+}
+
+interface Campaign {
+  readonly id: string
+  /** The number the page shows, in launch order. */
+  readonly n: number
+  readonly batch: number
+  readonly seed: string
+  /** The parameters of the Basic Autopilot AI, every one of them, as they were at launch. */
+  readonly params: Record<string, unknown>
+  readonly thread: Thread
+  state: 'starting' | 'running' | 'idle' | 'failed'
+  stats: CampaignStats | null
+  run: Run | null
+  /** The time of every earlier run together, in milliseconds. */
+  priorMs: number
+  /** The Turns of every earlier run together. */
+  priorTurns: number
+  error: string | null
+}
+
+interface Thread {
+  readonly worker: Worker
+  readonly ready: Promise<void>
+  campaigns: number
+}
+
+interface Batch {
+  readonly id: number
+  readonly engine: string
+  readonly createdAt: number
+  readonly threads: Thread[]
+}
+
+const campaigns = new Map<string, Campaign>()
+const batches: Batch[] = []
+let nextCampaign = 1
+
+function engineVersion(): string {
+  try {
+    const git = (...args: string[]) => execFileSync('git', ['-C', IMPL, ...args], { encoding: 'utf8' }).trim()
+    const dirty = git('status', '--porcelain', '--', 'src') === '' ? '' : ', with uncommitted changes under src'
+    return `commit ${git('rev-parse', '--short', 'HEAD')}${dirty}`
+  } catch {
+    return 'unknown commit'
+  }
+}
+
+/** A worker thread, which loads the engine and the AI from the source on disk as it starts. */
+function startThread(onReady?: (m: Extract<FromWorker, { type: 'ready' }>) => void): Thread {
+  const worker = new Worker(path.join(HERE, 'worker.ts'), { workerData: { impl: IMPL } })
+  const ready = new Promise<void>((resolve, reject) => {
+    worker.on('message', (m: FromWorker) => {
+      if (m.type === 'ready') {
+        onReady?.(m)
+        resolve()
+      } else if (m.type === 'error') {
+        reject(new Error(m.message))
+      } else {
+        onMessage(m)
+      }
+    })
+    worker.on('error', (e) => {
+      console.error('engine worker failed:', e.message)
+      reject(e)
+      for (const c of campaigns.values()) {
+        if (c.thread.worker === worker) {
+          fail(c, `The worker thread failed: ${e.message}`)
+        }
+      }
+    })
+  })
+  ready.catch(() => {})
+  return { worker, ready, campaigns: 0 }
+}
+
+function fail(c: Campaign, message: string) {
+  c.state = 'failed'
+  c.error = message
+  if (c.run !== null && c.run.endedAt === null) {
+    c.run.endedAt = Date.now()
+    c.run.reason = 'failed'
+  }
+}
+
+function onMessage(m: FromWorker) {
+  if (m.type === 'failed') {
+    const c = m.id === null ? undefined : campaigns.get(m.id)
+    if (c !== undefined) {
+      fail(c, m.message)
+    } else {
+      console.error(m.message)
+    }
+    return
+  }
+  if (m.type !== 'stats' && m.type !== 'done') {
+    return
+  }
+  const c = campaigns.get(m.id)
+  if (c === undefined) {
+    return
+  }
+  c.stats = m.stats
+  if (c.state === 'starting') {
+    startLaunchRun(c)
+    return
+  }
+  if (m.type === 'done' && c.run !== null) {
+    c.run.endedAt = Date.now()
+    c.run.reason = m.reason
+    c.run.detail = m.detail
+    c.state = m.reason === 'aiFailed' ? 'failed' : 'idle'
+    if (m.reason === 'aiFailed') {
+      c.error = m.detail ?? 'The Autopilot AI failed.'
+    }
+  }
+}
+
+function send(c: Campaign, message: ToWorker) {
+  c.thread.worker.postMessage(message)
+}
+
+/** Starts a run of `turns` Turns of an idle Campaign, unless it has ended. */
+function play(c: Campaign, turns: number) {
+  if (c.state !== 'idle' || c.stats === null || c.stats.ending !== null || turns < 1) {
+    return
+  }
+  if (c.run !== null && c.run.endedAt !== null) {
+    c.priorMs += c.run.endedAt - c.run.startedAt
+    c.priorTurns += c.stats.turn - c.run.startTurn
+  }
+  c.run = { turns, startTurn: c.stats.turn, startedAt: Date.now(), endedAt: null, reason: null, detail: null }
+  c.state = 'running'
+  send(c, { type: 'play', id: c.id, turns })
+}
+
+async function launch(count: number, untilTurn: number, seedPrefix: string, params: Record<string, unknown>) {
+  const threads = Array.from({ length: Math.min(count, THREADS) }, () => startThread())
+  const batch: Batch = { id: batches.length + 1, engine: engineVersion(), createdAt: Date.now(), threads }
+  batches.push(batch)
+  const created: Campaign[] = []
+  for (let i = 0; i < count; i += 1) {
+    const thread = threads[i % threads.length]!
+    thread.campaigns += 1
+    const c: Campaign = {
+      id: `c${nextCampaign}`,
+      n: nextCampaign,
+      batch: batch.id,
+      seed: `${seedPrefix}-${i + 1}`,
+      params,
+      thread,
+      state: 'starting',
+      stats: null,
+      // The launch's run starts at once, so its time includes starting the engine and creating the Campaign.
+      run: { turns: untilTurn - 1, startTurn: 1, startedAt: Date.now(), endedAt: null, reason: null, detail: null },
+      priorMs: 0,
+      priorTurns: 0,
+      error: null,
+    }
+    nextCampaign += 1
+    campaigns.set(c.id, c)
+    created.push(c)
+  }
+  for (const c of created) {
+    c.thread.ready.then(
+      () => send(c, { type: 'create', id: c.id, seed: c.seed, params }),
+      (e: unknown) => fail(c, `The engine did not start: ${e instanceof Error ? e.message : String(e)}`),
+    )
+  }
+}
+
+/** The launch run of a Campaign that has just been created: it plays up to the Turn the launch asked for. */
+function startLaunchRun(c: Campaign) {
+  const run = c.run!
+  const turn = c.stats!.turn
+  c.run = { ...run, startTurn: turn, turns: Math.max(0, run.turns + run.startTurn - turn) }
+  if (c.run.turns < 1) {
+    c.run.endedAt = Date.now()
+    c.run.reason = 'limitReached'
+    c.state = 'idle'
+    return
+  }
+  c.state = 'running'
+  send(c, { type: 'play', id: c.id, turns: c.run.turns })
+}
+
+function remove(c: Campaign) {
+  send(c, { type: 'remove', id: c.id })
+  campaigns.delete(c.id)
+  c.thread.campaigns -= 1
+  if (c.thread.campaigns === 0) {
+    void c.thread.worker.terminate()
+  }
+}
+
+/* ---------- HTTP ---------- */
+
+function body(req: http.IncomingMessage): Promise<any> {
+  return new Promise((resolve, reject) => {
+    const chunks: Buffer[] = []
+    req.on('data', (c: Buffer) => chunks.push(c))
+    req.on('end', () => {
+      try {
+        resolve(JSON.parse(Buffer.concat(chunks).toString('utf8') || '{}'))
+      } catch (e) {
+        reject(e)
+      }
+    })
+    req.on('error', reject)
+  })
+}
+
+const json = (res: http.ServerResponse, status: number, value: unknown) => {
+  res.writeHead(status, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' })
+  res.end(JSON.stringify(value))
+}
+
+/** The engine's defaults and Upgrades, from a worker thread started for this alone, so they are read from disk. */
+function readInfo(): Promise<{ defaults: Record<string, unknown>; upgrades: readonly UpgradeInfo[] }> {
+  return new Promise((resolve, reject) => {
+    const thread = startThread((m) => resolve({ defaults: m.defaults, upgrades: m.upgrades }))
+    thread.ready.then(
+      () => void thread.worker.terminate(),
+      (e: unknown) => {
+        void thread.worker.terminate()
+        reject(e)
+      },
+    )
+  })
+}
+
+function view(c: Campaign) {
+  return {
+    id: c.id,
+    n: c.n,
+    batch: c.batch,
+    seed: c.seed,
+    params: c.params,
+    state: c.state,
+    stats: c.stats,
+    run: c.run,
+    priorMs: c.priorMs,
+    priorTurns: c.priorTurns,
+    error: c.error,
+  }
+}
+
+const selected = (ids: unknown): Campaign[] =>
+  (Array.isArray(ids) ? ids : []).flatMap((id) => {
+    const c = campaigns.get(String(id))
+    return c === undefined ? [] : [c]
+  })
+
+const whole = (value: unknown, min: number, max: number): number | null =>
+  typeof value === 'number' && Number.isInteger(value) && value >= min && value <= max ? value : null
+
+const server = http.createServer((req, res) => {
+  void (async () => {
+    const url = (req.url ?? '/').split('?')[0]
+    if (req.method === 'GET' && url === '/') {
+      res.writeHead(200, { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' })
+      res.end(fs.readFileSync(path.join(HERE, 'index.html'), 'utf8'))
+    } else if (req.method === 'GET' && url === '/api/info') {
+      const info = await readInfo().catch((e: unknown) => ({ engineError: e instanceof Error ? e.message : String(e) }))
+      json(res, 200, { ...info, engine: engineVersion(), impl: IMPL, threads: THREADS })
+    } else if (req.method === 'GET' && url === '/api/state') {
+      json(res, 200, {
+        now: Date.now(),
+        campaigns: [...campaigns.values()].map(view),
+        batches: batches.map((b) => ({ id: b.id, engine: b.engine, createdAt: b.createdAt })),
+      })
+    } else if (req.method === 'POST' && url === '/api/launch') {
+      const b = await body(req)
+      const count = whole(b.count, 1, MAX_CAMPAIGNS - campaigns.size)
+      const untilTurn = whole(b.untilTurn, 1, MAX_TURNS)
+      const seedPrefix = typeof b.seedPrefix === 'string' && b.seedPrefix.trim() !== '' ? b.seedPrefix.trim() : 'seed'
+      if (count === null || untilTurn === null || typeof b.params !== 'object' || b.params === null) {
+        json(res, 400, {
+          error: `Give 1 to ${MAX_CAMPAIGNS - campaigns.size} Campaigns, a Turn of 1 to ${MAX_TURNS}, and the parameters.`,
+        })
+        return
+      }
+      await launch(count, untilTurn, seedPrefix, b.params as Record<string, unknown>)
+      json(res, 200, { ok: true })
+    } else if (req.method === 'POST' && url === '/api/play') {
+      const b = await body(req)
+      const turns = whole(b.turns, 1, MAX_TURNS)
+      if (turns === null) {
+        json(res, 400, { error: `Give 1 to ${MAX_TURNS} Turns.` })
+        return
+      }
+      for (const c of selected(b.ids)) {
+        play(c, turns)
+      }
+      json(res, 200, { ok: true })
+    } else if (req.method === 'POST' && url === '/api/stop') {
+      for (const c of selected((await body(req)).ids)) {
+        if (c.state === 'running') {
+          send(c, { type: 'stop', id: c.id })
+        }
+      }
+      json(res, 200, { ok: true })
+    } else if (req.method === 'POST' && url === '/api/remove') {
+      for (const c of selected((await body(req)).ids)) {
+        remove(c)
+      }
+      json(res, 200, { ok: true })
+    } else {
+      json(res, 404, { error: 'not found' })
+    }
+  })().catch((e: unknown) => {
+    const message = e instanceof Error ? e.message : String(e)
+    console.error(message)
+    if (!res.headersSent) {
+      json(res, 500, { error: message })
+    } else {
+      res.end()
+    }
+  })
+})
+
+server.listen(PORT, '127.0.0.1', () => {
+  console.log(`Autopilot Bench: http://127.0.0.1:${PORT}/`)
+  console.log(`  engine  ${IMPL} (${engineVersion()}), up to ${THREADS} worker threads per launch`)
+  console.log('Each launch starts the engine again from the source on disk; its Campaigns keep that engine.')
+})

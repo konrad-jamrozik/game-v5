@@ -1,0 +1,1027 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Autopilot Bench</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    />
+    <style>
+      /* The look of the GDR Balance Bench: the game's own Visual Design tokens, in one dark look on purpose. */
+      :root {
+        color-scheme: dark;
+        --bg: #0d0d0b;
+        --surface: #151512;
+        --raised: #22211c;
+        --divider: #2b2a24;
+        --border: #3a382f;
+        --text: #e8e4d8;
+        --text2: #b8b3a6;
+        --muted: #9c978a;
+        --accent: #ff7a1a;
+        --accent-dim: #7a4a22;
+        --accent-text: #ff8a33;
+        --on-accent: #1a0b00;
+        --positive: #b7c77a;
+        --warning: #e3c14b;
+        --danger: #ff7f78;
+        --notice: #8fb8d6;
+        --band: rgba(232, 228, 216, 0.035);
+        --head: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+        --body: 'Barlow', 'Segoe UI', system-ui, sans-serif;
+        --mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font: 15px/1.5 var(--body);
+      }
+      .wrap {
+        max-width: 2200px;
+        margin: 0 auto;
+        padding-block: 20px 80px;
+        padding-left: max(16px, env(safe-area-inset-left, 0px));
+        padding-right: max(16px, env(safe-area-inset-right, 0px));
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
+      }
+      h1,
+      h2,
+      h3,
+      th,
+      .lbl,
+      button,
+      nav a {
+        font-family: var(--head);
+        text-transform: uppercase;
+      }
+      h1 {
+        font-size: 34px;
+        letter-spacing: 0.04em;
+        margin: 0;
+        line-height: 1.1;
+      }
+      h2 {
+        font-size: 22px;
+        letter-spacing: 0.08em;
+        margin: 0;
+      }
+      h3 {
+        font-size: 16px;
+        letter-spacing: 0.08em;
+        margin: 0;
+        color: var(--text2);
+      }
+      p {
+        margin: 0;
+        color: var(--text2);
+        max-width: 68ch;
+      }
+      code,
+      input,
+      td {
+        font-family: var(--mono);
+        font-variant-numeric: tabular-nums;
+      }
+      code {
+        font-size: 13px;
+        color: var(--text);
+      }
+      .intro {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .bar {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        background: var(--bg);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 18px;
+        align-items: center;
+        padding-block: 10px;
+      }
+      nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 14px;
+        flex: 1 1 auto;
+      }
+      nav a {
+        color: var(--text2);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 14px;
+        letter-spacing: 0.1em;
+      }
+      nav a:hover,
+      nav a:focus-visible {
+        color: var(--accent-text);
+      }
+      .acts {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      #summary,
+      #count {
+        font-family: var(--mono);
+        font-size: 13px;
+        color: var(--muted);
+      }
+      #summary.on,
+      #count.on {
+        color: var(--accent-text);
+      }
+      button {
+        font-weight: 600;
+        font-size: 14px;
+        letter-spacing: 0.1em;
+        background: var(--raised);
+        color: var(--text);
+        border: 1px solid var(--border);
+        padding: 5px 12px;
+        cursor: pointer;
+      }
+      button.pri {
+        background: var(--accent);
+        color: var(--on-accent);
+        border-color: var(--accent);
+      }
+      button:hover {
+        border-color: var(--text2);
+      }
+      button:disabled {
+        opacity: 0.4;
+        cursor: default;
+      }
+      :focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 1px;
+      }
+      section {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        scroll-margin-top: 70px;
+      }
+      .shead {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        border-top: 1px solid var(--border);
+        padding-top: 14px;
+      }
+      .cols {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+      }
+      @media (max-width: 1500px) {
+        .cols {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+      @media (max-width: 800px) {
+        .cols {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
+      .panel {
+        background: var(--surface);
+        border-top: 1px solid var(--border);
+        padding: 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        min-width: 0;
+      }
+      .panel.read {
+        border-top-color: var(--accent-dim);
+      }
+      .kv {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        padding: 5px 0;
+        border-bottom: 1px solid var(--raised);
+      }
+      .kv:last-child {
+        border-bottom: 0;
+      }
+      .k {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+      }
+      .k code {
+        overflow-wrap: anywhere;
+      }
+      .k small,
+      .note {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.35;
+      }
+      input {
+        background: var(--bg);
+        color: var(--text);
+        border: 1px solid var(--border);
+        padding: 4px 6px;
+        font-size: 13px;
+        width: 84px;
+        text-align: right;
+        flex: none;
+      }
+      input.wide {
+        width: 140px;
+        text-align: left;
+      }
+      input.chg {
+        border-color: var(--accent);
+        color: var(--accent-text);
+      }
+      .ctl {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 18px;
+        align-items: flex-end;
+      }
+      .ctl label {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+      .lbl {
+        font-weight: 600;
+        font-size: 13px;
+        letter-spacing: 0.12em;
+        color: var(--muted);
+      }
+      .tw {
+        overflow-x: auto;
+        min-width: 0;
+      }
+      table {
+        border-collapse: collapse;
+        font-size: 13px;
+        width: 100%;
+      }
+      th {
+        font-weight: 600;
+        font-size: 13px;
+        letter-spacing: 0.1em;
+        color: var(--muted);
+        text-align: right;
+        padding: 2px 6px;
+        white-space: nowrap;
+        vertical-align: bottom;
+      }
+      thead tr:last-child th {
+        border-bottom: 1px solid var(--border);
+      }
+      th.left,
+      td.left {
+        text-align: left;
+      }
+      td {
+        padding: 2px 6px;
+        text-align: right;
+        white-space: nowrap;
+      }
+      /* One Campaign is three rows, its three layers; the cells left of them span all three. */
+      tbody tr.l3 td,
+      td.span {
+        border-bottom: 1px solid var(--border);
+      }
+      td.span {
+        vertical-align: top;
+        padding-block: 5px;
+      }
+      tbody tr.l2 td:not(.span),
+      thead tr.l2 th:not(.span) {
+        background-image: linear-gradient(var(--band), var(--band));
+      }
+      th.layer,
+      td.layer {
+        font-family: var(--head);
+        font-weight: 600;
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        color: var(--muted);
+        text-transform: uppercase;
+        text-align: left;
+        padding-right: 2px;
+      }
+      td.name {
+        font-family: var(--body);
+        color: var(--text);
+      }
+      td.params {
+        font-size: 12px;
+        color: var(--text2);
+        white-space: normal;
+        min-width: 150px;
+        max-width: 260px;
+      }
+      td.params b {
+        color: var(--accent-text);
+        font-weight: 500;
+      }
+      td.acts {
+        white-space: normal;
+        width: 1%;
+      }
+      td.acts button {
+        padding: 1px 8px;
+        font-size: 12px;
+        margin: 0 4px 4px 0;
+      }
+      .sub {
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .meter {
+        display: inline-block;
+        width: 90px;
+        height: 8px;
+        background: var(--divider);
+        vertical-align: middle;
+        margin-right: 8px;
+      }
+      .meter i {
+        display: block;
+        height: 100%;
+        background: var(--accent);
+      }
+      .meter i.done {
+        background: var(--positive);
+      }
+      .good {
+        color: var(--positive);
+      }
+      .warn {
+        color: var(--warning);
+      }
+      .bad {
+        color: var(--danger);
+      }
+      .dim {
+        color: var(--muted);
+      }
+      .err {
+        color: var(--danger);
+        white-space: normal;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="intro">
+        <h1>Autopilot Bench</h1>
+        <p>
+          Plays whole Campaigns with the Basic Autopilot AI of the <code>game-v5-impl-web</code> clone, built with the
+          parameters below. Campaigns are played only when a button here asks for it: Launch plays new Campaigns up to a
+          Turn, and Play plays more Turns of those that exist. Each Campaign keeps the parameters and the engine it was
+          launched with, and lives until the server stops.
+        </p>
+        <p class="note" id="engine"></p>
+      </div>
+      <div class="bar">
+        <nav><a href="#params">Parameters</a><a href="#campaigns">Campaigns</a></nav>
+        <div class="acts"><span id="count">0 changed</span><button id="reset">Reset parameters</button></div>
+      </div>
+      <div id="app" style="display: contents"></div>
+    </div>
+
+    <script>
+      'use strict'
+      // Every known parameter of the Basic Autopilot AI, in the groups the page shows them in. A parameter the engine
+      // has that is not listed here appears under Other, without a description, and is passed to the AI as edited.
+      const GROUPS = [
+        {
+          title: 'Hiring',
+          params: [
+            [
+              'baseRoster',
+              'roster',
+              'Target roster size before any Upgrade is bought. While the roster is below the target, the AI hires before it buys anything else, and buys Agent cap when the cap is in the way.',
+              1,
+            ],
+            [
+              'rosterPerUpgrade',
+              'roster/upg',
+              'Agents added to the target roster for each Upgrade bought other than a Cap Upgrade. Higher hires faster as the Agency grows.',
+              1,
+            ],
+          ],
+        },
+        {
+          title: 'Missions',
+          params: [
+            [
+              'combatMarginPct',
+              'margin',
+              'A team is deployed only when its Combat rating exceeds this % of the Enemies’ Combat rating. The same test decides whether a Lead whose Mission site it could not win is investigated.',
+              1,
+            ],
+            [
+              'enemiesPerAgent',
+              'enemies/agent',
+              'A team needs at least one Agent per this many Enemies, e.g. 2 means at least 6 Agents against 12 Enemies. May be fractional.',
+              0.5,
+            ],
+          ],
+        },
+        {
+          title: 'Investigations',
+          params: [
+            ['baseInvestigators', 'inv', 'Agents investigating Leads, before the roster grows.', 1],
+            [
+              'investigatorsPerRoster',
+              'inv per',
+              'One more investigating Agent for each this many Agents in the roster.',
+              1,
+            ],
+          ],
+        },
+        {
+          title: 'Reserve and money',
+          params: [
+            [
+              'reservePct',
+              'reserve',
+              'The Agent reserve: % of the roster kept Rested on Standby or Training for the next Mission site.',
+              1,
+            ],
+            [
+              'savingsFloorTurns',
+              'floor',
+              'The Savings floor, in Turns of half the projected upkeep. Nothing is bought below it.',
+              1,
+            ],
+            [
+              'incomeTargetPct',
+              'income',
+              'Agents go to Contracting until Expected income is this % of projected upkeep.',
+              1,
+            ],
+          ],
+        },
+        {
+          title: 'Work',
+          params: [
+            [
+              'contractingSharePct',
+              'contract',
+              'At least this % of the roster is kept on Contracting, even once the income target is met; 0 leaves only the income target.',
+              1,
+            ],
+            [
+              'trainingSharePct',
+              'train',
+              'At most this % of the roster is put on Training; 100 leaves only the Training cap as the limit.',
+              1,
+            ],
+            [
+              'recallExhaustion',
+              'recall',
+              'An Agent on Contracting with more exhaustion than this is recalled to Standby to rest.',
+              1,
+            ],
+          ],
+        },
+        {
+          title: 'Upgrades',
+          params: [
+            ['transportCapPct', 'transport', 'Transport cap is bought while it is below this % of the roster.', 1],
+            ['trainingCapPct', 'training cap', 'Training cap is bought while it is below this % of the roster.', 1],
+          ],
+          weights: true,
+        },
+      ]
+      const KNOWN = new Map(GROUPS.flatMap((g) => g.params.map((p) => [p[0], p])))
+      const STORE = 'autopilot-bench'
+
+      let INFO = null
+      let DEFAULTS = {}
+      let UPGRADES = []
+      let edited = {}
+      let weights = {}
+      let launchForm = { count: 10, untilTurn: 200, seedPrefix: 'seed' }
+      let moreTurns = 50
+      let STATE = { now: Date.now(), campaigns: [], batches: [] }
+      let clockOffset = 0
+
+      const $ = (id) => document.getElementById(id)
+      const esc = (s) =>
+        String(s).replace(
+          /[&<>"']/g,
+          (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c],
+        )
+      const fmt = (n) => (typeof n === 'number' ? n.toLocaleString('en-US') : '—')
+      const fmt1 = (n) => (typeof n === 'number' ? n.toLocaleString('en-US', { maximumFractionDigits: 1 }) : '—')
+      const abbr = (name) =>
+        name
+          .split(/\s+/)
+          .map((w) => w[0])
+          .join('')
+          .toUpperCase()
+      const isCap = (u) => u.effect.endsWith('_cap')
+
+      function save() {
+        try {
+          localStorage.setItem(STORE, JSON.stringify({ edited, weights, launchForm, moreTurns }))
+        } catch {}
+      }
+      function restore() {
+        try {
+          const s = JSON.parse(localStorage.getItem(STORE) ?? 'null')
+          if (s) {
+            edited = s.edited ?? {}
+            weights = s.weights ?? {}
+            launchForm = { ...launchForm, ...(s.launchForm ?? {}) }
+            moreTurns = s.moreTurns ?? moreTurns
+          }
+        } catch {}
+      }
+
+      /** The parameters a launch sends: every default of the engine, with the edits on this page. */
+      function params() {
+        const out = { ...DEFAULTS, ...edited }
+        out.upgradeWeights = { ...(DEFAULTS.upgradeWeights ?? {}), ...weights }
+        return out
+      }
+
+      /** What differs in `p` from the engine's defaults, shortly, e.g. "reserve 30 · margin 150". */
+      function diffText(p) {
+        const parts = []
+        for (const [k, v] of Object.entries(p)) {
+          if (k === 'upgradeWeights') {
+            for (const u of UPGRADES) {
+              const w = v?.[u.id] ?? 1
+              const d = DEFAULTS.upgradeWeights?.[u.id] ?? 1
+              if (w !== d) {
+                parts.push(`w ${esc(abbr(u.name))} <b>${esc(w)}</b>`)
+              }
+            }
+          } else if (JSON.stringify(v) !== JSON.stringify(DEFAULTS[k])) {
+            parts.push(`${esc(KNOWN.get(k)?.[1] ?? k)} <b>${esc(v)}</b>`)
+          }
+        }
+        return parts.length === 0 ? '<span class="dim">defaults</span>' : parts.join(' · ')
+      }
+
+      /* ---------- Parameters ---------- */
+
+      function numInput(id, value, changed, step) {
+        return `<input type="number" id="${id}" value="${esc(value)}" step="${step}" min="0"${changed ? ' class="chg"' : ''} />`
+      }
+
+      function renderParams() {
+        const other = Object.keys(DEFAULTS).filter((k) => k !== 'upgradeWeights' && !KNOWN.has(k))
+        const groups =
+          other.length === 0 ? GROUPS : [...GROUPS, { title: 'Other', params: other.map((k) => [k, k, '', 1]) }]
+        const panels = groups.map((g) => {
+          const rows = g.params
+            .filter(([k]) => k in DEFAULTS)
+            .map(
+              ([k, , desc, step]) =>
+                `<div class="kv"><div class="k"><code>${esc(k)}</code><small>${esc(desc)}</small></div>${numInput('p_' + k, edited[k] ?? DEFAULTS[k], k in edited, step)}</div>`,
+            )
+          if (g.weights) {
+            for (const u of UPGRADES.filter((u) => !isCap(u))) {
+              const d = DEFAULTS.upgradeWeights?.[u.id] ?? 1
+              rows.push(
+                `<div class="kv"><div class="k"><code>weight ${esc(u.id)}</code><small>${esc(u.name)}: its weight in the rotation among Upgrades other than Cap Upgrades; 2 buys it about twice as often as weight 1, 0 never.</small></div>${numInput('w_' + u.id, weights[u.id] ?? d, u.id in weights, 0.5)}</div>`,
+              )
+            }
+          }
+          return `<div class="panel"><h3>${esc(g.title)}</h3><div>${rows.join('')}</div></div>`
+        })
+        return `<section id="params"><div class="shead"><h2>Parameters</h2><p>The thresholds of the Basic Autopilot AI. A launch uses the values as they are here; the defaults are the engine's own, <code>BASIC_AI_THRESHOLDS</code>.</p></div><div class="cols">${panels.join('')}</div></section>`
+      }
+
+      function bindParams() {
+        for (const k of Object.keys(DEFAULTS)) {
+          const el = $('p_' + k)
+          el?.addEventListener('input', () => {
+            const v = Number(el.value)
+            if (el.value === '' || !Number.isFinite(v) || v === DEFAULTS[k]) {
+              delete edited[k]
+            } else {
+              edited[k] = v
+            }
+            el.classList.toggle('chg', k in edited)
+            changed()
+          })
+        }
+        for (const u of UPGRADES) {
+          const el = $('w_' + u.id)
+          el?.addEventListener('input', () => {
+            const v = Number(el.value)
+            if (el.value === '' || !Number.isFinite(v) || v === (DEFAULTS.upgradeWeights?.[u.id] ?? 1)) {
+              delete weights[u.id]
+            } else {
+              weights[u.id] = v
+            }
+            el.classList.toggle('chg', u.id in weights)
+            changed()
+          })
+        }
+      }
+
+      function changed() {
+        const n = Object.keys(edited).length + Object.keys(weights).length
+        $('count').textContent = `${n} changed`
+        $('count').classList.toggle('on', n > 0)
+        $('launchParams').innerHTML = diffText(params())
+        save()
+      }
+
+      /* ---------- Campaigns ---------- */
+
+      const RUN_LABEL = {
+        limitReached: 'done',
+        campaignEnded: 'ended',
+        disengagedByController: 'stopped',
+        aiFailed: 'AI failed',
+        failed: 'failed',
+      }
+
+      function renderCampaignsSection() {
+        return `<section id="campaigns"><div class="shead"><h2>Campaigns</h2><p>Each row is one Campaign at its Current Turn, in three layers: the Agency, its strength, and its Missions. Its parameters are those it was launched with.</p></div>
+  <div class="panel read"><div class="ctl">
+    <label><span class="lbl">Campaigns</span><input type="number" id="l_count" min="1" step="1" value="${esc(launchForm.count)}" /></label>
+    <label><span class="lbl">Until turn</span><input type="number" id="l_until" min="1" step="1" value="${esc(launchForm.untilTurn)}" /></label>
+    <label><span class="lbl">Seed prefix</span><input class="wide" id="l_seed" value="${esc(launchForm.seedPrefix)}" /></label>
+    <button class="pri" id="launch">Launch</button>
+    <span class="note" style="align-self:center">with <span id="launchParams"></span></span>
+  </div>
+  <div class="note">Campaign <i>i</i> of a launch has the Campaign seed <code>&lt;prefix&gt;-&lt;i&gt;</code>, so two launches with the same prefix play the same Campaigns, and differ only by their parameters. The launch plays each Campaign from Turn 1 until the Turn given.</div>
+  <div class="ctl">
+    <label><span class="lbl">More turns</span><input type="number" id="more" min="1" step="1" value="${esc(moreTurns)}" /></label>
+    <button id="playAll">Play more · all</button><button id="stopAll">Stop all</button><button id="removeAll">Remove all</button>
+    <span id="summary" style="align-self:center"></span>
+  </div><span class="err" id="launchErr"></span></div>
+  <div class="panel"><div class="tw"><table id="ct"><thead></thead><tbody></tbody></table></div>
+  <div class="note" id="legend"></div></div></section>`
+      }
+
+      /** The three layers of a Campaign row, each a list of [header, title, cell(stats) → html, colspan]. */
+      function layers() {
+        const factions = STATE.campaigns.find((c) => c.stats)?.stats.factions ?? []
+        const ups = UPGRADES
+        const ml = (m) =>
+          `<span class="good">${m.won}</span> / <span class="bad">${m.lost}</span> / <span class="dim">${m.expired}</span>`
+        const work = (a) =>
+          ['Contracting', 'Training', 'Investigation', 'Standby', 'Recovery', 'Deployed']
+            .map((k) => `${k[0]}${a[k] ?? 0}`)
+            .join(' ')
+        const L1 = [
+          ['Turn', 'The Current Turn', (s) => fmt(s.turn)],
+          [
+            'Outcome',
+            'The Campaign ending, and the Turn it came',
+            (s) =>
+              s.ending === null
+                ? '<span class="dim">playing</span>'
+                : `<span class="${s.ending.ending === 'Victory' ? 'good' : 'bad'}" title="${esc(s.ending.reasons.join(', '))}">${esc(s.ending.ending)} T${s.ending.turn}</span>`,
+          ],
+          ['Panic', 'Panic', (s) => `${(s.panicHundredths / 100).toFixed(1)}%`],
+          ['Money', 'Money', (s) => `<span class="${s.money < 0 ? 'bad' : ''}">${fmt(s.money)}</span>`],
+          ['Funding', 'Funding', (s) => fmt(s.funding)],
+          ['Income', 'Projected income', (s) => fmt(s.projectedIncome)],
+          ['Upkeep', 'Projected upkeep', (s) => fmt(s.projectedUpkeep)],
+          [
+            'Agents',
+            'Serving Agents / Agent cap',
+            (s) => `${fmt(s.agents)}<span class="dim"> / ${fmt(s.agentCap)}</span>`,
+          ],
+          ['Hired', 'Agents hired in total, beyond those the Campaign started with', (s) => fmt(s.hired)],
+          [
+            'Lost',
+            'Agents Killed in total (Dismissed after the slash)',
+            (s) =>
+              `<span class="${s.killed > 0 ? 'bad' : ''}">${fmt(s.killed)}</span>${s.dismissed ? `<span class="dim"> / ${s.dismissed}</span>` : ''}`,
+          ],
+          [
+            'Work',
+            'Serving Agents by Assignment, In transit included: Contracting, Training, Investigation, Standby, Recovery, Deployed',
+            (s) => `<span class="dim">${work(s.assignments)}</span>`,
+            2,
+          ],
+        ]
+        const L2 = [
+          ['CR now', 'Combat rating of every Serving Agent together, as they are now', (s) => fmt(s.ratingNow)],
+          [
+            'CR fresh',
+            'Combat rating of every Serving Agent together at full health and exhaustion 0',
+            (s) => `<span style="color:var(--accent-text)">${fmt(s.ratingFresh)}</span>`,
+          ],
+          ['Skill', 'Mean base skill of the Serving Agents', (s) => fmt1(s.meanSkill)],
+          ['Transp', 'Transport cap', (s) => fmt(s.transportCap)],
+          ['Train', 'Training cap', (s) => fmt(s.trainingCap)],
+          ...ups.map((u) => [abbr(u.name), `${u.name}: acquisitions`, (s) => fmt(s.upgrades[u.id] ?? 0)]),
+        ]
+        const L3 = [
+          [
+            'Response',
+            'Response Missions Won / Lost, and Response Mission sites Expired',
+            (s) => ml(s.missions.Response),
+            2,
+          ],
+          [
+            'Initiative',
+            'Initiative Missions Won / Lost, and Initiative Mission sites Expired',
+            (s) => ml(s.missions.Initiative),
+            2,
+          ],
+          ...factions.map((f, i) => [
+            f.name,
+            `The Won Initiative Mission against ${f.name} with the highest Initiative operation level; ✕ once the Faction is Eliminated`,
+            (s) => {
+              const x = s.factions[i]
+              if (!x) return ''
+              const best =
+                x.best === null
+                  ? '<span class="dim">—</span>'
+                  : `<span class="dim">L${x.best.level ?? '?'}</span> ${esc(x.best.name)}`
+              return `${best}${x.eliminated ? ' <span class="good" title="Eliminated">✕</span>' : ''}`
+            },
+            3,
+          ]),
+          ['Inv', 'Active Investigations', (s) => fmt(s.activeInvestigations)],
+        ]
+        const width = (L) => L.reduce((n, x) => n + (x[3] ?? 1), 0)
+        const n = Math.max(width(L1), width(L2), width(L3))
+        // Pad each layer to the same width, so that its columns line up under its own headers.
+        for (const L of [L1, L2, L3]) {
+          const w = width(L)
+          if (w < n) L.push(['', '', () => '', n - w])
+        }
+        return [L1, L2, L3]
+      }
+
+      let LAYOUT = null
+      let layoutKey = ''
+
+      function renderHead() {
+        const names = ['Agency', 'Strength', 'Missions']
+        const left = `<th class="left span" rowspan="3">#</th><th class="left span" rowspan="3">Parameters</th><th class="left span" rowspan="3">Progress</th><th class="span" rowspan="3">Time</th><th class="span" rowspan="3"></th>`
+        $('ct').tHead.innerHTML = LAYOUT.map(
+          (L, i) =>
+            `<tr class="l${i + 1}">${i === 0 ? left : ''}<th class="layer">${names[i]}</th>${L.map((x) => `<th title="${esc(x[1])}"${x[3] > 1 ? ` colspan="${x[3]}"` : ''}${i === 2 && x[3] === 3 ? ' class="left"' : ''}>${esc(x[0])}</th>`).join('')}</tr>`,
+        ).join('')
+        $('legend').innerHTML =
+          `<b>CR fresh</b> is the Combat rating the same Agents would have at full health and exhaustion 0. Upgrades: ${UPGRADES.map((u) => `${esc(abbr(u.name))} ${esc(u.name)}`).join(' · ')}. Missions: Won / Lost / Expired. Hover a header for its meaning. Time is the latest run's wall-clock time, and the total of every run below it.`
+      }
+
+      const rows = new Map()
+
+      /** The cells of a Campaign, by key, so that only the cells that changed are written again. */
+      function cellsOf(c) {
+        const cells = {}
+        cells.n = `<span class="name" style="font-family:var(--body)">${c.n}</span> <span class="sub">${esc(c.seed)}</span><span class="sub">launch ${c.batch}</span>`
+        cells.params = diffText(c.params) + (c.error ? `<div class="err">${esc(c.error)}</div>` : '')
+        const run = c.run
+        const turn = c.stats?.turn ?? null
+        if (run !== null) {
+          const done = turn === null ? 0 : Math.max(0, turn - run.startTurn)
+          const pct = run.turns > 0 ? Math.min(100, (done / run.turns) * 100) : 100
+          const label =
+            run.endedAt === null
+              ? c.state === 'starting'
+                ? 'starting'
+                : 'playing'
+              : (RUN_LABEL[run.reason] ?? run.reason)
+          cells.progress = `<span class="meter"><i class="${run.endedAt === null ? '' : 'done'}" style="width:${pct.toFixed(1)}%"></i></span>${fmt(done)} / ${fmt(run.turns)} <span class="dim">${pct.toFixed(0)}%</span><span class="sub">${esc(label)}${run.detail ? ': ' + esc(run.detail) : ''}</span>`
+        } else {
+          cells.progress = ''
+        }
+        cells.time = `<span data-t="run"></span><span class="sub" data-t="total"></span>`
+        const ended = c.stats?.ending != null
+        cells.acts =
+          c.state === 'running' || c.state === 'starting'
+            ? `<button data-act="stop">Stop</button>`
+            : `<button data-act="play"${ended || c.state === 'failed' ? ' disabled' : ''}>Play more</button><button data-act="use" title="Load its parameters into the editor">Use</button><button data-act="remove" title="Remove">✕</button>`
+        LAYOUT.forEach((L, i) =>
+          L.forEach((x, j) => {
+            cells[`${i}_${j}`] = c.stats === null ? '' : x[2](c.stats)
+          }),
+        )
+        return cells
+      }
+
+      function rowSkeleton(c) {
+        const tb = $('ct').tBodies[0]
+        const trs = LAYOUT.map((L, i) => {
+          const tr = document.createElement('tr')
+          tr.className = `l${i + 1}`
+          if (i === 0) {
+            tr.innerHTML = `<td class="left span" rowspan="3" data-k="n"></td><td class="params span" rowspan="3" data-k="params"></td><td class="left span" rowspan="3" data-k="progress"></td><td class="span" rowspan="3" data-k="time"></td><td class="acts span" rowspan="3" data-k="acts"></td>`
+          }
+          tr.insertAdjacentHTML(
+            'beforeend',
+            `<td class="layer"></td>${L.map((x, j) => `<td data-k="${i}_${j}"${x[3] > 1 ? ` colspan="${x[3]}"` : ''}${i === 2 && x[3] === 3 ? ' class="left"' : ''}></td>`).join('')}`,
+          )
+          tr.dataset.id = c.id
+          tb.appendChild(tr)
+          return tr
+        })
+        const cells = {}
+        for (const tr of trs) for (const td of tr.querySelectorAll('[data-k]')) cells[td.dataset.k] = td
+        return { trs, cells, cache: {} }
+      }
+
+      function renderCampaigns() {
+        const key = JSON.stringify([
+          UPGRADES.map((u) => u.id),
+          STATE.campaigns.find((c) => c.stats)?.stats.factions.map((f) => f.id) ?? [],
+        ])
+        if (LAYOUT === null || key !== layoutKey) {
+          LAYOUT = layers()
+          layoutKey = key
+          renderHead()
+          $('ct').tBodies[0].innerHTML = ''
+          rows.clear()
+        }
+        const seen = new Set()
+        for (const c of STATE.campaigns) {
+          seen.add(c.id)
+          let row = rows.get(c.id)
+          if (!row) {
+            row = rowSkeleton(c)
+            rows.set(c.id, row)
+          }
+          row.campaign = c
+          const cells = cellsOf(c)
+          for (const [k, html] of Object.entries(cells)) {
+            if (row.cache[k] !== html) {
+              row.cache[k] = html
+              row.cells[k].innerHTML = html
+            }
+          }
+        }
+        for (const [id, row] of rows) {
+          if (!seen.has(id)) {
+            row.trs.forEach((tr) => tr.remove())
+            rows.delete(id)
+          }
+        }
+        tick()
+      }
+
+      const clock = (ms) => {
+        const s = ms / 1000
+        const m = Math.floor(s / 60)
+        return `${m}:${(s - m * 60).toFixed(1).padStart(4, '0')}`
+      }
+
+      /** The run timer and the total timer of every row, and the summary, from the server's timestamps. */
+      function tick() {
+        const now = Date.now() + clockOffset
+        let active = 0
+        let done = 0
+        let wanted = 0
+        let longest = 0
+        for (const row of rows.values()) {
+          const c = row.campaign
+          const run = c.run
+          const runMs = run === null ? 0 : (run.endedAt ?? now) - run.startedAt
+          const el = row.cells.time
+          el.querySelector('[data-t="run"]').textContent = run === null ? '' : clock(runMs)
+          el.querySelector('[data-t="total"]').textContent = `total ${clock(c.priorMs + runMs)}`
+          if (run !== null && run.endedAt === null) {
+            active += 1
+            wanted += run.turns
+            done += Math.max(0, (c.stats?.turn ?? run.startTurn) - run.startTurn)
+            longest = Math.max(longest, runMs)
+          }
+        }
+        const sum = $('summary')
+        sum.textContent =
+          active === 0
+            ? `${rows.size} Campaign${rows.size === 1 ? '' : 's'}, none playing`
+            : `${active} playing · ${fmt(done)} / ${fmt(wanted)} Turns · ${wanted ? ((done / wanted) * 100).toFixed(0) : 100}% · ${clock(longest)}`
+        sum.classList.toggle('on', active > 0)
+      }
+
+      async function post(url, body) {
+        const r = await fetch(url, { method: 'POST', body: JSON.stringify(body) })
+        const v = await r.json().catch(() => ({}))
+        $('launchErr').textContent = r.ok ? '' : (v.error ?? `HTTP ${r.status}`)
+        poll(true)
+      }
+
+      function bindCampaigns() {
+        const num = (id) => Math.floor(Number($(id).value))
+        const remember = () => {
+          launchForm = { count: num('l_count'), untilTurn: num('l_until'), seedPrefix: $('l_seed').value }
+          moreTurns = num('more')
+          save()
+        }
+        for (const id of ['l_count', 'l_until', 'l_seed', 'more']) $(id).addEventListener('input', remember)
+        $('launch').addEventListener('click', () => {
+          remember()
+          post('api/launch', { ...launchForm, params: params() })
+        })
+        const ids = () => STATE.campaigns.map((c) => c.id)
+        $('playAll').addEventListener('click', () => post('api/play', { ids: ids(), turns: num('more') }))
+        $('stopAll').addEventListener('click', () => post('api/stop', { ids: ids() }))
+        $('removeAll').addEventListener('click', () => {
+          if (STATE.campaigns.length === 0 || confirm(`Remove all ${STATE.campaigns.length} Campaigns?`))
+            post('api/remove', { ids: ids() })
+        })
+        // Act on pointerdown, so that a row that is redrawn between press and release does not swallow the press;
+        // a keyboard press still arrives as a click.
+        const act = (e) => {
+          const b = e.target.closest('button[data-act]')
+          if (!b || b.disabled) return
+          const id = b.closest('tr').dataset.id
+          const a = b.dataset.act
+          if (a === 'play') post('api/play', { ids: [id], turns: num('more') })
+          else if (a === 'stop') post('api/stop', { ids: [id] })
+          else if (a === 'remove') post('api/remove', { ids: [id] })
+          else if (a === 'use') useParams(rows.get(id).campaign.params)
+        }
+        $('ct').addEventListener('pointerdown', (e) => e.button === 0 && act(e))
+        $('ct').addEventListener('click', (e) => e.detail === 0 && act(e))
+      }
+
+      function useParams(p) {
+        edited = {}
+        weights = {}
+        for (const [k, v] of Object.entries(p)) {
+          if (k === 'upgradeWeights') {
+            for (const [u, w] of Object.entries(v ?? {})) if (w !== (DEFAULTS.upgradeWeights?.[u] ?? 1)) weights[u] = w
+          } else if (k in DEFAULTS && JSON.stringify(v) !== JSON.stringify(DEFAULTS[k])) {
+            edited[k] = v
+          }
+        }
+        rebuildParams()
+      }
+
+      function rebuildParams() {
+        $('params').outerHTML = renderParams()
+        bindParams()
+        changed()
+      }
+
+      let polling = null
+      async function poll(once) {
+        try {
+          const r = await fetch('api/state', { cache: 'no-store' })
+          STATE = await r.json()
+          clockOffset = STATE.now - Date.now()
+          renderCampaigns()
+        } catch {}
+        if (!once) {
+          const busy = STATE.campaigns.some((c) => c.state === 'running' || c.state === 'starting')
+          polling = setTimeout(() => poll(false), busy ? 400 : 2000)
+        }
+      }
+
+      async function load() {
+        restore()
+        const r = await fetch('api/info', { cache: 'no-store' })
+        INFO = await r.json()
+        $('engine').innerHTML = INFO.engineError
+          ? `<span class="bad">The engine did not start: ${esc(INFO.engineError)}</span>`
+          : `Engine and AI: <code>${esc(INFO.impl)}</code>, ${esc(INFO.engine)}, read again from disk at each launch; up to ${INFO.threads} worker threads per launch.`
+        DEFAULTS = INFO.defaults ?? {}
+        UPGRADES = INFO.upgrades ?? []
+        for (const k of Object.keys(edited)) if (!(k in DEFAULTS)) delete edited[k]
+        $('app').innerHTML = renderParams() + renderCampaignsSection()
+        bindParams()
+        bindCampaigns()
+        changed()
+        $('reset').addEventListener('click', () => {
+          edited = {}
+          weights = {}
+          rebuildParams()
+        })
+        setInterval(tick, 100)
+        poll(false)
+      }
+      load()
+    </script>
+  </body>
+</html>

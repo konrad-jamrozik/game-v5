@@ -5,7 +5,7 @@
 | Spec ID | BASICAI |
 | Family | Autopilot AIs |
 | Audience | AI designer, Implementer |
-| Owns | The goals the Basic Autopilot AI pursues, how it prioritizes them within a Turn, and what it deliberately leaves alone. |
+| Owns | The goals the Basic Autopilot AI pursues, how it prioritizes them within a Turn, what it deliberately leaves alone, and the Tuning parameters it is built with. |
 | Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
@@ -28,10 +28,11 @@ These terms are specific to the Basic Autopilot AI. General terms are in the [Do
 | Expected reserve | The size the Agent reserve will have once every Agent now resting has rested: the number of Rested Agents, plus every other Agent whose Assignment is Standby or [Recovery](../mechanics/agents-spec.md#assignments), whether it is [In transit](../mechanics/agents-spec.md#agent-statuses) or not. |
 | Savings floor | The money the Basic Autopilot AI keeps unspent so that the [Agency](../mechanics/domain-model.md#agency-and-agents) can pay several [Turns](../foundation/engine-contract.md#player-actions-and-turns) of upkeep even if contracting income falls short. |
 | Expected income | The projected income the Agency will have once every Agent now [In transit](../mechanics/agents-spec.md#agent-statuses) to [Contracting](../mechanics/agents-spec.md#assignments) has arrived: its funding plus the contributions of every Agent whose Assignment is Contracting, each from its current [effective skill](../mechanics/agents-spec.md#combatant-attributes) and rounded down once in total, as [Agency income](../mechanics/economy-and-upgrades.md#agency-income) computes them. |
+| Tuning parameter | One of the values that the Basic Autopilot AI is built with, e.g. the Recall threshold, under Tuning parameters. |
 
 # Goals
 
-The Basic Autopilot AI pursues the following goals. The list is exhaustive. The goals can conflict, e.g. a [Deployed](../mechanics/agents-spec.md#assignments) Agent earns no contracting income, so [Turn routine](#turn-routine) states which goal wins. The exact thresholds of the goals, e.g. how large a safety margin is, are the Implementer's choice; the informative [Appendix: Derivation from game-ts](#appendix-derivation-from-game-ts) gives proven starting values.
+The Basic Autopilot AI pursues the following goals. The list is exhaustive. The goals can conflict, e.g. a [Deployed](../mechanics/agents-spec.md#assignments) Agent earns no contracting income, so [Turn routine](#turn-routine) states which goal wins. The exact thresholds of the goals, e.g. how large a safety margin is, are the Implementer's choice; the informative [Appendix: Derivation from game-ts](#appendix-derivation-from-game-ts) gives proven starting values, and [Tuning parameters](#tuning-parameters) lists them.
 
 | Goal | What the Basic Autopilot AI aims for |
 | --- | --- |
@@ -83,6 +84,27 @@ To judge whether it could win the Mission site a Lead creates, it reads the Miss
 
 What discovers a Lead is not Player-visible, so it does not trace a Faction's chain itself. It reads how far along the chain a discovered Lead is as the Lead's Initiative operation level, which the engine derives and makes Player-visible under [Player-visible information](../mechanics/leads-and-progression.md#player-visible-information) in Leads and Progression. E.g., with the Bootstrap GDRs, `locate_red_dawn_outpost` has level 3 and `interrogate_red_dawn_handler` level 2, so the former comes first when both qualify.
 
+# Tuning parameters
+
+The [Game build](../foundation/core-concepts.md#game-build-and-content) offers the Basic Autopilot AI with one fixed set of Tuning parameters, the Implementer's choice, and a player cannot change them. So that the thresholds can be tuned against whole Campaigns, an Implementation builds the Basic Autopilot AI from a given set of Tuning parameters, and lets developer tooling build it with values other than the Game build's, e.g. a tool that plays many Campaigns with each of several sets of values and compares them. How developer tooling reaches that build, e.g. a function of the Implementation's own code, is the Implementer's choice; it is not part of any API of the engine, and a Basic Autopilot AI built with other values is not offered by the Game build.
+
+The following list of Tuning parameters is exhaustive. The first group holds the thresholds of the goals. The second group goes beyond the goals, and each of its parameters has a neutral value with which the Basic Autopilot AI plays exactly as Goals and Turn routine state; the Game build uses the neutral values.
+
+| Tuning parameter | What it sets |
+| --- | --- |
+| Recall threshold | The Recall threshold. |
+| Reserve share | The target size of the Agent reserve, as a share of the roster. |
+| Income target | The Expected income that steps 1, 4, and 5 keep, as a share of projected upkeep, i.e. the margin of Stay solvent. |
+| Savings floor | The Savings floor, as a number of Turns of a share of projected upkeep. |
+| Combat margin | The safety margin of Deploy only to win, as a share of the Enemies' Combat rating that the team's Combat rating must exceed. |
+| Enemies per Agent | How many Enemies one Agent of a team answers for, so that a team has at least the number of Enemies divided by it, rounded up; it may be fractional. |
+| Investigators | The Agents investigating Leads: a base number, plus one for each given number of Agents in the roster. |
+| Target roster | The target roster size of Grow with the threat: a base size, plus a given number for each Upgrade other than a Cap Upgrade bought. It sets how fast the Basic Autopilot AI hires. |
+| Cap shares | The Transport cap and the Training cap that Grow with the threat keeps, each as a share of the roster. |
+| Training share | The most Agents that step 7 puts on Training, as a share of the roster. Neutral value: 100%, which leaves only the Training cap as the limit. |
+| Contracting share | The Agents that step 5 keeps on Contracting, as a share of the roster, even once Expected income covers projected upkeep with the margin; step 5 then assigns Fresh Agents beyond the Agent reserve until both hold. Neutral value: 0%. |
+| Upgrade weights | A non-negative weight of each Upgrade other than a Cap Upgrade in the rotation of Grow with the threat: the rotation buys the one with the fewest acquisitions per unit of weight, counting the acquisition it would make, and never one of weight 0. E.g., an Upgrade of weight 2 is bought about twice as often as one of weight 1. Neutral value: weight 1 for every Upgrade, with which the rotation buys the one bought least often. |
+
 # Edge cases and failure behavior
 
 | Case | Behavior |
@@ -95,10 +117,6 @@ What discovers a Lead is not Player-visible, so it does not trace a Faction's ch
 | Every Agent is exhausted or cannot be assigned, or the roster is empty | It makes no assignment and ends the Turn; buying an Agent still follows Grow with the threat. |
 | A Player action it attempts is rejected | It does not retry the same Player action in that Turn and continues with the next step, so a rejection cannot make it repeat itself until it fails. |
 | Only Leads that create Mission sites it cannot currently win remain | It leaves those Leads uninvestigated until the Agency is strong enough. |
-
-# TODOs
-
-- TODO: Decide whether the Basic Autopilot AI's thresholds, e.g. its safety margin and Savings floor, stay implementation constants or become values a Player can tune, under [Goals](#goals).
 
 # Appendix: Derivation from game-ts
 

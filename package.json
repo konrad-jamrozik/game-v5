@@ -22,6 +22,7 @@
     "docs:plain": "node scripts/plain-docs.ts",
     "artboards:export": "node scripts/export-artboards.ts",
     "balance:bench": "node --watch tools/gdr-balance-bench/server.ts",
+    "autopilot:bench": "node tools/autopilot-bench/server.ts",
     "lint": "npm run lint:specs && npm run lint:code",
     "lint:fix": "npm run lint:specs && npm run lint:code -- --fix",
     "format": "oxfmt . --write",
