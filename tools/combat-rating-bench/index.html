@@ -1547,11 +1547,13 @@
         '<svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><g stroke="currentColor" stroke-linecap="round" fill="none"><line x1="13.5" y1="2.5" x2="6.5" y2="9.5" stroke-width="2.2"/><line x1="4" y1="8" x2="8" y2="12" stroke-width="1.6"/><line x1="5.5" y1="10.5" x2="2.5" y2="13.5" stroke-width="2"/></g></svg>'
       const SHIELD =
         '<svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5 14 3.5V8c0 3.5-3 5.8-6 6.8C5 13.8 2 11.5 2 8V3.5z" fill="currentColor"/></svg>'
-      /** An Upgrade set as what it adds, with a sword for weapon damage and a shield for armor, e.g. +4⚔ +20🛡. */
-      const upHtml = (up) =>
+      /** An Upgrade set as what it adds, with a sword for weapon damage and a shield for armor, e.g. +4⚔ +20🛡; stacked, each on a line of its own, to fit a grid column. */
+      const upHtml = (up, stacked = false) =>
         up.w === 0 && up.a === 0
           ? 'none'
-          : [up.w ? `+${up.w}${SWORD}` : '', up.a ? `+${up.a}${SHIELD}` : ''].filter(Boolean).join(' ')
+          : [up.w ? `+${up.w}${SWORD}` : '', up.a ? `+${up.a}${SHIELD}` : '']
+              .filter(Boolean)
+              .join(stacked ? '<br>' : ' ')
       /** How many Upgrades of each kind add an Upgrade set's points, e.g. +4 weapon damage is 2 Upgrades of +2. */
       const upgradesFor = (points, upgrade) => points / (info?.gdr.upgradeIncrements?.[upgrade] || 1)
       const upTitle = (up) =>
@@ -1605,7 +1607,7 @@
         }
         const block = (t, site) => {
           // Every block has its own header of Upgrade sets, so that a column's Upgrades read beside its cells.
-          let html = `<div class="block">${blockHead(t, site)}<span></span>${ups.map((u) => `<span class="uh" title="${upTitle(u)}"><span>${upHtml(u)}</span></span>`).join('')}`
+          let html = `<div class="block">${blockHead(t, site)}<span></span>${ups.map((u) => `<span class="uh" title="${upTitle(u)}"><span>${upHtml(u, true)}</span></span>`).join('')}`
           if (site !== null) {
             for (const skill of skills) {
               html += `<span class="tier">${skill}</span>`
