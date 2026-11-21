@@ -18,7 +18,12 @@ Then open <http://127.0.0.1:4718/>. To use another clone or another port:
 node tools/autopilot-bench/server.ts --impl <game-v5-impl-web clone> --port <number>
 ```
 
-Unlike the GDR Balance Bench, the server does not run under `node --watch`: the Campaigns live in the server process, and a restart would lose them. Restart it by hand after changing `server.ts`, `worker.ts`, or `protocol.ts`.
+A change to the Bench reaches it without a restart wherever it can, because the Campaigns live in the server process and a restart loses them:
+
+- `index.html` is read on every page load: reload the page.
+- `worker.ts` and the Implementation clone are loaded by each launch's own worker threads, so a change reaches the Campaigns launched after it; Campaigns launched before keep their code, also for Play more.
+- `protocol.ts` holds only types, which Node strips, so a change to it needs nothing.
+- `server.ts` needs a restart. `npm run autopilot:bench` runs the server under `node --watch-path` on `server.ts` alone, so it restarts by itself when `server.ts` changes on disk, e.g. after a pull, and on no other change; the restart loses every Campaign, and the page then shows none.
 
 ## What it plays, and when
 
