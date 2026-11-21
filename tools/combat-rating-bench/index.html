@@ -413,6 +413,32 @@
         color: var(--accent-text);
       }
 
+      /* The display panel sticks to the top of the screen, on the left of the samples, while the section scrolls. */
+      .sbody {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 24px;
+        align-items: start;
+      }
+      .sview {
+        position: sticky;
+        /* Below the sticky top bar, whose height the page keeps in --bar-h, as it wraps on a narrow screen. */
+        top: calc(var(--bar-h, 52px) + 10px);
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-top: 12px;
+        padding: 10px 12px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        max-height: calc(100vh - var(--bar-h, 52px) - 20px);
+        overflow-y: auto;
+      }
+      .sview-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
       /* The Z tables run down the first column, then down the next; layoutSamples sets the number of rows. */
       .samples {
         display: grid;
@@ -799,45 +825,53 @@
           <button class="small" data-act="reset-sampler" title="Restore every dimension of the sampler to its default">
             Restore sampler defaults
           </button>
-          <label class="inline"><input type="checkbox" data-bind="sampler.showWin" data-type="bool" /> Win rate</label>
-          <label class="inline"
-            ><input type="checkbox" data-bind="sampler.showRatio" data-type="bool" /> Rating ratio</label
-          >
-          <label class="inline"
-            ><input type="checkbox" data-bind="sampler.showCrLeft" data-type="bool" />
-            <span class="k-cr">Agent CR left</span></label
-          >
-          <label class="inline"
-            ><input type="checkbox" data-bind="sampler.showExhaustion" data-type="bool" />
-            <span class="k-ex">Agent exhaustion</span></label
-          >
-          <label class="inline" title="The win rate minus the rating ratio, in points, e.g. +8% for 98% and 90%"
-            ><input type="checkbox" data-bind="sampler.showDiff" data-type="bool" />
-            <span class="k-df">CR to win diff</span></label
-          >
           <span id="samplerInfo" class="note"></span>
         </div>
-        <div class="row" style="margin-top: 8px" role="radiogroup" aria-label="Cell colouring">
-          <span class="lbl note">Colouring</span>
-          <label class="inline" title="Red below a 50% win rate, green above, as in the grid"
-            ><input type="radio" name="coloring" value="win" data-bind="sampler.coloring" data-type="str" /> Win
-            rate</label
-          >
-          <label
-            class="inline"
-            title="For a rating ratio from 80% to 120% only: red when the Agents win less than their ratio, yellow when more, at full strength from 20 points; none when they match, or when a ratio of 100% or more wins every Combat"
-            ><input type="radio" name="coloring" value="diff" data-bind="sampler.coloring" data-type="str" /> CR to win
-            diff</label
-          >
-          <label
-            class="inline"
-            title="None at a rating ratio of 100%, more red down to 80% and more yellow up to 120%, and none beyond"
-            ><input type="radio" name="coloring" value="ratio" data-bind="sampler.coloring" data-type="str" /> CR
-            ratio</label
-          >
-        </div>
         <div id="samplerErr" class="err"></div>
-        <div id="samplerOut" class="samples"></div>
+        <!-- The display panel stays on the left of the screen while the samples scroll past it. -->
+        <div class="sbody">
+          <aside class="sview">
+            <span class="lbl note">Show</span>
+            <label class="inline"
+              ><input type="checkbox" data-bind="sampler.showWin" data-type="bool" /> Win rate</label
+            >
+            <label class="inline"
+              ><input type="checkbox" data-bind="sampler.showRatio" data-type="bool" /> Rating ratio</label
+            >
+            <label class="inline"
+              ><input type="checkbox" data-bind="sampler.showCrLeft" data-type="bool" />
+              <span class="k-cr">Agent CR left</span></label
+            >
+            <label class="inline"
+              ><input type="checkbox" data-bind="sampler.showExhaustion" data-type="bool" />
+              <span class="k-ex">Agent exhaustion</span></label
+            >
+            <label class="inline" title="The win rate minus the rating ratio, in points, e.g. +8% for 98% and 90%"
+              ><input type="checkbox" data-bind="sampler.showDiff" data-type="bool" />
+              <span class="k-df">CR to win diff</span></label
+            >
+            <span class="lbl note" style="margin-top: 10px">Colouring</span>
+            <div role="radiogroup" aria-label="Cell colouring" class="sview-group">
+              <label class="inline" title="Red below a 50% win rate, green above, as in the grid"
+                ><input type="radio" name="coloring" value="win" data-bind="sampler.coloring" data-type="str" /> Win
+                rate</label
+              >
+              <label
+                class="inline"
+                title="For a rating ratio from 80% to 120% only: red when the Agents win less than their ratio, yellow when more, at full strength from 20 points; none when they match, or when a ratio of 100% or more wins every Combat"
+                ><input type="radio" name="coloring" value="diff" data-bind="sampler.coloring" data-type="str" /> CR to
+                win diff</label
+              >
+              <label
+                class="inline"
+                title="None at a rating ratio of 100%, more red down to 80% and more yellow up to 120%, and none beyond"
+                ><input type="radio" name="coloring" value="ratio" data-bind="sampler.coloring" data-type="str" /> CR
+                ratio</label
+              >
+            </div>
+          </aside>
+          <div id="samplerOut" class="samples"></div>
+        </div>
       </section>
 
       <section>
@@ -2556,6 +2590,10 @@
         out.style.gridTemplateRows = `repeat(${Math.ceil(tables.length / cols)}, auto)`
       }
       window.addEventListener('resize', () => sampler && layoutSamples())
+      // The Sampler's display panel sticks just below the top bar, whatever its height.
+      new ResizeObserver(([entry]) =>
+        document.documentElement.style.setProperty('--bar-h', `${entry.target.offsetHeight}px`),
+      ).observe($('.bar'))
 
       function changed() {
         save()
