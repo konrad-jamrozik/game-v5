@@ -1666,9 +1666,9 @@ Better plates and padding for the [Service armor](#service-armor) of every [Agen
 | `armor`     | Upgrade       |
 | ----------- | ------------- |
 | `name`      | `Armor`       |
-| `price`     | `500`         |
+| `price`     | `2000`        |
 | `effect`    | `agent_armor` |
-| `increment` | `1`           |
+| `increment` | `5`           |
 
 ### Exhaustion recovery
 
@@ -1744,9 +1744,9 @@ Better ammunition and gunsmithing make the [Service weapon](#service-weapon) of 
 | `weapon_damage` | Upgrade               |
 | --------------- | --------------------- |
 | `name`          | `Weapon damage`       |
-| `price`         | `500`                 |
+| `price`         | `2000`                |
 | `effect`        | `agent_weapon_damage` |
-| `increment`     | `1`                   |
+| `increment`     | `2`                   |
 
 ## Subject articles: Weapon
 
