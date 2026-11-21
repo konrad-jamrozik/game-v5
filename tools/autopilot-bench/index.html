@@ -275,6 +275,45 @@
         border-color: var(--accent);
         color: var(--accent-text);
       }
+      /* Changes: every parameter that differs from BASIC_AI_THRESHOLDS, and the same as text to copy. */
+      .chg-list {
+        display: flex;
+        flex-direction: column;
+      }
+      .chg-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: center;
+        padding: 4px 0;
+        border-bottom: 1px solid var(--raised);
+        font-family: var(--mono);
+        font-size: 13px;
+      }
+      .chg-row span {
+        min-width: 0;
+        overflow-wrap: anywhere;
+      }
+      .chg-row b {
+        color: var(--accent-text);
+        font-weight: 500;
+      }
+      .chg-row button {
+        padding: 1px 8px;
+        font-size: 12px;
+      }
+      #chgtext {
+        width: 100%;
+        min-height: 150px;
+        margin-top: 10px;
+        background: var(--bg);
+        color: var(--text2);
+        border: 1px solid var(--border);
+        padding: 8px;
+        font-family: var(--mono);
+        font-size: 12px;
+        resize: vertical;
+      }
       .ctl {
         display: flex;
         flex-wrap: wrap;
@@ -485,8 +524,14 @@
         <p class="note" id="engine"></p>
       </div>
       <div class="bar">
-        <nav><a href="#params">Parameters</a><a href="#campaigns">Campaigns</a><a href="#glossary">Glossary</a></nav>
-        <div class="acts"><span id="count">0 changed</span><button id="reset">Reset parameters</button></div>
+        <nav>
+          <a href="#params">Parameters</a><a href="#campaigns">Campaigns</a><a href="#changes">Changes</a
+          ><a href="#glossary">Glossary</a>
+        </nav>
+        <div class="acts">
+          <span id="count">0 changed</span><button class="pri" id="copy">Copy changes</button
+          ><button id="reset">Reset parameters</button>
+        </div>
       </div>
       <div id="app" style="display: contents"></div>
     </div>
@@ -765,7 +810,88 @@
         $('count').textContent = `${n} changed`
         $('count').classList.toggle('on', n > 0)
         $('launchParams').innerHTML = diffText(params())
+        renderChanges()
         save()
+      }
+
+      /* ---------- Changes ---------- */
+
+      /** Every edited value, as [key, old, new, revert]: the parameters first, then the Upgrade weights. */
+      function changeList() {
+        return [
+          ...Object.keys(DEFAULTS)
+            .filter((k) => k in edited)
+            .map((k) => [k, DEFAULTS[k], edited[k], () => delete edited[k]]),
+          ...UPGRADES.filter((u) => u.id in weights).map((u) => [
+            `upgradeWeights.${u.id}`,
+            DEFAULTS.upgradeWeights?.[u.id] ?? 1,
+            weights[u.id],
+            () => delete weights[u.id],
+          ]),
+        ]
+      }
+
+      function changesText(list) {
+        if (list.length === 0) return 'No changes: every parameter equals BASIC_AI_THRESHOLDS.'
+        const lines = [
+          'Basic Autopilot AI Tuning parameter changes to apply to BASIC_AI_THRESHOLDS (old -> new):',
+          '',
+          'game-v5-impl-web/src/ai/basic/basic-autopilot-ai.ts',
+          ...list.map(([k, from, to]) => `  ${k}: ${from} -> ${to}`),
+        ]
+        if (list.some(([k]) => k.startsWith('upgradeWeights.')))
+          lines.push('', 'Note: an Upgrade absent from upgradeWeights has weight 1.')
+        return lines.join('\n')
+      }
+
+      function renderChangesSection() {
+        return `<section id="changes"><div class="shead"><h2>Changes</h2><p>Every parameter that differs from the engine's defaults, <code>BASIC_AI_THRESHOLDS</code>, including the Upgrade weights. Nothing here writes to the Implementation: copy the list and hand it to Claude to apply.</p></div><div class="panel"><div class="chg-list" id="chglist"></div><textarea id="chgtext" readonly aria-label="Changes as text"></textarea></div></section>`
+      }
+
+      function renderChanges() {
+        const box = $('chglist')
+        if (!box) return
+        const list = changeList()
+        box.innerHTML =
+          list.length === 0
+            ? '<div class="note">Nothing changed yet. Edited fields turn orange and are listed here.</div>'
+            : list
+                .map(
+                  ([k, from, to]) =>
+                    `<div class="chg-row"><span>${esc(k)}: ${esc(from)} → <b>${esc(to)}</b></span><button data-rev="${esc(k)}">Revert</button></div>`,
+                )
+                .join('')
+        $('chgtext').value = changesText(list)
+      }
+
+      function bindChanges() {
+        $('chglist').addEventListener('click', (e) => {
+          const key = e.target.closest('button[data-rev]')?.dataset.rev
+          const change = changeList().find(([k]) => k === key)
+          if (change === undefined) return
+          change[3]()
+          rebuildParams()
+        })
+        $('copy').addEventListener('click', (e) => {
+          const button = e.currentTarget
+          const text = $('chgtext')
+          const done = () => {
+            button.textContent = 'Copied'
+            setTimeout(() => (button.textContent = 'Copy changes'), 1500)
+          }
+          const fallback = () => {
+            location.hash = 'changes'
+            text.focus()
+            text.select()
+            button.textContent = 'Selected: press Ctrl+C'
+            setTimeout(() => (button.textContent = 'Copy changes'), 3000)
+          }
+          try {
+            navigator.clipboard.writeText(text.value).then(done, fallback)
+          } catch {
+            fallback()
+          }
+        })
       }
 
       /* ---------- Campaigns ---------- */
@@ -1222,9 +1348,10 @@
         DEFAULTS = INFO.defaults ?? {}
         UPGRADES = INFO.upgrades ?? []
         for (const k of Object.keys(edited)) if (!(k in DEFAULTS)) delete edited[k]
-        $('app').innerHTML = renderParams() + renderCampaignsSection() + renderGlossary()
+        $('app').innerHTML = renderParams() + renderCampaignsSection() + renderChangesSection() + renderGlossary()
         bindParams()
         bindCampaigns()
+        bindChanges()
         changed()
         $('reset').addEventListener('click', () => {
           edited = {}

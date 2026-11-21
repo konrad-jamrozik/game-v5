@@ -63,6 +63,8 @@ Every number is read through Player API queries, as a player could see it, excep
 
 The page lists every value of `BASIC_AI_THRESHOLDS`, the engine's defaults, and the weight of every Upgrade other than a Cap Upgrade. A value the engine has that the page does not know appears under Other, without a description, and is passed to the AI as edited. The edits, the launch fields, and More turns are kept in the browser for the next visit.
 
+**Changes** lists every parameter and Upgrade weight that differs from `BASIC_AI_THRESHOLDS`, old and new, each with a Revert button, and the same list as text for `BASIC_AI_THRESHOLDS` in the Implementation's `src/ai/basic/basic-autopilot-ai.ts`. **Copy changes** in the top bar copies that text, e.g. to hand it to Claude to apply. Nothing on the page writes to either repository.
+
 ## Files
 
 | Path          | Content                                                                                     |
