@@ -476,7 +476,18 @@
           </p>
         </div>
         <div class="cols">
-          <div class="scroll"><table id="params"></table></div>
+          <div style="display: flex; flex-direction: column; gap: 8px">
+            <div class="scroll"><table id="params"></table></div>
+            <p class="note">
+              Every parameter applies at its value, whether or not its <b>Fit</b> box is checked; e.g. 0 switches a CR
+              per point off. The box only lets the <b>Fit</b> button change the parameter. <b>Fit</b> fights nothing:
+              over the cells already fought for the current formula, it searches the checked parameters for the values
+              whose ratings best predict the measured win rates, by the curve under Analysis, which is exactly 50% at
+              equal ratings, and writes them into the table. The unchecked parameters stay as they are. The new values
+              usually size many teams differently, so those cells turn grey until they are run again; run, fit, and run
+              the grey cells until the values settle.
+            </p>
+          </div>
           <div style="display: flex; flex-direction: column; gap: 10px">
             <label class="lbl note" for="exprC">combatant_cr</label>
             <textarea id="exprC" data-bind="formula.combatant" data-type="str" spellcheck="false"></textarea>
@@ -1287,7 +1298,7 @@
       /* ---------- rendering of the inputs ---------- */
       function renderFormula() {
         $('#params').innerHTML =
-          `<tr><th>Parameter</th><th class="r">Value</th><th>Fit</th><th>Meaning</th></tr>` +
+          `<tr><th>Parameter</th><th class="r">Value</th><th title="Checked: the Fit button may change this parameter. Unchecked: Fit leaves it as it is. Either way the value applies.">Fit</th><th>Meaning</th></tr>` +
           PARAMS.map(
             ([name, desc, step]) => `<tr><td><code>${name}</code></td>
             <td class="r"><input type="number" step="${step}" data-bind="formula.params.${name}" data-type="num" value="${state.formula.params[name]}"></td>
