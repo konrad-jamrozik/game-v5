@@ -227,6 +227,10 @@ function statsOf(campaign: Campaign): CampaignStats {
       const enemies = archetypeEnemies.get(archetype)
       // The discovered Lead of this Faction whose completion creates the Mission site.
       const lead = (retired.leads as Any[]).find((l) => l.faction === f.id && l.createsMissionSite === archetype)
+      // An Active Mission site of it against this Faction, which a team can be deployed to now.
+      const site = (live.missionSites as Any[]).find(
+        (m) => m.archetype === archetype && m.targetFaction === f.id && m.lifecycle === 'Active',
+      )
       return {
         id: f.id,
         name: f.name,
@@ -237,6 +241,7 @@ function statsOf(campaign: Campaign): CampaignStats {
           name: archetypeNames.get(archetype) ?? archetype,
           enemiesRating: enemies?.rating ?? 0,
           enemies: enemies?.count ?? 0,
+          site: site === undefined ? null : { turnsUntilExpiration: site.turnsUntilExpiration as number },
           lead:
             lead === undefined
               ? null

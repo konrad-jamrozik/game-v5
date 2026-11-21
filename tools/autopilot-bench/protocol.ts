@@ -103,6 +103,8 @@ export interface CampaignStats {
       /** The Combat rating of the MissionSiteArchetype's Enemies, and how many Enemies it has. */
       readonly enemiesRating: number
       readonly enemies: number
+      /** The Active Mission site of it against the Faction, which a team can be deployed to now; none otherwise. */
+      readonly site: { readonly turnsUntilExpiration: number } | null
       /** The discovered Lead of the Faction that creates it; none while no such Lead is discovered. */
       readonly lead: {
         readonly completions: number

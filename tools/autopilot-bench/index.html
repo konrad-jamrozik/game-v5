@@ -888,8 +888,8 @@
           ['Initiative', 'Initiative Missions Won / Lost / Expired', (s) => ml(s.missions.Initiative), 104],
           ...factions.map((f, i) => [
             f.name,
-            `The next Initiative Mission site to win against ${f.name}: one Initiative operation level above the highest it has Won; Eliminated once the Faction is. Below it, the Lead that creates it: available for the first time, investigated for the first time, or completed at least once; then the Enemies' Combat rating, CR ready as a percentage of it, and the Enemies against the Deployable Agents`,
-            (s) => {
+            `The next Initiative Mission site to win against ${f.name}: one Initiative operation level above the highest it has Won; Eliminated once the Faction is. Below it, four checks, each 🟢 when it holds and 🔴 when not. First, whether a Mission site of it is available, i.e. Active; when not, the state of the Lead that creates it: available for the first time, investigated for the first time, or completed at least once. Then the three tests of the Basic Autopilot AI's winning team, with this Campaign's parameters: CR ready against the Enemies' Combat rating and the Combat margin; the Deployable Agents against the Agents needed for the Enemies; and the free Transport cap against the Agents needed`,
+            (s, c) => {
               const x = s.factions[i]
               if (!x) return ''
               if (x.eliminated) return '<span class="good">Eliminated ✕</span>'
@@ -905,14 +905,26 @@
                       : lead.available
                         ? 'Lead available, 1st time'
                         : `<span class="dim">Lead ${esc(lead.status.toLowerCase())}</span>`
+              // Whether a Mission site is available, then the three tests of the Basic Autopilot AI's winning team, with
+              // this Campaign's parameters.
+              const p = { ...DEFAULTS, ...(c?.params ?? {}) }
+              const margin = Number(p.combatMarginPct ?? 120)
+              const perAgent = Number(p.enemiesPerAgent ?? 3)
+              const mark = (pass) => (pass ? '🟢' : '🔴')
               const pct = x.next.enemiesRating > 0 ? (s.ratingReady / x.next.enemiesRating) * 100 : null
-              const odds =
-                `<span class="dim">CR</span> ${fmt(x.next.enemiesRating)} <span class="dim">·</span> ` +
-                `<span class="${pct !== null && pct >= 100 ? 'good' : 'bad'}" title="CR ready / the Enemies' Combat rating">${pct === null ? '—' : `${pct.toFixed(0)}%`}</span> <span class="dim">·</span> ` +
-                `<span title="Enemies vs Deployable Agents">${fmt(x.next.enemies)} <span class="dim">en vs</span> ${fmt(s.ready)} <span class="dim">dep</span></span>`
-              return `<span class="dim">L${x.next.level}</span> ${esc(x.next.name)}<br>${status}<br>${odds}`
+              const crPass = s.ratingReady * 100 > x.next.enemiesRating * margin
+              const needed = Math.max(1, Math.ceil(x.next.enemies / perAgent - 1e-9))
+              const free = s.transportCap - (s.assignments?.Deployed ?? 0)
+              const site = x.next.site
+              const checks = [
+                `<span title="An Active Mission site of it against the Faction, which a team can be deployed to now; otherwise the state of the Lead that creates it">${mark(site !== null)} <span class="dim">Site</span> ${site !== null ? `<span class="good">available</span> <span class="dim">· expires in ${fmt(site.turnsUntilExpiration)}</span>` : status}</span>`,
+                `<span title="CR ready must exceed ${margin}% of the Enemies' Combat rating">${mark(crPass)} <span class="dim">CR</span> ${fmt(s.ratingReady)} <span class="dim">/</span> ${fmt(x.next.enemiesRating)} <span class="dim">=</span> <span class="${crPass ? 'good' : 'bad'}">${pct === null ? '—' : `${pct.toFixed(0)}%`}</span> <span class="dim">&gt;${margin}%</span></span>`,
+                `<span title="Deployable Agents against the Agents needed: one per ${perAgent} Enemies, rounded up">${mark(s.ready >= needed)} <span class="dim">Agents</span> ${fmt(s.ready)} <span class="dim">/</span> ${fmt(needed)} <span class="dim">(${fmt(x.next.enemies)} en ÷ ${perAgent})</span></span>`,
+                `<span title="Free Transport cap, i.e. Transport cap less the Deployed Agents, against the Agents needed">${mark(free >= needed)} <span class="dim">Transport</span> ${fmt(free)} <span class="dim">/</span> ${fmt(needed)} <span class="dim">(cap ${fmt(s.transportCap)})</span></span>`,
+              ]
+              return `<span class="dim">L${x.next.level}</span> ${esc(x.next.name)}<br>${checks.join('<br>')}`
             },
-            280,
+            300,
             true,
           ]),
           ['Inv', 'Active Investigations', (s) => fmt(s.activeInvestigations), 48],
@@ -929,7 +941,7 @@
 
       function renderHead() {
         $('legend').innerHTML =
-          `<b>CR ready</b> is the Combat rating of the Deployable Agents, under Glossary below; their number out of all Serving Agents is in brackets, e.g. (29/155), and a team is further limited by the free Transport cap. <b>CR all</b> is the Combat rating of every Serving Agent at full health and exhaustion 0. A label with <b>+</b>, e.g. <b>+Weapon</b>, is how many times that Upgrade was bought. Work counts Serving Agents by Assignment, In transit included; <b>Deployable</b> and <b>Non-deployable</b> split those on Training and on Standby, so the two Deployable counts add up to the number after CR ready.Each Faction shows the next Initiative Mission site to win against it, one level above the highest Won. Below it, the state of the Lead that creates it, the Enemies' Combat rating, CR ready as a percentage of it, and the Enemies (<b>en</b>) against the Deployable Agents (<b>dep</b>). Missions: Won / Lost / Expired. Below the layers, <b>Fought</b> lists the last four Missions fought, the latest first: the Turn, the kind and name of the Mission site, the Agents sent (<b>ag</b>), the team's Combat rating against the Enemies' at Combat start, the result, and the Agents Killed (<b>dead</b>) and Incapacitated (<b>incap</b>). Hover a label for its meaning. Time is the latest run's wall-clock time, and the total of every run. <b>Load params</b> copies a Campaign's parameters into the Parameters editor above, e.g. to launch a variant of it.`
+          `<b>CR ready</b> is the Combat rating of the Deployable Agents, under Glossary below; their number out of all Serving Agents is in brackets, e.g. (29/155), and a team is further limited by the free Transport cap. <b>CR all</b> is the Combat rating of every Serving Agent at full health and exhaustion 0. A label with <b>+</b>, e.g. <b>+Weapon</b>, is how many times that Upgrade was bought. Work counts Serving Agents by Assignment, In transit included; <b>Deployable</b> and <b>Non-deployable</b> split those on Training and on Standby, so the two Deployable counts add up to the number after CR ready.Each Faction shows the next Initiative Mission site to win against it, one level above the highest Won. Below it, four checks, 🟢 when it holds and 🔴 when not: <b>Site</b>, whether a Mission site of it is available, and otherwise the state of the Lead that creates it; then the three tests of the Basic Autopilot AI's winning team, with the Campaign's parameters: <b>CR</b>, CR ready against the Enemies' Combat rating, as a percentage, above the Combat margin; <b>Agents</b>, the Deployable Agents against the Agents needed, one per <code>enemiesPerAgent</code> Enemies (<b>en</b>); and <b>Transport</b>, the free Transport cap against the Agents needed. Missions: Won / Lost / Expired. Below the layers, <b>Fought</b> lists the last four Missions fought, the latest first: the Turn, the kind and name of the Mission site, the Agents sent (<b>ag</b>), the team's Combat rating against the Enemies' at Combat start, the result, and the Agents Killed (<b>dead</b>) and Incapacitated (<b>incap</b>). Hover a label for its meaning. Time is the latest run's wall-clock time, and the total of every run. <b>Load params</b> copies a Campaign's parameters into the Parameters editor above, e.g. to launch a variant of it.`
       }
 
       const rows = new Map()
@@ -961,7 +973,7 @@
             : `<button data-act="play"${ended || c.state === 'failed' ? ' disabled' : ''}>Play more</button><button data-act="use" title="Copy this Campaign's parameters into the Parameters editor above">Load params</button><button data-act="remove" title="Remove this Campaign">✕</button>`
         LAYOUT.forEach((L, i) =>
           L.forEach((x, j) => {
-            cells[`${i}_${j}`] = c.stats === null ? '' : x[2](c.stats)
+            cells[`${i}_${j}`] = c.stats === null ? '' : x[2](c.stats, c)
           }),
         )
         const recent = c.stats?.recentMissions ?? []
