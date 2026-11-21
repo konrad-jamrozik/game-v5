@@ -73,10 +73,11 @@ async function boot() {
 
 /** The name of the Initiative Mission site of each Initiative operation level. */
 const chain = new Map<number, string>()
-/** AgentParameters' `exhaustion_free_points`, up to which an Agent counts as a Rested Agent. */
+/**
+ * AgentParameters' `exhaustion_free_points`, up to which an Agent counts as a Rested Agent, so that an Agent on Standby
+ * above it is resting, and counts as exhausted in Work.
+ */
 let exhaustionFreePoints = 0
-/** The exhaustion above which an Agent on Standby counts as exhausted in Work. */
-const STANDBY_EXHAUSTED_ABOVE = 20
 
 const booted = boot()
 const campaigns = new Map<string, Campaign>()
@@ -146,7 +147,7 @@ function statsOf(campaign: Campaign): CampaignStats {
   const assignments: Record<string, number> = {}
   for (const a of agents) {
     const assigned = (a.assignment?.kind as string | undefined) ?? 'None'
-    const kind = assigned === 'Standby' && a.exhaustion > STANDBY_EXHAUSTED_ABOVE ? 'Exhausted' : assigned
+    const kind = assigned === 'Standby' && a.exhaustion > exhaustionFreePoints ? 'Exhausted' : assigned
     assignments[kind] = (assignments[kind] ?? 0) + 1
   }
   return {
