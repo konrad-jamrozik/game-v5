@@ -582,9 +582,10 @@
         <div class="shead">
           <h2>Formula</h2>
           <p>
-            Each group of identical Combatants rates by the combatant expression; a team rates by the team expression
-            over the sum of its Combatants' ratings. A Combatant that is not able to fight counts for nothing. The
-            expressions are JavaScript, with <code>Math</code> in scope, e.g. <code>sqrt(health)</code>.
+            Each group of identical Combatants rates by its side's combatant expression, the Agent or the Enemy one; a
+            team rates by the team expression over the sum of its Combatants' ratings. A Combatant that is not able to
+            fight counts for nothing. The expressions are JavaScript, with <code>Math</code> in scope, e.g.
+            <code>sqrt(health)</code>.
           </p>
         </div>
         <div class="cols">
@@ -601,8 +602,10 @@
             <div class="scroll detail"><table id="types"></table></div>
           </div>
           <div style="display: flex; flex-direction: column; gap: 10px">
-            <label class="lbl note" for="exprC">combatant_cr</label>
-            <textarea id="exprC" data-bind="formula.combatant" data-type="str" spellcheck="false"></textarea>
+            <label class="lbl note" for="exprA">combatant_cr of an Agent</label>
+            <textarea id="exprA" data-bind="formula.agent" data-type="str" spellcheck="false"></textarea>
+            <label class="lbl note" for="exprE">combatant_cr of an Enemy</label>
+            <textarea id="exprE" data-bind="formula.enemy" data-type="str" spellcheck="false"></textarea>
             <label class="lbl note" for="exprT">team_cr</label>
             <textarea id="exprT" data-bind="formula.team" data-type="str" spellcheck="false"></textarea>
             <div id="exprErr" class="err"></div>
@@ -642,16 +645,16 @@
               <code>armor</code>, <code>damage</code>, <code>exhaustion</code>, and the derived
               <code>health_mult = 1 + (health − health_base) × cr_per_health</code>, likewise
               <code>armor_mult</code> and <code>damage_mult</code>. An Agent's Weapon damage and Armor Upgrades count
-              only as the weapon damage and armor they add, and the multipliers rate Agents and Enemies alike. Team
-              variables: <code>sum</code>, <code>count</code> (Combatants able to fight), and <code>game</code> (the
-              game's base Combat rating, Σ effective skill). Every parameter, and every Combat value under Setup, is a
-              variable of both.
+              only as the weapon damage and armor they add. Agents are rated by the Agent expression and Enemies by the
+              Enemy one; every preset sets both to the same expression. Team variables: <code>sum</code>,
+              <code>count</code> (Combatants able to fight), and <code>game</code> (the game's base Combat rating, Σ
+              effective skill). Every parameter, and every Combat value under Setup, is a variable of both.
             </p>
             <p class="note detail">
-              <b>combatant_cr</b> is one Combatant's rating by the combatant expression; <b>× skill</b> is that rating
-              over its effective skill, i.e. how much its health, armor, and weapon damage raise or lower it. A team's
-              rating then comes from the team expression over the sum of these, so with a team expression other than
-              <code>sum</code>, e.g. <code>sqrt(sum * count)</code>, a site's rating is on another scale than its
+              <b>combatant_cr</b> is one Combatant's rating by the Agent or Enemy expression; <b>× skill</b> is that
+              rating over its effective skill, i.e. how much its health, armor, and weapon damage raise or lower it. A
+              team's rating then comes from the team expression over the sum of these, so with a team expression other
+              than <code>sum</code>, e.g. <code>sqrt(sum * count)</code>, a site's rating is on another scale than its
               Combatants'.
             </p>
             <p class="note detail">
@@ -779,6 +782,8 @@
           team: 'sum * count ** team_exp / count',
         },
       }
+      /** A preset's expressions: its combatant expression rates Agents and Enemies alike. */
+      const expressionsOf = ({ combatant, team }) => ({ agent: combatant, enemy: combatant, team })
       /**
        * The default formula and setup: the game's Combat rating, its parameters read from CombatParameters once the
        * content is loaded.
@@ -808,7 +813,7 @@
             cr_per_damage: true,
             team_exp: true,
           },
-          ...FORMULAS.default,
+          ...expressionsOf(FORMULAS.default),
         },
         setup: {
           targets: '80, 90, 100',
@@ -889,6 +894,12 @@
             if (removed.test(`${saved.formula?.combatant} ${saved.formula?.team}`)) {
               saved.formula.combatant = FORMULAS.default.combatant
               saved.formula.team = FORMULAS.default.team
+            }
+            // A formula saved with one combatant expression rates Agents and Enemies by it.
+            if (saved.formula && 'combatant' in saved.formula) {
+              saved.formula.agent ??= saved.formula.combatant
+              saved.formula.enemy ??= saved.formula.combatant
+              delete saved.formula.combatant
             }
             return {
               ...d,
@@ -1024,16 +1035,16 @@
           damage_mult: 1 + (g.damage - p.damage_base) * p.cr_per_damage,
         }
       }
-      /** The combatant_cr of one Combatant of a group; throws on a broken expression. */
-      function combatantRating(g, formula, cv) {
-        const c = compile(formula.combatant)(combatantVars(g, formula, cv))
+      /** The combatant_cr of one Combatant of a group, by the Agent or the Enemy expression; throws on a broken one. */
+      function combatantRating(g, formula, cv, side) {
+        const c = compile(formula[side])(combatantVars(g, formula, cv))
         if (typeof c !== 'number' || Number.isNaN(c)) {
-          throw new Error('combatant_cr is not a number')
+          throw new Error(`combatant_cr of an ${side === 'agent' ? 'Agent' : 'Enemy'} is not a number`)
         }
         return c
       }
-      /** The rating of a list of groups under a formula; throws on a broken expression. */
-      function rate(groups, formula, cv) {
+      /** The rating of a list of groups of one side, 'agent' or 'enemy', under a formula; throws on a broken expression. */
+      function rate(groups, formula, cv, side) {
         const p = effectiveParams(formula)
         const ft = compile(formula.team)
         let sum = 0
@@ -1044,7 +1055,7 @@
             continue
           }
           const skill = effectiveSkill(g, cv)
-          const c = combatantRating(g, formula, cv)
+          const c = combatantRating(g, formula, cv, side)
           sum += c * g.count
           count += g.count
           game += skill * g.count
@@ -1134,7 +1145,7 @@
 
       /** The Agent count whose rating is closest, by ratio, to the target; ratings rise with the count. */
       function countFor(target, skill, up, formula, cv) {
-        const cr = (n) => rate(agentGroups(skill, up, n), formula, cv)
+        const cr = (n) => rate(agentGroups(skill, up, n), formula, cv, 'agent')
         if (!(target > 0) || cr(1) >= target) {
           return 1
         }
@@ -1164,11 +1175,12 @@
         const tail = JSON.stringify([info.engine, trials, cv])
         const cells = []
         for (const site of sites) {
-          site.cr = rate(site.groups, formula, cv)
+          site.cr = rate(site.groups, formula, cv, 'enemy')
           // The mean combatant_cr of the site's Enemies able to fight.
           const able = site.groups.filter((g) => g.count > 0 && ableToFight(g, cv))
           const n = able.reduce((s, g) => s + g.count, 0)
-          site.meanCr = n === 0 ? 0 : able.reduce((s, g) => s + combatantRating(g, formula, cv) * g.count, 0) / n
+          site.meanCr =
+            n === 0 ? 0 : able.reduce((s, g) => s + combatantRating(g, formula, cv, 'enemy') * g.count, 0) / n
           // The mean health, weapon damage, and armor of the same Enemies.
           const meanOf = (key) => (n === 0 ? 0 : able.reduce((s, g) => s + g[key] * g.count, 0) / n)
           site.meanHealth = meanOf('health')
@@ -1183,7 +1195,7 @@
                 const target = (site.cr * t) / 100
                 const count = countFor(target, skill, up, formula, cv)
                 const groups = agentGroups(skill, up, count)
-                const cr = rate(groups, formula, cv)
+                const cr = rate(groups, formula, cv, 'agent')
                 const cell = {
                   id: `${site.id}|${t}|${skill}|${up.w}/${up.a}`,
                   site,
@@ -1478,9 +1490,9 @@
             const list = rows.map((row) => {
               const s = row.cell.site
               if (!siteCr.has(s)) {
-                siteCr.set(s, rate(s.groups, formula, model.cv))
+                siteCr.set(s, rate(s.groups, formula, model.cv, 'enemy'))
               }
-              return { win: row.win, ratio: rate(row.cell.groups, formula, model.cv) / siteCr.get(s) }
+              return { win: row.win, ratio: rate(row.cell.groups, formula, model.cv, 'agent') / siteCr.get(s) }
             })
             const s = fitCurve(list).sse
             return Number.isFinite(s) ? s : Infinity
@@ -1521,7 +1533,8 @@
             <td><input type="checkbox" data-bind="formula.fit.${name}" data-type="bool" ${state.formula.fit[name] ? 'checked' : ''} aria-label="Fit ${name}"></td>
             <td class="desc">${esc(desc)}<span class="unused-note"> Not used by the current expressions.</span></td></tr>`,
           ).join('')
-        $('#exprC').value = state.formula.combatant
+        $('#exprA').value = state.formula.agent
+        $('#exprE').value = state.formula.enemy
         $('#exprT').value = state.formula.team
       }
       function renderSetup() {
@@ -1665,7 +1678,7 @@
         if (state.formula.enabled?.[partOf(name)] === false) {
           return 'off'
         }
-        const text = `${state.formula.combatant} ${state.formula.team}`
+        const text = `${state.formula.agent} ${state.formula.enemy} ${state.formula.team}`
         const mentions = (word) => new RegExp(`\\b${word}\\b`).test(text)
         const stat = ['health', 'armor', 'damage'].find((s) => name === `${s}_base` || name === `cr_per_${s}`)
         return mentions(name) || (stat !== undefined && mentions(`${stat}_mult`)) ? 'used' : 'unused'
@@ -1699,6 +1712,7 @@
           .sort((a, b) => a.skill - b.skill)
           .map((e) => ({
             name: e.name,
+            side: 'enemy',
             g: { count: 1, skill: e.skill, health: e.health, damage: e.damage, armor: e.armor, exhaustion: 0 },
           }))
         const sets = [ups[0], ups.at(-1)].filter((u, i, all) => u !== undefined && all.indexOf(u) === i)
@@ -1706,6 +1720,7 @@
           for (const up of sets) {
             rows.push({
               name: `Agent, ${up.label === 'none' ? 'no Upgrades' : up.label}`,
+              side: 'agent',
               g: agentGroups(skill, up, 1)[0],
             })
           }
@@ -1713,8 +1728,8 @@
         $('#types').innerHTML =
           `<tr><th>Combatant</th><th class="r">Skill</th><th class="r">Health</th><th class="r">Damage</th><th class="r">Armor</th><th class="r">combatant_cr</th><th class="r">× skill</th></tr>` +
           rows
-            .map(({ name, g }) => {
-              const c = combatantRating(g, state.formula, cv)
+            .map(({ name, side, g }) => {
+              const c = combatantRating(g, state.formula, cv, side)
               const skill = effectiveSkill(g, cv)
               return `<tr><td style="font-family:var(--body)">${esc(name)}</td><td class="r">${g.skill}</td><td class="r">${g.health}</td>
               <td class="r">${g.damage}</td><td class="r">${g.armor}</td><td class="r">${fmt(c, 1)}</td><td class="r">${skill > 0 ? `×${(c / skill).toFixed(3)}` : '–'}</td></tr>`
@@ -1802,7 +1817,8 @@
 
         const p = state.formula.params
         $('#formulaText').textContent = [
-          `combatant_cr = ${state.formula.combatant}`,
+          `agent_cr     = ${state.formula.agent}`,
+          `enemy_cr     = ${state.formula.enemy}`,
           `team_cr      = ${state.formula.team}`,
           `health_mult  = 1 + (health − ${p.health_base}) × ${p.cr_per_health}`,
           `armor_mult   = 1 + (armor − ${p.armor_base}) × ${p.cr_per_armor}`,
@@ -1969,7 +1985,7 @@
         const act = b.dataset.act
         const t = Number(b.dataset.t)
         if (act.startsWith('preset-')) {
-          Object.assign(state.formula, FORMULAS[act.slice(7)])
+          Object.assign(state.formula, expressionsOf(FORMULAS[act.slice(7)]))
           if (act === 'preset-default') {
             state.formula.edited = {}
             state.formula.enabled = defaults().formula.enabled
