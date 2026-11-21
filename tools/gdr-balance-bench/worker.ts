@@ -115,8 +115,6 @@ async function fight(probe: Probe): Promise<ProbeResult> {
       agents: new Array<unknown>(probe.size).fill(probe.agent),
       enemies: probe.enemies,
       gdrValues: probe.gdrValues,
-      // COMBAT, Detached Combat: the Rating Upgrades of the Agents' side; an engine that predates them ignores the part.
-      ratingUpgrades: probe.ratingUpgrades,
       seed: `${probe.id}|${probe.size}`,
     },
     probe.trials,

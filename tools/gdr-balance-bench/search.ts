@@ -21,17 +21,17 @@ export interface SiteJob {
   agent: unknown
   n: number
   gdrValues: Record<string, number>
-  /** The Rating Upgrades of the Agents' side: the test team's Weapon damage Upgrades and Armor Upgrades, counted apart. */
-  ratingUpgrades: { weaponDamage: number; armor: number }
   target: number
   /** Whether to search for the smallest team that reaches the target; without it, only the test team is fought. */
   findTeam: boolean
   trials: number
   maxn: number
-  /** The Combat rating of the site's Enemies at full health, i.e. the sum of their effective skills. */
+  /** The Combat rating of the site's Enemies at full health. */
   rating: number
-  /** The Combat rating of one Agent of the test team: its effective skill, raised by the team's Rating Upgrades. */
+  /** What one Agent of the test team adds to its side's sum: its effective skill times its rating factor. */
   agentRating: number
+  /** `rating_team_size_exponent`: a side of n Combatants is rated n ^ (this − 1) times the sum of what each adds. */
+  teamSizeExponent: number
 }
 
 /**
@@ -66,7 +66,6 @@ export interface Probe {
   enemies: unknown[]
   agent: unknown
   gdrValues: Record<string, number>
-  ratingUpgrades: { weaponDamage: number; armor: number }
   target: number
   trials: number
 }
@@ -88,12 +87,19 @@ export type ProbeResult =
   | { type: 'probe'; gen: number; id: string; size: number; full: boolean; error: string }
 
 /**
- * The team size to start from. Teams that need equal strength scale with the Enemies' Combat rating, so the estimate
- * is the need of the solved site whose Combat rating is closest, scaled by the ratio of the two ratings; with no such
- * site solved yet, it is the team whose Combat rating equals the Enemies'.
+ * The team size to start from. A team of n Agents is rated n ^ e times what one adds, e being the team size exponent,
+ * so a team of equal strength grows as the Enemies' Combat rating to the power 1 / e. The estimate is the need of the
+ * solved site whose Combat rating is closest, scaled by the ratio of the two ratings to that power; with no such site
+ * solved yet, it is the team whose Combat rating equals the Enemies'.
  */
+const inverseExponent = (job: SiteJob): number => 1 / Math.max(1, job.teamSizeExponent || 1)
+
+function teamForRating(job: SiteJob): number {
+  return Math.pow(job.rating / Math.max(1e-9, job.agentRating), inverseExponent(job))
+}
+
 export function defaultEstimate(job: SiteJob): number {
-  return Math.min(job.maxn, Math.max(1, Math.round(job.rating / Math.max(1, job.agentRating))))
+  return Math.min(job.maxn, Math.max(1, Math.round(teamForRating(job))))
 }
 
 /** Whether a hint can serve as an estimate for other sites. */
@@ -112,7 +118,9 @@ export function estimate(job: SiteJob, hints: readonly Hint[]): number {
     }
   }
   const guess =
-    best !== null && job.rating > 0 ? (best.need * job.rating) / best.rating : job.rating / Math.max(1, job.agentRating)
+    best !== null && job.rating > 0
+      ? best.need * Math.pow(job.rating / best.rating, inverseExponent(job))
+      : teamForRating(job)
   return Math.min(job.maxn, Math.max(1, Math.round(guess)))
 }
 
@@ -127,7 +135,6 @@ export function searchKey(job: SiteJob): string {
     job.agent,
     job.n,
     job.gdrValues,
-    job.ratingUpgrades,
     job.target,
     job.findTeam,
     job.trials,

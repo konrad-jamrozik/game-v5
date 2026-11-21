@@ -100,6 +100,7 @@ function loadGdr(): Record<string, unknown> {
       case 'InvestigationParameters':
       case 'EndingParameters':
       case 'Weapon':
+      case 'Armor':
         out[d.id] = numbers(d)
         break
       case 'Upgrade':
@@ -107,7 +108,7 @@ function loadGdr(): Record<string, unknown> {
         break
       case 'AgentArchetype':
       case 'EnemyArchetype':
-        out[d.id] = { ...numbers(d), weapon: d['weapon'] }
+        out[d.id] = { ...numbers(d), weapon: d['weapon'], armor: d['armor'] }
         break
       case 'FactionArchetype':
         out[d.id] = { initial_activity_level: d['initial_activity_level'] }
@@ -232,7 +233,6 @@ function pump(): void {
         enemies: job.enemies,
         agent: job.agent,
         gdrValues: job.gdrValues,
-        ratingUpgrades: job.ratingUpgrades,
         target: job.target,
         trials: job.trials,
       })
