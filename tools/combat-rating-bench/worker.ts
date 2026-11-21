@@ -64,6 +64,11 @@ interface Engine {
           }
         | { ok: false; error: { message: string } }
     }
+    queries: {
+      getInitiativeOperationLevels():
+        | { ok: true; value: { missionSiteArchetypes: { id: string; level: number | null }[] } }
+        | { ok: false; error: { message: string } }
+    }
   }
 }
 
@@ -88,7 +93,17 @@ async function boot(): Promise<Engine> {
 
 const booted = boot()
 booted.then(
-  () => port.postMessage({ type: 'ready' }),
+  (engine) => {
+    // The operation level of each Initiative Mission site, for the page's labels and order; none from an engine
+    // that does not answer the query.
+    const levels = engine.developer.queries.getInitiativeOperationLevels()
+    port.postMessage({
+      type: 'ready',
+      initiativeLevels: levels.ok
+        ? Object.fromEntries(levels.value.missionSiteArchetypes.map((item) => [item.id, item.level]))
+        : {},
+    })
+  },
   (e: unknown) => port.postMessage({ type: 'error', message: e instanceof Error ? e.message : String(e) }),
 )
 

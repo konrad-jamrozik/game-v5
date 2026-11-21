@@ -95,6 +95,12 @@ function loadGdr() {
       level: typeof d['operation_level'] === 'number' ? d['operation_level'] : null,
       enemies: (d['enemies'] ?? {}) as Record<string, number>,
     })),
+    // The name of each Faction operation level, e.g. 3: Strategic threats.
+    operationLevelNames: Object.fromEntries(
+      of('FactionOperationLevel')
+        .filter((d) => typeof d['level'] === 'number')
+        .map((d) => [d['level'] as number, typeof d['name'] === 'string' ? d['name'] : d.id]),
+    ),
     // What one purchase of each Upgrade that the Agent teams take adds to every Agent.
     upgradeIncrements: Object.fromEntries(
       of('Upgrade')
@@ -111,7 +117,8 @@ interface Slot {
   busy: boolean
 }
 let pool: Slot[] = []
-let ready: Promise<void> = Promise.reject(new Error('not started'))
+/** Resolves with the operation level of each Initiative Mission site once the first worker thread has started. */
+let ready: Promise<Record<string, number | null>> = Promise.reject(new Error('not started'))
 ready.catch(() => {})
 /** The current run: its number, the jobs still to hand out, the jobs out on a thread, and the page's stream. */
 let gen = 0
@@ -149,7 +156,7 @@ function startPool(): void {
   stream = null
   const mine: Slot[] = []
   pool = mine
-  ready = new Promise<void>((resolve, reject) => {
+  ready = new Promise<Record<string, number | null>>((resolve, reject) => {
     for (let i = 0; i < THREADS; i += 1) {
       const worker = new Worker(new URL('./worker.ts', import.meta.url), { workerData: { impl: IMPL } })
       const slot: Slot = { worker, ready: false, busy: false }
@@ -160,7 +167,7 @@ function startPool(): void {
         }
         if (m.type === 'ready') {
           slot.ready = true
-          resolve()
+          resolve((m as { initiativeLevels?: Record<string, number | null> }).initiativeLevels ?? {})
           pump()
         } else if (m.type === 'error') {
           reject(new Error((m as { message?: string }).message))
@@ -216,11 +223,11 @@ const server = http.createServer((req, res) => {
     } else if (req.method === 'GET' && url === '/api/info') {
       // Every page load reads the GDR values again and starts the engine again from the source on disk.
       startPool()
-      const engineError = await ready.then(
-        () => null,
-        (e: unknown) => (e instanceof Error ? e.message : String(e)),
+      const started = await ready.then(
+        (initiativeLevels) => ({ engineError: null, initiativeLevels }),
+        (e: unknown) => ({ engineError: e instanceof Error ? e.message : String(e), initiativeLevels: {} }),
       )
-      json(res, 200, { engineError, engine: engineVersion(), impl: IMPL, threads: THREADS, gdr: loadGdr() })
+      json(res, 200, { ...started, engine: engineVersion(), impl: IMPL, threads: THREADS, gdr: loadGdr() })
     } else if (req.method === 'POST' && url === '/api/run') {
       const jobs = (JSON.parse(await body(req)) as { jobs: Omit<Job, 'gen'>[] }).jobs
       // A new run replaces the one before: its queued jobs are dropped and its results still on a thread are ignored.

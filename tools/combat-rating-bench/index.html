@@ -150,6 +150,22 @@
         flex-direction: column;
         gap: 14px;
       }
+      /* A section folds to its heading when the heading is clicked. */
+      .shead h2 {
+        cursor: pointer;
+        user-select: none;
+      }
+      .shead h2::before {
+        content: '▾ ';
+        color: var(--muted);
+      }
+      section.folded .shead h2::before {
+        content: '▸ ';
+      }
+      section.folded > :not(.shead),
+      section.folded .shead > :not(h2) {
+        display: none;
+      }
       .shead {
         display: flex;
         flex-direction: column;
@@ -991,15 +1007,31 @@
               const e = byId.get(id)
               return { count: n, skill: e.skill, health: e.health, damage: e.damage, armor: e.armor, exhaustion: 0 }
             })
-          return { ...s, groups, size: groups.reduce((n, x) => n + x.count, 0) }
+          // An Initiative site's operation level comes from the engine, a Response site's from its own GDR.
+          const level = s.kind === 'initiative' ? (info.initiativeLevels?.[s.id] ?? null) : s.level
+          return { ...s, level, groups, size: groups.reduce((n, x) => n + x.count, 0) }
         })
-        // The Initiative sites first, then the Response sites by operation level, each in the order of the YAML file.
+        // The Initiative sites first, then the Response sites, each from the highest operation level down; sites of one
+        // level in the reverse order of the YAML file, which lists the weaker first.
+        const descending = (list) =>
+          list
+            .map((s, i) => ({ s, i }))
+            .sort((a, b) => (b.s.level ?? 0) - (a.s.level ?? 0) || b.i - a.i)
+            .map(({ s }) => s)
         return [
-          ...sites.filter((s) => s.kind === 'initiative'),
-          ...(state.setup.skipResponse
-            ? []
-            : sites.filter((s) => s.kind !== 'initiative').sort((a, b) => (a.level ?? 0) - (b.level ?? 0))),
+          ...descending(sites.filter((s) => s.kind === 'initiative')),
+          ...(state.setup.skipResponse ? [] : descending(sites.filter((s) => s.kind !== 'initiative'))),
         ]
+      }
+
+      /** A site's kind and operation level, e.g. Initiative level 4, or Response level 3: Strategic threats. */
+      function siteLevel(site) {
+        const kind = site.kind === 'initiative' ? 'Initiative' : 'Response'
+        if (site.level === null || site.level === undefined) {
+          return kind
+        }
+        const name = site.kind === 'initiative' ? null : info.gdr.operationLevelNames?.[site.level]
+        return `${kind} level ${site.level}${name ? `: ${esc(name)}` : ''}`
       }
 
       function agentGroups(skill, up, count) {
@@ -1501,7 +1533,7 @@
         const rows = sites
           .map(
             (site) => `<div class="grow-row"><div class="site"><b>${esc(site.name)}</b>
-              <span class="meta">${site.kind === 'initiative' ? 'Initiative' : `Response, level ${site.level}`}</span>
+              <span class="meta">${siteLevel(site)}</span>
               <span class="meta">CR ${fmt(site.cr)} · ${site.size} Enemies</span>
               <span class="meta" title="The mean combatant_cr of the site's Enemies">mean CR ${fmt(site.meanCr, 1)}</span>
               <span><button class="small" data-act="run-row" data-site="${site.id}">Run row</button></span></div>
@@ -1907,6 +1939,29 @@
           scheduleRender()
         }
       })
+
+      /** Folds a section to its heading on a click of the heading, and remembers which sections are folded. */
+      function setUpFolding() {
+        const KEY = 'combat-rating-bench/folded'
+        let folded = []
+        try {
+          folded = JSON.parse(localStorage.getItem(KEY) ?? '[]')
+        } catch {}
+        for (const h2 of document.querySelectorAll('section .shead h2')) {
+          const section = h2.closest('section')
+          const name = h2.textContent.trim()
+          section.classList.toggle('folded', folded.includes(name))
+          h2.title = 'Click to fold or unfold'
+          h2.addEventListener('click', () => {
+            section.classList.toggle('folded')
+            folded = [...document.querySelectorAll('section.folded .shead h2')].map((h) => h.textContent.trim())
+            try {
+              localStorage.setItem(KEY, JSON.stringify(folded))
+            } catch {}
+          })
+        }
+      }
+      setUpFolding()
 
       async function start() {
         renderFormula()
