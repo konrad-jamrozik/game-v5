@@ -610,9 +610,16 @@
               <button
                 class="small"
                 data-act="preset-default"
-                title="The game's formula: the additive expressions and the game's parameters, with every part enabled"
+                title="The game's formula, skill × (damage / damage_base + (health + armor) / (health_base + armor_base)) / 2, with the game's parameters and every part enabled"
               >
                 Restore all defaults
+              </button>
+              <button
+                class="small"
+                data-act="preset-game"
+                title="The game's formula, skill × (damage / damage_base + (health + armor) / (health_base + armor_base)) / 2; keeps the parameters"
+              >
+                Game's formula
               </button>
               <button
                 class="small"
@@ -624,7 +631,7 @@
               <button
                 class="small"
                 data-act="preset-additive"
-                title="skill × (1 + the sum of the three bonuses), as in the game, e.g. +10% health, +15% armor, and +30% damage make skill × 1.55; keeps the parameters"
+                title="skill × (1 + the sum of the three bonuses), e.g. +10% health, +15% armor, and +30% damage make skill × 1.55; keeps the parameters"
               >
                 Additive bonuses
               </button>
@@ -728,19 +735,19 @@
         ['health_base', 'Baseline health. Defaults to the game’s rating_base_health.', 1],
         [
           'cr_per_health',
-          'CR % per point of health above baseline, e.g. 0.01 is 1%. Defaults to the game’s rating_bonus_per_health.',
+          'CR % per point of health above baseline, e.g. 0.01 is 1%. Read only by the bonus presets; the game has no such value.',
           0.01,
         ],
         ['armor_base', 'Baseline armor. Defaults to the game’s rating_base_armor.', 1],
         [
           'cr_per_armor',
-          'CR % per point of armor above baseline, e.g. 0.01 is 1%. Defaults to the game’s rating_bonus_per_armor.',
+          'CR % per point of armor above baseline, e.g. 0.01 is 1%. Read only by the bonus presets; the game has no such value.',
           0.001,
         ],
         ['damage_base', 'Baseline weapon damage. Defaults to the game’s rating_base_weapon_damage.', 1],
         [
           'cr_per_damage',
-          'CR % per point of weapon damage above baseline, e.g. 0.01 is 1%. Defaults to the game’s rating_bonus_per_weapon_damage.',
+          'CR % per point of weapon damage above baseline, e.g. 0.01 is 1%. Read only by the bonus presets; the game has no such value.',
           0.01,
         ],
         [
@@ -750,9 +757,9 @@
         ],
       ]
       const FORMULAS = {
-        // The game's formula, under COMBAT, Combat rating: the bonuses add rather than multiply.
+        // The game's formula, under COMBAT, Combat rating: the mean of an attack half and a toughness half.
         default: {
-          combatant: 'skill * (1 + (health_mult - 1) + (armor_mult - 1) + (damage_mult - 1))',
+          combatant: 'skill * ((damage / damage_base) + ((health + armor) / (health_base + armor_base))) / 2',
           team: 'sum * count ** team_exp / count',
         },
         lanchester: { combatant: 'skill * health_mult * armor_mult * damage_mult', team: 'sqrt(sum * count)' },
@@ -762,6 +769,11 @@
           team: 'sum * count ** team_exp / count',
         },
         // The game's expressions alone, keeping the parameters, unlike Restore all defaults.
+        game: {
+          combatant: 'skill * ((damage / damage_base) + ((health + armor) / (health_base + armor_base))) / 2',
+          team: 'sum * count ** team_exp / count',
+        },
+        // The bonuses add rather than multiply, e.g. +10% health, +15% armor, and +30% damage make skill × 1.55.
         additive: {
           combatant: 'skill * (1 + (health_mult - 1) + (armor_mult - 1) + (damage_mult - 1))',
           team: 'sum * count ** team_exp / count',
@@ -775,11 +787,12 @@
         formula: {
           params: {
             health_base: contentValue('rating_base_health') ?? 30,
-            cr_per_health: contentValue('rating_bonus_per_health') ?? 0.01,
+            // The game's formula has no bonus per point, so the bonus presets start from fixed values.
+            cr_per_health: 0.01,
             armor_base: contentValue('rating_base_armor') ?? 0,
-            cr_per_armor: contentValue('rating_bonus_per_armor') ?? 0.004,
+            cr_per_armor: 0.004,
             damage_base: contentValue('rating_base_weapon_damage') ?? 10,
-            cr_per_damage: contentValue('rating_bonus_per_weapon_damage') ?? 0.02,
+            cr_per_damage: 0.02,
             team_exp: contentValue('rating_team_size_exponent') ?? 1.2,
           },
           /** The parameters the designer edited, by typing or by Fit; every other one follows the content. */
@@ -800,7 +813,7 @@
         setup: {
           targets: '80, 90, 100',
           skills: '100, 250, 500',
-          upgrades: '0/0, 4/0, 0/20, 4/20, 8/0, 0/40, 8/40',
+          upgrades: '0/0, 2/10, 4/20, 4/30, 4/40, 8/20, 8/30',
           trials: 100,
           retreat: false,
           /** Leaves the Response sites out of the grid, the runs, the statistics, and the fit. */

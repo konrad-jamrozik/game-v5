@@ -104,7 +104,7 @@ A Combat is fought in rounds. In each round every [Agent](#agents) attacks once,
 | Agent target | Any Enemy able to fight, with a weight of 100 minus one for each whole hundredth by which the chance to hit it lies above or below 0.8, times the share of the Agent's [weapon damage](#damage) that the Enemy's health and armor can still take, rounded up |
 | Each attack | +1 [exhaustion](#exhaustion) for the attacker and +1 for the defender, hit or miss |
 | Incapacitated | Alive but unable to fight: effective skill at or below 0.1 × skill, or exhaustion of 100 or more |
-| Combat rating | For each Combatant of a side who is able to fight, its effective skill times its rating factor: 1, plus 0.01 for each point of max health above 30, 0.004 for each point of armor above 0, and 0.02 for each point of weapon damage above 10, each point below lowering it alike. Added up for the side, then multiplied by n ^ (1.2 − 1), where n is the number of those Combatants, so that a larger side counts for more than its sum, and rounded down |
+| Combat rating | For each Combatant of a side who is able to fight, its effective skill times its rating factor: the mean of its weapon damage divided by 10 and its max health plus armor divided by (30 + 0), so that an Agent without [Upgrades](#upgrades) has a rating factor of 1. Added up for the side, then multiplied by n ^ (1.2 − 1), where n is the number of those Combatants, so that a larger side counts for more than its sum, and rounded down |
 | End of the Combat | As soon as no Enemy or no Agent is able to fight, or after a round in which the team retreats |
 
 See also: [Damage](#damage) · [Retreat](#retreat) · [Skill](#skill) · [Missions](#missions)
