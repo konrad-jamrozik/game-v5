@@ -4,7 +4,7 @@
 
 # What this family is for
 
-The Development loop needs a few things from every Implementation, whatever its platform: that it lives where it can be found and rebuilt, that it writes down what it learned about the specifications, that it records which specifications it follows, that its developer tools run the same code as play, and that it is published on the same terms as the specifications. Mandatory specifications state those repository constraints. They are checked against the files of an Implementation rather than through the engine API.
+The Development loop needs a few things from every Implementation, whatever its platform: that it lives where it can be found and rebuilt, that it writes down what it learned about the specifications, that it records which specifications it follows, that its developer tools run the same code as play, that its tests of whole Campaigns stay short and check only that play runs, and that it is published on the same terms as the specifications. Mandatory specifications state those repository constraints. They are checked against the files of an Implementation rather than through the engine API.
 
 # Documents
 
@@ -28,9 +28,13 @@ The Development loop needs a few things from every Implementation, whatever its 
 
 [Rule Reuse](rule-reuse.md) answers _how does a developer tool stay true to play?_ It requires each Developer tool to call the very code that play runs for the same rule, e.g. one function that fights a Combat for both the Mission resolution step and `fightCombat`, and a test that shows the two agree.
 
+## Campaign Tests
+
+[Campaign Tests](campaign-tests.md) answers _how much play may a test simulate?_ It limits each test that plays Campaigns with an Autopilot AI to at most two Campaigns of at most 200 Turns each, and to checking that play does not fail, never balance, e.g. never whether the Basic Autopilot AI wins.
+
 # How they relate
 
-Implementation Feedback and Specification Tracking use Implementation Placement: their files are kept in its Implementation repo. Specification Tracking also uses Implementation Feedback, whose Specification problems are the only exceptions to conformance it allows. Implementation Placement uses Bootstrap GDRs from the Content family and Music and Visual Design from the UI family, whose files each implementation copies. Implementation License uses Implementation Placement for the Implementation repo whose files state the license. Rule Reuse uses Specification Tracking, whose Specification map names the shared code, and Developer Access and Combat from the Design families, which define the Developer tools it constrains.
+Implementation Feedback and Specification Tracking use Implementation Placement: their files are kept in its Implementation repo. Specification Tracking also uses Implementation Feedback, whose Specification problems are the only exceptions to conformance it allows. Implementation Placement uses Bootstrap GDRs from the Content family and Music and Visual Design from the UI family, whose files each implementation copies. Implementation License uses Implementation Placement for the Implementation repo whose files state the license. Rule Reuse uses Specification Tracking, whose Specification map names the shared code, and Developer Access and Combat from the Design families, which define the Developer tools it constrains. Campaign Tests uses Implementation Placement for the Implementation repo whose tests it limits, Implementation Feedback, where it forbids recording balance results, and Autopilot and the Basic Autopilot AI from the Design families, whose play its tests run.
 
 <!-- generated:family-diagram:start -->
 

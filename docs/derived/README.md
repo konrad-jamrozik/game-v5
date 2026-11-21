@@ -19,7 +19,7 @@ These informative views are derived from the registered Markdown specifications.
 | Design             | Content       | 1              |
 | Design             | UI            | 17             |
 | Design             | Autopilot AIs | 1              |
-| Implementation     | Mandatory     | 5              |
+| Implementation     | Mandatory     | 6              |
 | Implementation     | Guidance      | 4              |
 | Implementation     | Recipes       | 3              |
 
@@ -121,6 +121,7 @@ These informative views are derived from the registered Markdown specifications.
 
 | ID | Document | Owns |
 | --- | --- | --- |
+| CTEST | [Campaign Tests](../specs/implementation/mandatory/campaign-tests.md) | How much play an automated test or a verification run of an Implementation may simulate with an Autopilot AI, and what it may check. |
 | FEEDBACK | [Implementation Feedback](../specs/implementation/mandatory/implementation-feedback.md) | The feedback files of Specification problems and Implementation decisions that each Implementation keeps. |
 | LICENSE | [Implementation License](../specs/implementation/mandatory/implementation-license.md) | The license under which each Implementation is published, and the files that state it. |
 | PLACE | [Implementation Placement](../specs/implementation/mandatory/implementation-placement.md) | Where each implementation and everything it needs reside, relative to the Spec repo. |
