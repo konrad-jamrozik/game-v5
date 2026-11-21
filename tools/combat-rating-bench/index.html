@@ -534,6 +534,47 @@
 
       <section>
         <div class="shead">
+          <h2>Setup</h2>
+          <p>
+            Agent teams are Agents of the AgentArchetype's health, weapon damage, and armor, at full health and rested,
+            with the given base skill and Upgrades; each Weapon damage or Armor Upgrade adds its <code>increment</code>
+            to every Agent. Each team takes the Agent count whose rating is closest to its share of the Mission site's
+            rating. The Agent team is always the Agents' side, as in a Mission.
+          </p>
+        </div>
+        <div class="row">
+          <label class="inline"
+            >Shares of the site's rating, % <input class="wide" data-bind="setup.targets" data-type="str"
+          /></label>
+          <label class="inline">Base skills <input class="wide" data-bind="setup.skills" data-type="str" /></label>
+          <label class="inline"
+            >Upgrades, weapon/armor <input class="wide" style="width: 340px" data-bind="setup.upgrades" data-type="str"
+          /></label>
+          <label class="inline"
+            >Combats per cell
+            <input type="number" min="10" max="2000" step="10" data-bind="setup.trials" data-type="num"
+          /></label>
+          <label class="inline"
+            ><input type="checkbox" data-bind="setup.retreat" data-type="bool" /> Allow retreat</label
+          >
+          <label class="inline"
+            ><input type="checkbox" data-bind="setup.skipResponse" data-type="bool" /> Skip Response missions</label
+          >
+        </div>
+        <p class="note">
+          Retreat is off by default, by setting <code>retreat_below_agent_rating_fraction</code> to 0, because it reads
+          the game's own Combat rating rather than this formula; when it is allowed, a retreat counts as a loss. A cell
+          whose closest Agent count still misses its share by more than 5% is excluded: drawn dashed, never fought, and
+          left out of the statistics and the fit, e.g. one Agent of skill 500 against a small site.
+        </p>
+        <details>
+          <summary class="lbl note" style="cursor: pointer">Combat values passed to the engine</summary>
+          <div class="scroll" style="margin-top: 8px"><table id="combat"></table></div>
+        </details>
+      </section>
+
+      <section>
+        <div class="shead">
           <h2>Formula</h2>
           <p>
             Each group of identical Combatants rates by the combatant expression; a team rates by the team expression
@@ -614,54 +655,7 @@
 
       <section>
         <div class="shead">
-          <h2>Setup</h2>
-          <p>
-            Agent teams are Agents of the AgentArchetype's health, weapon damage, and armor, at full health and rested,
-            with the given base skill and Upgrades; each Weapon damage or Armor Upgrade adds its <code>increment</code>
-            to every Agent. Each team takes the Agent count whose rating is closest to its share of the Mission site's
-            rating. The Agent team is always the Agents' side, as in a Mission.
-          </p>
-        </div>
-        <div class="row">
-          <label class="inline"
-            >Shares of the site's rating, % <input class="wide" data-bind="setup.targets" data-type="str"
-          /></label>
-          <label class="inline">Base skills <input class="wide" data-bind="setup.skills" data-type="str" /></label>
-          <label class="inline"
-            >Upgrades, weapon/armor <input class="wide" style="width: 340px" data-bind="setup.upgrades" data-type="str"
-          /></label>
-          <label class="inline"
-            >Combats per cell
-            <input type="number" min="10" max="2000" step="10" data-bind="setup.trials" data-type="num"
-          /></label>
-          <label class="inline"
-            ><input type="checkbox" data-bind="setup.retreat" data-type="bool" /> Allow retreat</label
-          >
-          <label class="inline"
-            ><input type="checkbox" data-bind="setup.skipResponse" data-type="bool" /> Skip Response missions</label
-          >
-        </div>
-        <p class="note">
-          Retreat is off by default, by setting <code>retreat_below_agent_rating_fraction</code> to 0, because it reads
-          the game's own Combat rating rather than this formula; when it is allowed, a retreat counts as a loss. A cell
-          whose closest Agent count still misses its share by more than 5% is excluded: drawn dashed, never fought, and
-          left out of the statistics and the fit, e.g. one Agent of skill 500 against a small site.
-        </p>
-        <details>
-          <summary class="lbl note" style="cursor: pointer">Combat values passed to the engine</summary>
-          <div class="scroll" style="margin-top: 8px"><table id="combat"></table></div>
-        </details>
-      </section>
-
-      <section>
-        <div class="shead">
           <h2>Mission sites</h2>
-          <p>
-            Each cell is one Agent team against the row's Mission site: its Agent count above, its win rate over the
-            Combats below, tinted red when the Agents win less than 50% and green when they win more; an excluded cell
-            shows <i>excl.</i> Hover a cell for its ratings. <b>Run</b> beside a share fights that block,
-            <b>Run row</b> the whole row, and <b>Run</b> in the top row that share for every site.
-          </p>
         </div>
         <div class="scroll"><div id="grid" class="grid"></div></div>
       </section>
