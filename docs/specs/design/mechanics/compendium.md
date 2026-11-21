@@ -205,7 +205,7 @@ Every EnemyArchetype, Weapon, and Armor is Player-visible in every World state, 
 - **Weapon:** a Weapon is a Met subject when it is the `weapon` of an AgentArchetype, or of an EnemyArchetype that is a Met subject in that World state.
 - **Armor:** an Armor is a Met subject when it is the `armor` of an AgentArchetype, or of an EnemyArchetype that is a Met subject in that World state.
 
-Whether a GDR is a Met subject is a Derived value of the World state, never stored. It follows the visibility of the MissionSiteArchetypes, so the article about an [Enemy](domain-model.md#combat) becomes Player-visible when a Lead is discovered that creates a Mission site holding that Enemy, or when a Mission site holding it is created, whichever comes first, e.g. with the Bootstrap GDRs, discovering a Lead that creates an Apprehend member Mission site makes the articles about the initiate, the operative, and the pistol Player-visible, while the article about the sidearm is Player-visible from the start because every Agent carries one.
+Whether a GDR is a Met subject is a Derived value of the World state, never stored. It follows the visibility of the MissionSiteArchetypes, so the article about an [Enemy](domain-model.md#combat) becomes Player-visible when a Lead is discovered that creates a Mission site holding that Enemy, or when a Mission site holding it is created, whichever comes first, e.g. with the Bootstrap GDRs, discovering a Lead that creates an Apprehend member Mission site makes the articles about the initiate, the operative, the basic pistol, and the combat pistol Player-visible, while the article about the service weapon is Player-visible from the start because every Agent carries one.
 
 # Article resolution
 

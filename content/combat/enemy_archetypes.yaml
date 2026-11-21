@@ -3,7 +3,7 @@ type: EnemyArchetype
 name: Initiate
 base_skill: 40
 base_health: 20
-weapon: pistol
+weapon: basic_pistol
 armor: no_armor
 ---
 id: operative
@@ -11,7 +11,7 @@ type: EnemyArchetype
 name: Operative
 base_skill: 60
 base_health: 25
-weapon: sidearm
+weapon: combat_pistol
 armor: no_armor
 ---
 id: handler
@@ -19,7 +19,7 @@ type: EnemyArchetype
 name: Handler
 base_skill: 80
 base_health: 25
-weapon: sidearm
+weapon: combat_pistol
 armor: padded_jacket
 ---
 id: soldier

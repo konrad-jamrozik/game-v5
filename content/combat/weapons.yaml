@@ -1,16 +1,16 @@
 id: service_weapon
 type: Weapon
 name: Service weapon
-base_weapon_damage: 10 # the same as sidearm; the weapon_damage Upgrade makes it hit harder in Agent hands
+base_weapon_damage: 10 # the same as combat_pistol; the weapon_damage Upgrade makes it hit harder in Agent hands
 ---
-id: pistol
+id: basic_pistol
 type: Weapon
-name: Pistol
+name: Basic pistol
 base_weapon_damage: 8
 ---
-id: sidearm
+id: combat_pistol
 type: Weapon
-name: Sidearm
+name: Combat pistol
 base_weapon_damage: 10
 ---
 id: rifle

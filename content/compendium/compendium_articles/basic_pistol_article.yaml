@@ -1,6 +1,6 @@
-id: pistol_article
+id: basic_pistol_article
 type: CompendiumArticle
 category: subject
-subject: pistol
-terms: [Pistol, Pistols]
+subject: basic_pistol
+terms: [Basic pistol, Basic pistols]
 body: A cheap handgun handed to the newest recruits.

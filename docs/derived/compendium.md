@@ -140,7 +140,7 @@ A hit deals damage to its target. How much depends on the weapon of the attacker
 | Lost armor | Costs no health and no [effective skill](#skill), and is whole again at the start of the next [Combat](#combat) |
 | A miss | No damage |
 
-See also: [Combat](#combat) · [Health](#health) · [Weapon damage](#weapon-damage) · [Armor](#armor) · [Service weapon](#service-weapon) · [Service armor](#service-armor) · [Pistol](#pistol) · [Sidearm](#sidearm) · [Rifle](#rifle) · [Battle rifle](#battle-rifle) · [Assault rifle](#assault-rifle) · [Heavy rifle](#heavy-rifle) · [Machine gun](#machine-gun)
+See also: [Combat](#combat) · [Health](#health) · [Weapon damage](#weapon-damage) · [Armor](#armor) · [Service weapon](#service-weapon) · [Service armor](#service-armor) · [Basic pistol](#basic-pistol) · [Combat pistol](#combat-pistol) · [Rifle](#rifle) · [Battle rifle](#battle-rifle) · [Assault rifle](#assault-rifle) · [Heavy rifle](#heavy-rifle) · [Machine gun](#machine-gun)
 
 ### Exhaustion
 
@@ -663,7 +663,7 @@ A junior officer who runs a cell of [Initiates](#initiate) and [Operatives](#ope
 | `name`        | `Handler`       |
 | `base_skill`  | `80`            |
 | `base_health` | `25`            |
-| `weapon`      | `sidearm`       |
+| `weapon`      | `combat_pistol` |
 | `armor`       | `padded_jacket` |
 
 ### High commander
@@ -691,7 +691,7 @@ A new recruit of a hostile cult, with more zeal than [skill](#skill). Initiates 
 | `name`        | `Initiate`     |
 | `base_skill`  | `40`           |
 | `base_health` | `20`           |
-| `weapon`      | `pistol`       |
+| `weapon`      | `basic_pistol` |
 | `armor`       | `no_armor`     |
 
 ### Lieutenant
@@ -714,13 +714,13 @@ Source: `content/compendium/compendium_articles/operative_article.yaml`
 
 A cult member trusted with real work. Operatives shoot straighter than [Initiates](#initiate) and stand beside them in most fights.
 
-| `operative`   | EnemyArchetype |
-| ------------- | -------------- |
-| `name`        | `Operative`    |
-| `base_skill`  | `60`           |
-| `base_health` | `25`           |
-| `weapon`      | `sidearm`      |
-| `armor`       | `no_armor`     |
+| `operative`   | EnemyArchetype  |
+| ------------- | --------------- |
+| `name`        | `Operative`     |
+| `base_skill`  | `60`            |
+| `base_health` | `25`            |
+| `weapon`      | `combat_pistol` |
+| `armor`       | `no_armor`      |
 
 ### Soldier
 
@@ -1849,6 +1849,17 @@ A fast-firing long gun issued to the best fighters of a cult.
 | `name`               | `Assault rifle` |
 | `base_weapon_damage` | `20`            |
 
+### Basic pistol
+
+Source: `content/compendium/compendium_articles/basic_pistol_article.yaml`
+
+A cheap handgun handed to the newest recruits.
+
+| `basic_pistol`       | Weapon         |
+| -------------------- | -------------- |
+| `name`               | `Basic pistol` |
+| `base_weapon_damage` | `8`            |
+
 ### Battle rifle
 
 Source: `content/compendium/compendium_articles/battle_rifle_article.yaml`
@@ -1859,6 +1870,17 @@ A full-power long gun carried by officers in the field.
 | -------------------- | -------------- |
 | `name`               | `Battle rifle` |
 | `base_weapon_damage` | `16`           |
+
+### Combat pistol
+
+Source: `content/compendium/compendium_articles/combat_pistol_article.yaml`
+
+A full-size handgun built for a fight, with a larger magazine than a [basic pistol](#basic-pistol) and still easy to carry unseen.
+
+| `combat_pistol`      | Weapon          |
+| -------------------- | --------------- |
+| `name`               | `Combat pistol` |
+| `base_weapon_damage` | `10`            |
 
 ### Heavy rifle
 
@@ -1882,17 +1904,6 @@ A heavy automatic weapon, rare and devastating.
 | `name`               | `Machine gun` |
 | `base_weapon_damage` | `28`          |
 
-### Pistol
-
-Source: `content/compendium/compendium_articles/pistol_article.yaml`
-
-A cheap handgun handed to the newest recruits.
-
-| `pistol`             | Weapon   |
-| -------------------- | -------- |
-| `name`               | `Pistol` |
-| `base_weapon_damage` | `8`      |
-
 ### Rifle
 
 Source: `content/compendium/compendium_articles/rifle_article.yaml`
@@ -1908,20 +1919,9 @@ A reliable long gun for trained fighters.
 
 Source: `content/compendium/compendium_articles/service_weapon_article.yaml`
 
-The handgun the Agency issues to every [Agent](#agents). It starts as good as an ordinary [sidearm](#sidearm), and every [Upgrade](#upgrades) to [weapon damage](#damage) makes it hit harder in the hands of every Agent.
+The handgun the Agency issues to every [Agent](#agents). It starts as good as a [combat pistol](#combat-pistol), and every [Upgrade](#upgrades) to [weapon damage](#damage) makes it hit harder in the hands of every Agent.
 
 | `service_weapon`     | Weapon           |
 | -------------------- | ---------------- |
 | `name`               | `Service weapon` |
 | `base_weapon_damage` | `10`             |
-
-### Sidearm
-
-Source: `content/compendium/compendium_articles/sidearm_article.yaml`
-
-A compact handgun, easy to carry and easy to hide.
-
-| `sidearm`            | Weapon    |
-| -------------------- | --------- |
-| `name`               | `Sidearm` |
-| `base_weapon_damage` | `10`      |
