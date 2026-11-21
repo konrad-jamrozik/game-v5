@@ -95,14 +95,10 @@ function statsOf(campaign: Campaign): CampaignStats {
   const skillNow = agents.reduce((s, a) => s + (a.ableToFight ? (a.effectiveSkill as number) : 0), 0)
   const skillFresh = agents.reduce((s, a) => s + Math.floor((a.skillHundredths as number) / 100), 0)
   const ratingFresh = Math.round(skillFresh * (skillNow > 0 ? ratingNow / skillNow : 1))
-  // The Agents the Basic Autopilot AI may form a team of for a Mission site: its Rested Agents that are able to fight,
-  // i.e. those that can be assigned, are on Standby or Training, and are Fit for work.
+  // The Agents the Basic Autopilot AI may form a team of for a Mission site: its Rested Agents, i.e. those that can be
+  // assigned, are on Standby or Training, and are Fit for work.
   const ready = agents.filter(
-    (a) =>
-      a.canBeAssigned &&
-      a.fitForWork &&
-      (a.assignment?.kind === 'Standby' || a.assignment?.kind === 'Training') &&
-      a.ableToFight,
+    (a) => a.canBeAssigned && a.fitForWork && (a.assignment?.kind === 'Standby' || a.assignment?.kind === 'Training'),
   )
   const ratingReady = ok<Any>(
     player.queries.previewDeployment(

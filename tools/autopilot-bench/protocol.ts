@@ -61,7 +61,7 @@ export interface CampaignStats {
   readonly upgrades: Record<string, number>
   /**
    * The Combat rating, as `previewDeployment` reports it, of the Agents the Basic Autopilot AI may form a team of: its
-   * Rested Agents that are able to fight.
+   * Rested Agents.
    */
   readonly ratingReady: number
   /** How many Agents that is. */
