@@ -12,6 +12,12 @@
       "runtimeExecutable": "node",
       "runtimeArgs": ["tools/gdr-balance-bench/server.ts"],
       "port": 4717
+    },
+    {
+      "name": "combat-rating-bench",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["tools/combat-rating-bench/server.ts"],
+      "port": 4719
     }
   ]
 }

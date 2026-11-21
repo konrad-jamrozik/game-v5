@@ -15,7 +15,8 @@
     ".claude/worktrees",
     "lib/globe",
     "tools/gdr-balance-bench",
-    "tools/autopilot-bench"
+    "tools/autopilot-bench",
+    "tools/combat-rating-bench"
   ],
   "rules": {
     "import/no-unassigned-import": ["error", { "allow": ["**/*.css"] }],

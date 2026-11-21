@@ -1,0 +1,1573 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Combat Rating Bench</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    />
+    <style>
+      /* Single dark look on purpose: the palette and type are the game's own Visual Design tokens, as in the GDR Balance Bench. */
+      :root {
+        color-scheme: dark;
+        --bg: #0d0d0b;
+        --surface: #151512;
+        --raised: #22211c;
+        --divider: #2b2a24;
+        --border: #3a382f;
+        --text: #e8e4d8;
+        --text2: #b8b3a6;
+        --muted: #9c978a;
+        --axis: #8f8a7d;
+        --accent: #ff7a1a;
+        --accent-text: #ff8a33;
+        --on-accent: #1a0b00;
+        --positive: #b7c77a;
+        --warning: #e3c14b;
+        --danger: #ff7f78;
+        --notice: #8fb8d6;
+        --head: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+        --body: 'Barlow', 'Segoe UI', system-ui, sans-serif;
+        --mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font: 15px/1.5 var(--body);
+      }
+      .wrap {
+        max-width: 1700px;
+        margin: 0 auto;
+        padding: 20px 16px 80px;
+        display: flex;
+        flex-direction: column;
+        gap: 36px;
+      }
+      h1,
+      h2,
+      h3,
+      th,
+      .lbl,
+      button {
+        font-family: var(--head);
+        text-transform: uppercase;
+      }
+      h1 {
+        font-size: 34px;
+        letter-spacing: 0.04em;
+        margin: 0;
+        line-height: 1.1;
+      }
+      h2 {
+        font-size: 22px;
+        letter-spacing: 0.08em;
+        margin: 0;
+      }
+      h3 {
+        font-size: 16px;
+        letter-spacing: 0.08em;
+        margin: 0;
+        color: var(--text2);
+      }
+      p {
+        margin: 0;
+        color: var(--text2);
+        max-width: 80ch;
+      }
+      code,
+      input,
+      select,
+      td,
+      textarea,
+      .num {
+        font-family: var(--mono);
+        font-variant-numeric: tabular-nums;
+      }
+      code {
+        font-size: 13px;
+        color: var(--text);
+      }
+      .bar {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        background: var(--bg);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 18px;
+        align-items: center;
+        padding-block: 10px;
+      }
+      .bar .grow {
+        flex: 1 1 auto;
+        font-family: var(--mono);
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .bar .grow.on {
+        color: var(--accent-text);
+      }
+      button {
+        font-weight: 600;
+        font-size: 14px;
+        letter-spacing: 0.1em;
+        background: var(--raised);
+        color: var(--text);
+        border: 1px solid var(--border);
+        padding: 5px 12px;
+        cursor: pointer;
+      }
+      button.pri {
+        background: var(--accent);
+        color: var(--on-accent);
+        border-color: var(--accent);
+      }
+      button.small {
+        font-size: 12px;
+        padding: 2px 8px;
+      }
+      button:hover {
+        border-color: var(--text2);
+      }
+      :focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 1px;
+      }
+      section {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .shead {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        border-top: 1px solid var(--border);
+        padding-top: 14px;
+      }
+      .cols {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 24px;
+        align-items: start;
+      }
+      @media (max-width: 1100px) {
+        .cols {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
+      .scroll {
+        overflow-x: auto;
+        max-width: 100%;
+      }
+      table {
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+      th {
+        font-weight: 600;
+        font-size: 13px;
+        letter-spacing: 0.08em;
+        color: var(--text2);
+        text-align: left;
+        padding: 4px 8px;
+        border-bottom: 1px solid var(--border);
+        white-space: nowrap;
+      }
+      td {
+        padding: 3px 8px;
+        border-bottom: 1px solid var(--divider);
+        white-space: nowrap;
+      }
+      td.r,
+      th.r {
+        text-align: right;
+      }
+      td.desc {
+        font-family: var(--body);
+        color: var(--muted);
+        white-space: normal;
+        min-width: 220px;
+      }
+      input,
+      select,
+      textarea {
+        background: var(--surface);
+        color: var(--text);
+        border: 1px solid var(--border);
+        font-size: 13px;
+        padding: 3px 6px;
+      }
+      input[type='number'] {
+        width: 86px;
+        text-align: right;
+      }
+      input.narrow {
+        width: 64px;
+      }
+      input.wide {
+        width: 220px;
+        text-align: left;
+      }
+      textarea {
+        width: 100%;
+        min-height: 2.6em;
+        resize: vertical;
+      }
+      .err {
+        color: var(--danger);
+        font-family: var(--mono);
+        font-size: 13px;
+      }
+      .note {
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 18px;
+        align-items: center;
+      }
+      label.inline {
+        display: inline-flex;
+        gap: 6px;
+        align-items: center;
+        color: var(--text2);
+      }
+      .teams {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, 560px), 1fr));
+        gap: 14px;
+      }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .card .crline {
+        font-family: var(--mono);
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .tiles {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+        gap: 12px;
+      }
+      .tile {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        padding: 10px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .tile .lbl {
+        font-size: 13px;
+        letter-spacing: 0.08em;
+        color: var(--text2);
+        font-weight: 600;
+      }
+      .tile .v {
+        font-family: var(--mono);
+        font-size: 26px;
+        line-height: 1.2;
+      }
+      .tile .s {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .good {
+        color: var(--positive);
+      }
+      .warn {
+        color: var(--warning);
+      }
+      .bad {
+        color: var(--danger);
+      }
+      .chart {
+        position: relative;
+        max-width: 820px;
+      }
+      .chart svg {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+      .chart text {
+        font-family: var(--mono);
+        font-size: 11px;
+        fill: var(--muted);
+      }
+      #tip {
+        position: absolute;
+        pointer-events: none;
+        background: var(--raised);
+        border: 1px solid var(--border);
+        padding: 6px 8px;
+        font-family: var(--mono);
+        font-size: 12px;
+        white-space: nowrap;
+        z-index: 3;
+      }
+      pre {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        padding: 10px 12px;
+        margin: 0;
+        font-family: var(--mono);
+        font-size: 13px;
+        white-space: pre-wrap;
+        color: var(--text);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="intro" style="display: flex; flex-direction: column; gap: 8px">
+        <h1>Combat Rating Bench</h1>
+        <p>
+          Teams of Combatants fight each other in the engine, and a candidate Combat rating formula predicts who wins. A
+          good formula gives two teams of equal rating a 50% win rate whatever their make-up, and a win rate that
+          follows the ratio of the ratings the same way for every pair. The Combats do not read the formula, so editing
+          it re-scores the Combats already fought at once, and <b>Fit</b> searches the checked parameters for the best
+          formula.
+        </p>
+        <p id="engine" class="note">Loading…</p>
+      </header>
+
+      <div class="bar">
+        <span id="progress" class="grow">Idle</span>
+        <button
+          id="fit"
+          class="pri"
+          title="Search the checked parameters for the formula that predicts the fought Combats best"
+        >
+          Fit
+        </button>
+        <button id="rerun" title="Forget every result and fight every pair again">Fight again</button>
+        <button id="reset" title="Restore the default formula, teams and settings">Reset</button>
+      </div>
+
+      <section>
+        <div class="shead">
+          <h2>Formula</h2>
+          <p>
+            Each group of identical Combatants rates by the combatant expression; a team rates by the team expression
+            over the sum of its Combatants' ratings. A Combatant that is not able to fight at the start counts for
+            nothing. The expressions are JavaScript, with <code>Math</code> in scope, e.g. <code>sqrt(health)</code>.
+          </p>
+        </div>
+        <div class="cols">
+          <div class="scroll"><table id="params"></table></div>
+          <div style="display: flex; flex-direction: column; gap: 10px">
+            <label class="lbl note" for="exprC">combatant_cr</label>
+            <textarea id="exprC" data-bind="formula.combatant" data-type="str" spellcheck="false"></textarea>
+            <label class="lbl note" for="exprT">team_cr</label>
+            <textarea id="exprT" data-bind="formula.team" data-type="str" spellcheck="false"></textarea>
+            <div id="exprErr" class="err"></div>
+            <p class="note">
+              Combatant variables: <code>skill</code> (effective skill), <code>base_skill</code>, <code>health</code>,
+              <code>armor</code>, <code>damage</code>, <code>exhaustion</code>, and the derived
+              <code>health_mult = 1 + (health − health_base) × health_per_point</code>, likewise
+              <code>armor_mult</code> and <code>damage_mult</code>. Team variables: <code>sum</code>,
+              <code>count</code> (Combatants able to fight), and <code>game</code> (the game's base Combat rating, Σ
+              effective skill). Every parameter is a variable of both.
+            </p>
+            <div class="row">
+              <button class="small" data-act="preset-game">Game's base Combat rating</button>
+              <button class="small" data-act="preset-default">Multiplicative default</button>
+              <button class="small" data-act="preset-lanchester">Lanchester square</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="shead">
+          <h2>Teams</h2>
+          <p>
+            Each team is a list of groups of identical Combatants at full health. <b>Sizes</b> multiplies every group's
+            count, giving one team per entry, e.g. <code>4, 8, 16</code>; each such team is called a variant below.
+          </p>
+        </div>
+        <div class="row">
+          <button class="small" data-act="add-team">Add team</button>
+          <label class="inline"
+            >Add from
+            <select id="preset"></select
+          ></label>
+          <button class="small" data-act="add-preset">Add</button>
+        </div>
+        <div id="teams" class="teams"></div>
+      </section>
+
+      <section>
+        <div class="shead">
+          <h2>Experiment</h2>
+          <p>
+            The engine is not symmetric: the Agents' side acts first in every Combat round, picks its targets, and alone
+            can retreat. With <b>Both sides</b>, every pair fights twice, each team once as the Agents' side, and a
+            team's win rate is the mean of the two, so that neither side's edge leaks into the result.
+          </p>
+        </div>
+        <div class="row">
+          <label class="inline"
+            >Pairs
+            <select data-bind="exp.pairing" data-type="str">
+              <option value="all">Every variant against every other</option>
+              <option value="first">The first variant against every other</option>
+            </select></label
+          >
+          <label class="inline"
+            >Sides
+            <select data-bind="exp.sides" data-type="str">
+              <option value="both">Both sides, averaged</option>
+              <option value="a">A as the Agents' side only</option>
+            </select></label
+          >
+          <label class="inline"
+            >Combats per side <input type="number" min="10" max="2000" step="10" data-bind="exp.trials" data-type="num"
+          /></label>
+          <label class="inline"
+            ><input type="checkbox" data-bind="exp.match" data-type="bool" /> Size every team to the first variant's
+            rating</label
+          >
+          <label class="inline"><input type="checkbox" data-bind="exp.retreat" data-type="bool" /> Allow retreat</label>
+        </div>
+        <p class="note">
+          With <b>Size every team</b>, each team other than the first fights in one variant only, whose first group's
+          count gives the rating closest to the first variant's, so every pair should be a 50% fight. Retreat is off by
+          default, because it reads the game's own Combat rating, not this formula, and a retreat counts as a loss.
+        </p>
+        <details>
+          <summary class="lbl note" style="cursor: pointer">Combat values passed to the engine</summary>
+          <div class="scroll" style="margin-top: 8px"><table id="combat"></table></div>
+        </details>
+      </section>
+
+      <section>
+        <div class="shead">
+          <h2>Results</h2>
+          <p>
+            The prediction is <code>P(A wins) = r^k / (1 + r^k)</code> with <code>r = team_cr(A) / team_cr(B)</code>,
+            which is exactly 50% at equal ratings; <code>k</code> is fitted to the Combats, so it measures how sharply
+            the win rate turns, and the error measures how well the formula orders the teams.
+          </p>
+        </div>
+        <div id="tiles" class="tiles"></div>
+        <div class="cols">
+          <div style="display: flex; flex-direction: column; gap: 8px">
+            <h3>Win rate of the higher-rated team by rating ratio</h3>
+            <div class="chart" id="chart"></div>
+            <h3 style="margin-top: 12px">Formula as text</h3>
+            <pre id="formulaText"></pre>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px">
+            <h3>Variants</h3>
+            <p class="note">
+              <b>Strength vs rating</b> is how far the Combats say a variant is stronger or weaker than its rating, as
+              the factor that would make the prediction fit best; e.g. +20% means the variant fights like a team rated
+              20% higher. A pattern across variants shows what the formula misjudges, e.g. large teams all positive.
+            </p>
+            <div class="scroll"><table id="variants"></table></div>
+          </div>
+        </div>
+        <h3>Pairs, largest error first</h3>
+        <div class="scroll"><table id="pairs"></table></div>
+        <button class="small" id="morePairs" hidden>Show every pair</button>
+      </section>
+    </div>
+
+    <script>
+      'use strict'
+      const STORE = 'combat-rating-bench/v1'
+      const PARAMS = [
+        ['health_base', 'Health at which health_mult is 1.'],
+        ['health_per_point', 'Added to health_mult for each point of health above health_base.'],
+        ['armor_base', 'Armor at which armor_mult is 1.'],
+        ['armor_per_point', 'Added to armor_mult for each point of armor above armor_base.'],
+        ['damage_base', 'Weapon damage at which damage_mult is 1.'],
+        ['damage_per_point', 'Added to damage_mult for each point of weapon damage above damage_base.'],
+        [
+          'team_exp',
+          'Exponent of the team size in team_cr: 1 sums the Combatants; above 1 favours larger teams, e.g. 2 is the Lanchester square law.',
+        ],
+      ]
+      const FORMULAS = {
+        default: {
+          combatant: 'skill * health_mult * armor_mult * damage_mult',
+          team: 'sum * count ** team_exp / count',
+        },
+        game: { combatant: 'skill', team: 'sum' },
+        lanchester: {
+          combatant: 'skill * health_mult * armor_mult * damage_mult',
+          team: 'sqrt(sum * count)',
+        },
+      }
+      const group = (count, skill, health, damage, armor = 0, exhaustion = 0) => ({
+        count,
+        skill,
+        health,
+        damage,
+        armor,
+        exhaustion,
+      })
+      const defaults = () => ({
+        formula: {
+          params: {
+            health_base: 30,
+            health_per_point: 0.01,
+            armor_base: 0,
+            armor_per_point: 0.01,
+            damage_base: 10,
+            damage_per_point: 0.01,
+            team_exp: 1,
+          },
+          fit: {
+            health_base: false,
+            health_per_point: true,
+            armor_base: false,
+            armor_per_point: true,
+            damage_base: false,
+            damage_per_point: true,
+            team_exp: true,
+          },
+          ...FORMULAS.default,
+        },
+        teams: [
+          { name: 'Field agents', sizes: '4, 8, 12, 16, 24', groups: [group(1, 100, 30, 10)] },
+          { name: 'Veterans', sizes: '2, 4, 6, 8, 12', groups: [group(1, 200, 40, 16, 4)] },
+          { name: 'Initiates', sizes: '10, 20, 30, 40, 60', groups: [group(1, 40, 20, 8)] },
+          { name: 'Soldiers', sizes: '3, 6, 9, 12, 18', groups: [group(1, 120, 30, 14)] },
+          { name: 'Elites', sizes: '1, 2, 3, 4, 6', groups: [group(1, 250, 40, 20)] },
+        ],
+        exp: { pairing: 'all', sides: 'both', trials: 100, match: false, retreat: false },
+        combat: {},
+      })
+
+      let info = null
+      let state = load()
+      /** Fought results by `<pair key>|<side>`: the totals of one batch. */
+      const cache = new Map()
+      const failures = new Map()
+      let run = null
+      let showAllPairs = false
+      let lastRows = []
+
+      function load() {
+        try {
+          const raw = localStorage.getItem(STORE)
+          if (raw) {
+            const saved = JSON.parse(raw)
+            const d = defaults()
+            return {
+              ...d,
+              ...saved,
+              formula: {
+                ...d.formula,
+                ...saved.formula,
+                params: { ...d.formula.params, ...saved.formula?.params },
+                fit: { ...d.formula.fit, ...saved.formula?.fit },
+              },
+              exp: { ...d.exp, ...saved.exp },
+            }
+          }
+        } catch {}
+        return defaults()
+      }
+      function save() {
+        try {
+          localStorage.setItem(STORE, JSON.stringify(state))
+        } catch {}
+      }
+
+      const $ = (s) => document.querySelector(s)
+      const esc = (s) =>
+        String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c])
+      const pct = (x, d = 1) => (Number.isFinite(x) ? `${(x * 100).toFixed(d)}%` : '–')
+      const fmt = (x, d = 1) =>
+        Number.isFinite(x) ? x.toLocaleString('en-US', { maximumFractionDigits: d, minimumFractionDigits: d }) : '–'
+      const sig = (x) => (Number.isFinite(x) ? String(Number(x.toPrecision(4))) : '–')
+
+      /* ---------- the Combat values and the formula ---------- */
+      function combatValues() {
+        const cv = { ...(info?.gdr.combatValues ?? {}), ...state.combat }
+        if (!state.exp.retreat) {
+          // COMBAT, Combat end checks: the team considers retreating only below this fraction of its starting rating.
+          cv.retreat_below_agent_rating_fraction = 0
+        }
+        return cv
+      }
+
+      // AGENTS, Effective skill, at full current health.
+      function effectiveSkill(g, cv) {
+        const penalty = Math.max(
+          0,
+          100 -
+            (cv.skill_penalty_pct_per_exhaustion ?? 1) * Math.max(0, g.exhaustion - (cv.exhaustion_free_points ?? 0)),
+        )
+        return Math.floor((g.skill * penalty) / 100)
+      }
+      // COMBAT, Incapacitation condition.
+      function ableToFight(g, cv) {
+        const eff = effectiveSkill(g, cv)
+        return (
+          g.health > 0 &&
+          g.exhaustion < (cv.exhaustion_incapacitation ?? Infinity) &&
+          eff > (cv.incapacitation_skill_fraction ?? 0) * g.skill
+        )
+      }
+
+      const compiled = new Map()
+      function compile(expr) {
+        if (!compiled.has(expr)) {
+          // Sloppy-mode function on purpose: `with` puts Math and the variables in scope of the expression.
+          compiled.set(expr, new Function('v', `with (Math) { with (v) { return (${expr}\n) } }`))
+        }
+        return compiled.get(expr)
+      }
+
+      /** The rating of a variant under a formula; throws on a broken expression. */
+      function rate(variant, formula, cv) {
+        const p = formula.params
+        const fc = compile(formula.combatant)
+        const ft = compile(formula.team)
+        let sum = 0
+        let count = 0
+        let game = 0
+        for (const g of variant.groups) {
+          if (g.count <= 0 || !ableToFight(g, cv)) {
+            continue
+          }
+          const skill = effectiveSkill(g, cv)
+          const c = fc({
+            ...p,
+            skill,
+            base_skill: g.skill,
+            health: g.health,
+            armor: g.armor,
+            damage: g.damage,
+            exhaustion: g.exhaustion,
+            health_mult: 1 + (g.health - p.health_base) * p.health_per_point,
+            armor_mult: 1 + (g.armor - p.armor_base) * p.armor_per_point,
+            damage_mult: 1 + (g.damage - p.damage_base) * p.damage_per_point,
+          })
+          if (typeof c !== 'number' || Number.isNaN(c)) {
+            throw new Error('combatant_cr is not a number')
+          }
+          sum += c * g.count
+          count += g.count
+          game += skill * g.count
+        }
+        const cr = count === 0 ? 0 : ft({ ...p, sum, count, game })
+        if (typeof cr !== 'number' || Number.isNaN(cr)) {
+          throw new Error('team_cr is not a number')
+        }
+        return { cr, game, count }
+      }
+
+      /* ---------- variants and pairs ---------- */
+      const clean = (g) => ({
+        count: Math.max(0, Math.round(Number(g.count) || 0)),
+        skill: Math.max(0, Math.round(Number(g.skill) || 0)),
+        health: Math.max(1, Math.round(Number(g.health) || 1)),
+        damage: Math.max(1, Math.round(Number(g.damage) || 1)),
+        armor: Math.max(0, Math.round(Number(g.armor) || 0)),
+        exhaustion: Math.max(0, Math.round(Number(g.exhaustion) || 0)),
+      })
+      const sizesOf = (team) => {
+        const list = String(team.sizes)
+          .split(/[\s,;]+/)
+          .map(Number)
+          .filter((x) => Number.isFinite(x) && x > 0)
+        return list.length > 0 ? list : [1]
+      }
+      const total = (groups) => groups.reduce((n, g) => n + g.count, 0)
+
+      /** Every variant the experiment fights: one per team and size, or one per team sized to the first's rating. */
+      function variants(formula, cv) {
+        const out = []
+        state.teams.forEach((team, t) => {
+          const groups = team.groups.map(clean)
+          if (total(groups) === 0) {
+            return
+          }
+          for (const s of sizesOf(team)) {
+            const scaled = groups.map((g) => ({
+              ...g,
+              count: g.count === 0 ? 0 : Math.max(1, Math.round(g.count * s)),
+            }))
+            out.push({ team: t, name: team.name, groups: scaled })
+            if (state.exp.match) {
+              break
+            }
+          }
+        })
+        if (state.exp.match && out.length > 1) {
+          const target = rate(out[0], formula, cv).cr
+          for (const v of out.slice(1)) {
+            const at = v.groups.findIndex((g) => g.count > 0)
+            let best = null
+            for (let c = 1; c <= 2000; c += 1) {
+              const groups = v.groups.map((g, i) => (i === at ? { ...g, count: c } : g))
+              const cr = rate({ groups }, formula, cv).cr
+              const miss = Math.abs(Math.log(Math.max(cr, 1e-9) / Math.max(target, 1e-9)))
+              if (best === null || miss < best.miss) {
+                best = { miss, groups }
+              }
+              if (cr > target * 2) {
+                break
+              }
+            }
+            v.groups = best.groups
+          }
+        }
+        for (const v of out) {
+          v.size = total(v.groups)
+          v.label = `${v.name} ${v.size}`
+          v.sig = JSON.stringify(
+            v.groups
+              .filter((g) => g.count > 0)
+              .map((g) => [g.count, g.skill, g.health, g.damage, g.armor, g.exhaustion]),
+          )
+        }
+        return out
+      }
+
+      function hash(s) {
+        let h1 = 0x811c9dc5
+        let h2 = 0x9747b28c
+        for (let i = 0; i < s.length; i += 1) {
+          const c = s.charCodeAt(i)
+          h1 = Math.imul(h1 ^ c, 16777619)
+          h2 = Math.imul(h2 ^ c, 2246822519)
+        }
+        return (h1 >>> 0).toString(16).padStart(8, '0') + (h2 >>> 0).toString(16).padStart(8, '0')
+      }
+
+      function pairsOf(vs, cv) {
+        const trials = Math.max(10, Math.min(10000, Math.round(state.exp.trials) || 100))
+        const tail = JSON.stringify([trials, cv])
+        const out = []
+        const add = (a, b) => out.push({ a, b, trials, key: hash(`${a.sig}|${b.sig}|${tail}`) })
+        if (state.exp.pairing === 'first') {
+          for (const b of vs.slice(1)) {
+            add(vs[0], b)
+          }
+        } else {
+          for (let i = 0; i < vs.length; i += 1) {
+            for (let j = i + 1; j < vs.length; j += 1) {
+              add(vs[i], vs[j])
+            }
+          }
+        }
+        return out
+      }
+      const sidesOf = () => (state.exp.sides === 'a' ? ['a'] : ['a', 'b'])
+
+      const entries = (v) =>
+        v.groups.flatMap((g) =>
+          Array.from({ length: g.count }, () => ({
+            kind: 'explicit',
+            baseSkill: g.skill,
+            currentHealth: g.health,
+            effectiveMaxHealth: g.health,
+            exhaustion: g.exhaustion,
+            effectiveWeaponDamage: g.damage,
+            effectiveArmor: g.armor,
+          })),
+        )
+
+      /* ---------- fighting ---------- */
+      let runTimer = 0
+      function scheduleRun() {
+        clearTimeout(runTimer)
+        runTimer = setTimeout(fight, 400)
+      }
+
+      async function fight() {
+        if (info === null || info.engineError) {
+          return
+        }
+        let ctx
+        try {
+          ctx = context()
+        } catch {
+          return
+        }
+        const jobs = []
+        for (const pair of ctx.pairs) {
+          for (const side of sidesOf()) {
+            const id = `${pair.key}|${side}`
+            if (cache.has(id) || failures.has(id)) {
+              continue
+            }
+            const [agents, enemies] = side === 'a' ? [pair.a, pair.b] : [pair.b, pair.a]
+            jobs.push({
+              key: pair.key,
+              side,
+              agents: entries(agents),
+              enemies: entries(enemies),
+              trials: pair.trials,
+              gdrValues: ctx.cv,
+              seed: `${pair.key}|${side}`,
+            })
+          }
+        }
+        run?.ctl.abort()
+        run = null
+        if (jobs.length === 0) {
+          progress()
+          return
+        }
+        // The largest Combats first, so that the last batches to finish are short ones.
+        jobs.sort((x, y) => y.agents.length + y.enemies.length - (x.agents.length + x.enemies.length))
+        const mine = { ctl: new AbortController(), total: jobs.length, done: 0, started: performance.now() }
+        run = mine
+        progress()
+        try {
+          const res = await fetch('/api/run', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ jobs }),
+            signal: mine.ctl.signal,
+          })
+          const reader = res.body.getReader()
+          const decoder = new TextDecoder()
+          let buffer = ''
+          for (;;) {
+            const { value, done } = await reader.read()
+            if (done) {
+              break
+            }
+            buffer += decoder.decode(value, { stream: true })
+            let at
+            while ((at = buffer.indexOf('\n')) >= 0) {
+              const line = buffer.slice(0, at).trim()
+              buffer = buffer.slice(at + 1)
+              if (line === '') {
+                continue
+              }
+              const m = JSON.parse(line)
+              const id = `${m.key}|${m.side}`
+              if ('error' in m) {
+                failures.set(id, m.error)
+              } else {
+                cache.set(id, m)
+              }
+              mine.done += 1
+              scheduleRender()
+            }
+          }
+        } catch (e) {
+          if (e.name !== 'AbortError') {
+            $('#progress').textContent = `Fighting failed: ${e.message}`
+          }
+          return
+        }
+        if (run === mine) {
+          run = null
+          mine.ms = performance.now() - mine.started
+          lastRun = mine
+        }
+        scheduleRender()
+      }
+      let lastRun = null
+
+      function progress() {
+        const p = $('#progress')
+        if (run !== null) {
+          p.textContent = `Fighting: ${run.done} / ${run.total} batches`
+          p.classList.add('on')
+        } else {
+          p.classList.remove('on')
+          p.textContent =
+            lastRun === null
+              ? `Idle; ${cache.size} batches fought`
+              : `Done: ${lastRun.total} batches in ${(lastRun.ms / 1000).toFixed(1)} s; ${cache.size} fought in all`
+          if (failures.size > 0) {
+            p.textContent += `; ${failures.size} failed: ${[...failures.values()][0]}`
+          }
+        }
+      }
+
+      /* ---------- scoring ---------- */
+      const predict = (r, k) => {
+        if (!(r > 0)) {
+          return r === 0 ? 0 : 0.5
+        }
+        if (!Number.isFinite(r)) {
+          return 1
+        }
+        return 1 / (1 + Math.pow(r, -k))
+      }
+
+      /** The pairs whose every side has been fought, with their win rates. */
+      function rowsOf(pairs) {
+        const rows = []
+        for (const pair of pairs) {
+          const a = cache.get(`${pair.key}|a`)
+          const b = sidesOf().length === 2 ? cache.get(`${pair.key}|b`) : null
+          if (a === undefined || b === undefined) {
+            continue
+          }
+          const asAgents = a.prevailed / a.fought
+          // As the Enemies' side, team A wins whenever team B, the Agents' side, does not prevail.
+          const asEnemies = b === null ? null : (b.fought - b.prevailed) / b.fought
+          rows.push({ pair, asAgents, asEnemies, win: asEnemies === null ? asAgents : (asAgents + asEnemies) / 2 })
+        }
+        return rows
+      }
+
+      function sse(rows, ratio, k) {
+        let s = 0
+        for (const row of rows) {
+          s += (predict(ratio(row), k) - row.win) ** 2
+        }
+        return s
+      }
+      /** The steepness k with the least squared error, by golden-section search over ln k. */
+      function fitK(rows, ratio) {
+        let lo = Math.log(0.2)
+        let hi = Math.log(80)
+        const g = (Math.sqrt(5) - 1) / 2
+        let x1 = hi - g * (hi - lo)
+        let x2 = lo + g * (hi - lo)
+        let f1 = sse(rows, ratio, Math.exp(x1))
+        let f2 = sse(rows, ratio, Math.exp(x2))
+        for (let i = 0; i < 50; i += 1) {
+          if (f1 < f2) {
+            hi = x2
+            x2 = x1
+            f2 = f1
+            x1 = hi - g * (hi - lo)
+            f1 = sse(rows, ratio, Math.exp(x1))
+          } else {
+            lo = x1
+            x1 = x2
+            f1 = f2
+            x2 = lo + g * (hi - lo)
+            f2 = sse(rows, ratio, Math.exp(x2))
+          }
+        }
+        const k = Math.exp((lo + hi) / 2)
+        return { k, sse: sse(rows, ratio, k) }
+      }
+
+      /**
+       * The factor by which each variant fights above or below its rating: c minimises the squared error of
+       * P = 1 / (1 + exp(−k (ln r + c_A − c_B))), anchored at a mean of 0, or at 0 for the first variant when only
+       * it is paired with the others.
+       */
+      function strengths(rows, ratioOf, k, vs) {
+        const index = new Map(vs.map((v, i) => [v, i]))
+        const c = new Float64Array(vs.length)
+        for (let step = 0; step < 200; step += 1) {
+          // A damped Gauss-Newton step on each variant's own factor.
+          const grad = new Float64Array(vs.length)
+          const curv = new Float64Array(vs.length)
+          for (const row of rows) {
+            const ia = index.get(row.pair.a)
+            const ib = index.get(row.pair.b)
+            const x = k * (Math.log(ratioOf(row)) + c[ia] - c[ib])
+            const p = 1 / (1 + Math.exp(-x))
+            const slope = k * p * (1 - p)
+            const d = (p - row.win) * slope
+            grad[ia] += d
+            grad[ib] -= d
+            curv[ia] += slope * slope
+            curv[ib] += slope * slope
+          }
+          for (let i = 0; i < c.length; i += 1) {
+            c[i] -= (0.5 * grad[i]) / (curv[i] + 1e-4)
+            c[i] = Math.max(-3, Math.min(3, c[i]))
+          }
+          const anchor = state.exp.pairing === 'first' ? c[0] : c.reduce((s, x) => s + x, 0) / c.length
+          for (let i = 0; i < c.length; i += 1) {
+            c[i] -= anchor
+          }
+        }
+        return c
+      }
+
+      function context(formula = state.formula) {
+        const cv = combatValues()
+        const vs = variants(formula, cv)
+        const ratings = new Map(vs.map((v) => [v, rate(v, formula, cv)]))
+        return { cv, vs, ratings, pairs: pairsOf(vs, cv) }
+      }
+
+      /* ---------- the fit of the formula ---------- */
+      function nelderMead(f, x0, steps, iterations) {
+        const n = x0.length
+        let simplex = [x0, ...x0.map((_, i) => x0.map((x, j) => (i === j ? x + steps[i] : x)))].map((x) => ({
+          x,
+          f: f(x),
+        }))
+        for (let it = 0; it < iterations; it += 1) {
+          simplex.sort((p, q) => p.f - q.f)
+          const best = simplex[0]
+          const worst = simplex[n]
+          const centroid = x0.map((_, j) => simplex.slice(0, n).reduce((s, p) => s + p.x[j], 0) / n)
+          const at = (t) => centroid.map((c, j) => c + t * (worst.x[j] - c))
+          const r = { x: at(-1) }
+          r.f = f(r.x)
+          if (r.f < best.f) {
+            const e = { x: at(-2) }
+            e.f = f(e.x)
+            simplex[n] = e.f < r.f ? e : r
+          } else if (r.f < simplex[n - 1].f) {
+            simplex[n] = r
+          } else {
+            const k = { x: at(0.5) }
+            k.f = f(k.x)
+            if (k.f < worst.f) {
+              simplex[n] = k
+            } else {
+              simplex = simplex.map((p, i) =>
+                i === 0 ? p : { x: p.x.map((v, j) => best.x[j] + 0.5 * (v - best.x[j])), f: NaN },
+              )
+              for (const p of simplex.slice(1)) {
+                p.f = f(p.x)
+              }
+            }
+          }
+        }
+        simplex.sort((p, q) => p.f - q.f)
+        return simplex[0]
+      }
+
+      function fitFormula() {
+        const free = PARAMS.map(([name]) => name).filter((name) => state.formula.fit[name])
+        if (free.length === 0) {
+          alert('Check at least one parameter to fit.')
+          return
+        }
+        let ctx
+        try {
+          ctx = context()
+        } catch (e) {
+          alert(e.message)
+          return
+        }
+        // The variants and pairs fought so far stay fixed during the fit; only their ratings change.
+        const rows = rowsOf(ctx.pairs)
+        if (rows.length < 3) {
+          alert('Fight at least three pairs first.')
+          return
+        }
+        const vs = ctx.vs
+        const objective = (x) => {
+          const formula = { ...state.formula, params: { ...state.formula.params } }
+          free.forEach((name, i) => (formula.params[name] = x[i]))
+          try {
+            const crs = new Map(vs.map((v) => [v, rate(v, formula, ctx.cv).cr]))
+            const ratio = (row) => crs.get(row.pair.a) / crs.get(row.pair.b)
+            const s = fitK(rows, ratio).sse
+            return Number.isFinite(s) ? s : Infinity
+          } catch {
+            return Infinity
+          }
+        }
+        const x0 = free.map((name) => state.formula.params[name])
+        const steps = x0.map((x) => (x === 0 ? 0.01 : Math.abs(x) * 0.2))
+        let best = nelderMead(objective, x0, steps, 250)
+        best = nelderMead(
+          objective,
+          best.x,
+          steps.map((s) => s / 5),
+          250,
+        )
+        free.forEach((name, i) => (state.formula.params[name] = Number(best.x[i].toPrecision(4))))
+        renderFormula()
+        changed()
+      }
+
+      /* ---------- rendering of the inputs ---------- */
+      function renderFormula() {
+        $('#params').innerHTML =
+          `<tr><th>Parameter</th><th class="r">Value</th><th>Fit</th><th>Meaning</th></tr>` +
+          PARAMS.map(
+            ([name, desc]) => `<tr><td><code>${name}</code></td>
+            <td class="r"><input type="number" step="any" data-bind="formula.params.${name}" data-type="num" value="${state.formula.params[name]}"></td>
+            <td><input type="checkbox" data-bind="formula.fit.${name}" data-type="bool" ${state.formula.fit[name] ? 'checked' : ''} aria-label="Fit ${name}"></td>
+            <td class="desc">${esc(desc)}</td></tr>`,
+          ).join('')
+        $('#exprC').value = state.formula.combatant
+        $('#exprT').value = state.formula.team
+      }
+
+      function renderCombat() {
+        const base = info?.gdr.combatValues ?? {}
+        $('#combat').innerHTML =
+          `<tr><th>Value</th><th class="r">Content</th><th class="r">Used</th></tr>` +
+          Object.keys(base)
+            .map(
+              (name) => `<tr><td><code>${name}</code></td><td class="r">${base[name]}</td>
+              <td class="r"><input type="number" step="any" data-bind="combat.${name}" data-type="num" value="${state.combat[name] ?? base[name]}"></td></tr>`,
+            )
+            .join('')
+      }
+
+      function renderTeams() {
+        $('#teams').innerHTML = state.teams
+          .map(
+            (team, t) => `<div class="card">
+            <div class="row">
+              <input class="wide" data-bind="teams.${t}.name" data-type="str" value="${esc(team.name)}" aria-label="Team name">
+              <label class="inline">Sizes <input class="wide" style="width:170px" data-bind="teams.${t}.sizes" data-type="str" value="${esc(team.sizes)}"></label>
+              <span style="flex:1"></span>
+              <button class="small" data-act="up" data-team="${t}" title="Move up">↑</button>
+              <button class="small" data-act="dup" data-team="${t}">Copy</button>
+              <button class="small" data-act="del" data-team="${t}">Remove</button>
+            </div>
+            <div class="scroll"><table>
+              <tr><th class="r">Count</th><th class="r">Skill</th><th class="r">Health</th><th class="r">Damage</th><th class="r">Armor</th><th class="r">Exhaustion</th><th></th></tr>
+              ${team.groups
+                .map(
+                  (g, i) => `<tr>${['count', 'skill', 'health', 'damage', 'armor', 'exhaustion']
+                    .map(
+                      (f) =>
+                        `<td class="r"><input class="narrow" type="number" min="0" step="1" data-bind="teams.${t}.groups.${i}.${f}" data-type="num" value="${g[f]}" aria-label="${f}"></td>`,
+                    )
+                    .join('')}
+                  <td><button class="small" data-act="del-group" data-team="${t}" data-group="${i}" ${team.groups.length === 1 ? 'disabled' : ''}>×</button></td></tr>`,
+                )
+                .join('')}
+            </table></div>
+            <div class="row"><button class="small" data-act="add-group" data-team="${t}">Add group</button><span class="crline" data-cr="${t}"></span></div>
+          </div>`,
+          )
+          .join('')
+      }
+
+      function renderPresets() {
+        const g = info?.gdr
+        if (!g) {
+          return
+        }
+        const opt = (value, label) => `<option value="${esc(value)}">${esc(label)}</option>`
+        $('#preset').innerHTML =
+          `<optgroup label="Agent archetypes">${g.agentArchetypes.map((a) => opt(`agent:${a.id}`, a.name)).join('')}</optgroup>` +
+          `<optgroup label="Enemy archetypes">${g.enemyArchetypes.map((a) => opt(`enemy:${a.id}`, a.name)).join('')}</optgroup>` +
+          `<optgroup label="Mission sites' Enemies">${g.missionSites.map((s) => opt(`site:${s.id}`, s.id)).join('')}</optgroup>`
+      }
+
+      function addPreset(value) {
+        const g = info.gdr
+        const [kind, id] = value.split(':')
+        const of = (a, count) => group(count, a.skill, a.health, a.damage, a.armor)
+        if (kind === 'site') {
+          const site = g.missionSites.find((s) => s.id === id)
+          const groups = Object.entries(site.enemies)
+            .filter(([, n]) => n > 0)
+            .map(([e, n]) =>
+              of(
+                g.enemyArchetypes.find((a) => a.id === e),
+                n,
+              ),
+            )
+          state.teams.push({ name: id, sizes: '1', groups })
+        } else {
+          const a = (kind === 'agent' ? g.agentArchetypes : g.enemyArchetypes).find((x) => x.id === id)
+          state.teams.push({ name: a.name, sizes: '4, 8, 16', groups: [of(a, 1)] })
+        }
+      }
+
+      /* ---------- rendering of the results ---------- */
+      let renderQueued = false
+      function scheduleRender() {
+        if (!renderQueued) {
+          renderQueued = true
+          requestAnimationFrame(() => {
+            renderQueued = false
+            renderResults()
+          })
+        }
+      }
+
+      function renderResults() {
+        progress()
+        let ctx
+        try {
+          ctx = context()
+          $('#exprErr').textContent = ''
+        } catch (e) {
+          $('#exprErr').textContent = e.message
+          return
+        }
+        const { vs, ratings } = ctx
+        // The rating of each variant, under each team card.
+        state.teams.forEach((_, t) => {
+          const span = document.querySelector(`[data-cr="${t}"]`)
+          if (span) {
+            span.textContent = vs
+              .filter((v) => v.team === t)
+              .map((v) => `${v.size}: ${fmt(ratings.get(v).cr, 0)}`)
+              .join(' · ')
+              .replace(/^/, 'team_cr by size  ')
+          }
+        })
+        const rows = rowsOf(ctx.pairs)
+        const ratioOf = (row) => ratings.get(row.pair.a).cr / ratings.get(row.pair.b).cr
+        const fit = rows.length >= 2 ? fitK(rows, ratioOf) : { k: NaN, sse: NaN }
+        const k = fit.k
+        for (const row of rows) {
+          row.r = ratioOf(row)
+          row.pred = predict(row.r, k)
+          row.err = row.win - row.pred
+        }
+        lastRows = rows
+        const contested = rows.filter(
+          (row) => (row.win > 0.05 && row.win < 0.95) || (row.pred > 0.05 && row.pred < 0.95),
+        )
+        const rmse = (list) => Math.sqrt(list.reduce((s, row) => s + row.err ** 2, 0) / list.length)
+        const parity = rows.filter((row) => Math.abs(Math.log(row.r)) <= Math.log(1.1))
+        const both = rows.filter((row) => row.asEnemies !== null)
+        const edge = both.reduce((s, row) => s + (row.asAgents - row.asEnemies) / 2, 0) / both.length
+        const tile = (label, value, sub, cls = '') =>
+          `<div class="tile"><span class="lbl">${label}</span><span class="v ${cls}">${value}</span><span class="s">${sub}</span></div>`
+        const grade = (x, good, ok) => (!Number.isFinite(x) ? '' : x <= good ? 'good' : x <= ok ? 'warn' : 'bad')
+        const rmseC = rmse(contested)
+        const par = parity.reduce((s, row) => s + Math.abs(row.win - 0.5), 0) / parity.length
+        // The error that the dice alone leave in a measured win rate, which no formula can remove.
+        const combats = (ctx.pairs[0]?.trials ?? 0) * sidesOf().length
+        const noise = (list) =>
+          Math.sqrt(
+            list.reduce((s, row) => s + Math.max(row.win * (1 - row.win), 0.25 / combats), 0) / list.length / combats,
+          )
+        const floorC = noise(contested)
+        const floorP = Math.sqrt(0.25 / combats) * Math.sqrt(2 / Math.PI)
+        $('#tiles').innerHTML =
+          tile(
+            'Prediction error',
+            Number.isFinite(rmseC) ? `${(rmseC * 100).toFixed(1)} pp` : '–',
+            `root mean square over the ${contested.length} contested pairs, i.e. those that neither the Combats nor the prediction give 95% or more; the dice alone leave ${Number.isFinite(floorC) ? (floorC * 100).toFixed(1) : '–'} pp`,
+            grade(rmseC, floorC * 1.5, floorC * 3),
+          ) +
+          tile(
+            'Parity error',
+            Number.isFinite(par) ? `${(par * 100).toFixed(1)} pp` : '–',
+            `mean distance from 50% of the ${parity.length} pairs whose ratings are within 10% of each other; the dice alone leave ${(floorP * 100).toFixed(1)} pp`,
+            grade(par, floorP * 1.5, floorP * 3),
+          ) +
+          tile(
+            'Steepness k',
+            Number.isFinite(k) ? k.toFixed(2) : '–',
+            Number.isFinite(k)
+              ? `a rating ${['1.1', '1.25', '1.5', '2'].map((r) => `${r}× wins ${pct(predict(Number(r), k), 0)}`).join(', ')}`
+              : 'needs two fought pairs',
+          ) +
+          tile(
+            "Agents' side edge",
+            Number.isFinite(edge) ? `${edge >= 0 ? '+' : ''}${(edge * 100).toFixed(1)} pp` : '–',
+            "how much more a team wins as the Agents' side than as the Enemies' side, halved, over the pairs fought both ways",
+          ) +
+          tile(
+            'Pairs fought',
+            `${rows.length} / ${ctx.pairs.length}`,
+            `${vs.length} variants, ${ctx.pairs[0]?.trials ?? 0} Combats per side`,
+          )
+
+        renderChart(rows, k)
+
+        // Variants.
+        const c = rows.length > 0 && Number.isFinite(k) ? strengths(rows, ratioOf, k, vs) : null
+        const errs = new Map(vs.map((v) => [v, []]))
+        for (const row of rows) {
+          errs.get(row.pair.a).push(row.err)
+          errs.get(row.pair.b).push(-row.err)
+        }
+        $('#variants').innerHTML =
+          `<tr><th>Variant</th><th class="r">Size</th><th class="r">Game CR</th><th class="r">team_cr</th><th class="r">Strength vs rating</th><th class="r">Mean error</th></tr>` +
+          vs
+            .map((v, i) => {
+              const r = ratings.get(v)
+              const e = errs.get(v)
+              const mean = e.reduce((s, x) => s + x, 0) / e.length
+              const sv = c === null || e.length === 0 ? NaN : Math.exp(c[i]) - 1
+              const cls = !Number.isFinite(sv)
+                ? ''
+                : Math.abs(sv) < 0.05
+                  ? 'good'
+                  : Math.abs(sv) < 0.15
+                    ? 'warn'
+                    : 'bad'
+              return `<tr><td style="font-family:var(--body)">${esc(v.label)}</td><td class="r">${v.size}</td><td class="r">${fmt(r.game, 0)}</td>
+              <td class="r">${fmt(r.cr, 0)}</td><td class="r ${cls}">${Number.isFinite(sv) ? `${sv >= 0 ? '+' : ''}${(sv * 100).toFixed(0)}%` : '–'}</td>
+              <td class="r">${Number.isFinite(mean) ? `${mean >= 0 ? '+' : ''}${(mean * 100).toFixed(1)} pp` : '–'}</td></tr>`
+            })
+            .join('')
+
+        // Pairs.
+        const sorted = [...rows].sort((x, y) => Math.abs(y.err) - Math.abs(x.err))
+        const shown = showAllPairs ? sorted : sorted.slice(0, 40)
+        $('#morePairs').hidden = showAllPairs || sorted.length <= 40
+        const two = sidesOf().length === 2
+        $('#pairs').innerHTML =
+          `<tr><th>Team A</th><th>Team B</th><th class="r">CR A</th><th class="r">CR B</th><th class="r">A / B</th><th class="r">Predicted</th><th class="r">A wins</th>${
+            two ? `<th class="r">as Agents</th><th class="r">as Enemies</th>` : ''
+          }<th class="r">Error</th></tr>` +
+          shown
+            .map((row) => {
+              const ra = ratings.get(row.pair.a).cr
+              const rb = ratings.get(row.pair.b).cr
+              const cls = Math.abs(row.err) < 0.05 ? 'good' : Math.abs(row.err) < 0.12 ? 'warn' : 'bad'
+              return `<tr><td style="font-family:var(--body)">${esc(row.pair.a.label)}</td><td style="font-family:var(--body)">${esc(row.pair.b.label)}</td>
+              <td class="r">${fmt(ra, 0)}</td><td class="r">${fmt(rb, 0)}</td><td class="r">${fmt(row.r, 2)}</td>
+              <td class="r">${pct(row.pred)}</td><td class="r">${pct(row.win)}</td>
+              ${two ? `<td class="r">${pct(row.asAgents)}</td><td class="r">${pct(row.asEnemies)}</td>` : ''}
+              <td class="r ${cls}">${row.err >= 0 ? '+' : ''}${(row.err * 100).toFixed(1)} pp</td></tr>`
+            })
+            .join('')
+
+        const p = state.formula.params
+        $('#formulaText').textContent = [
+          `combatant_cr = ${state.formula.combatant}`,
+          `team_cr      = ${state.formula.team}`,
+          `health_mult  = 1 + (health − ${p.health_base}) × ${p.health_per_point}`,
+          `armor_mult   = 1 + (armor − ${p.armor_base}) × ${p.armor_per_point}`,
+          `damage_mult  = 1 + (damage − ${p.damage_base}) × ${p.damage_per_point}`,
+          `team_exp     = ${p.team_exp}`,
+          ``,
+          `k = ${sig(k)}; prediction error ${Number.isFinite(rmseC) ? (rmseC * 100).toFixed(1) : '–'} pp over ${contested.length} contested pairs; parity error ${Number.isFinite(par) ? (par * 100).toFixed(1) : '–'} pp over ${parity.length} pairs`,
+          `${rows.length} pairs of ${vs.length} variants, ${ctx.pairs[0]?.trials ?? 0} Combats per side, ${two ? 'both sides' : 'A as Agents'}${state.exp.match ? ', sized to equal rating' : ''}${state.exp.retreat ? ', retreat allowed' : ''}`,
+        ].join('\n')
+      }
+
+      function renderChart(rows, k) {
+        const W = 760
+        const H = 380
+        const m = { l: 48, r: 18, t: 14, b: 40 }
+        let pts = rows
+          .filter((row) => Number.isFinite(row.r) && row.r > 0)
+          .map((row) =>
+            row.r >= 1
+              ? { r: row.r, win: row.win, hi: row.pair.a, lo: row.pair.b, row }
+              : { r: 1 / row.r, win: 1 - row.win, hi: row.pair.b, lo: row.pair.a, row },
+          )
+        // The axis ends a little past the last contested pair; the pairs beyond it are all won outright and are left out.
+        const contested = pts.filter((p) => p.win < 0.99 || (p.row.pred > 0.01 && p.row.pred < 0.99))
+        const xmax = Math.min(16, Math.max(1.5, ...contested.map((p) => p.r)) * 1.15)
+        pts = pts.filter((p) => p.r <= xmax)
+        const X = (r) => m.l + (Math.log(Math.min(r, xmax)) / Math.log(xmax)) * (W - m.l - m.r)
+        const Y = (w) => m.t + (1 - w) * (H - m.t - m.b)
+        const grid = [0, 0.25, 0.5, 0.75, 1]
+          .map(
+            (w) =>
+              `<line x1="${m.l}" x2="${W - m.r}" y1="${Y(w)}" y2="${Y(w)}" stroke="var(--divider)" ${w === 0.5 ? 'stroke-dasharray="4 4" stroke="var(--border)"' : ''}/>
+              <text x="${m.l - 6}" y="${Y(w) + 4}" text-anchor="end">${w * 100}%</text>`,
+          )
+          .join('')
+        const ticks = [1, 1.25, 1.5, 2, 3, 4, 6, 8, 12, 16]
+          .filter((t) => t <= xmax)
+          .map(
+            (t) =>
+              `<line x1="${X(t)}" x2="${X(t)}" y1="${m.t}" y2="${H - m.b}" stroke="var(--divider)"/>
+              <text x="${X(t)}" y="${H - m.b + 16}" text-anchor="middle">${t}×</text>`,
+          )
+          .join('')
+        let curve = ''
+        if (Number.isFinite(k)) {
+          const steps = 80
+          const d = Array.from({ length: steps + 1 }, (_, i) => {
+            const r = Math.exp((i / steps) * Math.log(xmax))
+            return `${i === 0 ? 'M' : 'L'}${X(r).toFixed(1)},${Y(predict(r, k)).toFixed(1)}`
+          }).join('')
+          const lr = Math.min(xmax, Math.exp(Math.log(xmax) * 0.62))
+          curve = `<path d="${d}" fill="none" stroke="var(--text2)" stroke-width="2"/>
+            <text x="${X(lr) + 8}" y="${Y(predict(lr, k)) + 16}" style="fill:var(--text2)">prediction, k = ${k.toFixed(2)}</text>`
+        }
+        const dots = pts
+          .map(
+            (p, i) =>
+              `<circle cx="${X(p.r).toFixed(1)}" cy="${Y(p.win).toFixed(1)}" r="4.5" fill="var(--accent)" stroke="var(--bg)" stroke-width="2" data-i="${i}"/>`,
+          )
+          .join('')
+        const hits = pts
+          .map(
+            (p, i) =>
+              `<circle cx="${X(p.r).toFixed(1)}" cy="${Y(p.win).toFixed(1)}" r="9" fill="transparent" data-i="${i}" style="cursor:default"/>`,
+          )
+          .join('')
+        $('#chart').innerHTML =
+          `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Win rate of the higher-rated team of each pair against the ratio of the two ratings">
+          ${grid}${ticks}
+          <text x="${(W + m.l) / 2}" y="${H - 6}" text-anchor="middle">team_cr of the higher-rated team ÷ team_cr of the other (log scale)</text>
+          ${curve}${dots}${hits}</svg><div id="tip" hidden></div>`
+        const svg = $('#chart svg')
+        const tip = $('#tip')
+        svg.addEventListener('mousemove', (e) => {
+          const i = e.target.dataset?.i
+          if (i === undefined) {
+            tip.hidden = true
+            return
+          }
+          const p = pts[Number(i)]
+          tip.innerHTML = `${esc(p.hi.label)} vs ${esc(p.lo.label)}<br>rating ${p.r.toFixed(2)}×<br>wins ${pct(p.win)}, predicted ${pct(p.row.r >= 1 ? p.row.pred : 1 - p.row.pred)}`
+          tip.hidden = false
+          const box = $('#chart').getBoundingClientRect()
+          const x = e.clientX - box.left
+          tip.style.left = `${Math.min(x + 14, box.width - tip.offsetWidth - 4)}px`
+          tip.style.top = `${e.clientY - box.top + 14}px`
+        })
+        svg.addEventListener('mouseleave', () => (tip.hidden = true))
+      }
+
+      /* ---------- events ---------- */
+      function changed() {
+        save()
+        scheduleRender()
+        scheduleRun()
+      }
+
+      function setPath(path, value) {
+        const keys = path.split('.')
+        let o = state
+        for (const k of keys.slice(0, -1)) {
+          o = o[k]
+        }
+        o[keys.at(-1)] = value
+      }
+
+      function onInput(e) {
+        const t = e.target
+        const path = t.dataset?.bind
+        if (!path) {
+          return
+        }
+        const type = t.dataset.type
+        const value = type === 'bool' ? t.checked : type === 'num' ? Number(t.value) : t.value
+        if (type === 'num' && (t.value === '' || !Number.isFinite(value))) {
+          return
+        }
+        setPath(path, value)
+        if (path === 'exp.match' || path === 'exp.pairing' || path === 'exp.sides') {
+          showAllPairs = false
+        }
+        changed()
+      }
+      document.addEventListener('input', onInput)
+      document.addEventListener('change', (e) => {
+        if (e.target.type === 'checkbox' || e.target.tagName === 'SELECT') {
+          onInput(e)
+        }
+      })
+
+      document.addEventListener('click', (e) => {
+        const b = e.target.closest('[data-act]')
+        if (!b) {
+          return
+        }
+        const t = Number(b.dataset.team)
+        switch (b.dataset.act) {
+          case 'add-team':
+            state.teams.push({
+              name: `Team ${state.teams.length + 1}`,
+              sizes: '4, 8, 16',
+              groups: [group(1, 100, 30, 10)],
+            })
+            break
+          case 'add-preset':
+            addPreset($('#preset').value)
+            break
+          case 'dup':
+            state.teams.splice(t + 1, 0, structuredClone({ ...state.teams[t], name: `${state.teams[t].name} copy` }))
+            break
+          case 'del':
+            state.teams.splice(t, 1)
+            break
+          case 'up':
+            if (t > 0) {
+              state.teams.splice(t - 1, 0, ...state.teams.splice(t, 1))
+            }
+            break
+          case 'add-group':
+            state.teams[t].groups.push({ ...state.teams[t].groups.at(-1) })
+            break
+          case 'del-group':
+            state.teams[t].groups.splice(Number(b.dataset.group), 1)
+            break
+          case 'preset-game':
+          case 'preset-default':
+          case 'preset-lanchester':
+            Object.assign(state.formula, FORMULAS[b.dataset.act.slice(7)])
+            renderFormula()
+            changed()
+            return
+          default:
+            return
+        }
+        renderTeams()
+        changed()
+      })
+
+      $('#fit').addEventListener('click', fitFormula)
+      $('#rerun').addEventListener('click', () => {
+        cache.clear()
+        failures.clear()
+        lastRun = null
+        changed()
+      })
+      $('#reset').addEventListener('click', () => {
+        if (confirm('Restore the default formula, teams, and settings?')) {
+          state = defaults()
+          renderAll()
+          changed()
+        }
+      })
+      $('#morePairs').addEventListener('click', () => {
+        showAllPairs = true
+        renderResults()
+      })
+
+      function renderAll() {
+        renderFormula()
+        renderTeams()
+        renderCombat()
+        renderPresets()
+        for (const input of document.querySelectorAll('[data-bind^="exp."]')) {
+          const v = state.exp[input.dataset.bind.slice(4)]
+          if (input.type === 'checkbox') {
+            input.checked = v
+          } else {
+            input.value = v
+          }
+        }
+      }
+
+      async function start() {
+        renderAll()
+        try {
+          info = await (await fetch('/api/info')).json()
+        } catch (e) {
+          $('#engine').textContent = `The server does not answer: ${e.message}`
+          return
+        }
+        $('#engine').innerHTML = info.engineError
+          ? `<span class="err">The engine did not start: ${esc(info.engineError)}</span>`
+          : `Engine ${esc(info.impl)}, ${esc(info.engine)}; ${info.threads} worker threads.`
+        renderAll()
+        renderResults()
+        scheduleRun()
+      }
+      void start()
+    </script>
+  </body>
+</html>

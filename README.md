@@ -58,6 +58,7 @@ When agents run in [T3 Code](https://github.com/pingdotgg/t3code), the skills th
 | `npm run artboards:export` | Export Artboard images from a local copy of the Design canvas |
 | `npm run balance:bench` | Serve the [GDR Balance Bench](tools/gdr-balance-bench/README.md), a local page for balancing GDR values |
 | `npm run autopilot:bench` | Serve the [Autopilot Bench](tools/autopilot-bench/README.md), a local page for tuning the Basic Autopilot AI |
+| `npm run rating:bench` | Serve the [Combat Rating Bench](tools/combat-rating-bench/README.md), a local page for finding a Combat rating formula that predicts who wins |
 | `npm run terms:report` | List the first mention of every term in every specification |
 | `npm run lint` | Run code and specification linting |
 | `npm run fix` | Link terms, regenerate derived views, format, fix code lint |
