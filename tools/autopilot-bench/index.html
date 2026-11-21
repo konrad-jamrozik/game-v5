@@ -859,6 +859,18 @@
             (s) => fmt(n(s, kind)),
             kind === 'Investigation' ? 120 : 100,
           ]),
+          [
+            'Inv',
+            'Active Investigations; after it, the Lead of each, with the Agents of its Current team in brackets',
+            (s) => {
+              const leads = s.investigatedLeads ?? []
+              const names = leads.map((l) => `${esc(l.name)} <span class="dim">(${fmt(l.agents)})</span>`).join(', ')
+              const plain = leads.map((l) => `${l.name} (${l.agents})`).join(', ')
+              return `<span title="${esc(plain)}">${fmt(s.activeInvestigations)}${names ? ` <span class="dim">·</span> ${names}` : ''}</span>`
+            },
+            420,
+            true,
+          ],
         ]
         const L2 = [
           [
@@ -927,7 +939,6 @@
             300,
             true,
           ]),
-          ['Inv', 'Active Investigations', (s) => fmt(s.activeInvestigations), 48],
         ]
         return [L1, L4, L2, L3]
       }

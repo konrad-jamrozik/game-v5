@@ -119,4 +119,6 @@ export interface CampaignStats {
   readonly killed: number
   readonly dismissed: number
   readonly activeInvestigations: number
+  /** The name of the Lead of each Active Investigation, with the Agents of its Current team. */
+  readonly investigatedLeads: readonly { readonly name: string; readonly agents: number }[]
 }

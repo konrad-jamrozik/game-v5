@@ -258,6 +258,10 @@ function statsOf(campaign: Campaign): CampaignStats {
     killed: all.filter((a) => a.agentStatus === 'Killed').length,
     dismissed: all.filter((a) => a.agentStatus === 'Dismissed').length,
     activeInvestigations: live.investigations.length,
+    investigatedLeads: (live.investigations as Any[]).map((i) => ({
+      name: i.leadName as string,
+      agents: (i.currentTeam as Any[]).length,
+    })),
   }
 }
 
