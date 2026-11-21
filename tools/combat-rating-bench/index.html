@@ -483,6 +483,11 @@
       .sgrid .cell .n.k-df {
         color: #f0a8ff;
       }
+      /* Outside the range where the CR to win diff is computed. */
+      .sgrid .cell.greyed {
+        background: repeating-linear-gradient(135deg, #2a2a27 0 4px, #1f1f1c 4px 8px);
+        opacity: 0.45;
+      }
       .sgrid .cell .n.old {
         opacity: 0.45;
         font-style: italic;
@@ -864,7 +869,7 @@
               >
               <label
                 class="inline"
-                title="For a rating ratio from 80% to 120% only: red when the Agents win less than their ratio, yellow when more, at full strength from 20 points; none when they match, or when a ratio of 100% or more wins every Combat"
+                title="For a rating ratio from 90% to 120% only, the rest greyed out: red when the Agents win less than their ratio, yellow when more, at full strength from 20 points; none when they match, or when a ratio of 100% or more wins every Combat"
                 ><input type="radio" name="coloring" value="diff" data-bind="sampler.coloring" data-type="str" /> CR to
                 win diff</label
               >
@@ -2401,11 +2406,11 @@
           ? 'transparent'
           : `rgba(${d < 0 ? 'var(--low)' : 'var(--over)'}, ${((0.75 * Math.min(Math.abs(d), 0.2)) / 0.2).toFixed(3)})`
       /**
-       * A sample's background under the chosen Colouring. Win rate: as in the grid. CR to win diff, for a rating ratio from
-       * 80% to 120% only: win − ratio, so red when the Agents win less than their ratio and yellow when more, e.g. 110%
-       * and 98% is 12 points of red; none when a ratio of 100% or more wins every Combat. CR ratio: ratio − 100%, so red
-       * below 100% down to 80% and yellow above up to 120%. Ratios are read by the whole percent shown, so that one that
-       * reads 80% is in range.
+       * A sample's background under the chosen Colouring. Win rate: as in the grid. CR ratio: ratio − 100%, so red below
+       * 100% down to 80% and yellow above up to 120%, and none beyond. CR to win diff, for a rating ratio from 90% to 120%
+       * only: win − ratio, so red when the Agents win less than their ratio and yellow when more, e.g. 110% and 98% is 12
+       * points of red; none when a ratio of 100% or more wins every Combat; 'grey' outside that range, where it is not
+       * computed. Ratios are read by the whole percent shown, so that one that reads 90% is in range.
        */
       function sampleBackground(cell, r) {
         const coloring = state.sampler.coloring
@@ -2413,11 +2418,11 @@
           return r ? tint(winOf(r)) : null
         }
         const shownRatio = Math.round(cell.ratio * 100)
-        if (shownRatio < 80 || shownRatio > 120) {
-          return 'transparent'
-        }
         if (coloring === 'ratio') {
-          return redYellow(cell.ratio - 1)
+          return shownRatio < 80 || shownRatio > 120 ? 'transparent' : redYellow(cell.ratio - 1)
+        }
+        if (shownRatio < 90 || shownRatio > 120) {
+          return 'grey'
         }
         if (!r) {
           return null
@@ -2431,9 +2436,11 @@
         const queued = pending.has(cell.key)
         // A result with fewer Combats than asked for shows greyed until it is run again.
         const shown = r ?? all
-        const cls = ['cell', r ? 'fresh' : all ? 'stale' : '', queued ? 'queued' : ''].join(' ')
         const bg = sampleBackground(cell, r)
-        const style = bg === null ? '' : `background:${bg}`
+        const cls = ['cell', r ? 'fresh' : all ? 'stale' : '', queued ? 'queued' : '', bg === 'grey' ? 'greyed' : '']
+          .join(' ')
+          .trim()
+        const style = bg === null || bg === 'grey' ? '' : `background:${bg}`
         const text = queued ? '…' : shown ? pct(winOf(shown)) : '–'
         const s = state.sampler
         // The CR left is greyed when it was measured with another formula.
