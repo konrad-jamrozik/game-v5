@@ -166,6 +166,27 @@
       section.folded .shead > :not(h2) {
         display: none;
       }
+      /* The Formula section never folds; its Combatant types table and explanations fold together instead. */
+      .shead h2.nofold {
+        cursor: default;
+      }
+      .shead h2.nofold::before {
+        content: none;
+      }
+      .fold-toggle {
+        cursor: pointer;
+        user-select: none;
+      }
+      .fold-toggle::before {
+        content: '▾ ';
+        color: var(--muted);
+      }
+      .details-folded .fold-toggle::before {
+        content: '▸ ';
+      }
+      .details-folded .detail {
+        display: none;
+      }
       .shead {
         display: flex;
         flex-direction: column;
@@ -523,8 +544,15 @@
         <div class="cols">
           <div style="display: flex; flex-direction: column; gap: 8px">
             <div class="scroll"><table id="params"></table></div>
-            <h3 style="margin-top: 8px">Combatant types under the formula</h3>
-            <div class="scroll"><table id="types"></table></div>
+            <h3
+              id="detailsToggle"
+              class="fold-toggle"
+              style="margin-top: 8px"
+              title="Click to fold or unfold the table and the explanations"
+            >
+              Combatant types under the formula, and explanations
+            </h3>
+            <div class="scroll detail"><table id="types"></table></div>
           </div>
           <div style="display: flex; flex-direction: column; gap: 10px">
             <label class="lbl note" for="exprC">combatant_cr</label>
@@ -532,7 +560,7 @@
             <label class="lbl note" for="exprT">team_cr</label>
             <textarea id="exprT" data-bind="formula.team" data-type="str" spellcheck="false"></textarea>
             <div id="exprErr" class="err"></div>
-            <p class="note">
+            <p class="note detail">
               Combatant variables: <code>skill</code> (effective skill), <code>base_skill</code>, <code>health</code>,
               <code>armor</code>, <code>damage</code>, <code>exhaustion</code>, and the derived
               <code>health_mult = 1 + (health − health_base) × cr_per_health</code>, likewise
@@ -552,14 +580,14 @@
               </button>
               <button class="small" data-act="preset-lanchester">Lanchester square</button>
             </div>
-            <p class="note">
+            <p class="note detail">
               <b>combatant_cr</b> is one Combatant's rating by the combatant expression; <b>× skill</b> is that rating
               over its effective skill, i.e. how much its health, armor, and weapon damage raise or lower it. A team's
               rating then comes from the team expression over the sum of these, so with a team expression other than
               <code>sum</code>, e.g. <code>sqrt(sum * count)</code>, a site's rating is on another scale than its
               Combatants'.
             </p>
-            <p class="note">
+            <p class="note detail">
               Unchecking <b>Enabled</b> switches that part of the formula off: its multiplier is 1, or
               <code>team_exp</code> is 1, whatever the values. Every change re-rates every Combatant, site, and Agent
               team at once, and <b>Run</b> fights the teams as the current formula sizes them. The <b>Fit</b> box only
@@ -570,7 +598,7 @@
               differently, so those cells turn grey until they are run again; run, fit, and run the grey cells until the
               values settle.
             </p>
-            <p class="note">
+            <p class="note detail">
               E.g. with <code>skill * damage_mult</code> and <code>cr_per_damage</code> 0.02, a site of CR 1,200 has
               been fought by 12 Agents of skill 100 without Upgrades, each rated 100, who won 50%, and by 10 Agents of
               skill 100 with 10 Weapon damage Upgrades, each rated 120, who won 85%. Both teams rate 1,200, so the curve
@@ -1950,6 +1978,10 @@
         for (const h2 of document.querySelectorAll('section .shead h2')) {
           const section = h2.closest('section')
           const name = h2.textContent.trim()
+          if (name === 'Formula') {
+            h2.classList.add('nofold')
+            continue
+          }
           section.classList.toggle('folded', folded.includes(name))
           h2.title = 'Click to fold or unfold'
           h2.addEventListener('click', () => {
@@ -1962,6 +1994,24 @@
         }
       }
       setUpFolding()
+
+      /** Folds the Combatant types table and the formula's explanations together; folded until unfolded once. */
+      function setUpDetailsFolding() {
+        const KEY = 'combat-rating-bench/details-folded'
+        const section = $('#detailsToggle').closest('section')
+        let folded = true
+        try {
+          folded = localStorage.getItem(KEY) !== 'false'
+        } catch {}
+        section.classList.toggle('details-folded', folded)
+        $('#detailsToggle').addEventListener('click', () => {
+          const now = section.classList.toggle('details-folded')
+          try {
+            localStorage.setItem(KEY, String(now))
+          } catch {}
+        })
+      }
+      setUpDetailsFolding()
 
       async function start() {
         renderFormula()

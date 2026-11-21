@@ -34,7 +34,7 @@ Unchecking a part's **Enabled** box switches it off: its multiplier is 1, or `te
 
 ## The grid
 
-Clicking a section heading, e.g. **Formula**, folds the section to its heading; the browser remembers which sections are folded.
+Clicking a section heading, e.g. **Setup**, folds the section to its heading; the Formula section never folds, but clicking **Combatant types under the formula, and explanations** folds that table together with the explanations beside the expressions, which start folded. The browser remembers what is folded.
 
 - **Rows** are the Mission sites read from `content/`, the Cut content under `content/cut/` excepted, the Initiative sites first and then the Response sites, each from the highest operation level down. Each site is labelled with its kind and operation level, an Initiative site's from the engine's `developer.queries.getInitiativeOperationLevels` and a Response site's with its FactionOperationLevel name, e.g. Response level 3: Strategic threats. Each site's Enemies take their EnemyArchetypes' values. **Skip Response missions** leaves the Response sites out of the grid, the runs, the statistics, and the fit.
 - **Blocks** are the shares of the site's rating, by default `100, 120, 150`. In each block, the rows are the base skills of the Agent teams, by default `100, 250, 500`, and the columns their Upgrades as `weapon/armor` counts, by default `0/0, 5/0, 0/5, 5/5, 10/0, 0/10, 10/10`, so the defaults make 24 sites × 3 shares × 3 skills × 7 Upgrade sets, i.e. 1,512 cells.
