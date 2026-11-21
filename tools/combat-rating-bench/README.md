@@ -22,10 +22,10 @@ node tools/combat-rating-bench/server.ts --impl <game-v5-impl-web clone> --spec 
 
 The rating of a team is computed in two steps, each an editable JavaScript expression with `Math` in scope:
 
-- **`combatant_cr`** rates one Combatant, by default `skill * health_mult * armor_mult * damage_mult`, where `skill` is its effective skill and e.g. `health_mult = 1 + (health − health_base) × health_per_point`; `armor_mult` and `damage_mult` follow the same pattern.
+- **`combatant_cr`** rates one Combatant, by default `skill * health_mult * armor_mult * damage_mult`, where `skill` is its effective skill and e.g. `health_mult = 1 + (health − health_base) × cr_per_health`; `armor_mult` and `damage_mult` follow the same pattern.
 - **`team_cr`** rates a team from `sum`, the sum of the `combatant_cr` of its Combatants that are able to fight, and `count`, their number, by default `sum * count ** team_exp / count`. `game` is also available: the game's base Combat rating, Σ effective skill.
 
-The parameters, e.g. `health_per_point` and `team_exp`, are variables of both expressions. The buttons under the expressions load the game's base Combat rating, the multiplicative default, and a Lanchester square law, `sqrt(sum * count)`.
+The parameters, e.g. `cr_per_health` and `team_exp`, are variables of both expressions. The buttons under the expressions load the game's base Combat rating, the multiplicative default, and a Lanchester square law, `sqrt(sum * count)`.
 
 ## The grid
 

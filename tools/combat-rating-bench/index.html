@@ -484,7 +484,7 @@
             <p class="note">
               Combatant variables: <code>skill</code> (effective skill), <code>base_skill</code>, <code>health</code>,
               <code>armor</code>, <code>damage</code>, <code>exhaustion</code>, and the derived
-              <code>health_mult = 1 + (health − health_base) × health_per_point</code>, likewise
+              <code>health_mult = 1 + (health − health_base) × cr_per_health</code>, likewise
               <code>armor_mult</code> and <code>damage_mult</code>. Team variables: <code>sum</code>,
               <code>count</code> (Combatants able to fight), and <code>game</code> (the game's base Combat rating, Σ
               effective skill). Every parameter is a variable of both.
@@ -594,11 +594,11 @@
       const RESULTS = 'combat-rating-bench/results-v2'
       const PARAMS = [
         ['health_base', 'Baseline health.'],
-        ['health_per_point', 'CR % per point of health above baseline, e.g. 0.01 is 1%.'],
+        ['cr_per_health', 'CR % per point of health above baseline, e.g. 0.01 is 1%.'],
         ['armor_base', 'Baseline armor.'],
-        ['armor_per_point', 'CR % per point of armor above baseline, e.g. 0.01 is 1%.'],
+        ['cr_per_armor', 'CR % per point of armor above baseline, e.g. 0.01 is 1%.'],
         ['damage_base', 'Baseline weapon damage.'],
-        ['damage_per_point', 'CR % per point of weapon damage above baseline, e.g. 0.01 is 1%.'],
+        ['cr_per_damage', 'CR % per point of weapon damage above baseline, e.g. 0.01 is 1%.'],
         [
           'team_exp',
           'Exponent of the team size in team_cr: 1 sums the Combatants; above 1 favours larger teams, e.g. 2 is the Lanchester square law.',
@@ -616,20 +616,20 @@
         formula: {
           params: {
             health_base: 30,
-            health_per_point: 0.01,
+            cr_per_health: 0.01,
             armor_base: 0,
-            armor_per_point: 0.01,
+            cr_per_armor: 0.01,
             damage_base: 10,
-            damage_per_point: 0.01,
+            cr_per_damage: 0.01,
             team_exp: 1,
           },
           fit: {
             health_base: false,
-            health_per_point: true,
+            cr_per_health: true,
             armor_base: false,
-            armor_per_point: true,
+            cr_per_armor: true,
             damage_base: false,
-            damage_per_point: true,
+            cr_per_damage: true,
             team_exp: true,
           },
           ...FORMULAS.default,
@@ -659,6 +659,16 @@
           const saved = JSON.parse(localStorage.getItem(STORE) ?? 'null')
           if (saved) {
             const d = defaults()
+            // The parameters were once named <stat>_per_point; a formula saved under those names keeps its values.
+            for (const part of ['params', 'fit']) {
+              const o = saved.formula?.[part] ?? {}
+              for (const stat of ['health', 'armor', 'damage']) {
+                if (`${stat}_per_point` in o) {
+                  o[`cr_per_${stat}`] ??= o[`${stat}_per_point`]
+                  delete o[`${stat}_per_point`]
+                }
+              }
+            }
             return {
               ...d,
               ...saved,
@@ -767,9 +777,9 @@
             armor: g.armor,
             damage: g.damage,
             exhaustion: g.exhaustion,
-            health_mult: 1 + (g.health - p.health_base) * p.health_per_point,
-            armor_mult: 1 + (g.armor - p.armor_base) * p.armor_per_point,
-            damage_mult: 1 + (g.damage - p.damage_base) * p.damage_per_point,
+            health_mult: 1 + (g.health - p.health_base) * p.cr_per_health,
+            armor_mult: 1 + (g.armor - p.armor_base) * p.cr_per_armor,
+            damage_mult: 1 + (g.damage - p.damage_base) * p.cr_per_damage,
           })
           if (typeof c !== 'number' || Number.isNaN(c)) {
             throw new Error('combatant_cr is not a number')
@@ -1390,9 +1400,9 @@
         $('#formulaText').textContent = [
           `combatant_cr = ${state.formula.combatant}`,
           `team_cr      = ${state.formula.team}`,
-          `health_mult  = 1 + (health − ${p.health_base}) × ${p.health_per_point}`,
-          `armor_mult   = 1 + (armor − ${p.armor_base}) × ${p.armor_per_point}`,
-          `damage_mult  = 1 + (damage − ${p.damage_base}) × ${p.damage_per_point}`,
+          `health_mult  = 1 + (health − ${p.health_base}) × ${p.cr_per_health}`,
+          `armor_mult   = 1 + (armor − ${p.armor_base}) × ${p.cr_per_armor}`,
+          `damage_mult  = 1 + (damage − ${p.damage_base}) × ${p.cr_per_damage}`,
           `team_exp     = ${p.team_exp}`,
           ``,
           ...targets.map((t) => {
