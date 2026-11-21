@@ -478,6 +478,15 @@
         <div class="cols">
           <div style="display: flex; flex-direction: column; gap: 8px">
             <div class="scroll"><table id="params"></table></div>
+            <h3 style="margin-top: 8px">Combatant types under the formula</h3>
+            <div class="scroll"><table id="types"></table></div>
+            <p class="note">
+              <b>combatant_cr</b> is one Combatant's rating by the combatant expression; <b>× skill</b> is that rating
+              over its effective skill, i.e. how much its health, armor, and weapon damage raise or lower it. A team's
+              rating then comes from the team expression over the sum of these, so with a team expression other than
+              <code>sum</code>, e.g. <code>sqrt(sum * count)</code>, a site's rating is on another scale than its
+              Combatants'.
+            </p>
             <p class="note">
               Every parameter applies at its value, whether or not its <b>Fit</b> box is checked; e.g. 0 switches a CR
               per point off. The box only lets the <b>Fit</b> button change the parameter. <b>Fit</b> fights nothing:
@@ -844,10 +853,36 @@
         }
         return compiled.get(expr)
       }
+      /** The variables of the combatant expression for one Combatant of a group. */
+      function combatantVars(g, formula, cv) {
+        const p = formula.params
+        return {
+          ...cv,
+          ...p,
+          skill: effectiveSkill(g, cv),
+          base_skill: g.skill,
+          health: g.health,
+          armor: g.armor,
+          damage: g.damage,
+          exhaustion: g.exhaustion,
+          weapon_upgrades: g.w ?? 0,
+          armor_upgrades: g.a ?? 0,
+          health_mult: 1 + (g.health - p.health_base) * p.cr_per_health,
+          armor_mult: 1 + (g.armor - p.armor_base) * p.cr_per_armor,
+          damage_mult: 1 + (g.damage - p.damage_base) * p.cr_per_damage,
+        }
+      }
+      /** The combatant_cr of one Combatant of a group; throws on a broken expression. */
+      function combatantRating(g, formula, cv) {
+        const c = compile(formula.combatant)(combatantVars(g, formula, cv))
+        if (typeof c !== 'number' || Number.isNaN(c)) {
+          throw new Error('combatant_cr is not a number')
+        }
+        return c
+      }
       /** The rating of a list of groups under a formula; throws on a broken expression. */
       function rate(groups, formula, cv) {
         const p = formula.params
-        const fc = compile(formula.combatant)
         const ft = compile(formula.team)
         let sum = 0
         let count = 0
@@ -857,24 +892,7 @@
             continue
           }
           const skill = effectiveSkill(g, cv)
-          const c = fc({
-            ...cv,
-            ...p,
-            skill,
-            base_skill: g.skill,
-            health: g.health,
-            armor: g.armor,
-            damage: g.damage,
-            exhaustion: g.exhaustion,
-            weapon_upgrades: g.w ?? 0,
-            armor_upgrades: g.a ?? 0,
-            health_mult: 1 + (g.health - p.health_base) * p.cr_per_health,
-            armor_mult: 1 + (g.armor - p.armor_base) * p.cr_per_armor,
-            damage_mult: 1 + (g.damage - p.damage_base) * p.cr_per_damage,
-          })
-          if (typeof c !== 'number' || Number.isNaN(c)) {
-            throw new Error('combatant_cr is not a number')
-          }
+          const c = combatantRating(g, formula, cv)
           sum += c * g.count
           count += g.count
           game += skill * g.count
@@ -1416,7 +1434,38 @@
         grid.style.setProperty('--targets', targets.length)
         grid.style.setProperty('--ups', ups.length)
         grid.innerHTML = head + rows
+        renderTypes()
         renderAnalysis()
+      }
+
+      /** The combatant_cr of every EnemyArchetype, and of the Agents of each base skill without and with Upgrades. */
+      function renderTypes() {
+        const { cv, skills, ups } = model
+        const rows = [...info.gdr.enemyArchetypes]
+          .sort((a, b) => a.skill - b.skill)
+          .map((e) => ({
+            name: e.name,
+            g: { count: 1, skill: e.skill, health: e.health, damage: e.damage, armor: e.armor, exhaustion: 0 },
+          }))
+        const sets = [ups[0], ups.at(-1)].filter((u, i, all) => u !== undefined && all.indexOf(u) === i)
+        for (const skill of skills) {
+          for (const up of sets) {
+            rows.push({
+              name: `Agent, ${up.label === 'none' ? 'no Upgrades' : up.label}`,
+              g: agentGroups(skill, up, 1)[0],
+            })
+          }
+        }
+        $('#types').innerHTML =
+          `<tr><th>Combatant</th><th class="r">Skill</th><th class="r">Health</th><th class="r">Damage</th><th class="r">Armor</th><th class="r">combatant_cr</th><th class="r">× skill</th></tr>` +
+          rows
+            .map(({ name, g }) => {
+              const c = combatantRating(g, state.formula, cv)
+              const skill = effectiveSkill(g, cv)
+              return `<tr><td style="font-family:var(--body)">${esc(name)}</td><td class="r">${g.skill}</td><td class="r">${g.health}</td>
+              <td class="r">${g.damage}</td><td class="r">${g.armor}</td><td class="r">${fmt(c, 1)}</td><td class="r">${skill > 0 ? `×${(c / skill).toFixed(3)}` : '–'}</td></tr>`
+            })
+            .join('')
       }
 
       function renderAnalysis() {
