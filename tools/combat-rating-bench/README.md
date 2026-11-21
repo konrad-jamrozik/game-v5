@@ -22,17 +22,21 @@ node tools/combat-rating-bench/server.ts --impl <game-v5-impl-web clone> --spec 
 
 The rating of a team is computed in two steps, each an editable JavaScript expression with `Math` in scope:
 
-- **`combatant_cr`** rates one Combatant, by default `skill * health_mult * armor_mult * damage_mult`, where `skill` is its effective skill and e.g. `health_mult = 1 + (health − health_base) × cr_per_health`; `armor_mult` and `damage_mult` follow the same pattern.
+- **`combatant_cr`** rates one Combatant, by default `skill * health_mult * armor_mult * damage_mult`, where `skill` is its effective skill and e.g. `health_mult = 1 + (health − health_base) × cr_per_health`; `armor_mult` and `damage_mult` follow the same pattern. `weapon_upgrades` and `armor_upgrades` are an Agent's Upgrade counts, 0 for an Enemy.
 - **`team_cr`** rates a team from `sum`, the sum of the `combatant_cr` of its Combatants that are able to fight, and `count`, their number, by default `sum * count ** team_exp / count`. `game` is also available: the game's base Combat rating, Σ effective skill.
 
-The parameters, e.g. `cr_per_health` and `team_exp`, are variables of both expressions. The buttons under the expressions load the game's base Combat rating, the multiplicative default, and a Lanchester square law, `sqrt(sum * count)`.
+The parameters, e.g. `cr_per_health` and `team_exp`, and the Combat values, e.g. `rating_bonus_per_weapon_damage_upgrade`, are variables of both expressions. `cr_per_damage` and `cr_per_armor` default to the game's `rating_bonus_per_weapon_damage_upgrade` and `rating_bonus_per_armor_upgrade`, each divided by what one Upgrade adds, so that an Agent's Upgrades rate as in the game; unlike the game's, they also rate the Enemies' weapon damage and armor. The buttons under the expressions load:
+
+- **Game's Combat rating**: the game's own, effective skill raised by the bonus of each of an Agent's Rating Upgrades, and rounded down once for the team.
+- **Multiplicative default**: the default expressions and parameters.
+- **Lanchester square**: the default combatant expression with the team expression `sqrt(sum * count)`.
 
 ## The grid
 
 - **Rows** are the Mission sites read from `content/`, the Cut content under `content/cut/` excepted, the Initiative sites first and then the Response sites by operation level. Each site's Enemies take their EnemyArchetypes' values.
 - **Blocks** are the shares of the site's rating, by default `100, 120, 150`. In each block, the rows are the base skills of the Agent teams, by default `100, 250, 500`, and the columns their Upgrades as `weapon/armor` counts, by default `0/0, 5/0, 0/5, 5/5, 10/0, 0/10, 10/10`, so the defaults make 24 sites × 3 shares × 3 skills × 7 Upgrade sets, i.e. 1,512 cells.
-- **An Agent team** is Agents of the first AgentArchetype's health, weapon damage, and armor, at full health and rested, with the cell's base skill; each Weapon damage Upgrade adds the `weapon_damage` Upgrade's `increment` to weapon damage, and each Armor Upgrade the `armor` Upgrade's to armor. Its Agent count is the one whose rating, under the current formula, is closest by ratio to the cell's share of the site's rating. A cell whose closest count still misses its share by more than 10%, e.g. one Agent of base skill 500 against a small site, is drawn dashed and left out of the statistics.
-- **A cell** shows the Agent count above and the win rate below, tinted blue below 50% and orange above; hovering it shows the ratings, the Agents' values, and the Combats won.
+- **An Agent team** is Agents of the first AgentArchetype's health, weapon damage, and armor, at full health and rested, with the cell's base skill; each Weapon damage Upgrade adds the `weapon_damage` Upgrade's `increment` to weapon damage, and each Armor Upgrade the `armor` Upgrade's to armor. Its Agent count is the one whose rating, under the current formula, is closest by ratio to the cell's share of the site's rating. A cell whose closest count still misses its share by more than 5%, e.g. one Agent of base skill 500 against a small site, is excluded: it is drawn dashed, never fought, and left out of the statistics and the fit.
+- **A cell** shows the Agent count above and the win rate below, tinted red when the Agents win less than 50% and green when they win more; hovering it shows the ratings, the Agents' values, and the Combats won.
 - **Nothing is fought until a Run button is pressed**: beside a share in a row, that block; **Run row**, the row; **Run** in the top row, that share for every site; and **Run all**, every cell. A run fights only the cells that have no result for their current team; **Stop** drops the fights not yet done.
 - **Results are kept in the browser's local storage**, by a key that hashes the site's Enemies, the Agent team, the Upgrade counts, the Combats per cell, the Combat values, and the engine's commit. A change of the formula that changes a cell's Agent count leaves its earlier result greyed until it is run again; one that keeps the count keeps the result. **Forget results** clears them.
 
@@ -42,7 +46,7 @@ Each cell is one batch of the engine's `developer.tools.fightCombatBatch`, on ex
 
 ## Analysis
 
-The analysis covers the cells that have a result for the current formula and are within 10% of their share:
+The analysis covers the cells that have a result for the current formula and are therefore within 5% of their share:
 
 - **For each share**, the mean win rate and its spread, i.e. the standard deviation over the cells. The spread that a finite number of Combats alone leaves is stated beside it, and the rest is the **formula spread**, the part a better formula can remove. For 100%, the distance from 50% is given as a root mean square, with its formula part too.
 - **Histograms** of the win rates of each share.

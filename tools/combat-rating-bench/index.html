@@ -27,9 +27,9 @@
         --warning: #e3c14b;
         --danger: #ff7f78;
         --notice: #8fb8d6;
-        /* The win rate of a cell: below 50% tints toward --low, above toward --high. */
-        --low: 92, 160, 214;
-        --high: 255, 122, 26;
+        /* The win rate of the Agents in a cell: below 50% tints toward red, --low, above toward green, --high. */
+        --low: 229, 72, 77;
+        --high: 120, 190, 90;
         --head: 'Barlow Condensed', 'Arial Narrow', sans-serif;
         --body: 'Barlow', 'Segoe UI', system-ui, sans-serif;
         --mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
@@ -338,6 +338,8 @@
       .cell.off {
         border-style: dashed;
         border-color: var(--border);
+        background: transparent;
+        opacity: 0.55;
       }
       .cell.queued .w {
         color: var(--accent-text);
@@ -483,15 +485,29 @@
             <div id="exprErr" class="err"></div>
             <p class="note">
               Combatant variables: <code>skill</code> (effective skill), <code>base_skill</code>, <code>health</code>,
-              <code>armor</code>, <code>damage</code>, <code>exhaustion</code>, and the derived
+              <code>armor</code>, <code>damage</code>, <code>exhaustion</code>, <code>weapon_upgrades</code> and
+              <code>armor_upgrades</code> (an Agent's Upgrade counts, 0 for an Enemy), and the derived
               <code>health_mult = 1 + (health − health_base) × cr_per_health</code>, likewise
               <code>armor_mult</code> and <code>damage_mult</code>. Team variables: <code>sum</code>,
               <code>count</code> (Combatants able to fight), and <code>game</code> (the game's base Combat rating, Σ
-              effective skill). Every parameter is a variable of both.
+              effective skill). Every parameter, and every Combat value under Setup, e.g.
+              <code>rating_bonus_per_weapon_damage_upgrade</code>, is a variable of both.
             </p>
             <div class="row">
-              <button class="small" data-act="preset-game">Game's base Combat rating</button>
-              <button class="small" data-act="preset-default">Multiplicative default</button>
+              <button
+                class="small"
+                data-act="preset-game"
+                title="Base Combat rating raised by each Rating Upgrade's bonus, for Agents only"
+              >
+                Game's Combat rating
+              </button>
+              <button
+                class="small"
+                data-act="preset-default"
+                title="The multiplicative formula with its default parameters"
+              >
+                Multiplicative default
+              </button>
               <button class="small" data-act="preset-lanchester">Lanchester square</button>
             </div>
           </div>
@@ -527,8 +543,8 @@
         <p class="note">
           Retreat is off by default, by setting <code>retreat_below_agent_rating_fraction</code> to 0, because it reads
           the game's own Combat rating rather than this formula; when it is allowed, a retreat counts as a loss. A cell
-          whose closest Agent count still misses its share by more than 10% is drawn dashed and left out of the
-          statistics, e.g. one Agent of skill 500 against a small site.
+          whose closest Agent count still misses its share by more than 5% is excluded: drawn dashed, never fought, and
+          left out of the statistics and the fit, e.g. one Agent of skill 500 against a small site.
         </p>
         <details>
           <summary class="lbl note" style="cursor: pointer">Combat values passed to the engine</summary>
@@ -541,9 +557,9 @@
           <h2>Mission sites</h2>
           <p>
             Each cell is one Agent team against the row's Mission site: its Agent count above, its win rate over the
-            Combats below, tinted blue below 50% and orange above. Hover a cell for its ratings. <b>Run</b> beside a
-            share fights that block, <b>Run row</b> the whole row, and <b>Run</b> in the top row that share for every
-            site.
+            Combats below, tinted red when the Agents win less than 50% and green when they win more; an excluded cell
+            shows <i>excl.</i> Hover a cell for its ratings. <b>Run</b> beside a share fights that block,
+            <b>Run row</b> the whole row, and <b>Run</b> in the top row that share for every site.
           </p>
         </div>
         <div class="scroll"><div id="grid" class="grid"></div></div>
@@ -553,7 +569,7 @@
         <div class="shead">
           <h2>Analysis</h2>
           <p>
-            Over the cells with a result for the current formula, within 10% of their share. The <b>spread</b> is the
+            Over the cells with a result for the current formula, all within 5% of their share. The <b>spread</b> is the
             standard deviation of the win rates of one share; the dice alone, i.e. a finite number of Combats, leave the
             spread stated beside it, and the rest is the <b>formula spread</b>, the part a better formula can remove.
           </p>
@@ -593,15 +609,25 @@
       const STORE = 'combat-rating-bench/v2'
       const RESULTS = 'combat-rating-bench/results-v2'
       const PARAMS = [
-        ['health_base', 'Baseline health.'],
-        ['cr_per_health', 'CR % per point of health above baseline, e.g. 0.01 is 1%.'],
-        ['armor_base', 'Baseline armor.'],
-        ['cr_per_armor', 'CR % per point of armor above baseline, e.g. 0.01 is 1%.'],
-        ['damage_base', 'Baseline weapon damage.'],
-        ['cr_per_damage', 'CR % per point of weapon damage above baseline, e.g. 0.01 is 1%.'],
+        // [name, meaning, step of the input's arrows]
+        ['health_base', 'Baseline health.', 1],
+        ['cr_per_health', 'CR % per point of health above baseline, e.g. 0.01 is 1%.', 0.01],
+        ['armor_base', 'Baseline armor.', 1],
+        [
+          'cr_per_armor',
+          'CR % per point of armor above baseline, e.g. 0.01 is 1%. Defaults to the game’s rating_bonus_per_armor_upgrade.',
+          0.01,
+        ],
+        ['damage_base', 'Baseline weapon damage.', 1],
+        [
+          'cr_per_damage',
+          'CR % per point of weapon damage above baseline, e.g. 0.01 is 1%. Defaults to the game’s rating_bonus_per_weapon_damage_upgrade.',
+          0.01,
+        ],
         [
           'team_exp',
           'Exponent of the team size in team_cr: 1 sums the Combatants; above 1 favours larger teams, e.g. 2 is the Lanchester square law.',
+          0.05,
         ],
       ]
       const FORMULAS = {
@@ -609,18 +635,27 @@
           combatant: 'skill * health_mult * armor_mult * damage_mult',
           team: 'sum * count ** team_exp / count',
         },
-        game: { combatant: 'skill', team: 'sum' },
+        // COMBAT, Combat rating: the bonus of each Rating Upgrade, which only Agents have.
+        game: {
+          combatant:
+            'skill * (1 + rating_bonus_per_weapon_damage_upgrade * weapon_upgrades + rating_bonus_per_armor_upgrade * armor_upgrades)',
+          team: 'floor(sum)',
+        },
         lanchester: { combatant: 'skill * health_mult * armor_mult * damage_mult', team: 'sqrt(sum * count)' },
       }
+      /**
+       * The default formula and setup. The CR per point of armor and of weapon damage are the game's bonus of each
+       * Rating Upgrade, divided by what one Upgrade adds, once the content is loaded.
+       */
       const defaults = () => ({
         formula: {
           params: {
             health_base: 30,
             cr_per_health: 0.01,
             armor_base: 0,
-            cr_per_armor: 0.01,
+            cr_per_armor: contentBonus('rating_bonus_per_armor_upgrade', 'armor') ?? 0.01,
             damage_base: 10,
-            cr_per_damage: 0.01,
+            cr_per_damage: contentBonus('rating_bonus_per_weapon_damage_upgrade', 'weapon_damage') ?? 0.02,
             team_exp: 1,
           },
           fit: {
@@ -645,6 +680,13 @@
       })
 
       let info = null
+      function contentBonus(name, upgrade) {
+        const bonus = info?.gdr.combatValues[name]
+        const inc = info?.gdr.upgradeIncrements[upgrade] ?? 1
+        return typeof bonus === 'number' ? Number((bonus / inc).toPrecision(4)) : null
+      }
+      /** Whether no formula was saved in this browser, so that the defaults follow the content once it loads. */
+      let unsaved = false
       let state = loadState()
       /** Results by fight key, and the fight key each cell was last fought with. */
       let store = loadStore()
@@ -682,6 +724,7 @@
             }
           }
         } catch {}
+        unsaved = true
         return defaults()
       }
       function loadStore() {
@@ -770,6 +813,7 @@
           }
           const skill = effectiveSkill(g, cv)
           const c = fc({
+            ...cv,
             ...p,
             skill,
             base_skill: g.skill,
@@ -777,6 +821,8 @@
             armor: g.armor,
             damage: g.damage,
             exhaustion: g.exhaustion,
+            weapon_upgrades: g.w ?? 0,
+            armor_upgrades: g.a ?? 0,
             health_mult: 1 + (g.health - p.health_base) * p.cr_per_health,
             armor_mult: 1 + (g.armor - p.armor_base) * p.cr_per_armor,
             damage_mult: 1 + (g.damage - p.damage_base) * p.cr_per_damage,
@@ -788,7 +834,7 @@
           count += g.count
           game += skill * g.count
         }
-        const cr = count === 0 ? 0 : ft({ ...p, sum, count, game })
+        const cr = count === 0 ? 0 : ft({ ...cv, ...p, sum, count, game })
         if (typeof cr !== 'number' || Number.isNaN(cr)) {
           throw new Error('team_cr is not a number')
         }
@@ -847,6 +893,9 @@
             damage: a.damage + up.w * (inc.weapon_damage ?? 1),
             armor: a.armor + up.a * (inc.armor ?? 1),
             exhaustion: 0,
+            // The Upgrade counts, which only the formula reads; the values above already hold what they add.
+            w: up.w,
+            a: up.a,
           },
         ]
       }
@@ -903,8 +952,10 @@
                   groups,
                   cr,
                   ratio: cr / site.cr,
-                  off: Math.abs(cr / site.cr / (t / 100) - 1) > 0.1,
-                  key: hash(`${site.sig}|${JSON.stringify(groups)}|${up.w}/${up.a}|${tail}`),
+                  // Excluded: no Agent count comes within 5% of the share, so the cell is never fought or counted.
+                  off: Math.abs(cr / site.cr / (t / 100) - 1) > 0.05,
+                  // The Upgrade counts enter the key once, after the groups, as they did before groups held them.
+                  key: hash(`${site.sig}|${JSON.stringify(groups.map(({ w, a, ...g }) => g))}|${up.w}/${up.a}|${tail}`),
                   trials,
                 }
                 site.cells.push(cell)
@@ -938,6 +989,9 @@
           return
         }
         for (const cell of cells) {
+          if (cell.off) {
+            continue
+          }
           if (resultOf(cell)) {
             store.last[cell.id] = cell.key
             continue
@@ -1036,12 +1090,12 @@
 
       function progress() {
         const p = $('#progress')
-        const fresh = model ? model.cells.filter(resultOf).length : 0
-        const all = model ? model.cells.length : 0
+        const fresh = model ? model.cells.filter((c) => !c.off && resultOf(c)).length : 0
+        const all = model ? model.cells.filter((c) => !c.off).length : 0
         p.classList.toggle('on', pending.size > 0)
         p.textContent =
           (pending.size > 0 ? `Fighting: ${pending.size} cells to go. ` : 'Idle. ') +
-          `${fresh} / ${all} cells have a result for the current formula.` +
+          `${fresh} / ${all} cells have a result for the current formula; ${(model?.cells.length ?? 0) - all} excluded.` +
           (failures.size > 0 ? ` ${failures.size} failed: ${[...failures.values()][0]}` : '')
       }
 
@@ -1155,7 +1209,7 @@
         // the Agent count it was fought with.
         const seen = new Set()
         const rows = model.cells
-          .filter((cell) => resultOf(cell) && !seen.has(cell.key) && seen.add(cell.key))
+          .filter((cell) => !cell.off && resultOf(cell) && !seen.has(cell.key) && seen.add(cell.key))
           .map((cell) => ({ cell, win: winOf(resultOf(cell)) }))
         if (rows.length < 3) {
           alert('Run at least three cells for the current formula first.')
@@ -1198,8 +1252,8 @@
         $('#params').innerHTML =
           `<tr><th>Parameter</th><th class="r">Value</th><th>Fit</th><th>Meaning</th></tr>` +
           PARAMS.map(
-            ([name, desc]) => `<tr><td><code>${name}</code></td>
-            <td class="r"><input type="number" step="any" data-bind="formula.params.${name}" data-type="num" value="${state.formula.params[name]}"></td>
+            ([name, desc, step]) => `<tr><td><code>${name}</code></td>
+            <td class="r"><input type="number" step="${step}" data-bind="formula.params.${name}" data-type="num" value="${state.formula.params[name]}"></td>
             <td><input type="checkbox" data-bind="formula.fit.${name}" data-type="bool" ${state.formula.fit[name] ? 'checked' : ''} aria-label="Fit ${name}"></td>
             <td class="desc">${esc(desc)}</td></tr>`,
           ).join('')
@@ -1248,7 +1302,10 @@
         const lastKey = store.last[cell.id]
         const old = !r && lastKey ? store.results[lastKey] : null
         const queued = pending.has(cell.key)
-        const cls = ['cell', r ? 'fresh' : old ? 'stale' : '', cell.off ? 'off' : '', queued ? 'queued' : ''].join(' ')
+        if (cell.off) {
+          return `<div class="cell off" data-cell="${esc(cell.id)}"><span class="n">${cell.count}</span><span class="w">excl.</span></div>`
+        }
+        const cls = ['cell', r ? 'fresh' : old ? 'stale' : '', queued ? 'queued' : ''].join(' ')
         const w = r ? winOf(r) : old ? winOf(old) : null
         const style = r ? `background:${tint(winOf(r))}` : ''
         const text = queued ? '…' : w === null ? '–' : pct(w)
@@ -1319,7 +1376,7 @@
         const fresh = model.cells
           .filter((c) => resultOf(c) && !c.off)
           .map((c) => ({ cell: c, win: winOf(resultOf(c)) }))
-        const off = model.cells.filter((c) => resultOf(c) && c.off).length
+        const off = model.cells.filter((c) => c.off).length
         const fit = fresh.length >= 2 ? fitK(fresh.map((f) => ({ win: f.win, ratio: f.cell.ratio }))) : null
         const k = fit?.k ?? NaN
         const per = new Map(
@@ -1360,7 +1417,7 @@
             Number.isFinite(k) ? k.toFixed(2) : '–',
             Number.isFinite(k)
               ? `fitted over ${fresh.length} cells; a rating ${['1.1', '1.2', '1.5', '2'].map((r) => `${r}× wins ${pct(predict(Number(r), k))}`).join(', ')}` +
-                  (off > 0 ? `; ${off} cells off their share are left out` : '')
+                  (off > 0 ? `; ${off} cells are excluded for missing their share by more than 5%` : '')
               : 'needs two cells',
           )
 
@@ -1560,6 +1617,9 @@
         const t = Number(b.dataset.t)
         if (act.startsWith('preset-')) {
           Object.assign(state.formula, FORMULAS[act.slice(7)])
+          if (act === 'preset-default') {
+            state.formula.params = defaults().formula.params
+          }
           renderFormula()
           changed()
         } else if (act === 'run-row') {
@@ -1589,7 +1649,7 @@
         const lines = [
           `${esc(cell.site.name)}, ${cell.t}% of CR ${fmt(cell.site.cr)}`,
           `${cell.count} Agents: skill ${cell.skill}, health ${cell.groups[0].health}, damage ${cell.groups[0].damage}, armor ${cell.groups[0].armor}`,
-          `team_cr ${fmt(cell.cr)}, ${cell.ratio.toFixed(3)}× the site${cell.off ? ' (off its share)' : ''}`,
+          `team_cr ${fmt(cell.cr)}, ${cell.ratio.toFixed(3)}× the site${cell.off ? ': excluded, more than 5% off its share' : ''}`,
         ]
         if (r) {
           lines.push(
@@ -1635,6 +1695,10 @@
         $('#engine').innerHTML = info.engineError
           ? `<span class="err">The engine did not start: ${esc(info.engineError)}</span>`
           : `Engine ${esc(info.impl)}, ${esc(info.engine)}; ${info.threads} worker threads.`
+        if (unsaved) {
+          state.formula.params = defaults().formula.params
+          renderFormula()
+        }
         renderSetup()
         render()
       }
