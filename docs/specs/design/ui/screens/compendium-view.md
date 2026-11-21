@@ -147,14 +147,14 @@ The Data sheet of an Upgrade shows what one acquisition costs and adds, under [U
 | `effect` | Wording, e.g. |
 | --- | --- |
 | `agent_cap` | "+4 to the [Agent cap](../../mechanics/domain-model.md#agency-and-agents)" |
-| `transport_cap` | "+2 to the [Transport cap](../../mechanics/economy-and-upgrades.md#glossary)" |
+| `transport_cap` | "+4 to the [Transport cap](../../mechanics/economy-and-upgrades.md#glossary)" |
 | `training_cap` | "+4 to the [Training cap](../../mechanics/economy-and-upgrades.md#glossary)" |
 | `agent_weapon_damage` | "+1 weapon damage for every Agent" |
 | `agent_max_health` | "+1 max health for every Agent" |
 | `agent_armor` | "+1 armor for every Agent" |
-| `training_skill_gain` | "+0.10 skill for each turn of [Training](../../mechanics/agents-spec.md#assignments)" |
-| `exhaustion_recovery` | "+0.50 [exhaustion](../../mechanics/agents-spec.md#combatant-attributes) recovered each turn" |
-| `health_recovery` | "+0.20% of max health recovered each turn" |
+| `training_skill_gain` | "+0.20 skill for each turn of [Training](../../mechanics/agents-spec.md#assignments)" |
+| `exhaustion_recovery` | "+1.00 [exhaustion](../../mechanics/agents-spec.md#combatant-attributes) recovered each turn" |
+| `health_recovery` | "+1.00% of max health recovered each turn" |
 
 ## Faction data sheet
 

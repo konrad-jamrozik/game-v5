@@ -1,21 +1,21 @@
 id: agent_cap
 type: Upgrade
 name: Agent cap
-price: 200
+price: 500
 effect: agent_cap
 increment: 4
 ---
 id: transport_cap
 type: Upgrade
 name: Transport cap
-price: 1000
+price: 2000
 effect: transport_cap
-increment: 2
+increment: 4
 ---
 id: training_cap
 type: Upgrade
 name: Training cap
-price: 200
+price: 500
 effect: training_cap
 increment: 4
 ---
@@ -36,20 +36,20 @@ increment: 5
 id: training_skill_gain
 type: Upgrade
 name: Training skill gain
-price: 500
+price: 1000
 effect: training_skill_gain
-increment: 0.1
+increment: 0.2
 ---
 id: exhaustion_recovery
 type: Upgrade
 name: Exhaustion recovery
-price: 500
+price: 1000
 effect: exhaustion_recovery
-increment: 0.5
+increment: 1
 ---
 id: health_recovery
 type: Upgrade
 name: Health recovery
-price: 500
+price: 1000
 effect: health_recovery
-increment: 0.2
+increment: 1

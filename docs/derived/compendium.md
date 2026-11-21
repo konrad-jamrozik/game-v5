@@ -1730,7 +1730,7 @@ Expands the barracks so that the Agency can employ more [Agents](#agents) at onc
 | `agent_cap` | Upgrade     |
 | ----------- | ----------- |
 | `name`      | `Agent cap` |
-| `price`     | `200`       |
+| `price`     | `500`       |
 | `effect`    | `agent_cap` |
 | `increment` | `4`         |
 
@@ -1756,9 +1756,9 @@ Better quarters and rest rotations let every resting [Agent](#agents) shake off 
 | `exhaustion_recovery` | Upgrade               |
 | --------------------- | --------------------- |
 | `name`                | `Exhaustion recovery` |
-| `price`               | `500`                 |
+| `price`               | `1000`                |
 | `effect`              | `exhaustion_recovery` |
-| `increment`           | `0.5`                 |
+| `increment`           | `1`                   |
 
 ### Health recovery
 
@@ -1769,9 +1769,9 @@ A better infirmary lets every [Agent](#agents) on [Recovery](#recovery) heal fas
 | `health_recovery` | Upgrade           |
 | ----------------- | ----------------- |
 | `name`            | `Health recovery` |
-| `price`           | `500`             |
+| `price`           | `1000`            |
 | `effect`          | `health_recovery` |
-| `increment`       | `0.2`             |
+| `increment`       | `1`               |
 
 ### Training cap
 
@@ -1782,7 +1782,7 @@ Enlarges the [training](#training) grounds so that more [Agents](#agents) can be
 | `training_cap` | Upgrade        |
 | -------------- | -------------- |
 | `name`         | `Training cap` |
-| `price`        | `200`          |
+| `price`        | `500`          |
 | `effect`       | `training_cap` |
 | `increment`    | `4`            |
 
@@ -1795,9 +1795,9 @@ Better instructors and simulators make every [Agent](#agents) on [Training](#tra
 | `training_skill_gain` | Upgrade               |
 | --------------------- | --------------------- |
 | `name`                | `Training skill gain` |
-| `price`               | `500`                 |
+| `price`               | `1000`                |
 | `effect`              | `training_skill_gain` |
-| `increment`           | `0.1`                 |
+| `increment`           | `0.2`                 |
 
 ### Transport cap
 
@@ -1808,9 +1808,9 @@ Adds vehicles so that more [Agents](#agents) can be [deployed](#missions) to [Mi
 | `transport_cap` | Upgrade         |
 | --------------- | --------------- |
 | `name`          | `Transport cap` |
-| `price`         | `1000`          |
+| `price`         | `2000`          |
 | `effect`        | `transport_cap` |
-| `increment`     | `2`             |
+| `increment`     | `4`             |
 
 ### Weapon damage
 
