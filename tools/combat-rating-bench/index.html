@@ -2376,7 +2376,7 @@
         $('#samplerInfo').innerHTML = `${cells.length} samples, ${done} complete.`
         const fixedSite = state.sampler.site.mode === 'fixed' ? values.site[0] : null
         $('#samplerSite').innerHTML = fixedSite ? `<b>${esc(fixedSite.name)}</b>${siteMeta(fixedSite)}` : ''
-        // As under Mission sites, the first values are at the upper left: X grows down and Y to the right.
+        // As under Mission sites, the first values are at the upper left: X grows to the right and Y down.
         const xs = ax.x ? values[ax.x] : [null]
         const ys = ax.y ? values[ax.y] : [null]
         const zs = ax.z ? values[ax.z] : [null]
@@ -2404,7 +2404,7 @@
           }
           return sampler.byId.get(sampleId(v))
         }
-        const corner = [ax.x ? `${samplerLabel(ax.x)} ↓` : '', ax.y ? `${samplerLabel(ax.y)} →` : '']
+        const corner = [ax.y ? `${samplerLabel(ax.y)} ↓` : '', ax.x ? `${samplerLabel(ax.x)} →` : '']
           .filter(Boolean)
           .join('<br>')
         out.innerHTML = zs
@@ -2415,11 +2415,11 @@
             let html = `<div><div class="stitle"><b>${ax.z ? `${samplerLabel(ax.z)} ${dimText(ax.z, z)}` : 'Samples'}</b>
               ${wins.length > 0 ? `<span class="note">μ ${pct(mean)} over ${wins.length}</span>` : ''}
               <button class="small" data-act="run-samples" data-z="${zi}">Run</button></div>
-              <div class="sgrid" style="grid-template-columns: auto repeat(${ys.length}, minmax(50px, auto))">
-              <span class="ax"><span>${corner}</span></span>${ys.map((y) => `<span class="ax"><span>${axisLabel('y', y, z, true)}</span></span>`).join('')}`
-            for (const x of xs) {
-              html += `<span class="ax y"><span>${axisLabel('x', x, z, false)}</span></span>`
-              html += ys.map((y) => sampleHtml(cellAt(x, y, z))).join('')
+              <div class="sgrid" style="grid-template-columns: auto repeat(${xs.length}, minmax(50px, auto))">
+              <span class="ax"><span>${corner}</span></span>${xs.map((x) => `<span class="ax"><span>${axisLabel('x', x, z, true)}</span></span>`).join('')}`
+            for (const y of ys) {
+              html += `<span class="ax y"><span>${axisLabel('y', y, z, false)}</span></span>`
+              html += xs.map((x) => sampleHtml(cellAt(x, y, z))).join('')
             }
             return `${html}</div></div>`
           })
