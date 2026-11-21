@@ -322,6 +322,14 @@
         justify-content: center;
         text-align: center;
         line-height: 1.1;
+        white-space: nowrap;
+        color: var(--text2);
+      }
+      .ico {
+        width: 10px;
+        height: 10px;
+        margin-left: 1px;
+        vertical-align: -1px;
       }
       .cell {
         background: var(--surface);
@@ -1388,6 +1396,17 @@
         }
       }
 
+      const SWORD =
+        '<svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><g stroke="currentColor" stroke-linecap="round" fill="none"><line x1="13.5" y1="2.5" x2="6.5" y2="9.5" stroke-width="2.2"/><line x1="4" y1="8" x2="8" y2="12" stroke-width="1.6"/><line x1="5.5" y1="10.5" x2="2.5" y2="13.5" stroke-width="2"/></g></svg>'
+      const SHIELD =
+        '<svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5 14 3.5V8c0 3.5-3 5.8-6 6.8C5 13.8 2 11.5 2 8V3.5z" fill="currentColor"/></svg>'
+      /** An Upgrade set as its counts with a sword for Weapon damage and a shield for Armor, e.g. 5⚔ 10🛡. */
+      const upHtml = (up) =>
+        up.w === 0 && up.a === 0
+          ? 'none'
+          : [up.w ? `${up.w}${SWORD}` : '', up.a ? `${up.a}${SHIELD}` : ''].filter(Boolean).join(' ')
+      const upTitle = (up) => `${up.w} Weapon damage Upgrades, ${up.a} Armor Upgrades`
+
       function tint(w) {
         const d = Math.min(1, Math.abs(w - 0.5) * 2)
         return `rgba(var(${w < 0.5 ? '--low' : '--high'}), ${(0.08 + 0.55 * d).toFixed(3)})`
@@ -1435,10 +1454,9 @@
           }<button class="small" data-act="run-sec" data-site="${site.id}" data-t="${t}">Run</button></div>`
         }
         const block = (t, site) => {
-          let html = `<div class="block">${blockHead(t, site)}`
-          if (site === null) {
-            html += `<span></span>${ups.map((u) => `<span class="uh">${esc(u.label)}</span>`).join('')}`
-          } else {
+          // Every block has its own header of Upgrade sets, so that a column's Upgrades read beside its cells.
+          let html = `<div class="block">${blockHead(t, site)}<span></span>${ups.map((u) => `<span class="uh" title="${upTitle(u)}"><span>${upHtml(u)}</span></span>`).join('')}`
+          if (site !== null) {
             for (const skill of skills) {
               html += `<span class="tier">${skill}</span>`
               for (const up of ups) {
@@ -1602,7 +1620,7 @@
               ups.map((up) => {
                 const cellsOf = (t) =>
                   fresh.filter((f) => f.cell.t === t && f.cell.skill === skill && f.cell.up === up).map((f) => f.win)
-                return `<tr><td class="r">${skill}</td><td>${esc(up.label)}</td>${targets
+                return `<tr><td class="r">${skill}</td><td class="upcol" title="${upTitle(up)}">${upHtml(up)}</td>${targets
                   .map((t) => {
                     const s = sd(cellsOf(t))
                     return `<td class="r" style="${heat(s)}">${s.n > 0 ? `${pct(s.mean)} ±${(s.sd * 100).toFixed(0)} <span class="note">(${s.n})</span>` : '–'}</td>`
