@@ -431,8 +431,8 @@
         padding: 10px 12px;
         background: var(--surface);
         border: 1px solid var(--border);
-        max-height: calc(100vh - var(--bar-h, 52px) - 20px);
-        overflow-y: auto;
+        /* No scroll of its own: the wheel always scrolls the page, never the panel's contents out of view. */
+        z-index: 5;
       }
       .sview-group {
         display: flex;
@@ -858,15 +858,15 @@
               >
               <label
                 class="inline"
-                title="For a rating ratio from 80% to 120% only: red when the Agents win less than their ratio, yellow when more, at full strength from 20 points; none when they match, or when a ratio of 100% or more wins every Combat"
-                ><input type="radio" name="coloring" value="diff" data-bind="sampler.coloring" data-type="str" /> CR to
-                win diff</label
-              >
-              <label
-                class="inline"
                 title="None at a rating ratio of 100%, more red down to 80% and more yellow up to 120%, and none beyond"
                 ><input type="radio" name="coloring" value="ratio" data-bind="sampler.coloring" data-type="str" /> CR
                 ratio</label
+              >
+              <label
+                class="inline"
+                title="For a rating ratio from 80% to 120% only: red when the Agents win less than their ratio, yellow when more, at full strength from 20 points; none when they match, or when a ratio of 100% or more wins every Combat"
+                ><input type="radio" name="coloring" value="diff" data-bind="sampler.coloring" data-type="str" /> CR to
+                win diff</label
               >
             </div>
           </aside>

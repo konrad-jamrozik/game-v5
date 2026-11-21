@@ -56,8 +56,8 @@ The Sampler fights one Agent team against one Mission site over a grid of values
 - **CR to win diff**, in pink, is the win rate minus the rating ratio, in points, e.g. +8% for a win rate of 98% and a ratio of 90%.
 - **Colouring**, whatever the checkboxes show, is one of three, each at full strength from 20 points:
   - **Win rate**, the default: red below a 50% win rate and green above, as in the grid.
-  - **CR to win diff**: for a rating ratio from 80% to 120% only, red when the Agents win less than their ratio, e.g. a ratio of 110% and a win rate of 98% is 12 points of red, and yellow when they win more, e.g. 90% and 98% is 8 points of yellow; none when the two match, or when a ratio of 100% or more wins every Combat.
   - **CR ratio**: none at a rating ratio of 100%, more red down to 80% and more yellow up to 120%, and none beyond either.
+  - **CR to win diff**: for a rating ratio from 80% to 120% only, red when the Agents win less than their ratio, e.g. a ratio of 110% and a win rate of 98% is 12 points of red, and yellow when they win more, e.g. 90% and 98% is 8 points of yellow; none when the two match, or when a ratio of 100% or more wins every Combat.
 - **Combats per sample** can be raised, e.g. from 5 to 12, and the next run fights only the 7 more.
 - **Re-run samples**, or a table's **Re-run**, forgets the samples' results and fights them again on a new seed, because running again on the same seed fights the same Combats. The result keeps its new seed, so raising the Combats afterwards still continues it.
 - At most 60 values per axis and 5,000 samples in all.
