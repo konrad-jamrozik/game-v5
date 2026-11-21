@@ -10,6 +10,8 @@ import type { SourceFile } from '../spec-linter/types.ts'
  */
 
 export const CONTENT_DIRECTORY = 'content'
+/** The Cut content directory: GDRs removed from the Game build, which no check or tool loads. */
+export const CUT_CONTENT_DIRECTORY = 'content/cut'
 export const ARTICLE_TYPE = 'CompendiumArticle'
 export const ARTICLE_DIRECTORY = 'content/compendium/compendium_articles'
 export const COMPENDIUM_PREVIEW_PATH = 'docs/derived/compendium.md'

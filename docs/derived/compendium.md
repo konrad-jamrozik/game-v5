@@ -696,48 +696,6 @@ A violent cult that recruits in the shadows and grows bolder the longer it is le
 
 ## Subject articles: Lead
 
-### Analyze Black Lotus command structure
-
-Source: `content/compendium/compendium_articles/analyze_black_lotus_command_structure_article.yaml`
-
-The seized records show who commands whom, and which [commander](#commander) holds a whole region.
-
-| `analyze_black_lotus_command_structure` | Lead                                                            |
-| --------------------------------------- | --------------------------------------------------------------- |
-| `name`                                  | `Analyze Black Lotus command structure`                         |
-| `description`                           | `Study the seized records to map how Black Lotus is commanded.` |
-| `faction`                               | `black_lotus`                                                   |
-| `required_progress`                     | `8`                                                             |
-| `discovered_when`                       | `{"mission_won":"raid_command_center"}`                         |
-
-### Analyze Exalt command structure
-
-Source: `content/compendium/compendium_articles/analyze_exalt_command_structure_article.yaml`
-
-The seized records show who commands whom, and which [commander](#commander) holds a whole region.
-
-| `analyze_exalt_command_structure` | Lead                                                      |
-| --------------------------------- | --------------------------------------------------------- |
-| `name`                            | `Analyze Exalt command structure`                         |
-| `description`                     | `Study the seized records to map how Exalt is commanded.` |
-| `faction`                         | `exalt`                                                   |
-| `required_progress`               | `8`                                                       |
-| `discovered_when`                 | `{"mission_won":"raid_command_center"}`                   |
-
-### Analyze Red Dawn command structure
-
-Source: `content/compendium/compendium_articles/analyze_red_dawn_command_structure_article.yaml`
-
-The seized records show who commands whom, and which [commander](#commander) holds a whole region.
-
-| `analyze_red_dawn_command_structure` | Lead                                                         |
-| ------------------------------------ | ------------------------------------------------------------ |
-| `name`                               | `Analyze Red Dawn command structure`                         |
-| `description`                        | `Study the seized records to map how Red Dawn is commanded.` |
-| `faction`                            | `red_dawn`                                                   |
-| `required_progress`                  | `8`                                                          |
-| `discovered_when`                    | `{"mission_won":"raid_command_center"}`                      |
-
 ### Black Lotus profile
 
 Source: `content/compendium/compendium_articles/black_lotus_profile_article.yaml`
@@ -782,7 +740,7 @@ Scraps of testimony and surveillance come together into a picture of how [Exalt]
 
 Source: `content/compendium/compendium_articles/interrogate_black_lotus_commander_article.yaml`
 
-A [commander](#commander) commands whole cells and knows where the cult directs its [operations](#faction-operations).
+A [commander](#commander) commands whole cells and knows where the cult's regional stronghold lies.
 
 | `interrogate_black_lotus_commander` | Lead                                                     |
 | ----------------------------------- | -------------------------------------------------------- |
@@ -834,20 +792,6 @@ Only the [cult leader](#cult-leader) outranks a [high commander](#high-commander
 | `required_progress`                      | `8`                                                           |
 | `discovered_when`                        | `{"mission_won":"raid_regional_stronghold"}`                  |
 
-### Interrogate Black Lotus lieutenant
-
-Source: `content/compendium/compendium_articles/interrogate_black_lotus_lieutenant_article.yaml`
-
-[Lieutenants](#lieutenant) answer only to the cult's [commanders](#commander). This one knows how supplies reach them.
-
-| `interrogate_black_lotus_lieutenant` | Lead                                                      |
-| ------------------------------------ | --------------------------------------------------------- |
-| `name`                               | `Interrogate Black Lotus lieutenant`                      |
-| `description`                        | `Extract what the captured Black Lotus lieutenant knows.` |
-| `faction`                            | `black_lotus`                                             |
-| `required_progress`                  | `5`                                                       |
-| `discovered_when`                    | `{"mission_won":"raid_training_facility"}`                |
-
 ### Interrogate Black Lotus member
 
 Source: `content/compendium/compendium_articles/interrogate_black_lotus_member_article.yaml`
@@ -880,7 +824,7 @@ A hardened fighter taken alive at the outpost. Getting him to talk will take tim
 
 Source: `content/compendium/compendium_articles/interrogate_exalt_commander_article.yaml`
 
-A [commander](#commander) commands whole cells and knows where the cult directs its [operations](#faction-operations).
+A [commander](#commander) commands whole cells and knows where the cult's regional stronghold lies.
 
 | `interrogate_exalt_commander` | Lead                                               |
 | ----------------------------- | -------------------------------------------------- |
@@ -932,20 +876,6 @@ Only the [cult leader](#cult-leader) outranks a [high commander](#high-commander
 | `required_progress`                | `8`                                                     |
 | `discovered_when`                  | `{"mission_won":"raid_regional_stronghold"}`            |
 
-### Interrogate Exalt lieutenant
-
-Source: `content/compendium/compendium_articles/interrogate_exalt_lieutenant_article.yaml`
-
-[Lieutenants](#lieutenant) answer only to the cult's [commanders](#commander). This one knows how supplies reach them.
-
-| `interrogate_exalt_lieutenant` | Lead                                                |
-| ------------------------------ | --------------------------------------------------- |
-| `name`                         | `Interrogate Exalt lieutenant`                      |
-| `description`                  | `Extract what the captured Exalt lieutenant knows.` |
-| `faction`                      | `exalt`                                             |
-| `required_progress`            | `5`                                                 |
-| `discovered_when`              | `{"mission_won":"raid_training_facility"}`          |
-
 ### Interrogate Exalt member
 
 Source: `content/compendium/compendium_articles/interrogate_exalt_member_article.yaml`
@@ -978,7 +908,7 @@ A hardened fighter taken alive at the outpost. Getting him to talk will take tim
 
 Source: `content/compendium/compendium_articles/interrogate_red_dawn_commander_article.yaml`
 
-A [commander](#commander) commands whole cells and knows where the cult directs its [operations](#faction-operations).
+A [commander](#commander) commands whole cells and knows where the cult's regional stronghold lies.
 
 | `interrogate_red_dawn_commander` | Lead                                                  |
 | -------------------------------- | ----------------------------------------------------- |
@@ -1030,20 +960,6 @@ Only the [cult leader](#cult-leader) outranks a [high commander](#high-commander
 | `required_progress`                   | `8`                                                        |
 | `discovered_when`                     | `{"mission_won":"raid_regional_stronghold"}`               |
 
-### Interrogate Red Dawn lieutenant
-
-Source: `content/compendium/compendium_articles/interrogate_red_dawn_lieutenant_article.yaml`
-
-[Lieutenants](#lieutenant) answer only to the cult's [commanders](#commander). This one knows how supplies reach them.
-
-| `interrogate_red_dawn_lieutenant` | Lead                                                   |
-| --------------------------------- | ------------------------------------------------------ |
-| `name`                            | `Interrogate Red Dawn lieutenant`                      |
-| `description`                     | `Extract what the captured Red Dawn lieutenant knows.` |
-| `faction`                         | `red_dawn`                                             |
-| `required_progress`               | `5`                                                    |
-| `discovered_when`                 | `{"mission_won":"raid_training_facility"}`             |
-
 ### Interrogate Red Dawn member
 
 Source: `content/compendium/compendium_articles/interrogate_red_dawn_member_article.yaml`
@@ -1072,22 +988,6 @@ A hardened fighter taken alive at the outpost. Getting him to talk will take tim
 | `required_progress`            | `4`                                                 |
 | `discovered_when`              | `{"mission_won":"raid_outpost"}`                    |
 
-### Locate Black Lotus command center
-
-Source: `content/compendium/compendium_articles/locate_black_lotus_command_center_article.yaml`
-
-The cult plans its [operations](#faction-operations) from a heavily defended command center.
-
-| `locate_black_lotus_command_center` | Lead                                                             |
-| ----------------------------------- | ---------------------------------------------------------------- |
-| `name`                              | `Locate Black Lotus command center`                              |
-| `description`                       | `Find the center from which Black Lotus directs its operations.` |
-| `faction`                           | `black_lotus`                                                    |
-| `required_progress`                 | `15`                                                             |
-| `discovered_when`                   | `{"lead_completed":"interrogate_black_lotus_commander"}`         |
-| `investigate_again`                 | `always`                                                         |
-| `on_completion`                     | `[{"create_mission_site":"raid_command_center"}]`                |
-
 ### Locate Black Lotus HQ
 
 Source: `content/compendium/compendium_articles/locate_black_lotus_hq_article.yaml`
@@ -1115,7 +1015,7 @@ Arms, [money](#money-and-funding) and people all pass through one hub. Cut it an
 | `description`                      | `Find the hub through which Black Lotus moves arms and money.` |
 | `faction`                          | `black_lotus`                                                  |
 | `required_progress`                | `12`                                                           |
-| `discovered_when`                  | `{"lead_completed":"interrogate_black_lotus_lieutenant"}`      |
+| `discovered_when`                  | `{"lead_completed":"interrogate_black_lotus_soldier"}`         |
 | `investigate_again`                | `always`                                                       |
 | `on_completion`                    | `[{"create_mission_site":"raid_logistics_hub"}]`               |
 
@@ -1155,7 +1055,7 @@ The [handler](#handler)'s reports [lead](#leads) to a small fortified base where
 
 Source: `content/compendium/compendium_articles/locate_black_lotus_regional_stronghold_article.yaml`
 
-The command structure points to a fortress where a [high commander](#high-commander) rules a whole region.
+The [commander](#commander) has given up a fortress where a [high commander](#high-commander) rules a whole region.
 
 | `locate_black_lotus_regional_stronghold` | Lead                                                               |
 | ---------------------------------------- | ------------------------------------------------------------------ |
@@ -1163,7 +1063,7 @@ The command structure points to a fortress where a [high commander](#high-comman
 | `description`                            | `Find the stronghold from which Black Lotus holds a whole region.` |
 | `faction`                                | `black_lotus`                                                      |
 | `required_progress`                      | `20`                                                               |
-| `discovered_when`                        | `{"lead_completed":"analyze_black_lotus_command_structure"}`       |
+| `discovered_when`                        | `{"lead_completed":"interrogate_black_lotus_commander"}`           |
 | `investigate_again`                      | `always`                                                           |
 | `on_completion`                          | `[{"create_mission_site":"raid_regional_stronghold"}]`             |
 
@@ -1182,38 +1082,6 @@ The profile of [Black Lotus](#black-lotus) points to a place it uses to hide peo
 | `discovered_when`              | `{"lead_completed":"black_lotus_profile"}`                   |
 | `investigate_again`            | `always`                                                     |
 | `on_completion`                | `[{"create_mission_site":"raid_safehouse"}]`                 |
-
-### Locate Black Lotus training facility
-
-Source: `content/compendium/compendium_articles/locate_black_lotus_training_facility_article.yaml`
-
-Every cult needs somewhere to [turn](#turns) recruits into fighters. The [soldier](#soldier) has described where this one does it.
-
-| `locate_black_lotus_training_facility` | Lead                                                    |
-| -------------------------------------- | ------------------------------------------------------- |
-| `name`                                 | `Locate Black Lotus training facility`                  |
-| `description`                          | `Find the place where Black Lotus trains its fighters.` |
-| `faction`                              | `black_lotus`                                           |
-| `required_progress`                    | `10`                                                    |
-| `discovered_when`                      | `{"lead_completed":"interrogate_black_lotus_soldier"}`  |
-| `investigate_again`                    | `always`                                                |
-| `on_completion`                        | `[{"create_mission_site":"raid_training_facility"}]`    |
-
-### Locate Exalt command center
-
-Source: `content/compendium/compendium_articles/locate_exalt_command_center_article.yaml`
-
-The cult plans its [operations](#faction-operations) from a heavily defended command center.
-
-| `locate_exalt_command_center` | Lead                                                       |
-| ----------------------------- | ---------------------------------------------------------- |
-| `name`                        | `Locate Exalt command center`                              |
-| `description`                 | `Find the center from which Exalt directs its operations.` |
-| `faction`                     | `exalt`                                                    |
-| `required_progress`           | `15`                                                       |
-| `discovered_when`             | `{"lead_completed":"interrogate_exalt_commander"}`         |
-| `investigate_again`           | `always`                                                   |
-| `on_completion`               | `[{"create_mission_site":"raid_command_center"}]`          |
 
 ### Locate Exalt HQ
 
@@ -1242,7 +1110,7 @@ Arms, [money](#money-and-funding) and people all pass through one hub. Cut it an
 | `description`                | `Find the hub through which Exalt moves arms and money.` |
 | `faction`                    | `exalt`                                                  |
 | `required_progress`          | `12`                                                     |
-| `discovered_when`            | `{"lead_completed":"interrogate_exalt_lieutenant"}`      |
+| `discovered_when`            | `{"lead_completed":"interrogate_exalt_soldier"}`         |
 | `investigate_again`          | `always`                                                 |
 | `on_completion`              | `[{"create_mission_site":"raid_logistics_hub"}]`         |
 
@@ -1282,7 +1150,7 @@ The [handler](#handler)'s reports [lead](#leads) to a small fortified base where
 
 Source: `content/compendium/compendium_articles/locate_exalt_regional_stronghold_article.yaml`
 
-The command structure points to a fortress where a [high commander](#high-commander) rules a whole region.
+The [commander](#commander) has given up a fortress where a [high commander](#high-commander) rules a whole region.
 
 | `locate_exalt_regional_stronghold` | Lead                                                         |
 | ---------------------------------- | ------------------------------------------------------------ |
@@ -1290,7 +1158,7 @@ The command structure points to a fortress where a [high commander](#high-comman
 | `description`                      | `Find the stronghold from which Exalt holds a whole region.` |
 | `faction`                          | `exalt`                                                      |
 | `required_progress`                | `20`                                                         |
-| `discovered_when`                  | `{"lead_completed":"analyze_exalt_command_structure"}`       |
+| `discovered_when`                  | `{"lead_completed":"interrogate_exalt_commander"}`           |
 | `investigate_again`                | `always`                                                     |
 | `on_completion`                    | `[{"create_mission_site":"raid_regional_stronghold"}]`       |
 
@@ -1309,38 +1177,6 @@ The profile of [Exalt](#exalt) points to a place it uses to hide people and supp
 | `discovered_when`        | `{"lead_completed":"exalt_profile"}`                   |
 | `investigate_again`      | `always`                                               |
 | `on_completion`          | `[{"create_mission_site":"raid_safehouse"}]`           |
-
-### Locate Exalt training facility
-
-Source: `content/compendium/compendium_articles/locate_exalt_training_facility_article.yaml`
-
-Every cult needs somewhere to [turn](#turns) recruits into fighters. The [soldier](#soldier) has described where this one does it.
-
-| `locate_exalt_training_facility` | Lead                                                 |
-| -------------------------------- | ---------------------------------------------------- |
-| `name`                           | `Locate Exalt training facility`                     |
-| `description`                    | `Find the place where Exalt trains its fighters.`    |
-| `faction`                        | `exalt`                                              |
-| `required_progress`              | `10`                                                 |
-| `discovered_when`                | `{"lead_completed":"interrogate_exalt_soldier"}`     |
-| `investigate_again`              | `always`                                             |
-| `on_completion`                  | `[{"create_mission_site":"raid_training_facility"}]` |
-
-### Locate Red Dawn command center
-
-Source: `content/compendium/compendium_articles/locate_red_dawn_command_center_article.yaml`
-
-The cult plans its [operations](#faction-operations) from a heavily defended command center.
-
-| `locate_red_dawn_command_center` | Lead                                                          |
-| -------------------------------- | ------------------------------------------------------------- |
-| `name`                           | `Locate Red Dawn command center`                              |
-| `description`                    | `Find the center from which Red Dawn directs its operations.` |
-| `faction`                        | `red_dawn`                                                    |
-| `required_progress`              | `15`                                                          |
-| `discovered_when`                | `{"lead_completed":"interrogate_red_dawn_commander"}`         |
-| `investigate_again`              | `always`                                                      |
-| `on_completion`                  | `[{"create_mission_site":"raid_command_center"}]`             |
 
 ### Locate Red Dawn HQ
 
@@ -1369,7 +1205,7 @@ Arms, [money](#money-and-funding) and people all pass through one hub. Cut it an
 | `description`                   | `Find the hub through which Red Dawn moves arms and money.` |
 | `faction`                       | `red_dawn`                                                  |
 | `required_progress`             | `12`                                                        |
-| `discovered_when`               | `{"lead_completed":"interrogate_red_dawn_lieutenant"}`      |
+| `discovered_when`               | `{"lead_completed":"interrogate_red_dawn_soldier"}`         |
 | `investigate_again`             | `always`                                                    |
 | `on_completion`                 | `[{"create_mission_site":"raid_logistics_hub"}]`            |
 
@@ -1409,7 +1245,7 @@ The [handler](#handler)'s reports [lead](#leads) to a small fortified base where
 
 Source: `content/compendium/compendium_articles/locate_red_dawn_regional_stronghold_article.yaml`
 
-The command structure points to a fortress where a [high commander](#high-commander) rules a whole region.
+The [commander](#commander) has given up a fortress where a [high commander](#high-commander) rules a whole region.
 
 | `locate_red_dawn_regional_stronghold` | Lead                                                            |
 | ------------------------------------- | --------------------------------------------------------------- |
@@ -1417,7 +1253,7 @@ The command structure points to a fortress where a [high commander](#high-comman
 | `description`                         | `Find the stronghold from which Red Dawn holds a whole region.` |
 | `faction`                             | `red_dawn`                                                      |
 | `required_progress`                   | `20`                                                            |
-| `discovered_when`                     | `{"lead_completed":"analyze_red_dawn_command_structure"}`       |
+| `discovered_when`                     | `{"lead_completed":"interrogate_red_dawn_commander"}`           |
 | `investigate_again`                   | `always`                                                        |
 | `on_completion`                       | `[{"create_mission_site":"raid_regional_stronghold"}]`          |
 
@@ -1436,22 +1272,6 @@ The profile of [Red Dawn](#red-dawn) points to a place it uses to hide people an
 | `discovered_when`           | `{"lead_completed":"red_dawn_profile"}`                   |
 | `investigate_again`         | `always`                                                  |
 | `on_completion`             | `[{"create_mission_site":"raid_safehouse"}]`              |
-
-### Locate Red Dawn training facility
-
-Source: `content/compendium/compendium_articles/locate_red_dawn_training_facility_article.yaml`
-
-Every cult needs somewhere to [turn](#turns) recruits into fighters. The [soldier](#soldier) has described where this one does it.
-
-| `locate_red_dawn_training_facility` | Lead                                                 |
-| ----------------------------------- | ---------------------------------------------------- |
-| `name`                              | `Locate Red Dawn training facility`                  |
-| `description`                       | `Find the place where Red Dawn trains its fighters.` |
-| `faction`                           | `red_dawn`                                           |
-| `required_progress`                 | `10`                                                 |
-| `discovered_when`                   | `{"lead_completed":"interrogate_red_dawn_soldier"}`  |
-| `investigate_again`                 | `always`                                             |
-| `on_completion`                     | `[{"create_mission_site":"raid_training_facility"}]` |
 
 ### Peace on Earth
 
@@ -1556,34 +1376,6 @@ A cult is bringing terror to the streets of a city. End it before the city break
 | `expires_in_turns` | `6` |
 | `enemies` | `{"initiate":30,"operative":24,"soldier":15,"elite":4,"handler":10,"lieutenant":3,"commander":1}` |
 
-### Defend against city government assault
-
-Source: `content/compendium/compendium_articles/defend_against_city_government_assault_article.yaml`
-
-A cult is moving to seize the government of a city by force. Stop it at the doors.
-
-| `defend_against_city_government_assault` | MissionSiteArchetype |
-| --- | --- |
-| `kind` | `response` |
-| `name` | `Defend against city government assault` |
-| `operation_level` | `4` |
-| `expires_in_turns` | `6` |
-| `enemies` | `{"initiate":24,"operative":24,"soldier":20,"elite":8,"handler":6,"lieutenant":4,"commander":2}` |
-
-### Defend against facility raid
-
-Source: `content/compendium/compendium_articles/defend_against_facility_raid_article.yaml`
-
-A cult is massing to overrun one of your facilities. Hold it against a force many times the size of a team.
-
-| `defend_against_facility_raid` | MissionSiteArchetype |
-| --- | --- |
-| `kind` | `response` |
-| `name` | `Defend against facility raid` |
-| `operation_level` | `3` |
-| `expires_in_turns` | `5` |
-| `enemies` | `{"initiate":16,"operative":12,"soldier":12,"elite":2,"handler":6,"lieutenant":3,"commander":1}` |
-
 ### Defend against HQ assault
 
 Source: `content/compendium/compendium_articles/defend_against_hq_assault_article.yaml`
@@ -1594,8 +1386,8 @@ A cult has found your headquarters and is coming with everything it has. If the 
 | --- | --- |
 | `kind` | `response` |
 | `name` | `Defend against HQ assault` |
-| `operation_level` | `6` |
-| `expires_in_turns` | `8` |
+| `operation_level` | `5` |
+| `expires_in_turns` | `7` |
 | `enemies` | `{"initiate":40,"operative":40,"soldier":40,"elite":10,"handler":10,"lieutenant":10,"commander":4,"high_commander":1}` |
 
 ### Defend against office raid
@@ -1612,33 +1404,19 @@ A cult is about to storm one of your field offices. Hold it.
 | `expires_in_turns`           | `4`                                                                   |
 | `enemies`                    | `{"initiate":4,"operative":4,"soldier":4,"handler":1,"lieutenant":1}` |
 
-### Defend against retaliation strike
+### Foil bioweapon release
 
-Source: `content/compendium/compendium_articles/defend_against_retaliation_strike_article.yaml`
+Source: `content/compendium/compendium_articles/foil_bioweapon_release_article.yaml`
 
-A cult is striking back at you with its best fighters. Break the strike before it lands.
+A cult is ready to release a plague it has bred. If it gets out, the Campaign is lost.
 
-| `defend_against_retaliation_strike` | MissionSiteArchetype |
+| `foil_bioweapon_release` | MissionSiteArchetype |
 | --- | --- |
 | `kind` | `response` |
-| `name` | `Defend against retaliation strike` |
-| `operation_level` | `4` |
-| `expires_in_turns` | `6` |
-| `enemies` | `{"initiate":24,"operative":8,"soldier":24,"elite":8,"handler":4,"lieutenant":6,"commander":3}` |
-
-### Defend military installation
-
-Source: `content/compendium/compendium_articles/defend_military_installation_article.yaml`
-
-A cult is assaulting a military installation for the weapons inside. Do not let it fall.
-
-| `defend_military_installation` | MissionSiteArchetype |
-| --- | --- |
-| `kind` | `response` |
-| `name` | `Defend military installation` |
+| `name` | `Foil bioweapon release` |
 | `operation_level` | `5` |
 | `expires_in_turns` | `7` |
-| `enemies` | `{"initiate":20,"operative":30,"soldier":24,"elite":12,"handler":7,"lieutenant":6,"commander":3,"high_commander":1}` |
+| `enemies` | `{"operative":20,"soldier":20,"elite":20,"lieutenant":5,"commander":5,"high_commander":1}` |
 
 ### Foil business extortion
 
@@ -1654,20 +1432,6 @@ A cult is squeezing local businesses for [money](#money-and-funding). Break the 
 | `expires_in_turns`        | `3`                                        |
 | `enemies`                 | `{"initiate":6,"operative":2,"handler":1}` |
 
-### Foil coup attempt
-
-Source: `content/compendium/compendium_articles/foil_coup_attempt_article.yaml`
-
-A cult is about to take a whole country. Its finest [lead](#leads) the coup, and only your finest can stop it.
-
-| `foil_coup_attempt` | MissionSiteArchetype                                                                       |
-| ------------------- | ------------------------------------------------------------------------------------------ |
-| `kind`              | `response`                                                                                 |
-| `name`              | `Foil coup attempt`                                                                        |
-| `operation_level`   | `5`                                                                                        |
-| `expires_in_turns`  | `7`                                                                                        |
-| `enemies`           | `{"operative":20,"soldier":20,"elite":20,"lieutenant":5,"commander":5,"high_commander":1}` |
-
 ### Foil financial heist
 
 Source: `content/compendium/compendium_articles/foil_financial_heist_article.yaml`
@@ -1682,19 +1446,47 @@ A cult is after a fortune that would fund it for years. Stop the heist before th
 | `expires_in_turns`     | `5`                                                                     |
 | `enemies`              | `{"initiate":10,"operative":10,"soldier":8,"handler":4,"lieutenant":2}` |
 
+### Foil infrastructure attack
+
+Source: `content/compendium/compendium_articles/foil_infrastructure_attack_article.yaml`
+
+A cult is about to strike a power grid or a water supply. Whole cities depend on stopping it.
+
+| `foil_infrastructure_attack` | MissionSiteArchetype |
+| --- | --- |
+| `kind` | `response` |
+| `name` | `Foil infrastructure attack` |
+| `operation_level` | `3` |
+| `expires_in_turns` | `5` |
+| `enemies` | `{"initiate":16,"operative":12,"soldier":12,"elite":2,"handler":6,"lieutenant":3,"commander":1}` |
+
 ### Foil nuclear plant bombing
 
 Source: `content/compendium/compendium_articles/foil_nuclear_plant_bombing_article.yaml`
 
-A cult means to blow up a nuclear plant. Nothing a cult has tried before comes close.
+A cult means to blow up a nuclear plant. If it blows, a whole region is poisoned.
 
 | `foil_nuclear_plant_bombing` | MissionSiteArchetype |
 | --- | --- |
 | `kind` | `response` |
 | `name` | `Foil nuclear plant bombing` |
-| `operation_level` | `5` |
-| `expires_in_turns` | `7` |
-| `enemies` | `{"initiate":28,"operative":24,"soldier":20,"elite":12,"handler":10,"lieutenant":5,"commander":3,"high_commander":1}` |
+| `operation_level` | `4` |
+| `expires_in_turns` | `6` |
+| `enemies` | `{"initiate":24,"operative":24,"soldier":20,"elite":8,"handler":6,"lieutenant":4,"commander":2}` |
+
+### Foil prison break
+
+Source: `content/compendium/compendium_articles/foil_prison_break_article.yaml`
+
+A cult is storming a prison to free its captured fighters. If they walk out, the region burns.
+
+| `foil_prison_break` | MissionSiteArchetype |
+| --- | --- |
+| `kind` | `response` |
+| `name` | `Foil prison break` |
+| `operation_level` | `4` |
+| `expires_in_turns` | `6` |
+| `enemies` | `{"initiate":24,"operative":8,"soldier":24,"elite":8,"handler":4,"lieutenant":6,"commander":3}` |
 
 ### Foil recruitment push
 
@@ -1752,6 +1544,20 @@ A cult has marked a public figure for death. Reach the killers before they reach
 | `expires_in_turns`       | `4`                                                    |
 | `enemies`                | `{"initiate":4,"operative":4,"soldier":2,"handler":1}` |
 
+### Foil warhead launch
+
+Source: `content/compendium/compendium_articles/foil_warhead_launch_article.yaml`
+
+A cult has seized a nuclear warhead and the means to launch it. If it flies, the Campaign is lost.
+
+| `foil_warhead_launch` | MissionSiteArchetype |
+| --- | --- |
+| `kind` | `response` |
+| `name` | `Foil warhead launch` |
+| `operation_level` | `5` |
+| `expires_in_turns` | `7` |
+| `enemies` | `{"initiate":20,"operative":30,"soldier":24,"elite":12,"handler":7,"lieutenant":6,"commander":3,"high_commander":1}` |
+
 ### Intercept arms deal
 
 Source: `content/compendium/compendium_articles/intercept_arms_deal_article.yaml`
@@ -1765,20 +1571,6 @@ A cult is buying military weapons. Hit the exchange before the shipment changes 
 | `operation_level` | `3` |
 | `expires_in_turns` | `5` |
 | `enemies` | `{"initiate":12,"operative":12,"soldier":10,"elite":2,"handler":4,"lieutenant":2,"commander":1}` |
-
-### Raid command center
-
-Source: `content/compendium/compendium_articles/raid_command_center_article.yaml`
-
-The nerve center of the cult's [operations](#faction-operations), guarded by its best [commanders](#commander).
-
-| `raid_command_center` | MissionSiteArchetype                                                                |
-| --------------------- | ----------------------------------------------------------------------------------- |
-| `kind`                | `initiative`                                                                        |
-| `name`                | `Raid command center`                                                               |
-| `expires_in_turns`    | `20`                                                                                |
-| `enemies`             | `{"operative":12,"soldier":30,"elite":10,"handler":4,"lieutenant":6,"commander":2}` |
-| `on_win`              | `[{"money":3000},{"funding":25},{"panic":-5}]`                                      |
 
 ### Raid HQ
 
@@ -1849,20 +1641,6 @@ Storm the safehouse of a cult before it is moved. Expect it to be well guarded.
 | `expires_in_turns` | `8`                                            |
 | `enemies`          | `{"initiate":4,"operative":4,"handler":1}`     |
 | `on_win`           | `[{"money":100},{"funding":5},{"panic":-0.1}]` |
-
-### Raid training facility
-
-Source: `content/compendium/compendium_articles/raid_training_facility_article.yaml`
-
-Strike the place where the cult [turns](#turns) recruits into fighters before more of them leave it.
-
-| `raid_training_facility` | MissionSiteArchetype                                                   |
-| ------------------------ | ---------------------------------------------------------------------- |
-| `kind`                   | `initiative`                                                           |
-| `name`                   | `Raid training facility`                                               |
-| `expires_in_turns`       | `12`                                                                   |
-| `enemies`                | `{"initiate":8,"operative":12,"soldier":6,"handler":6,"lieutenant":1}` |
-| `on_win`                 | `[{"money":800},{"funding":15},{"panic":-1}]`                          |
 
 ## Subject articles: Upgrade
 

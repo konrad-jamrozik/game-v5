@@ -1,0 +1,125 @@
+id: locate_red_dawn_training_facility
+type: Lead
+name: Locate Red Dawn training facility
+description: Find the place where Red Dawn trains its fighters.
+faction: red_dawn
+required_progress: 10
+discovered_when:
+  lead_completed: interrogate_red_dawn_soldier
+investigate_again: always
+on_completion:
+  - create_mission_site: raid_training_facility
+---
+id: interrogate_red_dawn_lieutenant
+type: Lead
+name: Interrogate Red Dawn lieutenant
+description: Extract what the captured Red Dawn lieutenant knows.
+faction: red_dawn
+required_progress: 5
+discovered_when:
+  mission_won: raid_training_facility
+---
+id: locate_red_dawn_command_center
+type: Lead
+name: Locate Red Dawn command center
+description: Find the center from which Red Dawn directs its operations.
+faction: red_dawn
+required_progress: 15
+discovered_when:
+  lead_completed: interrogate_red_dawn_commander
+investigate_again: always
+on_completion:
+  - create_mission_site: raid_command_center
+---
+id: analyze_red_dawn_command_structure
+type: Lead
+name: Analyze Red Dawn command structure
+description: Study the seized records to map how Red Dawn is commanded.
+faction: red_dawn
+required_progress: 8
+discovered_when:
+  mission_won: raid_command_center
+---
+id: locate_exalt_training_facility
+type: Lead
+name: Locate Exalt training facility
+description: Find the place where Exalt trains its fighters.
+faction: exalt
+required_progress: 10
+discovered_when:
+  lead_completed: interrogate_exalt_soldier
+investigate_again: always
+on_completion:
+  - create_mission_site: raid_training_facility
+---
+id: interrogate_exalt_lieutenant
+type: Lead
+name: Interrogate Exalt lieutenant
+description: Extract what the captured Exalt lieutenant knows.
+faction: exalt
+required_progress: 5
+discovered_when:
+  mission_won: raid_training_facility
+---
+id: locate_exalt_command_center
+type: Lead
+name: Locate Exalt command center
+description: Find the center from which Exalt directs its operations.
+faction: exalt
+required_progress: 15
+discovered_when:
+  lead_completed: interrogate_exalt_commander
+investigate_again: always
+on_completion:
+  - create_mission_site: raid_command_center
+---
+id: analyze_exalt_command_structure
+type: Lead
+name: Analyze Exalt command structure
+description: Study the seized records to map how Exalt is commanded.
+faction: exalt
+required_progress: 8
+discovered_when:
+  mission_won: raid_command_center
+---
+id: locate_black_lotus_training_facility
+type: Lead
+name: Locate Black Lotus training facility
+description: Find the place where Black Lotus trains its fighters.
+faction: black_lotus
+required_progress: 10
+discovered_when:
+  lead_completed: interrogate_black_lotus_soldier
+investigate_again: always
+on_completion:
+  - create_mission_site: raid_training_facility
+---
+id: interrogate_black_lotus_lieutenant
+type: Lead
+name: Interrogate Black Lotus lieutenant
+description: Extract what the captured Black Lotus lieutenant knows.
+faction: black_lotus
+required_progress: 5
+discovered_when:
+  mission_won: raid_training_facility
+---
+id: locate_black_lotus_command_center
+type: Lead
+name: Locate Black Lotus command center
+description: Find the center from which Black Lotus directs its operations.
+faction: black_lotus
+required_progress: 15
+discovered_when:
+  lead_completed: interrogate_black_lotus_commander
+investigate_again: always
+on_completion:
+  - create_mission_site: raid_command_center
+---
+id: analyze_black_lotus_command_structure
+type: Lead
+name: Analyze Black Lotus command structure
+description: Study the seized records to map how Black Lotus is commanded.
+faction: black_lotus
+required_progress: 8
+discovered_when:
+  mission_won: raid_command_center

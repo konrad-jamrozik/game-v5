@@ -39,22 +39,6 @@ on_win:
   - funding: 10
   - panic: -0.5
 ---
-id: raid_training_facility
-type: MissionSiteArchetype
-kind: initiative
-name: Raid training facility
-expires_in_turns: 12
-enemies:
-  initiate: 8
-  operative: 12
-  soldier: 6
-  handler: 6
-  lieutenant: 1
-on_win:
-  - money: 800
-  - funding: 15
-  - panic: -1
----
 id: raid_logistics_hub
 type: MissionSiteArchetype
 kind: initiative
@@ -72,23 +56,6 @@ on_win:
   - money: 2000
   - funding: 20
   - panic: -2
----
-id: raid_command_center
-type: MissionSiteArchetype
-kind: initiative
-name: Raid command center
-expires_in_turns: 20
-enemies:
-  operative: 12
-  soldier: 30
-  elite: 10
-  handler: 4
-  lieutenant: 6
-  commander: 2
-on_win:
-  - money: 3000
-  - funding: 25
-  - panic: -5
 ---
 id: raid_regional_stronghold
 type: MissionSiteArchetype
@@ -220,10 +187,10 @@ enemies:
   lieutenant: 2
   commander: 1
 ---
-id: defend_against_facility_raid
+id: foil_infrastructure_attack
 type: MissionSiteArchetype
 kind: response
-name: Defend against facility raid
+name: Foil infrastructure attack
 operation_level: 3
 expires_in_turns: 5
 enemies:
@@ -250,10 +217,10 @@ enemies:
   lieutenant: 3
   commander: 1
 ---
-id: defend_against_city_government_assault
+id: foil_nuclear_plant_bombing
 type: MissionSiteArchetype
 kind: response
-name: Defend against city government assault
+name: Foil nuclear plant bombing
 operation_level: 4
 expires_in_turns: 6
 enemies:
@@ -265,10 +232,10 @@ enemies:
   lieutenant: 4
   commander: 2
 ---
-id: defend_against_retaliation_strike
+id: foil_prison_break
 type: MissionSiteArchetype
 kind: response
-name: Defend against retaliation strike
+name: Foil prison break
 operation_level: 4
 expires_in_turns: 6
 enemies:
@@ -280,10 +247,10 @@ enemies:
   lieutenant: 6
   commander: 3
 ---
-id: foil_coup_attempt
+id: foil_bioweapon_release
 type: MissionSiteArchetype
 kind: response
-name: Foil coup attempt
+name: Foil bioweapon release
 operation_level: 5
 expires_in_turns: 7
 enemies:
@@ -294,26 +261,10 @@ enemies:
   commander: 5
   high_commander: 1
 ---
-id: foil_nuclear_plant_bombing
+id: foil_warhead_launch
 type: MissionSiteArchetype
 kind: response
-name: Foil nuclear plant bombing
-operation_level: 5
-expires_in_turns: 7
-enemies:
-  initiate: 28
-  operative: 24
-  soldier: 20
-  elite: 12
-  handler: 10
-  lieutenant: 5
-  commander: 3
-  high_commander: 1
----
-id: defend_military_installation
-type: MissionSiteArchetype
-kind: response
-name: Defend military installation
+name: Foil warhead launch
 operation_level: 5
 expires_in_turns: 7
 enemies:
@@ -330,8 +281,8 @@ id: defend_against_hq_assault
 type: MissionSiteArchetype
 kind: response
 name: Defend against HQ assault
-operation_level: 6
-expires_in_turns: 8
+operation_level: 5
+expires_in_turns: 7
 enemies:
   initiate: 40
   operative: 40

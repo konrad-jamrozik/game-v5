@@ -35,7 +35,7 @@ function yamlFiles(dir: string): string[] {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const full = path.join(dir, entry.name)
     if (entry.isDirectory()) {
-      if (entry.name !== 'compendium') {
+      if (entry.name !== 'compendium' && entry.name !== 'cut') {
         out.push(...yamlFiles(full))
       }
     } else if (entry.name.endsWith('.yaml')) {

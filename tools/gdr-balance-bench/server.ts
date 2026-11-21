@@ -45,7 +45,7 @@ function yamlFiles(dir: string): string[] {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const full = path.join(dir, entry.name)
     if (entry.isDirectory()) {
-      if (entry.name !== 'compendium') {
+      if (entry.name !== 'compendium' && entry.name !== 'cut') {
         out.push(...yamlFiles(full))
       }
     } else if (entry.name.endsWith('.yaml')) {
@@ -85,6 +85,10 @@ function loadGdr(): Record<string, unknown> {
     return out
   }
   const enemyIds = docs.filter((d) => d.type === 'EnemyArchetype').map((d) => d.id)
+  const operationLevels = docs
+    .filter((d) => d.type === 'FactionOperationLevel')
+    .map((d) => d['level'] as number)
+    .toSorted((a, b) => a - b)
   const out: Record<string, unknown> = {}
   for (const d of docs) {
     switch (d.type) {
@@ -115,7 +119,7 @@ function loadGdr(): Record<string, unknown> {
           lasts_turns: d['lasts_turns'] ?? null,
           operation_every_turns: every,
           operation_level_weights:
-            every === null ? {} : Object.fromEntries([1, 2, 3, 4, 5, 6].map((k) => [k, weights[k] ?? 0])),
+            every === null ? {} : Object.fromEntries(operationLevels.map((k) => [k, weights[k] ?? 0])),
         }
         break
       }

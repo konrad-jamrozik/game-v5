@@ -29,7 +29,7 @@ The parameters, e.g. `cr_per_health` and `team_exp`, are variables of both expre
 
 ## The grid
 
-- **Rows** are the Mission sites read from `content/`, the Initiative sites first and then the Response sites by operation level. Each site's Enemies take their EnemyArchetypes' values.
+- **Rows** are the Mission sites read from `content/`, the Cut content under `content/cut/` excepted, the Initiative sites first and then the Response sites by operation level. Each site's Enemies take their EnemyArchetypes' values.
 - **Blocks** are the shares of the site's rating, by default `100, 120, 150`. In each block, the rows are the base skills of the Agent teams, by default `100, 250, 500`, and the columns their Upgrades as `weapon/armor` counts, by default `0/0, 5/0, 0/5, 5/5, 10/0, 0/10, 10/10`, so the defaults make 24 sites × 3 shares × 3 skills × 7 Upgrade sets, i.e. 1,512 cells.
 - **An Agent team** is Agents of the first AgentArchetype's health, weapon damage, and armor, at full health and rested, with the cell's base skill; each Weapon damage Upgrade adds the `weapon_damage` Upgrade's `increment` to weapon damage, and each Armor Upgrade the `armor` Upgrade's to armor. Its Agent count is the one whose rating, under the current formula, is closest by ratio to the cell's share of the site's rating. A cell whose closest count still misses its share by more than 10%, e.g. one Agent of base skill 500 against a small site, is drawn dashed and left out of the statistics.
 - **A cell** shows the Agent count above and the win rate below, tinted blue below 50% and orange above; hovering it shows the ratings, the Agents' values, and the Combats won.

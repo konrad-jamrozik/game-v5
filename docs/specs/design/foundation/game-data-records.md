@@ -19,6 +19,7 @@ Because a GDR never changes, what sets one use of it apart from another is how t
 | Term | Definition |
 | --- | --- |
 | Campaign configuration preset | A [GDR](core-concepts.md#game-build-and-content) supplying a value for every [Campaign configuration](campaign-state.md#glossary) value, from which campaign creation obtains the initial Campaign configuration, under [Campaign configuration presets](configuration.md#campaign-configuration-presets). |
+| Cut content | The GDRs removed from the [Game build](core-concepts.md#game-build-and-content) but kept for reference and possible return, authored under `content/cut/`, under [Cut content](#cut-content). No Game build contains them. |
 
 # Purposes of GDRs
 
@@ -46,7 +47,7 @@ The key order of a mapping in a GDR file, as authored, is significant: it is pre
 
 ## GDR file layout
 
-GDR files are authored under the `content/` directory at the repository root. The layout of the files follows these rules:
+GDR files are authored under the `content/` directory at the repository root, outside its `content/cut/` directory, which holds Cut content. The layout of the files follows these rules:
 
 - **One file per Type:** each file holds every GDR of one Type and no GDR of another Type, unless the Type has a directory of one file per GDR, as the last rule states. The order of the GDRs in a file, as authored, is significant: it is preserved when the file is read, and a specification may rely on it, e.g. to fix the order in which Campaign instances are created from them.
 - **Directory of the Type owner:** the file lies in the directory named after the file name of the specification that owns its Type, without the `.md` extension or a `-spec` suffix, e.g. `content/combat/` for Combat.
@@ -55,6 +56,14 @@ GDR files are authored under the `content/` directory at the repository root. Th
 - **Directory of one file per GDR:** a Type with many GDRs, or with GDRs too long to read together in one file, may have a directory in place of its file. The directory lies where the file would lie and is named as the file would be, without the `.yaml` extension, e.g. `content/compendium/compendium_articles/` for CompendiumArticle. It holds one file for each GDR of the Type and nothing else. Each file holds exactly one YAML document and is named after the identifier of its GDR, followed by `.yaml`, e.g. `mechanics_combat.yaml`, so that a GDR is found by its identifier. A Type has either a file or a directory, never both. The order of the GDRs of such a Type is the ascending order of their identifiers, compared character by character by Unicode code point; a specification whose rules need another order states it by a property instead.
 
 A GDR added later goes into the file of its Type, or into the directory of its Type as a file of its own, and a file or directory is added only for a new Type.
+
+## Cut content
+
+A GDR removed from the Game build, e.g. a MissionSiteArchetype the content no longer offers, is not deleted but becomes Cut content, so that its values and text stay at hand when it is restored or reworked. Cut content follows these rules:
+
+- **Mirrored layout:** the `content/cut/` directory mirrors the layout of `content/`: a cut GDR lies at the path its GDR file has under `content/`, with `content/` replaced by `content/cut/`, e.g. a cut MissionSiteArchetype in `content/cut/missions/mission_site_archetypes.yaml` and a cut CompendiumArticle in `content/cut/compendium/compendium_articles/`. A file or directory under `content/cut/` exists only while it holds at least one GDR.
+- **Moved unchanged:** cutting a GDR moves its YAML document from its file under `content/` to the mirrored file, unchanged; a GDR left in the Game build that named the cut GDR is changed so that it no longer does. Restoring a GDR moves it back.
+- **Outside the Game build:** no Game build contains Cut content, and no Implementation, repository check, or tool reads it as game data. GDR validation of every kind applies to the Game build alone, so a cut GDR may name a GDR that is itself cut or that no longer exists, and an identifier of Cut content may equal one in the Game build.
 
 # GDR purpose: campaign instance initialization
 

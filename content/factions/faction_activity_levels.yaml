@@ -74,8 +74,7 @@ operation_level_weights:
   2: 20
   3: 30
   4: 20
-  5: 10
-  6: 5
+  5: 15
 next: total_war
 ---
 id: total_war
@@ -88,6 +87,5 @@ operation_level_weights:
   2: 15
   3: 25
   4: 25
-  5: 15
-  6: 10
+  5: 25
 next: null

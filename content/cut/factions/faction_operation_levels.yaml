@@ -1,0 +1,7 @@
+id: operation_level_6
+type: FactionOperationLevel
+level: 6
+name: Existential
+on_win: []
+on_ignored_or_lost:
+  - defeat: true # game-ts: Panic set to 100%

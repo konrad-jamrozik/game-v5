@@ -43,18 +43,9 @@ on_ignored_or_lost:
 id: operation_level_5
 type: FactionOperationLevel
 level: 5
-name: Global conflict
+name: Existential
 on_win:
   - money: 1000
   - funding: 80
 on_ignored_or_lost:
-  - panic: 3
-  - funding: -16
----
-id: operation_level_6
-type: FactionOperationLevel
-level: 6
-name: Existential
-on_win: []
-on_ignored_or_lost:
-  - defeat: true # game-ts: Panic set to 100%
+  - defeat: true

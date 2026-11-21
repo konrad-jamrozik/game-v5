@@ -562,7 +562,10 @@
       ]
       const AL = ['dormant', 'faint', 'emerging', 'active', 'expanding', 'escalating', 'war', 'total_war']
       const FA = ['red_dawn', 'exalt', 'black_lotus']
-      const OL = [1, 2, 3, 4, 5, 6].map((n) => 'operation_level_' + n)
+      /* The Faction operation levels; not stopping one of the last, existential, level loses the Campaign outright. */
+      const LEVELS = [1, 2, 3, 4, 5]
+      const EXISTENTIAL = LEVELS[LEVELS.length - 1]
+      const OL = LEVELS.map((n) => 'operation_level_' + n)
       const site = (kind, lv, exp, en, win) => {
         const e = {}
         EN.forEach((k) => (e[k] = en[k] || 0))
@@ -573,7 +576,7 @@
       }
       const lvl = (lasts, every, w) => {
         const o = { lasts_turns: lasts, operation_every_turns: every, operation_level_weights: {} }
-        if (every) for (let i = 1; i <= 6; i++) o.operation_level_weights[i] = w[i - 1] || 0
+        if (every) LEVELS.forEach((i) => (o.operation_level_weights[i] = w[i - 1] || 0))
         return o
       }
       const BASE = {
@@ -658,14 +661,13 @@
         active: lvl([60, 90], [11, 21], [40, 40, 15, 5]),
         expanding: lvl([60, 90], [10, 20], [30, 30, 30, 10]),
         escalating: lvl([60, 90], [9, 19], [20, 25, 35, 15, 5]),
-        war: lvl([60, 90], [8, 18], [15, 20, 30, 20, 10, 5]),
-        total_war: lvl(null, [7, 17], [10, 15, 25, 25, 15, 10]),
+        war: lvl([60, 90], [8, 18], [15, 20, 30, 20, 15]),
+        total_war: lvl(null, [7, 17], [10, 15, 25, 25, 25]),
         operation_level_1: { on_win: { money: 10, funding: 0 }, on_ignored_or_lost: { panic: 0.02, funding: 0 } },
         operation_level_2: { on_win: { money: 30, funding: 5 }, on_ignored_or_lost: { panic: 0.1, funding: -1 } },
         operation_level_3: { on_win: { money: 100, funding: 20 }, on_ignored_or_lost: { panic: 0.3, funding: -4 } },
         operation_level_4: { on_win: { money: 300, funding: 40 }, on_ignored_or_lost: { panic: 1, funding: -8 } },
-        operation_level_5: { on_win: { money: 1000, funding: 80 }, on_ignored_or_lost: { panic: 3, funding: -16 } },
-        operation_level_6: {},
+        operation_level_5: {},
         apprehend_member: site(
           'initiative',
           0,
@@ -687,26 +689,12 @@
           { initiate: 12, operative: 8, soldier: 3, handler: 4 },
           { money: 400, funding: 10, panic: -0.5 },
         ),
-        raid_training_facility: site(
-          'initiative',
-          0,
-          12,
-          { initiate: 40, operative: 20, soldier: 4, handler: 10, lieutenant: 1 },
-          { money: 800, funding: 15, panic: -1 },
-        ),
         raid_logistics_hub: site(
           'initiative',
           0,
           15,
           { initiate: 32, operative: 16, soldier: 20, elite: 4, handler: 6, lieutenant: 4, commander: 1 },
           { money: 2000, funding: 20, panic: -2 },
-        ),
-        raid_command_center: site(
-          'initiative',
-          0,
-          20,
-          { initiate: 20, operative: 20, soldier: 30, elite: 10, handler: 8, lieutenant: 6, commander: 3 },
-          { money: 3000, funding: 25, panic: -5 },
         ),
         raid_regional_stronghold: site(
           'initiative',
@@ -759,7 +747,7 @@
           lieutenant: 2,
           commander: 1,
         }),
-        defend_against_facility_raid: site('response', 3, 5, {
+        foil_infrastructure_attack: site('response', 3, 5, {
           initiate: 16,
           operative: 12,
           soldier: 12,
@@ -777,7 +765,7 @@
           lieutenant: 3,
           commander: 1,
         }),
-        defend_against_city_government_assault: site('response', 4, 6, {
+        foil_nuclear_plant_bombing: site('response', 4, 6, {
           initiate: 24,
           operative: 24,
           soldier: 20,
@@ -786,7 +774,7 @@
           lieutenant: 4,
           commander: 2,
         }),
-        defend_against_retaliation_strike: site('response', 4, 6, {
+        foil_prison_break: site('response', 4, 6, {
           initiate: 24,
           operative: 8,
           soldier: 24,
@@ -795,7 +783,7 @@
           lieutenant: 6,
           commander: 3,
         }),
-        foil_coup_attempt: site('response', 5, 7, {
+        foil_bioweapon_release: site('response', 5, 7, {
           operative: 20,
           soldier: 20,
           elite: 20,
@@ -803,17 +791,7 @@
           commander: 5,
           high_commander: 1,
         }),
-        foil_nuclear_plant_bombing: site('response', 5, 7, {
-          initiate: 28,
-          operative: 24,
-          soldier: 20,
-          elite: 12,
-          handler: 10,
-          lieutenant: 5,
-          commander: 3,
-          high_commander: 1,
-        }),
-        defend_military_installation: site('response', 5, 7, {
+        foil_warhead_launch: site('response', 5, 7, {
           initiate: 20,
           operative: 30,
           soldier: 24,
@@ -823,7 +801,7 @@
           commander: 3,
           high_commander: 1,
         }),
-        defend_against_hq_assault: site('response', 6, 8, {
+        defend_against_hq_assault: site('response', 5, 7, {
           initiate: 40,
           operative: 40,
           soldier: 40,
@@ -843,12 +821,8 @@
         ['interrogate_<faction>_handler', 3],
         ['locate_<faction>_outpost', 8, 'raid_outpost'],
         ['interrogate_<faction>_soldier', 4],
-        ['locate_<faction>_training_facility', 10, 'raid_training_facility'],
-        ['interrogate_<faction>_lieutenant', 5],
         ['locate_<faction>_logistics_hub', 12, 'raid_logistics_hub'],
         ['interrogate_<faction>_commander', 6],
-        ['locate_<faction>_command_center', 15, 'raid_command_center'],
-        ['analyze_<faction>_command_structure', 8],
         ['locate_<faction>_regional_stronghold', 20, 'raid_regional_stronghold'],
         ['interrogate_<faction>_high_commander', 8],
         ['locate_<faction>_hq', 25, 'raid_hq'],
@@ -1025,7 +999,7 @@
   ${panel('What these values cause', '', `<div id="o_leads"></div>`, 'read')}
   </div></div></section>`)
         /* Factions */
-        const wcols = [1, 2, 3, 4, 5, 6]
+        const wcols = LEVELS
         h.push(`<section id="factions"><div class="shead"><h2>Factions and Panic</h2><p>How fast the Factions escalate, how often they strike, and how long the Agency can afford to look away.</p></div>
   ${panel(
     'Faction activity levels',
@@ -1033,7 +1007,7 @@
     `<div class="tw"><table><tr><th>Level</th><th colspan="2">lasts_turns</th><th colspan="2">operation_every_turns</th>${wcols.map((k) => `<th title="operation_level_weights.${k}">w${k}</th>`).join('')}<th class="d">Ops / 100 Turns</th><th class="d">Panic per ignored op</th><th class="d">Existential</th>${FA.map((x) => `<th class="d">${title(x)} from</th>`).join('')}</tr>${AL.map(
       (a) => {
         const L = BASE[a]
-        return `<tr><td class="name">${title(a)}</td>${L.lasts_turns ? `<td>${inp(a + '.lasts_turns.0', { min: 1 })}</td><td>${inp(a + '.lasts_turns.1', { min: 1 })}</td>` : `<td colspan="2" style="text-align:center;color:var(--muted)">final</td>`}${L.operation_every_turns ? `<td>${inp(a + '.operation_every_turns.0', { min: 1 })}</td><td>${inp(a + '.operation_every_turns.1', { min: 1 })}</td>${wcols.map((k) => `<td class="w">${inp(a + '.operation_level_weights.' + k)}</td>`).join('')}` : `<td colspan="8" style="text-align:center;color:var(--muted)">no operations</td>`}<td class="d" id="ao_${a}"></td><td class="d" id="ap_${a}"></td><td class="d" id="ae_${a}"></td>${FA.map((x) => `<td class="d" id="at_${a}_${x}"></td>`).join('')}</tr>`
+        return `<tr><td class="name">${title(a)}</td>${L.lasts_turns ? `<td>${inp(a + '.lasts_turns.0', { min: 1 })}</td><td>${inp(a + '.lasts_turns.1', { min: 1 })}</td>` : `<td colspan="2" style="text-align:center;color:var(--muted)">final</td>`}${L.operation_every_turns ? `<td>${inp(a + '.operation_every_turns.0', { min: 1 })}</td><td>${inp(a + '.operation_every_turns.1', { min: 1 })}</td>${wcols.map((k) => `<td class="w">${inp(a + '.operation_level_weights.' + k)}</td>`).join('')}` : `<td colspan="${wcols.length + 2}" style="text-align:center;color:var(--muted)">no operations</td>`}<td class="d" id="ao_${a}"></td><td class="d" id="ap_${a}"></td><td class="d" id="ae_${a}"></td>${FA.map((x) => `<td class="d" id="at_${a}_${x}"></td>`).join('')}</tr>`
       },
     ).join(
       '',
@@ -1045,7 +1019,7 @@
     'content/factions/faction_operation_levels.yaml',
     `<div class="tw"><table><tr><th>Level</th><th>win money</th><th>win funding</th><th>loss panic</th><th>loss funding</th></tr>${OL.slice(
       0,
-      5,
+      EXISTENTIAL - 1,
     )
       .map(
         (o, i) =>
@@ -1053,7 +1027,7 @@
       )
       .join(
         '',
-      )}<tr><td class="name">6</td><td colspan="4" style="text-align:center;color:var(--muted)">no reward · the Campaign is lost outright</td></tr></table></div>`,
+      )}<tr><td class="name">${EXISTENTIAL}</td><td colspan="4" style="text-align:center;color:var(--muted)">existential: not stopping it loses the Campaign outright</td></tr></table></div>`,
   )}
   ${panel('Starting levels and Panic limit', 'content/factions/faction_archetypes.yaml · panic-and-endings/ending_parameters.yaml', FA.map((x) => `<div class="kv"><span class="k"><code>${x}.initial_activity_level</code><small></small></span>${sel(x + '.initial_activity_level', AL)}</div>`).join('') + row('endings.defeat_at_panic_pct', 'Panic at which the Campaign is lost', { min: 1 }))}
   </div><div class="col">
@@ -1659,17 +1633,17 @@
           ]) +
           `<div class="note" style="margin-top:8px">Turns are the mean over the Actual required progress range, for members at full skill. They leave out transit, the Missions between Leads, and the skill a tired member loses.</div>`
         /* factions */
-        const opPanic = (k) => (k < 6 ? cur['operation_level_' + k].on_ignored_or_lost.panic : 0)
+        const opPanic = (k) => (k < EXISTENTIAL ? cur['operation_level_' + k].on_ignored_or_lost.panic : 0)
         const lv = {}
         AL.forEach((x) => {
           const L = cur[x],
             o = { rate: 0, ep: 0, ex: 0 }
           if (L.operation_every_turns) {
-            const W = [1, 2, 3, 4, 5, 6].reduce((s, k) => s + L.operation_level_weights[k], 0)
+            const W = LEVELS.reduce((s, k) => s + L.operation_level_weights[k], 0)
             o.rate = 1 / mean(L.operation_every_turns)
             if (W > 0) {
-              o.ep = [1, 2, 3, 4, 5].reduce((s, k) => s + (L.operation_level_weights[k] / W) * opPanic(k), 0)
-              o.ex = L.operation_level_weights[6] / W
+              o.ep = LEVELS.reduce((s, k) => s + (L.operation_level_weights[k] / W) * opPanic(k), 0)
+              o.ex = L.operation_level_weights[EXISTENTIAL] / W
             }
           }
           lv[x] = o

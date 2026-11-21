@@ -22,7 +22,7 @@ node tools/gdr-balance-bench/server.ts --impl <game-v5-impl-web clone> --spec <g
 
 Both are read again each time the page is loaded in the browser, so nothing is rebuilt after a change on disk:
 
-- **GDR values** come from the YAML files under `content/` of this repository, the Compendium articles excepted.
+- **GDR values** come from the YAML files under `content/` of this repository, the Compendium articles and the Cut content under `content/cut/` excepted.
 - **The engine** is the TypeScript source under `src/` of the Implementation clone, as it is on disk, including uncommitted changes. The page states the commit it ran.
 
 An engine that does not start, e.g. because the Implementation is in the middle of an update, is reported on the page under the test team, and the GDR values still load.

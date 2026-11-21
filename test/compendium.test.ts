@@ -1,8 +1,8 @@
-import { readdirSync, readFileSync } from 'node:fs'
+import { readFileSync } from 'node:fs'
 
 import { describe, expect, test } from 'vitest'
 
-import { BOOTSTRAP_GDRS_PATH, compendiumFindings } from '../scripts/compendium-check.ts'
+import { BOOTSTRAP_GDRS_PATH, collectContentFiles, compendiumFindings } from '../scripts/compendium-check.ts'
 import {
   coverageExemptions,
   coverageFindings,
@@ -279,14 +279,8 @@ describe('Compendium coverage', () => {
 })
 
 describe('the game data of the repository', () => {
-  const contentFiles: SourceFile[] = readdirSync('content', { recursive: true, encoding: 'utf8' })
-    .filter((entry) => entry.endsWith('.yaml'))
-    .map((entry) => {
-      const path = `content/${entry.replace(/\\/g, '/')}`
-      return { path, content: readFileSync(path, 'utf8') }
-    })
-
-  test('passes the Compendium check', () => {
+  test('passes the Compendium check', async () => {
+    const contentFiles = await collectContentFiles(process.cwd())
     expect(compendiumFindings(contentFiles, readFileSync(BOOTSTRAP_GDRS_PATH, 'utf8'))).toEqual([])
   })
 

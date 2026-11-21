@@ -50,7 +50,7 @@ An Implementation must treat the root directory of its Implementation repo as it
 
 ## Game data in an Implementation
 
-The [Bootstrap GDRs](../../design/content/bootstrap-gdrs.md#glossary) are authored under the `content/` directory of the Spec repo. An Implementation that builds them into its [Game build](../../design/foundation/core-concepts.md#game-build-and-content) must hold its own copy of the [GDR](../../design/foundation/core-concepts.md#game-build-and-content) files it uses inside its Implementation repo, and its Game build must read that copy rather than the `content/` directory of the Spec repo.
+The [Bootstrap GDRs](../../design/content/bootstrap-gdrs.md#glossary) are authored under the `content/` directory of the Spec repo. An Implementation that builds them into its [Game build](../../design/foundation/core-concepts.md#game-build-and-content) must hold its own copy of the [GDR](../../design/foundation/core-concepts.md#game-build-and-content) files it uses inside its Implementation repo, never a copy of the [Cut content](../../design/foundation/game-data-records.md#cut-content) under `content/cut/`, and its Game build must read that copy rather than the `content/` directory of the Spec repo.
 
 ## Music in an Implementation
 
