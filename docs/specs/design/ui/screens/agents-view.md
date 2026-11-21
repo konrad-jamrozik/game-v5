@@ -54,7 +54,7 @@ In base and Away split the Serving Agents, so their counts add up to the count o
 
 The Assignment filter after each button of Assign to is a square button holding a funnel icon, drawn as on while it is on. At most one is on at a time: turning one on turns off the one that was on, and pressing the one that is on turns it off. No Assignment filter is on whenever the Agents View opens.
 
-While an Assignment filter is on, the table keeps showing every Agent its row filter shows, but only the Agents that its button would succeed with if that Agent alone were selected can be selected, as Action preview reports it for `assignAgents` with that Agent alone and that Assignment. E.g., the Contracting Assignment filter leaves selectable only the Agents on Standby or Training, At assignment, that are Fit for work, and the Standby Assignment filter leaves selectable also the Agents on Contracting or an Investigation, At assignment.
+While an Assignment filter is on, the table keeps showing every Agent its row filter shows, but only the Agents that its button would succeed with if that Agent alone were selected can be selected, as Action preview reports it for `assignAgents` with that Agent alone and that Assignment. E.g., the Contracting Assignment filter leaves selectable only the Agents on Standby or Training, At assignment, that are Fit to start work, and the Standby Assignment filter leaves selectable also the Agents on Contracting or an Investigation, At assignment.
 
 While no Assignment filter is on, every shown Serving Agent can be selected, and each button is enabled or disabled by the whole selection, under [Header](#header). E.g., selecting an Agent on Contracting disables Contracting and Training, and selecting an Agent In transit disables every button of Assign to and Dismiss.
 
@@ -73,7 +73,7 @@ A row whose Agent cannot be selected, under [Filters](#filters), has its checkbo
 3. **In transit:** it is In transit.
 4. **On assignment:** it is on Contracting or an Investigation and the Assignment filter that is on is for Contracting or Training.
 5. **Already on Standby, Contracting, or Training:** the Assignment filter that is on is for the Assignment it has.
-6. **Too exhausted:** it is not [Fit for work](../../mechanics/agents-spec.md#assignments) and the Assignment filter that is on is for Contracting or Training.
+6. **Too exhausted:** it is not [Fit to start work](../../mechanics/agents-spec.md#assignments) and the Assignment filter that is on is for Contracting or Training.
 7. **Training full:** the Training Assignment filter is on and the [Training cap](../../mechanics/economy-and-upgrades.md#glossary) has no place left.
 8. **Otherwise:** the message of the rejection that Action preview reports.
 

@@ -52,7 +52,7 @@ export interface CampaignStats {
   readonly trainingCap: number
   /**
    * Serving Agents by the kind of their Current assignment, those In transit included; an Agent on Standby with
-   * that is not Fit for work, i.e. not a Rested Agent, counts as `Exhausted` instead.
+   * that is not Fit to start work counts as `Exhausted` instead.
    */
   readonly assignments: Record<string, number>
   /** The mean base skill of the Serving Agents. */
@@ -61,7 +61,7 @@ export interface CampaignStats {
   readonly upgrades: Record<string, number>
   /**
    * The Combat rating, as `previewDeployment` reports it, of the Agents the Basic Autopilot AI may form a team of: its
-   * Rested Agents.
+   * Deployable Agents.
    */
   readonly ratingReady: number
   /** How many Agents that is. */

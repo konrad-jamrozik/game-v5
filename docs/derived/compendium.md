@@ -159,7 +159,7 @@ Exhaustion measures how tired an [Agent](#agents) is. Work and fighting raise it
 | Each turn on Standby or Recovery | −5, plus [Upgrades](#upgrades), never below 0 |
 | [In transit](#transit) or deployed | No rest |
 | [Skill](#skill) penalty | −1% of skill for each point above 30 |
-| New work can start at most at | 30; deploying to a [Mission site](#mission-sites) has no such limit |
+| New work can start at most at | 30; deploying to a [Mission site](#mission-sites) needs only that the Agent could still fight |
 | Work ends at | 70 or more: after that turn's work the Agent is sent to Standby |
 | Unable to fight at | 100 or more |
 
@@ -314,7 +314,7 @@ A Mission is your team's one attempt at a [Mission site](#mission-sites). You de
 
 | Formulas |  |
 | --- | --- |
-| Who can deploy | Agents on [Standby](#assignments) or [Training](#training), whatever their exhaustion |
+| Who can deploy | Agents on [Standby](#assignments) or [Training](#training), however tired, unless too worn down to fight |
 | Transport cap | 4 Agents deployed at one time, over all Missions, plus [Upgrades](#upgrades) |
 | Won | No Enemy is able to fight; the rewards of the Mission site apply |
 | Lost | The team [retreats](#retreat), or no Agent is able to fight; no reward, and a [Faction operation](#faction-operations) that was not stopped applies its penalty |

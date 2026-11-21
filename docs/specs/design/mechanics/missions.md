@@ -275,7 +275,7 @@ Preconditions: the action is rejected, as a whole, when any of the following hol
 3. `agents` is empty.
 4. `agents` contains the same Instance ID more than once.
 5. An Instance ID in `agents` identifies no Agent of the Campaign.
-6. An Agent in `agents` cannot be assigned, under [Agents that can be assigned](agents-spec.md#agents-that-can-be-assigned) in Agents, e.g. because it is [In transit](domain-model.md#agency-and-agents) or on Recovery.
+6. An Agent in `agents` cannot take orders, under [Agents that can take orders](agents-spec.md#agents-that-can-take-orders) in Agents, e.g. because it is [In transit](domain-model.md#agency-and-agents) or on Recovery.
 7. An Agent in `agents` has an Assignment other than a [Base Assignment](agents-spec.md#assignments), i.e. other than [Standby](agents-spec.md#assignments) or [Training](agents-spec.md#assignments). An Agent on [Contracting](agents-spec.md#assignments) or an Investigation must first be recalled to base.
 8. The Agents would exceed the [Transport cap](economy-and-upgrades.md#glossary):
 
@@ -285,7 +285,9 @@ Preconditions: the action is rejected, as a whole, when any of the following hol
 
    where D is the number of [Serving](agents-spec.md#agent-statuses) Agents whose Assignment is Deployed, over every Mission together, in the World state in which the action is requested, and the Transport cap is computed under [Agency caps](economy-and-upgrades.md#agency-caps) in Economy and Upgrades. Every Agent in `agents` adds one, because precondition 6 already rejects an Agent that is Deployed. The action is accepted when the sum is equal to or less than the Transport cap. No rounding occurs; every term is a whole number of Agents.
 
-The preconditions on every Player action, e.g. that the Campaign has no [Campaign ending](domain-model.md#campaign-standing), also apply, under [Panic and Endings](panic-and-endings.md) and [Engine Contract](../foundation/engine-contract.md). No precondition reads an Agent's [exhaustion](agents-spec.md#combatant-attributes): an Agent that is not [Fit for work](agents-spec.md#assignments) can still be deployed, under [Start-work gate](agents-spec.md#start-work-gate) in Agents, because sending a tired team may be the only way to answer a Mission site.
+9. An Agent in `agents` meets the incapacitation condition with its current values, under [Incapacitation condition](combat.md#incapacitation-condition) in Combat, i.e. it would be [Incapacitated](combat.md#combatant-condition-in-a-combat) at [Combat start](combat.md#combat-start) if its Combat began now, and so would never attack in it.
+
+The preconditions on every Player action, e.g. that the Campaign has no [Campaign ending](domain-model.md#campaign-standing), also apply, under [Panic and Endings](panic-and-endings.md) and [Engine Contract](../foundation/engine-contract.md). Only precondition 9 reads an Agent's [exhaustion](agents-spec.md#combatant-attributes), and only through the incapacitation condition: an Agent that is not [Fit to start work](agents-spec.md#assignments) can still be deployed, under [Start-work gate](agents-spec.md#start-work-gate) in Agents, because sending a tired team may be the only way to answer a Mission site, but an Agent that would take no part in the Combat is never sent. E.g., with the Bootstrap values, an Agent on Standby with exhaustion 100 after a costly Mission cannot be deployed until it has rested below 100.
 
 Rejection: the action is all-or-nothing. When any precondition fails, it is rejected with an error that identifies at least one failed precondition and, where the precondition concerns Agents, those Agents; the exact error representation is the Implementer's choice. A rejected action changes nothing, under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract. Because every value of a Mission site and of a Mission is [Player-visible information](../foundation/engine-contract.md#api-surfaces), under [Player-visible information](#player-visible-information), the error reveals nothing hidden.
 
@@ -297,7 +299,7 @@ State changes: when every precondition holds, the action is one Player action th
 
 Nothing else changes; e.g., no money is spent, the Mission site's Turns until expiration is unchanged, and the Agents' base skill, current health, and exhaustion are unchanged. The Agents count toward the Transport cap at once and until the Mission resolution step of the next Advance turn, under [Agency caps](economy-and-upgrades.md#agency-caps). The Combat is fought in that step.
 
-**No recall:** No Player action removes an Agent from a Mission's Current team or returns a Deployed Mission site to Active. A Deployed Agent cannot be assigned or dismissed, under [Agents that can be assigned](agents-spec.md#agents-that-can-be-assigned) in Agents. Several `deployAgents` actions in one Turn may each deploy a team to a different Active Mission site, as long as each satisfies the Transport cap with the Agents the earlier ones deployed.
+**No recall:** No Player action removes an Agent from a Mission's Current team or returns a Deployed Mission site to Active. A Deployed Agent cannot take orders and cannot be dismissed, under [Agents that can take orders](agents-spec.md#agents-that-can-take-orders) in Agents. Several `deployAgents` actions in one Turn may each deploy a team to a different Active Mission site, as long as each satisfies the Transport cap with the Agents the earlier ones deployed.
 
 # Mission resolution
 
@@ -457,6 +459,7 @@ A Response Mission site's MissionSiteArchetype is the value of its [MissionSiteA
 - **Lost versus Expired:** A Lost Response Mission and an Expired Response Mission site have identical Consequences, and a Lost Initiative Mission and an Expired Initiative Mission site have none; a Lost Mission yields no benefit from the damage dealt by its team ([Consequences](#consequences)).
 - **Deploying to a Mission site that is not Active:** Rejected, e.g. to a Deployed Mission site that already has its Mission, or to an Expired one ([Deploying Agents](#deploying-agents)).
 - **Mixed valid and invalid Agents:** One invalid Agent rejects the whole action; no Agent and no Mission site changes, and no Mission is created ([Deploying Agents](#deploying-agents)).
+- **An Agent that would be Incapacitated:** Rejected, with the whole action, e.g. an Agent with exhaustion at or above `exhaustion_incapacitation`, or one of base skill 0; it is judged with the Agent's values when the action is requested ([Deploying Agents](#deploying-agents)).
 - **Agents away:** An Agent on Contracting or an Investigation is rejected; it must first be recalled to a [Base Assignment](agents-spec.md#assignments), which costs an Advance turn of transit, so deploying never takes an Agent off an Investigation ([Deploying Agents](#deploying-agents)).
 - **Elimination of a Faction already Eliminated:** A Won Initiative Mission whose MissionSiteArchetype's `on_win` holds an `eliminate_faction` Effect and whose target Faction is already Eliminated changes nothing about that Faction; the other Effects of its `on_win` still apply ([Consequences](#consequences)).
 - **Negative or zero funding change at the floor:** Funding never falls below 0, under [Funding changes](economy-and-upgrades.md#funding-changes) ([Consequences](#consequences)).

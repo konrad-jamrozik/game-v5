@@ -9,7 +9,7 @@ body: >-
   and a little more skilled.
 formulas:
   - label: 'Who can deploy'
-    text: 'Agents on Standby or Training, whatever their exhaustion'
+    text: 'Agents on Standby or Training, however tired, unless too worn down to fight'
   - label: 'Transport cap'
     text: '{economy.base_transport_cap} Agents deployed at one time, over all Missions, plus Upgrades'
   - label: 'Won'

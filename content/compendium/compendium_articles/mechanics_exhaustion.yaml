@@ -27,7 +27,7 @@ formulas:
   - label: 'Skill penalty'
     text: '−{agent_parameters.skill_penalty_pct_per_exhaustion}% of skill for each point above {agent_parameters.exhaustion_free_points}'
   - label: 'New work can start at most at'
-    text: '{agent_parameters.exhaustion_work_start_max}; deploying to a Mission site has no such limit'
+    text: '{agent_parameters.exhaustion_work_start_max}; deploying to a Mission site needs only that the Agent could still fight'
   - label: 'Work ends at'
     text: "{agent_parameters.exhaustion_work_limit} or more: after that turn's work the Agent is sent to Standby"
   - label: 'Unable to fight at'

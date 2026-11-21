@@ -124,7 +124,7 @@ These informative views are derived from the registered Markdown specifications.
 | FEEDBACK | [Implementation Feedback](../specs/implementation/mandatory/implementation-feedback.md) | The feedback files of Specification problems and Implementation decisions that each Implementation keeps. |
 | LICENSE | [Implementation License](../specs/implementation/mandatory/implementation-license.md) | The license under which each Implementation is published, and the files that state it. |
 | PLACE | [Implementation Placement](../specs/implementation/mandatory/implementation-placement.md) | Where each implementation and everything it needs reside, relative to the Spec repo. |
-| REUSE | [Rule Reuse](../specs/implementation/mandatory/rule-reuse.md) | That each Developer tool runs the code that play runs, and the test that shows it. |
+| REUSE | [Rule Reuse](../specs/implementation/mandatory/rule-reuse.md) | That each Developer tool runs the code that play runs, that a rule which another rule reads runs as one implementation, and the tests that show it. |
 | TRACK | [Specification Tracking](../specs/implementation/mandatory/specification-tracking.md) | The Specification baseline and Specification map records that tie each Implementation to the specifications it conforms to. |
 
 ## Guidance
