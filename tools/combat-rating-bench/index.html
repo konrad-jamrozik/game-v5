@@ -467,6 +467,9 @@
       .k-ex {
         color: #ffd166;
       }
+      .k-line {
+        color: rgb(var(--line));
+      }
       .k-df {
         color: #f0a8ff;
       }
@@ -865,12 +868,6 @@
               >
               <label
                 class="inline"
-                title="Win rate, with cyan lines between the cells where the rating ratio crosses 100%, bold, and 90% and 110%, faint, so the line of equal ratings shows without covering the colours"
-                ><input type="radio" name="coloring" value="winline" data-bind="sampler.coloring" data-type="str" /> Win
-                rate + CR ratio line</label
-              >
-              <label
-                class="inline"
                 title="None at a rating ratio of 100%, more red down to 80% and more yellow up to 120%, and none beyond"
                 ><input type="radio" name="coloring" value="ratio" data-bind="sampler.coloring" data-type="str" /> CR
                 ratio</label
@@ -882,6 +879,13 @@
                 win diff</label
               >
             </div>
+            <label
+              class="inline"
+              style="margin-top: 10px"
+              title="Cyan lines between the cells where the rating ratio crosses 100%, bold, and 90% and 110%, faint, over any colouring"
+              ><input type="checkbox" data-bind="sampler.showLine" data-type="bool" />
+              <span class="k-line">CR ratio line</span></label
+            >
           </aside>
           <div id="samplerOut" class="samples"></div>
         </div>
@@ -1034,6 +1038,8 @@
           /** Shows each sample's win rate against its rating ratio in place of every other figure. */
           /** What a sample's background shows: its win rate, its CR to win diff, or its rating ratio. */
           coloring: 'win',
+          /** Draws the CR ratio line, contour lines of the rating ratio, over any colouring. */
+          showLine: false,
           showDiff: false,
           count: { mode: 'x', value: 20, from: 10, to: 100, step: 10 },
           skill: { mode: 'fixed', value: 250, from: 100, to: 500, step: 50 },
@@ -1140,6 +1146,9 @@
                   typeof v === 'object' ? { ...v, ...saved.sampler?.[k] } : (saved.sampler?.[k] ?? v),
                 ]),
               ),
+              ...(saved.sampler?.coloring === 'winline'
+                ? { sampler: { ...d.sampler, ...saved.sampler, coloring: 'win', showLine: true } }
+                : {}),
             }
           }
         } catch {}
@@ -2424,10 +2433,6 @@
         if (coloring === 'win') {
           return r ? tint(winOf(r)) : null
         }
-        if (coloring === 'winline') {
-          // The win rate's tint, untouched; the lines are drawn on the cells' edges by contourEdges.
-          return r ? tint(winOf(r)) : null
-        }
         const shownRatio = Math.round(cell.ratio * 100)
         if (coloring === 'ratio') {
           return shownRatio < 80 || shownRatio > 120 ? 'transparent' : redYellow(cell.ratio - 1)
@@ -2528,7 +2533,7 @@
       }
       /** The Sampler's dimensions as inputs; drawn anew only when a mode changes, so typing keeps its focus. */
       function renderSamplerDims() {
-        for (const name of ['showWin', 'showRatio', 'showCrLeft', 'showExhaustion', 'showDiff']) {
+        for (const name of ['showWin', 'showRatio', 'showCrLeft', 'showExhaustion', 'showDiff', 'showLine']) {
           $(`[data-bind="sampler.${name}"]`).checked = state.sampler[name]
         }
         for (const radio of document.querySelectorAll('[data-bind="sampler.coloring"]')) {
@@ -2638,7 +2643,7 @@
               <button class="small" data-act="run-samples" data-z="${zi}" data-rerun="1" title="Forget these samples' results and fight them again, on new seeds">Re-run</button></div>
               <div class="sgrid" style="grid-template-columns: auto repeat(${xs.length}, minmax(50px, auto))">
               <span class="ax"><span>${corner}</span></span>${xs.map((x) => `<span class="ax"><span>${axisLabel('x', x, z, true)}</span></span>`).join('')}`
-            const lined = state.sampler.coloring === 'winline'
+            const lined = state.sampler.showLine
             for (const [yi, y] of ys.entries()) {
               html += `<span class="ax y"><span>${axisLabel('y', y, z, false)}</span></span>`
               html += xs
