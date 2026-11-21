@@ -1161,6 +1161,7 @@
           site.meanHealth = meanOf('health')
           site.meanDamage = meanOf('damage')
           site.meanArmor = meanOf('armor')
+          site.meanSkill = n === 0 ? 0 : able.reduce((s, g) => s + effectiveSkill(g, cv) * g.count, 0) / n
           site.sig = JSON.stringify(site.groups)
           site.cells = []
           for (const t of targets) {
@@ -1623,10 +1624,8 @@
             (site) => `<div class="grow-row"><div class="site"><b>${esc(site.name)}</b>
               <span class="meta">${siteLevel(site)}</span>
               <span class="meta">CR ${fmt(site.cr)} · ${site.size} Enemies</span>
-              <span class="meta" title="The mean combatant_cr of the site's Enemies">mean CR ${fmt(site.meanCr, 1)}</span>
-              <span class="meta" title="The mean health of the site's Enemies">mean health ${fmt(site.meanHealth, 1)}</span>
-              <span class="meta" title="The mean weapon damage of the site's Enemies">mean damage ${fmt(site.meanDamage, 1)}</span>
-              <span class="meta" title="The mean armor of the site's Enemies">mean armor ${fmt(site.meanArmor, 1)}</span>
+              <span class="meta" title="The means over the site's Enemies: combatant_cr, effective skill, health, weapon damage, and armor">mean CR ${fmt(site.meanCr, 1)} · skill ${fmt(site.meanSkill, 1)}</span>
+              <span class="meta" title="The mean health, weapon damage, and armor of the site's Enemies">health ${fmt(site.meanHealth, 1)} · ${fmt(site.meanDamage, 1)}${SWORD} · ${fmt(site.meanArmor, 1)}${SHIELD}</span>
               <span><button class="small" data-act="run-row" data-site="${site.id}">Run row</button></span></div>
               ${targets.map((t) => block(t, site)).join('')}</div>`,
           )
