@@ -33,7 +33,17 @@ export interface Job {
   ratingUpgrades?: { weaponDamage: number; armor: number }
   gdrValues: Record<string, number>
   seed: string
+  /**
+   * The number of Combats already fought on this seed: the job fights Combats `from + 1` to `from + trials`, the same
+   * Combats a batch of `from + trials` would end with. 0 when absent.
+   */
+  from?: number
+  /** True to report, for every Combat, the final health and exhaustion of the Agents alive at its end. */
+  detail?: boolean
 }
+
+/** The Agents alive at the end of one Combat, as [current health in hundredths, exhaustion, count] groups. */
+export type Finals = [number, number, number][]
 
 export type JobResult =
   | { type: 'job'; gen: number; key: string; side: 'a' | 'b'; error: string }
@@ -47,11 +57,27 @@ export type JobResult =
       retreated: number
       wiped: number
       agentsDead: number
+      /** With `detail`, one entry per Combat, in order. */
+      finals?: Finals[]
     }
 
 interface Engine {
   developer: {
     tools: {
+      fightCombat(setup: unknown):
+        | {
+            ok: true
+            value: {
+              summary: { outcome: string; agentsDead: number }
+              participants: {
+                side: string
+                dead: boolean
+                finalCurrentHealthHundredths: number
+                finalExhaustion: number
+              }[]
+            }
+          }
+        | { ok: false; error: { message: string } }
       fightCombatBatch(
         setup: unknown,
         count: number,
@@ -110,22 +136,56 @@ booted.then(
 async function fight(job: Job): Promise<JobResult> {
   const engine = await booted
   const head = { type: 'job', gen: job.gen, key: job.key, side: job.side } as const
-  const result = engine.developer.tools.fightCombatBatch(
-    {
-      agents: job.agents,
-      enemies: job.enemies,
-      gdrValues: job.gdrValues,
-      // The explicit values already hold what the Upgrades add. Only an engine from before the rating factor reads the
-      // counts, for its own Combat rating, which only the Retreated check reads.
-      ratingUpgrades: job.ratingUpgrades ?? { weaponDamage: 0, armor: 0 },
-      seed: job.seed,
-    },
-    job.trials,
-  )
-  if (!result.ok) {
-    return { ...head, error: result.error.message }
+  const setup = {
+    agents: job.agents,
+    enemies: job.enemies,
+    gdrValues: job.gdrValues,
+    // The explicit values already hold what the Upgrades add. Only an engine from before the rating factor reads the
+    // counts, for its own Combat rating, which only the Retreated check reads.
+    ratingUpgrades: job.ratingUpgrades ?? { weaponDamage: 0, armor: 0 },
+    seed: job.seed,
   }
-  return { ...head, ...result.value.totals }
+  const from = job.from ?? 0
+  if (from === 0 && !job.detail) {
+    const result = engine.developer.tools.fightCombatBatch(setup, job.trials)
+    if (!result.ok) {
+      return { ...head, error: result.error.message }
+    }
+    return { ...head, ...result.value.totals }
+  }
+  // Combat i of a batch is the Detached Combat on the seed `<seed>#<i>`, so fighting them one by one continues a batch
+  // and shows each Combat's final values.
+  const totals = { fought: 0, prevailed: 0, retreated: 0, wiped: 0, agentsDead: 0 }
+  const finals: Finals[] = []
+  for (let i = from + 1; i <= from + job.trials; i += 1) {
+    const result = engine.developer.tools.fightCombat({ ...setup, seed: `${job.seed}#${i}` })
+    if (!result.ok) {
+      return { ...head, error: result.error.message }
+    }
+    const { summary, participants } = result.value
+    totals.fought += 1
+    totals.agentsDead += summary.agentsDead
+    if (summary.outcome === 'Prevailed') {
+      totals.prevailed += 1
+    } else if (summary.outcome === 'Retreated') {
+      totals.retreated += 1
+    } else {
+      totals.wiped += 1
+    }
+    if (job.detail) {
+      const groups = new Map<string, [number, number, number]>()
+      for (const p of participants) {
+        if (p.side === 'agent' && !p.dead && p.finalCurrentHealthHundredths > 0) {
+          const k = `${p.finalCurrentHealthHundredths}|${p.finalExhaustion}`
+          const g = groups.get(k) ?? [p.finalCurrentHealthHundredths, p.finalExhaustion, 0]
+          g[2] += 1
+          groups.set(k, g)
+        }
+      }
+      finals.push([...groups.values()])
+    }
+  }
+  return { ...head, ...totals, ...(job.detail ? { finals } : {}) }
 }
 
 port.on('message', (job: Job) => {

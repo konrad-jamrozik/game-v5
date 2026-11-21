@@ -411,11 +411,28 @@
         color: var(--accent-text);
       }
 
+      /* The Z tables run down the first column, then down the next; layoutSamples sets the number of rows. */
       .samples {
-        display: flex;
-        flex-wrap: wrap;
+        display: grid;
+        grid-auto-flow: column;
+        justify-content: start;
+        align-items: start;
         gap: 18px 28px;
         margin-top: 12px;
+      }
+      .sgrid .cell {
+        height: auto;
+        min-height: 38px;
+        padding: 3px 4px;
+      }
+      .sgrid .cell .n {
+        font-size: 11px;
+        color: var(--text);
+        opacity: 0.85;
+      }
+      .sgrid .cell .n.old {
+        opacity: 0.45;
+        font-style: italic;
       }
       .sgrid {
         display: grid;
@@ -731,25 +748,30 @@
       <section>
         <div class="shead">
           <h2>Sampler</h2>
-          <p>
-            One Agent team against one Mission site, over a grid of values: each dimension is either fixed or sampled
-            along the X, Y, or Z axis, e.g. 250 skill against one site, the Agent count from 50 to 100 on X, +damage on
-            Y, and +armor on Z. X and Y make one table; Z makes one table per value. The Agents are at full health and
-            rested, and every rating comes from the current formula. A sampled Mission site covers every site shown
-            under Mission sites. Results are shared with the Mission sites grid, so a sample that matches one of its
-            cells is not fought again.
-          </p>
         </div>
-        <div class="scroll"><table id="samplerDims"></table></div>
+        <div class="row" style="align-items: flex-start; gap: 18px 36px">
+          <div class="scroll"><table id="samplerDims"></table></div>
+          <div id="samplerSite" class="site"></div>
+        </div>
         <div class="row" style="margin-top: 10px">
-          <button class="small pri" data-act="run-samples" title="Fight every sample that has no result">
+          <button
+            class="small pri"
+            data-act="run-samples"
+            title="Fight every sample that lacks Combats, or the final values under the current formula"
+          >
             Run samples
           </button>
           <button class="small" data-act="reset-sampler" title="Restore every dimension of the sampler to its default">
             Restore sampler defaults
           </button>
           <label class="inline"
-            ><input type="checkbox" data-bind="sampler.showRatio" data-type="bool" /> Show the rating ratio</label
+            ><input type="checkbox" data-bind="sampler.showRatio" data-type="bool" /> Rating ratio</label
+          >
+          <label class="inline"
+            ><input type="checkbox" data-bind="sampler.showCrLeft" data-type="bool" /> Agent CR left</label
+          >
+          <label class="inline"
+            ><input type="checkbox" data-bind="sampler.showExhaustion" data-type="bool" /> Agent exhaustion</label
           >
           <span id="samplerInfo" class="note"></span>
         </div>
@@ -898,6 +920,8 @@
         /** Each dimension of the Sampler: fixed at its value, or sampled from, to, by step along an axis. */
         sampler: {
           showRatio: true,
+          showCrLeft: true,
+          showExhaustion: true,
           count: { mode: 'x', value: 20, from: 10, to: 100, step: 10 },
           skill: { mode: 'fixed', value: 250, from: 100, to: 500, step: 50 },
           damage: { mode: 'y', value: 0, from: 0, to: 8, step: 2 },
@@ -1071,12 +1095,14 @@
           100 -
             (cv.skill_penalty_pct_per_exhaustion ?? 1) * Math.max(0, g.exhaustion - (cv.exhaustion_free_points ?? 0)),
         )
-        return Math.floor((g.skill * penalty) / 100)
+        // An Agent hurt in a Combat, with its current health below its max health, fights at that share of its skill.
+        const share = g.current === undefined ? 1 : g.current / g.health
+        return Math.floor((g.skill * share * penalty) / 100 + 1e-9)
       }
       // COMBAT, Incapacitation condition.
       function ableToFight(g, cv) {
         return (
-          g.health > 0 &&
+          (g.current ?? g.health) > 0 &&
           g.exhaustion < (cv.exhaustion_incapacitation ?? Infinity) &&
           effectiveSkill(g, cv) > (cv.incapacitation_skill_fraction ?? 0) * g.skill
         )
@@ -1257,22 +1283,9 @@
         const skills = numbers(state.setup.skills).map(Math.round)
         const ups = upgradeSets()
         const trials = Math.max(10, Math.min(10000, Math.round(state.setup.trials) || 100))
-        const tail = JSON.stringify([info.engine, trials, cv])
         const cells = []
         for (const site of sites) {
-          site.cr = rate(site.groups, formula, cv, 'enemy')
-          // The mean combatant_cr of the site's Enemies able to fight.
-          const able = site.groups.filter((g) => g.count > 0 && ableToFight(g, cv))
-          const n = able.reduce((s, g) => s + g.count, 0)
-          site.meanCr =
-            n === 0 ? 0 : able.reduce((s, g) => s + combatantRating(g, formula, cv, 'enemy') * g.count, 0) / n
-          // The mean health, weapon damage, and armor of the same Enemies.
-          const meanOf = (key) => (n === 0 ? 0 : able.reduce((s, g) => s + g[key] * g.count, 0) / n)
-          site.meanHealth = meanOf('health')
-          site.meanDamage = meanOf('damage')
-          site.meanArmor = meanOf('armor')
-          site.meanSkill = n === 0 ? 0 : able.reduce((s, g) => s + effectiveSkill(g, cv) * g.count, 0) / n
-          site.sig = JSON.stringify(site.groups)
+          rateSite(site, formula, cv)
           site.cells = []
           for (const t of targets) {
             for (const skill of skills) {
@@ -1293,8 +1306,7 @@
                   ratio: cr / site.cr,
                   // Excluded: no Agent count comes within 5% of the share, so the cell is never fought or counted.
                   off: Math.abs(cr / site.cr / (t / 100) - 1) > 0.05,
-                  // The Upgrade counts enter the key once, after the groups, as they did before groups held them.
-                  key: hash(`${site.sig}|${JSON.stringify(groups.map(({ w, a, ...g }) => g))}|${up.w}/${up.a}|${tail}`),
+                  key: combatKey(site, groups, up, cv, trials),
                   trials,
                 }
                 site.cells.push(cell)
@@ -1306,8 +1318,110 @@
         return { cv, sites, targets, skills, ups, cells, trials }
       }
 
-      const resultOf = (cell) => store.results[cell.key]
+      /** A site's rating, and the means over its Enemies able to fight: combatant_cr, effective skill, and values. */
+      function rateSite(site, formula, cv) {
+        site.cr = rate(site.groups, formula, cv, 'enemy')
+        const able = site.groups.filter((g) => g.count > 0 && ableToFight(g, cv))
+        const n = able.reduce((s, g) => s + g.count, 0)
+        const meanOf = (f) => (n === 0 ? 0 : able.reduce((s, g) => s + f(g) * g.count, 0) / n)
+        site.meanCr = meanOf((g) => combatantRating(g, formula, cv, 'enemy'))
+        site.meanHealth = meanOf((g) => g.health)
+        site.meanDamage = meanOf((g) => g.damage)
+        site.meanArmor = meanOf((g) => g.armor)
+        site.meanSkill = meanOf((g) => effectiveSkill(g, cv))
+        site.sig = JSON.stringify(site.groups)
+      }
+      /** A site's level, rating, and means, as under Mission sites. */
+      const siteMeta = (site) => `<span class="meta">${siteLevel(site)}</span>
+        <span class="meta">CR ${fmt(site.cr)} · ${site.size} Enemies</span>
+        <span class="meta" title="The means over the site's Enemies: combatant_cr, effective skill, health, weapon damage, and armor">mean CR ${fmt(site.meanCr, 1)} · skill ${fmt(site.meanSkill, 1)}</span>
+        <span class="meta" title="The mean health, weapon damage, and armor of the site's Enemies">health ${fmt(site.meanHealth, 1)} · ${fmt(site.meanDamage, 1)}${SWORD} · ${fmt(site.meanArmor, 1)}${SHIELD}</span>`
+
+      /**
+       * The key of a Combat: the site's Enemies, the Agent team, and the Combat values. The number of Combats is not part
+       * of it, so that a result can grow by more Combats.
+       */
+      function combatKey(site, groups, up, cv, trials) {
+        // The Upgrade counts enter the key once, after the groups, as they did before groups held them.
+        const team = `${site.sig}|${JSON.stringify(groups.map(({ w, a, ...g }) => g))}|${up.w}/${up.a}`
+        const key = hash(`${team}|${JSON.stringify([info.engine, cv])}`)
+        // A result kept under the earlier key, which held the number of Combats, moves to the new one.
+        if (!(key in store.results)) {
+          const old = hash(`${team}|${JSON.stringify([info.engine, trials, cv])}`)
+          if (old in store.results) {
+            store.results[key] = store.results[old]
+            saveStore()
+          }
+        }
+        return key
+      }
+
+      /** A cell's result once it holds at least the cell's number of Combats. */
+      const resultOf = (cell) => {
+        const r = store.results[cell.key]
+        return r && r.fought >= cell.trials ? r : undefined
+      }
       const winOf = (r) => r.prevailed / r.fought
+      /** What the Agents' rating by the current formula is measured with: a result's CR left is kept with it. */
+      const crSig = () => JSON.stringify([state.formula.agent, state.formula.team, effectiveParams(state.formula)])
+      /** The mean share of the Agents' starting rating left at the end, or NaN; stale under another formula. */
+      const crLeftOf = (r) => (r?.dN > 0 ? r.crLeftSum / r.dN : NaN)
+      const exhaustionOf = (r) => (r?.exhN > 0 ? r.exhSum / r.exhN : NaN)
+
+      /**
+       * What a cell still needs fought, as { from, trials, detail }, or null when its result is complete. A cell with
+       * detail, i.e. a Sampler sample, needs the final values of every one of its Combats under the current formula.
+       */
+      function jobFor(cell) {
+        const r = store.results[cell.key]
+        const detail = cell.detail === true
+        const fought = r?.fought ?? 0
+        const detailOk = !detail || (r !== undefined && r.dN === fought && r.crSig === crSig())
+        if (fought >= cell.trials && detailOk) {
+          return null
+        }
+        // More Combats continue the result; final values it lacks mean fighting it again, on the same seeds.
+        return r !== undefined && detailOk
+          ? { from: fought, trials: cell.trials - fought, detail }
+          : { from: 0, trials: Math.max(cell.trials, fought), detail }
+      }
+      /** The CR left and the exhaustion of the Agents alive at the end of each Combat of a cell. */
+      function finalsOf(cell, finals) {
+        const formula = state.formula
+        const cv = model.cv
+        const start = rate(cell.groups, formula, cv, 'agent')
+        const g0 = cell.groups[0]
+        const out = { crLeftSum: 0, exhSum: 0, exhN: 0, dN: finals.length, crSig: crSig() }
+        for (const combat of finals) {
+          const left = combat.map(([h, e, n]) => ({ ...g0, count: n, current: h / 100, exhaustion: e }))
+          out.crLeftSum += start > 0 ? rate(left, formula, cv, 'agent') / start : 0
+          for (const [, e, n] of combat) {
+            out.exhSum += e * n
+            out.exhN += n
+          }
+        }
+        return out
+      }
+      /** A result with the Combats of a finished job added. */
+      function merged(job, before, m, cell) {
+        const keep = job.from > 0 && before?.fought === job.from
+        const r = keep ? { ...before } : { fought: 0, prevailed: 0, retreated: 0, wiped: 0, agentsDead: 0 }
+        for (const k of ['fought', 'prevailed', 'retreated', 'wiped', 'agentsDead']) {
+          r[k] += m[k]
+        }
+        if (m.finals && cell) {
+          const d = finalsOf(cell, m.finals)
+          if (!(keep && r.dN === job.from && r.crSig === d.crSig)) {
+            Object.assign(r, { crLeftSum: 0, exhSum: 0, exhN: 0, dN: 0 })
+          }
+          r.crLeftSum += d.crLeftSum
+          r.exhSum += d.exhSum
+          r.exhN += d.exhN
+          r.dN += d.dN
+          r.crSig = d.crSig
+        }
+        return r
+      }
 
       /* ---------- fighting ---------- */
       const entries = (groups) =>
@@ -1331,24 +1445,26 @@
           if (cell.off) {
             continue
           }
-          if (resultOf(cell)) {
-            store.last[cell.id] = cell.key
-            continue
-          }
-          failures.delete(cell.key)
           const known = pending.get(cell.key)
           if (known) {
             known.cells.add(cell.id)
             continue
           }
+          const todo = jobFor(cell)
+          if (todo === null) {
+            store.last[cell.id] = cell.key
+            continue
+          }
+          failures.delete(cell.key)
           pending.set(cell.key, {
             cells: new Set([cell.id]),
+            cell,
             job: {
               key: cell.key,
               side: 'a',
               agents: entries(cell.groups),
               enemies: entries(cell.site.groups),
-              trials: cell.trials,
+              ...todo,
               gdrValues: model.cv,
               seed: cell.key,
               ratingUpgrades: {
@@ -1408,8 +1524,7 @@
               if ('error' in m) {
                 failures.set(m.key, m.error)
               } else {
-                const { fought, prevailed, retreated, wiped, agentsDead } = m
-                store.results[m.key] = { fought, prevailed, retreated, wiped, agentsDead }
+                store.results[m.key] = merged(p.job, store.results[m.key], m, p.cell)
                 for (const id of p.cells) {
                   store.last[id] = m.key
                 }
@@ -1735,10 +1850,7 @@
         const rows = sites
           .map(
             (site) => `<div class="grow-row"><div class="site"><b>${esc(site.name)}</b>
-              <span class="meta">${siteLevel(site)}</span>
-              <span class="meta">CR ${fmt(site.cr)} · ${site.size} Enemies</span>
-              <span class="meta" title="The means over the site's Enemies: combatant_cr, effective skill, health, weapon damage, and armor">mean CR ${fmt(site.meanCr, 1)} · skill ${fmt(site.meanSkill, 1)}</span>
-              <span class="meta" title="The mean health, weapon damage, and armor of the site's Enemies">health ${fmt(site.meanHealth, 1)} · ${fmt(site.meanDamage, 1)}${SWORD} · ${fmt(site.meanArmor, 1)}${SHIELD}</span>
+              ${siteMeta(site)}
               <span><button class="small" data-act="run-row" data-site="${site.id}">Run row</button></span></div>
               ${targets.map((t) => block(t, site)).join('')}</div>`,
           )
@@ -2039,7 +2151,7 @@
       function dimValues(name) {
         const d = state.sampler[name]
         const label = samplerLabel(name)
-        const [lo, hi] = name === 'trials' ? [10, 10000] : name === 'damage' || name === 'armor' ? [0, 1e6] : [1, 1e6]
+        const [lo, hi] = name === 'trials' ? [1, 10000] : name === 'damage' || name === 'armor' ? [0, 1e6] : [1, 1e6]
         const whole = (x) => Math.min(hi, Math.max(lo, Math.round(x)))
         if (d.mode === 'fixed') {
           if (!Number.isFinite(d.value)) {
@@ -2122,14 +2234,12 @@
           ]),
         )
         for (const site of values.site) {
-          site.cr = rate(site.groups, formula, cv, 'enemy')
-          site.sig = JSON.stringify(site.groups)
+          rateSite(site, formula, cv)
         }
         const cells = []
         const byId = new Map()
         for (const site of values.site) {
           for (const trials of values.trials) {
-            const tail = JSON.stringify([info.engine, trials, cv])
             for (const count of values.count) {
               for (const skill of values.skill) {
                 for (const damage of values.damage) {
@@ -2150,10 +2260,10 @@
                       ratio: cr / site.cr,
                       trials,
                       off: false,
+                      // A sample keeps the final values of its Combats, for the CR left and the exhaustion.
+                      detail: true,
                       // The same key as a Mission sites cell of the same Combat, so that the two share results.
-                      key: hash(
-                        `${site.sig}|${JSON.stringify(groups.map(({ w, a, ...g }) => g))}|${up.w}/${up.a}|${tail}`,
-                      ),
+                      key: combatKey(site, groups, up, cv, trials),
                     }
                     cells.push(cell)
                     byId.set(cell.id, cell)
@@ -2174,17 +2284,36 @@
               ? `+${v}${SHIELD}`
               : String(v)
       function sampleHtml(cell) {
+        const all = store.results[cell.key]
         const r = resultOf(cell)
         const queued = pending.has(cell.key)
-        const cls = ['cell', r ? 'fresh' : '', queued ? 'queued' : ''].join(' ')
+        // A result with fewer Combats than asked for shows greyed until it is run again.
+        const shown = r ?? all
+        const cls = ['cell', r ? 'fresh' : all ? 'stale' : '', queued ? 'queued' : ''].join(' ')
         const style = r ? `background:${tint(winOf(r))}` : ''
-        const text = queued ? '…' : r ? pct(winOf(r)) : '–'
-        const ratio = state.sampler.showRatio ? `<span class="n">×${cell.ratio.toFixed(2)}</span>` : ''
-        return `<div class="${cls}" style="${style}" data-sample="${esc(cell.id)}">${ratio}<span class="w">${text}</span></div>`
+        const text = queued ? '…' : shown ? pct(winOf(shown)) : '–'
+        const s = state.sampler
+        // The CR left is greyed when it was measured with another formula.
+        const old = shown?.crSig !== crSig() ? ' old' : ''
+        const lines = [
+          s.showRatio
+            ? `<span class="n" title="The Agent team's rating over the site's">×${cell.ratio.toFixed(2)}</span>`
+            : '',
+          `<span class="w">${text}</span>`,
+          s.showCrLeft
+            ? `<span class="n${old}" title="The mean share of the Agents' rating left at the end of a Combat">CR ${pct(crLeftOf(shown))}</span>`
+            : '',
+          s.showExhaustion
+            ? `<span class="n" title="The mean exhaustion of the Agents alive at the end of a Combat">ex ${Number.isFinite(exhaustionOf(shown)) ? exhaustionOf(shown).toFixed(1) : '–'}</span>`
+            : '',
+        ]
+        return `<div class="${cls}" style="${style}" data-sample="${esc(cell.id)}">${lines.join('')}</div>`
       }
       /** The Sampler's dimensions as inputs; drawn anew only when a mode changes, so typing keeps its focus. */
       function renderSamplerDims() {
-        $('[data-bind="sampler.showRatio"]').checked = state.sampler.showRatio
+        for (const name of ['showRatio', 'showCrLeft', 'showExhaustion']) {
+          $(`[data-bind="sampler.${name}"]`).checked = state.sampler[name]
+        }
         const sites = info ? sitesOf(combatValues(), false) : []
         const modes = [
           ['fixed', 'Fixed'],
@@ -2232,6 +2361,7 @@
           sampler = null
           $('#samplerErr').textContent = e.message
           $('#samplerInfo').textContent = ''
+          $('#samplerSite').innerHTML = ''
           out.innerHTML = ''
           return
         }
@@ -2242,18 +2372,25 @@
         if (siteSel && state.sampler.site.mode === 'fixed' && siteSel.value !== values.site[0].id) {
           siteSel.value = values.site[0].id
         }
-        const done = cells.filter((c) => resultOf(c)).length
-        const fixed = SAMPLER_DIMS.filter(([n]) => state.sampler[n].mode === 'fixed').map(
-          ([n, label]) =>
-            `${label} ${dimText(n, fixedValue(n))}${n === 'site' ? ` (CR ${fmt(fixedValue(n).cr)})` : ''}`,
-        )
-        $('#samplerInfo').innerHTML =
-          `${cells.length} samples, ${done} with a result. ${fixed.length > 0 ? `Fixed: ${fixed.join(' · ')}.` : ''}` +
-          (state.sampler.showRatio ? ' The small number is the team’s rating over the site’s.' : '')
+        const done = cells.filter((c) => jobFor(c) === null).length
+        $('#samplerInfo').innerHTML = `${cells.length} samples, ${done} complete.`
+        const fixedSite = state.sampler.site.mode === 'fixed' ? values.site[0] : null
+        $('#samplerSite').innerHTML = fixedSite ? `<b>${esc(fixedSite.name)}</b>${siteMeta(fixedSite)}` : ''
+        // As under Mission sites, the first values are at the upper left: X grows down and Y to the right.
         const xs = ax.x ? values[ax.x] : [null]
-        // The Y axis rises upward, as on a chart; Mission sites keep their order from the top.
-        const ys = ax.y ? (ax.y === 'site' ? values.site : [...values[ax.y]].reverse()) : [null]
+        const ys = ax.y ? values[ax.y] : [null]
         const zs = ax.z ? values[ax.z] : [null]
+        // A Z of weapon damage or armor also labels the axis that shows the other, e.g. +4 weapon damage beside +5 armor.
+        const gear = (n) => n === 'damage' || n === 'armor'
+        const zOn = !gear(ax.z) ? null : gear(ax.y) ? 'y' : gear(ax.x) ? 'x' : ax.y ? 'y' : ax.x ? 'x' : null
+        const axisLabel = (a, val, z, stacked) => {
+          const parts = ax[a] ? [[ax[a], val]] : []
+          if (zOn === a) {
+            parts.push([ax.z, z])
+          }
+          parts.sort((p, q) => (p[0] === 'armor') - (q[0] === 'armor'))
+          return parts.map(([n, v]) => dimText(n, v)).join(stacked ? '<br>' : ' ')
+        }
         const cellAt = (x, y, z) => {
           const v = Object.fromEntries(SAMPLER_DIMS.map(([n]) => [n, fixedValue(n)]))
           for (const [a, val] of [
@@ -2267,10 +2404,7 @@
           }
           return sampler.byId.get(sampleId(v))
         }
-        const corner = [
-          ax.y ? `${samplerLabel(ax.y)} ${ax.y === 'site' ? '↓' : '↑'}` : '',
-          ax.x ? `${samplerLabel(ax.x)} →` : '',
-        ]
+        const corner = [ax.x ? `${samplerLabel(ax.x)} ↓` : '', ax.y ? `${samplerLabel(ax.y)} →` : '']
           .filter(Boolean)
           .join('<br>')
         out.innerHTML = zs
@@ -2281,16 +2415,31 @@
             let html = `<div><div class="stitle"><b>${ax.z ? `${samplerLabel(ax.z)} ${dimText(ax.z, z)}` : 'Samples'}</b>
               ${wins.length > 0 ? `<span class="note">μ ${pct(mean)} over ${wins.length}</span>` : ''}
               <button class="small" data-act="run-samples" data-z="${zi}">Run</button></div>
-              <div class="sgrid" style="grid-template-columns: auto repeat(${xs.length}, minmax(50px, auto))">
-              <span class="ax">${corner}</span>${xs.map((x) => `<span class="ax">${ax.x ? dimText(ax.x, x) : ''}</span>`).join('')}`
-            for (const y of ys) {
-              html += `<span class="ax y">${ax.y ? dimText(ax.y, y) : ''}</span>`
-              html += xs.map((x) => sampleHtml(cellAt(x, y, z))).join('')
+              <div class="sgrid" style="grid-template-columns: auto repeat(${ys.length}, minmax(50px, auto))">
+              <span class="ax"><span>${corner}</span></span>${ys.map((y) => `<span class="ax"><span>${axisLabel('y', y, z, true)}</span></span>`).join('')}`
+            for (const x of xs) {
+              html += `<span class="ax y"><span>${axisLabel('x', x, z, false)}</span></span>`
+              html += ys.map((y) => sampleHtml(cellAt(x, y, z))).join('')
             }
             return `${html}</div></div>`
           })
           .join('')
+        layoutSamples()
       }
+      /** Lays the Z tables out in as many columns as fit, filling each column from the top before the next. */
+      function layoutSamples() {
+        const out = $('#samplerOut')
+        const tables = [...out.children]
+        if (tables.length === 0) {
+          return
+        }
+        out.style.gridTemplateRows = `repeat(${tables.length}, auto)`
+        const gap = 28
+        const width = Math.max(...tables.map((t) => t.offsetWidth))
+        const cols = Math.max(1, Math.floor((out.clientWidth + gap) / (width + gap)))
+        out.style.gridTemplateRows = `repeat(${Math.ceil(tables.length / cols)}, auto)`
+      }
+      window.addEventListener('resize', () => sampler && layoutSamples())
 
       function changed() {
         save()
@@ -2411,10 +2560,17 @@
               `${cell.count} Agents: skill ${cell.skill}, health ${cell.groups[0].health}, damage ${cell.groups[0].damage}, armor ${cell.groups[0].armor}`,
               `team_cr ${fmt(cell.cr)}, ${cell.ratio.toFixed(3)}× the site${cell.off ? ': excluded, more than 5% off its share' : ''}`,
             ]
-        if (r) {
+        // A result with fewer Combats than asked for still shows, as such.
+        const shown = r ?? store.results[cell.key]
+        if (shown) {
           lines.push(
-            `won ${r.prevailed} of ${r.fought}; Agents killed ${fmt(r.agentsDead / r.fought, 1)} per Combat${r.retreated ? `; retreated ${r.retreated}` : ''}`,
+            `won ${shown.prevailed} of ${shown.fought}; Agents killed ${fmt(shown.agentsDead / shown.fought, 1)} per Combat${shown.retreated ? `; retreated ${shown.retreated}` : ''}${r ? '' : `; ${cell.trials} asked for`}`,
           )
+          if (shown.dN > 0) {
+            lines.push(
+              `Agent CR left ${pct(crLeftOf(shown))}${shown.crSig === crSig() ? '' : ' (by an earlier formula)'}; exhaustion ${Number.isFinite(exhaustionOf(shown)) ? exhaustionOf(shown).toFixed(1) : '–'} of the Agents alive; over ${shown.dN} Combats`,
+            )
+          }
         } else if (old) {
           lines.push(`earlier result, with another Agent count or values: won ${old.prevailed} of ${old.fought}`)
         } else {
