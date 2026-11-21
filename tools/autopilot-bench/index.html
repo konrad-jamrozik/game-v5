@@ -292,7 +292,7 @@
         letter-spacing: 0.12em;
         color: var(--muted);
       }
-      /* The Campaign list: one block per Campaign, the Campaign and its progress on the left, and its three layers on the
+      /* The Campaign list: one block per Campaign, the Campaign and its progress on the left, and its four layers on the
    right. Every stat has a fixed width, so each value stands under its label in the header and in every block. */
       .clist {
         overflow-x: auto;
@@ -365,7 +365,8 @@
         align-items: flex-end;
         padding: 2px 0 3px;
       }
-      .line.l2 {
+      .line.l2,
+      .line.l4 {
         background: var(--band);
       }
       /* Each stat is its label over its value, at a fixed width so that it stands at the same place in every block. */
@@ -754,7 +755,7 @@
       }
 
       function renderCampaignsSection() {
-        return `<section id="campaigns"><div class="shead"><h2>Campaigns</h2><p>Each block is one Campaign at its Current Turn, in three layers: the Agency, its strength, and its Missions. Its parameters are those it was launched with.</p></div>
+        return `<section id="campaigns"><div class="shead"><h2>Campaigns</h2><p>Each block is one Campaign at its Current Turn, in four layers: the Agency, the work of its Agents, its strength, and its Missions. Its parameters are those it was launched with.</p></div>
   <div class="panel read"><div class="ctl">
     <label><span class="lbl">Campaigns</span><input type="number" id="l_count" min="1" step="1" value="${esc(launchForm.count)}" /></label>
     <label><span class="lbl">Until turn</span><input type="number" id="l_until" min="1" step="1" value="${esc(launchForm.untilTurn)}" /></label>
@@ -772,23 +773,15 @@
   <div class="note" id="legend"></div></div></section>`
       }
 
-      /** The three layers of a Campaign, each a list of [label, title, cell(stats) → html, width in px, left-aligned]. */
+      /** The four layers of a Campaign, each a list of [label, title, cell(stats) → html, width in px, left-aligned]. */
       function layers() {
         const factions = STATE.campaigns.find((c) => c.stats)?.stats.factions ?? []
         const ml = (m) =>
           `<span class="good">${m.won}</span><span class="dim">/</span><span class="bad">${m.lost}</span><span class="dim">/${m.expired}</span>`
-        const work = (a) =>
-          [
-            ['C', 'Contracting'],
-            ['T', 'Training'],
-            ['I', 'Investigation'],
-            ['S', 'Standby'],
-            ['Ex', 'Exhausted'],
-            ['R', 'Recovery'],
-            ['D', 'Deployed'],
-          ]
-            .map(([l, k]) => `${l}${a[k] ?? 0}`)
-            .join(' ')
+        const n = (s, kind) => s.assignments?.[kind] ?? 0
+        const dep = (s, kind) => s.deployable?.[kind] ?? 0
+        const pair = (training, standby) =>
+          `Training ${fmt(training)} <span class="dim">·</span> Standby ${fmt(standby)}`
         const L1 = [
           ['Turn', 'The Current Turn', (s) => fmt(s.turn), 56],
           [
@@ -820,18 +813,33 @@
               `<span class="${s.killed > 0 ? 'bad' : ''}">${fmt(s.killed)}</span>${s.dismissed ? `<span class="dim">/${s.dismissed}</span>` : ''}`,
             60,
           ],
+        ]
+        const L4 = [
           [
-            'Work',
-            'Serving Agents by Assignment, In transit included: Contracting, Training, Investigation, Standby and Fit to start work, Standby but not Fit to start work (Ex), i.e. resting until the AI may send it, Recovery, Deployed',
-            (s) => `<span class="dim">${work(s.assignments)}</span>`,
-            230,
+            'Deployable',
+            'Deployable Agents on Training and on Standby; together, the number after CR ready',
+            (s) => pair(dep(s, 'Training'), dep(s, 'Standby')),
+            200,
             true,
           ],
+          [
+            'Non-deployable',
+            'Agents on Training and on Standby, In transit included, that are not Deployable Agents, e.g. resting until Fully rested, or not Fit to start work',
+            (s) => pair(n(s, 'Training') - dep(s, 'Training'), n(s, 'Standby') - dep(s, 'Standby')),
+            200,
+            true,
+          ],
+          ...['Contracting', 'Investigation', 'Recovery', 'Deployed'].map((kind) => [
+            kind,
+            `Agents whose Assignment is ${kind}, In transit included`,
+            (s) => fmt(n(s, kind)),
+            kind === 'Investigation' ? 120 : 100,
+          ]),
         ]
         const L2 = [
           [
             'CR ready',
-            'Combat rating of the Deployable Agents, i.e. those the AI may send to a Mission site now; after it, their number of all Serving Agents',
+            'Combat rating of the Deployable Agents; after it, their number of all Serving Agents',
             (s) => `${fmt(s.ratingReady)} <span class="dim">(${fmt(s.ready)}/${fmt(s.agents)})</span>`,
             140,
           ],
@@ -870,10 +878,10 @@
           ]),
           ['Inv', 'Active Investigations', (s) => fmt(s.activeInvestigations), 48],
         ]
-        return [L1, L2, L3]
+        return [L1, L4, L2, L3]
       }
 
-      const LAYER_NAMES = ['Agency', 'Strength', 'Missions']
+      const LAYER_NAMES = ['Agency', 'Work', 'Strength', 'Missions']
       let LAYOUT = null
       let layoutKey = ''
 
@@ -882,7 +890,7 @@
 
       function renderHead() {
         $('legend').innerHTML =
-          `<b>CR ready</b> is the Combat rating of the Deployable Agents, under Glossary below; their number out of all Serving Agents is in brackets, e.g. (29/155), and a team is further limited by the free Transport cap. <b>CR all</b> is the Combat rating of every Serving Agent at full health and exhaustion 0. A label with <b>+</b>, e.g. <b>+Weapon</b>, is how many times that Upgrade was bought. Work: Contracting, Training, Investigation, Standby and Fit to start work, Exhausted on Standby (not Fit to start work, so resting until the AI may send it), Recovery, Deployed. Each Faction shows the next Initiative Mission site to win against it, one level above the highest Won. Missions: Won / Lost / Expired. Hover a label for its meaning. Time is the latest run's wall-clock time, and the total of every run. <b>Load params</b> copies a Campaign's parameters into the Parameters editor above, e.g. to launch a variant of it.`
+          `<b>CR ready</b> is the Combat rating of the Deployable Agents, under Glossary below; their number out of all Serving Agents is in brackets, e.g. (29/155), and a team is further limited by the free Transport cap. <b>CR all</b> is the Combat rating of every Serving Agent at full health and exhaustion 0. A label with <b>+</b>, e.g. <b>+Weapon</b>, is how many times that Upgrade was bought. Work counts Serving Agents by Assignment, In transit included; <b>Deployable</b> and <b>Non-deployable</b> split those on Training and on Standby, so the two Deployable counts add up to the number after CR ready.Each Faction shows the next Initiative Mission site to win against it, one level above the highest Won. Missions: Won / Lost / Expired. Hover a label for its meaning. Time is the latest run's wall-clock time, and the total of every run. <b>Load params</b> copies a Campaign's parameters into the Parameters editor above, e.g. to launch a variant of it.`
       }
 
       const rows = new Map()

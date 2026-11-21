@@ -98,13 +98,12 @@ function statsOf(campaign: Campaign): CampaignStats {
   // The Agents the Basic Autopilot AI may form a team of for a Mission site: its Deployable Agents, i.e. those In base,
   // i.e. on Standby or Training and able to take orders, that are Fit to start work and do not meet the incapacitation
   // condition with their current values, which the engine reports as `ableToFight`, so that deployAgents accepts them.
-  const ready = agents.filter(
-    (a) =>
-      a.canBeAssigned &&
-      (a.assignment?.kind === 'Standby' || a.assignment?.kind === 'Training') &&
-      a.fitForWork &&
-      a.ableToFight,
-  )
+  const isDeployable = (a: Any): boolean =>
+    a.canBeAssigned &&
+    (a.assignment?.kind === 'Standby' || a.assignment?.kind === 'Training') &&
+    a.fitForWork &&
+    a.ableToFight
+  const ready = agents.filter(isDeployable)
   const ratingReady = ok<Any>(
     player.queries.previewDeployment(
       null,
@@ -137,10 +136,13 @@ function statsOf(campaign: Campaign): CampaignStats {
   }
   const all = [...agents, ...(retired.agents as Any[])]
   const assignments: Record<string, number> = {}
+  const deployable: Record<string, number> = {}
   for (const a of agents) {
-    const assigned = (a.assignment?.kind as string | undefined) ?? 'None'
-    const kind = assigned === 'Standby' && !a.fitForWork ? 'Exhausted' : assigned
+    const kind = (a.assignment?.kind as string | undefined) ?? 'None'
     assignments[kind] = (assignments[kind] ?? 0) + 1
+    if (isDeployable(a)) {
+      deployable[kind] = (deployable[kind] ?? 0) + 1
+    }
   }
   return {
     turn: live.turn,
@@ -158,6 +160,7 @@ function statsOf(campaign: Campaign): CampaignStats {
     transportCap: agency.transportCap,
     trainingCap: agency.trainingCap,
     assignments,
+    deployable,
     meanSkill:
       agents.length === 0 ? 0 : agents.reduce((s, a) => s + (a.skillHundredths as number), 0) / agents.length / 100,
     upgrades: Object.fromEntries((agency.upgrades as Any[]).map((u) => [u.id, u.acquisitions as number])),
