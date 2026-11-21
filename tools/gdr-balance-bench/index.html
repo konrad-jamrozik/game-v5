@@ -129,6 +129,25 @@
         align-items: center;
         padding-block: 10px;
       }
+      .stale {
+        flex-basis: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 14px;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 12px;
+        border: 1px solid var(--warning);
+        background: var(--raised);
+        color: var(--warning);
+      }
+      .stale[hidden] {
+        display: none;
+      }
+      .stale span {
+        min-width: 0;
+        flex: 1 1 280px;
+      }
       nav {
         display: flex;
         flex-wrap: wrap;
@@ -509,6 +528,9 @@
         <div class="acts">
           <span id="count">0 changed</span><button class="pri" id="copy">Copy changes</button
           ><button id="reset">Reset all</button>
+        </div>
+        <div id="stale" class="stale" role="alert" hidden>
+          <span id="stale-msg"></span><button class="pri" id="reload">Reload</button>
         </div>
       </div>
       <div id="app" style="display: contents"></div>
@@ -1890,6 +1912,44 @@
           }
         }
       })
+
+      /*
+       * The GDR values, the engine, and this page are read from disk only when the page loads, so a page left open
+       * across a change on disk, e.g. a pull that changed the Combat rating formula, keeps showing the numbers of the
+       * earlier version. The server's fingerprints of all three are compared with the ones this page was loaded with,
+       * and the bar says which changed. A reload keeps the edits, because they are saved in the browser.
+       */
+      const STALE_PARTS = {
+        bench: 'this page or its server (tools/gdr-balance-bench)',
+        gdr: 'the GDR values under content/',
+        engine: 'the engine source under game-v5-impl-web/src',
+      }
+      async function checkStale() {
+        const loadedFrom = LOCAL && LOCAL.stamp
+        if (!loadedFrom || document.hidden) return
+        let msg = ''
+        try {
+          const r = await fetch('api/stamp', { cache: 'no-store' })
+          if (!r.ok) throw new Error('the server answered ' + r.status)
+          const now = await r.json()
+          const changed = Object.keys(STALE_PARTS).filter((k) => now[k] !== loadedFrom[k])
+          if (changed.length)
+            msg =
+              'Out of date: ' +
+              changed.map((k) => STALE_PARTS[k]).join(', and ') +
+              ' changed on disk after this page loaded, so the numbers below are from the earlier version. Reload to read them again; your edits are kept.'
+        } catch (e) {
+          msg =
+            'The bench server is not answering (' +
+            String(e.message || e) +
+            '), e.g. because it is restarting after a change to server.ts. Reload once it is back.'
+        }
+        document.getElementById('stale-msg').textContent = msg
+        document.getElementById('stale').hidden = !msg
+      }
+      document.getElementById('reload').addEventListener('click', () => location.reload())
+      document.addEventListener('visibilitychange', checkStale)
+      setInterval(checkStale, 5000)
       init()
     </script>
   </body>

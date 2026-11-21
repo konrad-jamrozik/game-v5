@@ -14,6 +14,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { Worker } from 'node:worker_threads'
 import { execFileSync } from 'node:child_process'
+import { createHash } from 'node:crypto'
 import YAML from 'yaml'
 import {
   SiteSearch,
@@ -165,6 +166,51 @@ function loadGdr(): Record<string, unknown> {
     }
   }
   return out
+}
+
+/* ---------- what the page was loaded from ---------- */
+function allFiles(dir: string): string[] {
+  const out: string[] = []
+  try {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, entry.name)
+      if (entry.isDirectory()) {
+        out.push(...allFiles(full))
+      } else {
+        out.push(full)
+      }
+    }
+  } catch {
+    // A directory that is missing, e.g. while the clone is being updated, contributes no files.
+  }
+  return out
+}
+
+/** A fingerprint of the files, from each one's path, size, and modification time, cheap enough to take every few seconds. */
+function fingerprint(files: string[]): string {
+  const hash = createHash('sha1')
+  for (const file of files.toSorted()) {
+    try {
+      const stat = fs.statSync(file)
+      hash.update(`${file}\0${stat.size}\0${stat.mtimeMs}\n`)
+    } catch {
+      hash.update(`${file}\0missing\n`)
+    }
+  }
+  return hash.digest('hex')
+}
+
+/**
+ * The fingerprints of what a page load reads: the bench itself, the GDR values, and the engine source. The page keeps
+ * the ones it was loaded with and asks for them again, so that it can say when one of them changed on disk after it
+ * loaded, e.g. a pull that changed a Combat rating formula, and its numbers no longer reflect what is on disk.
+ */
+function stamp(): { bench: string; gdr: string; engine: string } {
+  return {
+    bench: fingerprint(['index.html', 'server.ts', 'search.ts', 'worker.ts'].map((f) => path.join(HERE, f))),
+    gdr: fingerprint(yamlFiles(path.join(SPEC, 'content'))),
+    engine: fingerprint(allFiles(path.join(IMPL, 'src'))),
+  }
 }
 
 /* ---------- engine worker threads ---------- */
@@ -361,12 +407,23 @@ const server = http.createServer((req, res) => {
     if (req.method === 'GET' && url === '/') {
       res.writeHead(200, { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' })
       res.end(fs.readFileSync(path.join(HERE, 'index.html'), 'utf8'))
+    } else if (req.method === 'GET' && url === '/api/stamp') {
+      json(res, 200, stamp())
     } else if (req.method === 'GET' && url === '/api/info') {
       // Every page load reads the GDR values again and starts the engine again from the source on disk.
+      const loadedFrom = stamp()
       startPool()
       // An engine that does not start, e.g. while the clone is being updated, is reported and the GDR values still load.
       const loaded = await info.catch((e: unknown) => ({ engineError: e instanceof Error ? e.message : String(e) }))
-      json(res, 200, { ...loaded, engine: engineVersion(), impl: IMPL, spec: SPEC, threads: THREADS, gdr: loadGdr() })
+      json(res, 200, {
+        ...loaded,
+        engine: engineVersion(),
+        impl: IMPL,
+        spec: SPEC,
+        threads: THREADS,
+        gdr: loadGdr(),
+        stamp: loadedFrom,
+      })
     } else if (req.method === 'POST' && url === '/api/run') {
       const jobs = (JSON.parse(await body(req)) as { jobs: SiteJob[] }).jobs
       stream?.end()

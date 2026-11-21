@@ -27,6 +27,8 @@ Both are read again each time the page is loaded in the browser, so nothing is r
 
 An engine that does not start, e.g. because the Implementation is in the middle of an update, is reported on the page under the test team, and the GDR values still load.
 
+A page left open does not follow later changes on disk, so it checks every 5 seconds, and whenever its tab is shown again, whether any of the three it was loaded from changed since: the bench's own files, the GDR values, or the engine source under `src/`. If one did, e.g. after a pull that changed the Combat rating formula, a warning in the bar at the top names what changed, because the numbers on the page are those of the earlier version. Reloading reads all three again and keeps the values edited on the page, which are saved in the browser. The check compares each file's size and modification time, so a file whose time changed without its content, e.g. after a checkout, also shows the warning.
+
 ## How the Combat numbers are made
 
 The page has no Combat rules of its own. For each Mission site, it sends the test team and the site's Enemies, with the values as edited on the page, to the engine's `developer.tools.fightCombatBatch`, which fights a batch of Detached Combats by the procedure the game itself uses, without building their Combat reports.
