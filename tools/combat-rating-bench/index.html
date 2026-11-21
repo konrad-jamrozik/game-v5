@@ -658,6 +658,8 @@
             cr_per_damage: contentBonus('rating_bonus_per_weapon_damage_upgrade', 'weapon_damage') ?? 0.02,
             team_exp: 1,
           },
+          /** The parameters the designer edited, by typing or by Fit; every other one follows the content. */
+          edited: {},
           fit: {
             health_base: false,
             cr_per_health: true,
@@ -685,8 +687,19 @@
         const inc = info?.gdr.upgradeIncrements[upgrade] ?? 1
         return typeof bonus === 'number' ? Number((bonus / inc).toPrecision(4)) : null
       }
-      /** Whether no formula was saved in this browser, so that the defaults follow the content once it loads. */
-      let unsaved = false
+      /**
+       * The parameter values before they were read from the content. A formula saved before the page recorded which
+       * parameters were edited counts a parameter at one of these values as never edited.
+       */
+      const OLD_DEFAULTS = {
+        health_base: 30,
+        cr_per_health: 0.01,
+        armor_base: 0,
+        cr_per_armor: 0.01,
+        damage_base: 10,
+        cr_per_damage: 0.01,
+        team_exp: 1,
+      }
       let state = loadState()
       /** Results by fight key, and the fight key each cell was last fought with. */
       let store = loadStore()
@@ -711,21 +724,42 @@
                 }
               }
             }
+            const params = saved.formula?.params ?? {}
+            const edited =
+              saved.formula?.edited ??
+              Object.fromEntries(
+                Object.keys(params)
+                  .filter((name) => params[name] !== OLD_DEFAULTS[name])
+                  .map((name) => [name, true]),
+              )
             return {
               ...d,
               ...saved,
               formula: {
                 ...d.formula,
                 ...saved.formula,
-                params: { ...d.formula.params, ...saved.formula?.params },
+                // Only the parameters the designer edited keep their saved values; the others follow the defaults.
+                params: {
+                  ...d.formula.params,
+                  ...Object.fromEntries(Object.keys(edited).map((name) => [name, params[name]])),
+                },
+                edited,
                 fit: { ...d.formula.fit, ...saved.formula?.fit },
               },
               setup: { ...d.setup, ...saved.setup },
             }
           }
         } catch {}
-        unsaved = true
         return defaults()
+      }
+      /** The defaults read from the content, for every parameter the designer has not edited. */
+      function applyDefaults() {
+        const d = defaults().formula.params
+        for (const name of Object.keys(d)) {
+          if (!state.formula.edited[name]) {
+            state.formula.params[name] = d[name]
+          }
+        }
       }
       function loadStore() {
         try {
@@ -1242,7 +1276,10 @@
           steps.map((s) => s / 5),
           250,
         )
-        free.forEach((name, i) => (state.formula.params[name] = Number(best.x[i].toPrecision(4))))
+        free.forEach((name, i) => {
+          state.formula.params[name] = Number(best.x[i].toPrecision(4))
+          state.formula.edited[name] = true
+        })
         renderFormula()
         changed()
       }
@@ -1599,6 +1636,9 @@
           return
         }
         setPath(path, value)
+        if (path.startsWith('formula.params.')) {
+          state.formula.edited[path.slice('formula.params.'.length)] = true
+        }
         changed()
       }
       document.addEventListener('input', onInput)
@@ -1618,7 +1658,8 @@
         if (act.startsWith('preset-')) {
           Object.assign(state.formula, FORMULAS[act.slice(7)])
           if (act === 'preset-default') {
-            state.formula.params = defaults().formula.params
+            state.formula.edited = {}
+            applyDefaults()
           }
           renderFormula()
           changed()
@@ -1695,10 +1736,8 @@
         $('#engine').innerHTML = info.engineError
           ? `<span class="err">The engine did not start: ${esc(info.engineError)}</span>`
           : `Engine ${esc(info.impl)}, ${esc(info.engine)}; ${info.threads} worker threads.`
-        if (unsaved) {
-          state.formula.params = defaults().formula.params
-          renderFormula()
-        }
+        applyDefaults()
+        renderFormula()
         renderSetup()
         render()
       }
