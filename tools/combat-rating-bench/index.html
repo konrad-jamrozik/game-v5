@@ -498,13 +498,15 @@
               Combatants'.
             </p>
             <p class="note">
-              Every parameter applies at its value, whether or not its <b>Fit</b> box is checked; e.g. 0 switches a CR
-              per point off. The box only lets the <b>Fit</b> button change the parameter. <b>Fit</b> fights nothing:
-              over the cells already fought for the current formula, it searches the checked parameters for the values
-              whose ratings best predict the measured win rates, by the curve under Analysis, which is exactly 50% at
-              equal ratings, and writes them into the table. The unchecked parameters stay as they are. The new values
-              usually size many teams differently, so those cells turn grey until they are run again; run, fit, and run
-              the grey cells until the values settle.
+              Unchecking <b>Enabled</b> switches that part of the formula off: its multiplier is 1, or
+              <code>team_exp</code> is 1, whatever the values. Every change re-rates every Combatant, site, and Agent
+              team at once, and <b>Run</b> fights the teams as the current formula sizes them. The <b>Fit</b> box only
+              lets the <b>Fit</b> button change the parameter. <b>Fit</b> fights nothing: over the cells already fought
+              for the current formula, it searches the checked parameters for the values whose ratings best predict the
+              measured win rates, by the curve under Analysis, which is exactly 50% at equal ratings, and writes them
+              into the table. The unchecked parameters stay as they are. The new values usually size many teams
+              differently, so those cells turn grey until they are run again; run, fit, and run the grey cells until the
+              values settle.
             </p>
           </div>
           <div style="display: flex; flex-direction: column; gap: 10px">
@@ -515,21 +517,15 @@
             <div id="exprErr" class="err"></div>
             <p class="note">
               Combatant variables: <code>skill</code> (effective skill), <code>base_skill</code>, <code>health</code>,
-              <code>armor</code>, <code>damage</code>, <code>exhaustion</code>, <code>agent</code> (1 for an Agent, 0
-              for an Enemy), and the derived <code>health_mult = 1 + (health − health_base) × cr_per_health</code>,
-              likewise <code>armor_mult</code> and <code>damage_mult</code>. Team variables: <code>sum</code>,
-              <code>count</code> (Combatants able to fight), and <code>game</code> (the game's base Combat rating, Σ
-              effective skill). Every parameter, and every Combat value under Setup, e.g.
-              <code>rating_bonus_per_weapon_damage_upgrade</code>, is a variable of both.
+              <code>armor</code>, <code>damage</code>, <code>exhaustion</code>, and the derived
+              <code>health_mult = 1 + (health − health_base) × cr_per_health</code>, likewise
+              <code>armor_mult</code> and <code>damage_mult</code>. An Agent's Weapon damage and Armor Upgrades count
+              only as the weapon damage and armor they add, and the multipliers rate Agents and Enemies alike. Team
+              variables: <code>sum</code>, <code>count</code> (Combatants able to fight), and <code>game</code> (the
+              game's base Combat rating, Σ effective skill). Every parameter, and every Combat value under Setup, is a
+              variable of both.
             </p>
             <div class="row">
-              <button
-                class="small"
-                data-act="preset-game"
-                title="The game's own: an Agent's skill × (damage_mult + armor_mult − 1), which with the default parameters adds each Rating Upgrade's bonus; an Enemy's skill alone. Resets the parameters."
-              >
-                Game's Combat rating
-              </button>
               <button
                 class="small"
                 data-act="preset-default"
@@ -664,9 +660,6 @@
           combatant: 'skill * health_mult * armor_mult * damage_mult',
           team: 'sum * count ** team_exp / count',
         },
-        // COMBAT, Combat rating: with the default parameters, damage_mult and armor_mult of an Agent are the game's
-        // bonus of its Rating Upgrades, which the game adds rather than multiplies, and which no Enemy has.
-        game: { combatant: 'agent ? skill * (damage_mult + armor_mult - 1) : skill', team: 'floor(sum)' },
         lanchester: { combatant: 'skill * health_mult * armor_mult * damage_mult', team: 'sqrt(sum * count)' },
       }
       /**
@@ -686,6 +679,8 @@
           },
           /** The parameters the designer edited, by typing or by Fit; every other one follows the content. */
           edited: {},
+          /** Which parts of the formula apply; a part switched off is a no-op: its multiplier is 1, or team_exp 1. */
+          enabled: { cr_per_health: true, cr_per_armor: true, cr_per_damage: true, team_exp: true },
           fit: {
             health_base: false,
             cr_per_health: true,
@@ -758,6 +753,13 @@
                   .filter((name) => params[name] !== OLD_DEFAULTS[name])
                   .map((name) => [name, true]),
               )
+            // A formula saved with variables the page no longer has, e.g. the Upgrade counts of an earlier game
+            // preset, would break every rating, so its expressions return to the default.
+            const removed = /\b(weapon_upgrades|armor_upgrades|agent)\b/
+            if (removed.test(`${saved.formula?.combatant} ${saved.formula?.team}`)) {
+              saved.formula.combatant = FORMULAS.default.combatant
+              saved.formula.team = FORMULAS.default.team
+            }
             return {
               ...d,
               ...saved,
@@ -770,6 +772,7 @@
                   ...Object.fromEntries(Object.keys(edited).map((name) => [name, params[name]])),
                 },
                 edited,
+                enabled: { ...d.formula.enabled, ...saved.formula?.enabled },
                 fit: { ...d.formula.fit, ...saved.formula?.fit },
               },
               setup: { ...d.setup, ...saved.setup },
@@ -859,9 +862,23 @@
         }
         return compiled.get(expr)
       }
+      /** The parameters as the expressions read them: a part switched off is a no-op. */
+      function effectiveParams(formula) {
+        const p = { ...formula.params }
+        const on = formula.enabled ?? {}
+        for (const name of ['cr_per_health', 'cr_per_armor', 'cr_per_damage']) {
+          if (on[name] === false) {
+            p[name] = 0
+          }
+        }
+        if (on.team_exp === false) {
+          p.team_exp = 1
+        }
+        return p
+      }
       /** The variables of the combatant expression for one Combatant of a group. */
       function combatantVars(g, formula, cv) {
-        const p = formula.params
+        const p = effectiveParams(formula)
         return {
           ...cv,
           ...p,
@@ -871,8 +888,6 @@
           armor: g.armor,
           damage: g.damage,
           exhaustion: g.exhaustion,
-          // 1 for an Agent, whose group holds its Upgrade counts, and 0 for an Enemy.
-          agent: g.w === undefined ? 0 : 1,
           health_mult: 1 + (g.health - p.health_base) * p.cr_per_health,
           armor_mult: 1 + (g.armor - p.armor_base) * p.cr_per_armor,
           damage_mult: 1 + (g.damage - p.damage_base) * p.cr_per_damage,
@@ -888,7 +903,7 @@
       }
       /** The rating of a list of groups under a formula; throws on a broken expression. */
       function rate(groups, formula, cv) {
-        const p = formula.params
+        const p = effectiveParams(formula)
         const ft = compile(formula.team)
         let sum = 0
         let count = 0
@@ -1322,10 +1337,15 @@
       /* ---------- rendering of the inputs ---------- */
       function renderFormula() {
         $('#params').innerHTML =
-          `<tr><th>Parameter</th><th class="r">Value</th><th title="Checked: the Fit button may change this parameter. Unchecked: Fit leaves it as it is. Either way the value applies.">Fit</th><th>Meaning</th></tr>` +
+          `<tr><th>Parameter</th><th class="r">Value</th><th title="Unchecked: this part of the formula is a no-op, i.e. its multiplier is 1, or team_exp is 1.">Enabled</th><th title="Checked: the Fit button may change this parameter. Unchecked: Fit leaves it as it is.">Fit</th><th>Meaning</th></tr>` +
           PARAMS.map(
             ([name, desc, step]) => `<tr data-param="${name}"><td><code>${name}</code></td>
             <td class="r"><input type="number" step="${step}" data-bind="formula.params.${name}" data-type="num" value="${state.formula.params[name]}"></td>
+            <td>${
+              name in state.formula.enabled
+                ? `<input type="checkbox" data-bind="formula.enabled.${name}" data-type="bool" ${state.formula.enabled[name] ? 'checked' : ''} aria-label="Enable ${name}">`
+                : ''
+            }</td>
             <td><input type="checkbox" data-bind="formula.fit.${name}" data-type="bool" ${state.formula.fit[name] ? 'checked' : ''} aria-label="Fit ${name}"></td>
             <td class="desc">${esc(desc)}<span class="unused-note"> Not used by the current expressions.</span></td></tr>`,
           ).join('')
@@ -1449,15 +1469,29 @@
        * Greys out each parameter that neither expression reads, directly or through the multiplier it sets, e.g.
        * cr_per_health when no expression mentions health_mult, so that changing it visibly changes nothing.
        */
-      function isUsed(name) {
+      /** The part of the formula a parameter belongs to: the one whose Enabled box switches it, e.g. cr_per_health. */
+      const partOf = (name) => (name.endsWith('_base') ? `cr_per_${name.slice(0, -'_base'.length)}` : name)
+      /** 'off' when its part is switched off, 'unused' when no expression reads it, and 'used' otherwise. */
+      function useOf(name) {
+        if (state.formula.enabled?.[partOf(name)] === false) {
+          return 'off'
+        }
         const text = `${state.formula.combatant} ${state.formula.team}`
         const mentions = (word) => new RegExp(`\\b${word}\\b`).test(text)
         const stat = ['health', 'armor', 'damage'].find((s) => name === `${s}_base` || name === `cr_per_${s}`)
-        return mentions(name) || (stat !== undefined && mentions(`${stat}_mult`))
+        return mentions(name) || (stat !== undefined && mentions(`${stat}_mult`)) ? 'used' : 'unused'
       }
+      const isUsed = (name) => useOf(name) === 'used'
       function markUnused() {
         for (const row of document.querySelectorAll('#params tr[data-param]')) {
-          row.classList.toggle('unused', !isUsed(row.dataset.param))
+          const use = useOf(row.dataset.param)
+          row.classList.toggle('unused', use !== 'used')
+          row.querySelector('.unused-note').textContent =
+            use === 'off'
+              ? ' Switched off: no effect.'
+              : use === 'unused'
+                ? ' Not used by the current expressions.'
+                : ''
         }
       }
 
@@ -1740,8 +1774,9 @@
         const t = Number(b.dataset.t)
         if (act.startsWith('preset-')) {
           Object.assign(state.formula, FORMULAS[act.slice(7)])
-          if (act === 'preset-default' || act === 'preset-game') {
+          if (act === 'preset-default') {
             state.formula.edited = {}
+            state.formula.enabled = defaults().formula.enabled
             applyDefaults()
           }
           renderFormula()
