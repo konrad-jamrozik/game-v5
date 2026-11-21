@@ -22,17 +22,17 @@ node tools/combat-rating-bench/server.ts --impl <game-v5-impl-web clone> --spec 
 
 The rating of a team is computed in two steps, each an editable JavaScript expression with `Math` in scope:
 
-- **`combatant_cr`** rates one Combatant, by default `skill * health_mult * armor_mult * damage_mult`, where `skill` is its effective skill and e.g. `health_mult = 1 + (health − health_base) × cr_per_health`; `armor_mult` and `damage_mult` follow the same pattern. An Agent's Weapon damage and Armor Upgrades count only as the weapon damage and armor they add, and the multipliers rate Agents and Enemies alike.
+- **`combatant_cr`** rates one Combatant, by default the game's `skill * (1 + (health_mult - 1) + (armor_mult - 1) + (damage_mult - 1))`, under Combat rating in Combat, where `skill` is its effective skill and e.g. `health_mult = 1 + (health − health_base) × cr_per_health`; `armor_mult` and `damage_mult` follow the same pattern. An Agent's Weapon damage and Armor Upgrades count only as the weapon damage and armor they add, and the multipliers rate Agents and Enemies alike.
 - **`team_cr`** rates a team from `sum`, the sum of the `combatant_cr` of its Combatants that are able to fight, and `count`, their number, by default `sum * count ** team_exp / count`. `game` is also available: the game's base Combat rating, Σ effective skill.
 
-The parameters, e.g. `cr_per_health` and `team_exp`, and the Combat values, e.g. `rating_bonus_per_weapon_damage_upgrade`, are variables of both expressions. `cr_per_damage` and `cr_per_armor` default to the game's `rating_bonus_per_weapon_damage_upgrade` and `rating_bonus_per_armor_upgrade`, each divided by what one Upgrade adds, so that an Agent's Upgrades rate about as in the game; unlike the game's, they also rate the Enemies' weapon damage and armor. The browser keeps only the parameters edited, by typing or by **Fit**; every other one follows `content/`, so that a changed bonus reaches the page on its next load.
+The parameters, e.g. `cr_per_health` and `team_exp`, and the Combat values, e.g. `rating_bonus_per_weapon_damage`, are variables of both expressions. Each parameter defaults to the game's CombatParameters value of the same role, e.g. `health_base` to `rating_base_health`, `cr_per_damage` to `rating_bonus_per_weapon_damage`, and `team_exp` to `rating_team_size_exponent`, so that the defaults rate every team as the game does, apart from the game's rounding down of each side's rating. The browser keeps only the parameters edited, by typing or by **Fit**; every other one follows `content/`, so that a changed bonus reaches the page on its next load.
 
 Unchecking a part's **Enabled** box switches it off: its multiplier is 1, or `team_exp` is 1, whatever the values; its parameters are greyed and **Fit** leaves them alone. A parameter that neither expression reads is greyed too. Every change re-rates every Combatant, site, and Agent team at once, and a Run button fights the teams as the current formula sizes them. A formula saved with a variable the page no longer has returns to the default expressions on load. The buttons under the expressions load:
 
-- **Restore all defaults**: the default expressions and parameters, with every part enabled. The ↺ beside a parameter restores that parameter alone, and a parameter away from its default, or a part switched off, shows in orange.
+- **Restore all defaults**: the game's expressions and parameters, with every part enabled. The ↺ beside a parameter restores that parameter alone, and a parameter away from its default, or a part switched off, shows in orange.
 - **Lanchester square**: the default combatant expression with the team expression `sqrt(sum * count)`.
-- **Multiplicative bonuses**: the default expressions, `skill * health_mult * armor_mult * damage_mult` and `sum * count ** team_exp / count`, keeping the parameters, unlike **Restore all defaults**.
-- **Additive bonuses**: the combatant expression `skill * (1 + (health_mult - 1) + (armor_mult - 1) + (damage_mult - 1))`, in which the three bonuses add rather than multiply, e.g. +10% health, +15% armor, and +30% damage make skill × 1.55 rather than × 1.64, with the default team expression. It keeps the parameters.
+- **Multiplicative bonuses**: the combatant expression `skill * health_mult * armor_mult * damage_mult`, in which the three bonuses multiply, e.g. +10% health, +15% armor, and +30% damage make skill × 1.64 rather than × 1.55, with the default team expression. It keeps the parameters.
+- **Additive bonuses**: the game's expressions, `skill * (1 + (health_mult - 1) + (armor_mult - 1) + (damage_mult - 1))` and `sum * count ** team_exp / count`, keeping the parameters, unlike **Restore all defaults**.
 
 ## The grid
 
@@ -47,7 +47,7 @@ Clicking a section heading, e.g. **Setup**, folds the section to its heading; th
 
 ## How the Combats are fought
 
-Each cell is one batch of the engine's `developer.tools.fightCombatBatch`, on explicit Combatants, with the Agent team as the Agents' side, as in a Mission, and the Combat values listed on the page. The batch's Rating Upgrades are the cell's Upgrade counts. Retreat is off unless **Allow retreat** is checked, by setting `retreat_below_agent_rating_fraction` to 0, because it reads the game's own Combat rating rather than the formula; when it is allowed, a retreat counts as a loss. The Detached seed of a cell is its key, so a changed number reflects an edit, not new dice.
+Each cell is one batch of the engine's `developer.tools.fightCombatBatch`, on explicit Combatants, with the Agent team as the Agents' side, as in a Mission, and the Combat values listed on the page. The explicit values already hold what the cell's Upgrades add, which is all the game's Combat rating counts of them. Retreat is off unless **Allow retreat** is checked, by setting `retreat_below_agent_rating_fraction` to 0, because it reads the game's own Combat rating rather than the formula; when it is allowed, a retreat counts as a loss. The Detached seed of a cell is its key, so a changed number reflects an edit, not new dice.
 
 ## Analysis
 

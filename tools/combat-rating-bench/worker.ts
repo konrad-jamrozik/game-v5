@@ -29,7 +29,7 @@ export interface Job {
   agents: Explicit[]
   enemies: Explicit[]
   trials: number
-  /** The Rating Upgrades of the Agents' side, under COMBAT, Combat rating. */
+  /** The Upgrade counts, which only an engine from before the rating factor reads, as its Rating Upgrades. */
   ratingUpgrades?: { weaponDamage: number; armor: number }
   gdrValues: Record<string, number>
   seed: string
@@ -115,8 +115,8 @@ async function fight(job: Job): Promise<JobResult> {
       agents: job.agents,
       enemies: job.enemies,
       gdrValues: job.gdrValues,
-      // The explicit values already hold what the Upgrades add; the counts matter only to the game's own Combat rating,
-      // which only the Retreated check reads.
+      // The explicit values already hold what the Upgrades add. Only an engine from before the rating factor reads the
+      // counts, for its own Combat rating, which only the Retreated check reads.
       ratingUpgrades: job.ratingUpgrades ?? { weaponDamage: 0, armor: 0 },
       seed: job.seed,
     },

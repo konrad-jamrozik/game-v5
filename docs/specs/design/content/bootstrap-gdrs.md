@@ -184,7 +184,7 @@ Type owner: [Combat](../mechanics/combat.md).
 | `heavy_armor` | Armor | Referenced GDR | Base armor of the Armor of `commander`. |
 | `assault_armor` | Armor | Referenced GDR | Base armor of the Armor of `high_commander`. |
 | `juggernaut_suit` | Armor | Referenced GDR | Base armor of the Armor of `cult_leader`. |
-| `combat_parameters` | CombatParameters | Calculation parameter | The spread of the damage outcome around base weapon damage, the two retreat thresholds, the incapacitation threshold, the two values from which an attacking Agent's [Selection weights](../mechanics/combat.md#combat-rounds-and-results) follow, the 2% by which each [Weapon damage Upgrade](../mechanics/economy-and-upgrades.md#glossary) acquired raises the [Combat rating](../mechanics/combat.md#combat-rating) of the Agents, and the 1% by which each [Armor Upgrade](../mechanics/economy-and-upgrades.md#glossary) does. |
+| `combat_parameters` | CombatParameters | Calculation parameter | The spread of the damage outcome around base weapon damage, the two retreat thresholds, the incapacitation threshold, the two values from which an attacking Agent's [Selection weights](../mechanics/combat.md#combat-rounds-and-results) follow, and the seven values of the [Combat rating](../mechanics/combat.md#combat-rating): the rating bases of 30 effective max health, 0 effective armor, and 10 effective weapon damage, at which a Combatant's [rating factor](../mechanics/combat.md#combatant-condition-in-a-combat) is 1; the 1% by which each point of effective max health and each point of effective armor above its base raises the rating factor and the 2% by which each point of effective weapon damage does; and the team size exponent of 1.2. |
 
 ## Agent Recovery GDRs
 

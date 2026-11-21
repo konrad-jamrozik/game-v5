@@ -605,21 +605,21 @@
               <button
                 class="small"
                 data-act="preset-default"
-                title="The default expressions and parameters, with every part enabled"
+                title="The game's formula: the additive expressions and the game's parameters, with every part enabled"
               >
                 Restore all defaults
               </button>
               <button
                 class="small"
                 data-act="preset-multiplicative"
-                title="skill × health_mult × armor_mult × damage_mult, e.g. +10% health, +15% armor, and +30% damage make skill × 1.64; keeps the parameters"
+                title="skill × health_mult × armor_mult × damage_mult, the bonuses multiplying, e.g. +10% health, +15% armor, and +30% damage make skill × 1.64; keeps the parameters"
               >
                 Multiplicative bonuses
               </button>
               <button
                 class="small"
                 data-act="preset-additive"
-                title="skill × (1 + the sum of the three bonuses), e.g. +10% health, +15% armor, and +30% damage make skill × 1.55; keeps the parameters"
+                title="skill × (1 + the sum of the three bonuses), as in the game, e.g. +10% health, +15% armor, and +30% damage make skill × 1.55; keeps the parameters"
               >
                 Additive bonuses
               </button>
@@ -720,57 +720,62 @@
       const RESULTS = 'combat-rating-bench/results-v2'
       const PARAMS = [
         // [name, meaning, step of the input's arrows]
-        ['health_base', 'Baseline health.', 1],
-        ['cr_per_health', 'CR % per point of health above baseline, e.g. 0.01 is 1%.', 0.01],
-        ['armor_base', 'Baseline armor.', 1],
+        ['health_base', 'Baseline health. Defaults to the game’s rating_base_health.', 1],
+        [
+          'cr_per_health',
+          'CR % per point of health above baseline, e.g. 0.01 is 1%. Defaults to the game’s rating_bonus_per_health.',
+          0.01,
+        ],
+        ['armor_base', 'Baseline armor. Defaults to the game’s rating_base_armor.', 1],
         [
           'cr_per_armor',
-          'CR % per point of armor above baseline, e.g. 0.01 is 1%. Defaults to the game’s rating_bonus_per_armor_upgrade.',
+          'CR % per point of armor above baseline, e.g. 0.01 is 1%. Defaults to the game’s rating_bonus_per_armor.',
           0.0025,
         ],
-        ['damage_base', 'Baseline weapon damage.', 1],
+        ['damage_base', 'Baseline weapon damage. Defaults to the game’s rating_base_weapon_damage.', 1],
         [
           'cr_per_damage',
-          'CR % per point of weapon damage above baseline, e.g. 0.01 is 1%. Defaults to the game’s rating_bonus_per_weapon_damage_upgrade.',
+          'CR % per point of weapon damage above baseline, e.g. 0.01 is 1%. Defaults to the game’s rating_bonus_per_weapon_damage.',
           0.01,
         ],
         [
           'team_exp',
-          'Exponent of the team size in team_cr: 1 sums the Combatants; above 1 favours larger teams, e.g. 2 is the Lanchester square law.',
+          'Exponent of the team size in team_cr: 1 sums the Combatants; above 1 favours larger teams, e.g. 2 is the Lanchester square law. Defaults to the game’s rating_team_size_exponent.',
           0.05,
         ],
       ]
       const FORMULAS = {
+        // The game's formula, under COMBAT, Combat rating: the bonuses add rather than multiply.
         default: {
-          combatant: 'skill * health_mult * armor_mult * damage_mult',
+          combatant: 'skill * (1 + (health_mult - 1) + (armor_mult - 1) + (damage_mult - 1))',
           team: 'sum * count ** team_exp / count',
         },
         lanchester: { combatant: 'skill * health_mult * armor_mult * damage_mult', team: 'sqrt(sum * count)' },
-        // The bonuses add rather than multiply, e.g. +10% health, +15% armor, and +30% damage make skill × 1.55.
-        // The default expressions alone, keeping the parameters, unlike Restore all defaults.
+        // The bonuses multiply, e.g. +10% health, +15% armor, and +30% damage make skill × 1.64.
         multiplicative: {
           combatant: 'skill * health_mult * armor_mult * damage_mult',
           team: 'sum * count ** team_exp / count',
         },
+        // The game's expressions alone, keeping the parameters, unlike Restore all defaults.
         additive: {
           combatant: 'skill * (1 + (health_mult - 1) + (armor_mult - 1) + (damage_mult - 1))',
           team: 'sum * count ** team_exp / count',
         },
       }
       /**
-       * The default formula and setup. The CR per point of armor and of weapon damage are the game's bonus of each
-       * Rating Upgrade, divided by what one Upgrade adds, once the content is loaded.
+       * The default formula and setup: the game's Combat rating, its parameters read from CombatParameters once the
+       * content is loaded.
        */
       const defaults = () => ({
         formula: {
           params: {
-            health_base: 30,
-            cr_per_health: 0.01,
-            armor_base: 0,
-            cr_per_armor: contentBonus('rating_bonus_per_armor_upgrade', 'armor') ?? 0.01,
-            damage_base: 10,
-            cr_per_damage: contentBonus('rating_bonus_per_weapon_damage_upgrade', 'weapon_damage') ?? 0.02,
-            team_exp: 1,
+            health_base: contentValue('rating_base_health') ?? 30,
+            cr_per_health: contentValue('rating_bonus_per_health') ?? 0.01,
+            armor_base: contentValue('rating_base_armor') ?? 0,
+            cr_per_armor: contentValue('rating_bonus_per_armor') ?? 0.01,
+            damage_base: contentValue('rating_base_weapon_damage') ?? 10,
+            cr_per_damage: contentValue('rating_bonus_per_weapon_damage') ?? 0.02,
+            team_exp: contentValue('rating_team_size_exponent') ?? 1.2,
           },
           /** The parameters the designer edited, by typing or by Fit; every other one follows the content. */
           edited: {},
@@ -800,10 +805,10 @@
       })
 
       let info = null
-      function contentBonus(name, upgrade) {
-        const bonus = info?.gdr.combatValues[name]
-        const inc = info?.gdr.upgradeIncrements[upgrade] ?? 1
-        return typeof bonus === 'number' ? Number((bonus / inc).toPrecision(4)) : null
+      /** A CombatParameters value of the content, or null before the content is loaded. */
+      function contentValue(name) {
+        const v = info?.gdr.combatValues[name]
+        return typeof v === 'number' ? v : null
       }
       /**
        * The parameter values before they were read from the content. A formula saved before the page recorded which
