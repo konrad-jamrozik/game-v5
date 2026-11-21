@@ -22,7 +22,7 @@ formulas:
   - label: 'Incapacitated'
     text: 'Alive but unable to fight: effective skill at or below {combat_parameters.incapacitation_skill_fraction} × skill, or exhaustion of {agent_parameters.exhaustion_incapacitation} or more'
   - label: 'Combat rating'
-    text: 'The effective skill of everyone on a side who is able to fight, added up; for your Agents, raised by {combat_parameters.rating_bonus_per_upgrade} × that sum for each Weapon damage and Armor Upgrade bought, rounded down'
+    text: 'The effective skill of everyone on a side who is able to fight, added up; for your Agents, raised by {combat_parameters.rating_bonus_per_weapon_damage_upgrade} × that sum for each Weapon damage Upgrade bought and {combat_parameters.rating_bonus_per_armor_upgrade} × that sum for each Armor Upgrade bought, rounded down'
   - label: 'End of the Combat'
     text: 'As soon as no Enemy or no Agent is able to fight, or after a round in which the team retreats'
 see_also: [mechanics_damage, mechanics_retreat, mechanics_skill, mechanics_missions]

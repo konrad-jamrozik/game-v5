@@ -21,8 +21,8 @@ export interface SiteJob {
   agent: unknown
   n: number
   gdrValues: Record<string, number>
-  /** The Rating Upgrades of the Agents' side: the test team's Weapon damage and Armor Upgrades together. */
-  ratingUpgrades: number
+  /** The Rating Upgrades of the Agents' side: the test team's Weapon damage Upgrades and Armor Upgrades, counted apart. */
+  ratingUpgrades: { weaponDamage: number; armor: number }
   target: number
   /** Whether to search for the smallest team that reaches the target; without it, only the test team is fought. */
   findTeam: boolean
@@ -66,7 +66,7 @@ export interface Probe {
   enemies: unknown[]
   agent: unknown
   gdrValues: Record<string, number>
-  ratingUpgrades: number
+  ratingUpgrades: { weaponDamage: number; armor: number }
   target: number
   trials: number
 }
