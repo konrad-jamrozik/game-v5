@@ -439,8 +439,12 @@
       .k-ex {
         color: #ffd166;
       }
+      .k-df {
+        color: #f0a8ff;
+      }
       .sgrid .cell .n.k-cr,
-      .sgrid .cell .n.k-ex {
+      .sgrid .cell .n.k-ex,
+      .sgrid .cell .n.k-df {
         opacity: 1;
         font-weight: 500;
       }
@@ -449,6 +453,9 @@
       }
       .sgrid .cell .n.k-ex {
         color: #ffd166;
+      }
+      .sgrid .cell .n.k-df {
+        color: #f0a8ff;
       }
       .sgrid .cell.diff {
         background: transparent;
@@ -807,10 +814,14 @@
             ><input type="checkbox" data-bind="sampler.showExhaustion" data-type="bool" />
             <span class="k-ex">Agent exhaustion</span></label
           >
+          <label class="inline" title="The win rate minus the rating ratio, in points, e.g. +8% for 98% and 90%"
+            ><input type="checkbox" data-bind="sampler.showDiff" data-type="bool" />
+            <span class="k-df">CR to win diff</span></label
+          >
           <label
             class="inline"
             title="How far each win rate is from its rating ratio: red when the Agents win less than their rating says, yellow when more; empty when they match, or when a rating of 100% or more wins every Combat"
-            ><input type="checkbox" data-bind="sampler.diffMode" data-type="bool" /> CR to win diff</label
+            ><input type="checkbox" data-bind="sampler.diffMode" data-type="bool" /> CR to win diff map</label
           >
           <span id="samplerInfo" class="note"></span>
         </div>
@@ -964,6 +975,7 @@
           showWin: true,
           /** Shows each sample's win rate against its rating ratio in place of every other figure. */
           diffMode: false,
+          showDiff: false,
           count: { mode: 'x', value: 20, from: 10, to: 100, step: 10 },
           skill: { mode: 'fixed', value: 250, from: 100, to: 500, step: 50 },
           damage: { mode: 'y', value: 0, from: 0, to: 8, step: 2 },
@@ -2340,6 +2352,8 @@
        * win less than their ratio, yellow when more, at full strength from 20 points; none when a ratio of 100% or more
        * wins every Combat, e.g. 110% and 98% is 12 points of red, and 90% and 98% is 8 points of yellow.
        */
+      /** A difference in points with its sign, e.g. +8% or −12%. */
+      const signedPct = (d) => `${d >= 0.005 ? '+' : d <= -0.005 ? '−' : ''}${Math.round(Math.abs(d) * 100)}%`
       function diffHtml(cell, r, queued) {
         const base = `data-sample="${esc(cell.id)}"`
         if (!r) {
@@ -2381,12 +2395,15 @@
           s.showExhaustion
             ? `<span class="n k-ex" title="Agent exhaustion: the mean exhaustion of the Agents alive at the end of a Combat">${Number.isFinite(exhaustionOf(shown)) ? Math.round(exhaustionOf(shown)) : '–'}</span>`
             : '',
+          s.showDiff
+            ? `<span class="n k-df" title="CR to win diff: the win rate minus the rating ratio">${shown ? signedPct(winOf(shown) - cell.ratio) : '–'}</span>`
+            : '',
         ]
         return `<div class="${cls}" style="${style}" data-sample="${esc(cell.id)}">${lines.join('')}</div>`
       }
       /** The Sampler's dimensions as inputs; drawn anew only when a mode changes, so typing keeps its focus. */
       function renderSamplerDims() {
-        for (const name of ['showWin', 'showRatio', 'showCrLeft', 'showExhaustion', 'diffMode']) {
+        for (const name of ['showWin', 'showRatio', 'showCrLeft', 'showExhaustion', 'showDiff', 'diffMode']) {
           const box = $(`[data-bind="sampler.${name}"]`)
           box.checked = state.sampler[name]
           // The diff shows alone, so the other figures wait until it is unchecked.
