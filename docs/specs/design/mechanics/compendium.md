@@ -5,7 +5,7 @@
 | Spec ID | COMP |
 | Family | Mechanics |
 | Audience | Engine designer, Content designer, UI designer, Implementer |
-| Owns | The CompendiumArticle GDR, how the Placeholders and Article links of a Compendium article are resolved, when a Compendium article is Player-visible, including which EnemyArchetypes and Weapons are Met subjects, what Player API reports of it, and the Revealed Compendium. |
+| Owns | The CompendiumArticle GDR, how the Placeholders and Article links of a Compendium article are resolved, when a Compendium article is Player-visible, including which EnemyArchetypes, Weapons, and Armors are Met subjects, what Player API reports of it, and the Revealed Compendium. |
 | Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
@@ -27,7 +27,7 @@ These terms are specific to the Compendium.
 | Placeholder | A marker in the text of a Compendium article that names a GDR property and is replaced by the value of that property. |
 | Article term | A word or phrase that names a Compendium article, so that its first mention in another article links to that article. |
 | Article link | A link from a mention of an Article term, or from a See also entry, to the Compendium article it names. |
-| Met subject | An EnemyArchetype or Weapon that the Player has faced or can foresee facing in a [World state](../foundation/engine-contract.md#player-actions-and-turns), under [Met subjects](#met-subjects). |
+| Met subject | An EnemyArchetype, Weapon, or Armor that the Player has faced or can foresee facing in a [World state](../foundation/engine-contract.md#player-actions-and-turns), under [Met subjects](#met-subjects). |
 | Revealed Compendium | Every Compendium article of the [Game build](../foundation/core-concepts.md#game-build-and-content), each resolved as though every article were Player-visible, under [Revealed Compendium](#revealed-compendium). |
 
 # Compendium article GDRs
@@ -180,7 +180,7 @@ Rule 9 makes a renamed or removed GDR property a data defect of every article th
 In each [World state](../foundation/engine-contract.md#player-actions-and-turns), a Compendium article is Player-visible exactly when its `visible_when`, if it has one, holds in that World state, under [Evaluating a Condition](../foundation/conditions.md#evaluating-a-condition) in Conditions, and one of the following holds:
 
 1. It is a Guide article or a Mechanics article.
-2. It is a Subject article and its subject is Player-visible in that World state: the specification that owns the subject's Type declares, as [Player-visible information](../foundation/engine-contract.md#api-surfaces) in that World state, a value that includes the subject GDR. When the subject is an EnemyArchetype or a Weapon, it must also be a Met subject in that World state, under Met subjects.
+2. It is a Subject article and its subject is Player-visible in that World state: the specification that owns the subject's Type declares, as [Player-visible information](../foundation/engine-contract.md#api-surfaces) in that World state, a value that includes the subject GDR. When the subject is an EnemyArchetype, a Weapon, or an Armor, it must also be a Met subject in that World state, under Met subjects.
 
 Whether an article is Player-visible is a [Derived value](../foundation/core-concepts.md#value-classification) of the World state in which it is read; it is never stored. It changes only when the visibility of its subject changes, its subject becomes a Met subject, or its `visible_when` starts to hold, so a Subject article without `visible_when` about a subject of another Type becomes Player-visible in the same World state as its subject, e.g. in the World state after the Advance turn whose Mission resolution step discovers its Lead.
 
@@ -191,7 +191,7 @@ The following table restates, for the Types the [Bootstrap GDRs](../content/boot
 | AgentArchetype | [Player-visible information](agents-spec.md#player-visible-information) in Agents | In every World state. |
 | EnemyArchetype | [Player-visible information](combat.md#player-visible-information) in [Combat](domain-model.md#combat) | In every World state; its article also needs it to be a Met subject. |
 | Weapon | [Player-visible information](combat.md#player-visible-information) in Combat | In every World state; its article also needs it to be a Met subject. |
-| Armor | [Player-visible information](combat.md#player-visible-information) in Combat | In every World state. |
+| Armor | [Player-visible information](combat.md#player-visible-information) in Combat | In every World state; its article also needs it to be a Met subject. |
 | Upgrade | [Player-visible information](economy-and-upgrades.md#player-visible-information) in Economy and Upgrades | In every World state. |
 | FactionArchetype | [Player-visible information](factions.md#player-visible-information) in Factions | While a [Faction](domain-model.md#factions) whose [Archetype](../foundation/core-concepts.md#campaign-instances) it is exists, i.e. in every World state for an initial Faction's Archetype. |
 | Lead | [Player-visible information](leads-and-progression.md#player-visible-information) in Leads and Progression | Once the [Lead](domain-model.md#leads-investigations-mission-sites-and-missions) is discovered, which is permanent, under [Lead discovery](leads-and-progression.md#lead-discovery). |
@@ -199,10 +199,11 @@ The following table restates, for the Types the [Bootstrap GDRs](../content/boot
 
 ## Met subjects
 
-Every EnemyArchetype and every Weapon is Player-visible in every World state, so that a Mission site or a [Combat report](domain-model.md#combat) can always name the Enemies in it. An article about each of them from the first [Turn](../foundation/engine-contract.md#player-actions-and-turns) would still tell the Player more than the Player may know, e.g. that a Cult leader with an anti-materiel rifle waits at the end of the Campaign. The article about one therefore waits until the Player meets its subject, i.e. until a Mission site the Player knows of, or can foresee, brings it into play. The following rules are complete. In a World state:
+Every EnemyArchetype, Weapon, and Armor is Player-visible in every World state, so that a Mission site or a [Combat report](domain-model.md#combat) can always name the Enemies in it. An article about each of them from the first [Turn](../foundation/engine-contract.md#player-actions-and-turns) would still tell the Player more than the Player may know, e.g. that a Cult leader with an anti-materiel rifle and a juggernaut suit waits at the end of the Campaign. The article about one therefore waits until the Player meets its subject, i.e. until a Mission site the Player knows of, or can foresee, brings it into play. The following rules are complete. In a World state:
 
 - **EnemyArchetype:** an EnemyArchetype is a Met subject when the `enemies` of a MissionSiteArchetype that is Player-visible in that World state include it, under [Player-visible information](missions.md#player-visible-information) in Missions.
 - **Weapon:** a Weapon is a Met subject when it is the `weapon` of an AgentArchetype, or of an EnemyArchetype that is a Met subject in that World state.
+- **Armor:** an Armor is a Met subject when it is the `armor` of an AgentArchetype, or of an EnemyArchetype that is a Met subject in that World state.
 
 Whether a GDR is a Met subject is a Derived value of the World state, never stored. It follows the visibility of the MissionSiteArchetypes, so the article about an [Enemy](domain-model.md#combat) becomes Player-visible when a Lead is discovered that creates a Mission site holding that Enemy, or when a Mission site holding it is created, whichever comes first, e.g. with the Bootstrap GDRs, discovering a Lead that creates an Apprehend member Mission site makes the articles about the initiate, the operative, and the pistol Player-visible, while the article about the sidearm is Player-visible from the start because every Agent carries one.
 

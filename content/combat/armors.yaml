@@ -7,3 +7,38 @@ id: no_armor
 type: Armor
 name: None
 base_armor: 0
+---
+id: padded_jacket
+type: Armor
+name: Padded jacket
+base_armor: 5
+---
+id: ballistic_vest
+type: Armor
+name: Ballistic vest
+base_armor: 20
+---
+id: plate_carrier
+type: Armor
+name: Plate carrier
+base_armor: 25
+---
+id: tactical_armor
+type: Armor
+name: Tactical armor
+base_armor: 40
+---
+id: heavy_armor
+type: Armor
+name: Heavy armor
+base_armor: 50
+---
+id: assault_armor
+type: Armor
+name: Assault armor
+base_armor: 60
+---
+id: juggernaut_suit
+type: Armor
+name: Juggernaut suit
+base_armor: 80

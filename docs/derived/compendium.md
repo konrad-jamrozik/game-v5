@@ -520,6 +520,72 @@ The backbone of the Agency: a trained [operative](#operative) who can investigat
 
 ## Subject articles: Armor
 
+### Assault armor
+
+Source: `content/compendium/compendium_articles/assault_armor_article.yaml`
+
+Full-body [armor](#damage) built to breach a defended position under fire.
+
+| `assault_armor` | Armor           |
+| --------------- | --------------- |
+| `name`          | `Assault armor` |
+| `base_armor`    | `60`            |
+
+### Ballistic vest
+
+Source: `content/compendium/compendium_articles/ballistic_vest_article.yaml`
+
+Soft body [armor](#damage) that stops most handgun rounds, the standard protection of trained fighters.
+
+| `ballistic_vest` | Armor            |
+| ---------------- | ---------------- |
+| `name`           | `Ballistic vest` |
+| `base_armor`     | `20`             |
+
+### Heavy armor
+
+Source: `content/compendium/compendium_articles/heavy_armor_article.yaml`
+
+Thick plates over most of the body, heavy enough that only those who command from the front bother with it.
+
+| `heavy_armor` | Armor         |
+| ------------- | ------------- |
+| `name`        | `Heavy armor` |
+| `base_armor`  | `50`          |
+
+### Juggernaut suit
+
+Source: `content/compendium/compendium_articles/juggernaut_suit_article.yaml`
+
+A suit of layered plates that shrugs off what would kill anyone else. Only a cult's leader is guarded this well.
+
+| `juggernaut_suit` | Armor             |
+| ----------------- | ----------------- |
+| `name`            | `Juggernaut suit` |
+| `base_armor`      | `80`              |
+
+### Padded jacket
+
+Source: `content/compendium/compendium_articles/padded_jacket_article.yaml`
+
+A thick coat lined against knives and stray rounds, worn by those who direct a cult's first recruits.
+
+| `padded_jacket` | Armor           |
+| --------------- | --------------- |
+| `name`          | `Padded jacket` |
+| `base_armor`    | `5`             |
+
+### Plate carrier
+
+Source: `content/compendium/compendium_articles/plate_carrier_article.yaml`
+
+A vest holding hard plates over the chest and back, worn by those who [lead](#leads) [soldiers](#soldier).
+
+| `plate_carrier` | Armor           |
+| --------------- | --------------- |
+| `name`          | `Plate carrier` |
+| `base_armor`    | `25`            |
+
 ### Service armor
 
 Source: `content/compendium/compendium_articles/service_armor_article.yaml`
@@ -530,6 +596,17 @@ The protective gear the Agency issues to every [Agent](#agents). It is issued wi
 | --------------- | --------------- |
 | `name`          | `Service armor` |
 | `base_armor`    | `0`             |
+
+### Tactical armor
+
+Source: `content/compendium/compendium_articles/tactical_armor_article.yaml`
+
+Plates, a helmet, and guards for the limbs, made for fighters who expect to be shot at.
+
+| `tactical_armor` | Armor            |
+| ---------------- | ---------------- |
+| `name`           | `Tactical armor` |
+| `base_armor`     | `40`             |
 
 ## Subject articles: EnemyArchetype
 
@@ -545,7 +622,7 @@ A senior officer who directs the larger [operations](#faction-operations) of a c
 | `base_skill`  | `300`          |
 | `base_health` | `40`           |
 | `weapon`      | `heavy_rifle`  |
-| `armor`       | `no_armor`     |
+| `armor`       | `heavy_armor`  |
 
 ### Cult leader
 
@@ -559,7 +636,7 @@ The heart of a cult, guarded in its headquarters. Only a strong, rested team sho
 | `base_skill`  | `800`                 |
 | `base_health` | `80`                  |
 | `weapon`      | `anti_materiel_rifle` |
-| `armor`       | `no_armor`            |
+| `armor`       | `juggernaut_suit`     |
 
 ### Elite
 
@@ -567,13 +644,13 @@ Source: `content/compendium/compendium_articles/elite_article.yaml`
 
 A hand-picked veteran, far more dangerous than a [Soldier](#soldier). Only well-trained [Agents](#agents) meet an Elite on even terms.
 
-| `elite`       | EnemyArchetype  |
-| ------------- | --------------- |
-| `name`        | `Elite`         |
-| `base_skill`  | `250`           |
-| `base_health` | `40`            |
-| `weapon`      | `assault_rifle` |
-| `armor`       | `no_armor`      |
+| `elite`       | EnemyArchetype   |
+| ------------- | ---------------- |
+| `name`        | `Elite`          |
+| `base_skill`  | `250`            |
+| `base_health` | `40`             |
+| `weapon`      | `assault_rifle`  |
+| `armor`       | `tactical_armor` |
 
 ### Handler
 
@@ -581,13 +658,13 @@ Source: `content/compendium/compendium_articles/handler_article.yaml`
 
 A junior officer who runs a cell of [Initiates](#initiate) and [Operatives](#operative).
 
-| `handler`     | EnemyArchetype |
-| ------------- | -------------- |
-| `name`        | `Handler`      |
-| `base_skill`  | `80`           |
-| `base_health` | `25`           |
-| `weapon`      | `sidearm`      |
-| `armor`       | `no_armor`     |
+| `handler`     | EnemyArchetype  |
+| ------------- | --------------- |
+| `name`        | `Handler`       |
+| `base_skill`  | `80`            |
+| `base_health` | `25`            |
+| `weapon`      | `sidearm`       |
+| `armor`       | `padded_jacket` |
 
 ### High commander
 
@@ -601,7 +678,7 @@ One of the few who answer only to the [Cult leader](#cult-leader). A High comman
 | `base_skill`     | `500`            |
 | `base_health`    | `50`             |
 | `weapon`         | `machine_gun`    |
-| `armor`          | `no_armor`       |
+| `armor`          | `assault_armor`  |
 
 ### Initiate
 
@@ -623,13 +700,13 @@ Source: `content/compendium/compendium_articles/lieutenant_article.yaml`
 
 An officer who [leads](#leads) [Soldiers](#soldier) in the field, and fights a little better than those under command.
 
-| `lieutenant`  | EnemyArchetype |
-| ------------- | -------------- |
-| `name`        | `Lieutenant`   |
-| `base_skill`  | `140`          |
-| `base_health` | `30`           |
-| `weapon`      | `battle_rifle` |
-| `armor`       | `no_armor`     |
+| `lieutenant`  | EnemyArchetype  |
+| ------------- | --------------- |
+| `name`        | `Lieutenant`    |
+| `base_skill`  | `140`           |
+| `base_health` | `30`            |
+| `weapon`      | `battle_rifle`  |
+| `armor`       | `plate_carrier` |
 
 ### Operative
 
@@ -651,13 +728,13 @@ Source: `content/compendium/compendium_articles/soldier_article.yaml`
 
 A seasoned fighter, roughly a match for a newly [hired](#hiring-and-upkeep) [Agent](#agents). Soldiers guard the places a [Faction](#factions) cannot afford to lose.
 
-| `soldier`     | EnemyArchetype |
-| ------------- | -------------- |
-| `name`        | `Soldier`      |
-| `base_skill`  | `120`          |
-| `base_health` | `30`           |
-| `weapon`      | `rifle`        |
-| `armor`       | `no_armor`     |
+| `soldier`     | EnemyArchetype   |
+| ------------- | ---------------- |
+| `name`        | `Soldier`        |
+| `base_skill`  | `120`            |
+| `base_health` | `30`             |
+| `weapon`      | `rifle`          |
+| `armor`       | `ballistic_vest` |
 
 ## Subject articles: FactionArchetype
 

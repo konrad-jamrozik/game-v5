@@ -20,7 +20,7 @@ name: Handler
 base_skill: 80
 base_health: 25
 weapon: sidearm
-armor: no_armor
+armor: padded_jacket
 ---
 id: soldier
 type: EnemyArchetype
@@ -28,7 +28,7 @@ name: Soldier
 base_skill: 120
 base_health: 30
 weapon: rifle
-armor: no_armor
+armor: ballistic_vest
 ---
 id: lieutenant
 type: EnemyArchetype
@@ -36,7 +36,7 @@ name: Lieutenant
 base_skill: 140
 base_health: 30
 weapon: battle_rifle
-armor: no_armor
+armor: plate_carrier
 ---
 id: elite
 type: EnemyArchetype
@@ -44,7 +44,7 @@ name: Elite
 base_skill: 250
 base_health: 40
 weapon: assault_rifle
-armor: no_armor
+armor: tactical_armor
 ---
 id: commander
 type: EnemyArchetype
@@ -52,7 +52,7 @@ name: Commander
 base_skill: 300
 base_health: 40
 weapon: heavy_rifle
-armor: no_armor
+armor: heavy_armor
 ---
 id: high_commander
 type: EnemyArchetype
@@ -60,7 +60,7 @@ name: High commander
 base_skill: 500
 base_health: 50
 weapon: machine_gun
-armor: no_armor
+armor: assault_armor
 ---
 id: cult_leader
 type: EnemyArchetype
@@ -68,4 +68,4 @@ name: Cult leader
 base_skill: 800
 base_health: 80
 weapon: anti_materiel_rifle
-armor: no_armor
+armor: juggernaut_suit
