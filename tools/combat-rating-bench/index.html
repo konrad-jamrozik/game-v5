@@ -593,21 +593,12 @@
       const STORE = 'combat-rating-bench/v2'
       const RESULTS = 'combat-rating-bench/results-v2'
       const PARAMS = [
-        ['health_base', 'Health that adds nothing to the rating, e.g. 30, an Agent’s health.'],
-        [
-          'health_per_point',
-          'Rating gained per point of health above health_base, as a fraction, e.g. 0.01 is +1% per point: an Enemy of health 40 rates ×1.10 and one of health 20 ×0.90.',
-        ],
-        ['armor_base', 'Armor that adds nothing to the rating, e.g. 0, an Agent’s armor without Upgrades.'],
-        [
-          'armor_per_point',
-          'Rating gained per point of armor above armor_base, as a fraction. Each Armor Upgrade adds 1 point, so for Agents this is the rating per Armor Upgrade, e.g. 0.01 is +1% per Upgrade and A10 rates ×1.10.',
-        ],
-        ['damage_base', 'Weapon damage that adds nothing to the rating, e.g. 10, an Agent’s weapon without Upgrades.'],
-        [
-          'damage_per_point',
-          'Rating gained per point of weapon damage above damage_base, as a fraction. Each Weapon damage Upgrade adds 1 point, so for Agents this is the rating per Weapon damage Upgrade, e.g. 0.01 is +1% per Upgrade and W10 rates ×1.10; it applies to Enemies’ weapons too, e.g. a Rifle’s 14 rates ×1.04.',
-        ],
+        ['health_base', 'Baseline health.'],
+        ['health_per_point', 'CR % per point of health above baseline, e.g. 0.01 is 1%.'],
+        ['armor_base', 'Baseline armor.'],
+        ['armor_per_point', 'CR % per point of armor above baseline, e.g. 0.01 is 1%.'],
+        ['damage_base', 'Baseline weapon damage.'],
+        ['damage_per_point', 'CR % per point of weapon damage above baseline, e.g. 0.01 is 1%.'],
         [
           'team_exp',
           'Exponent of the team size in team_cr: 1 sums the Combatants; above 1 favours larger teams, e.g. 2 is the Lanchester square law.',
