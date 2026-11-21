@@ -1005,11 +1005,14 @@
           f(250, esc(m.name), m.name),
           f(64, `${fmt(m.agents)} <span class="dim">ag</span>`, 'Agents sent', true),
           f(
-            170,
+            230,
             m.agentsRating === null
               ? ''
-              : `<span class="dim">CR</span> ${fmt(m.agentsRating)} <span class="dim">vs</span> ${fmt(m.enemiesRating)}`,
-            "The team's Combat rating against the Enemies' at Combat start",
+              : `<span class="dim">CR</span> ${fmt(m.agentsRating)} <span class="dim">vs</span> ${fmt(m.enemiesRating)}` +
+                  (m.enemiesRating > 0
+                    ? ` <span class="dim">=</span> ${((m.agentsRating / m.enemiesRating) * 100).toFixed(0)}%`
+                    : ''),
+            "The team's Combat rating against the Enemies' at Combat start, and the team's as a percentage of the Enemies'",
           ),
           f(
             48,
