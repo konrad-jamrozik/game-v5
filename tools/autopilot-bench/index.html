@@ -210,6 +210,25 @@
         gap: 10px;
         min-width: 0;
       }
+      .gloss {
+        display: grid;
+        grid-template-columns: max-content minmax(0, 68ch);
+        gap: 8px 24px;
+        margin: 0;
+      }
+      .gloss dt {
+        font-weight: 600;
+      }
+      .gloss dd {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.4;
+      }
+      @media (max-width: 800px) {
+        .gloss {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
       .panel.read {
         border-top-color: var(--accent-dim);
       }
@@ -441,7 +460,7 @@
         <p class="note" id="engine"></p>
       </div>
       <div class="bar">
-        <nav><a href="#params">Parameters</a><a href="#campaigns">Campaigns</a></nav>
+        <nav><a href="#params">Parameters</a><a href="#campaigns">Campaigns</a><a href="#glossary">Glossary</a></nav>
         <div class="acts"><span id="count">0 changed</span><button id="reset">Reset parameters</button></div>
       </div>
       <div id="app" style="display: contents"></div>
@@ -501,12 +520,7 @@
         {
           title: 'Reserve and money',
           params: [
-            [
-              'reservePct',
-              'reserve',
-              'The Agent reserve: % of the roster kept as Deployable Agents on Standby or Training for the next Mission site.',
-              1,
-            ],
+            ['reservePct', 'reserve', 'The size of the Agent reserve, as a % of the roster.', 1],
             [
               'savingsFloorTurns',
               'floor',
@@ -640,6 +654,32 @@
 
       function numInput(id, value, changed, step) {
         return `<input type="number" id="${id}" value="${esc(value)}" step="${step}" min="0"${changed ? ' class="chg"' : ''} />`
+      }
+
+      // The terms of the Basic Autopilot AI that this page uses, as its specification defines them. Game terms, e.g.
+      // Fit to start work, are not repeated here.
+      const GLOSSARY = [
+        [
+          'Deployable Agent',
+          'An Agent the AI can deploy to a Mission site now: In base, Fit to start work (exhaustion of at most <code>exhaustion_work_start_max</code> and no health lost), and not meeting the incapacitation condition with its current values, so that the engine accepts it. Such an Agent is on Standby or Training.',
+        ],
+        [
+          'Agent reserve',
+          'The Deployable Agents the AI keeps on Standby or Training rather than giving them Contracting or an Investigation, so that it can form a team for the next Mission site. Its target size is <code>reservePct</code> of the roster.',
+        ],
+        [
+          'Savings floor',
+          'The money the AI keeps unspent so that the Agency can pay several Turns of upkeep even if contracting income falls short. <code>savingsFloorTurns</code> sets it.',
+        ],
+        [
+          'Expected income',
+          'The projected income the Agency will have once every Agent In transit to Contracting has arrived: its funding plus the contributions of every Agent whose Assignment is Contracting.',
+        ],
+      ]
+
+      function renderGlossary() {
+        const rows = GLOSSARY.map(([t, d]) => `<dt>${esc(t)}</dt><dd>${d}</dd>`).join('')
+        return `<section id="glossary"><div class="shead"><h2>Glossary</h2><p>The terms of the Basic Autopilot AI that this page uses. Game terms are in the game's own glossary.</p></div><div class="panel"><dl class="gloss">${rows}</dl></div></section>`
       }
 
       function renderParams() {
@@ -791,7 +831,7 @@
         const L2 = [
           [
             'CR ready',
-            'Combat rating of the Agents the AI may send to a Mission site now, i.e. its Deployable Agents: In base, Fit to start work, and not too worn down to fight; after it, their number of all Serving Agents',
+            'Combat rating of the Deployable Agents, i.e. those the AI may send to a Mission site now; after it, their number of all Serving Agents',
             (s) => `${fmt(s.ratingReady)} <span class="dim">(${fmt(s.ready)}/${fmt(s.agents)})</span>`,
             140,
           ],
@@ -842,7 +882,7 @@
 
       function renderHead() {
         $('legend').innerHTML =
-          `<b>CR ready</b> is the Combat rating of the Agents the AI may send to a Mission site now: its Deployable Agents, i.e. on Standby or Training and Fit to start work (exhaustion of at most <code>exhaustion_work_start_max</code> and no health lost), that do not meet the incapacitation condition, so that the engine lets them be deployed; their number out of all Serving Agents is in brackets, e.g. (29/155), and a team is further limited by the free Transport cap. <b>CR all</b> is the Combat rating of every Serving Agent at full health and exhaustion 0. A label with <b>+</b>, e.g. <b>+Weapon</b>, is how many times that Upgrade was bought. Work: Contracting, Training, Investigation, Standby and Fit to start work, Exhausted on Standby (not Fit to start work, so resting until the AI may send it), Recovery, Deployed. Each Faction shows the next Initiative Mission site to win against it, one level above the highest Won. Missions: Won / Lost / Expired. Hover a label for its meaning. Time is the latest run's wall-clock time, and the total of every run. <b>Load params</b> copies a Campaign's parameters into the Parameters editor above, e.g. to launch a variant of it.`
+          `<b>CR ready</b> is the Combat rating of the Deployable Agents, under Glossary below; their number out of all Serving Agents is in brackets, e.g. (29/155), and a team is further limited by the free Transport cap. <b>CR all</b> is the Combat rating of every Serving Agent at full health and exhaustion 0. A label with <b>+</b>, e.g. <b>+Weapon</b>, is how many times that Upgrade was bought. Work: Contracting, Training, Investigation, Standby and Fit to start work, Exhausted on Standby (not Fit to start work, so resting until the AI may send it), Recovery, Deployed. Each Faction shows the next Initiative Mission site to win against it, one level above the highest Won. Missions: Won / Lost / Expired. Hover a label for its meaning. Time is the latest run's wall-clock time, and the total of every run. <b>Load params</b> copies a Campaign's parameters into the Parameters editor above, e.g. to launch a variant of it.`
       }
 
       const rows = new Map()
@@ -1057,7 +1097,7 @@
         DEFAULTS = INFO.defaults ?? {}
         UPGRADES = INFO.upgrades ?? []
         for (const k of Object.keys(edited)) if (!(k in DEFAULTS)) delete edited[k]
-        $('app').innerHTML = renderParams() + renderCampaignsSection()
+        $('app').innerHTML = renderParams() + renderCampaignsSection() + renderGlossary()
         bindParams()
         bindCampaigns()
         changed()

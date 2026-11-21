@@ -53,7 +53,7 @@ The page lists every value of `BASIC_AI_THRESHOLDS`, the engine's defaults, and 
 
 | Path          | Content                                                                                     |
 | ------------- | ------------------------------------------------------------------------------------------- |
-| `index.html`  | The page: the parameters, the launch, and the Campaign rows.                                |
+| `index.html`  | The page: the parameters, the launch, the Campaign rows, and the glossary.                  |
 | `server.ts`   | Serves the page, holds the Campaigns and their runs, and starts the worker threads.         |
 | `worker.ts`   | Loads the engine and the AI from the Implementation clone and plays the Campaigns given it. |
 | `protocol.ts` | The messages between the server and its worker threads, and the stats a Campaign reports.   |
