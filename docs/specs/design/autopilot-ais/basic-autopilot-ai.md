@@ -87,7 +87,7 @@ What discovers a Lead is not Player-visible, so it does not trace a Faction's ch
 
 The [Game build](../foundation/core-concepts.md#game-build-and-content) offers the Basic Autopilot AI with one fixed set of Tuning parameters, the Implementer's choice, and a player cannot change them. So that the thresholds can be tuned against whole Campaigns, an Implementation builds the Basic Autopilot AI from a given set of Tuning parameters, and lets developer tooling build it with values other than the Game build's, e.g. a tool that plays many Campaigns with each of several sets of values and compares them. How developer tooling reaches that build, e.g. a function of the Implementation's own code, is the Implementer's choice; it is not part of any API of the engine, and a Basic Autopilot AI built with other values is not offered by the Game build.
 
-The following list of Tuning parameters is exhaustive. The first group holds the thresholds of the goals. The second group goes beyond the goals, and each of its parameters has a neutral value with which the Basic Autopilot AI plays exactly as Goals and Turn routine state; the Game build uses the neutral values.
+The following list of Tuning parameters is exhaustive. The first group holds the thresholds of the goals. The second group goes beyond the goals, and each of its parameters has a neutral value with which the Basic Autopilot AI plays exactly as Goals and Turn routine state; the Game build uses the neutral values. The Game designer has set the values of the Game build for Target roster and Cap shares, under Game designer values; every other Tuning parameter remains the Implementer's choice.
 
 | Tuning parameter | What it sets |
 | --- | --- |
@@ -103,6 +103,15 @@ The following list of Tuning parameters is exhaustive. The first group holds the
 | Contracting share | The Agents that step 5 keeps on Contracting, as a share of the roster, even once Expected income covers projected upkeep with the margin; step 5 then assigns Fully rested Deployable Agents beyond the Agent reserve until both hold. Neutral value: 0%. |
 | Max assignment exhaustion allowed | The exhaustion above which step 1 recalls an Agent on Training or Contracting to Standby to rest. A value of `exhaustion_work_limit` of AgentParameters or more has the effect of `exhaustion_work_limit`, because the Agent's Forced return sends it to Standby first. Neutral value: `exhaustion_work_limit`, with which step 1 recalls no Agent and Forced return alone ends its work. |
 | Upgrade weights | A non-negative weight of each Upgrade other than a Cap Upgrade in the rotation of Grow with the threat: the rotation buys the one with the fewest acquisitions per unit of weight, counting the acquisition it would make, and never one of weight 0. E.g., an Upgrade of weight 2 is bought about twice as often as one of weight 1. Neutral value: weight 1 for every Upgrade, with which the rotation buys the one bought least often. |
+
+## Game designer values
+
+The Game designer sets the following values of the Game build, so that an Implementation rebuilt from the specifications keeps them. The Implementer chooses the other parts of the same Tuning parameters, e.g. the Training cap's share of the roster.
+
+| Tuning parameter          | Value in the Game build                                                      |
+| ------------------------- | ---------------------------------------------------------------------------- |
+| Target roster             | A base size of 20, plus 10 for each Upgrade other than a Cap Upgrade bought. |
+| Cap shares, Transport cap | 40% of the roster.                                                           |
 
 # Edge cases and failure behavior
 

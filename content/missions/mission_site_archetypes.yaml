@@ -30,10 +30,10 @@ kind: initiative
 name: Raid outpost
 expires_in_turns: 10
 enemies:
-  initiate: 12
-  operative: 8
-  soldier: 3
-  handler: 4
+  initiate: 4
+  operative: 6
+  soldier: 2
+  handler: 3
 on_win:
   - money: 400
   - funding: 10
@@ -45,10 +45,10 @@ kind: initiative
 name: Raid training facility
 expires_in_turns: 12
 enemies:
-  initiate: 40
-  operative: 20
-  soldier: 4
-  handler: 10
+  initiate: 8
+  operative: 12
+  soldier: 6
+  handler: 6
   lieutenant: 1
 on_win:
   - money: 800
@@ -61,12 +61,12 @@ kind: initiative
 name: Raid logistics hub
 expires_in_turns: 15
 enemies:
-  initiate: 32
-  operative: 16
-  soldier: 20
+  initiate: 8
+  operative: 10
+  soldier: 14
   elite: 4
   handler: 6
-  lieutenant: 4
+  lieutenant: 2
   commander: 1
 on_win:
   - money: 2000
@@ -79,13 +79,12 @@ kind: initiative
 name: Raid command center
 expires_in_turns: 20
 enemies:
-  initiate: 20
-  operative: 20
+  operative: 12
   soldier: 30
   elite: 10
-  handler: 8
+  handler: 4
   lieutenant: 6
-  commander: 3
+  commander: 2
 on_win:
   - money: 3000
   - funding: 25
@@ -97,11 +96,8 @@ kind: initiative
 name: Raid regional stronghold
 expires_in_turns: 30
 enemies:
-  initiate: 20
-  operative: 40
   soldier: 40
-  elite: 12
-  handler: 10
+  elite: 18
   lieutenant: 8
   commander: 3
   high_commander: 1
@@ -116,9 +112,9 @@ kind: initiative
 name: Raid HQ
 expires_in_turns: 40
 enemies:
-  soldier: 60
+  soldier: 50
   elite: 30
-  lieutenant: 12
+  lieutenant: 10
   commander: 6
   high_commander: 2
   cult_leader: 1

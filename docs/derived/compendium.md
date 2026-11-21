@@ -1772,13 +1772,13 @@ Source: `content/compendium/compendium_articles/raid_command_center_article.yaml
 
 The nerve center of the cult's [operations](#faction-operations), guarded by its best [commanders](#commander).
 
-| `raid_command_center` | MissionSiteArchetype |
-| --- | --- |
-| `kind` | `initiative` |
-| `name` | `Raid command center` |
-| `expires_in_turns` | `20` |
-| `enemies` | `{"initiate":20,"operative":20,"soldier":30,"elite":10,"handler":8,"lieutenant":6,"commander":3}` |
-| `on_win` | `[{"money":3000},{"funding":25},{"panic":-5}]` |
+| `raid_command_center` | MissionSiteArchetype                                                                |
+| --------------------- | ----------------------------------------------------------------------------------- |
+| `kind`                | `initiative`                                                                        |
+| `name`                | `Raid command center`                                                               |
+| `expires_in_turns`    | `20`                                                                                |
+| `enemies`             | `{"operative":12,"soldier":30,"elite":10,"handler":4,"lieutenant":6,"commander":2}` |
+| `on_win`              | `[{"money":3000},{"funding":25},{"panic":-5}]`                                      |
 
 ### Raid HQ
 
@@ -1791,7 +1791,7 @@ The final assault on the headquarters of a cult. Winning it puts the [Cult leade
 | `kind`             | `initiative`                                                                                 |
 | `name`             | `Raid HQ`                                                                                    |
 | `expires_in_turns` | `40`                                                                                         |
-| `enemies`          | `{"soldier":60,"elite":30,"lieutenant":12,"commander":6,"high_commander":2,"cult_leader":1}` |
+| `enemies`          | `{"soldier":50,"elite":30,"lieutenant":10,"commander":6,"high_commander":2,"cult_leader":1}` |
 | `on_win`           | `[{"money":10000},{"funding":100},{"panic":-20}]`                                            |
 
 ### Raid logistics hub
@@ -1805,7 +1805,7 @@ The hub that keeps the cult supplied. Taking it will hurt the cult for a long ti
 | `kind` | `initiative` |
 | `name` | `Raid logistics hub` |
 | `expires_in_turns` | `15` |
-| `enemies` | `{"initiate":32,"operative":16,"soldier":20,"elite":4,"handler":6,"lieutenant":4,"commander":1}` |
+| `enemies` | `{"initiate":8,"operative":10,"soldier":14,"elite":4,"handler":6,"lieutenant":2,"commander":1}` |
 | `on_win` | `[{"money":2000},{"funding":20},{"panic":-2}]` |
 
 ### Raid outpost
@@ -1814,13 +1814,13 @@ Source: `content/compendium/compendium_articles/raid_outpost_article.yaml`
 
 A fortified outpost where the cult gathers its people. Expect a determined defence.
 
-| `raid_outpost`     | MissionSiteArchetype                                    |
-| ------------------ | ------------------------------------------------------- |
-| `kind`             | `initiative`                                            |
-| `name`             | `Raid outpost`                                          |
-| `expires_in_turns` | `10`                                                    |
-| `enemies`          | `{"initiate":12,"operative":8,"soldier":3,"handler":4}` |
-| `on_win`           | `[{"money":400},{"funding":10},{"panic":-0.5}]`         |
+| `raid_outpost`     | MissionSiteArchetype                                   |
+| ------------------ | ------------------------------------------------------ |
+| `kind`             | `initiative`                                           |
+| `name`             | `Raid outpost`                                         |
+| `expires_in_turns` | `10`                                                   |
+| `enemies`          | `{"initiate":4,"operative":6,"soldier":2,"handler":3}` |
+| `on_win`           | `[{"money":400},{"funding":10},{"panic":-0.5}]`        |
 
 ### Raid regional stronghold
 
@@ -1828,13 +1828,13 @@ Source: `content/compendium/compendium_articles/raid_regional_stronghold_article
 
 A fortress that a [high commander](#high-commander) rules like a small kingdom. Bring everything you have.
 
-| `raid_regional_stronghold` | MissionSiteArchetype |
-| --- | --- |
-| `kind` | `initiative` |
-| `name` | `Raid regional stronghold` |
-| `expires_in_turns` | `30` |
-| `enemies` | `{"initiate":20,"operative":40,"soldier":40,"elite":12,"handler":10,"lieutenant":8,"commander":3,"high_commander":1}` |
-| `on_win` | `[{"money":5000},{"funding":50},{"panic":-10}]` |
+| `raid_regional_stronghold` | MissionSiteArchetype                                                        |
+| -------------------------- | --------------------------------------------------------------------------- |
+| `kind`                     | `initiative`                                                                |
+| `name`                     | `Raid regional stronghold`                                                  |
+| `expires_in_turns`         | `30`                                                                        |
+| `enemies`                  | `{"soldier":40,"elite":18,"lieutenant":8,"commander":3,"high_commander":1}` |
+| `on_win`                   | `[{"money":5000},{"funding":50},{"panic":-10}]`                             |
 
 ### Raid safehouse
 
@@ -1856,13 +1856,13 @@ Source: `content/compendium/compendium_articles/raid_training_facility_article.y
 
 Strike the place where the cult [turns](#turns) recruits into fighters before more of them leave it.
 
-| `raid_training_facility` | MissionSiteArchetype                                                     |
-| ------------------------ | ------------------------------------------------------------------------ |
-| `kind`                   | `initiative`                                                             |
-| `name`                   | `Raid training facility`                                                 |
-| `expires_in_turns`       | `12`                                                                     |
-| `enemies`                | `{"initiate":40,"operative":20,"soldier":4,"handler":10,"lieutenant":1}` |
-| `on_win`                 | `[{"money":800},{"funding":15},{"panic":-1}]`                            |
+| `raid_training_facility` | MissionSiteArchetype                                                   |
+| ------------------------ | ---------------------------------------------------------------------- |
+| `kind`                   | `initiative`                                                           |
+| `name`                   | `Raid training facility`                                               |
+| `expires_in_turns`       | `12`                                                                   |
+| `enemies`                | `{"initiate":8,"operative":12,"soldier":6,"handler":6,"lieutenant":1}` |
+| `on_win`                 | `[{"money":800},{"funding":15},{"panic":-1}]`                          |
 
 ## Subject articles: Upgrade
 
