@@ -195,6 +195,16 @@
       th.r {
         text-align: right;
       }
+      tr.unused td {
+        opacity: 0.45;
+      }
+      .unused-note {
+        display: none;
+        color: var(--warning);
+      }
+      tr.unused .unused-note {
+        display: inline;
+      }
       td.desc {
         font-family: var(--body);
         color: var(--muted);
@@ -1258,9 +1268,9 @@
       }
 
       function fitFormula() {
-        const free = PARAMS.map(([name]) => name).filter((name) => state.formula.fit[name])
+        const free = PARAMS.map(([name]) => name).filter((name) => state.formula.fit[name] && isUsed(name))
         if (free.length === 0) {
-          alert('Check at least one parameter to fit.')
+          alert('Check at least one parameter that the current expressions use.')
           return
         }
         // Every cell with a result for the current formula, each fight once: the teams fought stay fixed during the
@@ -1314,10 +1324,10 @@
         $('#params').innerHTML =
           `<tr><th>Parameter</th><th class="r">Value</th><th title="Checked: the Fit button may change this parameter. Unchecked: Fit leaves it as it is. Either way the value applies.">Fit</th><th>Meaning</th></tr>` +
           PARAMS.map(
-            ([name, desc, step]) => `<tr><td><code>${name}</code></td>
+            ([name, desc, step]) => `<tr data-param="${name}"><td><code>${name}</code></td>
             <td class="r"><input type="number" step="${step}" data-bind="formula.params.${name}" data-type="num" value="${state.formula.params[name]}"></td>
             <td><input type="checkbox" data-bind="formula.fit.${name}" data-type="bool" ${state.formula.fit[name] ? 'checked' : ''} aria-label="Fit ${name}"></td>
-            <td class="desc">${esc(desc)}</td></tr>`,
+            <td class="desc">${esc(desc)}<span class="unused-note"> Not used by the current expressions.</span></td></tr>`,
           ).join('')
         $('#exprC').value = state.formula.combatant
         $('#exprT').value = state.formula.team
@@ -1430,8 +1440,25 @@
         grid.style.setProperty('--targets', targets.length)
         grid.style.setProperty('--ups', ups.length)
         grid.innerHTML = head + rows
+        markUnused()
         renderTypes()
         renderAnalysis()
+      }
+
+      /**
+       * Greys out each parameter that neither expression reads, directly or through the multiplier it sets, e.g.
+       * cr_per_health when no expression mentions health_mult, so that changing it visibly changes nothing.
+       */
+      function isUsed(name) {
+        const text = `${state.formula.combatant} ${state.formula.team}`
+        const mentions = (word) => new RegExp(`\\b${word}\\b`).test(text)
+        const stat = ['health', 'armor', 'damage'].find((s) => name === `${s}_base` || name === `cr_per_${s}`)
+        return mentions(name) || (stat !== undefined && mentions(`${stat}_mult`))
+      }
+      function markUnused() {
+        for (const row of document.querySelectorAll('#params tr[data-param]')) {
+          row.classList.toggle('unused', !isUsed(row.dataset.param))
+        }
       }
 
       /** The combatant_cr of every EnemyArchetype, and of the Agents of each base skill without and with Upgrades. */
