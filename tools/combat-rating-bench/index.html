@@ -512,10 +512,10 @@
         <h1>Combat Rating Bench</h1>
         <p>
           Every Mission site's Enemies fight Agent teams sized by a candidate Combat rating formula to a set share of
-          the site's rating, e.g. 100%, 120%, and 150%. A good formula gives the teams sized to 100% a 50% win rate
-          whatever their skill and Upgrades, and the teams sized to each larger share one consistent win rate. Nothing
-          is fought until you press a <b>Run</b> button; results are kept in the browser, and a cell whose team the
-          current formula sizes differently shows its earlier result greyed until it is run again.
+          the site's rating, e.g. 100%, 120%, and 150%. A good formula gives all the teams sized to one share the same
+          win rate, whatever their skill and Upgrades and whatever that win rate is, e.g. 87% at 100%. Nothing is fought
+          until you press a <b>Run</b> button; results are kept in the browser, and a cell whose team the current
+          formula sizes differently shows its earlier result greyed until it is run again.
         </p>
         <p id="engine" class="note">Loading…</p>
       </header>
@@ -634,20 +634,20 @@
               team at once, and <b>Run</b> fights the teams as the current formula sizes them. The <b>Fit</b> box only
               lets the <b>Fit</b> button change the parameter. <b>Fit</b> fights nothing: over the cells already fought
               for the current formula, it searches the checked parameters for the values whose ratings best predict the
-              measured win rates, by the curve under Analysis, which is exactly 50% at equal ratings, and writes them
-              into the table. The unchecked parameters stay as they are. The new values usually size many teams
-              differently, so those cells turn grey until they are run again; run, fit, and run the grey cells until the
-              values settle.
+              measured win rates, by the curve under Analysis, whose win rate at equal ratings the cells decide, and
+              writes them into the table. The unchecked parameters stay as they are. The new values usually size many
+              teams differently, so those cells turn grey until they are run again; run, fit, and run the grey cells
+              until the values settle.
             </p>
             <p class="note detail">
               E.g. with <code>skill * damage_mult</code> and <code>cr_per_damage</code> 0.02, a site of CR 1,200 has
               been fought by 12 Agents of skill 100 without Upgrades, each rated 100, who won 50%, and by 10 Agents of
-              skill 100 with 10 Weapon damage Upgrades, each rated 120, who won 85%. Both teams rate 1,200, so the curve
-              predicts 50% for both: right for the first, 35 points off for the second. Fit tries other values on the
-              same two results: at 0.05 the second team rates 10 × 150 = 1,500, 1.25× the site, for which the curve
-              predicts about 85%, while the first team, without Upgrades, still rates 1,200. Fit writes 0.05. The team
-              that now matches the site is 8 such Agents, not 10, so that cell turns grey until it is run again, and
-              should then win about 50%.
+              skill 100 with 10 Weapon damage Upgrades, each rated 120, who won 85%. Both teams rate 1,200, yet their
+              win rates differ by 35 points, so no curve fits both. Fit tries other values on the same two results: at
+              0.05 the second team rates 10 × 150 = 1,500, 1.25× the site, while the first team, without Upgrades, still
+              rates 1,200, and a curve through 50% at 1× and 85% at 1.25× fits both. Fit writes 0.05. The team that now
+              matches the site is 8 such Agents, not 10, so that cell turns grey until it is run again, and should then
+              win about what the first team won.
             </p>
           </div>
         </div>
@@ -678,9 +678,10 @@
             <div class="legend" id="scatterLegend"></div>
             <div class="chart" id="scatter"></div>
             <p class="note">
-              The curve is <code>P = r^k / (1 + r^k)</code> with <code>r</code> the Agent team's rating over the site's,
-              exactly 50% at equal ratings, with <code>k</code> fitted to the cells; <b>Fit</b> searches the checked
-              parameters for the least squared error of this curve.
+              The curve is <code>P = 1 / (1 + e^−(k·ln r + b))</code> with <code>r</code> the Agent team's rating over
+              the site's. Both <code>k</code>, how sharply the win rate turns, and <code>b</code>, which sets the win
+              rate at equal ratings, are fitted to the cells, so the curve need not pass through 50%.
+              <b>Fit</b> searches the checked parameters for the least squared error of this curve.
             </p>
             <h3 style="margin-top: 12px">Formula as text</h3>
             <pre id="formulaText"></pre>
@@ -689,8 +690,8 @@
             <h3>Agent teams</h3>
             <p class="note">
               The mean win rate of each Agent team over the Mission sites, ± the standard deviation, for each share. An
-              Agent team that wins well above 50% at 100% is rated too low by the formula, e.g. a pattern along the
-              armor column shows that armor is weighed wrongly.
+              Agent team that wins well above the other teams of the same share is rated too low by the formula, e.g. a
+              pattern along the armor column shows that armor is weighed wrongly.
             </p>
             <div class="scroll"><table id="teams"></table></div>
           </div>
@@ -1278,40 +1279,53 @@
       }
 
       /* ---------- statistics ---------- */
-      const predict = (r, k) => (!(r > 0) ? 0 : !Number.isFinite(r) ? 1 : 1 / (1 + Math.pow(r, -k)))
-      function sse(rows, k) {
+      /**
+       * The curve P = 1 / (1 + e^−(k·ln r + b)) of the win rate by the rating ratio r. The steepness k says how fast the
+       * win rate turns, and the offset b sets the win rate at equal ratings, 1 / (1 + e^−b), which the cells decide: a
+       * formula need not make equal ratings a 50% fight, only make the win rate follow the ratio consistently.
+       */
+      const predict = (r, curve) =>
+        !(r > 0) ? 0 : !Number.isFinite(r) ? 1 : 1 / (1 + Math.exp(-(curve.k * Math.log(r) + curve.b)))
+      const atParity = (curve) => 1 / (1 + Math.exp(-curve.b))
+      function sse(rows, curve) {
         let s = 0
         for (const row of rows) {
-          s += (predict(row.ratio, k) - row.win) ** 2
+          s += (predict(row.ratio, curve) - row.win) ** 2
         }
         return s
       }
-      /** The steepness k with the least squared error, by golden-section search over ln k. */
-      function fitK(rows) {
-        let lo = Math.log(0.2)
-        let hi = Math.log(80)
+      /** The value of x in [lo, hi] at which f is least, by golden-section search. */
+      function golden(f, lo, hi, steps) {
         const g = (Math.sqrt(5) - 1) / 2
         let x1 = hi - g * (hi - lo)
         let x2 = lo + g * (hi - lo)
-        let f1 = sse(rows, Math.exp(x1))
-        let f2 = sse(rows, Math.exp(x2))
-        for (let i = 0; i < 50; i += 1) {
+        let f1 = f(x1)
+        let f2 = f(x2)
+        for (let i = 0; i < steps; i += 1) {
           if (f1 < f2) {
             hi = x2
             x2 = x1
             f2 = f1
             x1 = hi - g * (hi - lo)
-            f1 = sse(rows, Math.exp(x1))
+            f1 = f(x1)
           } else {
             lo = x1
             x1 = x2
             f1 = f2
             x2 = lo + g * (hi - lo)
-            f2 = sse(rows, Math.exp(x2))
+            f2 = f(x2)
           }
         }
-        const k = Math.exp((lo + hi) / 2)
-        return { k, sse: sse(rows, k) }
+        return (lo + hi) / 2
+      }
+      /** The curve with the least squared error over the rows: k over ln k, and b, in turn, a few rounds each. */
+      function fitCurve(rows) {
+        const curve = { k: 4, b: 0 }
+        for (let round = 0; round < 4; round += 1) {
+          curve.k = Math.exp(golden((x) => sse(rows, { k: Math.exp(x), b: curve.b }), Math.log(0.2), Math.log(80), 30))
+          curve.b = golden((b) => sse(rows, { k: curve.k, b }), -7, 7, 30)
+        }
+        return { ...curve, sse: sse(rows, curve) }
       }
       function summary(wins, trials) {
         const n = wins.length
@@ -1322,15 +1336,12 @@
         const sd = Math.sqrt(wins.reduce((s, w) => s + (w - mean) ** 2, 0) / n)
         // The spread a finite number of Combats leaves around each cell's true win rate.
         const dice = Math.sqrt(wins.reduce((s, w) => s + w * (1 - w), 0) / n / Math.max(1, trials - 1))
-        const rms50 = Math.sqrt(wins.reduce((s, w) => s + (w - 0.5) ** 2, 0) / n)
         return {
           n,
           mean,
           sd,
           dice,
           formula: Math.sqrt(Math.max(0, sd * sd - dice * dice)),
-          rms50,
-          formula50: Math.sqrt(Math.max(0, rms50 * rms50 - dice * dice)),
           min: Math.min(...wins),
           max: Math.max(...wins),
         }
@@ -1405,7 +1416,7 @@
               }
               return { win: row.win, ratio: rate(row.cell.groups, formula, model.cv) / siteCr.get(s) }
             })
-            const s = fitK(list).sse
+            const s = fitCurve(list).sse
             return Number.isFinite(s) ? s : Infinity
           } catch {
             return Infinity
@@ -1645,8 +1656,8 @@
           .filter((c) => resultOf(c) && !c.off)
           .map((c) => ({ cell: c, win: winOf(resultOf(c)) }))
         const off = model.cells.filter((c) => c.off).length
-        const fit = fresh.length >= 2 ? fitK(fresh.map((f) => ({ win: f.win, ratio: f.cell.ratio }))) : null
-        const k = fit?.k ?? NaN
+        const curve = fresh.length >= 2 ? fitCurve(fresh.map((f) => ({ win: f.win, ratio: f.cell.ratio }))) : null
+        const k = curve?.k ?? NaN
         const per = new Map(
           targets.map((t) => [
             t,
@@ -1667,24 +1678,20 @@
               if (s.n === 0) {
                 return tile(`${t}% of the site`, '–', 'no cell run yet')
               }
-              const parity = t === 100
+              // What matters is that the win rates of one share agree, whatever they agree on: the spread, not the mean.
               return tile(
                 `${t}% of the site · ${s.n} cells`,
                 `${pct(s.mean, 1)} <span style="font-size:15px">± ${pp(s.sd, 1).replace(' pp', '')}</span>`,
                 `mean win ± spread; range ${pct(s.min)}–${pct(s.max)}. Dice spread ${pp(s.dice)}, so formula spread <b class="${grade(s.formula, s.dice)}">${pp(s.formula)}</b>.` +
-                  (parity
-                    ? ` Distance from 50%: ${pp(s.rms50)} root mean square, formula part <b class="${grade(s.formula50, s.dice)}">${pp(s.formula50)}</b>.`
-                    : Number.isFinite(k)
-                      ? ` The curve predicts ${pct(predict(t / 100, k), 1)}.`
-                      : ''),
+                  (curve ? ` The curve predicts ${pct(predict(t / 100, curve), 1)}.` : ''),
               )
             })
             .join('') +
           tile(
-            'Steepness k',
-            Number.isFinite(k) ? k.toFixed(2) : '–',
-            Number.isFinite(k)
-              ? `fitted over ${fresh.length} cells; a rating ${['1.1', '1.2', '1.5', '2'].map((r) => `${r}× wins ${pct(predict(Number(r), k))}`).join(', ')}` +
+            'Curve',
+            curve ? `${pct(atParity(curve), 1)} at 1×` : '–',
+            curve
+              ? `the win rate the fitted curve gives at equal ratings, over ${fresh.length} cells; steepness k ${k.toFixed(2)}, so a rating ${['1.1', '1.2', '1.5', '2'].map((r) => `${r}× wins ${pct(predict(Number(r), curve))}`).join(', ')}` +
                   (off > 0 ? `; ${off} cells are excluded for missing their share by more than 5%` : '')
               : 'needs two cells',
           )
@@ -1699,7 +1706,7 @@
           )
           .join('')
 
-        renderScatter(fresh, k)
+        renderScatter(fresh, curve)
 
         // Agent teams by share.
         const sd = (wins) => summary(wins, trials)
@@ -1734,9 +1741,9 @@
             const s = per.get(t)
             return s.n === 0
               ? `${t}%: no cells`
-              : `${t}%: ${s.n} cells, win ${pct(s.mean, 1)} ± ${pp(s.sd)} (dice ${pp(s.dice)}, formula ${pp(s.formula)})${t === 100 ? `, from 50% ${pp(s.rms50)} rms` : ''}`
+              : `${t}%: ${s.n} cells, win ${pct(s.mean, 1)} ± ${pp(s.sd)} (dice ${pp(s.dice)}, formula ${pp(s.formula)})`
           }),
-          `k = ${sig(k)}; ${trials} Combats per cell${state.setup.retreat ? ', retreat allowed' : ''}`,
+          `curve: ${curve ? pct(atParity(curve), 1) : '–'} at equal ratings, k = ${sig(k)}; ${trials} Combats per cell${state.setup.retreat ? ', retreat allowed' : ''}`,
         ].join('\n')
       }
 
@@ -1771,7 +1778,7 @@
       }
 
       const TIER_COLORS = ['var(--accent)', 'var(--notice)', 'var(--positive)', 'var(--warning)', 'var(--danger)']
-      function renderScatter(fresh, k) {
+      function renderScatter(fresh, curve) {
         const W = 760
         const H = 380
         const m = { l: 48, r: 18, t: 14, b: 40 }
@@ -1801,13 +1808,13 @@
               <text x="${X(t)}" y="${H - m.b + 16}" text-anchor="middle">${t}×</text>`,
           )
           .join('')
-        let curve = ''
-        if (Number.isFinite(k)) {
+        let curvePath = ''
+        if (curve) {
           const d = Array.from({ length: 81 }, (_, i) => {
             const r = xmin * Math.pow(xmax / xmin, i / 80)
-            return `${i === 0 ? 'M' : 'L'}${X(r).toFixed(1)},${Y(predict(r, k)).toFixed(1)}`
+            return `${i === 0 ? 'M' : 'L'}${X(r).toFixed(1)},${Y(predict(r, curve)).toFixed(1)}`
           }).join('')
-          curve = `<path d="${d}" fill="none" stroke="var(--text2)" stroke-width="2"/>`
+          curvePath = `<path d="${d}" fill="none" stroke="var(--text2)" stroke-width="2"/>`
         }
         const pts = fresh.filter((f) => f.cell.ratio >= xmin && f.cell.ratio <= xmax)
         const dots = pts
@@ -1820,7 +1827,7 @@
           `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Win rate of each cell against the ratio of its Agent team's rating to its site's">
           ${grid}${ticks}
           <text x="${(W + m.l) / 2}" y="${H - 6}" text-anchor="middle">team_cr of the Agent team ÷ team_cr of the site (log scale)</text>
-          ${curve}${dots}</svg><div class="tip" hidden></div>`
+          ${curvePath}${dots}</svg><div class="tip" hidden></div>`
         const svg = $('#scatter svg')
         const tip = $('#scatter .tip')
         svg.addEventListener('mousemove', (e) => {

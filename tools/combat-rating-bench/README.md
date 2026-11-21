@@ -1,6 +1,6 @@
 # Combat Rating Bench
 
-A local page for finding a Combat rating formula that predicts who wins. Every Mission site's Enemies fight Agent teams that a candidate formula sizes to a set share of the site's rating, e.g. 100%, 120%, and 150%. A good formula gives every team sized to 100% a 50% win rate whatever its skill and Upgrades, e.g. a few Agents of base skill 500 and many of base skill 100 alike, and every team sized to a larger share one consistent win rate.
+A local page for finding a Combat rating formula that predicts who wins. Every Mission site's Enemies fight Agent teams that a candidate formula sizes to a set share of the site's rating, e.g. 100%, 120%, and 150%. A good formula gives every team sized to one share the same win rate whatever its skill and Upgrades, e.g. a few Agents of base skill 500 and many of base skill 100 alike. That win rate need not be 50%: e.g. 87% for every team sized to 100% serves as well, because only a consistent win rate makes the rating predict the fight.
 
 It is a tool for the Game designer, not a specification and not part of any Implementation. It writes nothing to the repository: a formula found with it is applied to the specifications by hand or by an agent, and the page prints it as text to copy.
 
@@ -51,11 +51,11 @@ Each cell is one batch of the engine's `developer.tools.fightCombatBatch`, on ex
 
 The analysis covers the cells that have a result for the current formula and are therefore within 5% of their share:
 
-- **For each share**, the mean win rate and its spread, i.e. the standard deviation over the cells. The spread that a finite number of Combats alone leaves is stated beside it, and the rest is the **formula spread**, the part a better formula can remove. For 100%, the distance from 50% is given as a root mean square, with its formula part too.
+- **For each share**, the mean win rate and its spread, i.e. the standard deviation over the cells. The spread that a finite number of Combats alone leaves is stated beside it, and the rest is the **formula spread**, the part a better formula can remove. The spread, not the mean, is what a formula is judged by.
 - **Histograms** of the win rates of each share.
-- **Win rate by rating ratio** plots every cell against the ratio of its Agent team's rating to its site's, coloured by base skill, with the curve `P = r^k / (1 + r^k)`, exactly 50% at equal ratings, whose steepness `k` is fitted to the cells.
+- **Win rate by rating ratio** plots every cell against the ratio of its Agent team's rating to its site's, coloured by base skill, with the curve `P = 1 / (1 + e^−(k·ln r + b))`, whose steepness `k` and offset `b`, which sets the win rate at equal ratings, are both fitted to the cells. The **Curve** tile gives that win rate at equal ratings, and each share tile the curve's prediction for its share.
 - **Agent teams** gives the mean win rate of each Agent team over the sites, ± the standard deviation, for each share, so that a team type the formula rates too high or too low stands out.
-- **Fit** searches the checked parameters by Nelder-Mead for the least squared error of the curve over the cells with a result, refitting `k` at each step. It fights nothing: the Agent counts the new formula gives differ, so the changed cells show their earlier results greyed until they are run again.
+- **Fit** searches the checked parameters by Nelder-Mead for the least squared error of the curve over the cells with a result, refitting `k` and `b` at each step. It fights nothing: the Agent counts the new formula gives differ, so the changed cells show their earlier results greyed until they are run again.
 
 ## Files
 
