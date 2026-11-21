@@ -505,10 +505,9 @@
             <div id="exprErr" class="err"></div>
             <p class="note">
               Combatant variables: <code>skill</code> (effective skill), <code>base_skill</code>, <code>health</code>,
-              <code>armor</code>, <code>damage</code>, <code>exhaustion</code>, <code>weapon_upgrades</code> and
-              <code>armor_upgrades</code> (an Agent's Upgrade counts, 0 for an Enemy), and the derived
-              <code>health_mult = 1 + (health − health_base) × cr_per_health</code>, likewise
-              <code>armor_mult</code> and <code>damage_mult</code>. Team variables: <code>sum</code>,
+              <code>armor</code>, <code>damage</code>, <code>exhaustion</code>, <code>agent</code> (1 for an Agent, 0
+              for an Enemy), and the derived <code>health_mult = 1 + (health − health_base) × cr_per_health</code>,
+              likewise <code>armor_mult</code> and <code>damage_mult</code>. Team variables: <code>sum</code>,
               <code>count</code> (Combatants able to fight), and <code>game</code> (the game's base Combat rating, Σ
               effective skill). Every parameter, and every Combat value under Setup, e.g.
               <code>rating_bonus_per_weapon_damage_upgrade</code>, is a variable of both.
@@ -517,7 +516,7 @@
               <button
                 class="small"
                 data-act="preset-game"
-                title="Base Combat rating raised by each Rating Upgrade's bonus, for Agents only"
+                title="The game's own: an Agent's skill × (damage_mult + armor_mult − 1), which with the default parameters adds each Rating Upgrade's bonus; an Enemy's skill alone. Resets the parameters."
               >
                 Game's Combat rating
               </button>
@@ -655,12 +654,9 @@
           combatant: 'skill * health_mult * armor_mult * damage_mult',
           team: 'sum * count ** team_exp / count',
         },
-        // COMBAT, Combat rating: the bonus of each Rating Upgrade, which only Agents have.
-        game: {
-          combatant:
-            'skill * (1 + rating_bonus_per_weapon_damage_upgrade * weapon_upgrades + rating_bonus_per_armor_upgrade * armor_upgrades)',
-          team: 'floor(sum)',
-        },
+        // COMBAT, Combat rating: with the default parameters, damage_mult and armor_mult of an Agent are the game's
+        // bonus of its Rating Upgrades, which the game adds rather than multiplies, and which no Enemy has.
+        game: { combatant: 'agent ? skill * (damage_mult + armor_mult - 1) : skill', team: 'floor(sum)' },
         lanchester: { combatant: 'skill * health_mult * armor_mult * damage_mult', team: 'sqrt(sum * count)' },
       }
       /**
@@ -865,8 +861,8 @@
           armor: g.armor,
           damage: g.damage,
           exhaustion: g.exhaustion,
-          weapon_upgrades: g.w ?? 0,
-          armor_upgrades: g.a ?? 0,
+          // 1 for an Agent, whose group holds its Upgrade counts, and 0 for an Enemy.
+          agent: g.w === undefined ? 0 : 1,
           health_mult: 1 + (g.health - p.health_base) * p.cr_per_health,
           armor_mult: 1 + (g.armor - p.armor_base) * p.cr_per_armor,
           damage_mult: 1 + (g.damage - p.damage_base) * p.cr_per_damage,
@@ -1717,7 +1713,7 @@
         const t = Number(b.dataset.t)
         if (act.startsWith('preset-')) {
           Object.assign(state.formula, FORMULAS[act.slice(7)])
-          if (act === 'preset-default') {
+          if (act === 'preset-default' || act === 'preset-game') {
             state.formula.edited = {}
             applyDefaults()
           }

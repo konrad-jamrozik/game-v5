@@ -22,12 +22,12 @@ node tools/combat-rating-bench/server.ts --impl <game-v5-impl-web clone> --spec 
 
 The rating of a team is computed in two steps, each an editable JavaScript expression with `Math` in scope:
 
-- **`combatant_cr`** rates one Combatant, by default `skill * health_mult * armor_mult * damage_mult`, where `skill` is its effective skill and e.g. `health_mult = 1 + (health − health_base) × cr_per_health`; `armor_mult` and `damage_mult` follow the same pattern. `weapon_upgrades` and `armor_upgrades` are an Agent's Upgrade counts, 0 for an Enemy.
+- **`combatant_cr`** rates one Combatant, by default `skill * health_mult * armor_mult * damage_mult`, where `skill` is its effective skill and e.g. `health_mult = 1 + (health − health_base) × cr_per_health`; `armor_mult` and `damage_mult` follow the same pattern. `agent` is 1 for an Agent and 0 for an Enemy.
 - **`team_cr`** rates a team from `sum`, the sum of the `combatant_cr` of its Combatants that are able to fight, and `count`, their number, by default `sum * count ** team_exp / count`. `game` is also available: the game's base Combat rating, Σ effective skill.
 
 The parameters, e.g. `cr_per_health` and `team_exp`, and the Combat values, e.g. `rating_bonus_per_weapon_damage_upgrade`, are variables of both expressions. `cr_per_damage` and `cr_per_armor` default to the game's `rating_bonus_per_weapon_damage_upgrade` and `rating_bonus_per_armor_upgrade`, each divided by what one Upgrade adds, so that an Agent's Upgrades rate as in the game; unlike the game's, they also rate the Enemies' weapon damage and armor. The browser keeps only the parameters edited, by typing or by **Fit**; every other one follows `content/`, so that a changed bonus reaches the page on its next load, and **Multiplicative default** returns every parameter to the content. The buttons under the expressions load:
 
-- **Game's Combat rating**: the game's own, effective skill raised by the bonus of each of an Agent's Rating Upgrades, and rounded down once for the team.
+- **Game's Combat rating**: the game's own, `agent ? skill * (damage_mult + armor_mult - 1) : skill`, rounded down once for the team. It resets the parameters, with which an Agent's `damage_mult` and `armor_mult` are exactly the bonus of its Rating Upgrades, which the game adds rather than multiplies, and an Enemy has none.
 - **Multiplicative default**: the default expressions and parameters.
 - **Lanchester square**: the default combatant expression with the team expression `sqrt(sum * count)`.
 
