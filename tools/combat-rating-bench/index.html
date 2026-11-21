@@ -1017,6 +1017,10 @@
         const cells = []
         for (const site of sites) {
           site.cr = rate(site.groups, formula, cv)
+          // The mean combatant_cr of the site's Enemies able to fight.
+          const able = site.groups.filter((g) => g.count > 0 && ableToFight(g, cv))
+          const n = able.reduce((s, g) => s + g.count, 0)
+          site.meanCr = n === 0 ? 0 : able.reduce((s, g) => s + combatantRating(g, formula, cv) * g.count, 0) / n
           site.sig = JSON.stringify(site.groups)
           site.cells = []
           for (const t of targets) {
@@ -1452,6 +1456,7 @@
             (site) => `<div class="grow-row"><div class="site"><b>${esc(site.name)}</b>
               <span class="meta">${site.kind === 'initiative' ? 'Initiative' : `Response, level ${site.level}`}</span>
               <span class="meta">CR ${fmt(site.cr)} · ${site.size} Enemies</span>
+              <span class="meta" title="The mean combatant_cr of the site's Enemies">mean CR ${fmt(site.meanCr, 1)}</span>
               <span><button class="small" data-act="run-row" data-site="${site.id}">Run row</button></span></div>
               ${targets.map((t) => block(t, site)).join('')}</div>`,
           )
