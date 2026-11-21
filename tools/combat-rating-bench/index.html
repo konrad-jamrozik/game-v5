@@ -20,7 +20,6 @@
         --text: #e8e4d8;
         --text2: #b8b3a6;
         --muted: #9c978a;
-        --axis: #8f8a7d;
         --accent: #ff7a1a;
         --accent-text: #ff8a33;
         --on-accent: #1a0b00;
@@ -28,6 +27,9 @@
         --warning: #e3c14b;
         --danger: #ff7f78;
         --notice: #8fb8d6;
+        /* The win rate of a cell: below 50% tints toward --low, above toward --high. */
+        --low: 92, 160, 214;
+        --high: 255, 122, 26;
         --head: 'Barlow Condensed', 'Arial Narrow', sans-serif;
         --body: 'Barlow', 'Segoe UI', system-ui, sans-serif;
         --mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
@@ -45,7 +47,7 @@
         font: 15px/1.5 var(--body);
       }
       .wrap {
-        max-width: 1700px;
+        max-width: 1900px;
         margin: 0 auto;
         padding: 20px 16px 80px;
         display: flex;
@@ -81,7 +83,7 @@
       p {
         margin: 0;
         color: var(--text2);
-        max-width: 80ch;
+        max-width: 90ch;
       }
       code,
       input,
@@ -99,7 +101,7 @@
       .bar {
         position: sticky;
         top: 0;
-        z-index: 5;
+        z-index: 6;
         background: var(--bg);
         border-bottom: 1px solid var(--border);
         display: flex;
@@ -134,7 +136,7 @@
       }
       button.small {
         font-size: 12px;
-        padding: 2px 8px;
+        padding: 1px 7px;
       }
       button:hover {
         border-color: var(--text2);
@@ -212,12 +214,8 @@
         width: 86px;
         text-align: right;
       }
-      input.narrow {
-        width: 64px;
-      }
       input.wide {
-        width: 220px;
-        text-align: left;
+        width: 300px;
       }
       textarea {
         width: 100%;
@@ -245,27 +243,109 @@
         align-items: center;
         color: var(--text2);
       }
-      .teams {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(min(100%, 560px), 1fr));
-        gap: 14px;
-      }
-      .card {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        padding: 12px;
+
+      /* The grid: one row per Mission site; in it one block per CR target, of skill tiers by upgrade sets. */
+      .grid {
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        min-width: max-content;
       }
-      .card .crline {
+      .grow-row {
+        display: grid;
+        grid-template-columns: 210px repeat(var(--targets), max-content);
+        gap: 0 18px;
+        padding-block: 8px;
+        border-bottom: 1px solid var(--border);
+      }
+      .grow-row.headrow {
+        padding-block: 4px;
+      }
+      .site {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        font-size: 13px;
+      }
+      .site b {
+        font-family: var(--head);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        font-size: 15px;
+      }
+      .site .meta {
         font-family: var(--mono);
         font-size: 12px;
         color: var(--muted);
       }
+      .block {
+        display: grid;
+        grid-template-columns: 40px repeat(var(--ups), 58px);
+        gap: 2px;
+        align-items: stretch;
+      }
+      .block .bh {
+        grid-column: 1 / -1;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        font-family: var(--mono);
+        font-size: 12px;
+        color: var(--muted);
+        min-height: 22px;
+      }
+      .block .bh .t {
+        font-family: var(--head);
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        color: var(--text2);
+        font-size: 14px;
+      }
+      .block .tier,
+      .block .uh {
+        font-family: var(--mono);
+        font-size: 11px;
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+      }
+      .block .uh {
+        justify-content: center;
+        text-align: center;
+        line-height: 1.1;
+      }
+      .cell {
+        background: var(--surface);
+        border: 1px solid var(--divider);
+        height: 38px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        line-height: 1.1;
+        font-family: var(--mono);
+      }
+      .cell .n {
+        font-size: 10px;
+        color: var(--muted);
+      }
+      .cell .w {
+        font-size: 13px;
+      }
+      .cell.stale .w {
+        color: var(--muted);
+        font-style: italic;
+      }
+      .cell.off {
+        border-style: dashed;
+        border-color: var(--border);
+      }
+      .cell.queued .w {
+        color: var(--accent-text);
+      }
+
       .tiles {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
         gap: 12px;
       }
       .tile {
@@ -300,9 +380,13 @@
       .bad {
         color: var(--danger);
       }
+      .charts {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr));
+        gap: 18px;
+      }
       .chart {
         position: relative;
-        max-width: 820px;
       }
       .chart svg {
         width: 100%;
@@ -314,7 +398,21 @@
         font-size: 11px;
         fill: var(--muted);
       }
-      #tip {
+      .legend {
+        display: flex;
+        gap: 14px;
+        font-size: 12px;
+        color: var(--text2);
+      }
+      .legend i {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 5px;
+        vertical-align: -1px;
+      }
+      .tip {
         position: absolute;
         pointer-events: none;
         background: var(--raised);
@@ -323,7 +421,10 @@
         font-family: var(--mono);
         font-size: 12px;
         white-space: nowrap;
-        z-index: 3;
+        z-index: 7;
+      }
+      #celltip {
+        position: fixed;
       }
       pre {
         background: var(--surface);
@@ -339,29 +440,28 @@
   </head>
   <body>
     <div class="wrap">
-      <header class="intro" style="display: flex; flex-direction: column; gap: 8px">
+      <header style="display: flex; flex-direction: column; gap: 8px">
         <h1>Combat Rating Bench</h1>
         <p>
-          Teams of Combatants fight each other in the engine, and a candidate Combat rating formula predicts who wins. A
-          good formula gives two teams of equal rating a 50% win rate whatever their make-up, and a win rate that
-          follows the ratio of the ratings the same way for every pair. The Combats do not read the formula, so editing
-          it re-scores the Combats already fought at once, and <b>Fit</b> searches the checked parameters for the best
-          formula.
+          Every Mission site's Enemies fight Agent teams sized by a candidate Combat rating formula to a set share of
+          the site's rating, e.g. 100%, 120%, and 150%. A good formula gives the teams sized to 100% a 50% win rate
+          whatever their skill and Upgrades, and the teams sized to each larger share one consistent win rate. Nothing
+          is fought until you press a <b>Run</b> button; results are kept in the browser, and a cell whose team the
+          current formula sizes differently shows its earlier result greyed until it is run again.
         </p>
         <p id="engine" class="note">Loading…</p>
       </header>
 
       <div class="bar">
         <span id="progress" class="grow">Idle</span>
-        <button
-          id="fit"
-          class="pri"
-          title="Search the checked parameters for the formula that predicts the fought Combats best"
-        >
+        <button id="runAll" class="pri" title="Fight every cell that has no result for the current formula">
+          Run all
+        </button>
+        <button id="stop" title="Drop every queued fight">Stop</button>
+        <button id="fit" title="Search the checked parameters for the formula that predicts the fought cells best">
           Fit
         </button>
-        <button id="rerun" title="Forget every result and fight every pair again">Fight again</button>
-        <button id="reset" title="Restore the default formula, teams and settings">Reset</button>
+        <button id="forget" title="Forget every result kept in this browser">Forget results</button>
       </div>
 
       <section>
@@ -369,8 +469,8 @@
           <h2>Formula</h2>
           <p>
             Each group of identical Combatants rates by the combatant expression; a team rates by the team expression
-            over the sum of its Combatants' ratings. A Combatant that is not able to fight at the start counts for
-            nothing. The expressions are JavaScript, with <code>Math</code> in scope, e.g. <code>sqrt(health)</code>.
+            over the sum of its Combatants' ratings. A Combatant that is not able to fight counts for nothing. The
+            expressions are JavaScript, with <code>Math</code> in scope, e.g. <code>sqrt(health)</code>.
           </p>
         </div>
         <div class="cols">
@@ -400,60 +500,35 @@
 
       <section>
         <div class="shead">
-          <h2>Teams</h2>
+          <h2>Setup</h2>
           <p>
-            Each team is a list of groups of identical Combatants at full health. <b>Sizes</b> multiplies every group's
-            count, giving one team per entry, e.g. <code>4, 8, 16</code>; each such team is called a variant below.
-          </p>
-        </div>
-        <div class="row">
-          <button class="small" data-act="add-team">Add team</button>
-          <label class="inline"
-            >Add from
-            <select id="preset"></select
-          ></label>
-          <button class="small" data-act="add-preset">Add</button>
-        </div>
-        <div id="teams" class="teams"></div>
-      </section>
-
-      <section>
-        <div class="shead">
-          <h2>Experiment</h2>
-          <p>
-            The engine is not symmetric: the Agents' side acts first in every Combat round, picks its targets, and alone
-            can retreat. With <b>Both sides</b>, every pair fights twice, each team once as the Agents' side, and a
-            team's win rate is the mean of the two, so that neither side's edge leaks into the result.
+            Agent teams are Agents of the AgentArchetype's health, weapon damage, and armor, at full health and rested,
+            with the given base skill and Upgrades; each Weapon damage or Armor Upgrade adds its <code>increment</code>
+            to every Agent. Each team takes the Agent count whose rating is closest to its share of the Mission site's
+            rating. The Agent team is always the Agents' side, as in a Mission.
           </p>
         </div>
         <div class="row">
           <label class="inline"
-            >Pairs
-            <select data-bind="exp.pairing" data-type="str">
-              <option value="all">Every variant against every other</option>
-              <option value="first">The first variant against every other</option>
-            </select></label
-          >
+            >Shares of the site's rating, % <input class="wide" data-bind="setup.targets" data-type="str"
+          /></label>
+          <label class="inline">Base skills <input class="wide" data-bind="setup.skills" data-type="str" /></label>
           <label class="inline"
-            >Sides
-            <select data-bind="exp.sides" data-type="str">
-              <option value="both">Both sides, averaged</option>
-              <option value="a">A as the Agents' side only</option>
-            </select></label
-          >
-          <label class="inline"
-            >Combats per side <input type="number" min="10" max="2000" step="10" data-bind="exp.trials" data-type="num"
+            >Upgrades, weapon/armor <input class="wide" style="width: 340px" data-bind="setup.upgrades" data-type="str"
           /></label>
           <label class="inline"
-            ><input type="checkbox" data-bind="exp.match" data-type="bool" /> Size every team to the first variant's
-            rating</label
+            >Combats per cell
+            <input type="number" min="10" max="2000" step="10" data-bind="setup.trials" data-type="num"
+          /></label>
+          <label class="inline"
+            ><input type="checkbox" data-bind="setup.retreat" data-type="bool" /> Allow retreat</label
           >
-          <label class="inline"><input type="checkbox" data-bind="exp.retreat" data-type="bool" /> Allow retreat</label>
         </div>
         <p class="note">
-          With <b>Size every team</b>, each team other than the first fights in one variant only, whose first group's
-          count gives the rating closest to the first variant's, so every pair should be a 50% fight. Retreat is off by
-          default, because it reads the game's own Combat rating, not this formula, and a retreat counts as a loss.
+          Retreat is off by default, by setting <code>retreat_below_agent_rating_fraction</code> to 0, because it reads
+          the game's own Combat rating rather than this formula; when it is allowed, a retreat counts as a loss. A cell
+          whose closest Agent count still misses its share by more than 10% is drawn dashed and left out of the
+          statistics, e.g. one Agent of skill 500 against a small site.
         </p>
         <details>
           <summary class="lbl note" style="cursor: pointer">Combat values passed to the engine</summary>
@@ -463,40 +538,60 @@
 
       <section>
         <div class="shead">
-          <h2>Results</h2>
+          <h2>Mission sites</h2>
           <p>
-            The prediction is <code>P(A wins) = r^k / (1 + r^k)</code> with <code>r = team_cr(A) / team_cr(B)</code>,
-            which is exactly 50% at equal ratings; <code>k</code> is fitted to the Combats, so it measures how sharply
-            the win rate turns, and the error measures how well the formula orders the teams.
+            Each cell is one Agent team against the row's Mission site: its Agent count above, its win rate over the
+            Combats below, tinted blue below 50% and orange above. Hover a cell for its ratings. <b>Run</b> beside a
+            share fights that block, <b>Run row</b> the whole row, and <b>Run</b> in the top row that share for every
+            site.
+          </p>
+        </div>
+        <div class="scroll"><div id="grid" class="grid"></div></div>
+      </section>
+
+      <section>
+        <div class="shead">
+          <h2>Analysis</h2>
+          <p>
+            Over the cells with a result for the current formula, within 10% of their share. The <b>spread</b> is the
+            standard deviation of the win rates of one share; the dice alone, i.e. a finite number of Combats, leave the
+            spread stated beside it, and the rest is the <b>formula spread</b>, the part a better formula can remove.
           </p>
         </div>
         <div id="tiles" class="tiles"></div>
+        <h3>Win rates of each share</h3>
+        <div id="hists" class="charts"></div>
         <div class="cols">
           <div style="display: flex; flex-direction: column; gap: 8px">
-            <h3>Win rate of the higher-rated team by rating ratio</h3>
-            <div class="chart" id="chart"></div>
+            <h3>Win rate by rating ratio</h3>
+            <div class="legend" id="scatterLegend"></div>
+            <div class="chart" id="scatter"></div>
+            <p class="note">
+              The curve is <code>P = r^k / (1 + r^k)</code> with <code>r</code> the Agent team's rating over the site's,
+              exactly 50% at equal ratings, with <code>k</code> fitted to the cells; <b>Fit</b> searches the checked
+              parameters for the least squared error of this curve.
+            </p>
             <h3 style="margin-top: 12px">Formula as text</h3>
             <pre id="formulaText"></pre>
           </div>
           <div style="display: flex; flex-direction: column; gap: 8px">
-            <h3>Variants</h3>
+            <h3>Agent teams</h3>
             <p class="note">
-              <b>Strength vs rating</b> is how far the Combats say a variant is stronger or weaker than its rating, as
-              the factor that would make the prediction fit best; e.g. +20% means the variant fights like a team rated
-              20% higher. A pattern across variants shows what the formula misjudges, e.g. large teams all positive.
+              The mean win rate of each Agent team over the Mission sites, ± the standard deviation, for each share. An
+              Agent team that wins well above 50% at 100% is rated too low by the formula, e.g. a pattern along the
+              armor column shows that armor is weighed wrongly.
             </p>
-            <div class="scroll"><table id="variants"></table></div>
+            <div class="scroll"><table id="teams"></table></div>
           </div>
         </div>
-        <h3>Pairs, largest error first</h3>
-        <div class="scroll"><table id="pairs"></table></div>
-        <button class="small" id="morePairs" hidden>Show every pair</button>
       </section>
     </div>
+    <div id="celltip" class="tip" hidden></div>
 
     <script>
       'use strict'
-      const STORE = 'combat-rating-bench/v1'
+      const STORE = 'combat-rating-bench/v2'
+      const RESULTS = 'combat-rating-bench/results-v2'
       const PARAMS = [
         ['health_base', 'Health at which health_mult is 1.'],
         ['health_per_point', 'Added to health_mult for each point of health above health_base.'],
@@ -515,19 +610,8 @@
           team: 'sum * count ** team_exp / count',
         },
         game: { combatant: 'skill', team: 'sum' },
-        lanchester: {
-          combatant: 'skill * health_mult * armor_mult * damage_mult',
-          team: 'sqrt(sum * count)',
-        },
+        lanchester: { combatant: 'skill * health_mult * armor_mult * damage_mult', team: 'sqrt(sum * count)' },
       }
-      const group = (count, skill, health, damage, armor = 0, exhaustion = 0) => ({
-        count,
-        skill,
-        health,
-        damage,
-        armor,
-        exhaustion,
-      })
       const defaults = () => ({
         formula: {
           params: {
@@ -550,31 +634,30 @@
           },
           ...FORMULAS.default,
         },
-        teams: [
-          { name: 'Field agents', sizes: '4, 8, 12, 16, 24', groups: [group(1, 100, 30, 10)] },
-          { name: 'Veterans', sizes: '2, 4, 6, 8, 12', groups: [group(1, 200, 40, 16, 4)] },
-          { name: 'Initiates', sizes: '10, 20, 30, 40, 60', groups: [group(1, 40, 20, 8)] },
-          { name: 'Soldiers', sizes: '3, 6, 9, 12, 18', groups: [group(1, 120, 30, 14)] },
-          { name: 'Elites', sizes: '1, 2, 3, 4, 6', groups: [group(1, 250, 40, 20)] },
-        ],
-        exp: { pairing: 'all', sides: 'both', trials: 100, match: false, retreat: false },
+        setup: {
+          targets: '100, 120, 150',
+          skills: '100, 250, 500',
+          upgrades: '0/0, 5/0, 0/5, 5/5, 10/0, 0/10, 10/10',
+          trials: 100,
+          retreat: false,
+        },
         combat: {},
       })
 
       let info = null
-      let state = load()
-      /** Fought results by `<pair key>|<side>`: the totals of one batch. */
-      const cache = new Map()
+      let state = loadState()
+      /** Results by fight key, and the fight key each cell was last fought with. */
+      let store = loadStore()
+      /** The fights requested and not yet answered, by fight key: the job and the cells it answers. */
+      const pending = new Map()
       const failures = new Map()
-      let run = null
-      let showAllPairs = false
-      let lastRows = []
+      let ctl = null
+      let model = null
 
-      function load() {
+      function loadState() {
         try {
-          const raw = localStorage.getItem(STORE)
-          if (raw) {
-            const saved = JSON.parse(raw)
+          const saved = JSON.parse(localStorage.getItem(STORE) ?? 'null')
+          if (saved) {
             const d = defaults()
             return {
               ...d,
@@ -585,36 +668,59 @@
                 params: { ...d.formula.params, ...saved.formula?.params },
                 fit: { ...d.formula.fit, ...saved.formula?.fit },
               },
-              exp: { ...d.exp, ...saved.exp },
+              setup: { ...d.setup, ...saved.setup },
             }
           }
         } catch {}
         return defaults()
+      }
+      function loadStore() {
+        try {
+          const saved = JSON.parse(localStorage.getItem(RESULTS) ?? 'null')
+          if (saved?.results && saved?.last) {
+            return saved
+          }
+        } catch {}
+        return { results: {}, last: {} }
       }
       function save() {
         try {
           localStorage.setItem(STORE, JSON.stringify(state))
         } catch {}
       }
+      let storeTimer = 0
+      function saveStore() {
+        clearTimeout(storeTimer)
+        storeTimer = setTimeout(() => {
+          try {
+            localStorage.setItem(RESULTS, JSON.stringify(store))
+          } catch {}
+        }, 300)
+      }
 
       const $ = (s) => document.querySelector(s)
       const esc = (s) =>
         String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c])
-      const pct = (x, d = 1) => (Number.isFinite(x) ? `${(x * 100).toFixed(d)}%` : '–')
-      const fmt = (x, d = 1) =>
+      const pct = (x, d = 0) => (Number.isFinite(x) ? `${(x * 100).toFixed(d)}%` : '–')
+      const pp = (x, d = 1) => (Number.isFinite(x) ? `${(x * 100).toFixed(d)} pp` : '–')
+      const fmt = (x, d = 0) =>
         Number.isFinite(x) ? x.toLocaleString('en-US', { maximumFractionDigits: d, minimumFractionDigits: d }) : '–'
       const sig = (x) => (Number.isFinite(x) ? String(Number(x.toPrecision(4))) : '–')
+      const numbers = (text) =>
+        String(text)
+          .split(/[\s,;]+/)
+          .map(Number)
+          .filter((x) => Number.isFinite(x) && x > 0)
 
       /* ---------- the Combat values and the formula ---------- */
       function combatValues() {
         const cv = { ...(info?.gdr.combatValues ?? {}), ...state.combat }
-        if (!state.exp.retreat) {
+        if (!state.setup.retreat) {
           // COMBAT, Combat end checks: the team considers retreating only below this fraction of its starting rating.
           cv.retreat_below_agent_rating_fraction = 0
         }
         return cv
       }
-
       // AGENTS, Effective skill, at full current health.
       function effectiveSkill(g, cv) {
         const penalty = Math.max(
@@ -626,14 +732,12 @@
       }
       // COMBAT, Incapacitation condition.
       function ableToFight(g, cv) {
-        const eff = effectiveSkill(g, cv)
         return (
           g.health > 0 &&
           g.exhaustion < (cv.exhaustion_incapacitation ?? Infinity) &&
-          eff > (cv.incapacitation_skill_fraction ?? 0) * g.skill
+          effectiveSkill(g, cv) > (cv.incapacitation_skill_fraction ?? 0) * g.skill
         )
       }
-
       const compiled = new Map()
       function compile(expr) {
         if (!compiled.has(expr)) {
@@ -642,16 +746,15 @@
         }
         return compiled.get(expr)
       }
-
-      /** The rating of a variant under a formula; throws on a broken expression. */
-      function rate(variant, formula, cv) {
+      /** The rating of a list of groups under a formula; throws on a broken expression. */
+      function rate(groups, formula, cv) {
         const p = formula.params
         const fc = compile(formula.combatant)
         const ft = compile(formula.team)
         let sum = 0
         let count = 0
         let game = 0
-        for (const g of variant.groups) {
+        for (const g of groups) {
           if (g.count <= 0 || !ableToFight(g, cv)) {
             continue
           }
@@ -679,77 +782,10 @@
         if (typeof cr !== 'number' || Number.isNaN(cr)) {
           throw new Error('team_cr is not a number')
         }
-        return { cr, game, count }
+        return cr
       }
 
-      /* ---------- variants and pairs ---------- */
-      const clean = (g) => ({
-        count: Math.max(0, Math.round(Number(g.count) || 0)),
-        skill: Math.max(0, Math.round(Number(g.skill) || 0)),
-        health: Math.max(1, Math.round(Number(g.health) || 1)),
-        damage: Math.max(1, Math.round(Number(g.damage) || 1)),
-        armor: Math.max(0, Math.round(Number(g.armor) || 0)),
-        exhaustion: Math.max(0, Math.round(Number(g.exhaustion) || 0)),
-      })
-      const sizesOf = (team) => {
-        const list = String(team.sizes)
-          .split(/[\s,;]+/)
-          .map(Number)
-          .filter((x) => Number.isFinite(x) && x > 0)
-        return list.length > 0 ? list : [1]
-      }
-      const total = (groups) => groups.reduce((n, g) => n + g.count, 0)
-
-      /** Every variant the experiment fights: one per team and size, or one per team sized to the first's rating. */
-      function variants(formula, cv) {
-        const out = []
-        state.teams.forEach((team, t) => {
-          const groups = team.groups.map(clean)
-          if (total(groups) === 0) {
-            return
-          }
-          for (const s of sizesOf(team)) {
-            const scaled = groups.map((g) => ({
-              ...g,
-              count: g.count === 0 ? 0 : Math.max(1, Math.round(g.count * s)),
-            }))
-            out.push({ team: t, name: team.name, groups: scaled })
-            if (state.exp.match) {
-              break
-            }
-          }
-        })
-        if (state.exp.match && out.length > 1) {
-          const target = rate(out[0], formula, cv).cr
-          for (const v of out.slice(1)) {
-            const at = v.groups.findIndex((g) => g.count > 0)
-            let best = null
-            for (let c = 1; c <= 2000; c += 1) {
-              const groups = v.groups.map((g, i) => (i === at ? { ...g, count: c } : g))
-              const cr = rate({ groups }, formula, cv).cr
-              const miss = Math.abs(Math.log(Math.max(cr, 1e-9) / Math.max(target, 1e-9)))
-              if (best === null || miss < best.miss) {
-                best = { miss, groups }
-              }
-              if (cr > target * 2) {
-                break
-              }
-            }
-            v.groups = best.groups
-          }
-        }
-        for (const v of out) {
-          v.size = total(v.groups)
-          v.label = `${v.name} ${v.size}`
-          v.sig = JSON.stringify(
-            v.groups
-              .filter((g) => g.count > 0)
-              .map((g) => [g.count, g.skill, g.health, g.damage, g.armor, g.exhaustion]),
-          )
-        }
-        return out
-      }
-
+      /* ---------- the model: Mission sites, Agent teams, and cells ---------- */
       function hash(s) {
         let h1 = 0x811c9dc5
         let h2 = 0x9747b28c
@@ -760,29 +796,122 @@
         }
         return (h1 >>> 0).toString(16).padStart(8, '0') + (h2 >>> 0).toString(16).padStart(8, '0')
       }
+      const upgradeSets = () =>
+        String(state.setup.upgrades)
+          .split(/[,;]+/)
+          .map((s) => s.trim().split('/').map(Number))
+          .filter(([w, a]) => Number.isInteger(w) && Number.isInteger(a) && w >= 0 && a >= 0)
+          .map(([w, a]) => ({
+            w,
+            a,
+            label: w === 0 && a === 0 ? 'none' : [w ? `W${w}` : '', a ? `A${a}` : ''].join(' ').trim(),
+          }))
 
-      function pairsOf(vs, cv) {
-        const trials = Math.max(10, Math.min(10000, Math.round(state.exp.trials) || 100))
-        const tail = JSON.stringify([trials, cv])
-        const out = []
-        const add = (a, b) => out.push({ a, b, trials, key: hash(`${a.sig}|${b.sig}|${tail}`) })
-        if (state.exp.pairing === 'first') {
-          for (const b of vs.slice(1)) {
-            add(vs[0], b)
+      function sitesOf(cv) {
+        const g = info.gdr
+        const byId = new Map(g.enemyArchetypes.map((e) => [e.id, e]))
+        const sites = g.missionSites.map((s) => {
+          const groups = Object.entries(s.enemies)
+            .filter(([, n]) => n > 0)
+            .map(([id, n]) => {
+              const e = byId.get(id)
+              return { count: n, skill: e.skill, health: e.health, damage: e.damage, armor: e.armor, exhaustion: 0 }
+            })
+          return { ...s, groups, size: groups.reduce((n, x) => n + x.count, 0) }
+        })
+        // The Initiative sites first, then the Response sites by operation level, each in the order of the YAML file.
+        return [
+          ...sites.filter((s) => s.kind === 'initiative'),
+          ...sites.filter((s) => s.kind !== 'initiative').sort((a, b) => (a.level ?? 0) - (b.level ?? 0)),
+        ]
+      }
+
+      function agentGroups(skill, up, count) {
+        const a = info.gdr.agentArchetypes[0] ?? { health: 30, damage: 10, armor: 0 }
+        const inc = info.gdr.upgradeIncrements
+        return [
+          {
+            count,
+            skill,
+            health: a.health,
+            damage: a.damage + up.w * (inc.weapon_damage ?? 1),
+            armor: a.armor + up.a * (inc.armor ?? 1),
+            exhaustion: 0,
+          },
+        ]
+      }
+
+      /** The Agent count whose rating is closest, by ratio, to the target; ratings rise with the count. */
+      function countFor(target, skill, up, formula, cv) {
+        const cr = (n) => rate(agentGroups(skill, up, n), formula, cv)
+        if (!(target > 0) || cr(1) >= target) {
+          return 1
+        }
+        let hi = 2
+        while (cr(hi) < target && hi < 4096) {
+          hi *= 2
+        }
+        let lo = Math.max(1, hi / 2)
+        while (hi - lo > 1) {
+          const mid = Math.floor((lo + hi) / 2)
+          if (cr(mid) >= target) {
+            hi = mid
+          } else {
+            lo = mid
           }
-        } else {
-          for (let i = 0; i < vs.length; i += 1) {
-            for (let j = i + 1; j < vs.length; j += 1) {
-              add(vs[i], vs[j])
+        }
+        return Math.abs(Math.log(cr(lo) / target)) <= Math.abs(Math.log(cr(hi) / target)) ? lo : hi
+      }
+
+      function buildModel(formula = state.formula) {
+        const cv = combatValues()
+        const sites = sitesOf(cv)
+        const targets = numbers(state.setup.targets)
+        const skills = numbers(state.setup.skills).map(Math.round)
+        const ups = upgradeSets()
+        const trials = Math.max(10, Math.min(10000, Math.round(state.setup.trials) || 100))
+        const tail = JSON.stringify([info.engine, trials, cv])
+        const cells = []
+        for (const site of sites) {
+          site.cr = rate(site.groups, formula, cv)
+          site.sig = JSON.stringify(site.groups)
+          site.cells = []
+          for (const t of targets) {
+            for (const skill of skills) {
+              for (const up of ups) {
+                const target = (site.cr * t) / 100
+                const count = countFor(target, skill, up, formula, cv)
+                const groups = agentGroups(skill, up, count)
+                const cr = rate(groups, formula, cv)
+                const cell = {
+                  id: `${site.id}|${t}|${skill}|${up.w}/${up.a}`,
+                  site,
+                  t,
+                  skill,
+                  up,
+                  count,
+                  groups,
+                  cr,
+                  ratio: cr / site.cr,
+                  off: Math.abs(cr / site.cr / (t / 100) - 1) > 0.1,
+                  key: hash(`${site.sig}|${JSON.stringify(groups)}|${up.w}/${up.a}|${tail}`),
+                  trials,
+                }
+                site.cells.push(cell)
+                cells.push(cell)
+              }
             }
           }
         }
-        return out
+        return { cv, sites, targets, skills, ups, cells, trials }
       }
-      const sidesOf = () => (state.exp.sides === 'a' ? ['a'] : ['a', 'b'])
 
-      const entries = (v) =>
-        v.groups.flatMap((g) =>
+      const resultOf = (cell) => store.results[cell.key]
+      const winOf = (r) => r.prevailed / r.fought
+
+      /* ---------- fighting ---------- */
+      const entries = (groups) =>
+        groups.flatMap((g) =>
           Array.from({ length: g.count }, () => ({
             kind: 'explicit',
             baseSkill: g.skill,
@@ -794,59 +923,59 @@
           })),
         )
 
-      /* ---------- fighting ---------- */
-      let runTimer = 0
-      function scheduleRun() {
-        clearTimeout(runTimer)
-        runTimer = setTimeout(fight, 400)
-      }
-
-      async function fight() {
+      function request(cells) {
         if (info === null || info.engineError) {
           return
         }
-        let ctx
-        try {
-          ctx = context()
-        } catch {
-          return
-        }
-        const jobs = []
-        for (const pair of ctx.pairs) {
-          for (const side of sidesOf()) {
-            const id = `${pair.key}|${side}`
-            if (cache.has(id) || failures.has(id)) {
-              continue
-            }
-            const [agents, enemies] = side === 'a' ? [pair.a, pair.b] : [pair.b, pair.a]
-            jobs.push({
-              key: pair.key,
-              side,
-              agents: entries(agents),
-              enemies: entries(enemies),
-              trials: pair.trials,
-              gdrValues: ctx.cv,
-              seed: `${pair.key}|${side}`,
-            })
+        for (const cell of cells) {
+          if (resultOf(cell)) {
+            store.last[cell.id] = cell.key
+            continue
           }
+          failures.delete(cell.key)
+          const known = pending.get(cell.key)
+          if (known) {
+            known.cells.add(cell.id)
+            continue
+          }
+          pending.set(cell.key, {
+            cells: new Set([cell.id]),
+            job: {
+              key: cell.key,
+              side: 'a',
+              agents: entries(cell.groups),
+              enemies: entries(cell.site.groups),
+              trials: cell.trials,
+              gdrValues: model.cv,
+              seed: cell.key,
+              ratingUpgrades: { weaponDamage: cell.up.w, armor: cell.up.a },
+            },
+          })
         }
-        run?.ctl.abort()
-        run = null
-        if (jobs.length === 0) {
-          progress()
+        saveStore()
+        void restart()
+      }
+
+      /** Sends every pending fight to the server, in place of what it was sent before. */
+      async function restart() {
+        ctl?.abort()
+        ctl = null
+        scheduleRender()
+        if (pending.size === 0) {
           return
         }
-        // The largest Combats first, so that the last batches to finish are short ones.
-        jobs.sort((x, y) => y.agents.length + y.enemies.length - (x.agents.length + x.enemies.length))
-        const mine = { ctl: new AbortController(), total: jobs.length, done: 0, started: performance.now() }
-        run = mine
-        progress()
+        const mine = new AbortController()
+        ctl = mine
+        // The largest Combats first, so that the last fights to finish are short ones.
+        const jobs = [...pending.values()]
+          .map((p) => p.job)
+          .sort((x, y) => y.agents.length + y.enemies.length - (x.agents.length + x.enemies.length))
         try {
           const res = await fetch('/api/run', {
             method: 'POST',
             headers: { 'content-type': 'application/json' },
             body: JSON.stringify({ jobs }),
-            signal: mine.ctl.signal,
+            signal: mine.signal,
           })
           const reader = res.body.getReader()
           const decoder = new TextDecoder()
@@ -865,13 +994,21 @@
                 continue
               }
               const m = JSON.parse(line)
-              const id = `${m.key}|${m.side}`
-              if ('error' in m) {
-                failures.set(id, m.error)
-              } else {
-                cache.set(id, m)
+              const p = pending.get(m.key)
+              if (!p) {
+                continue
               }
-              mine.done += 1
+              pending.delete(m.key)
+              if ('error' in m) {
+                failures.set(m.key, m.error)
+              } else {
+                const { fought, prevailed, retreated, wiped, agentsDead } = m
+                store.results[m.key] = { fought, prevailed, retreated, wiped, agentsDead }
+                for (const id of p.cells) {
+                  store.last[id] = m.key
+                }
+                saveStore()
+              }
               scheduleRender()
             }
           }
@@ -881,136 +1018,80 @@
           }
           return
         }
-        if (run === mine) {
-          run = null
-          mine.ms = performance.now() - mine.started
-          lastRun = mine
+        if (ctl === mine) {
+          ctl = null
+          scheduleRender()
         }
-        scheduleRender()
       }
-      let lastRun = null
 
       function progress() {
         const p = $('#progress')
-        if (run !== null) {
-          p.textContent = `Fighting: ${run.done} / ${run.total} batches`
-          p.classList.add('on')
-        } else {
-          p.classList.remove('on')
-          p.textContent =
-            lastRun === null
-              ? `Idle; ${cache.size} batches fought`
-              : `Done: ${lastRun.total} batches in ${(lastRun.ms / 1000).toFixed(1)} s; ${cache.size} fought in all`
-          if (failures.size > 0) {
-            p.textContent += `; ${failures.size} failed: ${[...failures.values()][0]}`
-          }
-        }
+        const fresh = model ? model.cells.filter(resultOf).length : 0
+        const all = model ? model.cells.length : 0
+        p.classList.toggle('on', pending.size > 0)
+        p.textContent =
+          (pending.size > 0 ? `Fighting: ${pending.size} cells to go. ` : 'Idle. ') +
+          `${fresh} / ${all} cells have a result for the current formula.` +
+          (failures.size > 0 ? ` ${failures.size} failed: ${[...failures.values()][0]}` : '')
       }
 
-      /* ---------- scoring ---------- */
-      const predict = (r, k) => {
-        if (!(r > 0)) {
-          return r === 0 ? 0 : 0.5
-        }
-        if (!Number.isFinite(r)) {
-          return 1
-        }
-        return 1 / (1 + Math.pow(r, -k))
-      }
-
-      /** The pairs whose every side has been fought, with their win rates. */
-      function rowsOf(pairs) {
-        const rows = []
-        for (const pair of pairs) {
-          const a = cache.get(`${pair.key}|a`)
-          const b = sidesOf().length === 2 ? cache.get(`${pair.key}|b`) : null
-          if (a === undefined || b === undefined) {
-            continue
-          }
-          const asAgents = a.prevailed / a.fought
-          // As the Enemies' side, team A wins whenever team B, the Agents' side, does not prevail.
-          const asEnemies = b === null ? null : (b.fought - b.prevailed) / b.fought
-          rows.push({ pair, asAgents, asEnemies, win: asEnemies === null ? asAgents : (asAgents + asEnemies) / 2 })
-        }
-        return rows
-      }
-
-      function sse(rows, ratio, k) {
+      /* ---------- statistics ---------- */
+      const predict = (r, k) => (!(r > 0) ? 0 : !Number.isFinite(r) ? 1 : 1 / (1 + Math.pow(r, -k)))
+      function sse(rows, k) {
         let s = 0
         for (const row of rows) {
-          s += (predict(ratio(row), k) - row.win) ** 2
+          s += (predict(row.ratio, k) - row.win) ** 2
         }
         return s
       }
       /** The steepness k with the least squared error, by golden-section search over ln k. */
-      function fitK(rows, ratio) {
+      function fitK(rows) {
         let lo = Math.log(0.2)
         let hi = Math.log(80)
         const g = (Math.sqrt(5) - 1) / 2
         let x1 = hi - g * (hi - lo)
         let x2 = lo + g * (hi - lo)
-        let f1 = sse(rows, ratio, Math.exp(x1))
-        let f2 = sse(rows, ratio, Math.exp(x2))
+        let f1 = sse(rows, Math.exp(x1))
+        let f2 = sse(rows, Math.exp(x2))
         for (let i = 0; i < 50; i += 1) {
           if (f1 < f2) {
             hi = x2
             x2 = x1
             f2 = f1
             x1 = hi - g * (hi - lo)
-            f1 = sse(rows, ratio, Math.exp(x1))
+            f1 = sse(rows, Math.exp(x1))
           } else {
             lo = x1
             x1 = x2
             f1 = f2
             x2 = lo + g * (hi - lo)
-            f2 = sse(rows, ratio, Math.exp(x2))
+            f2 = sse(rows, Math.exp(x2))
           }
         }
         const k = Math.exp((lo + hi) / 2)
-        return { k, sse: sse(rows, ratio, k) }
+        return { k, sse: sse(rows, k) }
       }
-
-      /**
-       * The factor by which each variant fights above or below its rating: c minimises the squared error of
-       * P = 1 / (1 + exp(−k (ln r + c_A − c_B))), anchored at a mean of 0, or at 0 for the first variant when only
-       * it is paired with the others.
-       */
-      function strengths(rows, ratioOf, k, vs) {
-        const index = new Map(vs.map((v, i) => [v, i]))
-        const c = new Float64Array(vs.length)
-        for (let step = 0; step < 200; step += 1) {
-          // A damped Gauss-Newton step on each variant's own factor.
-          const grad = new Float64Array(vs.length)
-          const curv = new Float64Array(vs.length)
-          for (const row of rows) {
-            const ia = index.get(row.pair.a)
-            const ib = index.get(row.pair.b)
-            const x = k * (Math.log(ratioOf(row)) + c[ia] - c[ib])
-            const p = 1 / (1 + Math.exp(-x))
-            const slope = k * p * (1 - p)
-            const d = (p - row.win) * slope
-            grad[ia] += d
-            grad[ib] -= d
-            curv[ia] += slope * slope
-            curv[ib] += slope * slope
-          }
-          for (let i = 0; i < c.length; i += 1) {
-            c[i] -= (0.5 * grad[i]) / (curv[i] + 1e-4)
-            c[i] = Math.max(-3, Math.min(3, c[i]))
-          }
-          const anchor = state.exp.pairing === 'first' ? c[0] : c.reduce((s, x) => s + x, 0) / c.length
-          for (let i = 0; i < c.length; i += 1) {
-            c[i] -= anchor
-          }
+      function summary(wins, trials) {
+        const n = wins.length
+        if (n === 0) {
+          return { n }
         }
-        return c
-      }
-
-      function context(formula = state.formula) {
-        const cv = combatValues()
-        const vs = variants(formula, cv)
-        const ratings = new Map(vs.map((v) => [v, rate(v, formula, cv)]))
-        return { cv, vs, ratings, pairs: pairsOf(vs, cv) }
+        const mean = wins.reduce((s, w) => s + w, 0) / n
+        const sd = Math.sqrt(wins.reduce((s, w) => s + (w - mean) ** 2, 0) / n)
+        // The spread a finite number of Combats leaves around each cell's true win rate.
+        const dice = Math.sqrt(wins.reduce((s, w) => s + w * (1 - w), 0) / n / Math.max(1, trials - 1))
+        const rms50 = Math.sqrt(wins.reduce((s, w) => s + (w - 0.5) ** 2, 0) / n)
+        return {
+          n,
+          mean,
+          sd,
+          dice,
+          formula: Math.sqrt(Math.max(0, sd * sd - dice * dice)),
+          rms50,
+          formula50: Math.sqrt(Math.max(0, rms50 * rms50 - dice * dice)),
+          min: Math.min(...wins),
+          max: Math.max(...wins),
+        }
       }
 
       /* ---------- the fit of the formula ---------- */
@@ -1035,10 +1116,10 @@
           } else if (r.f < simplex[n - 1].f) {
             simplex[n] = r
           } else {
-            const k = { x: at(0.5) }
-            k.f = f(k.x)
-            if (k.f < worst.f) {
-              simplex[n] = k
+            const c = { x: at(0.5) }
+            c.f = f(c.x)
+            if (c.f < worst.f) {
+              simplex[n] = c
             } else {
               simplex = simplex.map((p, i) =>
                 i === 0 ? p : { x: p.x.map((v, j) => best.x[j] + 0.5 * (v - best.x[j])), f: NaN },
@@ -1059,27 +1140,30 @@
           alert('Check at least one parameter to fit.')
           return
         }
-        let ctx
-        try {
-          ctx = context()
-        } catch (e) {
-          alert(e.message)
-          return
-        }
-        // The variants and pairs fought so far stay fixed during the fit; only their ratings change.
-        const rows = rowsOf(ctx.pairs)
+        // Every cell with a result for the current formula, each fight once: the teams fought stay fixed during the
+        // fit, and only their ratings change. A stale cell does not count, because the current model does not hold
+        // the Agent count it was fought with.
+        const seen = new Set()
+        const rows = model.cells
+          .filter((cell) => resultOf(cell) && !seen.has(cell.key) && seen.add(cell.key))
+          .map((cell) => ({ cell, win: winOf(resultOf(cell)) }))
         if (rows.length < 3) {
-          alert('Fight at least three pairs first.')
+          alert('Run at least three cells for the current formula first.')
           return
         }
-        const vs = ctx.vs
         const objective = (x) => {
           const formula = { ...state.formula, params: { ...state.formula.params } }
           free.forEach((name, i) => (formula.params[name] = x[i]))
           try {
-            const crs = new Map(vs.map((v) => [v, rate(v, formula, ctx.cv).cr]))
-            const ratio = (row) => crs.get(row.pair.a) / crs.get(row.pair.b)
-            const s = fitK(rows, ratio).sse
+            const siteCr = new Map()
+            const list = rows.map((row) => {
+              const s = row.cell.site
+              if (!siteCr.has(s)) {
+                siteCr.set(s, rate(s.groups, formula, model.cv))
+              }
+              return { win: row.win, ratio: rate(row.cell.groups, formula, model.cv) / siteCr.get(s) }
+            })
+            const s = fitK(list).sse
             return Number.isFinite(s) ? s : Infinity
           } catch {
             return Infinity
@@ -1112,8 +1196,15 @@
         $('#exprC').value = state.formula.combatant
         $('#exprT').value = state.formula.team
       }
-
-      function renderCombat() {
+      function renderSetup() {
+        for (const input of document.querySelectorAll('[data-bind^="setup."]')) {
+          const v = state.setup[input.dataset.bind.slice(6)]
+          if (input.type === 'checkbox') {
+            input.checked = v
+          } else {
+            input.value = v
+          }
+        }
         const base = info?.gdr.combatValues ?? {}
         $('#combat').innerHTML =
           `<tr><th>Value</th><th class="r">Content</th><th class="r">Used</th></tr>` +
@@ -1125,216 +1216,174 @@
             .join('')
       }
 
-      function renderTeams() {
-        $('#teams').innerHTML = state.teams
-          .map(
-            (team, t) => `<div class="card">
-            <div class="row">
-              <input class="wide" data-bind="teams.${t}.name" data-type="str" value="${esc(team.name)}" aria-label="Team name">
-              <label class="inline">Sizes <input class="wide" style="width:170px" data-bind="teams.${t}.sizes" data-type="str" value="${esc(team.sizes)}"></label>
-              <span style="flex:1"></span>
-              <button class="small" data-act="up" data-team="${t}" title="Move up">↑</button>
-              <button class="small" data-act="dup" data-team="${t}">Copy</button>
-              <button class="small" data-act="del" data-team="${t}">Remove</button>
-            </div>
-            <div class="scroll"><table>
-              <tr><th class="r">Count</th><th class="r">Skill</th><th class="r">Health</th><th class="r">Damage</th><th class="r">Armor</th><th class="r">Exhaustion</th><th></th></tr>
-              ${team.groups
-                .map(
-                  (g, i) => `<tr>${['count', 'skill', 'health', 'damage', 'armor', 'exhaustion']
-                    .map(
-                      (f) =>
-                        `<td class="r"><input class="narrow" type="number" min="0" step="1" data-bind="teams.${t}.groups.${i}.${f}" data-type="num" value="${g[f]}" aria-label="${f}"></td>`,
-                    )
-                    .join('')}
-                  <td><button class="small" data-act="del-group" data-team="${t}" data-group="${i}" ${team.groups.length === 1 ? 'disabled' : ''}>×</button></td></tr>`,
-                )
-                .join('')}
-            </table></div>
-            <div class="row"><button class="small" data-act="add-group" data-team="${t}">Add group</button><span class="crline" data-cr="${t}"></span></div>
-          </div>`,
-          )
-          .join('')
-      }
-
-      function renderPresets() {
-        const g = info?.gdr
-        if (!g) {
-          return
-        }
-        const opt = (value, label) => `<option value="${esc(value)}">${esc(label)}</option>`
-        $('#preset').innerHTML =
-          `<optgroup label="Agent archetypes">${g.agentArchetypes.map((a) => opt(`agent:${a.id}`, a.name)).join('')}</optgroup>` +
-          `<optgroup label="Enemy archetypes">${g.enemyArchetypes.map((a) => opt(`enemy:${a.id}`, a.name)).join('')}</optgroup>` +
-          `<optgroup label="Mission sites' Enemies">${g.missionSites.map((s) => opt(`site:${s.id}`, s.id)).join('')}</optgroup>`
-      }
-
-      function addPreset(value) {
-        const g = info.gdr
-        const [kind, id] = value.split(':')
-        const of = (a, count) => group(count, a.skill, a.health, a.damage, a.armor)
-        if (kind === 'site') {
-          const site = g.missionSites.find((s) => s.id === id)
-          const groups = Object.entries(site.enemies)
-            .filter(([, n]) => n > 0)
-            .map(([e, n]) =>
-              of(
-                g.enemyArchetypes.find((a) => a.id === e),
-                n,
-              ),
-            )
-          state.teams.push({ name: id, sizes: '1', groups })
-        } else {
-          const a = (kind === 'agent' ? g.agentArchetypes : g.enemyArchetypes).find((x) => x.id === id)
-          state.teams.push({ name: a.name, sizes: '4, 8, 16', groups: [of(a, 1)] })
-        }
-      }
-
-      /* ---------- rendering of the results ---------- */
+      /* ---------- rendering of the grid and the analysis ---------- */
       let renderQueued = false
       function scheduleRender() {
         if (!renderQueued) {
           renderQueued = true
           requestAnimationFrame(() => {
             renderQueued = false
-            renderResults()
+            render()
           })
         }
       }
 
-      function renderResults() {
-        progress()
-        let ctx
+      function tint(w) {
+        const d = Math.min(1, Math.abs(w - 0.5) * 2)
+        return `rgba(var(${w < 0.5 ? '--low' : '--high'}), ${(0.08 + 0.55 * d).toFixed(3)})`
+      }
+
+      function cellHtml(cell) {
+        const r = resultOf(cell)
+        const lastKey = store.last[cell.id]
+        const old = !r && lastKey ? store.results[lastKey] : null
+        const queued = pending.has(cell.key)
+        const cls = ['cell', r ? 'fresh' : old ? 'stale' : '', cell.off ? 'off' : '', queued ? 'queued' : ''].join(' ')
+        const w = r ? winOf(r) : old ? winOf(old) : null
+        const style = r ? `background:${tint(winOf(r))}` : ''
+        const text = queued ? '…' : w === null ? '–' : pct(w)
+        return `<div class="${cls}" style="${style}" data-cell="${esc(cell.id)}"><span class="n">${cell.count}</span><span class="w">${text}</span></div>`
+      }
+
+      function render() {
+        if (info === null) {
+          return
+        }
         try {
-          ctx = context()
+          model = buildModel()
           $('#exprErr').textContent = ''
         } catch (e) {
           $('#exprErr').textContent = e.message
           return
         }
-        const { vs, ratings } = ctx
-        // The rating of each variant, under each team card.
-        state.teams.forEach((_, t) => {
-          const span = document.querySelector(`[data-cr="${t}"]`)
-          if (span) {
-            span.textContent = vs
-              .filter((v) => v.team === t)
-              .map((v) => `${v.size}: ${fmt(ratings.get(v).cr, 0)}`)
-              .join(' · ')
-              .replace(/^/, 'team_cr by size  ')
+        progress()
+        const { sites, targets, skills, ups } = model
+        const byId = new Map(model.cells.map((c) => [c.id, c]))
+        model.byId = byId
+        const blockHead = (t, site) => {
+          if (site === null) {
+            return `<div class="bh"><span class="t">${t}% of the site</span><button class="small" data-act="run-col" data-t="${t}">Run</button></div>`
           }
-        })
-        const rows = rowsOf(ctx.pairs)
-        const ratioOf = (row) => ratings.get(row.pair.a).cr / ratings.get(row.pair.b).cr
-        const fit = rows.length >= 2 ? fitK(rows, ratioOf) : { k: NaN, sse: NaN }
-        const k = fit.k
-        for (const row of rows) {
-          row.r = ratioOf(row)
-          row.pred = predict(row.r, k)
-          row.err = row.win - row.pred
+          const cells = site.cells.filter((c) => c.t === t)
+          const wins = cells.filter((c) => resultOf(c) && !c.off).map((c) => winOf(resultOf(c)))
+          const s = summary(wins, model.trials)
+          return `<div class="bh"><span>${t}% · CR ${fmt((site.cr * t) / 100)}</span>${
+            s.n > 0 ? `<span>μ ${pct(s.mean)} ±${(s.sd * 100).toFixed(0)}</span>` : ''
+          }<button class="small" data-act="run-sec" data-site="${site.id}" data-t="${t}">Run</button></div>`
         }
-        lastRows = rows
-        const contested = rows.filter(
-          (row) => (row.win > 0.05 && row.win < 0.95) || (row.pred > 0.05 && row.pred < 0.95),
+        const block = (t, site) => {
+          let html = `<div class="block">${blockHead(t, site)}`
+          if (site === null) {
+            html += `<span></span>${ups.map((u) => `<span class="uh">${esc(u.label)}</span>`).join('')}`
+          } else {
+            for (const skill of skills) {
+              html += `<span class="tier">${skill}</span>`
+              for (const up of ups) {
+                html += cellHtml(byId.get(`${site.id}|${t}|${skill}|${up.w}/${up.a}`))
+              }
+            }
+          }
+          return `${html}</div>`
+        }
+        const head = `<div class="grow-row headrow"><div class="site note">Mission site<br>base skill ↓ · Upgrades →</div>${targets
+          .map((t) => block(t, null))
+          .join('')}</div>`
+        const rows = sites
+          .map(
+            (site) => `<div class="grow-row"><div class="site"><b>${esc(site.name)}</b>
+              <span class="meta">${site.kind === 'initiative' ? 'Initiative' : `Response, level ${site.level}`}</span>
+              <span class="meta">CR ${fmt(site.cr)} · ${site.size} Enemies</span>
+              <span><button class="small" data-act="run-row" data-site="${site.id}">Run row</button></span></div>
+              ${targets.map((t) => block(t, site)).join('')}</div>`,
+          )
+          .join('')
+        const grid = $('#grid')
+        grid.style.setProperty('--targets', targets.length)
+        grid.style.setProperty('--ups', ups.length)
+        grid.innerHTML = head + rows
+        renderAnalysis()
+      }
+
+      function renderAnalysis() {
+        const { targets, skills, ups, trials } = model
+        const fresh = model.cells
+          .filter((c) => resultOf(c) && !c.off)
+          .map((c) => ({ cell: c, win: winOf(resultOf(c)) }))
+        const off = model.cells.filter((c) => resultOf(c) && c.off).length
+        const fit = fresh.length >= 2 ? fitK(fresh.map((f) => ({ win: f.win, ratio: f.cell.ratio }))) : null
+        const k = fit?.k ?? NaN
+        const per = new Map(
+          targets.map((t) => [
+            t,
+            summary(
+              fresh.filter((f) => f.cell.t === t).map((f) => f.win),
+              trials,
+            ),
+          ]),
         )
-        const rmse = (list) => Math.sqrt(list.reduce((s, row) => s + row.err ** 2, 0) / list.length)
-        const parity = rows.filter((row) => Math.abs(Math.log(row.r)) <= Math.log(1.1))
-        const both = rows.filter((row) => row.asEnemies !== null)
-        const edge = both.reduce((s, row) => s + (row.asAgents - row.asEnemies) / 2, 0) / both.length
+        const grade = (x, dice) =>
+          !Number.isFinite(x) ? '' : x <= dice * 0.75 ? 'good' : x <= dice * 1.5 ? 'warn' : 'bad'
         const tile = (label, value, sub, cls = '') =>
           `<div class="tile"><span class="lbl">${label}</span><span class="v ${cls}">${value}</span><span class="s">${sub}</span></div>`
-        const grade = (x, good, ok) => (!Number.isFinite(x) ? '' : x <= good ? 'good' : x <= ok ? 'warn' : 'bad')
-        const rmseC = rmse(contested)
-        const par = parity.reduce((s, row) => s + Math.abs(row.win - 0.5), 0) / parity.length
-        // The error that the dice alone leave in a measured win rate, which no formula can remove.
-        const combats = (ctx.pairs[0]?.trials ?? 0) * sidesOf().length
-        const noise = (list) =>
-          Math.sqrt(
-            list.reduce((s, row) => s + Math.max(row.win * (1 - row.win), 0.25 / combats), 0) / list.length / combats,
-          )
-        const floorC = noise(contested)
-        const floorP = Math.sqrt(0.25 / combats) * Math.sqrt(2 / Math.PI)
         $('#tiles').innerHTML =
-          tile(
-            'Prediction error',
-            Number.isFinite(rmseC) ? `${(rmseC * 100).toFixed(1)} pp` : '–',
-            `root mean square over the ${contested.length} contested pairs, i.e. those that neither the Combats nor the prediction give 95% or more; the dice alone leave ${Number.isFinite(floorC) ? (floorC * 100).toFixed(1) : '–'} pp`,
-            grade(rmseC, floorC * 1.5, floorC * 3),
-          ) +
-          tile(
-            'Parity error',
-            Number.isFinite(par) ? `${(par * 100).toFixed(1)} pp` : '–',
-            `mean distance from 50% of the ${parity.length} pairs whose ratings are within 10% of each other; the dice alone leave ${(floorP * 100).toFixed(1)} pp`,
-            grade(par, floorP * 1.5, floorP * 3),
-          ) +
+          targets
+            .map((t) => {
+              const s = per.get(t)
+              if (s.n === 0) {
+                return tile(`${t}% of the site`, '–', 'no cell run yet')
+              }
+              const parity = t === 100
+              return tile(
+                `${t}% of the site · ${s.n} cells`,
+                `${pct(s.mean, 1)} <span style="font-size:15px">± ${pp(s.sd, 1).replace(' pp', '')}</span>`,
+                `mean win ± spread; range ${pct(s.min)}–${pct(s.max)}. Dice spread ${pp(s.dice)}, so formula spread <b class="${grade(s.formula, s.dice)}">${pp(s.formula)}</b>.` +
+                  (parity
+                    ? ` Distance from 50%: ${pp(s.rms50)} root mean square, formula part <b class="${grade(s.formula50, s.dice)}">${pp(s.formula50)}</b>.`
+                    : Number.isFinite(k)
+                      ? ` The curve predicts ${pct(predict(t / 100, k), 1)}.`
+                      : ''),
+              )
+            })
+            .join('') +
           tile(
             'Steepness k',
             Number.isFinite(k) ? k.toFixed(2) : '–',
             Number.isFinite(k)
-              ? `a rating ${['1.1', '1.25', '1.5', '2'].map((r) => `${r}× wins ${pct(predict(Number(r), k), 0)}`).join(', ')}`
-              : 'needs two fought pairs',
-          ) +
-          tile(
-            "Agents' side edge",
-            Number.isFinite(edge) ? `${edge >= 0 ? '+' : ''}${(edge * 100).toFixed(1)} pp` : '–',
-            "how much more a team wins as the Agents' side than as the Enemies' side, halved, over the pairs fought both ways",
-          ) +
-          tile(
-            'Pairs fought',
-            `${rows.length} / ${ctx.pairs.length}`,
-            `${vs.length} variants, ${ctx.pairs[0]?.trials ?? 0} Combats per side`,
+              ? `fitted over ${fresh.length} cells; a rating ${['1.1', '1.2', '1.5', '2'].map((r) => `${r}× wins ${pct(predict(Number(r), k))}`).join(', ')}` +
+                  (off > 0 ? `; ${off} cells off their share are left out` : '')
+              : 'needs two cells',
           )
 
-        renderChart(rows, k)
+        // Histograms of each share.
+        $('#hists').innerHTML = targets
+          .map((t) =>
+            histogram(
+              t,
+              fresh.filter((f) => f.cell.t === t).map((f) => f.win),
+            ),
+          )
+          .join('')
 
-        // Variants.
-        const c = rows.length > 0 && Number.isFinite(k) ? strengths(rows, ratioOf, k, vs) : null
-        const errs = new Map(vs.map((v) => [v, []]))
-        for (const row of rows) {
-          errs.get(row.pair.a).push(row.err)
-          errs.get(row.pair.b).push(-row.err)
-        }
-        $('#variants').innerHTML =
-          `<tr><th>Variant</th><th class="r">Size</th><th class="r">Game CR</th><th class="r">team_cr</th><th class="r">Strength vs rating</th><th class="r">Mean error</th></tr>` +
-          vs
-            .map((v, i) => {
-              const r = ratings.get(v)
-              const e = errs.get(v)
-              const mean = e.reduce((s, x) => s + x, 0) / e.length
-              const sv = c === null || e.length === 0 ? NaN : Math.exp(c[i]) - 1
-              const cls = !Number.isFinite(sv)
-                ? ''
-                : Math.abs(sv) < 0.05
-                  ? 'good'
-                  : Math.abs(sv) < 0.15
-                    ? 'warn'
-                    : 'bad'
-              return `<tr><td style="font-family:var(--body)">${esc(v.label)}</td><td class="r">${v.size}</td><td class="r">${fmt(r.game, 0)}</td>
-              <td class="r">${fmt(r.cr, 0)}</td><td class="r ${cls}">${Number.isFinite(sv) ? `${sv >= 0 ? '+' : ''}${(sv * 100).toFixed(0)}%` : '–'}</td>
-              <td class="r">${Number.isFinite(mean) ? `${mean >= 0 ? '+' : ''}${(mean * 100).toFixed(1)} pp` : '–'}</td></tr>`
-            })
-            .join('')
+        renderScatter(fresh, k)
 
-        // Pairs.
-        const sorted = [...rows].sort((x, y) => Math.abs(y.err) - Math.abs(x.err))
-        const shown = showAllPairs ? sorted : sorted.slice(0, 40)
-        $('#morePairs').hidden = showAllPairs || sorted.length <= 40
-        const two = sidesOf().length === 2
-        $('#pairs').innerHTML =
-          `<tr><th>Team A</th><th>Team B</th><th class="r">CR A</th><th class="r">CR B</th><th class="r">A / B</th><th class="r">Predicted</th><th class="r">A wins</th>${
-            two ? `<th class="r">as Agents</th><th class="r">as Enemies</th>` : ''
-          }<th class="r">Error</th></tr>` +
-          shown
-            .map((row) => {
-              const ra = ratings.get(row.pair.a).cr
-              const rb = ratings.get(row.pair.b).cr
-              const cls = Math.abs(row.err) < 0.05 ? 'good' : Math.abs(row.err) < 0.12 ? 'warn' : 'bad'
-              return `<tr><td style="font-family:var(--body)">${esc(row.pair.a.label)}</td><td style="font-family:var(--body)">${esc(row.pair.b.label)}</td>
-              <td class="r">${fmt(ra, 0)}</td><td class="r">${fmt(rb, 0)}</td><td class="r">${fmt(row.r, 2)}</td>
-              <td class="r">${pct(row.pred)}</td><td class="r">${pct(row.win)}</td>
-              ${two ? `<td class="r">${pct(row.asAgents)}</td><td class="r">${pct(row.asEnemies)}</td>` : ''}
-              <td class="r ${cls}">${row.err >= 0 ? '+' : ''}${(row.err * 100).toFixed(1)} pp</td></tr>`
-            })
+        // Agent teams by share.
+        const sd = (wins) => summary(wins, trials)
+        const heat = (s) => (s.n > 0 ? `background:${tint(s.mean)}` : '')
+        $('#teams').innerHTML =
+          `<tr><th class="r">Skill</th><th>Upgrades</th>${targets.map((t) => `<th class="r">${t}%</th>`).join('')}</tr>` +
+          skills
+            .flatMap((skill) =>
+              ups.map((up) => {
+                const cellsOf = (t) =>
+                  fresh.filter((f) => f.cell.t === t && f.cell.skill === skill && f.cell.up === up).map((f) => f.win)
+                return `<tr><td class="r">${skill}</td><td>${esc(up.label)}</td>${targets
+                  .map((t) => {
+                    const s = sd(cellsOf(t))
+                    return `<td class="r" style="${heat(s)}">${s.n > 0 ? `${pct(s.mean)} ±${(s.sd * 100).toFixed(0)} <span class="note">(${s.n})</span>` : '–'}</td>`
+                  })
+                  .join('')}</tr>`
+              }),
+            )
             .join('')
 
         const p = state.formula.params
@@ -1346,37 +1395,71 @@
           `damage_mult  = 1 + (damage − ${p.damage_base}) × ${p.damage_per_point}`,
           `team_exp     = ${p.team_exp}`,
           ``,
-          `k = ${sig(k)}; prediction error ${Number.isFinite(rmseC) ? (rmseC * 100).toFixed(1) : '–'} pp over ${contested.length} contested pairs; parity error ${Number.isFinite(par) ? (par * 100).toFixed(1) : '–'} pp over ${parity.length} pairs`,
-          `${rows.length} pairs of ${vs.length} variants, ${ctx.pairs[0]?.trials ?? 0} Combats per side, ${two ? 'both sides' : 'A as Agents'}${state.exp.match ? ', sized to equal rating' : ''}${state.exp.retreat ? ', retreat allowed' : ''}`,
+          ...targets.map((t) => {
+            const s = per.get(t)
+            return s.n === 0
+              ? `${t}%: no cells`
+              : `${t}%: ${s.n} cells, win ${pct(s.mean, 1)} ± ${pp(s.sd)} (dice ${pp(s.dice)}, formula ${pp(s.formula)})${t === 100 ? `, from 50% ${pp(s.rms50)} rms` : ''}`
+          }),
+          `k = ${sig(k)}; ${trials} Combats per cell${state.setup.retreat ? ', retreat allowed' : ''}`,
         ].join('\n')
       }
 
-      function renderChart(rows, k) {
+      function histogram(t, wins) {
+        const W = 420
+        const H = 170
+        const m = { l: 30, r: 8, t: 10, b: 30 }
+        const bins = new Array(20).fill(0)
+        for (const w of wins) {
+          bins[Math.min(19, Math.floor(w * 20))] += 1
+        }
+        const top = Math.max(1, ...bins)
+        const bw = (W - m.l - m.r) / 20
+        const Y = (n) => m.t + (1 - n / top) * (H - m.t - m.b)
+        const bars = bins
+          .map((n, i) =>
+            n === 0
+              ? ''
+              : `<rect x="${(m.l + i * bw + 1).toFixed(1)}" y="${Y(n).toFixed(1)}" width="${(bw - 2).toFixed(1)}" height="${(H - m.b - Y(n)).toFixed(1)}" rx="2" fill="var(--accent)"><title>${i * 5}–${i * 5 + 5}%: ${n} cells</title></rect>`,
+          )
+          .join('')
+        const x = (w) => m.l + w * (W - m.l - m.r)
+        const ticks = [0, 0.25, 0.5, 0.75, 1]
+          .map((w) => `<text x="${x(w)}" y="${H - m.b + 14}" text-anchor="middle">${w * 100}%</text>`)
+          .join('')
+        return `<div class="chart"><div class="lbl note" style="font-weight:600">${t}% of the site · ${wins.length} cells</div>
+          <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Histogram of the win rates of the teams sized to ${t}% of their site">
+          <line x1="${x(0.5)}" x2="${x(0.5)}" y1="${m.t}" y2="${H - m.b}" stroke="var(--border)" stroke-dasharray="4 4"/>
+          <line x1="${m.l}" x2="${W - m.r}" y1="${H - m.b}" y2="${H - m.b}" stroke="var(--border)"/>
+          <text x="${m.l - 6}" y="${m.t + 8}" text-anchor="end">${top}</text>
+          ${bars}${ticks}</svg></div>`
+      }
+
+      const TIER_COLORS = ['var(--accent)', 'var(--notice)', 'var(--positive)', 'var(--warning)', 'var(--danger)']
+      function renderScatter(fresh, k) {
         const W = 760
         const H = 380
         const m = { l: 48, r: 18, t: 14, b: 40 }
-        let pts = rows
-          .filter((row) => Number.isFinite(row.r) && row.r > 0)
-          .map((row) =>
-            row.r >= 1
-              ? { r: row.r, win: row.win, hi: row.pair.a, lo: row.pair.b, row }
-              : { r: 1 / row.r, win: 1 - row.win, hi: row.pair.b, lo: row.pair.a, row },
+        const skills = model.skills
+        $('#scatterLegend').innerHTML = skills
+          .map(
+            (s, i) => `<span><i style="background:${TIER_COLORS[i % TIER_COLORS.length]}"></i>base skill ${s}</span>`,
           )
-        // The axis ends a little past the last contested pair; the pairs beyond it are all won outright and are left out.
-        const contested = pts.filter((p) => p.win < 0.99 || (p.row.pred > 0.01 && p.row.pred < 0.99))
-        const xmax = Math.min(16, Math.max(1.5, ...contested.map((p) => p.r)) * 1.15)
-        pts = pts.filter((p) => p.r <= xmax)
-        const X = (r) => m.l + (Math.log(Math.min(r, xmax)) / Math.log(xmax)) * (W - m.l - m.r)
+          .join('')
+        const rs = fresh.map((f) => f.cell.ratio).filter((r) => r > 0 && Number.isFinite(r))
+        const xmin = Math.min(0.8, ...rs) * 0.97
+        const xmax = Math.max(1.7, ...rs) * 1.03
+        const X = (r) => m.l + (Math.log(r / xmin) / Math.log(xmax / xmin)) * (W - m.l - m.r)
         const Y = (w) => m.t + (1 - w) * (H - m.t - m.b)
         const grid = [0, 0.25, 0.5, 0.75, 1]
           .map(
             (w) =>
-              `<line x1="${m.l}" x2="${W - m.r}" y1="${Y(w)}" y2="${Y(w)}" stroke="var(--divider)" ${w === 0.5 ? 'stroke-dasharray="4 4" stroke="var(--border)"' : ''}/>
+              `<line x1="${m.l}" x2="${W - m.r}" y1="${Y(w)}" y2="${Y(w)}" stroke="var(--divider)" ${w === 0.5 ? 'stroke-dasharray="4 4"' : ''}/>
               <text x="${m.l - 6}" y="${Y(w) + 4}" text-anchor="end">${w * 100}%</text>`,
           )
           .join('')
-        const ticks = [1, 1.25, 1.5, 2, 3, 4, 6, 8, 12, 16]
-          .filter((t) => t <= xmax)
+        const ticks = [0.8, 0.9, 1, 1.1, 1.2, 1.35, 1.5, 1.75, 2, 2.5, 3, 4]
+          .filter((t) => t >= xmin && t <= xmax)
           .map(
             (t) =>
               `<line x1="${X(t)}" x2="${X(t)}" y1="${m.t}" y2="${H - m.b}" stroke="var(--divider)"/>
@@ -1385,58 +1468,50 @@
           .join('')
         let curve = ''
         if (Number.isFinite(k)) {
-          const steps = 80
-          const d = Array.from({ length: steps + 1 }, (_, i) => {
-            const r = Math.exp((i / steps) * Math.log(xmax))
+          const d = Array.from({ length: 81 }, (_, i) => {
+            const r = xmin * Math.pow(xmax / xmin, i / 80)
             return `${i === 0 ? 'M' : 'L'}${X(r).toFixed(1)},${Y(predict(r, k)).toFixed(1)}`
           }).join('')
-          const lr = Math.min(xmax, Math.exp(Math.log(xmax) * 0.62))
-          curve = `<path d="${d}" fill="none" stroke="var(--text2)" stroke-width="2"/>
-            <text x="${X(lr) + 8}" y="${Y(predict(lr, k)) + 16}" style="fill:var(--text2)">prediction, k = ${k.toFixed(2)}</text>`
+          curve = `<path d="${d}" fill="none" stroke="var(--text2)" stroke-width="2"/>`
         }
+        const pts = fresh.filter((f) => f.cell.ratio >= xmin && f.cell.ratio <= xmax)
         const dots = pts
-          .map(
-            (p, i) =>
-              `<circle cx="${X(p.r).toFixed(1)}" cy="${Y(p.win).toFixed(1)}" r="4.5" fill="var(--accent)" stroke="var(--bg)" stroke-width="2" data-i="${i}"/>`,
-          )
+          .map((f, i) => {
+            const color = TIER_COLORS[skills.indexOf(f.cell.skill) % TIER_COLORS.length]
+            return `<circle cx="${X(f.cell.ratio).toFixed(1)}" cy="${Y(f.win).toFixed(1)}" r="4" fill="${color}" stroke="var(--bg)" stroke-width="1.5" data-i="${i}"/>`
+          })
           .join('')
-        const hits = pts
-          .map(
-            (p, i) =>
-              `<circle cx="${X(p.r).toFixed(1)}" cy="${Y(p.win).toFixed(1)}" r="9" fill="transparent" data-i="${i}" style="cursor:default"/>`,
-          )
-          .join('')
-        $('#chart').innerHTML =
-          `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Win rate of the higher-rated team of each pair against the ratio of the two ratings">
+        $('#scatter').innerHTML =
+          `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Win rate of each cell against the ratio of its Agent team's rating to its site's">
           ${grid}${ticks}
-          <text x="${(W + m.l) / 2}" y="${H - 6}" text-anchor="middle">team_cr of the higher-rated team ÷ team_cr of the other (log scale)</text>
-          ${curve}${dots}${hits}</svg><div id="tip" hidden></div>`
-        const svg = $('#chart svg')
-        const tip = $('#tip')
+          <text x="${(W + m.l) / 2}" y="${H - 6}" text-anchor="middle">team_cr of the Agent team ÷ team_cr of the site (log scale)</text>
+          ${curve}${dots}</svg><div class="tip" hidden></div>`
+        const svg = $('#scatter svg')
+        const tip = $('#scatter .tip')
         svg.addEventListener('mousemove', (e) => {
           const i = e.target.dataset?.i
           if (i === undefined) {
             tip.hidden = true
             return
           }
-          const p = pts[Number(i)]
-          tip.innerHTML = `${esc(p.hi.label)} vs ${esc(p.lo.label)}<br>rating ${p.r.toFixed(2)}×<br>wins ${pct(p.win)}, predicted ${pct(p.row.r >= 1 ? p.row.pred : 1 - p.row.pred)}`
+          const f = pts[Number(i)]
+          tip.innerHTML = `${esc(f.cell.site.name)}, ${f.cell.t}%<br>${f.cell.count} Agents of skill ${f.cell.skill}, ${esc(f.cell.up.label)}<br>rating ${f.cell.ratio.toFixed(2)}×, wins ${pct(f.win, 1)}`
           tip.hidden = false
-          const box = $('#chart').getBoundingClientRect()
-          const x = e.clientX - box.left
-          tip.style.left = `${Math.min(x + 14, box.width - tip.offsetWidth - 4)}px`
+          const box = $('#scatter').getBoundingClientRect()
+          tip.style.left = `${Math.min(e.clientX - box.left + 14, box.width - tip.offsetWidth - 4)}px`
           tip.style.top = `${e.clientY - box.top + 14}px`
         })
         svg.addEventListener('mouseleave', () => (tip.hidden = true))
       }
 
       /* ---------- events ---------- */
+      let renderTimer = 0
       function changed() {
         save()
-        scheduleRender()
-        scheduleRun()
+        // The grid reads every cell's rating anew, so typing waits for a pause.
+        clearTimeout(renderTimer)
+        renderTimer = setTimeout(scheduleRender, 150)
       }
-
       function setPath(path, value) {
         const keys = path.split('.')
         let o = state
@@ -1445,7 +1520,6 @@
         }
         o[keys.at(-1)] = value
       }
-
       function onInput(e) {
         const t = e.target
         const path = t.dataset?.bind
@@ -1458,102 +1532,90 @@
           return
         }
         setPath(path, value)
-        if (path === 'exp.match' || path === 'exp.pairing' || path === 'exp.sides') {
-          showAllPairs = false
-        }
         changed()
       }
       document.addEventListener('input', onInput)
       document.addEventListener('change', (e) => {
-        if (e.target.type === 'checkbox' || e.target.tagName === 'SELECT') {
+        if (e.target.type === 'checkbox') {
           onInput(e)
         }
       })
 
       document.addEventListener('click', (e) => {
         const b = e.target.closest('[data-act]')
-        if (!b) {
+        if (!b || model === null) {
           return
         }
-        const t = Number(b.dataset.team)
-        switch (b.dataset.act) {
-          case 'add-team':
-            state.teams.push({
-              name: `Team ${state.teams.length + 1}`,
-              sizes: '4, 8, 16',
-              groups: [group(1, 100, 30, 10)],
-            })
-            break
-          case 'add-preset':
-            addPreset($('#preset').value)
-            break
-          case 'dup':
-            state.teams.splice(t + 1, 0, structuredClone({ ...state.teams[t], name: `${state.teams[t].name} copy` }))
-            break
-          case 'del':
-            state.teams.splice(t, 1)
-            break
-          case 'up':
-            if (t > 0) {
-              state.teams.splice(t - 1, 0, ...state.teams.splice(t, 1))
-            }
-            break
-          case 'add-group':
-            state.teams[t].groups.push({ ...state.teams[t].groups.at(-1) })
-            break
-          case 'del-group':
-            state.teams[t].groups.splice(Number(b.dataset.group), 1)
-            break
-          case 'preset-game':
-          case 'preset-default':
-          case 'preset-lanchester':
-            Object.assign(state.formula, FORMULAS[b.dataset.act.slice(7)])
-            renderFormula()
-            changed()
-            return
-          default:
-            return
-        }
-        renderTeams()
-        changed()
-      })
-
-      $('#fit').addEventListener('click', fitFormula)
-      $('#rerun').addEventListener('click', () => {
-        cache.clear()
-        failures.clear()
-        lastRun = null
-        changed()
-      })
-      $('#reset').addEventListener('click', () => {
-        if (confirm('Restore the default formula, teams, and settings?')) {
-          state = defaults()
-          renderAll()
+        const act = b.dataset.act
+        const t = Number(b.dataset.t)
+        if (act.startsWith('preset-')) {
+          Object.assign(state.formula, FORMULAS[act.slice(7)])
+          renderFormula()
           changed()
+        } else if (act === 'run-row') {
+          request(model.cells.filter((c) => c.site.id === b.dataset.site))
+        } else if (act === 'run-sec') {
+          request(model.cells.filter((c) => c.site.id === b.dataset.site && c.t === t))
+        } else if (act === 'run-col') {
+          request(model.cells.filter((c) => c.t === t))
         }
-      })
-      $('#morePairs').addEventListener('click', () => {
-        showAllPairs = true
-        renderResults()
       })
 
-      function renderAll() {
-        renderFormula()
-        renderTeams()
-        renderCombat()
-        renderPresets()
-        for (const input of document.querySelectorAll('[data-bind^="exp."]')) {
-          const v = state.exp[input.dataset.bind.slice(4)]
-          if (input.type === 'checkbox') {
-            input.checked = v
-          } else {
-            input.value = v
-          }
+      // The tooltip of a cell.
+      document.addEventListener('mouseover', (e) => {
+        const el = e.target.closest?.('[data-cell]')
+        const tip = $('#celltip')
+        if (!el || !model?.byId) {
+          tip.hidden = true
+          return
         }
-      }
+        const cell = model.byId.get(el.dataset.cell)
+        if (!cell) {
+          return
+        }
+        const r = resultOf(cell)
+        const lastKey = store.last[cell.id]
+        const old = !r && lastKey ? store.results[lastKey] : null
+        const lines = [
+          `${esc(cell.site.name)}, ${cell.t}% of CR ${fmt(cell.site.cr)}`,
+          `${cell.count} Agents: skill ${cell.skill}, health ${cell.groups[0].health}, damage ${cell.groups[0].damage}, armor ${cell.groups[0].armor}`,
+          `team_cr ${fmt(cell.cr)}, ${cell.ratio.toFixed(3)}× the site${cell.off ? ' (off its share)' : ''}`,
+        ]
+        if (r) {
+          lines.push(
+            `won ${r.prevailed} of ${r.fought}; Agents killed ${fmt(r.agentsDead / r.fought, 1)} per Combat${r.retreated ? `; retreated ${r.retreated}` : ''}`,
+          )
+        } else if (old) {
+          lines.push(`earlier result, with another Agent count or values: won ${old.prevailed} of ${old.fought}`)
+        } else {
+          lines.push('not run')
+        }
+        tip.innerHTML = lines.join('<br>')
+        tip.hidden = false
+        const box = el.getBoundingClientRect()
+        tip.style.left = `${Math.min(box.right + 8, window.innerWidth - tip.offsetWidth - 8)}px`
+        tip.style.top = `${box.top}px`
+      })
+
+      $('#runAll').addEventListener('click', () => model && request(model.cells))
+      $('#stop').addEventListener('click', () => {
+        pending.clear()
+        void restart()
+      })
+      $('#fit').addEventListener('click', () => model && fitFormula())
+      $('#forget').addEventListener('click', () => {
+        if (confirm('Forget every result kept in this browser?')) {
+          pending.clear()
+          void restart()
+          store = { results: {}, last: {} }
+          saveStore()
+          scheduleRender()
+        }
+      })
 
       async function start() {
-        renderAll()
+        renderFormula()
+        renderSetup()
         try {
           info = await (await fetch('/api/info')).json()
         } catch (e) {
@@ -1563,9 +1625,8 @@
         $('#engine').innerHTML = info.engineError
           ? `<span class="err">The engine did not start: ${esc(info.engineError)}</span>`
           : `Engine ${esc(info.impl)}, ${esc(info.engine)}; ${info.threads} worker threads.`
-        renderAll()
-        renderResults()
-        scheduleRun()
+        renderSetup()
+        render()
       }
       void start()
     </script>

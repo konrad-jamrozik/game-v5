@@ -90,8 +90,17 @@ function loadGdr() {
     enemyArchetypes: of('EnemyArchetype').map(combatant),
     missionSites: of('MissionSiteArchetype').map((d) => ({
       id: d.id,
+      name: typeof d['name'] === 'string' ? d['name'] : d.id,
+      kind: d['kind'],
+      level: typeof d['operation_level'] === 'number' ? d['operation_level'] : null,
       enemies: (d['enemies'] ?? {}) as Record<string, number>,
     })),
+    // What one purchase of each Upgrade that the Agent teams take adds to every Agent.
+    upgradeIncrements: Object.fromEntries(
+      of('Upgrade')
+        .filter((d) => typeof d['increment'] === 'number')
+        .map((d) => [d.id, d['increment'] as number]),
+    ),
   }
 }
 

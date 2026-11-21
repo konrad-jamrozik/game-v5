@@ -1,6 +1,6 @@
 # Combat Rating Bench
 
-A local page for finding a Combat rating formula that predicts who wins. Teams of Combatants fight each other in the engine, a candidate formula rates every team, and the page measures how well the ratings predict the Combats: two teams of equal rating should each win 50% of the time whatever their make-up, e.g. a few elite Combatants against many weak ones, and a growing ratio of ratings should raise the win rate the same way for every pair.
+A local page for finding a Combat rating formula that predicts who wins. Every Mission site's Enemies fight Agent teams that a candidate formula sizes to a set share of the site's rating, e.g. 100%, 120%, and 150%. A good formula gives every team sized to 100% a 50% win rate whatever its skill and Upgrades, e.g. a few Agents of base skill 500 and many of base skill 100 alike, and every team sized to a larger share one consistent win rate.
 
 It is a tool for the Game designer, not a specification and not part of any Implementation. It writes nothing to the repository: a formula found with it is applied to the specifications by hand or by an agent, and the page prints it as text to copy.
 
@@ -18,8 +18,6 @@ Then open <http://127.0.0.1:4719/>. The server runs under `node --watch`, so it 
 node tools/combat-rating-bench/server.ts --impl <game-v5-impl-web clone> --spec <game-v5 clone> --port <number>
 ```
 
-The formula, the teams, and the settings are kept in the browser's local storage; **Reset** restores the defaults.
-
 ## The formula
 
 The rating of a team is computed in two steps, each an editable JavaScript expression with `Math` in scope:
@@ -29,21 +27,33 @@ The rating of a team is computed in two steps, each an editable JavaScript expre
 
 The parameters, e.g. `health_per_point` and `team_exp`, are variables of both expressions. The buttons under the expressions load the game's base Combat rating, the multiplicative default, and a Lanchester square law, `sqrt(sum * count)`.
 
-## How the numbers are made
+## The grid
 
-- **Teams** are lists of groups of identical Combatants at full health, given by count, base skill, health, weapon damage, armor, and exhaustion. **Sizes** multiplies every group's count, giving one variant of the team per entry. A team can be added from an AgentArchetype, an EnemyArchetype, or a Mission site's Enemies, read from `content/`.
-- **Pairs** are every variant against every other, or the first variant against every other. With **Size every team to the first variant's rating**, each team other than the first fights in one variant only, whose first group's count gives the rating closest to the first variant's, so every pair is meant to be a 50% fight.
-- **Combats** are fought by the engine's `developer.tools.fightCombatBatch`, on explicit Combatants and with the Combat values listed on the page. With **Both sides, averaged**, every pair fights one batch with each team as the Agents' side, and a team's win rate is the mean of the two, because the Agents' side acts first, picks its targets, and alone can retreat. Retreat is off unless **Allow retreat** is checked, by setting `retreat_below_agent_rating_fraction` to 0, because it reads the game's own Combat rating rather than the formula; when it is allowed, a retreat counts as a loss for the retreating team.
-- **Seeds** are fixed: the batch of a pair has the Detached seed `<pair key>|<side>`, where the key hashes both teams, the Combats per side, and the Combat values, so a changed number reflects an edit, not new dice. A pair already fought is never fought again in the same page session; **Fight again** forgets every result.
-- **Prediction** is `P(A wins) = r^k / (1 + r^k)` with `r = team_cr(A) / team_cr(B)`, exactly 50% at equal ratings. The steepness `k` is fitted to the Combats by least squares, so it measures how sharply the win rate turns, and the remaining error measures how well the formula orders the teams.
-- **Prediction error** is the root mean square of the error over the contested pairs, i.e. those that neither the Combats nor the prediction give 95% or more. **Parity error** is the mean distance from 50% of the pairs whose ratings are within 10% of each other. Each states the error that the dice alone leave, which no formula can go below; more Combats per side lower it.
-- **Strength vs rating** of a variant is the factor by which it fights above or below its rating: the per-variant factor on the rating that makes the prediction fit best, anchored at a mean of 1, or at 1 for the first variant when only it is paired with the others.
-- **Fit** searches the checked parameters by Nelder-Mead for the least squared error of the prediction over the pairs fought so far, refitting `k` at each step. The Combats do not read the formula, so the fit, like every edit of the formula, fights nothing again, unless **Size every team** is on, in which case the resized teams are fought after it.
+- **Rows** are the Mission sites read from `content/`, the Initiative sites first and then the Response sites by operation level. Each site's Enemies take their EnemyArchetypes' values.
+- **Blocks** are the shares of the site's rating, by default `100, 120, 150`. In each block, the rows are the base skills of the Agent teams, by default `100, 250, 500`, and the columns their Upgrades as `weapon/armor` counts, by default `0/0, 5/0, 0/5, 5/5, 10/0, 0/10, 10/10`, so the defaults make 24 sites × 3 shares × 3 skills × 7 Upgrade sets, i.e. 1,512 cells.
+- **An Agent team** is Agents of the first AgentArchetype's health, weapon damage, and armor, at full health and rested, with the cell's base skill; each Weapon damage Upgrade adds the `weapon_damage` Upgrade's `increment` to weapon damage, and each Armor Upgrade the `armor` Upgrade's to armor. Its Agent count is the one whose rating, under the current formula, is closest by ratio to the cell's share of the site's rating. A cell whose closest count still misses its share by more than 10%, e.g. one Agent of base skill 500 against a small site, is drawn dashed and left out of the statistics.
+- **A cell** shows the Agent count above and the win rate below, tinted blue below 50% and orange above; hovering it shows the ratings, the Agents' values, and the Combats won.
+- **Nothing is fought until a Run button is pressed**: beside a share in a row, that block; **Run row**, the row; **Run** in the top row, that share for every site; and **Run all**, every cell. A run fights only the cells that have no result for their current team; **Stop** drops the fights not yet done.
+- **Results are kept in the browser's local storage**, by a key that hashes the site's Enemies, the Agent team, the Upgrade counts, the Combats per cell, the Combat values, and the engine's commit. A change of the formula that changes a cell's Agent count leaves its earlier result greyed until it is run again; one that keeps the count keeps the result. **Forget results** clears them.
+
+## How the Combats are fought
+
+Each cell is one batch of the engine's `developer.tools.fightCombatBatch`, on explicit Combatants, with the Agent team as the Agents' side, as in a Mission, and the Combat values listed on the page. The batch's Rating Upgrades are the cell's Upgrade counts. Retreat is off unless **Allow retreat** is checked, by setting `retreat_below_agent_rating_fraction` to 0, because it reads the game's own Combat rating rather than the formula; when it is allowed, a retreat counts as a loss. The Detached seed of a cell is its key, so a changed number reflects an edit, not new dice.
+
+## Analysis
+
+The analysis covers the cells that have a result for the current formula and are within 10% of their share:
+
+- **For each share**, the mean win rate and its spread, i.e. the standard deviation over the cells. The spread that a finite number of Combats alone leaves is stated beside it, and the rest is the **formula spread**, the part a better formula can remove. For 100%, the distance from 50% is given as a root mean square, with its formula part too.
+- **Histograms** of the win rates of each share.
+- **Win rate by rating ratio** plots every cell against the ratio of its Agent team's rating to its site's, coloured by base skill, with the curve `P = r^k / (1 + r^k)`, exactly 50% at equal ratings, whose steepness `k` is fitted to the cells.
+- **Agent teams** gives the mean win rate of each Agent team over the sites, ± the standard deviation, for each share, so that a team type the formula rates too high or too low stands out.
+- **Fit** searches the checked parameters by Nelder-Mead for the least squared error of the curve over the cells with a result, refitting `k` at each step. It fights nothing: the Agent counts the new formula gives differ, so the changed cells show their earlier results greyed until they are run again.
 
 ## Files
 
-| Path         | Content                                                                                            |
-| ------------ | -------------------------------------------------------------------------------------------------- |
-| `index.html` | The page: the formula, the teams, the experiment, the scoring, and the fit.                        |
-| `server.ts`  | Serves the page, reads the defaults from `content/`, and hands the batches to the worker threads.  |
-| `worker.ts`  | Loads the engine from the Implementation clone and fights one batch of Detached Combats at a time. |
+| Path         | Content                                                                                             |
+| ------------ | --------------------------------------------------------------------------------------------------- |
+| `index.html` | The page: the formula, the setup, the grid, the analysis, and the fit.                              |
+| `server.ts`  | Serves the page, reads the GDR values from `content/`, and hands the batches to the worker threads. |
+| `worker.ts`  | Loads the engine from the Implementation clone and fights one batch of Detached Combats at a time.  |
