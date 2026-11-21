@@ -419,7 +419,7 @@ Weapon damage and armor make every Agent stronger in a [Combat](domain-model.md#
 Rating Upgrades of the Agents' side = Σ Acquisitions(U)   over every Upgrade U whose effect is agent_weapon_damage or agent_armor
 ```
 
-Inputs: each Acquisitions is that of the World state in which the value is read. The Increment of an Upgrade does not enter: one acquisition counts once, whatever it adds to effective weapon damage or effective armor. The result is a whole number of at least 0, raised at once by a purchase, within the same Turn, like the values the Upgrades improve. E.g., with the Bootstrap GDRs, an Agency that has acquired the Weapon damage Upgrade 8 times and the Armor Upgrade 11 times has 19 Rating Upgrades, so a team whose base Combat rating is 5,000 has a Combat rating of 5,000 × (1 + 0.01 × 19) = 5,950. No other Upgrade, e.g. a Max health Upgrade, counts toward them.
+Inputs: each Acquisitions is that of the World state in which the value is read. The Increment of an Upgrade does not enter: one acquisition counts once, whatever it adds to effective weapon damage or effective armor. The result is a whole number of at least 0, raised at once by a purchase, within the same Turn, like the values the Upgrades improve. E.g., with the Bootstrap GDRs, an Agency that has acquired the Weapon damage Upgrade 8 times and the Armor Upgrade 11 times has 19 Rating Upgrades, so a team whose base Combat rating is 5,000 has a Combat rating of 5,000 × (1 + 0.02 × 19) = 6,900. No other Upgrade, e.g. a Max health Upgrade, counts toward them.
 
 ### Rate Upgrades
 

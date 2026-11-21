@@ -6,4 +6,4 @@ retreat_at_enemy_to_agent_rating: 0.8
 incapacitation_skill_fraction: 0.1
 target_base_weight: 100 # an Agent's hit-chance weight for an Enemy it hits with exactly the preferred chance
 target_preferred_hit_chance: 0.8 # each percentage point away from it lowers the hit-chance weight by 1
-rating_bonus_per_upgrade: 0.01 # each Weapon damage or Armor Upgrade acquired raises the team's combat rating by 1%
+rating_bonus_per_upgrade: 0.02 # each Weapon damage or Armor Upgrade acquired raises the team's combat rating by 2%
