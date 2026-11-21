@@ -562,6 +562,9 @@
           <label class="inline"
             ><input type="checkbox" data-bind="setup.skipResponse" data-type="bool" /> Skip Response missions</label
           >
+          <button class="small" data-act="reset-setup" title="Restore every setting of the setup to its default">
+            Restore setup defaults
+          </button>
         </div>
         <p class="note">
           Retreat is off by default, by setting <code>retreat_below_agent_rating_fraction</code> to 0, because it reads
@@ -803,6 +806,8 @@
           /** Leaves the Response sites out of the grid, the runs, the statistics, and the fit. */
           skipResponse: false,
         },
+        /** The setup's settings the designer edited; every other one follows its default. */
+        setupEdited: {},
         combat: {},
       })
 
@@ -835,17 +840,12 @@
       let model = null
 
       /**
-       * A saved setup with a setting still at an earlier default takes today's default instead, e.g. the Upgrade sets
-       * that once counted Upgrades rather than the points they add.
+       * The saved setup's settings that the designer edited; every other setting follows today's default, so that a
+       * changed default reaches the page on its next load. A setup saved before edits were recorded keeps none.
        */
-      function upToDateSetup(saved = {}) {
-        const old = {
-          targets: ['100, 120, 150'],
-          upgrades: ['0/0, 5/0, 0/5, 5/5, 10/0, 0/10, 10/10'],
-        }
-        return Object.fromEntries(
-          Object.entries(saved).filter(([key, value]) => !(old[key] ?? []).includes(String(value).trim())),
-        )
+      function editedSetup(saved) {
+        const edited = saved?.setupEdited ?? {}
+        return Object.fromEntries(Object.entries(saved?.setup ?? {}).filter(([key]) => edited[key]))
       }
       function loadState() {
         try {
@@ -892,7 +892,8 @@
                 enabled: { ...d.formula.enabled, ...saved.formula?.enabled },
                 fit: { ...d.formula.fit, ...saved.formula?.fit },
               },
-              setup: { ...d.setup, ...upToDateSetup(saved.setup) },
+              setup: { ...d.setup, ...editedSetup(saved) },
+              setupEdited: saved.setupEdited ?? {},
             }
           }
         } catch {}
@@ -1934,6 +1935,9 @@
         if (path.startsWith('formula.params.')) {
           state.formula.edited[path.slice('formula.params.'.length)] = true
         }
+        if (path.startsWith('setup.')) {
+          state.setupEdited = { ...state.setupEdited, [path.slice('setup.'.length)]: true }
+        }
         changed()
       }
       document.addEventListener('input', onInput)
@@ -1958,6 +1962,11 @@
             applyDefaults()
           }
           renderFormula()
+          changed()
+        } else if (act === 'reset-setup') {
+          state.setup = defaults().setup
+          state.setupEdited = {}
+          renderSetup()
           changed()
         } else if (act === 'reset-param') {
           const name = b.dataset.param
