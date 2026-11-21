@@ -761,9 +761,18 @@
           >
             Run samples
           </button>
+          <button
+            class="small"
+            data-act="run-samples"
+            data-rerun="1"
+            title="Forget every sample's result and fight it again, on new seeds"
+          >
+            Re-run samples
+          </button>
           <button class="small" data-act="reset-sampler" title="Restore every dimension of the sampler to its default">
             Restore sampler defaults
           </button>
+          <label class="inline"><input type="checkbox" data-bind="sampler.showWin" data-type="bool" /> Win rate</label>
           <label class="inline"
             ><input type="checkbox" data-bind="sampler.showRatio" data-type="bool" /> Rating ratio</label
           >
@@ -922,6 +931,7 @@
           showRatio: true,
           showCrLeft: true,
           showExhaustion: true,
+          showWin: true,
           count: { mode: 'x', value: 20, from: 10, to: 100, step: 10 },
           skill: { mode: 'fixed', value: 250, from: 100, to: 500, step: 50 },
           damage: { mode: 'y', value: 0, from: 0, to: 8, step: 2 },
@@ -1045,10 +1055,11 @@
         try {
           const saved = JSON.parse(localStorage.getItem(RESULTS) ?? 'null')
           if (saved?.results && saved?.last) {
+            saved.seeds ??= {}
             return saved
           }
         } catch {}
-        return { results: {}, last: {} }
+        return { results: {}, last: {}, seeds: {} }
       }
       function save() {
         try {
@@ -1437,7 +1448,11 @@
           })),
         )
 
-      function request(cells) {
+      /**
+       * Queues the fights the cells lack. A re-run forgets their results first and fights them on a new seed, since the
+       * same seed fights the same Combats again.
+       */
+      function request(cells, rerun = false) {
         if (info === null || info.engineError) {
           return
         }
@@ -1449,6 +1464,10 @@
           if (known) {
             known.cells.add(cell.id)
             continue
+          }
+          if (rerun) {
+            delete store.results[cell.key]
+            store.seeds[cell.key] = `${cell.key}~${Math.random().toString(36).slice(2, 8)}`
           }
           const todo = jobFor(cell)
           if (todo === null) {
@@ -1466,7 +1485,8 @@
               enemies: entries(cell.site.groups),
               ...todo,
               gdrValues: model.cv,
-              seed: cell.key,
+              // A result keeps its seed, so that more Combats continue it.
+              seed: store.seeds[cell.key] ?? cell.key,
               ratingUpgrades: {
                 weaponDamage: Math.round(upgradesFor(cell.up.w, 'weapon_damage')),
                 armor: Math.round(upgradesFor(cell.up.a, 'armor')),
@@ -2299,7 +2319,7 @@
           s.showRatio
             ? `<span class="n" title="The Agent team's rating over the site's">×${cell.ratio.toFixed(2)}</span>`
             : '',
-          `<span class="w">${text}</span>`,
+          s.showWin ? `<span class="w">${text}</span>` : '',
           s.showCrLeft
             ? `<span class="n${old}" title="The mean share of the Agents' rating left at the end of a Combat">CR ${pct(crLeftOf(shown))}</span>`
             : '',
@@ -2311,7 +2331,7 @@
       }
       /** The Sampler's dimensions as inputs; drawn anew only when a mode changes, so typing keeps its focus. */
       function renderSamplerDims() {
-        for (const name of ['showRatio', 'showCrLeft', 'showExhaustion']) {
+        for (const name of ['showWin', 'showRatio', 'showCrLeft', 'showExhaustion']) {
           $(`[data-bind="sampler.${name}"]`).checked = state.sampler[name]
         }
         const sites = info ? sitesOf(combatValues(), false) : []
@@ -2414,7 +2434,8 @@
             const mean = wins.length > 0 ? wins.reduce((a, b) => a + b, 0) / wins.length : NaN
             let html = `<div><div class="stitle"><b>${ax.z ? `${samplerLabel(ax.z)} ${dimText(ax.z, z)}` : 'Samples'}</b>
               ${wins.length > 0 ? `<span class="note">μ ${pct(mean)} over ${wins.length}</span>` : ''}
-              <button class="small" data-act="run-samples" data-z="${zi}">Run</button></div>
+              <button class="small" data-act="run-samples" data-z="${zi}">Run</button>
+              <button class="small" data-act="run-samples" data-z="${zi}" data-rerun="1" title="Forget these samples' results and fight them again, on new seeds">Re-run</button></div>
               <div class="sgrid" style="grid-template-columns: auto repeat(${xs.length}, minmax(50px, auto))">
               <span class="ax"><span>${corner}</span></span>${xs.map((x) => `<span class="ax"><span>${axisLabel('x', x, z, true)}</span></span>`).join('')}`
             for (const y of ys) {
@@ -2521,7 +2542,10 @@
         } else if (act === 'run-samples' && sampler !== null) {
           const { ax, values } = sampler
           const z = b.dataset.z === undefined || !ax.z ? null : values[ax.z][Number(b.dataset.z)]
-          request(sampler.cells.filter((c) => z === null || c.v[ax.z] === z))
+          request(
+            sampler.cells.filter((c) => z === null || c.v[ax.z] === z),
+            b.dataset.rerun === '1',
+          )
         } else if (act === 'reset-sampler') {
           state.sampler = defaults().sampler
           renderSamplerDims()
@@ -2593,7 +2617,7 @@
         if (confirm('Forget every result kept in this browser?')) {
           pending.clear()
           void restart()
-          store = { results: {}, last: {} }
+          store = { results: {}, last: {}, seeds: {} }
           saveStore()
           scheduleRender()
         }
