@@ -430,6 +430,24 @@
         color: var(--text);
         opacity: 0.85;
       }
+      /* The Sampler's CR left and exhaustion read by colour, keyed by their checkboxes' labels. */
+      .k-cr {
+        color: #9fd0ff;
+      }
+      .k-ex {
+        color: #ffd166;
+      }
+      .sgrid .cell .n.k-cr,
+      .sgrid .cell .n.k-ex {
+        opacity: 1;
+        font-weight: 500;
+      }
+      .sgrid .cell .n.k-cr {
+        color: #9fd0ff;
+      }
+      .sgrid .cell .n.k-ex {
+        color: #ffd166;
+      }
       .sgrid .cell .n.old {
         opacity: 0.45;
         font-style: italic;
@@ -777,10 +795,12 @@
             ><input type="checkbox" data-bind="sampler.showRatio" data-type="bool" /> Rating ratio</label
           >
           <label class="inline"
-            ><input type="checkbox" data-bind="sampler.showCrLeft" data-type="bool" /> Agent CR left</label
+            ><input type="checkbox" data-bind="sampler.showCrLeft" data-type="bool" />
+            <span class="k-cr">Agent CR left</span></label
           >
           <label class="inline"
-            ><input type="checkbox" data-bind="sampler.showExhaustion" data-type="bool" /> Agent exhaustion</label
+            ><input type="checkbox" data-bind="sampler.showExhaustion" data-type="bool" />
+            <span class="k-ex">Agent exhaustion</span></label
           >
           <span id="samplerInfo" class="note"></span>
         </div>
@@ -2321,10 +2341,10 @@
             : '',
           s.showWin ? `<span class="w">${text}</span>` : '',
           s.showCrLeft
-            ? `<span class="n${old}" title="The mean share of the Agents' rating left at the end of a Combat">CR ${pct(crLeftOf(shown))}</span>`
+            ? `<span class="n k-cr${old}" title="Agent CR left: the mean share of the Agents' rating left at the end of a Combat">${pct(crLeftOf(shown))}</span>`
             : '',
           s.showExhaustion
-            ? `<span class="n" title="The mean exhaustion of the Agents alive at the end of a Combat">ex ${Number.isFinite(exhaustionOf(shown)) ? exhaustionOf(shown).toFixed(1) : '–'}</span>`
+            ? `<span class="n k-ex" title="Agent exhaustion: the mean exhaustion of the Agents alive at the end of a Combat">${Number.isFinite(exhaustionOf(shown)) ? Math.round(exhaustionOf(shown)) : '–'}</span>`
             : '',
         ]
         return `<div class="${cls}" style="${style}" data-sample="${esc(cell.id)}">${lines.join('')}</div>`
