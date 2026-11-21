@@ -351,8 +351,11 @@
         color: var(--accent-dim);
         color: var(--muted);
       }
-      tr.sep td {
-        border-top: 1px solid var(--border);
+      h4.sites {
+        font-size: 13px;
+        letter-spacing: 0.08em;
+        margin: 14px 0 6px;
+        color: var(--muted);
       }
       /* Mission sites: the rows of one level share a band, and a rule marks where the level changes. */
       tr.band td {
@@ -862,18 +865,17 @@
       /* The level that groups a site's row: an Initiative site's tier, i.e. its place in the Victory path, or a Response site's Faction operation level. */
       const rowLevel = (s) => (BASE[s].kind === 'initiative' ? 'i' + INIT.indexOf(s) : 'r' + BASE[s].level)
       /* Every other level is banded, counted separately for each kind, so a level change is always a change of band. */
-      const rowClass = (s, i) => {
+      const rowClass = (s, i, list) => {
         const level = rowLevel(s),
-          before = i > 0 ? rowLevel(SITES[i - 1]) : null,
-          same = SITES.filter((t) => BASE[t].kind === BASE[s].kind).map(rowLevel),
-          index = [...new Set(same)].indexOf(level),
+          before = i > 0 ? rowLevel(list[i - 1]) : null,
+          index = [...new Set(list.map(rowLevel))].indexOf(level),
           classes = []
-        if (i === INIT.length) classes.push('sep')
-        else if (before !== null && before !== level) classes.push('lvl')
+        if (before !== null && before !== level) classes.push('lvl')
         if (index % 2 === 1) classes.push('band')
         return classes.length ? ` class="${classes.join(' ')}"` : ''
       }
       const INIT = SITES.filter((k) => BASE[k].kind === 'initiative')
+      const RESP = SITES.filter((k) => BASE[k].kind !== 'initiative')
       const FILES = [
         ['configuration/campaign_configurations.yaml', ['standard']],
         ['agents/agent_archetypes.yaml', ['field_agent']],
@@ -982,7 +984,20 @@
   ${panel('Field agent and Combat exhaustion', 'content/agents/agent_archetypes.yaml · agent_parameters.yaml', `<div class="kv"><span class="k"><code>field_agent.base_skill</code><small>a newly hired Agent</small></span>${inp('field_agent.base_skill')}</div><div class="kv"><span class="k"><code>field_agent.base_health</code><small></small></span>${inp('field_agent.base_health', { min: 1 })}</div><div class="kv"><span class="k"><code>field_agent.weapon</code><small></small></span>${sel('field_agent.weapon', WP)}</div>` + row(ap + '.exhaustion_per_attack', 'to the attacker, hit or miss') + row(ap + '.exhaustion_per_defense', 'to the defender, hit or miss') + row(ap + '.exhaustion_free_points', 'exhaustion up to this costs no skill') + row(ap + '.skill_penalty_pct_per_exhaustion', '% of skill lost per point above the free points', { step: 0.5 }) + row(ap + '.exhaustion_incapacitation', 'Incapacitated at this exhaustion'))}
   </div></div>
   ${panel('Test team', 'not a GDR: the team every Mission site below is fought with', `<div class="ctl">${tin('n', 'Agents', { min: 1, max: 300 })}${tin('skill', 'Base skill', { min: 1 })}${tin('ex', 'Starting exhaustion')}${tin('wu', 'Weapon damage upgrades')}${tin('au', 'Armor upgrades')}${tin('target', 'Target win %', { min: 1, max: 100 })}${tcheck('team', 'Find team for target')}</div><div class="teamcr" id="teamcr"></div><div class="note" id="teamnote"></div><div class="note" id="simstatus"></div>`, 'read')}
-  ${panel('Mission sites', 'content/missions/mission_site_archetypes.yaml', `<div class="tw"><table id="sites"><tr><th>MissionSiteArchetype</th><th style="text-align:left">Kind</th><th>expires</th>${EN.map((e) => `<th title="${e}">${EN_AB[e]}</th>`).join('')}<th class="d">Enemies</th><th class="d">Rating</th><th class="d">Test team wins, of ${TRIALS} Combats</th><th class="d">Agents killed</th><th class="d">Team for target</th><th class="d">Transport upgrades</th><th class="d">Search</th></tr>${SITES.map((s, i) => `<tr${rowClass(s, i)}><td class="name">${title(s)}</td><td id="sl_${s}" style="text-align:left;font-family:var(--body);color:var(--text2)">${BASE[s].level ? 'Response · operation level ' + BASE[s].level : 'Initiative'}</td><td>${inp(s + '.expires_in_turns', { min: 1 })}</td>${EN.map((e) => `<td class="w">${inp(s + '.enemies.' + e)}</td>`).join('')}<td class="d" id="sc_${s}"></td><td class="d" id="sr_${s}"></td><td class="d" id="sw_${s}" style="text-align:left"></td><td class="d" id="sk_${s}"></td><td class="d" id="sn_${s}"></td><td class="d" id="st_${s}"></td><td class="d" id="sx_${s}"></td></tr>`).join('')}</table></div><div class="note"><b>Every Combat is fought by the game-v5-impl-web engine itself</b>, through <code>developer.tools.fightCombatBatch</code>, with the values on this page passed as its Combatants and GDR values; this page has no Combat rules of its own. <b>Each win rate is the share of ${TRIALS} Combats the test team Prevailed in</b>, and Agents killed is the mean over those ${TRIALS}. A Mission is Won only when the Combat outcome is Prevailed, so a retreat counts as a loss. Team for target is the smallest team of the test team's skill and upgrades that reaches the target win rate, searched up to ${MAXN} Agents; the search starts from the team size that the Combat ratings estimate, and each team size tried is one batch of at most ${TRIALS} Combats that stops as soon as its answer is certain. Transport upgrades is how many it takes to deploy that team at once. The Initiative operation levels come from <code>developer.queries.getInitiativeOperationLevels</code>. Each Combat's Detached seed is fixed, so a changed number reflects your edit and not new dice: Combat <i>i</i> of a team of <i>n</i> at a Mission site has the Detached seed <code>&lt;site&gt;|&lt;n&gt;#&lt;i&gt;</code>, which <code>developer.tools.fightCombat</code> shows in full.</div>`)}
+  ${panel(
+    'Mission sites',
+    'content/missions/mission_site_archetypes.yaml',
+    [
+      ['Initiative', INIT],
+      ['Response', RESP],
+    ]
+      .map(
+        ([kind, list]) =>
+          `<h4 class="sites">${kind} Mission sites</h4><div class="tw"><table><tr><th>MissionSiteArchetype</th><th style="text-align:left">Kind</th><th>expires</th>${EN.map((e) => `<th title="${e}">${EN_AB[e]}</th>`).join('')}<th class="d">Enemies</th><th class="d">Rating</th><th class="d" title="This site's Rating divided by the Rating of the row above">× above</th><th class="d" title="Team Combat rating divided by this site's Rating">Team / Rating</th><th class="d">Test team wins, of ${TRIALS} Combats</th><th class="d">Agents killed</th><th class="d">Team for target</th><th class="d">Transport upgrades</th><th class="d">Search</th></tr>${list.map((s, i) => `<tr${rowClass(s, i, list)}><td class="name">${title(s)}</td><td id="sl_${s}" style="text-align:left;font-family:var(--body);color:var(--text2)">${BASE[s].level ? 'Response · operation level ' + BASE[s].level : 'Initiative'}</td><td>${inp(s + '.expires_in_turns', { min: 1 })}</td>${EN.map((e) => `<td class="w">${inp(s + '.enemies.' + e)}</td>`).join('')}<td class="d" id="sc_${s}"></td><td class="d" id="sr_${s}"></td><td class="d" id="sm_${s}"></td><td class="d" id="sp_${s}"></td><td class="d" id="sw_${s}" style="text-align:left"></td><td class="d" id="sk_${s}"></td><td class="d" id="sn_${s}"></td><td class="d" id="st_${s}"></td><td class="d" id="sx_${s}"></td></tr>`).join('')}</table></div>`,
+      )
+      .join('') +
+      `<div class="note"><b>× above</b> is a site's Rating divided by the Rating of the row above it in the same table, and <b>Team / Rating</b> is the team Combat rating as a percentage of the site's Rating.<b>Every Combat is fought by the game-v5-impl-web engine itself</b>, through <code>developer.tools.fightCombatBatch</code>, with the values on this page passed as its Combatants and GDR values; this page has no Combat rules of its own. <b>Each win rate is the share of ${TRIALS} Combats the test team Prevailed in</b>, and Agents killed is the mean over those ${TRIALS}. A Mission is Won only when the Combat outcome is Prevailed, so a retreat counts as a loss. Team for target is the smallest team of the test team's skill and upgrades that reaches the target win rate, searched up to ${MAXN} Agents; the search starts from the team size that the Combat ratings estimate, and each team size tried is one batch of at most ${TRIALS} Combats that stops as soon as its answer is certain. Transport upgrades is how many it takes to deploy that team at once. The Initiative operation levels come from <code>developer.queries.getInitiativeOperationLevels</code>. Each Combat's Detached seed is fixed, so a changed number reflects your edit and not new dice: Combat <i>i</i> of a team of <i>n</i> at a Mission site has the Detached seed <code>&lt;site&gt;|&lt;n&gt;#&lt;i&gt;</code>, which <code>developer.tools.fightCombat</code> shows in full.</div>`,
+  )}
   </section>`)
         /* Agents */
         h.push(`<section id="agents"><div class="shead"><h2>Agents</h2><p>How long an Agent can work before it tires, how fast it rests and heals, and how fast it grows.</p></div><div class="cols"><div class="col">
@@ -1445,15 +1460,22 @@
           if (cur.field_agent.weapon === w) u.unshift('Agents')
           $('wu_' + w).textContent = u.join(', ') || '–'
         })
-        SITES.forEach((s) => {
-          let c = 0,
-            r = 0
-          EN.forEach((x) => {
-            c += cur[s].enemies[x]
-            r += cur[s].enemies[x] * cur[x].base_skill
+        const teamEff = teamRatings().eff
+        ;[INIT, RESP].forEach((list) => {
+          let prev = null
+          list.forEach((s) => {
+            let c = 0,
+              r = 0
+            EN.forEach((x) => {
+              c += cur[s].enemies[x]
+              r += cur[s].enemies[x] * cur[x].base_skill
+            })
+            $('sc_' + s).textContent = c
+            $('sr_' + s).textContent = f(r, 0)
+            $('sm_' + s).textContent = prev ? '×' + f(r / prev, 2) : '–'
+            $('sp_' + s).textContent = r ? f((teamEff / r) * 100, 0) + '%' : '–'
+            prev = r || null
           })
-          $('sc_' + s).textContent = c
-          $('sr_' + s).textContent = f(r, 0)
         })
         const fa = cur.field_agent,
           tw = wdmg(fa.weapon) + T.wu * cur.weapon_damage.increment,
