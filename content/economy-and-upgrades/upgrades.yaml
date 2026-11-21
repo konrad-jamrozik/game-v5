@@ -29,7 +29,7 @@ increment: 2
 id: armor
 type: Upgrade
 name: Armor
-price: 2000
+price: 1000
 effect: agent_armor
 increment: 5
 ---
