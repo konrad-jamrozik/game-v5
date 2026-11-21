@@ -52,7 +52,7 @@ export interface CampaignStats {
   readonly trainingCap: number
   /**
    * Serving Agents by the kind of their Current assignment, those In transit included; an Agent on Standby with
-   * exhaustion above `exhaustion_free_points`, i.e. not a Rested Agent, counts as `Exhausted` instead.
+   * that is not Fit for work, i.e. not a Rested Agent, counts as `Exhausted` instead.
    */
   readonly assignments: Record<string, number>
   /** The mean base skill of the Serving Agents. */

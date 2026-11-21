@@ -85,7 +85,7 @@ Every [Agent](#agents) has exactly one Assignment: Standby, [Contracting](#contr
 | From Standby or Training | Switch to the other at once, go to Contracting or an Investigation, or deploy to a [Mission site](#mission-sites) |
 | From Contracting or an Investigation | Can only be recalled to Standby |
 | In transit, deployed, or on Recovery | Cannot be given orders |
-| Starting Contracting, Training, or an Investigation | Needs [exhaustion](#exhaustion) of at most 30 |
+| Starting Contracting, Training, or an Investigation | Needs full [health](#health) and [exhaustion](#exhaustion) of at most 30 |
 | Dismissing | Only an Agent on Standby that is not in transit |
 
 See also: [Contracting](#contracting) · [Training](#training) · [Investigations](#investigations) · [Missions](#missions) · [Recovery](#recovery) · [Transit](#transit)

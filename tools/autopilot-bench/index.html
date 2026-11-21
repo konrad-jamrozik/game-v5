@@ -536,12 +536,6 @@
               'At most this % of the roster is put on Training; 100 leaves only the Training cap as the limit.',
               1,
             ],
-            [
-              'recallExhaustion',
-              'recall',
-              'An Agent on Contracting with more exhaustion than this is recalled to Standby to rest.',
-              1,
-            ],
           ],
         },
         {
@@ -782,7 +776,7 @@
           ],
           [
             'Work',
-            'Serving Agents by Assignment, In transit included: Contracting, Training, Investigation, Standby with exhaustion up to exhaustion_free_points, Standby with exhaustion above it (Ex), i.e. resting until the AI may send it, Recovery, Deployed',
+            'Serving Agents by Assignment, In transit included: Contracting, Training, Investigation, Standby and Fit for work, Standby but not Fit for work (Ex), i.e. resting until the AI may send it, Recovery, Deployed',
             (s) => `<span class="dim">${work(s.assignments)}</span>`,
             230,
             true,
@@ -842,7 +836,7 @@
 
       function renderHead() {
         $('legend').innerHTML =
-          `<b>CR ready</b> is the Combat rating of the Agents the AI may send to a Mission site now: its Rested Agents able to fight, i.e. on Standby or Training, Fit for work, at full health, with exhaustion of at most <code>exhaustion_free_points</code>; their number is in brackets, and a team is further limited by the free Transport cap. <b>CR all</b> is the Combat rating of every Serving Agent at full health and exhaustion 0. A label with <b>+</b>, e.g. <b>+Weapon</b>, is how many times that Upgrade was bought. Work: Contracting, Training, Investigation, Standby with exhaustion up to <code>exhaustion_free_points</code>, Exhausted on Standby (above it, so resting until the AI may send it), Recovery, Deployed. Each Faction shows the next Initiative Mission site to win against it, one level above the highest Won. Missions: Won / Lost / Expired. Hover a label for its meaning. Time is the latest run's wall-clock time, and the total of every run. <b>Load params</b> copies a Campaign's parameters into the Parameters editor above, e.g. to launch a variant of it.`
+          `<b>CR ready</b> is the Combat rating of the Agents the AI may send to a Mission site now: its Rested Agents able to fight, i.e. on Standby or Training and Fit for work: exhaustion of at most <code>exhaustion_work_start_max</code> and no health lost; their number is in brackets, and a team is further limited by the free Transport cap. <b>CR all</b> is the Combat rating of every Serving Agent at full health and exhaustion 0. A label with <b>+</b>, e.g. <b>+Weapon</b>, is how many times that Upgrade was bought. Work: Contracting, Training, Investigation, Standby and Fit for work, Exhausted on Standby (not Fit for work, so resting until the AI may send it), Recovery, Deployed. Each Faction shows the next Initiative Mission site to win against it, one level above the highest Won. Missions: Won / Lost / Expired. Hover a label for its meaning. Time is the latest run's wall-clock time, and the total of every run. <b>Load params</b> copies a Campaign's parameters into the Parameters editor above, e.g. to launch a variant of it.`
       }
 
       const rows = new Map()

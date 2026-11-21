@@ -67,17 +67,11 @@ async function boot() {
       chain.set(item.level as number, names.get(item.id) ?? item.id)
     }
   }
-  exhaustionFreePoints = ok<Any>(scratch.player.queries.getGameData()).agentParameters['exhaustionFreePoints'] as number
   return { MemoryStorage, createEngine, BASIC_AI_THRESHOLDS, createBasicAutopilotAi, upgrades }
 }
 
 /** The name of the Initiative Mission site of each Initiative operation level. */
 const chain = new Map<number, string>()
-/**
- * AgentParameters' `exhaustion_free_points`, up to which an Agent counts as a Rested Agent, so that an Agent on Standby
- * above it is resting, and counts as exhausted in Work.
- */
-let exhaustionFreePoints = 0
 
 const booted = boot()
 const campaigns = new Map<string, Campaign>()
@@ -102,15 +96,12 @@ function statsOf(campaign: Campaign): CampaignStats {
   const skillFresh = agents.reduce((s, a) => s + Math.floor((a.skillHundredths as number) / 100), 0)
   const ratingFresh = Math.round(skillFresh * (skillNow > 0 ? ratingNow / skillNow : 1))
   // The Agents the Basic Autopilot AI may form a team of for a Mission site: its Rested Agents that are able to fight,
-  // i.e. those that can be assigned, are Fit for work, are on Standby or Training, have their full health, and have
-  // exhaustion of at most exhaustion_free_points.
+  // i.e. those that can be assigned, are on Standby or Training, and are Fit for work.
   const ready = agents.filter(
     (a) =>
       a.canBeAssigned &&
       a.fitForWork &&
       (a.assignment?.kind === 'Standby' || a.assignment?.kind === 'Training') &&
-      a.healthLostHundredths === 0 &&
-      a.exhaustion <= exhaustionFreePoints &&
       a.ableToFight,
   )
   const ratingReady = ok<Any>(
@@ -147,7 +138,7 @@ function statsOf(campaign: Campaign): CampaignStats {
   const assignments: Record<string, number> = {}
   for (const a of agents) {
     const assigned = (a.assignment?.kind as string | undefined) ?? 'None'
-    const kind = assigned === 'Standby' && a.exhaustion > exhaustionFreePoints ? 'Exhausted' : assigned
+    const kind = assigned === 'Standby' && !a.fitForWork ? 'Exhausted' : assigned
     assignments[kind] = (assignments[kind] ?? 0) + 1
   }
   return {

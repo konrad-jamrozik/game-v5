@@ -59,7 +59,7 @@ The [Assignments](domain-model.md#agency-and-agents) that are neither an [Invest
 | Base Assignment | Standby or Training, the Assignments an Agent carries out in the Agency's base. Moving between them takes no transit, and only an Agent on one can be deployed or given an Away Assignment. |  |
 | Away Assignment | Contracting or an [Investigation](domain-model.md#leads-investigations-mission-sites-and-missions), the Assignments an Agent carries out away from base. Every move to or from them starts [In transit](domain-model.md#agency-and-agents), and an Agent on one can only be recalled to Standby. |  |
 | Work Assignment | Contracting, Training, or an Investigation, the Assignments on which an Agent works and so gains exhaustion, under [Work exhaustion](#work-exhaustion). |  |
-| Fit for work | Of an Agent: whose exhaustion is at most `exhaustion_work_start_max`, so that it may start a Work Assignment, under [Start-work gate](#start-work-gate). |  |
+| Fit for work | Of an Agent: whose exhaustion is at most `exhaustion_work_start_max` and whose health lost is 0, so that it may start a Work Assignment, under [Start-work gate](#start-work-gate). |  |
 | Working Agent | In an Advance turn: an Agent whose Assignment is a Work Assignment and that is [At assignment](domain-model.md#agency-and-agents) on it when the [Turn advancement step](domain-model.md#turn-advancement-steps) of its work begins, so that it works in that Advance turn, under [Transit rule](#transit-rule). An Agent In transit to a Work Assignment is not a Working Agent; it arrives only in the Previous turn transit arrivals step, after every step of work. |  |
 | Forced return | The move of a Working Agent to Standby that an Advance turn makes when its work raises its exhaustion to `exhaustion_work_limit` or more, under [Forced return](#forced-return). |  |
 
@@ -123,7 +123,7 @@ AgentParameters bundles the values that the Agent rules read, and the values tha
 | `exhaustion_per_contracting_turn` | The exhaustion an Agent gains in each Advance turn in which it works on Contracting. | [Work exhaustion](#work-exhaustion) |
 | `exhaustion_per_training_turn` | The exhaustion an Agent gains in each Advance turn in which it works on Training. | [Work exhaustion](#work-exhaustion) |
 | `exhaustion_per_investigation_turn` | The exhaustion an Agent gains in each Advance turn in which it works on an Investigation. | [Work exhaustion](#work-exhaustion) |
-| `exhaustion_work_start_max` | The highest exhaustion at which an Agent is Fit for work. | [Start-work gate](#start-work-gate) |
+| `exhaustion_work_start_max` | The highest exhaustion at which an Agent can be Fit for work. | [Start-work gate](#start-work-gate) |
 | `exhaustion_work_limit` | The exhaustion at or above which work makes an Agent return to Standby. | [Forced return](#forced-return) |
 | `training_skill_gain_per_turn` | The base skill an Agent on Training gains in one Advance turn when its Training gain outcome is "gains", before any [Upgrade](domain-model.md#agency-and-agents). It is a [Decimal quantity](../foundation/numbers.md#glossary). | [Training growth](#training-growth) |
 | `experience_per_attack_hit` | The combat experience an attacking Agent earns from each of its attacks that hits. | [Combat](combat.md), which owns its meaning |
@@ -413,9 +413,14 @@ A new Work Assignment also requires that the Agent is Fit for work, under [Start
 
 ## Start-work gate
 
-An Agent worn down by work or by a Combat must rest before it takes on new work, so that tiredness builds up only as far as the player lets it.
+An Agent worn down by work or by a Combat must rest, and heal, before it takes on new work, so that tiredness builds up only as far as the player lets it.
 
-An Agent is Fit for work exactly when its exhaustion is at most `exhaustion_work_start_max`. Whether an Agent is Fit for work is a Derived value, never stored. Every Player action that gives an Agent a Work Assignment it does not already have requires that the Agent is Fit for work: `assignAgents` with `Contracting` or `Training` under [Assigning Agents](#assigning-agents), and `startInvestigation` and `assignAgentsToInvestigation` under [Investigations](investigations.md). No other Player action requires it; e.g., an Agent of any exhaustion can be assigned to Standby and can be deployed, under [Deploying Agents](missions.md#deploying-agents) in Missions.
+An Agent is Fit for work exactly when both of the following hold:
+
+1. Its exhaustion is at most `exhaustion_work_start_max`.
+2. Its health lost is 0, i.e. its current health equals its effective max health.
+
+Whether an Agent is Fit for work is a Derived value, never stored. Every Player action that gives an Agent a Work Assignment it does not already have requires that the Agent is Fit for work: `assignAgents` with `Contracting` or `Training` under [Assigning Agents](#assigning-agents), and `startInvestigation` and `assignAgentsToInvestigation` under [Investigations](investigations.md). No other Player action requires it; e.g., an Agent of any exhaustion can be assigned to Standby and can be deployed, under [Deploying Agents](missions.md#deploying-agents) in Missions.
 
 The gate applies only when the work starts. An Agent already on a Work Assignment keeps working whatever its exhaustion, until it is assigned elsewhere or until its [Forced return](#forced-return). E.g., with the Bootstrap values, an Agent on Contracting with exhaustion 45 keeps earning and can be recalled to Standby, and once In base cannot be assigned to Contracting, Training, or an Investigation until its exhaustion falls to 30.
 
@@ -673,7 +678,8 @@ Every value below is [Player-visible information](../foundation/engine-contract.
 - **Very high exhaustion:** Exhaustion has no upper bound and may exceed `exhaustion_incapacitation`, e.g. after a costly Mission under [Mission exhaustion](missions.md#mission-exhaustion) in Missions; the penalty factor is 0 once `skill_penalty_pct_per_exhaustion × (exhaustion − exhaustion_free_points)` reaches 100, and the Agent needs a longer rest before it is Fit for work ([Attribute ranges](#attribute-ranges), [Start-work gate](#start-work-gate)).
 - **Exact exhaustion just above a threshold:** An Agent with Exact exhaustion 30.40 has exhaustion 31, so with `exhaustion_work_start_max` 30 it is not Fit for work; with Exact exhaustion 30 it is ([Exhaustion and Exact exhaustion](#exhaustion-and-exact-exhaustion), [Start-work gate](#start-work-gate)).
 - **Current health just below effective max health:** An Agent with current health 29.99 of 30 has an effective skill below its base skill wherever the exact value falls below the next whole number, e.g. `round down(100 × 29.99 × 100 / 3000) = round down(99.96…) = 99` ([Effective skill](#effective-skill)).
-- **Exhaustion exactly at a threshold:** An Agent with exhaustion equal to `exhaustion_work_start_max` is Fit for work, and an Agent whose work brings its exhaustion exactly to `exhaustion_work_limit` has a Forced return ([Start-work gate](#start-work-gate), [Forced return](#forced-return)).
+- **Exhaustion exactly at a threshold:** An Agent with exhaustion equal to `exhaustion_work_start_max` and no health lost is Fit for work, and an Agent whose work brings its exhaustion exactly to `exhaustion_work_limit` has a Forced return ([Start-work gate](#start-work-gate), [Forced return](#forced-return)).
+- **Health lost outside Recovery:** Missions sends an Agent that survives a Combat with health lost to Recovery, which ends only once its health lost is 0, under [Agent Recovery](agent-recovery.md), so an Agent that can be assigned normally has no health lost. Should one have health lost, it is not Fit for work whatever its exhaustion ([Start-work gate](#start-work-gate)).
 - **Assigning a tired Agent:** `assignAgents` to Contracting or Training, `startInvestigation`, and `assignAgentsToInvestigation` reject, as a whole, a list with an Agent that is not Fit for work; assigning it to Standby or deploying it is accepted ([Start-work gate](#start-work-gate)).
 - **Forced return from Training:** The Agent is on Standby, At assignment, at once, so it recovers exhaustion in the Agent recovery step of the same Advance turn, under [Which Agents recover](agent-recovery.md#which-agents-recover) in Agent Recovery ([Forced return](#forced-return)).
 - **Forced return of the last member of an Investigation:** The Investigation loses all its progress under Progress loss, although this turn's progress was added first, and becomes Abandoned ([Forced return](#forced-return)).
