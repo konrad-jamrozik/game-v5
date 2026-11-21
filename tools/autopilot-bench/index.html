@@ -369,6 +369,15 @@
       .line.l4 {
         background: var(--band);
       }
+      /* The four layers and, to their right, the last four Missions fought, one beside each layer line. */
+      .lgrid {
+        display: grid;
+        grid-template-columns: max-content 560px;
+      }
+      .line.rm {
+        padding-left: 12px;
+        border-left: 1px solid var(--border);
+      }
       /* Each stat is its label over its value, at a fixed width so that it stands at the same place in every block. */
       .c {
         flex: none;
@@ -890,7 +899,7 @@
 
       function renderHead() {
         $('legend').innerHTML =
-          `<b>CR ready</b> is the Combat rating of the Deployable Agents, under Glossary below; their number out of all Serving Agents is in brackets, e.g. (29/155), and a team is further limited by the free Transport cap. <b>CR all</b> is the Combat rating of every Serving Agent at full health and exhaustion 0. A label with <b>+</b>, e.g. <b>+Weapon</b>, is how many times that Upgrade was bought. Work counts Serving Agents by Assignment, In transit included; <b>Deployable</b> and <b>Non-deployable</b> split those on Training and on Standby, so the two Deployable counts add up to the number after CR ready.Each Faction shows the next Initiative Mission site to win against it, one level above the highest Won. Missions: Won / Lost / Expired. Hover a label for its meaning. Time is the latest run's wall-clock time, and the total of every run. <b>Load params</b> copies a Campaign's parameters into the Parameters editor above, e.g. to launch a variant of it.`
+          `<b>CR ready</b> is the Combat rating of the Deployable Agents, under Glossary below; their number out of all Serving Agents is in brackets, e.g. (29/155), and a team is further limited by the free Transport cap. <b>CR all</b> is the Combat rating of every Serving Agent at full health and exhaustion 0. A label with <b>+</b>, e.g. <b>+Weapon</b>, is how many times that Upgrade was bought. Work counts Serving Agents by Assignment, In transit included; <b>Deployable</b> and <b>Non-deployable</b> split those on Training and on Standby, so the two Deployable counts add up to the number after CR ready.Each Faction shows the next Initiative Mission site to win against it, one level above the highest Won. Missions: Won / Lost / Expired. To the right, the last four Missions fought, the latest first: the Turn, the kind and name of the Mission site, the Agents sent (<b>ag</b>), the team's Combat rating against the Enemies' at Combat start, the result, and the Agents Killed (<b>dead</b>) and Incapacitated (<b>incap</b>). Hover a label for its meaning. Time is the latest run's wall-clock time, and the total of every run. <b>Load params</b> copies a Campaign's parameters into the Parameters editor above, e.g. to launch a variant of it.`
       }
 
       const rows = new Map()
@@ -925,16 +934,43 @@
             cells[`${i}_${j}`] = c.stats === null ? '' : x[2](c.stats)
           }),
         )
+        const recent = c.stats?.recentMissions ?? []
+        for (let i = 0; i < LAYER_NAMES.length; i += 1) {
+          cells[`rm${i}`] =
+            recent[i] !== undefined
+              ? missionCell(recent[i])
+              : i === 0 && c.stats !== null
+                ? '<span class="c left"><span class="cl">Missions fought</span><span class="dim">none yet</span></span>'
+                : ''
+        }
         return cells
+      }
+
+      /**
+       * One Mission fought: its Turn and kind over its Mission site's name, the team sent with its Combat rating against
+       * the Enemies' Combat rating at Combat start, and the outcome with the Agents Killed and Incapacitated.
+       */
+      function missionCell(m) {
+        const result = `<span class="${m.result === 'Won' ? 'good' : 'bad'}">${esc(m.result)}</span>`
+        const cr =
+          m.agentsRating === null
+            ? ''
+            : ` <span class="dim">CR</span> ${fmt(m.agentsRating)} <span class="dim">vs</span> ${fmt(m.enemiesRating)}`
+        const dead = `<span class="${m.killed > 0 ? 'bad' : 'dim'}">${fmt(m.killed)} dead</span>`
+        const incap = `<span class="${m.incapacitated > 0 ? '' : 'dim'}">${fmt(m.incapacitated)} incap</span>`
+        return (
+          `<span class="c left"><span class="cl" title="The Turn whose Advance turn fought the Combat, and the kind of Mission site">T${fmt(m.turn)} · ${esc(m.kind)}</span>` +
+          `<span title="${esc(m.name)}: ${fmt(m.agents)} Agents sent; Combat ratings at Combat start; result${m.outcome ? `, ${esc(m.outcome)}` : ''}; Agents Killed and Incapacitated">${esc(m.name)} <span class="dim">·</span> ${fmt(m.agents)} <span class="dim">ag</span>${cr} <span class="dim">·</span> ${result} <span class="dim">·</span> ${dead} <span class="dim">·</span> ${incap}</span></span>`
+        )
       }
 
       function rowSkeleton(c) {
         const el = document.createElement('div')
         el.className = 'crow'
         el.dataset.id = c.id
-        el.innerHTML = `<div class="cleft"><div class="cname" data-k="n"></div><div class="cparams" data-k="params"></div></div><div class="cprog"><div data-k="progress"></div><div><span data-t="run"></span> <span class="dim" data-t="total"></span></div><div class="btns" data-k="acts"></div></div><div>${LAYOUT.map(
+        el.innerHTML = `<div class="cleft"><div class="cname" data-k="n"></div><div class="cparams" data-k="params"></div></div><div class="cprog"><div data-k="progress"></div><div><span data-t="run"></span> <span class="dim" data-t="total"></span></div><div class="btns" data-k="acts"></div></div><div class="lgrid">${LAYOUT.map(
           (L, i) =>
-            `<div class="line l${i + 1}"><span class="c layer">${LAYER_NAMES[i]}</span>${L.map((x, j) => cell(x, `${i}_${j}`)).join('')}</div>`,
+            `<div class="line l${i + 1}"><span class="c layer">${LAYER_NAMES[i]}</span>${L.map((x, j) => cell(x, `${i}_${j}`)).join('')}</div><div class="line rm l${i + 1}" data-k="rm${i}"></div>`,
         ).join('')}</div>`
         $('cbody').appendChild(el)
         const cells = {}

@@ -31,6 +31,26 @@ export type FromWorker =
     }
   | { readonly type: 'failed'; readonly id: string | null; readonly message: string }
 
+/** One Mission fought, read from the Turn report of the Advance turn that fought its Combat. */
+export interface MissionRecord {
+  readonly mission: string
+  /** The Turn that Advance turn ended. */
+  readonly turn: number
+  readonly name: string
+  readonly kind: string
+  readonly result: 'Won' | 'Lost'
+  /** The Combat outcome for the Agents' side, e.g. Prevailed, Wiped, or Retreated. */
+  readonly outcome: string | null
+  /** The Agents of the team sent. */
+  readonly agents: number
+  /** The Combat rating of each side at Combat start. */
+  readonly agentsRating: number | null
+  readonly enemiesRating: number | null
+  readonly killed: number
+  /** Agents of the team whose final condition in the Combat is Incapacitated. */
+  readonly incapacitated: number
+}
+
 export interface MissionCounts {
   won: number
   lost: number
@@ -68,6 +88,8 @@ export interface CampaignStats {
   /** The Combat rating of every Serving Agent together at full health and exhaustion 0. */
   readonly ratingFresh: number
   readonly missions: { Response: MissionCounts; Initiative: MissionCounts }
+  /** The last four Missions fought, the latest first. */
+  readonly recentMissions: readonly MissionRecord[]
   readonly factions: readonly {
     readonly id: string
     readonly name: string

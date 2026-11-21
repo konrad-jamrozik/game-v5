@@ -9,7 +9,7 @@ import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { parentPort, workerData } from 'node:worker_threads'
 
-import type { CampaignStats, ToWorker } from './protocol.ts'
+import type { CampaignStats, MissionRecord, ToWorker } from './protocol.ts'
 
 const impl = (workerData as { impl: string }).impl
 const port = parentPort!
@@ -36,6 +36,46 @@ interface Campaign {
   /** The active Autopilot engagement, while a run is playing. */
   engagementId: string | null
   lastReport: number
+  /** The last Missions fought, the latest first, and the Turn of the last Turn report read for them. */
+  recentMissions: MissionRecord[]
+  missionsReadTurn: number
+}
+
+/** How many of the last Missions fought a Campaign keeps. */
+const RECENT_MISSIONS = 4
+
+/**
+ * Reads the Missions the latest Advance turn fought from its Turn report, once per Turn report, so that a Campaign
+ * keeps its last Missions although each Turn report holds only one Advance turn.
+ */
+function readMissions(campaign: Campaign) {
+  const report = ok<Any>(campaign.engine.player.queries.getTurnReport())
+  if (report === null || report.turn === campaign.missionsReadTurn) {
+    return
+  }
+  campaign.missionsReadTurn = report.turn
+  for (const mission of report.missions as Any[]) {
+    const combat = (report.combatReports as Any[]).find((c) => c.mission === mission.mission)
+    const start = combat?.ratings?.find((r: Any) => r.round === 0) ?? combat?.ratings?.[0]
+    campaign.recentMissions.unshift({
+      mission: mission.mission,
+      turn: report.turn,
+      name: archetypeNames.get(mission.missionSiteArchetype) ?? mission.missionSiteArchetype,
+      kind: mission.kind,
+      result: mission.result,
+      outcome: combat?.outcome ?? null,
+      agents: combat?.agents?.length ?? 0,
+      agentsRating: start?.agents ?? null,
+      enemiesRating: start?.enemies ?? null,
+      killed: (mission.killed as Any[]).length,
+      incapacitated:
+        combat === undefined
+          ? 0
+          : (combat.participants as Any[]).filter((p) => p.side === 'agent' && p.final.condition === 'incapacitated')
+              .length,
+    })
+  }
+  campaign.recentMissions.length = Math.min(campaign.recentMissions.length, RECENT_MISSIONS)
 }
 
 async function boot() {
@@ -59,12 +99,12 @@ async function boot() {
   // a row can name the next Initiative Mission site to win against each Faction. It is fixed game data.
   ok(scratch.session.developer.enable())
   const levels = ok<Any>(scratch.developer.queries.getInitiativeOperationLevels()).missionSiteArchetypes as Any[]
-  const names = new Map<string, string>(
-    (ok<Any>(scratch.player.queries.getGameData()).missionSiteArchetypes as Any[]).map((a) => [a.id, a.name]),
-  )
+  for (const a of ok<Any>(scratch.player.queries.getGameData()).missionSiteArchetypes as Any[]) {
+    archetypeNames.set(a.id, a.name)
+  }
   for (const item of levels) {
     if (item.level !== null) {
-      chain.set(item.level as number, names.get(item.id) ?? item.id)
+      chain.set(item.level as number, archetypeNames.get(item.id) ?? item.id)
     }
   }
   return { MemoryStorage, createEngine, BASIC_AI_THRESHOLDS, createBasicAutopilotAi, upgrades }
@@ -72,6 +112,8 @@ async function boot() {
 
 /** The name of the Initiative Mission site of each Initiative operation level. */
 const chain = new Map<number, string>()
+/** The name of each MissionSiteArchetype, by its ID. */
+const archetypeNames = new Map<string, string>()
 
 const booted = boot()
 const campaigns = new Map<string, Campaign>()
@@ -168,6 +210,7 @@ function statsOf(campaign: Campaign): CampaignStats {
     ready: ready.length,
     ratingFresh,
     missions,
+    recentMissions: [...campaign.recentMissions],
     factions: (live.factions as Any[]).map((f) => {
       const top = best.get(f.id)?.level ?? 0
       const level = [...chain.keys()].filter((l) => l > top).sort((x, y) => x - y)[0]
@@ -209,6 +252,7 @@ async function create(id: string, seed: string, params: unknown) {
       yieldToHost: async () => {
         const campaign = holder.campaign
         if (campaign !== null && campaign.engagementId !== null) {
+          readMissions(campaign)
           report(campaign, false)
         }
         await new Promise((resolve) => setImmediate(resolve))
@@ -219,7 +263,15 @@ async function create(id: string, seed: string, params: unknown) {
   ok(await engine.session.globalConfiguration.set('autosaveLimit', 0))
   ok(await engine.session.campaign.create({ seed }))
   const initialAgents = ok<Any>(engine.player.queries.getCurrentLiveWorldState()).agents.length
-  const campaign: Campaign = { id, engine, initialAgents, engagementId: null, lastReport: 0 }
+  const campaign: Campaign = {
+    id,
+    engine,
+    initialAgents,
+    engagementId: null,
+    lastReport: 0,
+    recentMissions: [],
+    missionsReadTurn: 0,
+  }
   holder.campaign = campaign
   campaigns.set(id, campaign)
   report(campaign, true)
@@ -236,6 +288,7 @@ async function play(campaign: Campaign, turns: number) {
   campaign.engagementId = engaged.engagementId
   const result = ok<Any>(await engine.session.autopilot.whenDisengaged(engaged.engagementId))
   campaign.engagementId = null
+  readMissions(campaign)
   port.postMessage({
     type: 'done',
     id: campaign.id,
