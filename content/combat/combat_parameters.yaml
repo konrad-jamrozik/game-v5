@@ -9,7 +9,7 @@ target_preferred_hit_chance: 0.8 # each percentage point away from it lowers the
 rating_base_health: 30 # the effective max health at which health neither raises nor lowers a Combatant's rating factor
 rating_bonus_per_health: 0.01 # each point of effective max health above or below the base: +1% or -1%
 rating_base_armor: 0 # the effective armor at which armor neither raises nor lowers a Combatant's rating factor
-rating_bonus_per_armor: 0.01 # each point of effective armor above or below the base: +1% or -1%
+rating_bonus_per_armor: 0.008 # each point of effective armor above or below the base: +0.8% or -0.8%
 rating_base_weapon_damage: 10 # the effective weapon damage at which it neither raises nor lowers a Combatant's rating factor
 rating_bonus_per_weapon_damage: 0.02 # each point of effective weapon damage above or below the base: +2% or -2%
 rating_team_size_exponent: 1.2 # a side of n Combatants able to fight is rated n ^ 0.2 times the sum of what each adds
