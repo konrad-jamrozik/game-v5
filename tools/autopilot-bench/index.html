@@ -1014,9 +1014,9 @@
           f(56, `<span class="dim">T</span>${fmt(m.turn)}`, 'The Turn whose Advance turn fought the Combat', true),
           f(92, `<span class="dim">${esc(m.kind)}</span>`),
           f(250, esc(m.name), m.name),
-          f(64, `${fmt(m.agents)} <span class="dim">ag</span>`, 'Agents sent', true),
+          f(72, `${fmt(m.agents)} <span class="dim">ag</span>`, 'Agents sent', true),
           f(
-            230,
+            250,
             m.agentsRating === null
               ? ''
               : `<span class="dim">CR</span> ${fmt(m.agentsRating)} <span class="dim">vs</span> ${fmt(m.enemiesRating)}` +
@@ -1030,9 +1030,10 @@
             `<span class="${m.result === 'Won' ? 'good' : 'bad'}">${esc(m.result)}</span>`,
             m.outcome ? `The result; Combat outcome for the Agents: ${m.outcome}` : 'The result',
           ),
-          f(64, `<span class="${m.killed > 0 ? 'bad' : 'dim'}">${fmt(m.killed)} dead</span>`, 'Agents Killed', true),
+          // Wide enough for three digits, e.g. "100 dead", so that no count is cut off.
+          f(84, `<span class="${m.killed > 0 ? 'bad' : 'dim'}">${fmt(m.killed)} dead</span>`, 'Agents Killed', true),
           f(
-            72,
+            92,
             `<span class="${m.incapacitated > 0 ? '' : 'dim'}">${fmt(m.incapacitated)} incap</span>`,
             'Agents Incapacitated in the Combat',
             true,
