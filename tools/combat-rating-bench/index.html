@@ -2317,7 +2317,7 @@
         const old = shown?.crSig !== crSig() ? ' old' : ''
         const lines = [
           s.showRatio
-            ? `<span class="n" title="The Agent team's rating over the site's">×${cell.ratio.toFixed(2)}</span>`
+            ? `<span class="n" title="The Agent team's rating over the site's">${pct(cell.ratio)}</span>`
             : '',
           s.showWin ? `<span class="w">${text}</span>` : '',
           s.showCrLeft
