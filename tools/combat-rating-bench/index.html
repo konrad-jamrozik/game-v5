@@ -527,6 +527,16 @@
               differently, so those cells turn grey until they are run again; run, fit, and run the grey cells until the
               values settle.
             </p>
+            <p class="note">
+              E.g. with <code>skill * damage_mult</code> and <code>cr_per_damage</code> 0.02, a site of CR 1,200 has
+              been fought by 12 Agents of skill 100 without Upgrades, each rated 100, who won 50%, and by 10 Agents of
+              skill 100 with 10 Weapon damage Upgrades, each rated 120, who won 85%. Both teams rate 1,200, so the curve
+              predicts 50% for both: right for the first, 35 points off for the second. Fit tries other values on the
+              same two results: at 0.05 the second team rates 10 × 150 = 1,500, 1.25× the site, for which the curve
+              predicts about 85%, while the first team, without Upgrades, still rates 1,200. Fit writes 0.05. The team
+              that now matches the site is 8 such Agents, not 10, so that cell turns grey until it is run again, and
+              should then win about 50%.
+            </p>
           </div>
           <div style="display: flex; flex-direction: column; gap: 10px">
             <label class="lbl note" for="exprC">combatant_cr</label>
