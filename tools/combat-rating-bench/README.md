@@ -31,6 +31,7 @@ Unchecking a part's **Enabled** box switches it off: its multiplier is 1, or `te
 
 - **Restore all defaults**: the default expressions and parameters, with every part enabled. The ↺ beside a parameter restores that parameter alone, and a parameter away from its default, or a part switched off, shows in orange.
 - **Lanchester square**: the default combatant expression with the team expression `sqrt(sum * count)`.
+- **Multiplicative bonuses**: the default expressions, `skill * health_mult * armor_mult * damage_mult` and `sum * count ** team_exp / count`, keeping the parameters, unlike **Restore all defaults**.
 - **Additive bonuses**: the combatant expression `skill * (1 + (health_mult - 1) + (armor_mult - 1) + (damage_mult - 1))`, in which the three bonuses add rather than multiply, e.g. +10% health, +15% armor, and +30% damage make skill × 1.55 rather than × 1.64, with the default team expression. It keeps the parameters.
 
 ## The grid

@@ -611,6 +611,13 @@
               </button>
               <button
                 class="small"
+                data-act="preset-multiplicative"
+                title="skill × health_mult × armor_mult × damage_mult, e.g. +10% health, +15% armor, and +30% damage make skill × 1.64; keeps the parameters"
+              >
+                Multiplicative bonuses
+              </button>
+              <button
+                class="small"
                 data-act="preset-additive"
                 title="skill × (1 + the sum of the three bonuses), e.g. +10% health, +15% armor, and +30% damage make skill × 1.55; keeps the parameters"
               >
@@ -740,6 +747,11 @@
         },
         lanchester: { combatant: 'skill * health_mult * armor_mult * damage_mult', team: 'sqrt(sum * count)' },
         // The bonuses add rather than multiply, e.g. +10% health, +15% armor, and +30% damage make skill × 1.55.
+        // The default expressions alone, keeping the parameters, unlike Restore all defaults.
+        multiplicative: {
+          combatant: 'skill * health_mult * armor_mult * damage_mult',
+          team: 'sum * count ** team_exp / count',
+        },
         additive: {
           combatant: 'skill * (1 + (health_mult - 1) + (armor_mult - 1) + (damage_mult - 1))',
           team: 'sum * count ** team_exp / count',
