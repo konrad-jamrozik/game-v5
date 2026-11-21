@@ -32,6 +32,8 @@
         --high: 120, 190, 90;
         /* The Sampler's colourings: a win rate above the rating ratio, or a ratio above 100%, tints toward yellow. */
         --over: 255, 200, 60;
+        /* The Sampler's Win rate + CR ratio line: the purple veil over the samples near equal ratings. */
+        --line: 168, 70, 230;
         --head: 'Barlow Condensed', 'Arial Narrow', sans-serif;
         --body: 'Barlow', 'Segoe UI', system-ui, sans-serif;
         --mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
@@ -860,6 +862,12 @@
               <label class="inline" title="Red below a 50% win rate, green above, as in the grid"
                 ><input type="radio" name="coloring" value="win" data-bind="sampler.coloring" data-type="str" /> Win
                 rate</label
+              >
+              <label
+                class="inline"
+                title="Win rate, with a purple veil that is strongest at a rating ratio of exactly 100% and fades to nothing at 80% and 120%, so the line of equal ratings shows across the tables"
+                ><input type="radio" name="coloring" value="winline" data-bind="sampler.coloring" data-type="str" /> Win
+                rate + CR ratio line</label
               >
               <label
                 class="inline"
@@ -2415,6 +2423,12 @@
         const coloring = state.sampler.coloring
         if (coloring === 'win') {
           return r ? tint(winOf(r)) : null
+        }
+        if (coloring === 'winline') {
+          // A purple veil over the win rate's tint, strongest at a ratio of exactly 100% and gone at 80% and 120%.
+          const near = Math.max(0, 1 - Math.abs(cell.ratio - 1) / 0.2)
+          const veil = `rgba(var(--line), ${(0.8 * near).toFixed(3)})`
+          return `linear-gradient(${veil}, ${veil}), ${r ? tint(winOf(r)) : 'var(--surface)'}`
         }
         const shownRatio = Math.round(cell.ratio * 100)
         if (coloring === 'ratio') {
