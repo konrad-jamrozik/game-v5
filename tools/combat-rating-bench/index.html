@@ -32,8 +32,8 @@
         --high: 120, 190, 90;
         /* The Sampler's colourings: a win rate above the rating ratio, or a ratio above 100%, tints toward yellow. */
         --over: 255, 200, 60;
-        /* The Sampler's Win rate + CR ratio line: the purple veil over the samples near equal ratings. */
-        --line: 168, 70, 230;
+        /* The Sampler's Win rate + CR ratio line: the contour lines of equal ratings, in a colour neither red nor green. */
+        --line: 90, 220, 255;
         --head: 'Barlow Condensed', 'Arial Narrow', sans-serif;
         --body: 'Barlow', 'Segoe UI', system-ui, sans-serif;
         --mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
@@ -865,7 +865,7 @@
               >
               <label
                 class="inline"
-                title="Win rate, with a purple veil that is strongest at a rating ratio of exactly 100% and fades to nothing at 80% and 120%, so the line of equal ratings shows across the tables"
+                title="Win rate, with cyan lines between the cells where the rating ratio crosses 100%, bold, and 90% and 110%, faint, so the line of equal ratings shows without covering the colours"
                 ><input type="radio" name="coloring" value="winline" data-bind="sampler.coloring" data-type="str" /> Win
                 rate + CR ratio line</label
               >
@@ -2425,10 +2425,8 @@
           return r ? tint(winOf(r)) : null
         }
         if (coloring === 'winline') {
-          // A purple veil over the win rate's tint, strongest at a ratio of exactly 100% and gone at 80% and 120%.
-          const near = Math.max(0, 1 - Math.abs(cell.ratio - 1) / 0.2)
-          const veil = `rgba(var(--line), ${(0.8 * near).toFixed(3)})`
-          return `linear-gradient(${veil}, ${veil}), ${r ? tint(winOf(r)) : 'var(--surface)'}`
+          // The win rate's tint, untouched; the lines are drawn on the cells' edges by contourEdges.
+          return r ? tint(winOf(r)) : null
         }
         const shownRatio = Math.round(cell.ratio * 100)
         if (coloring === 'ratio') {
@@ -2467,7 +2465,35 @@
         const turn = Math.min(d, 0.1) / 0.1
         return `color-mix(in oklab, hsl(120, ${base.toFixed(0)}%, 32%), hsl(285, 50%, 42%) ${(turn * 100).toFixed(0)}%)`
       }
-      function sampleHtml(cell) {
+      /** The rating ratios the Win rate + CR ratio line draws: a bold line at 100% and faint ones at 90% and 110%. */
+      const CONTOURS = [
+        [1, 3, 'rgb(var(--line))'],
+        [0.9, 1, 'rgba(var(--line), 0.6)'],
+        [1.1, 1, 'rgba(var(--line), 0.6)'],
+      ]
+      /**
+       * The lines of the Win rate + CR ratio line on one cell's edges, as a box-shadow: an edge that the rating ratio
+       * crosses a contour across, from this cell to its neighbour on that side, carries the contour's line, so that the
+       * lines run between the cells and leave their fills alone. The neighbours are those above, right, below, and left.
+       */
+      function contourEdges(cell, around) {
+        const shadows = []
+        const sides = [
+          [around[0], (w) => `0 ${w}px`],
+          [around[1], (w) => `-${w}px 0`],
+          [around[2], (w) => `0 -${w}px`],
+          [around[3], (w) => `${w}px 0`],
+        ]
+        for (const [t, w, colour] of CONTOURS) {
+          for (const [next, offset] of sides) {
+            if (next && cell.ratio >= t !== next.ratio >= t) {
+              shadows.push(`inset ${offset(w)} 0 ${colour}`)
+            }
+          }
+        }
+        return shadows.join(', ')
+      }
+      function sampleHtml(cell, edges = '') {
         const all = store.results[cell.key]
         const r = resultOf(cell)
         const queued = pending.has(cell.key)
@@ -2497,7 +2523,8 @@
             ? `<span class="n k-df" title="CR to win diff: the win rate minus the rating ratio">${shown ? signedPct(winOf(shown) - cell.ratio) : '–'}</span>`
             : '',
         ]
-        return `<div class="${cls}" style="${style}" data-sample="${esc(cell.id)}">${lines.join('')}</div>`
+        const shadow = edges ? `;box-shadow:${edges}` : ''
+        return `<div class="${cls}" style="${style}${shadow}" data-sample="${esc(cell.id)}">${lines.join('')}</div>`
       }
       /** The Sampler's dimensions as inputs; drawn anew only when a mode changes, so typing keeps its focus. */
       function renderSamplerDims() {
@@ -2611,9 +2638,18 @@
               <button class="small" data-act="run-samples" data-z="${zi}" data-rerun="1" title="Forget these samples' results and fight them again, on new seeds">Re-run</button></div>
               <div class="sgrid" style="grid-template-columns: auto repeat(${xs.length}, minmax(50px, auto))">
               <span class="ax"><span>${corner}</span></span>${xs.map((x) => `<span class="ax"><span>${axisLabel('x', x, z, true)}</span></span>`).join('')}`
-            for (const y of ys) {
+            const lined = state.sampler.coloring === 'winline'
+            for (const [yi, y] of ys.entries()) {
               html += `<span class="ax y"><span>${axisLabel('y', y, z, false)}</span></span>`
-              html += xs.map((x) => sampleHtml(cellAt(x, y, z))).join('')
+              html += xs
+                .map((x, xi) => {
+                  const cell = cellAt(x, y, z)
+                  const at = (i, j) =>
+                    i >= 0 && i < xs.length && j >= 0 && j < ys.length ? cellAt(xs[i], ys[j], z) : null
+                  const around = [at(xi, yi - 1), at(xi + 1, yi), at(xi, yi + 1), at(xi - 1, yi)]
+                  return sampleHtml(cell, lined ? contourEdges(cell, around) : '')
+                })
+                .join('')
             }
             return `${html}</div></div>`
           })
