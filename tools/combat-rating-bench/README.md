@@ -46,6 +46,14 @@ Clicking a section heading, e.g. **Setup**, folds the section to its heading; th
 - **Nothing is fought until a Run button is pressed**: beside a share in a row, that block; **Run row**, the row; **Run** in the top row, that share for every site; and **Run all**, every cell. A run fights only the cells that have no result for their current team; **Stop** drops the fights not yet done.
 - **Results are kept in the browser's local storage**, by a key that hashes the site's Enemies, the Agent team, the Upgrade set, the Combats per cell, the Combat values, and the engine's commit. A change of the formula that changes a cell's Agent count leaves its earlier result greyed until it is run again; one that keeps the count keeps the result. **Forget results** clears them.
 
+## The Sampler
+
+The Sampler fights one Agent team against one Mission site over a grid of values, e.g. Agents of base skill 250 against one site, with the Agent count from 50 to 100 on the X axis, +weapon damage on the Y axis, and +armor on the Z axis. Each of its dimensions, the Agent count, the Agent base skill, +weapon damage, +armor, the Mission site, and the Combats per sample, is either **Fixed** at one value or sampled from **From** to **To** by **Step** along the X, Y, or Z axis, one dimension per axis. A sampled Mission site covers every site shown in the grid; until a site is chosen, the fixed one is the site whose rating is closest to that of the middle sample. The Agents are those of the grid, at full health and rested.
+
+- **X and Y** make one table, X across and Y rising upward, and **Z** makes one table per value, so that a 2D and a 3D sample both read as tables of cells. A cell shows the win rate, tinted as in the grid, and above it the Agent team's rating over the site's by the current formula; hovering it shows the ratings and the win rate that the curve fitted on the grid predicts.
+- **Nothing is fought until Run samples**, or a table's **Run**, is pressed. A sample's key is that of a grid cell of the same Combat, so the two share results; changing the formula changes the ratings shown but fights nothing again.
+- At most 60 values per axis and 5,000 samples in all.
+
 ## How the Combats are fought
 
 Each cell is one batch of the engine's `developer.tools.fightCombatBatch`, on explicit Combatants, with the Agent team as the Agents' side, as in a Mission, and the Combat values listed on the page. The explicit values already hold what the cell's Upgrades add, which is all the game's Combat rating counts of them. Retreat is off unless **Allow retreat** is checked, by setting `retreat_below_agent_rating_fraction` to 0, because it reads the game's own Combat rating rather than the formula; when it is allowed, a retreat counts as a loss. The Detached seed of a cell is its key, so a changed number reflects an edit, not new dice.
@@ -64,6 +72,6 @@ The analysis covers the cells that have a result for the current formula and are
 
 | Path         | Content                                                                                             |
 | ------------ | --------------------------------------------------------------------------------------------------- |
-| `index.html` | The page: the formula, the setup, the grid, the analysis, and the fit.                              |
+| `index.html` | The page: the formula, the setup, the grid, the Sampler, the analysis, and the fit.                 |
 | `server.ts`  | Serves the page, reads the GDR values from `content/`, and hands the batches to the worker threads. |
 | `worker.ts`  | Loads the engine from the Implementation clone and fights one batch of Detached Combats at a time.  |
