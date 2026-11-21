@@ -101,10 +101,14 @@ async function boot() {
   const levels = ok<Any>(scratch.developer.queries.getInitiativeOperationLevels()).missionSiteArchetypes as Any[]
   for (const a of ok<Any>(scratch.player.queries.getGameData()).missionSiteArchetypes as Any[]) {
     archetypeNames.set(a.id, a.name)
+    archetypeEnemies.set(a.id, {
+      rating: a.enemiesCombatRating as number,
+      count: (a.enemies as Any[]).reduce((sum, e) => sum + (e.count as number), 0),
+    })
   }
   for (const item of levels) {
     if (item.level !== null) {
-      chain.set(item.level as number, archetypeNames.get(item.id) ?? item.id)
+      chain.set(item.level as number, item.id as string)
     }
   }
   return { MemoryStorage, createEngine, BASIC_AI_THRESHOLDS, createBasicAutopilotAi, upgrades }
@@ -112,6 +116,8 @@ async function boot() {
 
 /** The name of the Initiative Mission site of each Initiative operation level. */
 const chain = new Map<number, string>()
+/** The Combat rating of each MissionSiteArchetype's Enemies and their number, by its ID. */
+const archetypeEnemies = new Map<string, { rating: number; count: number }>()
 /** The name of each MissionSiteArchetype, by its ID. */
 const archetypeNames = new Map<string, string>()
 
@@ -214,12 +220,33 @@ function statsOf(campaign: Campaign): CampaignStats {
     factions: (live.factions as Any[]).map((f) => {
       const top = best.get(f.id)?.level ?? 0
       const level = [...chain.keys()].filter((l) => l > top).sort((x, y) => x - y)[0]
+      if (f.eliminated || level === undefined) {
+        return { id: f.id, name: f.name, eliminated: f.eliminated, best: best.get(f.id) ?? null, next: null }
+      }
+      const archetype = chain.get(level)!
+      const enemies = archetypeEnemies.get(archetype)
+      // The discovered Lead of this Faction whose completion creates the Mission site.
+      const lead = (retired.leads as Any[]).find((l) => l.faction === f.id && l.createsMissionSite === archetype)
       return {
         id: f.id,
         name: f.name,
         eliminated: f.eliminated,
         best: best.get(f.id) ?? null,
-        next: f.eliminated || level === undefined ? null : { level, name: chain.get(level)! },
+        next: {
+          level,
+          name: archetypeNames.get(archetype) ?? archetype,
+          enemiesRating: enemies?.rating ?? 0,
+          enemies: enemies?.count ?? 0,
+          lead:
+            lead === undefined
+              ? null
+              : {
+                  completions: lead.completionCount as number,
+                  investigating: lead.activeInvestigation !== null,
+                  available: lead.canBeInvestigatedNow === true || lead.status === 'Available',
+                  status: lead.status as string,
+                },
+        },
       }
     }),
     hired: all.length - campaign.initialAgents,

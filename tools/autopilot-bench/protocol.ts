@@ -97,7 +97,20 @@ export interface CampaignStats {
     /** The Won Initiative Mission site against the Faction with the highest Initiative operation level. */
     readonly best: { readonly level: number | null; readonly name: string } | null
     /** The Initiative Mission site one Initiative operation level above `best`; none once the Faction is Eliminated. */
-    readonly next: { readonly level: number; readonly name: string } | null
+    readonly next: {
+      readonly level: number
+      readonly name: string
+      /** The Combat rating of the MissionSiteArchetype's Enemies, and how many Enemies it has. */
+      readonly enemiesRating: number
+      readonly enemies: number
+      /** The discovered Lead of the Faction that creates it; none while no such Lead is discovered. */
+      readonly lead: {
+        readonly completions: number
+        readonly investigating: boolean
+        readonly available: boolean
+        readonly status: string
+      } | null
+    } | null
   }[]
   /** Agents beyond those the Campaign started with. */
   readonly hired: number

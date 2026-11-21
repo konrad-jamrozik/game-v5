@@ -369,14 +369,29 @@
       .line.l4 {
         background: var(--band);
       }
-      /* The four layers and, to their right, the last four Missions fought, one beside each layer line. */
-      .lgrid {
-        display: grid;
-        grid-template-columns: max-content 560px;
-      }
+      /* Below the four layers, the last four Missions fought, one per line, each field at a fixed width. */
       .line.rm {
-        padding-left: 12px;
-        border-left: 1px solid var(--border);
+        align-items: baseline;
+        font-family: var(--mono);
+        font-variant-numeric: tabular-nums;
+      }
+      .line.rm .c.layer {
+        align-self: baseline;
+      }
+      .line.l6,
+      .line.l8 {
+        background: var(--band);
+      }
+      .f {
+        display: inline-block;
+        padding: 0 6px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        vertical-align: bottom;
+      }
+      .f.r {
+        text-align: right;
       }
       /* Each stat is its label over its value, at a fixed width so that it stands at the same place in every block. */
       .c {
@@ -873,16 +888,31 @@
           ['Initiative', 'Initiative Missions Won / Lost / Expired', (s) => ml(s.missions.Initiative), 104],
           ...factions.map((f, i) => [
             f.name,
-            `The next Initiative Mission site to win against ${f.name}: one Initiative operation level above the highest it has Won; Eliminated once the Faction is`,
+            `The next Initiative Mission site to win against ${f.name}: one Initiative operation level above the highest it has Won; Eliminated once the Faction is. Below it, the Lead that creates it: available for the first time, investigated for the first time, or completed at least once; then the Enemies' Combat rating, CR ready as a percentage of it, and the Enemies against the Deployable Agents`,
             (s) => {
               const x = s.factions[i]
               if (!x) return ''
               if (x.eliminated) return '<span class="good">Eliminated ✕</span>'
-              return x.next === null
-                ? '<span class="dim">—</span>'
-                : `<span class="dim">L${x.next.level}</span> ${esc(x.next.name)}`
+              if (x.next === null) return '<span class="dim">—</span>'
+              const lead = x.next.lead
+              const status =
+                lead === null
+                  ? '<span class="dim">Lead not discovered</span>'
+                  : lead.completions > 0
+                    ? `<span class="good">Lead completed ×${fmt(lead.completions)}</span>${lead.investigating ? ' <span class="dim">· investigating</span>' : ''}`
+                    : lead.investigating
+                      ? '<span style="color:var(--accent-text)">Lead investigated, 1st time</span>'
+                      : lead.available
+                        ? 'Lead available, 1st time'
+                        : `<span class="dim">Lead ${esc(lead.status.toLowerCase())}</span>`
+              const pct = x.next.enemiesRating > 0 ? (s.ratingReady / x.next.enemiesRating) * 100 : null
+              const odds =
+                `<span class="dim">CR</span> ${fmt(x.next.enemiesRating)} <span class="dim">·</span> ` +
+                `<span class="${pct !== null && pct >= 100 ? 'good' : 'bad'}" title="CR ready / the Enemies' Combat rating">${pct === null ? '—' : `${pct.toFixed(0)}%`}</span> <span class="dim">·</span> ` +
+                `<span title="Enemies vs Deployable Agents">${fmt(x.next.enemies)} <span class="dim">en vs</span> ${fmt(s.ready)} <span class="dim">dep</span></span>`
+              return `<span class="dim">L${x.next.level}</span> ${esc(x.next.name)}<br>${status}<br>${odds}`
             },
-            240,
+            280,
             true,
           ]),
           ['Inv', 'Active Investigations', (s) => fmt(s.activeInvestigations), 48],
@@ -899,7 +929,7 @@
 
       function renderHead() {
         $('legend').innerHTML =
-          `<b>CR ready</b> is the Combat rating of the Deployable Agents, under Glossary below; their number out of all Serving Agents is in brackets, e.g. (29/155), and a team is further limited by the free Transport cap. <b>CR all</b> is the Combat rating of every Serving Agent at full health and exhaustion 0. A label with <b>+</b>, e.g. <b>+Weapon</b>, is how many times that Upgrade was bought. Work counts Serving Agents by Assignment, In transit included; <b>Deployable</b> and <b>Non-deployable</b> split those on Training and on Standby, so the two Deployable counts add up to the number after CR ready.Each Faction shows the next Initiative Mission site to win against it, one level above the highest Won. Missions: Won / Lost / Expired. To the right, the last four Missions fought, the latest first: the Turn, the kind and name of the Mission site, the Agents sent (<b>ag</b>), the team's Combat rating against the Enemies' at Combat start, the result, and the Agents Killed (<b>dead</b>) and Incapacitated (<b>incap</b>). Hover a label for its meaning. Time is the latest run's wall-clock time, and the total of every run. <b>Load params</b> copies a Campaign's parameters into the Parameters editor above, e.g. to launch a variant of it.`
+          `<b>CR ready</b> is the Combat rating of the Deployable Agents, under Glossary below; their number out of all Serving Agents is in brackets, e.g. (29/155), and a team is further limited by the free Transport cap. <b>CR all</b> is the Combat rating of every Serving Agent at full health and exhaustion 0. A label with <b>+</b>, e.g. <b>+Weapon</b>, is how many times that Upgrade was bought. Work counts Serving Agents by Assignment, In transit included; <b>Deployable</b> and <b>Non-deployable</b> split those on Training and on Standby, so the two Deployable counts add up to the number after CR ready.Each Faction shows the next Initiative Mission site to win against it, one level above the highest Won. Below it, the state of the Lead that creates it, the Enemies' Combat rating, CR ready as a percentage of it, and the Enemies (<b>en</b>) against the Deployable Agents (<b>dep</b>). Missions: Won / Lost / Expired. Below the layers, <b>Fought</b> lists the last four Missions fought, the latest first: the Turn, the kind and name of the Mission site, the Agents sent (<b>ag</b>), the team's Combat rating against the Enemies' at Combat start, the result, and the Agents Killed (<b>dead</b>) and Incapacitated (<b>incap</b>). Hover a label for its meaning. Time is the latest run's wall-clock time, and the total of every run. <b>Load params</b> copies a Campaign's parameters into the Parameters editor above, e.g. to launch a variant of it.`
       }
 
       const rows = new Map()
@@ -935,42 +965,66 @@
           }),
         )
         const recent = c.stats?.recentMissions ?? []
-        for (let i = 0; i < LAYER_NAMES.length; i += 1) {
+        for (let i = 0; i < RECENT_LINES; i += 1) {
           cells[`rm${i}`] =
             recent[i] !== undefined
-              ? missionCell(recent[i])
+              ? missionLine(recent[i])
               : i === 0 && c.stats !== null
-                ? '<span class="c left"><span class="cl">Missions fought</span><span class="dim">none yet</span></span>'
+                ? '<span class="f dim">none yet</span>'
                 : ''
         }
         return cells
       }
 
+      /** How many of the last Missions fought a block shows, one per line below its layers. */
+      const RECENT_LINES = 4
+
       /**
-       * One Mission fought: its Turn and kind over its Mission site's name, the team sent with its Combat rating against
-       * the Enemies' Combat rating at Combat start, and the outcome with the Agents Killed and Incapacitated.
+       * One Mission fought, its fields at fixed widths so that they stand in columns: the Turn, the kind and name of the
+       * Mission site, the Agents sent, the team's Combat rating against the Enemies' at Combat start, the result, and
+       * the Agents Killed and Incapacitated.
        */
-      function missionCell(m) {
-        const result = `<span class="${m.result === 'Won' ? 'good' : 'bad'}">${esc(m.result)}</span>`
-        const cr =
-          m.agentsRating === null
-            ? ''
-            : ` <span class="dim">CR</span> ${fmt(m.agentsRating)} <span class="dim">vs</span> ${fmt(m.enemiesRating)}`
-        const dead = `<span class="${m.killed > 0 ? 'bad' : 'dim'}">${fmt(m.killed)} dead</span>`
-        const incap = `<span class="${m.incapacitated > 0 ? '' : 'dim'}">${fmt(m.incapacitated)} incap</span>`
-        return (
-          `<span class="c left"><span class="cl" title="The Turn whose Advance turn fought the Combat, and the kind of Mission site">T${fmt(m.turn)} · ${esc(m.kind)}</span>` +
-          `<span title="${esc(m.name)}: ${fmt(m.agents)} Agents sent; Combat ratings at Combat start; result${m.outcome ? `, ${esc(m.outcome)}` : ''}; Agents Killed and Incapacitated">${esc(m.name)} <span class="dim">·</span> ${fmt(m.agents)} <span class="dim">ag</span>${cr} <span class="dim">·</span> ${result} <span class="dim">·</span> ${dead} <span class="dim">·</span> ${incap}</span></span>`
-        )
+      function missionLine(m) {
+        const f = (width, html, title, right) =>
+          `<span class="f${right ? ' r' : ''}" style="width:${width}px"${title ? ` title="${esc(title)}"` : ''}>${html}</span>`
+        return [
+          f(56, `<span class="dim">T</span>${fmt(m.turn)}`, 'The Turn whose Advance turn fought the Combat', true),
+          f(92, `<span class="dim">${esc(m.kind)}</span>`),
+          f(250, esc(m.name), m.name),
+          f(64, `${fmt(m.agents)} <span class="dim">ag</span>`, 'Agents sent', true),
+          f(
+            170,
+            m.agentsRating === null
+              ? ''
+              : `<span class="dim">CR</span> ${fmt(m.agentsRating)} <span class="dim">vs</span> ${fmt(m.enemiesRating)}`,
+            "The team's Combat rating against the Enemies' at Combat start",
+          ),
+          f(
+            110,
+            `<span class="${m.result === 'Won' ? 'good' : 'bad'}">${esc(m.result)}</span>${m.outcome ? ` <span class="dim">${esc(m.outcome)}</span>` : ''}`,
+            'The result, and the Combat outcome for the Agents',
+          ),
+          f(64, `<span class="${m.killed > 0 ? 'bad' : 'dim'}">${fmt(m.killed)} dead</span>`, 'Agents Killed', true),
+          f(
+            72,
+            `<span class="${m.incapacitated > 0 ? '' : 'dim'}">${fmt(m.incapacitated)} incap</span>`,
+            'Agents Incapacitated in the Combat',
+            true,
+          ),
+        ].join('')
       }
 
       function rowSkeleton(c) {
         const el = document.createElement('div')
         el.className = 'crow'
         el.dataset.id = c.id
-        el.innerHTML = `<div class="cleft"><div class="cname" data-k="n"></div><div class="cparams" data-k="params"></div></div><div class="cprog"><div data-k="progress"></div><div><span data-t="run"></span> <span class="dim" data-t="total"></span></div><div class="btns" data-k="acts"></div></div><div class="lgrid">${LAYOUT.map(
+        el.innerHTML = `<div class="cleft"><div class="cname" data-k="n"></div><div class="cparams" data-k="params"></div></div><div class="cprog"><div data-k="progress"></div><div><span data-t="run"></span> <span class="dim" data-t="total"></span></div><div class="btns" data-k="acts"></div></div><div>${LAYOUT.map(
           (L, i) =>
-            `<div class="line l${i + 1}"><span class="c layer">${LAYER_NAMES[i]}</span>${L.map((x, j) => cell(x, `${i}_${j}`)).join('')}</div><div class="line rm l${i + 1}" data-k="rm${i}"></div>`,
+            `<div class="line l${i + 1}"><span class="c layer">${LAYER_NAMES[i]}</span>${L.map((x, j) => cell(x, `${i}_${j}`)).join('')}</div>`,
+        ).join('')}${Array.from(
+          { length: RECENT_LINES },
+          (_, i) =>
+            `<div class="line rm l${LAYER_NAMES.length + i + 1}"><span class="c layer"${i === 0 ? ' title="The last Missions fought, the latest first"' : ''}>${i === 0 ? 'Fought' : ''}</span><span data-k="rm${i}"></span></div>`,
         ).join('')}</div>`
         $('cbody').appendChild(el)
         const cells = {}
