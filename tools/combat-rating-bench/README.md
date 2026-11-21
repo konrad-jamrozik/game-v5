@@ -29,12 +29,12 @@ The parameters, e.g. `cr_per_health` and `team_exp`, and the Combat values, e.g.
 
 Unchecking a part's **Enabled** box switches it off: its multiplier is 1, or `team_exp` is 1, whatever the values; its parameters are greyed and **Fit** leaves them alone. A parameter that neither expression reads is greyed too. Every change re-rates every Combatant, site, and Agent team at once, and a Run button fights the teams as the current formula sizes them. A formula saved with a variable the page no longer has returns to the default expressions on load. The buttons under the expressions load:
 
-- **Multiplicative default**: the default expressions and parameters, with every part enabled.
+- **Restore all defaults**: the default expressions and parameters, with every part enabled. The ↺ beside a parameter restores that parameter alone, and a parameter away from its default, or a part switched off, shows in orange.
 - **Lanchester square**: the default combatant expression with the team expression `sqrt(sum * count)`.
 
 ## The grid
 
-- **Rows** are the Mission sites read from `content/`, the Cut content under `content/cut/` excepted, the Initiative sites first and then the Response sites by operation level. Each site's Enemies take their EnemyArchetypes' values.
+- **Rows** are the Mission sites read from `content/`, the Cut content under `content/cut/` excepted, the Initiative sites first and then the Response sites by operation level. Each site's Enemies take their EnemyArchetypes' values. **Skip Response missions** leaves the Response sites out of the grid, the runs, the statistics, and the fit.
 - **Blocks** are the shares of the site's rating, by default `100, 120, 150`. In each block, the rows are the base skills of the Agent teams, by default `100, 250, 500`, and the columns their Upgrades as `weapon/armor` counts, by default `0/0, 5/0, 0/5, 5/5, 10/0, 0/10, 10/10`, so the defaults make 24 sites × 3 shares × 3 skills × 7 Upgrade sets, i.e. 1,512 cells.
 - **An Agent team** is Agents of the first AgentArchetype's health, weapon damage, and armor, at full health and rested, with the cell's base skill; each Weapon damage Upgrade adds the `weapon_damage` Upgrade's `increment` to weapon damage, and each Armor Upgrade the `armor` Upgrade's to armor. Its Agent count is the one whose rating, under the current formula, is closest by ratio to the cell's share of the site's rating. A cell whose closest count still misses its share by more than 5%, e.g. one Agent of base skill 500 against a small site, is excluded: it is drawn dashed, never fought, and left out of the statistics and the fit.
 - **A cell** shows the Agent count above and the win rate below, tinted red when the Agents win less than 50% and green when they win more; hovering it shows the ratings, the Agents' values, and the Combats won.

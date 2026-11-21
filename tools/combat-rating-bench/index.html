@@ -195,6 +195,17 @@
       th.r {
         text-align: right;
       }
+      input.changed,
+      code.changed {
+        color: var(--accent-text);
+      }
+      input.changed {
+        border-color: var(--accent);
+      }
+      button:disabled {
+        opacity: 0.35;
+        cursor: default;
+      }
       tr.unused td {
         opacity: 0.45;
       }
@@ -537,9 +548,9 @@
               <button
                 class="small"
                 data-act="preset-default"
-                title="The multiplicative formula with its default parameters"
+                title="The default expressions and parameters, with every part enabled"
               >
-                Multiplicative default
+                Restore all defaults
               </button>
               <button class="small" data-act="preset-lanchester">Lanchester square</button>
             </div>
@@ -571,6 +582,9 @@
           /></label>
           <label class="inline"
             ><input type="checkbox" data-bind="setup.retreat" data-type="bool" /> Allow retreat</label
+          >
+          <label class="inline"
+            ><input type="checkbox" data-bind="setup.skipResponse" data-type="bool" /> Skip Response missions</label
           >
         </div>
         <p class="note">
@@ -706,6 +720,8 @@
           upgrades: '0/0, 5/0, 0/5, 5/5, 10/0, 0/10, 10/10',
           trials: 100,
           retreat: false,
+          /** Leaves the Response sites out of the grid, the runs, the statistics, and the fit. */
+          skipResponse: false,
         },
         combat: {},
       })
@@ -970,7 +986,9 @@
         // The Initiative sites first, then the Response sites by operation level, each in the order of the YAML file.
         return [
           ...sites.filter((s) => s.kind === 'initiative'),
-          ...sites.filter((s) => s.kind !== 'initiative').sort((a, b) => (a.level ?? 0) - (b.level ?? 0)),
+          ...(state.setup.skipResponse
+            ? []
+            : sites.filter((s) => s.kind !== 'initiative').sort((a, b) => (a.level ?? 0) - (b.level ?? 0))),
         ]
       }
 
@@ -1349,10 +1367,11 @@
       /* ---------- rendering of the inputs ---------- */
       function renderFormula() {
         $('#params').innerHTML =
-          `<tr><th>Parameter</th><th class="r">Value</th><th title="Unchecked: this part of the formula is a no-op, i.e. its multiplier is 1, or team_exp is 1.">Enabled</th><th title="Checked: the Fit button may change this parameter. Unchecked: Fit leaves it as it is.">Fit</th><th>Meaning</th></tr>` +
+          `<tr><th>Parameter</th><th class="r">Value</th><th></th><th title="Unchecked: this part of the formula is a no-op, i.e. its multiplier is 1, or team_exp is 1.">Enabled</th><th title="Checked: the Fit button may change this parameter. Unchecked: Fit leaves it as it is.">Fit</th><th>Meaning</th></tr>` +
           PARAMS.map(
             ([name, desc, step]) => `<tr data-param="${name}"><td><code>${name}</code></td>
             <td class="r"><input type="number" step="${step}" data-bind="formula.params.${name}" data-type="num" value="${state.formula.params[name]}"></td>
+            <td><button class="small" data-act="reset-param" data-param="${name}" title="Restore the default">↺</button></td>
             <td>${
               name in state.formula.enabled
                 ? `<input type="checkbox" data-bind="formula.enabled.${name}" data-type="bool" ${state.formula.enabled[name] ? 'checked' : ''} aria-label="Enable ${name}">`
@@ -1506,8 +1525,16 @@
       }
       const isUsed = (name) => useOf(name) === 'used'
       function markUnused() {
+        const d = defaults().formula
         for (const row of document.querySelectorAll('#params tr[data-param]')) {
-          const use = useOf(row.dataset.param)
+          const name = row.dataset.param
+          // A value away from its default, or a part switched off, shows in orange; ↺ restores the value.
+          const changedValue = Math.abs(state.formula.params[name] - d.params[name]) > 1e-9
+          const switchedOff = name in d.enabled && state.formula.enabled[name] !== d.enabled[name]
+          row.querySelector('input[type="number"]').classList.toggle('changed', changedValue)
+          row.querySelector('code').classList.toggle('changed', changedValue || switchedOff)
+          row.querySelector('[data-act="reset-param"]').disabled = !changedValue
+          const use = useOf(name)
           row.classList.toggle('unused', use !== 'used')
           row.querySelector('.unused-note').textContent =
             use === 'off'
@@ -1802,6 +1829,12 @@
             state.formula.enabled = defaults().formula.enabled
             applyDefaults()
           }
+          renderFormula()
+          changed()
+        } else if (act === 'reset-param') {
+          const name = b.dataset.param
+          state.formula.params[name] = defaults().formula.params[name]
+          delete state.formula.edited[name]
           renderFormula()
           changed()
         } else if (act === 'run-row') {
