@@ -537,9 +537,10 @@
           <h2>Setup</h2>
           <p>
             Agent teams are Agents of the AgentArchetype's health, weapon damage, and armor, at full health and rested,
-            with the given base skill and Upgrades; each Weapon damage or Armor Upgrade adds its <code>increment</code>
-            to every Agent. Each team takes the Agent count whose rating is closest to its share of the Mission site's
-            rating. The Agent team is always the Agents' side, as in a Mission.
+            with the given base skill, plus the weapon damage and armor of an Upgrade set, e.g. 4/20 is +4 weapon damage
+            and +20 armor, i.e. 2 Weapon damage Upgrades of +2 and 4 Armor Upgrades of +5. Each team takes the Agent
+            count whose rating is closest to its share of the Mission site's rating. The Agent team is always the
+            Agents' side, as in a Mission.
           </p>
         </div>
         <div class="row">
@@ -548,7 +549,8 @@
           /></label>
           <label class="inline">Base skills <input class="wide" data-bind="setup.skills" data-type="str" /></label>
           <label class="inline"
-            >Upgrades, weapon/armor <input class="wide" style="width: 340px" data-bind="setup.upgrades" data-type="str"
+            >Upgrades, +weapon damage/+armor
+            <input class="wide" style="width: 340px" data-bind="setup.upgrades" data-type="str"
           /></label>
           <label class="inline"
             >Combats per cell
@@ -730,7 +732,7 @@
         [
           'cr_per_armor',
           'CR % per point of armor above baseline, e.g. 0.01 is 1%. Defaults to the game’s rating_bonus_per_armor.',
-          0.0025,
+          0.001,
         ],
         ['damage_base', 'Baseline weapon damage. Defaults to the game’s rating_base_weapon_damage.', 1],
         [
@@ -793,9 +795,9 @@
           ...FORMULAS.default,
         },
         setup: {
-          targets: '100, 120, 150',
+          targets: '80, 90, 100',
           skills: '100, 250, 500',
-          upgrades: '0/0, 5/0, 0/5, 5/5, 10/0, 0/10, 10/10',
+          upgrades: '0/0, 2/0, 0/10, 2/10, 4/0, 0/20, 4/20',
           trials: 100,
           retreat: false,
           /** Leaves the Response sites out of the grid, the runs, the statistics, and the fit. */
@@ -832,6 +834,19 @@
       let ctl = null
       let model = null
 
+      /**
+       * A saved setup with a setting still at an earlier default takes today's default instead, e.g. the Upgrade sets
+       * that once counted Upgrades rather than the points they add.
+       */
+      function upToDateSetup(saved = {}) {
+        const old = {
+          targets: ['100, 120, 150'],
+          upgrades: ['0/0, 5/0, 0/5, 5/5, 10/0, 0/10, 10/10'],
+        }
+        return Object.fromEntries(
+          Object.entries(saved).filter(([key, value]) => !(old[key] ?? []).includes(String(value).trim())),
+        )
+      }
       function loadState() {
         try {
           const saved = JSON.parse(localStorage.getItem(STORE) ?? 'null')
@@ -877,7 +892,7 @@
                 enabled: { ...d.formula.enabled, ...saved.formula?.enabled },
                 fit: { ...d.formula.fit, ...saved.formula?.fit },
               },
-              setup: { ...d.setup, ...saved.setup },
+              setup: { ...d.setup, ...upToDateSetup(saved.setup) },
             }
           }
         } catch {}
@@ -1046,7 +1061,7 @@
           .map(([w, a]) => ({
             w,
             a,
-            label: w === 0 && a === 0 ? 'none' : [w ? `W${w}` : '', a ? `A${a}` : ''].join(' ').trim(),
+            label: w === 0 && a === 0 ? 'none' : [w ? `+${w} damage` : '', a ? `+${a} armor` : ''].join(' ').trim(),
           }))
 
       function sitesOf(cv) {
@@ -1088,16 +1103,15 @@
 
       function agentGroups(skill, up, count) {
         const a = info.gdr.agentArchetypes[0] ?? { health: 30, damage: 10, armor: 0 }
-        const inc = info.gdr.upgradeIncrements
+        // An Upgrade set is the weapon damage and armor added to every Agent, e.g. 4/20 is +4 and +20.
         return [
           {
             count,
             skill,
             health: a.health,
-            damage: a.damage + up.w * (inc.weapon_damage ?? 1),
-            armor: a.armor + up.a * (inc.armor ?? 1),
+            damage: a.damage + up.w,
+            armor: a.armor + up.a,
             exhaustion: 0,
-            // The Upgrade counts, which only the formula reads; the values above already hold what they add.
             w: up.w,
             a: up.a,
           },
@@ -1225,7 +1239,10 @@
               trials: cell.trials,
               gdrValues: model.cv,
               seed: cell.key,
-              ratingUpgrades: { weaponDamage: cell.up.w, armor: cell.up.a },
+              ratingUpgrades: {
+                weaponDamage: Math.round(upgradesFor(cell.up.w, 'weapon_damage')),
+                armor: Math.round(upgradesFor(cell.up.a, 'armor')),
+              },
             },
           })
         }
@@ -1528,12 +1545,15 @@
         '<svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><g stroke="currentColor" stroke-linecap="round" fill="none"><line x1="13.5" y1="2.5" x2="6.5" y2="9.5" stroke-width="2.2"/><line x1="4" y1="8" x2="8" y2="12" stroke-width="1.6"/><line x1="5.5" y1="10.5" x2="2.5" y2="13.5" stroke-width="2"/></g></svg>'
       const SHIELD =
         '<svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5 14 3.5V8c0 3.5-3 5.8-6 6.8C5 13.8 2 11.5 2 8V3.5z" fill="currentColor"/></svg>'
-      /** An Upgrade set as its counts with a sword for Weapon damage and a shield for Armor, e.g. 5⚔ 10🛡. */
+      /** An Upgrade set as what it adds, with a sword for weapon damage and a shield for armor, e.g. +4⚔ +20🛡. */
       const upHtml = (up) =>
         up.w === 0 && up.a === 0
           ? 'none'
-          : [up.w ? `${up.w}${SWORD}` : '', up.a ? `${up.a}${SHIELD}` : ''].filter(Boolean).join(' ')
-      const upTitle = (up) => `${up.w} Weapon damage Upgrades, ${up.a} Armor Upgrades`
+          : [up.w ? `+${up.w}${SWORD}` : '', up.a ? `+${up.a}${SHIELD}` : ''].filter(Boolean).join(' ')
+      /** How many Upgrades of each kind add an Upgrade set's points, e.g. +4 weapon damage is 2 Upgrades of +2. */
+      const upgradesFor = (points, upgrade) => points / (info?.gdr.upgradeIncrements?.[upgrade] || 1)
+      const upTitle = (up) =>
+        `+${up.w} weapon damage (${+upgradesFor(up.w, 'weapon_damage').toFixed(2)} Weapon damage Upgrades), +${up.a} armor (${+upgradesFor(up.a, 'armor').toFixed(2)} Armor Upgrades)`
 
       function tint(w) {
         const d = Math.min(1, Math.abs(w - 0.5) * 2)
