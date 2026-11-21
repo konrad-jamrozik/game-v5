@@ -509,6 +509,33 @@
             <div class="scroll"><table id="params"></table></div>
             <h3 style="margin-top: 8px">Combatant types under the formula</h3>
             <div class="scroll"><table id="types"></table></div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 10px">
+            <label class="lbl note" for="exprC">combatant_cr</label>
+            <textarea id="exprC" data-bind="formula.combatant" data-type="str" spellcheck="false"></textarea>
+            <label class="lbl note" for="exprT">team_cr</label>
+            <textarea id="exprT" data-bind="formula.team" data-type="str" spellcheck="false"></textarea>
+            <div id="exprErr" class="err"></div>
+            <p class="note">
+              Combatant variables: <code>skill</code> (effective skill), <code>base_skill</code>, <code>health</code>,
+              <code>armor</code>, <code>damage</code>, <code>exhaustion</code>, and the derived
+              <code>health_mult = 1 + (health − health_base) × cr_per_health</code>, likewise
+              <code>armor_mult</code> and <code>damage_mult</code>. An Agent's Weapon damage and Armor Upgrades count
+              only as the weapon damage and armor they add, and the multipliers rate Agents and Enemies alike. Team
+              variables: <code>sum</code>, <code>count</code> (Combatants able to fight), and <code>game</code> (the
+              game's base Combat rating, Σ effective skill). Every parameter, and every Combat value under Setup, is a
+              variable of both.
+            </p>
+            <div class="row">
+              <button
+                class="small"
+                data-act="preset-default"
+                title="The default expressions and parameters, with every part enabled"
+              >
+                Restore all defaults
+              </button>
+              <button class="small" data-act="preset-lanchester">Lanchester square</button>
+            </div>
             <p class="note">
               <b>combatant_cr</b> is one Combatant's rating by the combatant expression; <b>× skill</b> is that rating
               over its effective skill, i.e. how much its health, armor, and weapon damage raise or lower it. A team's
@@ -537,33 +564,6 @@
               that now matches the site is 8 such Agents, not 10, so that cell turns grey until it is run again, and
               should then win about 50%.
             </p>
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 10px">
-            <label class="lbl note" for="exprC">combatant_cr</label>
-            <textarea id="exprC" data-bind="formula.combatant" data-type="str" spellcheck="false"></textarea>
-            <label class="lbl note" for="exprT">team_cr</label>
-            <textarea id="exprT" data-bind="formula.team" data-type="str" spellcheck="false"></textarea>
-            <div id="exprErr" class="err"></div>
-            <p class="note">
-              Combatant variables: <code>skill</code> (effective skill), <code>base_skill</code>, <code>health</code>,
-              <code>armor</code>, <code>damage</code>, <code>exhaustion</code>, and the derived
-              <code>health_mult = 1 + (health − health_base) × cr_per_health</code>, likewise
-              <code>armor_mult</code> and <code>damage_mult</code>. An Agent's Weapon damage and Armor Upgrades count
-              only as the weapon damage and armor they add, and the multipliers rate Agents and Enemies alike. Team
-              variables: <code>sum</code>, <code>count</code> (Combatants able to fight), and <code>game</code> (the
-              game's base Combat rating, Σ effective skill). Every parameter, and every Combat value under Setup, is a
-              variable of both.
-            </p>
-            <div class="row">
-              <button
-                class="small"
-                data-act="preset-default"
-                title="The default expressions and parameters, with every part enabled"
-              >
-                Restore all defaults
-              </button>
-              <button class="small" data-act="preset-lanchester">Lanchester square</button>
-            </div>
           </div>
         </div>
       </section>
