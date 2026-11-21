@@ -869,7 +869,7 @@
               >
               <label
                 class="inline"
-                title="For a rating ratio from 90% to 120% only, the rest greyed out: red when the Agents win less than their ratio, yellow when more, at full strength from 20 points; none when they match, or when a ratio of 100% or more wins every Combat"
+                title="For a rating ratio from 90% to 120% only, the rest greyed out. The ratio sets the saturation, very low at 90%, medium at 100%, and full at 120%; the win rate sets the hue: green when it matches the ratio, through yellow toward red when below, fully turned at 20 points, and toward purple when above, fully turned at 10 points"
                 ><input type="radio" name="coloring" value="diff" data-bind="sampler.coloring" data-type="str" /> CR to
                 win diff</label
               >
@@ -2407,10 +2407,9 @@
           : `rgba(${d < 0 ? 'var(--low)' : 'var(--over)'}, ${((0.75 * Math.min(Math.abs(d), 0.2)) / 0.2).toFixed(3)})`
       /**
        * A sample's background under the chosen Colouring. Win rate: as in the grid. CR ratio: ratio − 100%, so red below
-       * 100% down to 80% and yellow above up to 120%, and none beyond. CR to win diff, for a rating ratio from 90% to 120%
-       * only: win − ratio, so red when the Agents win less than their ratio and yellow when more, e.g. 110% and 98% is 12
-       * points of red; none when a ratio of 100% or more wins every Combat; 'grey' outside that range, where it is not
-       * computed. Ratios are read by the whole percent shown, so that one that reads 90% is in range.
+       * 100% down to 80% and yellow above up to 120%, and none beyond. CR to win diff: see diffColour; 'grey' outside a
+       * rating ratio from 90% to 120%, where it is not computed. Ratios are read by the whole percent shown, so that one
+       * that reads 90% is in range.
        */
       function sampleBackground(cell, r) {
         const coloring = state.sampler.coloring
@@ -2427,8 +2426,32 @@
         if (!r) {
           return null
         }
-        const win = winOf(r)
-        return redYellow(cell.ratio >= 1 && win >= 1 ? 0 : win - cell.ratio)
+        return diffColour(cell.ratio, winOf(r))
+      }
+      /**
+       * The CR to win diff colour of a rating ratio from 90% to 120%. The ratio sets the saturation: very low at 90%,
+       * medium at 100%, and full at 120%. The win rate against the ratio sets the hue: green when they match, or when a
+       * ratio of 100% or more wins every Combat; through yellow toward red as the win rate falls below the ratio, fully
+       * turned at 20 points; and toward purple as it rises above, fully turned at 10 points, the most a win rate can rise
+       * above a ratio of 90%. E.g. 90% and 90% is a pale green, 90% and 100% a purple, 110% and 100% a strong green, and
+       * 100% and 85% an orange.
+       */
+      function diffColour(ratio, win) {
+        const d = ratio >= 1 && win >= 1 ? 0 : win - ratio
+        const base = Math.max(
+          0,
+          ratio < 1 ? 12 + ((ratio - 0.9) / 0.1) * 33 : 45 + ((Math.min(ratio, 1.2) - 1) / 0.2) * 40,
+        )
+        if (d <= 0) {
+          const turn = Math.min(-d, 0.2) / 0.2
+          // The shift adds some saturation of its own, so that red still shows on a pale cell.
+          const sat = Math.min(85, base + 30 * turn).toFixed(0)
+          // The hue turns from green, 120°, through yellow, 60°, to red, 0°.
+          return `hsl(${(120 * (1 - turn)).toFixed(0)}, ${sat}%, 32%)`
+        }
+        // Green blends straight into a clear purple, since turning the hue that way would pass through cyan and blue.
+        const turn = Math.min(d, 0.1) / 0.1
+        return `color-mix(in oklab, hsl(120, ${base.toFixed(0)}%, 32%), hsl(285, 50%, 42%) ${(turn * 100).toFixed(0)}%)`
       }
       function sampleHtml(cell) {
         const all = store.results[cell.key]
