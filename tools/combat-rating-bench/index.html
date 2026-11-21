@@ -2359,15 +2359,22 @@
         if (!r) {
           return `<div class="cell${queued ? ' queued' : ''}" ${base}><span class="w">${queued ? '…' : '–'}</span></div>`
         }
+        // Only a ratio from 80% to 120% is mapped: far from equal ratings, the win rate is all or nothing anyway.
+        // By the whole percent shown, so that a ratio that reads 80% is mapped.
+        const shownRatio = Math.round(cell.ratio * 100)
+        if (shownRatio < 80 || shownRatio > 120) {
+          return `<div class="cell diff" ${base}></div>`
+        }
         const win = winOf(r)
         const d = cell.ratio >= 1 && win >= 1 ? 0 : cell.ratio - win
+        const ratio = `<span class="n">${pct(cell.ratio)}</span>`
         if (Math.abs(d) < 0.005) {
-          return `<div class="cell diff" ${base}></div>`
+          return `<div class="cell diff" ${base}>${ratio}</div>`
         }
         const alpha = (0.75 * Math.min(Math.abs(d), 0.2)) / 0.2
         const rgb = d > 0 ? 'var(--low)' : 'var(--over)'
         const text = `${d > 0 ? '−' : '+'}${Math.round(Math.abs(d) * 100)}%`
-        return `<div class="cell diff" style="background:rgba(${rgb}, ${alpha.toFixed(3)})" ${base}><span class="w">${text}</span></div>`
+        return `<div class="cell diff" style="background:rgba(${rgb}, ${alpha.toFixed(3)})" ${base}>${ratio}<span class="w">${text}</span></div>`
       }
       function sampleHtml(cell) {
         const all = store.results[cell.key]
