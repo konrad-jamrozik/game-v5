@@ -1012,9 +1012,9 @@
             "The team's Combat rating against the Enemies' at Combat start",
           ),
           f(
-            110,
-            `<span class="${m.result === 'Won' ? 'good' : 'bad'}">${esc(m.result)}</span>${m.outcome ? ` <span class="dim">${esc(m.outcome)}</span>` : ''}`,
-            'The result, and the Combat outcome for the Agents',
+            48,
+            `<span class="${m.result === 'Won' ? 'good' : 'bad'}">${esc(m.result)}</span>`,
+            m.outcome ? `The result; Combat outcome for the Agents: ${m.outcome}` : 'The result',
           ),
           f(64, `<span class="${m.killed > 0 ? 'bad' : 'dim'}">${fmt(m.killed)} dead</span>`, 'Agents Killed', true),
           f(
