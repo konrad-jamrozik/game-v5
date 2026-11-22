@@ -2,14 +2,14 @@ id: criminal_organizations
 type: Lead
 name: Criminal organizations
 description: Investigate local criminal organizations to find their connections to the cults.
-required_progress: 3
+required_progress: 5
 ---
 id: locate_red_dawn_member
 type: Lead
 name: Locate Red Dawn member
 description: Track down a Red Dawn member for apprehension.
 faction: red_dawn
-required_progress: 3
+required_progress: 5
 discovered_when:
   lead_completed: criminal_organizations
 investigate_again: always
@@ -39,7 +39,7 @@ type: Lead
 name: Locate Red Dawn safehouse
 description: Use the Red Dawn profile to find one of its safehouses.
 faction: red_dawn
-required_progress: 6
+required_progress: 10
 discovered_when:
   lead_completed: red_dawn_profile
 investigate_again: always
@@ -51,7 +51,7 @@ type: Lead
 name: Interrogate Red Dawn handler
 description: Extract what the captured Red Dawn handler knows.
 faction: red_dawn
-required_progress: 3
+required_progress: 5
 discovered_when:
   mission_won: raid_safehouse
 ---
@@ -60,7 +60,7 @@ type: Lead
 name: Locate Red Dawn outpost
 description: Trace the handler's reports to a Red Dawn outpost.
 faction: red_dawn
-required_progress: 8
+required_progress: 20
 discovered_when:
   lead_completed: interrogate_red_dawn_handler
 investigate_again: always
@@ -72,7 +72,7 @@ type: Lead
 name: Interrogate Red Dawn soldier
 description: Extract what the captured Red Dawn soldier knows.
 faction: red_dawn
-required_progress: 4
+required_progress: 10
 discovered_when:
   mission_won: raid_outpost
 ---
@@ -81,7 +81,7 @@ type: Lead
 name: Locate Red Dawn logistics hub
 description: Find the hub through which Red Dawn moves arms and money.
 faction: red_dawn
-required_progress: 12
+required_progress: 30
 discovered_when:
   lead_completed: interrogate_red_dawn_soldier
 investigate_again: always
@@ -93,7 +93,7 @@ type: Lead
 name: Interrogate Red Dawn commander
 description: Extract what the captured Red Dawn commander knows.
 faction: red_dawn
-required_progress: 6
+required_progress: 20
 discovered_when:
   mission_won: raid_logistics_hub
 ---
@@ -102,7 +102,7 @@ type: Lead
 name: Locate Red Dawn regional stronghold
 description: Find the stronghold from which Red Dawn holds a whole region.
 faction: red_dawn
-required_progress: 20
+required_progress: 50
 discovered_when:
   lead_completed: interrogate_red_dawn_commander
 investigate_again: always
@@ -114,7 +114,7 @@ type: Lead
 name: Interrogate Red Dawn high commander
 description: Extract what the captured Red Dawn high commander knows.
 faction: red_dawn
-required_progress: 8
+required_progress: 30
 discovered_when:
   mission_won: raid_regional_stronghold
 ---
@@ -123,7 +123,7 @@ type: Lead
 name: Locate Red Dawn HQ
 description: Learn where the leader of Red Dawn hides.
 faction: red_dawn
-required_progress: 25
+required_progress: 80
 discovered_when:
   lead_completed: interrogate_red_dawn_high_commander
 on_completion:
@@ -134,7 +134,7 @@ type: Lead
 name: Interrogate Red Dawn cult leader
 description: Extract what the captured Red Dawn cult leader knows.
 faction: red_dawn
-required_progress: 8
+required_progress: 40
 discovered_when:
   mission_won: raid_hq
 ---
@@ -143,7 +143,7 @@ type: Lead
 name: Terminate Red Dawn
 description: Run the final operation that ends Red Dawn for good.
 faction: red_dawn
-required_progress: 35
+required_progress: 30
 discovered_when:
   lead_completed: interrogate_red_dawn_cult_leader
 on_completion:
@@ -154,7 +154,7 @@ type: Lead
 name: Locate Exalt member
 description: Track down an Exalt member for apprehension.
 faction: exalt
-required_progress: 3
+required_progress: 5
 discovered_when:
   lead_completed: criminal_organizations
 investigate_again: always
@@ -184,7 +184,7 @@ type: Lead
 name: Locate Exalt safehouse
 description: Use the Exalt profile to find one of its safehouses.
 faction: exalt
-required_progress: 6
+required_progress: 10
 discovered_when:
   lead_completed: exalt_profile
 investigate_again: always
@@ -196,7 +196,7 @@ type: Lead
 name: Interrogate Exalt handler
 description: Extract what the captured Exalt handler knows.
 faction: exalt
-required_progress: 3
+required_progress: 5
 discovered_when:
   mission_won: raid_safehouse
 ---
@@ -205,7 +205,7 @@ type: Lead
 name: Locate Exalt outpost
 description: Trace the handler's reports to an Exalt outpost.
 faction: exalt
-required_progress: 8
+required_progress: 20
 discovered_when:
   lead_completed: interrogate_exalt_handler
 investigate_again: always
@@ -217,7 +217,7 @@ type: Lead
 name: Interrogate Exalt soldier
 description: Extract what the captured Exalt soldier knows.
 faction: exalt
-required_progress: 4
+required_progress: 10
 discovered_when:
   mission_won: raid_outpost
 ---
@@ -226,7 +226,7 @@ type: Lead
 name: Locate Exalt logistics hub
 description: Find the hub through which Exalt moves arms and money.
 faction: exalt
-required_progress: 12
+required_progress: 30
 discovered_when:
   lead_completed: interrogate_exalt_soldier
 investigate_again: always
@@ -238,7 +238,7 @@ type: Lead
 name: Interrogate Exalt commander
 description: Extract what the captured Exalt commander knows.
 faction: exalt
-required_progress: 6
+required_progress: 20
 discovered_when:
   mission_won: raid_logistics_hub
 ---
@@ -247,7 +247,7 @@ type: Lead
 name: Locate Exalt regional stronghold
 description: Find the stronghold from which Exalt holds a whole region.
 faction: exalt
-required_progress: 20
+required_progress: 50
 discovered_when:
   lead_completed: interrogate_exalt_commander
 investigate_again: always
@@ -259,7 +259,7 @@ type: Lead
 name: Interrogate Exalt high commander
 description: Extract what the captured Exalt high commander knows.
 faction: exalt
-required_progress: 8
+required_progress: 30
 discovered_when:
   mission_won: raid_regional_stronghold
 ---
@@ -268,7 +268,7 @@ type: Lead
 name: Locate Exalt HQ
 description: Learn where the leader of Exalt hides.
 faction: exalt
-required_progress: 25
+required_progress: 80
 discovered_when:
   lead_completed: interrogate_exalt_high_commander
 on_completion:
@@ -279,7 +279,7 @@ type: Lead
 name: Interrogate Exalt cult leader
 description: Extract what the captured Exalt cult leader knows.
 faction: exalt
-required_progress: 8
+required_progress: 40
 discovered_when:
   mission_won: raid_hq
 ---
@@ -288,7 +288,7 @@ type: Lead
 name: Terminate Exalt
 description: Run the final operation that ends Exalt for good.
 faction: exalt
-required_progress: 35
+required_progress: 30
 discovered_when:
   lead_completed: interrogate_exalt_cult_leader
 on_completion:
@@ -299,7 +299,7 @@ type: Lead
 name: Locate Black Lotus member
 description: Track down a Black Lotus member for apprehension.
 faction: black_lotus
-required_progress: 3
+required_progress: 5
 discovered_when:
   lead_completed: criminal_organizations
 investigate_again: always
@@ -329,7 +329,7 @@ type: Lead
 name: Locate Black Lotus safehouse
 description: Use the Black Lotus profile to find one of its safehouses.
 faction: black_lotus
-required_progress: 6
+required_progress: 10
 discovered_when:
   lead_completed: black_lotus_profile
 investigate_again: always
@@ -341,7 +341,7 @@ type: Lead
 name: Interrogate Black Lotus handler
 description: Extract what the captured Black Lotus handler knows.
 faction: black_lotus
-required_progress: 3
+required_progress: 5
 discovered_when:
   mission_won: raid_safehouse
 ---
@@ -350,7 +350,7 @@ type: Lead
 name: Locate Black Lotus outpost
 description: Trace the handler's reports to a Black Lotus outpost.
 faction: black_lotus
-required_progress: 8
+required_progress: 20
 discovered_when:
   lead_completed: interrogate_black_lotus_handler
 investigate_again: always
@@ -362,7 +362,7 @@ type: Lead
 name: Interrogate Black Lotus soldier
 description: Extract what the captured Black Lotus soldier knows.
 faction: black_lotus
-required_progress: 4
+required_progress: 10
 discovered_when:
   mission_won: raid_outpost
 ---
@@ -371,7 +371,7 @@ type: Lead
 name: Locate Black Lotus logistics hub
 description: Find the hub through which Black Lotus moves arms and money.
 faction: black_lotus
-required_progress: 12
+required_progress: 30
 discovered_when:
   lead_completed: interrogate_black_lotus_soldier
 investigate_again: always
@@ -383,7 +383,7 @@ type: Lead
 name: Interrogate Black Lotus commander
 description: Extract what the captured Black Lotus commander knows.
 faction: black_lotus
-required_progress: 6
+required_progress: 20
 discovered_when:
   mission_won: raid_logistics_hub
 ---
@@ -392,7 +392,7 @@ type: Lead
 name: Locate Black Lotus regional stronghold
 description: Find the stronghold from which Black Lotus holds a whole region.
 faction: black_lotus
-required_progress: 20
+required_progress: 50
 discovered_when:
   lead_completed: interrogate_black_lotus_commander
 investigate_again: always
@@ -404,7 +404,7 @@ type: Lead
 name: Interrogate Black Lotus high commander
 description: Extract what the captured Black Lotus high commander knows.
 faction: black_lotus
-required_progress: 8
+required_progress: 30
 discovered_when:
   mission_won: raid_regional_stronghold
 ---
@@ -413,7 +413,7 @@ type: Lead
 name: Locate Black Lotus HQ
 description: Learn where the leader of Black Lotus hides.
 faction: black_lotus
-required_progress: 25
+required_progress: 80
 discovered_when:
   lead_completed: interrogate_black_lotus_high_commander
 on_completion:
@@ -424,7 +424,7 @@ type: Lead
 name: Interrogate Black Lotus cult leader
 description: Extract what the captured Black Lotus cult leader knows.
 faction: black_lotus
-required_progress: 8
+required_progress: 40
 discovered_when:
   mission_won: raid_hq
 ---
@@ -433,7 +433,7 @@ type: Lead
 name: Terminate Black Lotus
 description: Run the final operation that ends Black Lotus for good.
 faction: black_lotus
-required_progress: 35
+required_progress: 30
 discovered_when:
   lead_completed: interrogate_black_lotus_cult_leader
 on_completion:
@@ -443,7 +443,7 @@ id: peace_on_earth
 type: Lead
 name: Peace on Earth
 description: With every cult terminated, coordinate the final operation that secures a lasting peace.
-required_progress: 40
+required_progress: 30
 discovered_when:
   all:
     - lead_completed: terminate_red_dawn

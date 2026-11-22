@@ -797,7 +797,7 @@ Crime and cults feed on each other. Follow the criminals and they will [lead](#l
 | ------------------------ | ---------------------------------------------------------------------------------- |
 | `name`                   | `Criminal organizations`                                                           |
 | `description`            | `Investigate local criminal organizations to find their connections to the cults.` |
-| `required_progress`      | `3`                                                                                |
+| `required_progress`      | `5`                                                                                |
 
 ### Exalt profile
 
@@ -824,7 +824,7 @@ A [commander](#commander) commands whole cells and knows where the cult's region
 | `name`                              | `Interrogate Black Lotus commander`                      |
 | `description`                       | `Extract what the captured Black Lotus commander knows.` |
 | `faction`                           | `black_lotus`                                            |
-| `required_progress`                 | `6`                                                      |
+| `required_progress`                 | `20`                                                     |
 | `discovered_when`                   | `{"mission_won":"raid_logistics_hub"}`                   |
 
 ### Interrogate Black Lotus cult leader
@@ -838,7 +838,7 @@ The leader is finally in your hands. What the leader knows is enough to bring th
 | `name`                                | `Interrogate Black Lotus cult leader`                      |
 | `description`                         | `Extract what the captured Black Lotus cult leader knows.` |
 | `faction`                             | `black_lotus`                                              |
-| `required_progress`                   | `8`                                                        |
+| `required_progress`                   | `40`                                                       |
 | `discovered_when`                     | `{"mission_won":"raid_hq"}`                                |
 
 ### Interrogate Black Lotus handler
@@ -852,7 +852,7 @@ Source: `content/compendium/compendium_articles/interrogate_black_lotus_handler_
 | `name`                            | `Interrogate Black Lotus handler`                      |
 | `description`                     | `Extract what the captured Black Lotus handler knows.` |
 | `faction`                         | `black_lotus`                                          |
-| `required_progress`               | `3`                                                    |
+| `required_progress`               | `5`                                                    |
 | `discovered_when`                 | `{"mission_won":"raid_safehouse"}`                     |
 
 ### Interrogate Black Lotus high commander
@@ -866,7 +866,7 @@ Only the [cult leader](#cult-leader) outranks a [high commander](#high-commander
 | `name`                                   | `Interrogate Black Lotus high commander`                      |
 | `description`                            | `Extract what the captured Black Lotus high commander knows.` |
 | `faction`                                | `black_lotus`                                                 |
-| `required_progress`                      | `8`                                                           |
+| `required_progress`                      | `30`                                                          |
 | `discovered_when`                        | `{"mission_won":"raid_regional_stronghold"}`                  |
 
 ### Interrogate Black Lotus member
@@ -894,7 +894,7 @@ A hardened fighter taken alive at the outpost. Getting him to talk will take tim
 | `name`                            | `Interrogate Black Lotus soldier`                      |
 | `description`                     | `Extract what the captured Black Lotus soldier knows.` |
 | `faction`                         | `black_lotus`                                          |
-| `required_progress`               | `4`                                                    |
+| `required_progress`               | `10`                                                   |
 | `discovered_when`                 | `{"mission_won":"raid_outpost"}`                       |
 
 ### Interrogate Exalt commander
@@ -908,7 +908,7 @@ A [commander](#commander) commands whole cells and knows where the cult's region
 | `name`                        | `Interrogate Exalt commander`                      |
 | `description`                 | `Extract what the captured Exalt commander knows.` |
 | `faction`                     | `exalt`                                            |
-| `required_progress`           | `6`                                                |
+| `required_progress`           | `20`                                               |
 | `discovered_when`             | `{"mission_won":"raid_logistics_hub"}`             |
 
 ### Interrogate Exalt cult leader
@@ -922,7 +922,7 @@ The leader is finally in your hands. What the leader knows is enough to bring th
 | `name`                          | `Interrogate Exalt cult leader`                      |
 | `description`                   | `Extract what the captured Exalt cult leader knows.` |
 | `faction`                       | `exalt`                                              |
-| `required_progress`             | `8`                                                  |
+| `required_progress`             | `40`                                                 |
 | `discovered_when`               | `{"mission_won":"raid_hq"}`                          |
 
 ### Interrogate Exalt handler
@@ -936,7 +936,7 @@ Source: `content/compendium/compendium_articles/interrogate_exalt_handler_articl
 | `name`                      | `Interrogate Exalt handler`                      |
 | `description`               | `Extract what the captured Exalt handler knows.` |
 | `faction`                   | `exalt`                                          |
-| `required_progress`         | `3`                                              |
+| `required_progress`         | `5`                                              |
 | `discovered_when`           | `{"mission_won":"raid_safehouse"}`               |
 
 ### Interrogate Exalt high commander
@@ -950,7 +950,7 @@ Only the [cult leader](#cult-leader) outranks a [high commander](#high-commander
 | `name`                             | `Interrogate Exalt high commander`                      |
 | `description`                      | `Extract what the captured Exalt high commander knows.` |
 | `faction`                          | `exalt`                                                 |
-| `required_progress`                | `8`                                                     |
+| `required_progress`                | `30`                                                    |
 | `discovered_when`                  | `{"mission_won":"raid_regional_stronghold"}`            |
 
 ### Interrogate Exalt member
@@ -978,7 +978,7 @@ A hardened fighter taken alive at the outpost. Getting him to talk will take tim
 | `name`                      | `Interrogate Exalt soldier`                      |
 | `description`               | `Extract what the captured Exalt soldier knows.` |
 | `faction`                   | `exalt`                                          |
-| `required_progress`         | `4`                                              |
+| `required_progress`         | `10`                                             |
 | `discovered_when`           | `{"mission_won":"raid_outpost"}`                 |
 
 ### Interrogate Red Dawn commander
@@ -992,7 +992,7 @@ A [commander](#commander) commands whole cells and knows where the cult's region
 | `name`                           | `Interrogate Red Dawn commander`                      |
 | `description`                    | `Extract what the captured Red Dawn commander knows.` |
 | `faction`                        | `red_dawn`                                            |
-| `required_progress`              | `6`                                                   |
+| `required_progress`              | `20`                                                  |
 | `discovered_when`                | `{"mission_won":"raid_logistics_hub"}`                |
 
 ### Interrogate Red Dawn cult leader
@@ -1006,7 +1006,7 @@ The leader is finally in your hands. What the leader knows is enough to bring th
 | `name`                             | `Interrogate Red Dawn cult leader`                      |
 | `description`                      | `Extract what the captured Red Dawn cult leader knows.` |
 | `faction`                          | `red_dawn`                                              |
-| `required_progress`                | `8`                                                     |
+| `required_progress`                | `40`                                                    |
 | `discovered_when`                  | `{"mission_won":"raid_hq"}`                             |
 
 ### Interrogate Red Dawn handler
@@ -1020,7 +1020,7 @@ Source: `content/compendium/compendium_articles/interrogate_red_dawn_handler_art
 | `name`                         | `Interrogate Red Dawn handler`                      |
 | `description`                  | `Extract what the captured Red Dawn handler knows.` |
 | `faction`                      | `red_dawn`                                          |
-| `required_progress`            | `3`                                                 |
+| `required_progress`            | `5`                                                 |
 | `discovered_when`              | `{"mission_won":"raid_safehouse"}`                  |
 
 ### Interrogate Red Dawn high commander
@@ -1034,7 +1034,7 @@ Only the [cult leader](#cult-leader) outranks a [high commander](#high-commander
 | `name`                                | `Interrogate Red Dawn high commander`                      |
 | `description`                         | `Extract what the captured Red Dawn high commander knows.` |
 | `faction`                             | `red_dawn`                                                 |
-| `required_progress`                   | `8`                                                        |
+| `required_progress`                   | `30`                                                       |
 | `discovered_when`                     | `{"mission_won":"raid_regional_stronghold"}`               |
 
 ### Interrogate Red Dawn member
@@ -1062,7 +1062,7 @@ A hardened fighter taken alive at the outpost. Getting him to talk will take tim
 | `name`                         | `Interrogate Red Dawn soldier`                      |
 | `description`                  | `Extract what the captured Red Dawn soldier knows.` |
 | `faction`                      | `red_dawn`                                          |
-| `required_progress`            | `4`                                                 |
+| `required_progress`            | `10`                                                |
 | `discovered_when`              | `{"mission_won":"raid_outpost"}`                    |
 
 ### Locate Black Lotus HQ
@@ -1076,7 +1076,7 @@ Everything the [high commander](#high-commander) revealed points to the headquar
 | `name`                  | `Locate Black Lotus HQ`                                       |
 | `description`           | `Learn where the leader of Black Lotus hides.`                |
 | `faction`               | `black_lotus`                                                 |
-| `required_progress`     | `25`                                                          |
+| `required_progress`     | `80`                                                          |
 | `discovered_when`       | `{"lead_completed":"interrogate_black_lotus_high_commander"}` |
 | `on_completion`         | `[{"create_mission_site":"raid_hq"}]`                         |
 
@@ -1091,7 +1091,7 @@ Arms, [money](#money-and-funding) and people all pass through one hub. Cut it an
 | `name`                             | `Locate Black Lotus logistics hub`                             |
 | `description`                      | `Find the hub through which Black Lotus moves arms and money.` |
 | `faction`                          | `black_lotus`                                                  |
-| `required_progress`                | `12`                                                           |
+| `required_progress`                | `30`                                                           |
 | `discovered_when`                  | `{"lead_completed":"interrogate_black_lotus_soldier"}`         |
 | `investigate_again`                | `always`                                                       |
 | `on_completion`                    | `[{"create_mission_site":"raid_logistics_hub"}]`               |
@@ -1107,7 +1107,7 @@ The first thread to pull: find a [Black Lotus](#black-lotus) member who can be b
 | `name`                      | `Locate Black Lotus member`                         |
 | `description`               | `Track down a Black Lotus member for apprehension.` |
 | `faction`                   | `black_lotus`                                       |
-| `required_progress`         | `3`                                                 |
+| `required_progress`         | `5`                                                 |
 | `discovered_when`           | `{"lead_completed":"criminal_organizations"}`       |
 | `investigate_again`         | `always`                                            |
 | `on_completion`             | `[{"create_mission_site":"apprehend_member"}]`      |
@@ -1123,7 +1123,7 @@ The [handler](#handler)'s reports [lead](#leads) to a small fortified base where
 | `name`                       | `Locate Black Lotus outpost`                            |
 | `description`                | `Trace the handler's reports to a Black Lotus outpost.` |
 | `faction`                    | `black_lotus`                                           |
-| `required_progress`          | `8`                                                     |
+| `required_progress`          | `20`                                                    |
 | `discovered_when`            | `{"lead_completed":"interrogate_black_lotus_handler"}`  |
 | `investigate_again`          | `always`                                                |
 | `on_completion`              | `[{"create_mission_site":"raid_outpost"}]`              |
@@ -1139,7 +1139,7 @@ The [commander](#commander) has given up a fortress where a [high commander](#hi
 | `name`                                   | `Locate Black Lotus regional stronghold`                           |
 | `description`                            | `Find the stronghold from which Black Lotus holds a whole region.` |
 | `faction`                                | `black_lotus`                                                      |
-| `required_progress`                      | `20`                                                               |
+| `required_progress`                      | `50`                                                               |
 | `discovered_when`                        | `{"lead_completed":"interrogate_black_lotus_commander"}`           |
 | `investigate_again`                      | `always`                                                           |
 | `on_completion`                          | `[{"create_mission_site":"raid_regional_stronghold"}]`             |
@@ -1155,7 +1155,7 @@ The profile of [Black Lotus](#black-lotus) points to a place it uses to hide peo
 | `name`                         | `Locate Black Lotus safehouse`                               |
 | `description`                  | `Use the Black Lotus profile to find one of its safehouses.` |
 | `faction`                      | `black_lotus`                                                |
-| `required_progress`            | `6`                                                          |
+| `required_progress`            | `10`                                                         |
 | `discovered_when`              | `{"lead_completed":"black_lotus_profile"}`                   |
 | `investigate_again`            | `always`                                                     |
 | `on_completion`                | `[{"create_mission_site":"raid_safehouse"}]`                 |
@@ -1171,7 +1171,7 @@ Everything the [high commander](#high-commander) revealed points to the headquar
 | `name`              | `Locate Exalt HQ`                                       |
 | `description`       | `Learn where the leader of Exalt hides.`                |
 | `faction`           | `exalt`                                                 |
-| `required_progress` | `25`                                                    |
+| `required_progress` | `80`                                                    |
 | `discovered_when`   | `{"lead_completed":"interrogate_exalt_high_commander"}` |
 | `on_completion`     | `[{"create_mission_site":"raid_hq"}]`                   |
 
@@ -1186,7 +1186,7 @@ Arms, [money](#money-and-funding) and people all pass through one hub. Cut it an
 | `name`                       | `Locate Exalt logistics hub`                             |
 | `description`                | `Find the hub through which Exalt moves arms and money.` |
 | `faction`                    | `exalt`                                                  |
-| `required_progress`          | `12`                                                     |
+| `required_progress`          | `30`                                                     |
 | `discovered_when`            | `{"lead_completed":"interrogate_exalt_soldier"}`         |
 | `investigate_again`          | `always`                                                 |
 | `on_completion`              | `[{"create_mission_site":"raid_logistics_hub"}]`         |
@@ -1202,7 +1202,7 @@ The first thread to pull: find an [Exalt](#exalt) member who can be brought in f
 | `name`                | `Locate Exalt member`                          |
 | `description`         | `Track down an Exalt member for apprehension.` |
 | `faction`             | `exalt`                                        |
-| `required_progress`   | `3`                                            |
+| `required_progress`   | `5`                                            |
 | `discovered_when`     | `{"lead_completed":"criminal_organizations"}`  |
 | `investigate_again`   | `always`                                       |
 | `on_completion`       | `[{"create_mission_site":"apprehend_member"}]` |
@@ -1218,7 +1218,7 @@ The [handler](#handler)'s reports [lead](#leads) to a small fortified base where
 | `name`                 | `Locate Exalt outpost`                             |
 | `description`          | `Trace the handler's reports to an Exalt outpost.` |
 | `faction`              | `exalt`                                            |
-| `required_progress`    | `8`                                                |
+| `required_progress`    | `20`                                               |
 | `discovered_when`      | `{"lead_completed":"interrogate_exalt_handler"}`   |
 | `investigate_again`    | `always`                                           |
 | `on_completion`        | `[{"create_mission_site":"raid_outpost"}]`         |
@@ -1234,7 +1234,7 @@ The [commander](#commander) has given up a fortress where a [high commander](#hi
 | `name`                             | `Locate Exalt regional stronghold`                           |
 | `description`                      | `Find the stronghold from which Exalt holds a whole region.` |
 | `faction`                          | `exalt`                                                      |
-| `required_progress`                | `20`                                                         |
+| `required_progress`                | `50`                                                         |
 | `discovered_when`                  | `{"lead_completed":"interrogate_exalt_commander"}`           |
 | `investigate_again`                | `always`                                                     |
 | `on_completion`                    | `[{"create_mission_site":"raid_regional_stronghold"}]`       |
@@ -1250,7 +1250,7 @@ The profile of [Exalt](#exalt) points to a place it uses to hide people and supp
 | `name`                   | `Locate Exalt safehouse`                               |
 | `description`            | `Use the Exalt profile to find one of its safehouses.` |
 | `faction`                | `exalt`                                                |
-| `required_progress`      | `6`                                                    |
+| `required_progress`      | `10`                                                   |
 | `discovered_when`        | `{"lead_completed":"exalt_profile"}`                   |
 | `investigate_again`      | `always`                                               |
 | `on_completion`          | `[{"create_mission_site":"raid_safehouse"}]`           |
@@ -1266,7 +1266,7 @@ Everything the [high commander](#high-commander) revealed points to the headquar
 | `name`               | `Locate Red Dawn HQ`                                       |
 | `description`        | `Learn where the leader of Red Dawn hides.`                |
 | `faction`            | `red_dawn`                                                 |
-| `required_progress`  | `25`                                                       |
+| `required_progress`  | `80`                                                       |
 | `discovered_when`    | `{"lead_completed":"interrogate_red_dawn_high_commander"}` |
 | `on_completion`      | `[{"create_mission_site":"raid_hq"}]`                      |
 
@@ -1281,7 +1281,7 @@ Arms, [money](#money-and-funding) and people all pass through one hub. Cut it an
 | `name`                          | `Locate Red Dawn logistics hub`                             |
 | `description`                   | `Find the hub through which Red Dawn moves arms and money.` |
 | `faction`                       | `red_dawn`                                                  |
-| `required_progress`             | `12`                                                        |
+| `required_progress`             | `30`                                                        |
 | `discovered_when`               | `{"lead_completed":"interrogate_red_dawn_soldier"}`         |
 | `investigate_again`             | `always`                                                    |
 | `on_completion`                 | `[{"create_mission_site":"raid_logistics_hub"}]`            |
@@ -1297,7 +1297,7 @@ The first thread to pull: find a [Red Dawn](#red-dawn) member who can be brought
 | `name`                   | `Locate Red Dawn member`                         |
 | `description`            | `Track down a Red Dawn member for apprehension.` |
 | `faction`                | `red_dawn`                                       |
-| `required_progress`      | `3`                                              |
+| `required_progress`      | `5`                                              |
 | `discovered_when`        | `{"lead_completed":"criminal_organizations"}`    |
 | `investigate_again`      | `always`                                         |
 | `on_completion`          | `[{"create_mission_site":"apprehend_member"}]`   |
@@ -1313,7 +1313,7 @@ The [handler](#handler)'s reports [lead](#leads) to a small fortified base where
 | `name`                    | `Locate Red Dawn outpost`                            |
 | `description`             | `Trace the handler's reports to a Red Dawn outpost.` |
 | `faction`                 | `red_dawn`                                           |
-| `required_progress`       | `8`                                                  |
+| `required_progress`       | `20`                                                 |
 | `discovered_when`         | `{"lead_completed":"interrogate_red_dawn_handler"}`  |
 | `investigate_again`       | `always`                                             |
 | `on_completion`           | `[{"create_mission_site":"raid_outpost"}]`           |
@@ -1329,7 +1329,7 @@ The [commander](#commander) has given up a fortress where a [high commander](#hi
 | `name`                                | `Locate Red Dawn regional stronghold`                           |
 | `description`                         | `Find the stronghold from which Red Dawn holds a whole region.` |
 | `faction`                             | `red_dawn`                                                      |
-| `required_progress`                   | `20`                                                            |
+| `required_progress`                   | `50`                                                            |
 | `discovered_when`                     | `{"lead_completed":"interrogate_red_dawn_commander"}`           |
 | `investigate_again`                   | `always`                                                        |
 | `on_completion`                       | `[{"create_mission_site":"raid_regional_stronghold"}]`          |
@@ -1345,7 +1345,7 @@ The profile of [Red Dawn](#red-dawn) points to a place it uses to hide people an
 | `name`                      | `Locate Red Dawn safehouse`                               |
 | `description`               | `Use the Red Dawn profile to find one of its safehouses.` |
 | `faction`                   | `red_dawn`                                                |
-| `required_progress`         | `6`                                                       |
+| `required_progress`         | `10`                                                      |
 | `discovered_when`           | `{"lead_completed":"red_dawn_profile"}`                   |
 | `investigate_again`         | `always`                                                  |
 | `on_completion`             | `[{"create_mission_site":"raid_safehouse"}]`              |
@@ -1360,7 +1360,7 @@ Every cult is gone. One last [operation](#faction-operations) remains, and it wi
 | --- | --- |
 | `name` | `Peace on Earth` |
 | `description` | `With every cult terminated, coordinate the final operation that secures a lasting peace.` |
-| `required_progress` | `40` |
+| `required_progress` | `30` |
 | `discovered_when` | `{"all":[{"lead_completed":"terminate_red_dawn"},{"lead_completed":"terminate_exalt"},{"lead_completed":"terminate_black_lotus"}]}` |
 | `on_completion` | `[{"win_campaign":true}]` |
 
@@ -1389,7 +1389,7 @@ With the leader's secrets in hand, strike every remaining part of the cult at on
 | `name`                  | `Terminate Black Lotus`                                    |
 | `description`           | `Run the final operation that ends Black Lotus for good.`  |
 | `faction`               | `black_lotus`                                              |
-| `required_progress`     | `35`                                                       |
+| `required_progress`     | `30`                                                       |
 | `discovered_when`       | `{"lead_completed":"interrogate_black_lotus_cult_leader"}` |
 | `on_completion`         | `[{"eliminate_faction":true}]`                             |
 
@@ -1404,7 +1404,7 @@ With the leader's secrets in hand, strike every remaining part of the cult at on
 | `name`              | `Terminate Exalt`                                    |
 | `description`       | `Run the final operation that ends Exalt for good.`  |
 | `faction`           | `exalt`                                              |
-| `required_progress` | `35`                                                 |
+| `required_progress` | `30`                                                 |
 | `discovered_when`   | `{"lead_completed":"interrogate_exalt_cult_leader"}` |
 | `on_completion`     | `[{"eliminate_faction":true}]`                       |
 
@@ -1419,7 +1419,7 @@ With the leader's secrets in hand, strike every remaining part of the cult at on
 | `name`               | `Terminate Red Dawn`                                    |
 | `description`        | `Run the final operation that ends Red Dawn for good.`  |
 | `faction`            | `red_dawn`                                              |
-| `required_progress`  | `35`                                                    |
+| `required_progress`  | `30`                                                    |
 | `discovered_when`    | `{"lead_completed":"interrogate_red_dawn_cult_leader"}` |
 | `on_completion`      | `[{"eliminate_faction":true}]`                          |
 
@@ -1431,13 +1431,13 @@ Source: `content/compendium/compendium_articles/apprehend_member_article.yaml`
 
 A cult member has been found, lightly guarded. Bring the member in before the trail goes cold.
 
-| `apprehend_member` | MissionSiteArchetype            |
-| ------------------ | ------------------------------- |
-| `kind`             | `initiative`                    |
-| `name`             | `Apprehend member`              |
-| `expires_in_turns` | `5`                             |
-| `enemies`          | `{"initiate":2,"operative":1}`  |
-| `on_win`           | `[{"money":5},{"panic":-0.05}]` |
+| `apprehend_member` | MissionSiteArchetype           |
+| ------------------ | ------------------------------ |
+| `kind`             | `initiative`                   |
+| `name`             | `Apprehend member`             |
+| `expires_in_turns` | `5`                            |
+| `enemies`          | `{"initiate":2,"operative":1}` |
+| `on_win`           | `[{"money":10}]`               |
 
 ### Counter civilian terror
 
@@ -1661,7 +1661,7 @@ The final assault on the headquarters of a cult. Winning it puts the [Cult leade
 | `name`             | `Raid HQ`                                                                                    |
 | `expires_in_turns` | `40`                                                                                         |
 | `enemies`          | `{"soldier":50,"elite":30,"lieutenant":10,"commander":6,"high_commander":2,"cult_leader":1}` |
-| `on_win`           | `[{"money":10000},{"funding":100},{"panic":-20}]`                                            |
+| `on_win`           | `[{"money":10000},{"funding":200},{"panic":-20}]`                                            |
 
 ### Raid logistics hub
 
@@ -1675,7 +1675,7 @@ The hub that keeps the cult supplied. Taking it will hurt the cult for a long ti
 | `name` | `Raid logistics hub` |
 | `expires_in_turns` | `15` |
 | `enemies` | `{"initiate":8,"operative":10,"soldier":14,"elite":4,"handler":6,"lieutenant":2,"commander":1}` |
-| `on_win` | `[{"money":2000},{"funding":20},{"panic":-2}]` |
+| `on_win` | `[{"money":2000},{"funding":50},{"panic":-5}]` |
 
 ### Raid outpost
 
@@ -1689,7 +1689,7 @@ A fortified outpost where the cult gathers its people. Expect a determined defen
 | `name`             | `Raid outpost`                                         |
 | `expires_in_turns` | `10`                                                   |
 | `enemies`          | `{"initiate":4,"operative":6,"soldier":2,"handler":3}` |
-| `on_win`           | `[{"money":400},{"funding":10},{"panic":-0.5}]`        |
+| `on_win`           | `[{"money":1000},{"funding":20},{"panic":-2}]`         |
 
 ### Raid regional stronghold
 
@@ -1703,7 +1703,7 @@ A fortress that a [high commander](#high-commander) rules like a small kingdom. 
 | `name`                     | `Raid regional stronghold`                                                  |
 | `expires_in_turns`         | `30`                                                                        |
 | `enemies`                  | `{"soldier":40,"elite":18,"lieutenant":8,"commander":3,"high_commander":1}` |
-| `on_win`                   | `[{"money":5000},{"funding":50},{"panic":-10}]`                             |
+| `on_win`                   | `[{"money":5000},{"funding":100},{"panic":-10}]`                            |
 
 ### Raid safehouse
 
@@ -1711,13 +1711,13 @@ Source: `content/compendium/compendium_articles/raid_safehouse_article.yaml`
 
 Storm the safehouse of a cult before it is moved. Expect it to be well guarded.
 
-| `raid_safehouse`   | MissionSiteArchetype                           |
-| ------------------ | ---------------------------------------------- |
-| `kind`             | `initiative`                                   |
-| `name`             | `Raid safehouse`                               |
-| `expires_in_turns` | `8`                                            |
-| `enemies`          | `{"initiate":4,"operative":4,"handler":1}`     |
-| `on_win`           | `[{"money":100},{"funding":5},{"panic":-0.1}]` |
+| `raid_safehouse`   | MissionSiteArchetype                          |
+| ------------------ | --------------------------------------------- |
+| `kind`             | `initiative`                                  |
+| `name`             | `Raid safehouse`                              |
+| `expires_in_turns` | `8`                                           |
+| `enemies`          | `{"initiate":4,"operative":4,"handler":1}`    |
+| `on_win`           | `[{"money":200},{"funding":10},{"panic":-1}]` |
 
 ## Subject articles: Upgrade
 

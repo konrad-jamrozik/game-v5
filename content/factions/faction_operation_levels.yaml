@@ -3,42 +3,42 @@ type: FactionOperationLevel
 level: 1
 name: Soft operations
 on_win:
-  - money: 10
+  - money: 50
 on_ignored_or_lost:
-  - panic: 0.02
+  - panic: 1
 ---
 id: operation_level_2
 type: FactionOperationLevel
 level: 2
 name: Violent but small-scale
 on_win:
-  - money: 30
-  - funding: 5
+  - money: 200
+  - funding: 10
 on_ignored_or_lost:
-  - panic: 0.1
-  - funding: -1
+  - panic: 2
+  - funding: -5
 ---
 id: operation_level_3
 type: FactionOperationLevel
 level: 3
 name: Strategic threats
 on_win:
-  - money: 100
+  - money: 500
   - funding: 20
 on_ignored_or_lost:
-  - panic: 0.3
-  - funding: -4
+  - panic: 5
+  - funding: -10
 ---
 id: operation_level_4
 type: FactionOperationLevel
 level: 4
 name: Regional destabilization
 on_win:
-  - money: 300
-  - funding: 40
+  - money: 2000
+  - funding: 50
 on_ignored_or_lost:
-  - panic: 1
-  - funding: -8
+  - panic: 10
+  - funding: -25
 ---
 id: operation_level_5
 type: FactionOperationLevel
