@@ -95,7 +95,7 @@ What discovers a Lead is not Player-visible, so it does not trace a Faction's ch
 
 The [Game build](../foundation/core-concepts.md#game-build-and-content) offers the Basic Autopilot AI with one fixed set of Tuning parameters, the Implementer's choice, and a player cannot change them. So that the thresholds can be tuned against whole Campaigns, an Implementation builds the Basic Autopilot AI from a given set of Tuning parameters, and lets developer tooling build it with values other than the Game build's, e.g. a tool that plays many Campaigns with each of several sets of values and compares them. How developer tooling reaches that build, e.g. a function of the Implementation's own code, is the Implementer's choice; it is not part of any API of the engine, and a Basic Autopilot AI built with other values is not offered by the Game build.
 
-The following list of Tuning parameters is exhaustive. The first group holds the thresholds of the goals. The second group goes beyond the goals, and each of its parameters has a neutral value with which the Basic Autopilot AI plays exactly as Goals and Turn routine state; the Game build uses the neutral values. The Game designer has set the values of the Game build for Target roster, Cap shares, Savings floor, Combat margin, Loss margin step, Muster horizon, and Muster income floor, under Game designer values; every other Tuning parameter remains the Implementer's choice.
+The following list of Tuning parameters is exhaustive. The first group holds the thresholds of the goals. The second group goes beyond the goals, and each of its parameters has a neutral value with which the Basic Autopilot AI plays exactly as Goals and Turn routine state; the Game build uses the neutral values, apart from the Upgrade weights the Game designer sets. The Game designer has set the values of the Game build for Target roster, Cap shares, Savings floor, Enemies per Agent, Upgrade weights, Combat margin, Loss margin step, Muster horizon, and Muster income floor, under Game designer values; every other Tuning parameter remains the Implementer's choice.
 
 | Tuning parameter | What it sets |
 | --- | --- |
@@ -119,15 +119,17 @@ The following list of Tuning parameters is exhaustive. The first group holds the
 
 The Game designer sets the following values of the Game build, so that an Implementation rebuilt from the specifications keeps them. The Implementer chooses the other parts of the same Tuning parameters, e.g. the Training cap's share of the roster.
 
-| Tuning parameter          | Value in the Game build                                                      |
-| ------------------------- | ---------------------------------------------------------------------------- |
-| Target roster             | A base size of 20, plus 10 for each Upgrade other than a Cap Upgrade bought. |
-| Cap shares, Transport cap | 40% of the roster.                                                           |
-| Combat margin             | 100%: a team whose Combat rating equals the Enemies' qualifies.              |
-| Loss margin step          | 5 percentage points, e.g. 105% after one Lost Mission and 110% after two.    |
-| Muster horizon            | 2 Advance turns.                                                             |
-| Muster income floor       | 60% of projected upkeep.                                                     |
-| Savings floor             | 3 Turns of projected upkeep.                                                 |
+| Tuning parameter | Value in the Game build |
+| --- | --- |
+| Target roster | A base size of 20, plus 20 for each Upgrade other than a Cap Upgrade bought. |
+| Cap shares, Transport cap | 40% of the roster. |
+| Combat margin | 100%: a team whose Combat rating equals the Enemies' qualifies. |
+| Loss margin step | 5 percentage points, e.g. 105% after one Lost Mission and 110% after two. |
+| Muster horizon | 2 Advance turns. |
+| Muster income floor | 60% of projected upkeep. |
+| Savings floor | 3 Turns of projected upkeep. |
+| Enemies per Agent | 2.5, e.g. a team of at least 4 Agents for 10 Enemies. |
+| Upgrade weights | 2 for `armor`, `training_skill_gain`, `exhaustion_recovery`, and `health_recovery`, and 1 for every other Upgrade other than a Cap Upgrade. |
 
 # Edge cases and failure behavior
 
