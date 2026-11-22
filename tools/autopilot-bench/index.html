@@ -564,6 +564,24 @@
         width: 360px;
         height: 120px;
       }
+      .chart h4 .last100 {
+        float: right;
+        margin: -2px 4px 0 6px;
+        font-family: var(--mono);
+        font-size: 10px;
+        font-weight: 400;
+        letter-spacing: 0;
+        text-transform: none;
+        color: var(--muted);
+        cursor: pointer;
+      }
+      .chart.full h4 .last100 {
+        font-size: 13px;
+      }
+      .chart h4 .last100 input {
+        vertical-align: -2px;
+        margin: 0 2px 0 0;
+      }
       .chart h4 .expand {
         float: right;
         margin: -2px 0 0 6px;
@@ -1451,7 +1469,7 @@
        */
       function chartSvg(kind, n, marks, labels) {
         const w = CW - PAD.l - PAD.r
-        return `<svg viewBox="0 0 ${CW} ${CH}" preserveAspectRatio="none" data-chart="${kind}" data-n="${n}">${marks}${labels}<rect class="hov" x="0" y="${PAD.t}" width="0" height="${CH - PAD.t - PAD.b}" fill="rgba(232,228,216,0.12)" /><text x="${PAD.l}" y="${CH - 2}">T1</text><text x="${PAD.l + w}" y="${CH - 2}" text-anchor="end">T${n}</text></svg>`
+        return `<svg viewBox="0 0 ${CW} ${CH}" preserveAspectRatio="none" data-chart="${kind}" data-n="${n}">${marks}${labels}<rect class="hov" x="0" y="${PAD.t}" width="0" height="${CH - PAD.t - PAD.b}" fill="rgba(232,228,216,0.12)" /><text x="${PAD.l}" y="${CH - 2}">T${CHART_FIRST}</text><text x="${PAD.l + w}" y="${CH - 2}" text-anchor="end">T${CHART_FIRST + n - 1}</text></svg>`
       }
 
       /** Stacked bars, one per Turn: `rows[i]` lists the values of Turn i+1 bottom-up from `base(i)` going `dir`. */
@@ -1475,7 +1493,7 @@
         return out
       }
 
-      function polyline(values, y, color, width) {
+      function polyline(values, y, color, width, opacity = 1) {
         const n = values.length
         const w = CW - PAD.l - PAD.r
         const bw = w / Math.max(n, 1)
@@ -1483,7 +1501,7 @@
           .map((v, i) => (v === null ? null : `${(PAD.l + (i + 0.5) * bw).toFixed(2)},${y(v).toFixed(2)}`))
           .filter((p) => p !== null)
         if (pts.length === 1) pts.push(pts[0])
-        return `<polyline points="${pts.join(' ')}" fill="none" stroke="${color}" stroke-width="${width}" vector-effect="non-scaling-stroke" stroke-linejoin="round" />`
+        return `<polyline points="${pts.join(' ')}" fill="none" stroke="${color}" stroke-width="${width}" vector-effect="non-scaling-stroke" stroke-linejoin="round"${opacity < 1 ? ` opacity="${opacity}"` : ''} />`
       }
 
       const yScale = (lo, hi) => (v) => PAD.t + ((hi - v) / (hi - lo || 1)) * (CH - PAD.t - PAD.b)
@@ -1491,6 +1509,21 @@
         `<text x="${right ? CW - PAD.r + 3 : PAD.l - 3}" y="${(y + 3).toFixed(1)}" text-anchor="${right ? 'start' : 'end'}">${compact(v)}</text>`
       const gridLine = (y, strong) =>
         `<line x1="${PAD.l}" x2="${CW - PAD.r}" y1="${y.toFixed(2)}" y2="${y.toFixed(2)}" stroke="${strong ? 'var(--border)' : 'var(--divider)'}" stroke-width="1" vector-effect="non-scaling-stroke" />`
+
+      /** The kinds of chart that show only their last 100 Turns, kept in the browser for the next visit. */
+      const LAST_100 = new Set(
+        (() => {
+          try {
+            return JSON.parse(localStorage.getItem('bench.last100') ?? '[]')
+          } catch {
+            return []
+          }
+        })(),
+      )
+      /** The first Turn the chart being drawn shows, for its axis labels. */
+      let CHART_FIRST = 1
+      /** The Turns a chart of this kind shows: the last 100 while its checkbox is checked, otherwise all. */
+      const shownTurns = (kind, turns) => (LAST_100.has(kind) ? turns.slice(-100) : turns)
 
       /** Every Turn of a Campaign, Turn 1 to its Current Turn: the ended Turns, then the Current Turn. */
       function turnsOf(c) {
@@ -1547,7 +1580,7 @@
               stackBars(inc, (j) => INCOME[j][1], y, 1) +
                 stackBars(exp, (j) => SPENDING[j][1], y, -1) +
                 gridLine(y(0), true) +
-                (ended.length ? polyline(net, y, NET[1], 2) : ''),
+                (ended.length ? polyline(net, y, NET[1], 2, 0.5) : ''),
               axisLabel(hi, y(hi)) + axisLabel(0, y(0)) + axisLabel(lo, y(lo)),
             )
           },
@@ -1611,7 +1644,7 @@
             const lines = WORN_LINES.map(([, color], j) => {
               if (!turns.some((p) => p.worn)) return ''
               const values = turns.map((p) => p.worn?.[j] ?? null)
-              return polyline(values, y, '#0D0D0B', 4) + polyline(values, y, color, 2)
+              return polyline(values, y, '#0D0D0B', 4, 0.5) + polyline(values, y, color, 2, 0.5)
             })
               .reverse()
               .join('')
@@ -1650,7 +1683,7 @@
             )
             const y = yScale(0, hi)
             const lines = STRENGTH_LINES.map(([, color], j) =>
-              line(j).some((v) => v !== null) ? polyline(line(j), y, color, 2) : '',
+              line(j).some((v) => v !== null) ? polyline(line(j), y, color, 2, 0.5) : '',
             )
               .reverse()
               .join('')
@@ -1682,10 +1715,15 @@
           Object.entries(CHARTS)
             .map(([kind, ch]) => {
               const full = kind === expanded
+              const shown = shownTurns(kind, turns)
+              const points = ch.points ? ch.points(shown) : shown
+              CHART_FIRST = points[0]?.turn ?? 1
+              const drawn = ch.draw(shown)
               const svg = full
-                ? ch.draw(turns).replace('preserveAspectRatio="none"', 'preserveAspectRatio="xMidYMid meet"')
-                : ch.draw(turns)
-              return `<div class="chart${full ? ' full' : ''}"><h4>${esc(ch.title)}<button type="button" class="expand" data-act="expand" data-kind="${kind}" title="${full ? 'Close (Esc)' : 'Show full screen'}" aria-label="${full ? 'Close' : 'Show full screen'}">${full ? '✕' : '⤢'}</button></h4>${ch.legend(turns)}${svg}${full ? '<div class="readout">&nbsp;</div>' : ''}</div>`
+                ? drawn.replace('preserveAspectRatio="none"', 'preserveAspectRatio="xMidYMid meet"')
+                : drawn
+              const last100 = `<label class="last100" title="Show only the last 100 Turns"><input type="checkbox" data-last100="${kind}"${LAST_100.has(kind) ? ' checked' : ''}> Last 100</label>`
+              return `<div class="chart${full ? ' full' : ''}"><h4>${esc(ch.title)}<button type="button" class="expand" data-act="expand" data-kind="${kind}" title="${full ? 'Close (Esc)' : 'Show full screen'}" aria-label="${full ? 'Close' : 'Show full screen'}">${full ? '✕' : '⤢'}</button>${last100}</h4>${ch.legend(turns)}${svg}${full ? '<div class="readout">&nbsp;</div>' : ''}</div>`
             })
             .join('')
         )
@@ -1694,7 +1732,7 @@
       function drawCharts(row, c) {
         const turns = turnsOf(c)
         const last = turns[turns.length - 1]
-        const key = `${turns.length}|${JSON.stringify(last ?? null)}|${row.expanded ?? ''}`
+        const key = `${turns.length}|${JSON.stringify(last ?? null)}|${row.expanded ?? ''}|${[...LAST_100].join(',')}`
         if (row.chartKey === key) return
         row.chartKey = key
         row.turns = turns
@@ -1727,7 +1765,8 @@
           return
         }
         const ch = CHARTS[svg.dataset.chart]
-        const points = ch.points ? ch.points(row.turns) : row.turns
+        const base = shownTurns(svg.dataset.chart, row.turns)
+        const points = ch.points ? ch.points(base) : base
         const box = svg.getBoundingClientRect()
         const x = ((e.clientX - box.left) / box.width) * CW
         const w = CW - PAD.l - PAD.r
@@ -1748,7 +1787,7 @@
           readout.innerHTML =
             `<b>Turn ${fmt(p.turn)}</b>${now}: ` +
             ch
-              .tip(p, i, row.turns)
+              .tip(p, i, base)
               .map(
                 ([name, color, v, line]) =>
                   `${color ? `<i class="${line ? 'ln' : ''}" style="background:${color}"></i>` : ''}${esc(name)} ${v === null ? '—' : fmt(v)}`,
@@ -1759,7 +1798,7 @@
         tip.innerHTML =
           `<b>Turn ${fmt(p.turn)}</b>${now}<br>` +
           ch
-            .tip(p, i, row.turns)
+            .tip(p, i, base)
             .map(
               ([name, color, v, line]) =>
                 `${color ? `<i class="${line ? 'ln' : ''}" style="background:${color}"></i>` : '<i></i>'}${esc(name)}<span class="v">${v === null ? '—' : fmt(v)}</span>`,
@@ -1943,6 +1982,19 @@
           if (row?.expanded) expandChart(row, row.expanded)
         })
         $('ct').addEventListener('pointerdown', (e) => e.button === 0 && act(e))
+        $('ct').addEventListener('change', (e) => {
+          const kind = e.target.dataset?.last100
+          if (!kind) return
+          if (e.target.checked) LAST_100.add(kind)
+          else LAST_100.delete(kind)
+          try {
+            localStorage.setItem('bench.last100', JSON.stringify([...LAST_100]))
+          } catch {}
+          for (const row of rows.values()) {
+            row.chartKey = null
+            drawCharts(row, row.campaign)
+          }
+        })
         $('ct').addEventListener('click', (e) => e.detail === 0 && act(e))
         $('ct').addEventListener('mousemove', hover)
         $('ct').addEventListener('mouseleave', hover)
