@@ -901,17 +901,38 @@
       /* The level that groups a site's row: an Initiative site's tier, i.e. its place in the Victory path, or a Response site's Faction operation level. */
       const rowLevel = (s) => (BASE[s].kind === 'initiative' ? 'i' + INIT.indexOf(s) : 'r' + BASE[s].level)
       /* Every other level is banded, counted separately for each kind, so a level change is always a change of band. */
-      const rowClass = (s, i, list) => {
+      const rowClasses = (s, i, list) => {
         const level = rowLevel(s),
           before = i > 0 ? rowLevel(list[i - 1]) : null,
           index = [...new Set(list.map(rowLevel))].indexOf(level),
           classes = []
         if (before !== null && before !== level) classes.push('lvl')
         if (index % 2 === 1) classes.push('band')
+        return classes
+      }
+      const rowClass = (s, i, list) => {
+        const classes = rowClasses(s, i, list)
         return classes.length ? ` class="${classes.join(' ')}"` : ''
       }
       const INIT = SITES.filter((k) => BASE[k].kind === 'initiative')
       const RESP = SITES.filter((k) => BASE[k].kind !== 'initiative')
+      /*
+       * Sorts the Response sites by operation level, and within a level ascending by Rating, from the values as edited.
+       * Initiative sites keep their order, because each is a tier of its own on the Victory path.
+       */
+      const sortSites = () =>
+        RESP.sort((a, b) => BASE[a].level - BASE[b].level || siteRating(a).rating - siteRating(b).rating)
+      /* Re-sort: moves the Response rows into the sorted order, keeping every result already painted in them. */
+      function resortRows() {
+        sortSites()
+        const body = cell('sc', RESP[0]).closest('tr').parentNode
+        RESP.forEach((s, i) => {
+          const tr = cell('sc', s).closest('tr')
+          tr.className = rowClasses(s, i, RESP).join(' ')
+          body.appendChild(tr)
+        })
+        derive()
+      }
       const FILES = [
         ['configuration/campaign_configurations.yaml', ['standard']],
         ['agents/agent_archetypes.yaml', ['field_agent']],
@@ -1035,7 +1056,7 @@
     ]
       .map(
         ([kind, list]) =>
-          `<h4 class="sites">${kind} Mission sites</h4><div class="tw"><table><tr><th>MissionSiteArchetype</th><th style="text-align:left">Kind</th><th>expires</th>${EN.map((e) => `<th title="${e}">${EN_AB[e]}</th>`).join('')}<th class="d">Enemies</th><th class="d">Rating</th><th class="d" title="This site's Rating divided by the Rating of the row above">× above</th><th class="d" title="Team Combat rating divided by this site's Rating">Team / Rating</th><th class="d">Test team wins</th><th class="d">Agents killed</th><th class="d">Team for target</th><th class="d" title="The Combat rating of the team for target">Its rating</th><th class="d" title="The Combat rating of the team for target divided by this site's Rating">Its rating / Rating</th><th class="d">Transport upgrades</th><th class="d">Search</th></tr>${list.map((s, i) => `<tr${rowClass(s, i, list)}><td class="name">${title(s)}</td><td id="sl_${s}" style="text-align:left;font-family:var(--body);color:var(--text2)">${BASE[s].level ? 'Response · operation level ' + BASE[s].level : 'Initiative'}</td><td>${inp(s + '.expires_in_turns', { min: 1 })}</td>${EN.map((e) => `<td class="w">${inp(s + '.enemies.' + e)}</td>`).join('')}<td class="d" id="sc_${s}"></td><td class="d" id="sr_${s}"></td><td class="d" id="sm_${s}"></td><td class="d" id="sp_${s}"></td><td class="d" id="sw_${s}" style="text-align:left"></td><td class="d" id="sk_${s}"></td><td class="d" id="sn_${s}"></td><td class="d" id="sq_${s}"></td><td class="d" id="sv_${s}"></td><td class="d" id="st_${s}"></td><td class="d" id="sx_${s}"></td></tr>`).join('')}</table></div>`,
+          `<h4 class="sites">${kind} Mission sites${list === RESP ? ` <button id="resort" title="Sort each operation level ascending by Rating, from the values as edited">Re-sort</button>` : ''}</h4><div class="tw"><table><tr><th>MissionSiteArchetype</th><th style="text-align:left">Kind</th><th>expires</th>${EN.map((e) => `<th title="${e}">${EN_AB[e]}</th>`).join('')}<th class="d">Enemies</th><th class="d">Rating</th><th class="d" title="This site's Rating divided by the Rating of the row above">× above</th><th class="d" title="Team Combat rating divided by this site's Rating">Team / Rating</th><th class="d">Test team wins</th><th class="d">Agents killed</th><th class="d">Team for target</th><th class="d" title="The Combat rating of the team for target">Its rating</th><th class="d" title="The Combat rating of the team for target divided by this site's Rating">Its rating / Rating</th><th class="d">Transport upgrades</th><th class="d">Search</th></tr>${list.map((s, i) => `<tr${rowClass(s, i, list)}><td class="name">${title(s)}</td><td id="sl_${s}" style="text-align:left;font-family:var(--body);color:var(--text2)">${BASE[s].level ? 'Response · operation level ' + BASE[s].level : 'Initiative'}</td><td>${inp(s + '.expires_in_turns', { min: 1 })}</td>${EN.map((e) => `<td class="w">${inp(s + '.enemies.' + e)}</td>`).join('')}<td class="d" id="sc_${s}"></td><td class="d" id="sr_${s}"></td><td class="d" id="sm_${s}"></td><td class="d" id="sp_${s}"></td><td class="d" id="sw_${s}" style="text-align:left"></td><td class="d" id="sk_${s}"></td><td class="d" id="sn_${s}"></td><td class="d" id="sq_${s}"></td><td class="d" id="sv_${s}"></td><td class="d" id="st_${s}"></td><td class="d" id="sx_${s}"></td></tr>`).join('')}</table></div>`,
       )
       .join('') +
       `<div class="note"><b>× above</b> is a site's Rating divided by the Rating of the row above it in the same table, and <b>Team / Rating</b> is the team Combat rating as a percentage of the site's Rating.<b>Every Combat is fought by the game-v5-impl-web engine itself</b>, through <code>developer.tools.fightCombatBatch</code>, with the values on this page passed as its Combatants and GDR values; this page has no Combat rules of its own. <b>Each win rate is the share of the test team's Combats per site that it Prevailed in</b>, and Agents killed is the mean over those Combats. A Mission is Won only when the Combat outcome is Prevailed, so a retreat counts as a loss. Team for target is the smallest team of the test team's skill and upgrades that reaches the target win rate, searched up to ${MAXN} Agents; the search starts from the team size that the Combat ratings estimate, and each team size tried is one batch of at most the Combats per site that stops as soon as its answer is certain. <b>Its rating</b> is the Combat rating of the team for target, and <b>Its rating / Rating</b> that rating divided by the site's Rating. Transport upgrades is how many it takes to deploy that team at once. The Initiative operation levels come from <code>developer.queries.getInitiativeOperationLevels</code>. Each Combat's Detached seed is fixed, so a changed number reflects your edit and not new dice: Combat <i>i</i> of a team of <i>n</i> at a Mission site has the Detached seed <code>&lt;site&gt;|&lt;n&gt;#&lt;i&gt;</code>, which <code>developer.tools.fightCombat</code> shows in full.</div>`,
@@ -1431,6 +1452,7 @@
           agent,
           T.n,
           T.target,
+          T.trials,
           T.team,
           gdrValues,
           cur.economy.base_transport_cap,
@@ -1490,6 +1512,7 @@
             '). The values shown are the ones written in the page, not the ones on disk'
         }
         load()
+        sortSites()
         build()
         derive()
       }
@@ -1931,8 +1954,11 @@
           cur = clone(BASE)
           T = clone(TEAM0)
           simSig = ''
+          sortSites()
           build()
           derive()
+        } else if (t.id === 'resort') {
+          resortRows()
         } else if (t.id === 'copy') {
           const ta = document.getElementById('chgtext'),
             done = () => {
