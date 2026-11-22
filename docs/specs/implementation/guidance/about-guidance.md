@@ -28,9 +28,13 @@ The Design specifications deliberately leave many technical matters open, e.g. t
 
 [Test Focus](test-focus.md) answers _which properties are tests best spent on?_ It suggests covering first what a person playing would not notice, e.g. determinism, saves, and the Timeline, checking each rule once at the lowest level that can, and keeping tests that drive a user interface to what only an interface shows.
 
+## Autopilot Performance
+
+[Autopilot Performance](autopilot-performance.md) answers _why does a Turn slow down as the Agency grows, and what was done about it?_ It explains where an Autopilot Turn's time goes and records each performance change of the current Implementation with its commits, so that each can be reverted once the game needs fewer Agents and Upgrades.
+
 # How they relate
 
-The Guidance specifications do not depend on one another; each builds only on Design specifications. Gameplay Dependency Direction uses the vocabulary and determinism guarantees of the Foundation family, together with the Graphical User Interface and Basic Autopilot AI, whose code it keeps behind the engine API. Headless First uses Engine Contract and both user interfaces of the UI family, whose order of construction it suggests. Storage Schema uses the data ownership, Campaign save, and Timeline contracts of the Foundation family. Test Focus uses the Artboards of Visual Design, against which it suggests checking presentation by looking rather than by test.
+The Guidance specifications do not depend on one another; each builds only on Design specifications. Gameplay Dependency Direction uses the vocabulary and determinism guarantees of the Foundation family, together with the Graphical User Interface and Basic Autopilot AI, whose code it keeps behind the engine API. Headless First uses Engine Contract and both user interfaces of the UI family, whose order of construction it suggests. Storage Schema uses the data ownership, Campaign save, and Timeline contracts of the Foundation family. Test Focus uses the Artboards of Visual Design, against which it suggests checking presentation by looking rather than by test. Autopilot Performance uses the Player API, Numbers, and Saves contracts of the Foundation family, Hiring Agents of Economy and Upgrades, and the Basic Autopilot AI, whose specification changes it records.
 
 <!-- generated:family-diagram:start -->
 

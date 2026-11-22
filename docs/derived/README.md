@@ -20,7 +20,7 @@ These informative views are derived from the registered Markdown specifications.
 | Design             | UI            | 17             |
 | Design             | Autopilot AIs | 1              |
 | Implementation     | Mandatory     | 7              |
-| Implementation     | Guidance      | 5              |
+| Implementation     | Guidance      | 6              |
 | Implementation     | Recipes       | 3              |
 
 ## Conventions
@@ -133,6 +133,7 @@ These informative views are derived from the registered Markdown specifications.
 
 | ID | Document | Owns |
 | --- | --- | --- |
+| APPERF | [Autopilot Performance](../specs/implementation/guidance/autopilot-performance.md) | Non-behavioural guidance on keeping Turns fast as an Agency grows, and the record of the performance changes made to the current Implementation, with their commits, so that each can be reverted. |
 | DEPDIR | [Gameplay Dependency Direction](../specs/implementation/guidance/gameplay-dependency-direction.md) | Non-behavioural guidance keeping gameplay code from reaching Campaign state beyond its necessary inputs. |
 | HEADLESS | [Headless First](../specs/implementation/guidance/headless-first.md) | Guidance that an Implementation becomes fully playable headlessly, through its Command-Line Interface, before work on its Graphical User Interface begins. |
 | SCHEMA | [Storage Schema](../specs/implementation/guidance/storage-schema.md) | Non-behavioural guidance on the physical layout of everything the game persists. |
