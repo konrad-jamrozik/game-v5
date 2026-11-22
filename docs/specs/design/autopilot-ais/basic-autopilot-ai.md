@@ -95,13 +95,13 @@ What discovers a Lead is not Player-visible, so it does not trace a Faction's ch
 
 The [Game build](../foundation/core-concepts.md#game-build-and-content) offers the Basic Autopilot AI with one fixed set of Tuning parameters, the Implementer's choice, and a player cannot change them. So that the thresholds can be tuned against whole Campaigns, an Implementation builds the Basic Autopilot AI from a given set of Tuning parameters, and lets developer tooling build it with values other than the Game build's, e.g. a tool that plays many Campaigns with each of several sets of values and compares them. How developer tooling reaches that build, e.g. a function of the Implementation's own code, is the Implementer's choice; it is not part of any API of the engine, and a Basic Autopilot AI built with other values is not offered by the Game build.
 
-The following list of Tuning parameters is exhaustive. The first group holds the thresholds of the goals. The second group goes beyond the goals, and each of its parameters has a neutral value with which the Basic Autopilot AI plays exactly as Goals and Turn routine state; the Game build uses the neutral values. The Game designer has set the values of the Game build for Target roster, Cap shares, Combat margin, Loss margin step, Muster horizon, and Muster income floor, under Game designer values; every other Tuning parameter remains the Implementer's choice.
+The following list of Tuning parameters is exhaustive. The first group holds the thresholds of the goals. The second group goes beyond the goals, and each of its parameters has a neutral value with which the Basic Autopilot AI plays exactly as Goals and Turn routine state; the Game build uses the neutral values. The Game designer has set the values of the Game build for Target roster, Cap shares, Savings floor, Combat margin, Loss margin step, Muster horizon, and Muster income floor, under Game designer values; every other Tuning parameter remains the Implementer's choice.
 
 | Tuning parameter | What it sets |
 | --- | --- |
 | Reserve share | The target size of the Agent reserve, as a share of the roster. |
 | Income target | The Expected income that steps 1, 4, and 5 keep, as a share of projected upkeep, i.e. the margin of Stay solvent. |
-| Savings floor | The Savings floor, as a number of Turns of a share of projected upkeep. |
+| Savings floor | The Savings floor, as a number of Turns of projected upkeep, e.g. 3 Turns of a projected upkeep of 200 is 600 money. |
 | Combat margin | The least share of the Enemies' Combat rating that the team's Combat rating must reach in Deploy only to win while no Mission at a Mission site of the same MissionSiteArchetype is Lost. |
 | Loss margin step | How much each Lost Mission at a Mission site of one MissionSiteArchetype raises the share of Deploy only to win for later Mission sites of that MissionSiteArchetype: the Required rating share of a Mission site is the Combat margin plus the Loss margin step times the number of Lost Missions at Mission sites of its MissionSiteArchetype. |
 | Muster horizon | The most Advance turns within which the last Agent of the Muster must become a Deployable Agent. |
@@ -127,6 +127,7 @@ The Game designer sets the following values of the Game build, so that an Implem
 | Loss margin step          | 5 percentage points, e.g. 105% after one Lost Mission and 110% after two.    |
 | Muster horizon            | 2 Advance turns.                                                             |
 | Muster income floor       | 60% of projected upkeep.                                                     |
+| Savings floor             | 3 Turns of projected upkeep.                                                 |
 
 # Edge cases and failure behavior
 
