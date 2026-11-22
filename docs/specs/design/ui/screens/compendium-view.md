@@ -183,7 +183,7 @@ The Data sheet of a MissionSiteArchetype shows what awaits a team there and what
 | Label | Value |
 | --- | --- |
 | Appears | For the kind initiative: "When an [Investigation](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) completes". For the kind response: "When a Faction carries out an operation of level", the `level` of the operation level, and its `name` in parentheses, e.g. "When a Faction carries out an operation of level 1 (Soft operations)". |
-| Expires in | `expires_in_turns`, followed by "turns". |
+| Expires in | `expires_in_turns`, followed by "turn" when it is 1 and "turns" otherwise, e.g. "1 turn" or "3 turns". |
 | Enemies | Each entry of `enemies` in authored order, separated by "·", as its count, "×", and the EnemyArchetype, e.g. "8 × Initiate · 1 × Soldier". |
 | Reward for a win | For the kind initiative, the Effect list `on_win`. For the kind response, the Effect list `on_win` of the operation level. |
 | If lost or expired | For the kind response only, the Effect list `on_ignored_or_lost` of the operation level. |

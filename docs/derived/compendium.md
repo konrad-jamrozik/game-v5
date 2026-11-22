@@ -1435,7 +1435,7 @@ A cult member has been found, lightly guarded. Bring the member in before the tr
 | ------------------ | ------------------------------ |
 | `kind`             | `initiative`                   |
 | `name`             | `Apprehend member`             |
-| `expires_in_turns` | `5`                            |
+| `expires_in_turns` | `3`                            |
 | `enemies`          | `{"initiate":2,"operative":1}` |
 | `on_win`           | `[{"money":10}]`               |
 
@@ -1450,7 +1450,7 @@ A cult is bringing terror to the streets of a city. End it before the city break
 | `kind` | `response` |
 | `name` | `Counter civilian terror` |
 | `operation_level` | `4` |
-| `expires_in_turns` | `6` |
+| `expires_in_turns` | `1` |
 | `enemies` | `{"initiate":30,"operative":24,"soldier":15,"elite":4,"handler":10,"lieutenant":3,"commander":1}` |
 
 ### Defend against HQ assault
@@ -1464,7 +1464,7 @@ A cult has found your headquarters and is coming with everything it has. If the 
 | `kind` | `response` |
 | `name` | `Defend against HQ assault` |
 | `operation_level` | `5` |
-| `expires_in_turns` | `7` |
+| `expires_in_turns` | `1` |
 | `enemies` | `{"initiate":40,"operative":40,"soldier":40,"elite":10,"handler":10,"lieutenant":10,"commander":4,"high_commander":1}` |
 
 ### Defend against office raid
@@ -1478,7 +1478,7 @@ A cult is about to storm one of your field offices. Hold it.
 | `kind`                       | `response`                                                            |
 | `name`                       | `Defend against office raid`                                          |
 | `operation_level`            | `2`                                                                   |
-| `expires_in_turns`           | `4`                                                                   |
+| `expires_in_turns`           | `1`                                                                   |
 | `enemies`                    | `{"initiate":4,"operative":4,"soldier":4,"handler":1,"lieutenant":1}` |
 
 ### Foil bioweapon release
@@ -1492,7 +1492,7 @@ A cult is ready to release a plague it has bred. If it gets out, the Campaign is
 | `kind` | `response` |
 | `name` | `Foil bioweapon release` |
 | `operation_level` | `5` |
-| `expires_in_turns` | `7` |
+| `expires_in_turns` | `1` |
 | `enemies` | `{"operative":20,"soldier":20,"elite":20,"lieutenant":5,"commander":5,"high_commander":1}` |
 
 ### Foil business extortion
@@ -1506,7 +1506,7 @@ A cult is squeezing local businesses for [money](#money-and-funding). Break the 
 | `kind`                    | `response`                                 |
 | `name`                    | `Foil business extortion`                  |
 | `operation_level`         | `1`                                        |
-| `expires_in_turns`        | `3`                                        |
+| `expires_in_turns`        | `1`                                        |
 | `enemies`                 | `{"initiate":6,"operative":2,"handler":1}` |
 
 ### Foil financial heist
@@ -1520,7 +1520,7 @@ A cult is after a fortune that would fund it for years. Stop the heist before th
 | `kind`                 | `response`                                                              |
 | `name`                 | `Foil financial heist`                                                  |
 | `operation_level`      | `3`                                                                     |
-| `expires_in_turns`     | `5`                                                                     |
+| `expires_in_turns`     | `1`                                                                     |
 | `enemies`              | `{"initiate":10,"operative":10,"soldier":8,"handler":4,"lieutenant":2}` |
 
 ### Foil infrastructure attack
@@ -1534,7 +1534,7 @@ A cult is about to strike a power grid or a water supply. Whole cities depend on
 | `kind` | `response` |
 | `name` | `Foil infrastructure attack` |
 | `operation_level` | `3` |
-| `expires_in_turns` | `5` |
+| `expires_in_turns` | `1` |
 | `enemies` | `{"initiate":16,"operative":12,"soldier":12,"elite":2,"handler":6,"lieutenant":3,"commander":1}` |
 
 ### Foil nuclear plant bombing
@@ -1548,7 +1548,7 @@ A cult means to blow up a nuclear plant. If it blows, a whole region is poisoned
 | `kind` | `response` |
 | `name` | `Foil nuclear plant bombing` |
 | `operation_level` | `4` |
-| `expires_in_turns` | `6` |
+| `expires_in_turns` | `1` |
 | `enemies` | `{"initiate":24,"operative":24,"soldier":20,"elite":8,"handler":6,"lieutenant":4,"commander":2}` |
 
 ### Foil prison break
@@ -1562,7 +1562,7 @@ A cult is storming a prison to free its captured fighters. If they walk out, the
 | `kind` | `response` |
 | `name` | `Foil prison break` |
 | `operation_level` | `4` |
-| `expires_in_turns` | `6` |
+| `expires_in_turns` | `1` |
 | `enemies` | `{"initiate":24,"operative":8,"soldier":24,"elite":8,"handler":4,"lieutenant":6,"commander":3}` |
 
 ### Foil recruitment push
@@ -1576,7 +1576,7 @@ A cult is recruiting openly. Break up the rally before the cult grows.
 | `kind`                  | `response`                     |
 | `name`                  | `Foil recruitment push`        |
 | `operation_level`       | `1`                            |
-| `expires_in_turns`      | `3`                            |
+| `expires_in_turns`      | `1`                            |
 | `enemies`               | `{"initiate":4,"operative":1}` |
 
 ### Foil sabotage
@@ -1590,7 +1590,7 @@ A cult plans to strike critical infrastructure. Stop the saboteurs before the bl
 | `kind`             | `response`                                                            |
 | `name`             | `Foil sabotage`                                                       |
 | `operation_level`  | `2`                                                                   |
-| `expires_in_turns` | `4`                                                                   |
+| `expires_in_turns` | `1`                                                                   |
 | `enemies`          | `{"initiate":2,"operative":2,"soldier":2,"handler":1,"lieutenant":1}` |
 
 ### Foil supply theft
@@ -1604,7 +1604,7 @@ A cult is stealing supplies to arm its members. Catch the thieves before the goo
 | `kind`              | `response`                     |
 | `name`              | `Foil supply theft`            |
 | `operation_level`   | `1`                            |
-| `expires_in_turns`  | `3`                            |
+| `expires_in_turns`  | `1`                            |
 | `enemies`           | `{"initiate":4,"operative":3}` |
 
 ### Foil VIP assassination
@@ -1618,7 +1618,7 @@ A cult has marked a public figure for death. Reach the killers before they reach
 | `kind`                   | `response`                                             |
 | `name`                   | `Foil VIP assassination`                               |
 | `operation_level`        | `2`                                                    |
-| `expires_in_turns`       | `4`                                                    |
+| `expires_in_turns`       | `1`                                                    |
 | `enemies`                | `{"initiate":4,"operative":4,"soldier":2,"handler":1}` |
 
 ### Foil warhead launch
@@ -1632,7 +1632,7 @@ A cult has seized a nuclear warhead and the means to launch it. If it flies, the
 | `kind` | `response` |
 | `name` | `Foil warhead launch` |
 | `operation_level` | `5` |
-| `expires_in_turns` | `7` |
+| `expires_in_turns` | `1` |
 | `enemies` | `{"initiate":20,"operative":30,"soldier":24,"elite":12,"handler":7,"lieutenant":6,"commander":3,"high_commander":1}` |
 
 ### Intercept arms deal
@@ -1646,7 +1646,7 @@ A cult is buying military weapons. Hit the exchange before the shipment changes 
 | `kind` | `response` |
 | `name` | `Intercept arms deal` |
 | `operation_level` | `3` |
-| `expires_in_turns` | `5` |
+| `expires_in_turns` | `1` |
 | `enemies` | `{"initiate":12,"operative":12,"soldier":10,"elite":2,"handler":4,"lieutenant":2,"commander":1}` |
 
 ### Raid HQ
@@ -1659,7 +1659,7 @@ The final assault on the headquarters of a cult. Winning it puts the [Cult leade
 | ------------------ | -------------------------------------------------------------------------------------------- |
 | `kind`             | `initiative`                                                                                 |
 | `name`             | `Raid HQ`                                                                                    |
-| `expires_in_turns` | `40`                                                                                         |
+| `expires_in_turns` | `3`                                                                                          |
 | `enemies`          | `{"soldier":50,"elite":30,"lieutenant":10,"commander":6,"high_commander":2,"cult_leader":1}` |
 | `on_win`           | `[{"money":10000},{"funding":200},{"panic":-20}]`                                            |
 
@@ -1673,7 +1673,7 @@ The hub that keeps the cult supplied. Taking it will hurt the cult for a long ti
 | --- | --- |
 | `kind` | `initiative` |
 | `name` | `Raid logistics hub` |
-| `expires_in_turns` | `15` |
+| `expires_in_turns` | `3` |
 | `enemies` | `{"initiate":8,"operative":10,"soldier":14,"elite":4,"handler":6,"lieutenant":2,"commander":1}` |
 | `on_win` | `[{"money":2000},{"funding":50},{"panic":-5}]` |
 
@@ -1687,7 +1687,7 @@ A fortified outpost where the cult gathers its people. Expect a determined defen
 | ------------------ | ------------------------------------------------------ |
 | `kind`             | `initiative`                                           |
 | `name`             | `Raid outpost`                                         |
-| `expires_in_turns` | `10`                                                   |
+| `expires_in_turns` | `3`                                                    |
 | `enemies`          | `{"initiate":4,"operative":6,"soldier":2,"handler":3}` |
 | `on_win`           | `[{"money":1000},{"funding":20},{"panic":-2}]`         |
 
@@ -1701,7 +1701,7 @@ A fortress that a [high commander](#high-commander) rules like a small kingdom. 
 | -------------------------- | --------------------------------------------------------------------------- |
 | `kind`                     | `initiative`                                                                |
 | `name`                     | `Raid regional stronghold`                                                  |
-| `expires_in_turns`         | `30`                                                                        |
+| `expires_in_turns`         | `3`                                                                         |
 | `enemies`                  | `{"soldier":40,"elite":18,"lieutenant":8,"commander":3,"high_commander":1}` |
 | `on_win`                   | `[{"money":5000},{"funding":100},{"panic":-10}]`                            |
 
@@ -1715,7 +1715,7 @@ Storm the safehouse of a cult before it is moved. Expect it to be well guarded.
 | ------------------ | --------------------------------------------- |
 | `kind`             | `initiative`                                  |
 | `name`             | `Raid safehouse`                              |
-| `expires_in_turns` | `8`                                           |
+| `expires_in_turns` | `3`                                           |
 | `enemies`          | `{"initiate":4,"operative":4,"handler":1}`    |
 | `on_win`           | `[{"money":200},{"funding":10},{"panic":-1}]` |
 

@@ -2,7 +2,7 @@ id: apprehend_member
 type: MissionSiteArchetype
 kind: initiative
 name: Apprehend member
-expires_in_turns: 5
+expires_in_turns: 3
 enemies:
   initiate: 2
   operative: 1
@@ -13,7 +13,7 @@ id: raid_safehouse
 type: MissionSiteArchetype
 kind: initiative
 name: Raid safehouse
-expires_in_turns: 8
+expires_in_turns: 3
 enemies:
   initiate: 4
   operative: 4
@@ -27,7 +27,7 @@ id: raid_outpost
 type: MissionSiteArchetype
 kind: initiative
 name: Raid outpost
-expires_in_turns: 10
+expires_in_turns: 3
 enemies:
   initiate: 4
   operative: 6
@@ -42,7 +42,7 @@ id: raid_logistics_hub
 type: MissionSiteArchetype
 kind: initiative
 name: Raid logistics hub
-expires_in_turns: 15
+expires_in_turns: 3
 enemies:
   initiate: 8
   operative: 10
@@ -60,7 +60,7 @@ id: raid_regional_stronghold
 type: MissionSiteArchetype
 kind: initiative
 name: Raid regional stronghold
-expires_in_turns: 30
+expires_in_turns: 3
 enemies:
   soldier: 40
   elite: 18
@@ -76,7 +76,7 @@ id: raid_hq
 type: MissionSiteArchetype
 kind: initiative
 name: Raid HQ
-expires_in_turns: 40
+expires_in_turns: 3
 enemies:
   soldier: 50
   elite: 30
@@ -94,7 +94,7 @@ type: MissionSiteArchetype
 kind: response
 name: Foil recruitment push
 operation_level: 1
-expires_in_turns: 3
+expires_in_turns: 1
 enemies:
   initiate: 4
   operative: 1
@@ -104,7 +104,7 @@ type: MissionSiteArchetype
 kind: response
 name: Foil sabotage
 operation_level: 2
-expires_in_turns: 4
+expires_in_turns: 1
 enemies:
   initiate: 2
   operative: 2
@@ -117,7 +117,7 @@ type: MissionSiteArchetype
 kind: response
 name: Foil supply theft
 operation_level: 1
-expires_in_turns: 3
+expires_in_turns: 1
 enemies:
   initiate: 4
   operative: 3
@@ -127,7 +127,7 @@ type: MissionSiteArchetype
 kind: response
 name: Foil business extortion
 operation_level: 1
-expires_in_turns: 3
+expires_in_turns: 1
 enemies:
   initiate: 6
   operative: 2
@@ -138,7 +138,7 @@ type: MissionSiteArchetype
 kind: response
 name: Foil VIP assassination
 operation_level: 2
-expires_in_turns: 4
+expires_in_turns: 1
 enemies:
   initiate: 4
   operative: 4
@@ -150,7 +150,7 @@ type: MissionSiteArchetype
 kind: response
 name: Defend against office raid
 operation_level: 2
-expires_in_turns: 4
+expires_in_turns: 1
 enemies:
   initiate: 4
   operative: 4
@@ -163,7 +163,7 @@ type: MissionSiteArchetype
 kind: response
 name: Foil financial heist
 operation_level: 3
-expires_in_turns: 5
+expires_in_turns: 1
 enemies:
   initiate: 10
   operative: 10
@@ -176,7 +176,7 @@ type: MissionSiteArchetype
 kind: response
 name: Intercept arms deal
 operation_level: 3
-expires_in_turns: 5
+expires_in_turns: 1
 enemies:
   initiate: 12
   operative: 12
@@ -191,7 +191,7 @@ type: MissionSiteArchetype
 kind: response
 name: Foil infrastructure attack
 operation_level: 3
-expires_in_turns: 5
+expires_in_turns: 1
 enemies:
   initiate: 16
   operative: 12
@@ -206,7 +206,7 @@ type: MissionSiteArchetype
 kind: response
 name: Counter civilian terror
 operation_level: 4
-expires_in_turns: 6
+expires_in_turns: 1
 enemies:
   initiate: 30
   operative: 24
@@ -221,7 +221,7 @@ type: MissionSiteArchetype
 kind: response
 name: Foil nuclear plant bombing
 operation_level: 4
-expires_in_turns: 6
+expires_in_turns: 1
 enemies:
   initiate: 24
   operative: 24
@@ -236,7 +236,7 @@ type: MissionSiteArchetype
 kind: response
 name: Foil prison break
 operation_level: 4
-expires_in_turns: 6
+expires_in_turns: 1
 enemies:
   initiate: 24
   operative: 8
@@ -251,7 +251,7 @@ type: MissionSiteArchetype
 kind: response
 name: Foil bioweapon release
 operation_level: 5
-expires_in_turns: 7
+expires_in_turns: 1
 enemies:
   operative: 20
   soldier: 20
@@ -265,7 +265,7 @@ type: MissionSiteArchetype
 kind: response
 name: Foil warhead launch
 operation_level: 5
-expires_in_turns: 7
+expires_in_turns: 1
 enemies:
   initiate: 20
   operative: 30
@@ -281,7 +281,7 @@ type: MissionSiteArchetype
 kind: response
 name: Defend against HQ assault
 operation_level: 5
-expires_in_turns: 7
+expires_in_turns: 1
 enemies:
   initiate: 40
   operative: 40
