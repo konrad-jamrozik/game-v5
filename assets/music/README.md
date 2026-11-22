@@ -35,6 +35,7 @@ The `excluded_tracks` of the GDR `music` in [`content/music/music_parameters.yam
 | `S6 SCNP+Dark+Piano&Cello B.mp3` | Unseen Approach var2 | Suno v6 |  |
 | `S6 XCOM+AllowEpic+NoSynth+Slow+Space A.mp3` | S6 XCOM+AllowEpic+NoSynth+Slow+Space A | Suno v6 |  |
 | `S6 XCOM+AllowEpic+NoSynth+Slow+Space B.mp3` | S6 XCOM+AllowEpic+NoSynth+Slow+Space B | Suno v6 |  |
+| `S6 XCOM+AllowEpic+NoSynth+Slow+Space C.mp3` | Restricted Orbit | Suno v6 |  |
 | `S6 XCOM+Var+NoMIDI+AllowHeroAggr A.mp3` | S6 XCOM+Var+NoMIDI+AllowHeroAggr A | Suno v6 |  |
 | `S6 XCOM+Var+NoMIDI+AllowHeroAggr B.mp3` | S6 XCOM+Var+NoMIDI+AllowHeroAggr B | Suno v6 |  |
 | `V3A-S5 SCNP.mp3` | v03AI UFO 3 - Scanning Protocol | Suno v5 via v03ai |  |
@@ -163,11 +164,13 @@ A Suno song page, e.g. `https://suno.com/song/<id>`, renders its data in the bro
 | `metadata.tags` | `final_prompt_from_gen_tool`: the final Styles text, as Suno stored it, when it differs from `suno.prompt` |
 | `metadata.negative_tags` | `suno.exclude_styles`, without its leading spaces |
 | `metadata.make_instrumental` | `instrumental` |
-| `metadata.control_sliders.style_weight` | `suno.style_influence` |
+| `metadata.control_sliders.style_weight` | `suno.style_influence`; Suno omits it at the default of 50%, i.e. `0.5` |
 | `metadata.control_sliders.aug_creativity` | `suno.variety`, by its number |
 | `metadata.control_sliders.weirdness_constraint` | `suno.weirdness`; Suno omits it at the default of 50%, i.e. `0.5` |
 
 `batch_index` gives each song's place in its generation, `0` for the first, which takes the earlier letter.
+
+A song generated with audio inspiration, i.e. a song dragged into Suno's Audio panel as Inspo, has `metadata.task` `playlist_condition`; the clip data holds neither the inspiring song nor the Audio influence slider, so a record gives both in `notes`, as the Game designer reports them.
 
 ## Analyzing track contents
 

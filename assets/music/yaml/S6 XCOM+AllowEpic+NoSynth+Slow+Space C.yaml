@@ -1,0 +1,31 @@
+file: 'S6 XCOM+AllowEpic+NoSynth+Slow+Space C.mp3'
+source: Suno v6
+original_title: 'Restricted Orbit'
+song_url: https://suno.com/song/80ccffaa-15b3-406d-a0a6-1cda627d7b68
+model: 'v6 (chirp-hawk)'
+created: '2026-11-21 20:29:26'
+tags: [science-fiction, instrumental, sparse]
+length: '2:23'
+instrumental: true
+meta_prompt_taxonomy:
+  stem: 'Dark 1990s sci-fi tactical strategy soundtrack in the style of the original X-COM: UFO Defense (1994), retro MIDI and Amiga synths'
+  adjustments:
+    - 'allow epic styles: choir, synthwave, epic orchestral, aggressive drums, and heroic brass taken out of Exclude styles'
+    - 'no synth sounds or drones'
+    - 'slower (55–65 BPM), darker, less intense; never cheery'
+    - 'a modern, cold space and high-tech atmosphere instead of military'
+suno:
+  prompt: |-
+    Contemporary science-fiction game soundtrack, instrumental; slow, restrained 65 BPM pulse, sparse and wide with deep reverberation and deliberate silences; glassy string harmonics, dissonant clusters, bowed metal, low cello and double bass sustains, muted brass swells, sonar-like pings, faint radio static, precise ticking percussion and distant sparse military snare.
+  exclude_styles: |-
+    Vocals, singing, EDM, upbeat, trailer music, rock, pop, bright melodies, jazz swing, synthesizer, chiptune, 8-bit, retro, lo-fi, military march, fast tempo
+  weirdness: 0.5
+  style_influence: 0.5
+  variety: 2
+  max_mode: false
+  personalize: false
+  duration: auto
+final_prompt_from_gen_tool: |-
+  Contemporary science-fiction soundtrack; instrumental. Sparse, wide mix with deep reverberation and deliberate silences; glassy string harmonics over dissonant clusters, bowed metal, sustained low cello and double bass, muted brass swells, sonar-like pings and faint radio static; precise ticking percussion and distant sparse military snare; restrained 65 BPM pulse.
+notes: |-
+  The Game designer generated this song without a draft record and saved its download as `Restricted Orbit.mp3`, after the song's title in Suno; Claude Code renamed it under the naming scheme. `suno.prompt` is word for word the `final_prompt_from_gen_tool` of S6 XCOM+AllowEpic+NoSynth+Slow+Space B, and the Exclude styles are that track's, so this track shares its prompt line and takes the next letter, C. The song was also generated with S6 XCOM+AllowEpic+NoSynth+Slow+Space B as Suno's audio inspiration (Audio, Inspo), at Audio influence 25%, which Suno's clip data does not hold; it marks such a song only with `metadata.task` `playlist_condition`. It is the second song of its generation (`batch_index` 1); the Game designer kept only this one. `final_prompt_from_gen_tool` is the Styles text Suno stored, which Suno's Variety at High rewrote from `suno.prompt`. `created`, `length`, `model`, `tags`, and Variety come from Suno's clip data for the song; `created` is its UTC creation time converted to Pacific time. `suno.weirdness` and `suno.style_influence` are the values the Game designer set, which Suno's clip data omits at their default of 50%; Max Mode, Personalize, and Duration are the Game designer's settings, which the clip data does not hold.
