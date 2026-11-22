@@ -1254,7 +1254,7 @@
 
       function renderHead() {
         $('legend').innerHTML =
-          `<b>CR ready</b> is the Combat rating of the Rested deployable Agents, under Glossary below; their number out of all Serving Agents is in brackets, e.g. (29/155), and a team is further limited by the free Transport cap. <b>CR all</b> is the Combat rating of every Serving Agent at full health and exhaustion 0. A label with <b>+</b>, e.g. <b>+Weapon</b>, is how many times that Upgrade was bought. Work counts Serving Agents by Assignment, In transit included; <b>Rested deployable</b> and <b>Not rested</b> split those on Training and on Standby, so the two Rested deployable counts add up to the number after CR ready. Each Faction shows the next Initiative Mission site to win against it, one level above the highest Won. Below it, four checks, 🟢 when it holds and 🔴 when not: <b>Site</b>, whether a Mission site of it is available, and otherwise the state of the Lead that creates it; then the three tests of the Basic Autopilot AI's winning team, with the Campaign's parameters: <b>CR</b>, CR ready against the Enemies' Combat rating, as a percentage, above the Combat margin; <b>Agents</b>, the Rested deployable Agents against the Agents needed, one per <code>enemiesPerAgent</code> Enemies (<b>en</b>); and <b>Transport</b>, the free Transport cap against the Agents needed. Missions: Won / Lost / Expired. Below the layers, <b>Fought</b> lists the last four Missions fought, the latest first: the Turn, the kind and name of the Mission site, the Agents sent (<b>ag</b>), the team's Combat rating against the Enemies' at Combat start, the result, and the Agents Killed (<b>dead</b>) and Incapacitated (<b>incap</b>). At the bottom, five charts of every Turn played: the Serving Agents by status and by effective skill band of 50, both at the end of each Turn's player phase, just before its Advance turn, and for the Current Turn as they are now; the income above 0, the expenditures below 0, and the Net flow line of each ended Turn; the money (left axis) and the Agents and caps (right axis) at each Turn start; and the Combat strength: the Combat rating of every Serving Agent as a bar, its Deployable Agents' part at the bottom, against lines of the Combat rating of the last Mission site created and the mean of the last five, as each was when created. Hover a chart for a Turn's values. Hover a label for its meaning. Time is the latest run's wall-clock time, and the total of every run. <b>Load params</b> copies a Campaign's parameters into the Parameters editor above, e.g. to launch a variant of it.`
+          `<b>CR ready</b> is the Combat rating of the Rested deployable Agents, under Glossary below; their number out of all Serving Agents is in brackets, e.g. (29/155), and a team is further limited by the free Transport cap. <b>CR all</b> is the Combat rating of every Serving Agent at full health and exhaustion 0. A label with <b>+</b>, e.g. <b>+Weapon</b>, is how many times that Upgrade was bought. Work counts Serving Agents by Assignment, In transit included; <b>Rested deployable</b> and <b>Not rested</b> split those on Training and on Standby, so the two Rested deployable counts add up to the number after CR ready. Each Faction shows the next Initiative Mission site to win against it, one level above the highest Won. Below it, four checks, 🟢 when it holds and 🔴 when not: <b>Site</b>, whether a Mission site of it is available, and otherwise the state of the Lead that creates it; then the three tests of the Basic Autopilot AI's winning team, with the Campaign's parameters: <b>CR</b>, CR ready against the Enemies' Combat rating, as a percentage, above the Combat margin; <b>Agents</b>, the Rested deployable Agents against the Agents needed, one per <code>enemiesPerAgent</code> Enemies (<b>en</b>); and <b>Transport</b>, the free Transport cap against the Agents needed. Missions: Won / Lost / Expired. Below the layers, <b>Fought</b> lists the last four Missions fought, the latest first: the Turn, the kind and name of the Mission site, the Agents sent (<b>ag</b>), the team's Combat rating against the Enemies' at Combat start, the result, and the Agents Killed (<b>dead</b>) and Incapacitated (<b>incap</b>). At the bottom, five charts of every Turn played: the Serving Agents by status and by effective skill band, with lines of the Agents recovering and of those of exhaustion above 70 and above 30, both at the end of each Turn's player phase, just before its Advance turn, and for the Current Turn as they are now; the income above 0, the expenditures below 0, and the Net flow line of each ended Turn; the money (left axis) and the Agents and caps (right axis) at each Turn start; and the Combat strength: the Combat rating of every Serving Agent as a bar, its Deployable Agents' part at the bottom, against lines of the Combat rating of the last Mission site created and the mean of the last five, as each was when created. Hover a chart for a Turn's values. Hover a label for its meaning. Time is the latest run's wall-clock time, and the total of every run. <b>Load params</b> copies a Campaign's parameters into the Parameters editor above, e.g. to launch a variant of it.`
       }
 
       const rows = new Map()
@@ -1387,10 +1387,41 @@
       ]
       /** A Turn point's strength: a Campaign launched before the chart existed reports none. */
       const strengthOf = (p) => p.strength ?? [0, 0, -1, -1]
-      const BAND_COLORS = ['#3B2C6E', '#3E4A8A', '#2F6E8E', '#23918A', '#3FAF6F', '#8CC63F', '#D6D23A', '#F5E9A0']
+      /**
+       * The game's skill bands, under Chart series colours in Visual Design: eleven 50 wide, 0–49 up to 500–549, and a
+       * last band of every effective skill from 550 up, so that every band keeps a colour of its own.
+       */
+      const BAND_COLORS = [
+        '#6A5ACD',
+        '#4A86D9',
+        '#2FB0B8',
+        '#45BF6E',
+        '#A3CC3F',
+        '#E3C43A',
+        '#F0913A',
+        '#E8605A',
+        '#D94A8C',
+        '#B45AD6',
+        '#F2A6D8',
+        '#F4EFE6',
+      ]
       const SKILL_BAND = 50
-      const bandColor = (i) => BAND_COLORS[Math.min(i, BAND_COLORS.length - 1)]
-      const bandName = (i) => `${i * SKILL_BAND}–${i * SKILL_BAND + SKILL_BAND - 1}`
+      const LAST_BAND = BAND_COLORS.length - 1
+      const bandColor = (i) => BAND_COLORS[Math.min(i, LAST_BAND)]
+      const bandName = (i) =>
+        i >= LAST_BAND ? `${LAST_BAND * SKILL_BAND}+` : `${i * SKILL_BAND}–${i * SKILL_BAND + SKILL_BAND - 1}`
+      /** A Turn point's Agents per band, the bands from 550 up merged into the last one. */
+      const bandsOf = (p) => {
+        const out = p.skill.slice(0, LAST_BAND)
+        if (p.skill.length > LAST_BAND) out.push(p.skill.slice(LAST_BAND).reduce((a, b) => a + b, 0))
+        return out
+      }
+      /** The lines over the skill chart: Agents recovering, of exhaustion above 70, and of exhaustion above 30. */
+      const WORN_LINES = [
+        ['Recovering', '#FF4D4D'],
+        ['Exhaustion > 70', '#FF9A2E'],
+        ['Exhaustion > 30', '#FFE14D'],
+      ]
 
       /** The plot area of every chart, in the units of its 360 × 120 viewBox. */
       const CW = 360
@@ -1567,25 +1598,41 @@
         skill: {
           title: 'Agents by effective skill',
           legend: (turns) => {
-            const top = Math.max(0, ...turns.map((p) => p.skill.length - 1))
-            return legend(Array.from({ length: top + 1 }, (_, i) => [bandName(i), bandColor(i)]))
+            const top = Math.max(0, ...turns.map((p) => bandsOf(p).length - 1))
+            const bands = Array.from({ length: top + 1 }, (_, i) => [bandName(i), bandColor(i)])
+            return legend([...bands, ...WORN_LINES], (i) => i >= bands.length)
           },
           draw(turns) {
-            const rows = turns.map((p) => p.skill)
+            const rows = turns.map(bandsOf)
             const hi = niceCeil(Math.max(1, ...rows.map((r) => r.reduce((a, b) => a + b, 0))))
             const y = yScale(0, hi)
+            // A Campaign launched before the lines existed reports no `worn`, and draws no line.
+            // Each line has a dark outline, so that it stays apart from a band of a like colour behind it.
+            const lines = WORN_LINES.map(([, color], j) => {
+              if (!turns.some((p) => p.worn)) return ''
+              const values = turns.map((p) => p.worn?.[j] ?? null)
+              return polyline(values, y, '#0D0D0B', 4) + polyline(values, y, color, 2)
+            })
+              .reverse()
+              .join('')
             return chartSvg(
               'skill',
               turns.length,
-              gridLine(y(hi / 2)) + stackBars(rows, bandColor, y, 1) + gridLine(y(0), true),
+              gridLine(y(hi / 2)) + stackBars(rows, bandColor, y, 1) + gridLine(y(0), true) + lines,
               axisLabel(0, y(0)) + axisLabel(hi / 2, y(hi / 2)) + axisLabel(hi, y(hi)),
             )
           },
-          tip: (p) =>
-            p.skill
-              .map((v, i) => [bandName(i), bandColor(i), v])
-              .filter((r) => r[2] > 0)
-              .reverse(),
+          tip: (p) => {
+            const bands = bandsOf(p)
+            return [
+              ['Serving', null, bands.reduce((a, b) => a + b, 0)],
+              ...bands
+                .map((v, i) => [bandName(i), bandColor(i), v])
+                .filter((r) => r[2] > 0)
+                .reverse(),
+              ...WORN_LINES.map(([name, color], j) => [name, color, p.worn?.[j] ?? null, true]),
+            ]
+          },
         },
         strength: {
           title: 'Combat strength',

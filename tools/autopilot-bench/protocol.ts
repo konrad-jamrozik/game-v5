@@ -74,6 +74,11 @@ export interface TurnPoint {
   /** At the same moment: Serving Agents per effective skill band of 50, the lowest first, i.e. 0–49, 50–99, and so on. */
   readonly skill: readonly number[]
   /**
+   * At the same moment: the Serving Agents recovering, i.e. whose Assignment is Recovery, In transit to it included;
+   * those of exhaustion above 70; and those of exhaustion above 30.
+   */
+  readonly worn: readonly number[]
+  /**
    * At the same moment: the Combat rating of the Deployable Agents and of every Serving Agent, each taken as one side,
    * then the Creation Combat rating of the last Mission site created and the mean of the last five, rounded down, or
    * -1 for both while no Mission site exists.

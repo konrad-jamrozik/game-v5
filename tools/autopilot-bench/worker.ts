@@ -46,7 +46,7 @@ interface Campaign {
   /** The ended Turns not yet reported to server.ts. */
   unsent: TurnPoint[]
   /** The Serving Agents of the Turn whose Advance turn was requested last, read just before it. */
-  turnEnd: { status: number[]; skill: number[]; strength: number[] } | null
+  turnEnd: { status: number[]; skill: number[]; worn: number[]; strength: number[] } | null
   /** The Creation Combat rating of every Mission site seen so far, by Instance ID. */
   siteRatings: Map<string, number>
   /** The last Turn recorded in the series. */
@@ -64,10 +64,17 @@ const SKILL_BAND = 50
 function agentsPoint(agents: readonly Any[]): {
   status: number[]
   skill: number[]
+  worn: number[]
 } {
   const status = [0, 0, 0, 0, 0, 0, 0]
   const skill: number[] = []
+  // Agents recovering, i.e. whose Assignment is Recovery, In transit to it included; and Agents of exhaustion above 70
+  // and above 30.
+  const worn = [0, 0, 0]
   for (const a of agents) {
+    if (a.assignment?.kind === 'Recovery') worn[0]! += 1
+    if ((a.exhaustion as number) > 70) worn[1]! += 1
+    if ((a.exhaustion as number) > 30) worn[2]! += 1
     const kind = a.assignment?.kind as string | undefined
     const group =
       a.agentStatus === 'InTransit'
@@ -90,7 +97,7 @@ function agentsPoint(agents: readonly Any[]): {
     while (skill.length <= band) skill.push(0)
     skill[band]! += 1
   }
-  return { status, skill }
+  return { status, skill, worn }
 }
 
 /**
@@ -214,6 +221,7 @@ function endTurn(campaign: Campaign) {
     start: campaign.turnStart,
     status: end.status,
     skill: end.skill,
+    worn: end.worn,
     strength: end.strength,
     money: [funding, report.income.income - funding, rewards, report.upkeep.upkeep, hiring, caps, other],
   })
