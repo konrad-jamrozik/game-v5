@@ -104,7 +104,7 @@ A Combat is fought in rounds. In each round every [Agent](#agents) attacks once,
 | Agent target | Any Enemy able to fight, with a weight of 100 minus one for each whole hundredth by which the chance to hit it lies above or below 0.8, times the share of the Agent's [weapon damage](#damage) that the Enemy's health and armor can still take, rounded up |
 | Each attack | +1 [exhaustion](#exhaustion) for the attacker and +1 for the defender, hit or miss |
 | Incapacitated | Alive but unable to fight: effective skill at or below 0.1 × skill, or exhaustion of 100 or more |
-| Combat rating | For each Combatant of a side who is able to fight, its effective skill times its rating factor: the mean of its weapon damage divided by 10 and its max health plus armor divided by (30 + 0), so that an Agent without [Upgrades](#upgrades) has a rating factor of 1. Added up for the side, then multiplied by n ^ (1.2 − 1), where n is the number of those Combatants, so that a larger side counts for more than its sum, and rounded down |
+| Combat rating | For each Combatant of a side who is able to fight, its effective skill times its rating factor: half the sum of its weapon damage divided by 10, its max health divided by 30, and its armor divided by 20, so that an Agent without [Upgrades](#upgrades) has a rating factor of 1. Added up for the side, then multiplied by n ^ (1.2 − 1), where n is the number of those Combatants, so that a larger side counts for more than its sum, and rounded down |
 | End of the Combat | As soon as no Enemy or no Agent is able to fight, or after a round in which the team retreats |
 
 See also: [Damage](#damage) · [Retreat](#retreat) · [Skill](#skill) · [Missions](#missions)
@@ -425,7 +425,7 @@ Training raises an [Agent](#agents)'s [skill](#skill) a little every [turn](#tur
 | Skill gained each turn | +1, plus [Upgrades](#upgrades) |
 | Chance to gain it | Certain up to 30 exhaustion; above it, 1% less likely for each further point |
 | Exhaustion | +1 each turn |
-| Training cap | 4 Agents, plus Upgrades |
+| Training cap | 10 Agents, plus Upgrades |
 | Moving between [Standby](#assignments) and Training | At once, without [transit](#transit) |
 
 See also: [Skill gain](#skill-gain) · [Exhaustion](#exhaustion) · [Training cap](#training-cap) · [Training skill gain](#training-skill-gain)
@@ -1730,9 +1730,9 @@ Expands the barracks so that the Agency can employ more [Agents](#agents) at onc
 | `agent_cap` | Upgrade     |
 | ----------- | ----------- |
 | `name`      | `Agent cap` |
-| `price`     | `500`       |
+| `price`     | `2000`      |
 | `effect`    | `agent_cap` |
-| `increment` | `4`         |
+| `increment` | `20`        |
 
 ### Armor
 
@@ -1782,9 +1782,9 @@ Enlarges the [training](#training) grounds so that more [Agents](#agents) can be
 | `training_cap` | Upgrade        |
 | -------------- | -------------- |
 | `name`         | `Training cap` |
-| `price`        | `500`          |
+| `price`        | `1000`         |
 | `effect`       | `training_cap` |
-| `increment`    | `4`            |
+| `increment`    | `10`           |
 
 ### Training skill gain
 

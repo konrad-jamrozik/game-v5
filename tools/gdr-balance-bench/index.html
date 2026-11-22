@@ -642,7 +642,7 @@
           retreat_at_enemy_to_agent_rating: 0.8,
           incapacitation_skill_fraction: 0.1,
           rating_base_health: 30,
-          rating_base_armor: 0,
+          rating_base_armor: 20,
           rating_base_weapon_damage: 10,
           rating_team_size_exponent: 1.2,
         },
@@ -653,7 +653,7 @@
           contracting_income_per_agent: 30,
           base_agent_cap: 20,
           base_transport_cap: 4,
-          base_training_cap: 4,
+          base_training_cap: 10,
         },
         investigation_parameters: {
           team_efficiency_exponent: 0.8,
@@ -688,9 +688,9 @@
         heavy_rifle: { base_weapon_damage: 22 },
         machine_gun: { base_weapon_damage: 28 },
         anti_materiel_rifle: { base_weapon_damage: 32 },
-        agent_cap: { price: 500, increment: 4 },
+        agent_cap: { price: 2000, increment: 20 },
         transport_cap: { price: 2000, increment: 4 },
-        training_cap: { price: 500, increment: 4 },
+        training_cap: { price: 1000, increment: 10 },
         weapon_damage: { price: 2000, increment: 2 },
         armor: { price: 1000, increment: 5 },
         training_skill_gain: { price: 1000, increment: 0.2 },
@@ -1001,7 +1001,7 @@
   ${panel('Weapons', 'content/combat/weapons.yaml', `<div class="tw"><table><tr><th>Weapon</th><th>base_weapon_damage</th><th class="d">damage roll</th><th class="d">used by</th></tr>${WP.map((w) => `<tr><td class="name">${title(w)}</td><td>${inp(w + '.base_weapon_damage', { min: 1 })}</td><td class="d" id="wr_${w}"></td><td class="d" id="wu_${w}" style="font-family:var(--body);white-space:normal"></td></tr>`).join('')}</table></div>`)}
   ${panel('Armors', 'content/combat/armors.yaml', `<div class="tw"><table><tr><th>Armor</th><th>base_armor</th><th class="d">used by</th></tr>${AR.map((w) => `<tr><td class="name">${title(w)}</td><td>${inp(w + '.base_armor')}</td><td class="d" id="au_${w}" style="font-family:var(--body);white-space:normal"></td></tr>`).join('')}</table></div>`)}
   </div><div class="col">
-  ${panel('Combat parameters', 'content/combat/combat_parameters.yaml', row(cp + '.weapon_damage_range', 'damage roll is base damage ± this fraction', { step: 0.05 }) + row(cp + '.retreat_below_agent_rating_fraction', 'Agents retreat below this fraction of their starting Combat rating…', { step: 0.05 }) + row(cp + '.retreat_at_enemy_to_agent_rating', "…while Enemies hold at least this ratio of the Agents' rating", { step: 0.05 }) + row(cp + '.incapacitation_skill_fraction', 'Incapacitated at this fraction of base skill or less', { step: 0.05 }) + row(cp + '.rating_base_health', 'with the armor base, the effective max health plus armor at which the toughness half of the rating factor is 1') + row(cp + '.rating_base_armor', 'with the health base, the effective max health plus armor at which the toughness half of the rating factor is 1') + row(cp + '.rating_base_weapon_damage', 'effective weapon damage at which the attack half of the rating factor is 1') + row(cp + '.rating_team_size_exponent', 'a side of n Combatants able to fight is rated n ^ (this − 1) times the sum of what each adds', { min: 1, step: 0.05 }) + extra(cp))}
+  ${panel('Combat parameters', 'content/combat/combat_parameters.yaml', row(cp + '.weapon_damage_range', 'damage roll is base damage ± this fraction', { step: 0.05 }) + row(cp + '.retreat_below_agent_rating_fraction', 'Agents retreat below this fraction of their starting Combat rating…', { step: 0.05 }) + row(cp + '.retreat_at_enemy_to_agent_rating', "…while Enemies hold at least this ratio of the Agents' rating", { step: 0.05 }) + row(cp + '.incapacitation_skill_fraction', 'Incapacitated at this fraction of base skill or less', { step: 0.05 }) + row(cp + '.rating_base_health', 'effective max health at which the health term of the rating factor is 1') + row(cp + '.rating_base_armor', 'effective armor at which the armor term of the rating factor is 1') + row(cp + '.rating_base_weapon_damage', 'effective weapon damage at which the attack term of the rating factor is 1') + row(cp + '.rating_team_size_exponent', 'a side of n Combatants able to fight is rated n ^ (this − 1) times the sum of what each adds', { min: 1, step: 0.05 }) + extra(cp))}
   ${panel('Field agent and Combat exhaustion', 'content/agents/agent_archetypes.yaml · agent_parameters.yaml', `<div class="kv"><span class="k"><code>field_agent.base_skill</code><small>a newly hired Agent</small></span>${inp('field_agent.base_skill')}</div><div class="kv"><span class="k"><code>field_agent.base_health</code><small></small></span>${inp('field_agent.base_health', { min: 1 })}</div><div class="kv"><span class="k"><code>field_agent.weapon</code><small></small></span>${sel('field_agent.weapon', WP)}</div><div class="kv"><span class="k"><code>field_agent.armor</code><small>the Armor Upgrades add to its base armor</small></span>${sel('field_agent.armor', AR)}</div>` + row(ap + '.exhaustion_per_attack', 'to the attacker, hit or miss') + row(ap + '.exhaustion_per_defense', 'to the defender, hit or miss') + row(ap + '.exhaustion_free_points', 'exhaustion up to this costs no skill') + row(ap + '.skill_penalty_pct_per_exhaustion', '% of skill lost per point above the free points', { step: 0.5 }) + row(ap + '.exhaustion_incapacitation', 'Incapacitated at this exhaustion'))}
   </div></div>
   ${panel('Test team', 'not a GDR: the team every Mission site below is fought with', `<div class="ctl">${tin('n', 'Agents', { min: 1, max: 300 })}${tin('skill', 'Base skill', { min: 1 })}${tin('ex', 'Starting exhaustion')}${tin('wu', 'Weapon damage upgrades')}${tin('au', 'Armor upgrades')}${tin('target', 'Target win %', { min: 1, max: 100 })}${tcheck('team', 'Find team for target')}</div><div class="teamcr" id="teamcr"></div><div class="note" id="teamnote"></div><div class="note" id="simstatus"></div>`, 'read')}
@@ -1122,17 +1122,18 @@
       const testAgentWeapon = () =>
         Math.max(1, Math.round(wdmg(cur.field_agent.weapon) + T.wu * cur.weapon_damage.increment))
       /*
-       * COMBAT, Combat rating: the attack and toughness halves of the rating factor, each 1 at the rating bases, and the
-       * factor itself, their mean.
+       * COMBAT, Combat rating: the attack, health, and armor terms of the rating factor, each 1 at its rating base, and the
+       * factor itself, half their sum.
        */
       function ratingTerms(health, armor, damage) {
         const c = cur.combat_parameters,
           n = (k) => Number(c[k]) || 0
         const t = {
           attack: damage / Math.max(1, n('rating_base_weapon_damage')),
-          toughness: (health + armor) / Math.max(1, n('rating_base_health') + n('rating_base_armor')),
+          health: health / Math.max(1, n('rating_base_health')),
+          armor: armor / Math.max(1, n('rating_base_armor')),
         }
-        t.factor = (t.attack + t.toughness) / 2
+        t.factor = (t.attack + t.health + t.armor) / 2
         return t
       }
       const teamSizeExponent = () => Number(cur.combat_parameters.rating_team_size_exponent) || 1
@@ -1567,7 +1568,7 @@
         $('teamcr').innerHTML =
           `<span><span class="k">Team Combat rating</span><span class="v eff">${f(tr.eff, 0)}</span></span>` +
           `<span><span class="k">Base, the sum of effective skills</span><span class="v">${f(tr.base, 0)}</span></span>` +
-          `<span class="note">Rating factor ${f(tr.factor, 3)} = (attack ${f(tr.terms.attack, 3)} + toughness ${f(tr.terms.toughness, 3)}) / 2; team size factor ${f(T.n, 0)} ^ ${f(teamSizeExponent() - 1, 2)} = ${f(tr.sizeFactor, 3)}. The Mission sites' Rating is their Enemies' Combat rating at full health, by the same formula, weighed against the team Combat rating as the game and its Autopilot AI do</span>`
+          `<span class="note">Rating factor ${f(tr.factor, 3)} = (attack ${f(tr.terms.attack, 3)} + health ${f(tr.terms.health, 3)} + armor ${f(tr.terms.armor, 3)}) / 2; team size factor ${f(T.n, 0)} ^ ${f(teamSizeExponent() - 1, 2)} = ${f(tr.sizeFactor, 3)}. The Mission sites' Rating is their Enemies' Combat rating at full health, by the same formula, weighed against the team Combat rating as the game and its Autopilot AI do</span>`
         $('teamnote').textContent =
           `Each Agent: health ${f(th, 0)}, armor ${f(ta, 0)}, damage roll ${tlo}–${thi}, effective skill ${f(tr.agent, 0)}, Combat rating alone ${f(rateSide(tr.adds, 1), 0)}.`
         /* agents */

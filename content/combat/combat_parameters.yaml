@@ -6,7 +6,7 @@ retreat_at_enemy_to_agent_rating: 0.8
 incapacitation_skill_fraction: 0.1
 target_base_weight: 100 # an Agent's hit-chance weight for an Enemy it hits with exactly the preferred chance
 target_preferred_hit_chance: 0.8 # each percentage point away from it lowers the hit-chance weight by 1
-rating_base_health: 30 # with rating_base_armor, the max health plus armor at which the toughness half of a Combatant's rating factor is 1
-rating_base_armor: 0
-rating_base_weapon_damage: 10 # the weapon damage at which the attack half of a Combatant's rating factor is 1
+rating_base_health: 30 # the max health at which the health term of a Combatant's rating factor is 1
+rating_base_armor: 20 # the armor at which the armor term of a Combatant's rating factor is 1
+rating_base_weapon_damage: 10 # the weapon damage at which the attack term of a Combatant's rating factor is 1
 rating_team_size_exponent: 1.2 # a side of n Combatants able to fight is rated n ^ 0.2 times the sum of what each adds

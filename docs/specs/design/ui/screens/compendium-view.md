@@ -146,9 +146,9 @@ The Data sheet of an Upgrade shows what one acquisition costs and adds, under [U
 
 | `effect` | Wording, e.g. |
 | --- | --- |
-| `agent_cap` | "+4 to the [Agent cap](../../mechanics/domain-model.md#agency-and-agents)" |
+| `agent_cap` | "+20 to the [Agent cap](../../mechanics/domain-model.md#agency-and-agents)" |
 | `transport_cap` | "+4 to the [Transport cap](../../mechanics/economy-and-upgrades.md#glossary)" |
-| `training_cap` | "+4 to the [Training cap](../../mechanics/economy-and-upgrades.md#glossary)" |
+| `training_cap` | "+10 to the [Training cap](../../mechanics/economy-and-upgrades.md#glossary)" |
 | `agent_weapon_damage` | "+1 weapon damage for every Agent" |
 | `agent_max_health` | "+1 max health for every Agent" |
 | `agent_armor` | "+1 armor for every Agent" |

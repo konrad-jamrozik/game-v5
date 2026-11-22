@@ -732,14 +732,14 @@
               <button
                 class="small"
                 data-act="preset-default"
-                title="The game's formula, skill × (damage / damage_base + (health + armor) / (health_base + armor_base)) / 2, with the game's parameters and every part enabled"
+                title="The game's formula, skill × (damage / damage_base + health / health_base + armor / armor_base) / 2, with the game's parameters and every part enabled"
               >
                 Restore all defaults
               </button>
               <button
                 class="small"
                 data-act="preset-game"
-                title="The game's formula, skill × (damage / damage_base + (health + armor) / (health_base + armor_base)) / 2; keeps the parameters"
+                title="The game's formula, skill × (damage / damage_base + health / health_base + armor / armor_base) / 2; keeps the parameters"
               >
                 Game's formula
               </button>
@@ -962,9 +962,9 @@
         ],
       ]
       const FORMULAS = {
-        // The game's formula, under COMBAT, Combat rating: the mean of an attack half and a toughness half.
+        // The game's formula, under COMBAT, Combat rating: half the sum of an attack, a health, and an armor term.
         default: {
-          combatant: 'skill * ((damage / damage_base) + ((health + armor) / (health_base + armor_base))) / 2',
+          combatant: 'skill * ((damage / damage_base) + (health / health_base) + (armor / armor_base)) / 2',
           team: 'sum * count ** team_exp / count',
         },
         lanchester: { combatant: 'skill * health_mult * armor_mult * damage_mult', team: 'sqrt(sum * count)' },
@@ -975,7 +975,7 @@
         },
         // The game's expressions alone, keeping the parameters, unlike Restore all defaults.
         game: {
-          combatant: 'skill * ((damage / damage_base) + ((health + armor) / (health_base + armor_base))) / 2',
+          combatant: 'skill * ((damage / damage_base) + (health / health_base) + (armor / armor_base)) / 2',
           team: 'sum * count ** team_exp / count',
         },
         // The bonuses add rather than multiply, e.g. +10% health, +15% armor, and +30% damage make skill × 1.55.
@@ -996,7 +996,7 @@
             health_base: contentValue('rating_base_health') ?? 30,
             // The game's formula has no bonus per point, so the bonus presets start from fixed values.
             cr_per_health: 0.01,
-            armor_base: contentValue('rating_base_armor') ?? 0,
+            armor_base: contentValue('rating_base_armor') ?? 20,
             cr_per_armor: 0.004,
             damage_base: contentValue('rating_base_weapon_damage') ?? 10,
             cr_per_damage: 0.02,
