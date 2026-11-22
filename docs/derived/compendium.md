@@ -85,7 +85,7 @@ Every [Agent](#agents) has exactly one Assignment: Standby, [Contracting](#contr
 | From Standby or Training | Switch to the other at once, go to Contracting or an Investigation, or deploy to a [Mission site](#mission-sites) |
 | From Contracting or an Investigation | Can only be recalled to Standby |
 | In transit, deployed, or on Recovery | Cannot be given orders |
-| Starting Contracting, Training, or an Investigation | Needs full [health](#health) and [exhaustion](#exhaustion) 0 |
+| Starting Contracting, Training, or an Investigation | Needs full [health](#health) and [exhaustion](#exhaustion) of at most 30 |
 | Dismissing | Only an Agent on Standby that is not in transit |
 
 See also: [Contracting](#contracting) · [Training](#training) · [Investigations](#investigations) · [Missions](#missions) · [Recovery](#recovery) · [Transit](#transit)
@@ -129,16 +129,18 @@ See also: [Combat](#combat) · [Retreat](#retreat) · [Damage](#damage) · [Skil
 
 Source: `content/compendium/compendium_articles/mechanics_contracting.yaml`
 
-Contracting sends an [Agent](#agents) out to work for [money](#money-and-funding). It is your steady income beside funding, and it pays a little more for a skilled Agent. An Agent on Contracting is away from base, so getting it back for a [Mission](#missions) takes a [turn](#turns).
+Contracting sends an [Agent](#agents) out to work for [money](#money-and-funding). It is your steady income beside funding, and it pays a little more for a skilled Agent and a little less for a [tired](#exhaustion) one. An Agent on Contracting is away from base, so getting it back for a [Mission](#missions) takes a [turn](#turns). No Agent can contract until a [Lead](#leads) has found you the work, and only as many at once as the Contracting cap allows.
 
-| Formulas                      |                                                                         |
-| ----------------------------- | ----------------------------------------------------------------------- |
-| Income of one Agent each turn | 30 × (1 + ([effective skill](#skill) − 100) ÷ 200)                      |
-| Total                         | The income of every Agent on Contracting is added up, then rounded down |
-| [Exhaustion](#exhaustion)     | None: Contracting never tires an Agent                                  |
-| Getting there and back        | One turn [in transit](#transit) each way, with no income                |
+| Formulas |  |
+| --- | --- |
+| Income of one Agent each turn | 30 × (1 + ([effective skill](#skill) − 100) ÷ 200) |
+| Total | The income of every Agent on Contracting is added up, then rounded down |
+| Exhaustion | +1 each turn, after the income is paid |
+| Contracting cap | 0 until a Lead unlocks Contracting; then 4 Agents |
+| Raising the Contracting cap | +4 the first time you win a Mission at an Initiative [Mission site](#mission-sites) of each [operation](#faction-operations) level, against any [Faction](#factions) |
+| Getting there and back | One turn [in transit](#transit) each way, with no income |
 
-See also: [Money and funding](#money-and-funding) · [Exhaustion](#exhaustion) · [Transit](#transit)
+See also: [Money and funding](#money-and-funding) · [Exhaustion](#exhaustion) · [Transit](#transit) · [Contracting opportunities](#contracting-opportunities)
 
 ### Damage
 
@@ -162,18 +164,21 @@ See also: [Combat](#combat) · [Health](#health) · [Weapon damage](#weapon-dama
 
 Source: `content/compendium/compendium_articles/mechanics_exhaustion.yaml`
 
-Exhaustion measures how tired an [Agent](#agents) is. Only fighting raises it: work never tires an Agent. Only rest on [Standby](#assignments) or [Recovery](#recovery) lowers it. A tired Agent fights worse, and it cannot start new work until it is fully rested.
+Exhaustion measures how tired an [Agent](#agents) is. [Contracting](#contracting), [Training](#training), and fighting raise it, and only rest on [Standby](#assignments) or [Recovery](#recovery) lowers it. A tired Agent works and fights worse, one that is too tired cannot start new work, and one that works on regardless is sent back to rest.
 
 | Formulas |  |
 | --- | --- |
+| Each [turn](#turns) of Contracting | +1 |
+| Each turn of Training | +1 |
+| Each turn on an [Investigation](#investigations) | No change |
 | Each attack made in a [Combat](#combat) | +1, hit or miss |
 | Each attack defended against | +1, hit or miss |
 | Each [Mission](#missions) survived | +5, and +1 for each 1% of the team that was killed, rounded up |
-| Each [turn](#turns) on Standby or Recovery | −5, plus [Upgrades](#upgrades), never below 0 |
+| Each turn on Standby or Recovery | −5, plus [Upgrades](#upgrades), never below 0 |
 | [In transit](#transit) or deployed | No rest |
-| [Contracting](#contracting), [Training](#training), or an [Investigation](#investigations) | No change |
 | [Skill](#skill) penalty | −1% of skill for each point above 30 |
-| New work can start at | 0 only; deploying to a [Mission site](#mission-sites) needs only that the Agent could still fight |
+| New work can start at most at | 30; deploying to a [Mission site](#mission-sites) needs only that the Agent could still fight |
+| Contracting and Training end at | 70 or more: after that turn's work the Agent is sent to Standby |
 | Unable to fight at | 100 or more |
 
 See also: [Recovery](#recovery) · [Skill](#skill) · [Assignments](#assignments) · [Exhaustion recovery](#exhaustion-recovery)
@@ -431,12 +436,13 @@ See also: [Skill](#skill) · [Training](#training) · [Experience](#experience) 
 
 Source: `content/compendium/compendium_articles/mechanics_training.yaml`
 
-Training raises an [Agent](#agents)'s [skill](#skill) a little every [turn](#turns). It happens at base, so an Agent on Training can be [deployed](#missions) to a [Mission site](#mission-sites) at once. Only as many Agents can train at one time as the Training cap allows.
+Training raises an [Agent](#agents)'s [skill](#skill) a little every [turn](#turns). It happens at base, so an Agent on Training can be [deployed](#missions) to a [Mission site](#mission-sites) at once. Only as many Agents can train at one time as the Training cap allows, and a [tired](#exhaustion) Agent may learn nothing in a turn.
 
 | Formulas |  |
 | --- | --- |
 | Skill gained each turn | +1, plus [Upgrades](#upgrades) |
-| [Exhaustion](#exhaustion) | None: Training never tires an Agent, and only a fully rested Agent can start it |
+| Chance to gain it | Certain up to 30 exhaustion; above it, 1% less likely for each further point |
+| Exhaustion | +1 each turn |
 | Training cap | 10 Agents, plus Upgrades |
 | Moving between [Standby](#assignments) and Training | At once, without [transit](#transit) |
 
@@ -798,6 +804,19 @@ Scraps of testimony and surveillance come together into a picture of how [Black 
 | `faction`             | `black_lotus`                                                        |
 | `required_progress`   | `5`                                                                  |
 | `discovered_when`     | `{"lead_completed":"interrogate_black_lotus_member"}`                |
+
+### Contracting opportunities
+
+Source: `content/compendium/compendium_articles/contracting_opportunities_article.yaml`
+
+Before your [Agents](#agents) can earn their keep, someone has to find out who will pay for their skills, and who can be trusted to keep quiet.
+
+| `contracting_opportunities` | Lead                                                                      |
+| --------------------------- | ------------------------------------------------------------------------- |
+| `name`                      | `Contracting opportunities`                                               |
+| `description`               | `Find clients who will pay for the Agency's skills and ask no questions.` |
+| `required_progress`         | `3`                                                                       |
+| `on_completion`             | `[{"unlock_contracting":true}]`                                           |
 
 ### Criminal organizations
 

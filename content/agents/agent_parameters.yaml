@@ -8,6 +8,10 @@ exhaustion_per_attack: 1
 exhaustion_per_defense: 1
 exhaustion_per_mission: 5
 exhaustion_per_pct_killed: 1
+exhaustion_per_contracting_turn: 1
+exhaustion_per_training_turn: 1
+exhaustion_work_start_max: 30
+exhaustion_work_limit: 70
 training_skill_gain_per_turn: 1
 experience_per_attack_hit: 4
 experience_per_attack_miss: 2

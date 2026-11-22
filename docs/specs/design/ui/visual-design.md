@@ -132,10 +132,11 @@ A chart with several series needs more hues than the roles above can spare, and 
 | Assets | [Agent cap](../mechanics/domain-model.md#agency-and-agents) | `#D7CCC8` |
 | Assets | [Transport cap](../mechanics/economy-and-upgrades.md#glossary) | `#3D8FD9` |
 | Assets | [Training cap](../mechanics/economy-and-upgrades.md#glossary) | `#E8C547` |
+| Assets | [Contracting cap](../mechanics/economy-and-upgrades.md#glossary) | `#C77DDB` |
 | Agents by [effective skill](../mechanics/agents-spec.md#combatant-attributes) | Skill bands 1 to 12, from the lowest | `#6A5ACD`, `#4A86D9`, `#2FB0B8`, `#45BF6E`, `#A3CC3F`, `#E3C43A`, `#F0913A`, `#E8605A`, `#D94A8C`, `#B45AD6`, `#F2A6D8`, `#F4EFE6` |
 | Agents by effective skill | Recovering | `#FF4D4D` |
-| Agents by effective skill | Exhaustion above `exhaustion_free_points` | `#FF9A2E` |
-| Agents by effective skill | Exhaustion above 0 | `#FFE14D` |
+| Agents by effective skill | Exhaustion above `exhaustion_work_limit` | `#FF9A2E` |
+| Agents by effective skill | Exhaustion above `exhaustion_free_points` | `#FFE14D` |
 | Combat strength | Deployable Agents | `#4A86D9` |
 | Combat strength | Other Agents | `#2E4E78` |
 | Combat strength | Last [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) | `#E8605A` |
@@ -285,7 +286,7 @@ The header of each column in a tier shows its direction as ▲ for ascending or 
 
 Wherever a table shows an [Agent](../mechanics/domain-model.md#agency-and-agents)'s [exhaustion](../mechanics/agents-spec.md#combatant-attributes) or [current health](../mechanics/agents-spec.md#combatant-attributes), its colour tells the Player at a glance how worn down the Agent is, so that a tired or hurt Agent stands out before it is sent anywhere. The outcome of an attack in a Combat log is the one exception: its colour says whom the attack favours, under [Combat log colours](screens/turn-report-view.md#combat-log-colours) in Turn Report View.
 
-- **Exhaustion:** Text at 0, when the Agent can start work; Warning from 1, when it cannot start work until it has rested, under [Start-work gate](../mechanics/agents-spec.md#start-work-gate); Accent text above `exhaustion_free_points`, when exhaustion lowers its effective skill; and Danger from `exhaustion_incapacitation`, at which it can no longer fight, with a warning-triangle icon before the value. The thresholds come from [AgentParameters](../mechanics/agents-spec.md#agentparameters), so they follow the [GDRs](../foundation/core-concepts.md#game-build-and-content). E.g., with the GDR values 30 and 100, exhaustion 0 is in Text, 1 and 30 in Warning, 31 in Accent text, and 100 in Danger with the triangle.
+- **Exhaustion:** Text up to `exhaustion_work_start_max`, when the Agent can start work; Warning above `exhaustion_work_start_max`, when it cannot start work until it has rested, under [Start-work gate](../mechanics/agents-spec.md#start-work-gate); Accent text from the midpoint of `exhaustion_work_start_max` and `exhaustion_work_limit`, rounded up; and Danger from `exhaustion_work_limit`, at which [Contracting](../mechanics/agents-spec.md#assignments) and [Training](../mechanics/agents-spec.md#assignments) end, under [Forced return](../mechanics/agents-spec.md#forced-return), with a warning-triangle icon before the value. The thresholds come from [AgentParameters](../mechanics/agents-spec.md#agentparameters), so they follow the [GDRs](../foundation/core-concepts.md#game-build-and-content). E.g., with the GDR values 30 and 70, exhaustion 30 is in Text, 31 in Warning, 50 in Accent text, and 70 in Danger with the triangle.
 - **Current health:** a smooth scale over the share of [effective max health](../mechanics/agents-spec.md#combatant-attributes) that current health is. Its stops are Text at 100%, Warning at 75%, Accent text at 50%, Danger at 25%, and Danger deep at 0%, and a share between two stops takes the colour between them in proportion, mixed in sRGB. E.g., 30 of 30 is in Text, 15 of 30 in Accent text, and 1 of 30 almost in Danger deep. The share is taken from the exact current health, e.g. 29.40 of 30 is 98%.
 
 ## Consequences

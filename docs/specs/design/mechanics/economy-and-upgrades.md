@@ -5,14 +5,14 @@
 | Spec ID | ECON |
 | Family | Mechanics |
 | Audience | Engine designer, Content designer, AI designer, Implementer |
-| Owns | The Agency's money, funding, and Upgrade Acquisitions, Agency income and upkeep, the Agent cap, Transport cap, and Training cap, Upgrade effects, the money change in each Action record, and the hireAgents, dismissAgents, purchaseUpgrade, and addMoney actions. |
+| Owns | The Agency's money, funding, and Upgrade Acquisitions, Agency income and upkeep, the Agent cap, Transport cap, Training cap, and Contracting cap, the unlock_contracting Effect kind, Upgrade effects, the money change in each Action record, and the hireAgents, dismissAgents, purchaseUpgrade, and addMoney actions. |
 | Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 
 Money is how the [Agency](domain-model.md#agency-and-agents) turns what it earns today into strength tomorrow, and keeping the Agency running costs money every [Turn](../foundation/engine-contract.md#player-actions-and-turns). In every Advance turn the [Agency](domain-model.md#glossary) receives income, its funding plus what its Agents earn on [Contracting](agents-spec.md#assignments), and pays upkeep for every [Serving](agents-spec.md#agent-statuses) [Agent](domain-model.md#agency-and-agents), whether or not that Agent is working. Money may run negative, but funding, the recurring part of income, never falls below zero.
 
-The player spends money in two ways: hiring grows the roster of Agents, and Upgrades improve the Agency permanently. Three caps limit what the Agency can do at once: the Agent cap on the Agents it employs, the Transport cap on the Agents it has [Deployed](agents-spec.md#assignments), and the Training cap on the Agents on [Training](agents-spec.md#assignments). Each Upgrade raises one cap, one value of every Agent, or one rate at which every Agent trains or recovers, and it can be bought again at the same price.
+The player spends money in two ways: hiring grows the roster of Agents, and Upgrades improve the Agency permanently. Four caps limit how many Agents the Agency employs, has [Deployed](agents-spec.md#assignments), has on [Training](agents-spec.md#assignments), and has on Contracting. The Contracting cap is never bought: a [Lead](domain-model.md#leads-investigations-mission-sites-and-missions) opens it and winning deeper [Initiative Missions](domain-model.md#leads-investigations-mission-sites-and-missions) raises it. Each Upgrade raises one of the other caps, one value of every Agent, or one rate at which every Agent trains or recovers, and it can be bought again at the same price.
 
 Economy and Upgrades builds on [Domain Model](domain-model.md): Domain Model says that the Agency holds money and employs Agents, and Economy and Upgrades says how that money is earned and spent.
 
@@ -32,6 +32,8 @@ These terms are specific to the [Agency](domain-model.md#agency-and-agents)'s ec
 | Rate Upgrade | An Upgrade that raises one rate every [Agent](domain-model.md#agency-and-agents) shares: the [training skill gain](agents-spec.md#growth), the [exhaustion](agents-spec.md#combatant-attributes) recovery, or the health recovery percentage. |  |
 | Transport cap | The most Agents the Agency can have [Deployed](agents-spec.md#assignments) at the same time. |  |
 | Training cap | The most Agents the Agency can have assigned to [Training](agents-spec.md#assignments) at the same time. |  |
+| Contracting cap | The most Agents the Agency can have assigned to [Contracting](agents-spec.md#assignments) at the same time, under [Contracting cap](#contracting-cap). | Contracting spots |
+| Contracting unlocked | Whether Contracting is open to the Agency at all; until it is, the Contracting cap is 0, under [Contracting cap](#contracting-cap). |  |
 
 # Economy GDRs
 
@@ -50,6 +52,8 @@ EconomyParameters bundles the scalar values that hiring, upkeep, Agency income, 
 | `base_agent_cap` | The Agent cap before any Upgrade is acquired. | [Agency caps](#agency-caps) |
 | `base_transport_cap` | The Transport cap before any Upgrade is acquired. | [Agency caps](#agency-caps) |
 | `base_training_cap` | The Training cap before any Upgrade is acquired. | [Agency caps](#agency-caps) |
+| `base_contracting_cap` | The Contracting cap once Contracting is unlocked, before any first win raises it. | [Contracting cap](#contracting-cap) |
+| `contracting_cap_per_initiative_level` | How much each first win counted under [Contracting cap growth](leads-and-progression.md#contracting-cap-growth) in Leads and Progression raises the Contracting cap once Contracting is unlocked. | [Contracting cap](#contracting-cap) |
 
 ## Upgrade
 
@@ -79,7 +83,7 @@ The GDRs a Game build supplies must satisfy every rule below. The list is exhaus
 1. **One AgencyArchetype:** The Game build supplies exactly one AgencyArchetype, so no rule selects among AgencyArchetypes.
 2. **One EconomyParameters:** The Game build supplies exactly one EconomyParameters GDR.
 3. **Exact properties:** Each GDR of the three Types has exactly the properties its table above lists, apart from `id` and `type`: no listed property is missing and no other property is present.
-4. **Parameters are valid:** Each of `hire_cost`, `upkeep_per_agent`, `contracting_income_per_agent`, `base_agent_cap`, `base_transport_cap`, and `base_training_cap` is a whole number of at least 0, and `contracting_skill_scale` is a whole number of at least 100, so that no Agent's contracting contribution is negative under [Agency income](#agency-income).
+4. **Parameters are valid:** Each of `hire_cost`, `upkeep_per_agent`, `contracting_income_per_agent`, `base_agent_cap`, `base_transport_cap`, `base_training_cap`, `base_contracting_cap`, and `contracting_cap_per_initiative_level` is a whole number of at least 0, and `contracting_skill_scale` is a whole number of at least 100, so that no Agent's contracting contribution is negative under [Agency income](#agency-income).
 5. **Upgrades are valid:** Each Upgrade's `price` is a whole number of at least 0. Its `increment` is a whole number of at least 0, except that the `increment` of a Rate Upgrade is a number of at least 0 written with at most two digits after the decimal point, under [Decimal quantities](../foundation/numbers.md#decimal-quantities) in Numbers. Its `effect` is exactly one of `agent_cap`, `transport_cap`, `training_cap`, `agent_weapon_damage`, `agent_max_health`, `agent_armor`, `training_skill_gain`, `exhaustion_recovery`, and `health_recovery`.
 6. **Names are present:** The `name` of the AgencyArchetype and of each Upgrade is non-empty text.
 
@@ -98,7 +102,7 @@ Neither value is adjustable during play, so a Campaign configuration change nami
 
 # Agency State
 
-The Agency's [State](../foundation/core-concepts.md#campaign-instances) holds what the Agency has built up over the Campaign: its money, its funding, and the Upgrades it has bought. These rules say what each value is, how the Agency starts, and how funding may change.
+The Agency's [State](../foundation/core-concepts.md#campaign-instances) holds what the Agency has built up over the Campaign: its money, its funding, the Upgrades it has bought, and whether Contracting is unlocked. These rules say what each value is, how the Agency starts, and how funding may change.
 
 ## Agency properties
 
@@ -109,8 +113,9 @@ The Agency is a [Campaign instance](../foundation/core-concepts.md#campaign-inst
 | Money | State | The money the Agency has. | [Authoritative value](../foundation/core-concepts.md#value-classification). A whole number of money with no lower and no upper bound: it may be negative, as [Whole-number quantities](../foundation/numbers.md#whole-number-quantities) allows. |
 | Funding | State | The recurring money the Agency receives in each Agency income step. | Authoritative value. A whole number of money of at least 0, under [Funding changes](#funding-changes). |
 | Acquisitions | State | For each Upgrade GDR the Game build supplies, the number of times the Agency has purchased that Upgrade. | Authoritative value. One whole number of at least 0 per Upgrade, with no upper bound. |
+| Contracting unlocked | State | Whether Contracting is unlocked. | Authoritative value. Yes or no; once yes, it stays yes for the rest of the Campaign. |
 
-The Agency also has these [Derived values](../foundation/core-concepts.md#value-classification), which are never stored: its Agent cap, Transport cap, and Training cap, under [Agency caps](#agency-caps); its projected income and projected upkeep, under [Projected income and upkeep](#projected-income-and-upkeep); and its roster, i.e. every Agent whose Agency reference identifies it, whatever that Agent's [Agent status](domain-model.md#agency-and-agents), under [Agent properties](agents-spec.md#agent-properties) in Agents. Its money has the two [Turn series](../foundation/world-history.md#turn-series) under [Turn series of money](#turn-series-of-money); funding and Acquisitions have none.
+The Agency also has these [Derived values](../foundation/core-concepts.md#value-classification), which are never stored: its Agent cap, Transport cap, and Training cap, under [Agency caps](#agency-caps); its Contracting cap, under [Contracting cap](#contracting-cap); its projected income and projected upkeep, under [Projected income and upkeep](#projected-income-and-upkeep); and its roster, i.e. every Agent whose Agency reference identifies it, whatever that Agent's [Agent status](domain-model.md#agency-and-agents), under [Agent properties](agents-spec.md#agent-properties) in Agents. Its money has the two [Turn series](../foundation/world-history.md#turn-series) under [Turn series of money](#turn-series-of-money); funding, Acquisitions, and Contracting unlocked have none.
 
 The following table is the exhaustive list of rules that change the Agency's State:
 
@@ -119,6 +124,7 @@ The following table is the exhaustive list of rules that change the Agency's Sta
 | Money | [Agency income](#agency-income); [Adding money](#adding-money); the [Consequences](missions.md#consequences) of a [Mission site](domain-model.md#leads-investigations-mission-sites-and-missions) | [Upkeep](#upkeep); [Hiring Agents](#hiring-agents); [Purchasing Upgrades](#purchasing-upgrades); [Adding money](#adding-money), with a negative `amount` |
 | Funding | The [Consequences](missions.md#consequences) of a Mission site, through [Funding changes](#funding-changes) | The [Consequences](missions.md#consequences) of a Mission site, through [Funding changes](#funding-changes) |
 | Acquisitions | [Purchasing Upgrades](#purchasing-upgrades) | No rule |
+| Contracting unlocked | The [Contracting Effect kind](#contracting-effect-kind), which sets it to yes | No rule |
 
 A rule of another specification that changes money adds a whole amount to it, positive or negative, and the result is never clamped.
 
@@ -136,6 +142,7 @@ The initial [Campaign state](../foundation/core-concepts.md#campaign-and-session
 | Money | The Campaign configuration value Starting money. | Campaign configuration, under [Campaign configuration values](#campaign-configuration-values). |
 | Funding | The Campaign configuration value Starting funding. | Campaign configuration, under [Campaign configuration values](#campaign-configuration-values). |
 | Acquisitions | 0 for every Upgrade GDR the Game build supplies. | This rule. |
+| Contracting unlocked | No. | This rule. |
 
 Campaign creation also records the Agency's initial money as the value of Money at the start of turn for the first [Turn](../foundation/engine-contract.md#player-actions-and-turns), under [Turn series of money](#turn-series-of-money).
 
@@ -166,6 +173,19 @@ The following table defines both Effect kinds, under [Effect kinds](../foundatio
 
 Neither Effect kind needs a supplied input, because a Campaign has exactly one Agency. An Effect whose value is 0 changes nothing.
 
+## Contracting Effect kind
+
+Game data opens Contracting to the Agency through one Effect kind, so that a [Lead](domain-model.md#leads-investigations-mission-sites-and-missions) can be the way in to it.
+
+The Effect kind `unlock_contracting` is defined as follows, under [Effect kinds](../foundation/effect-lists.md#effect-kinds) in Effect Lists:
+
+- **Value:** `true`. Any other value is invalid.
+- **Change:** applying one [Effect](../foundation/effect-lists.md#glossary) sets the Agency's Contracting unlocked to yes, at once, in the step that applies it. It changes no other value; when Contracting unlocked is already yes, it changes nothing.
+- **Supplied inputs:** none, because a Campaign has exactly one Agency.
+- **Combined result:** several `unlock_contracting` Effects applied in one Turn advancement step have the result of one.
+
+In scope only the [Completion effect](leads-and-progression.md#completion-effect) of a [Lead](domain-model.md#leads-investigations-mission-sites-and-missions) applies one.
+
 # Agency caps
 
 The Agent cap, Transport cap, and Training cap are Derived values of the Agency, each computed by the same formula from a base value of EconomyParameters and the Upgrade bonus of the cap's effect identifier, under [Upgrade bonus](#upgrade-bonus):
@@ -178,7 +198,7 @@ cap = base + Upgrade bonus of the cap's effect identifier
 | --- | --- | --- | --- | --- |
 | Agent cap | `base_agent_cap` | `agent_cap` | The number of Serving Agents, whatever their [Assignment](domain-model.md#agency-and-agents) and Agent status. | [Hiring Agents](#hiring-agents) |
 | Transport cap | `base_transport_cap` | `transport_cap` | The number of Deployed Agents, i.e. Serving Agents whose Assignment is Deployed, over every [Mission](domain-model.md#leads-investigations-mission-sites-and-missions) together. | The `deployAgents` [Player action](../foundation/engine-contract.md#player-actions-and-turns) under [Deploying Agents](missions.md#deploying-agents) |
-| Training cap | `base_training_cap` | `training_cap` | The number of Serving Agents whose Assignment is Training, whatever their Agent status. | [Training cap on assigning Agents](#training-cap-on-assigning-agents) |
+| Training cap | `base_training_cap` | `training_cap` | The number of Serving Agents whose Assignment is Training, whatever their Agent status. | [Caps on assigning Agents](#caps-on-assigning-agents) |
 
 Inputs: base is a whole number of Agents of at least 0, and the Upgrade bonus is a whole number of Agents of at least 0. A cap with no Upgrade of its effect identifier equals its base. No rounding occurs, because every term is a whole number. Each cap is a whole number of at least its base, with no upper bound.
 
@@ -188,9 +208,28 @@ Inputs: base is a whole number of Agents of at least 0, and the Upgrade bonus is
 
 Each cap is computed from the current Acquisitions whenever a rule reads it, so a purchase raises it at once, under [Derived value consistency](../foundation/engine-contract.md#derived-value-consistency) in Engine Contract.
 
+## Contracting cap
+
+The Agency finds work for its Agents only once it has learned where to look, and each new depth it reaches in its fight against the Factions opens more of it.
+
+The Contracting cap is a Derived value of the Agency, never stored:
+
+```text
+Contracting cap = 0                                                                       while Contracting unlocked is no
+Contracting cap = base_contracting_cap + contracting_cap_per_initiative_level × W         once Contracting unlocked is yes
+```
+
+Inputs: `base_contracting_cap` and `contracting_cap_per_initiative_level` are the values of EconomyParameters, each a whole number of Agents of at least 0; W is the number of first wins that raise the Contracting cap, a whole number of at least 0 that never falls, which [Contracting cap growth](leads-and-progression.md#contracting-cap-growth) in Leads and Progression counts from the Won Missions at [Initiative Mission sites](domain-model.md#leads-investigations-mission-sites-and-missions). No rounding occurs, because every term is a whole number. No Upgrade raises the Contracting cap.
+
+Contracting unlocked only gates the cap; it does not gate W. A Won [Initiative Mission](domain-model.md#leads-investigations-mission-sites-and-missions) that comes before Contracting is unlocked therefore adds nothing while Contracting is locked, and counts from the moment Contracting is unlocked. E.g., with the GDR values and a W of 2, the Contracting cap is 0 until Contracting is unlocked and `4 + 4 × 2 = 12` from then on.
+
+**Counting Contracting:** An Agent assigned to Contracting occupies a place under the Contracting cap from the moment of the assignment, [In transit](domain-model.md#agency-and-agents) included, and keeps it until its Assignment stops being Contracting, e.g. when it is recalled or has a [Forced return](agents-spec.md#forced-return).
+
+The Contracting cap is computed whenever a rule reads it, so an unlocking Lead completion or a Won Mission raises it in the step that makes it, and every later step and Player action sees the raised cap, under [Derived value consistency](../foundation/engine-contract.md#derived-value-consistency) in Engine Contract. The `assignAgents` Player action is the only rule that reads it, under [Caps on assigning Agents](#caps-on-assigning-agents).
+
 ## Counts above a cap
 
-A cap limits only the actions that add to the count it limits: hiring for the Agent cap, assigning to Training for the Training cap, and deployment for the Transport cap. No rule lowers a cap, because Acquisitions only rise, but a count can exceed its cap through a [Player cheat action](../foundation/engine-contract.md#player-actions-and-turns), e.g. `addAgents` under [Adding Agents](agents-spec.md#adding-agents) in Agents, which ignores the Agent cap. When a count exceeds its cap, nothing is removed and no Agent's Assignment changes; only further additions are rejected until the count is below the cap again. A count above a cap is not an invariant violation.
+A cap limits only the actions that add to the count it limits: hiring for the Agent cap, assigning to Training for the Training cap, assigning to Contracting for the Contracting cap, and deployment for the Transport cap. No rule lowers a cap, because Acquisitions only rise and neither Contracting unlocked nor the first wins that raise the Contracting cap are ever undone, but a count can exceed its cap through a [Player cheat action](../foundation/engine-contract.md#player-actions-and-turns), e.g. `addAgents` under [Adding Agents](agents-spec.md#adding-agents) in Agents, which ignores the Agent cap. When a count exceeds its cap, nothing is removed and no Agent's Assignment changes; only further additions are rejected until the count is below the cap again. A count above a cap is not an invariant violation.
 
 # Agency income and upkeep
 
@@ -220,7 +259,7 @@ Inputs:
 
 Evaluation: each contribution is evaluated exactly, under [Exact evaluation](../foundation/numbers.md#exact-evaluation) in Numbers, the contributions are summed exactly, and the sum is rounded once, with [Round down](../foundation/numbers.md#glossary); no contribution is rounded on its own. Because effective skill is at least 0 and `contracting_skill_scale` is at least 100, each contribution is at least `(1 − 100 / contracting_skill_scale) × contracting_income_per_agent`, which is at least 0, so income is a whole number of at least 0 and money never falls in this step. E.g., with the GDR values 30 and 200, an Agent with effective skill 100 contributes exactly 30; one with effective skill 83 contributes `30 × (1 − 17 / 200) = 27.45`; and one trained to effective skill 150 contributes `30 × (1 + 50 / 200) = 37.5`, so the three together give `round down(94.95) = 94`.
 
-An Agent [In transit](domain-model.md#agency-and-agents) to Contracting is not in C, including one that arrives in the Previous turn transit arrivals step of the same Advance turn, because that step comes after the Agency income step. The Agency income step is the first step, so funding, C, and each effective skill equal their values in the [Turn-end state](../foundation/engine-contract.md#player-actions-and-turns). Contracting changes no Agent's [exhaustion](agents-spec.md#combatant-attributes) or [current health](agents-spec.md#combatant-attributes), under [Changes to attributes](agents-spec.md#changes-to-attributes) in Agents.
+An Agent [In transit](domain-model.md#agency-and-agents) to Contracting is not in C, including one that arrives in the Previous turn transit arrivals step of the same Advance turn, because that step comes after the Agency income step. The Agency income step is the first step, so funding, C, and each effective skill equal their values in the [Turn-end state](../foundation/engine-contract.md#player-actions-and-turns). After the income is added, every Agent in C gains [exhaustion](agents-spec.md#combatant-attributes) and may have a [Forced return](agents-spec.md#assignments), under [Work exhaustion](agents-spec.md#work-exhaustion) and [Forced return](agents-spec.md#forced-return) in Agents; the income already added is kept.
 
 **Informative rationale:** Work pays more for a skilled Agent and less for a worn-down one, but only gently, so that Contracting stays a dependable source of money.
 
@@ -306,17 +345,18 @@ Rejection: the action is all-or-nothing. When any precondition fails, it is reje
 
 State changes: when every precondition holds, the action is one Player action that applies at once, within the same Turn, to every Agent in `agents`: the Agent becomes Dismissed under [Agent status](agents-spec.md#agent-status) in Agents, which removes its Assignment and Agent status and sets its Turn terminated to the current turn number, under [Service record](agents-spec.md#service-record). No money is refunded or spent, and nothing else changes. A Dismissed Agent stops counting toward the Agent cap and in projected upkeep at once, and is not counted in any later Upkeep step. It stays in the Agency's roster and is kept in the [Retired world state](../foundation/campaign-state.md#glossary) with its final values.
 
-# Training cap on assigning Agents
+# Caps on assigning Agents
 
-The Player action `assignAgents` under [Assigning Agents](agents-spec.md#assigning-agents) in Agents has one further precondition. When its `assignment` is `Training`, the action is also rejected, as a whole, when:
+The Player action `assignAgents` under [Assigning Agents](agents-spec.md#assigning-agents) in Agents has two further preconditions, one for each cap on an Assignment. The action is also rejected, as a whole, when:
 
-```text
-T + number of Agents in agents  >  Training cap
-```
+| `assignment` | Rejected when | Where A is | And the cap is under |
+| --- | --- | --- | --- |
+| `Training` | A + number of Agents in `agents` > Training cap | The number of Serving Agents whose Assignment is Training, whatever their Agent status. | [Agency caps](#agency-caps) |
+| `Contracting` | A + number of Agents in `agents` > Contracting cap | The number of Serving Agents whose Assignment is Contracting, whatever their Agent status. | [Contracting cap](#contracting-cap) |
 
-where T is the number of Serving Agents whose Assignment is Training, whatever their Agent status, in the World state in which the action is requested, and the Training cap is under [Agency caps](#agency-caps). Every Agent in `agents` adds one, because the preconditions under [Assigning Agents](agents-spec.md#assigning-agents) already reject an Agent whose Assignment is Training. The action is accepted when the sum is equal to or less than the Training cap.
+A and the cap are those of the World state in which the action is requested. Every Agent in `agents` adds one, because the preconditions under [Assigning Agents](agents-spec.md#assigning-agents) already reject an Agent whose Assignment is `assignment`. The action is accepted when the sum is equal to or less than the cap. E.g., while Contracting is not unlocked, the Contracting cap is 0, so every `assignAgents` with `Contracting` is rejected.
 
-The rejection follows the rejection behavior of `assignAgents` in Agents: the whole action is rejected, no listed Agent changes, and the error identifies this precondition. This precondition does not apply when `assignment` is `Standby` or `Contracting`, even when T exceeds the Training cap, under [Counts above a cap](#counts-above-a-cap). Assigning an Agent away from Training frees its place at once, within the same Turn.
+The rejection follows the rejection behavior of `assignAgents` in Agents: the whole action is rejected, no listed Agent changes, and the error identifies this precondition. Neither precondition applies when `assignment` is `Standby`, nor the one of the other Assignment, even when A exceeds its cap, under [Counts above a cap](#counts-above-a-cap). Assigning an Agent away from Training or Contracting frees its place at once, within the same Turn.
 
 # Upgrades
 
@@ -475,7 +515,7 @@ The [Turn report](../foundation/campaign-state.md#glossary) of an Advance turn h
 - **Funding:** the Agency's funding in the Turn-end state and after the Advance turn.
 - **Money:** the Agency's money in the Turn-end state and after the Advance turn.
 
-The [History entry](../foundation/world-history.md#glossary) of the Turn the Advance turn ends holds, of these, the funding the Agency income step used, the income, the upkeep, and the Agency's money and funding after the Advance turn, and holds the Agency's money and funding in the Turn-start state and in the Turn-end state of that Turn, and its Agent cap, Transport cap, and Training cap in the Turn-start state, under Agency caps. All are Player-visible information, under [Turn report and history](../foundation/world-history.md#turn-report-and-history) in History and Turn Report.
+The [History entry](../foundation/world-history.md#glossary) of the Turn the Advance turn ends holds, of these, the funding the Agency income step used, the income, the upkeep, and the Agency's money and funding after the Advance turn, and holds the Agency's money and funding in the Turn-start state and in the Turn-end state of that Turn, and its Agent cap, Transport cap, Training cap, and Contracting cap in the Turn-start state, under Agency caps and Contracting cap. All are Player-visible information, under [Turn report and history](../foundation/world-history.md#turn-report-and-history) in History and Turn Report.
 
 # Player-visible information
 
@@ -487,7 +527,8 @@ Every value below is Player-visible information under [Player-visible informatio
 | The Agency's money, including a negative amount | Yes |
 | The Agency's funding | Yes |
 | The Agency's Acquisitions of each Upgrade | Yes |
-| The Agent cap, Transport cap, and Training cap, each with its current value | Yes |
+| The Agent cap, Transport cap, Training cap, and Contracting cap, each with its current value | Yes |
+| Whether Contracting is unlocked | Yes |
 | The training skill gain, exhaustion recovery, and health recovery percentage, each with its current value | Yes |
 | The projected income and projected upkeep of the coming Advance turn | Yes |
 | Money at the start of turn and Money at the end of turn, in full | Yes |
@@ -502,14 +543,14 @@ Every value below is Player-visible information under [Player-visible informatio
 - **Exact affordability:** Money exactly equal to `count` times `hire_cost` or to an Upgrade's `price` satisfies the precondition; the action succeeds and leaves money 0 ([Hiring Agents](#hiring-agents), [Purchasing Upgrades](#purchasing-upgrades)).
 - **Insufficient money:** Money below the cost rejects `hireAgents` and `purchaseUpgrade`; nothing changes. A `hireAgents` that the money covers only in part hires nobody ([Hiring Agents](#hiring-agents), [Purchasing Upgrades](#purchasing-upgrades)).
 - **Agent cap reached:** With exactly as many Serving Agents as the Agent cap, `hireAgents` is rejected even with enough money, and with fewer, a `hireAgents` whose `count` would take the Serving Agents past the Agent cap hires nobody. Serving Agents In transit, on Recovery, or Deployed count; Killed and Dismissed Agents do not ([Hiring Agents](#hiring-agents), [Agency caps](#agency-caps)).
-- **Training cap reached:** An order to Training that would exceed the cap is rejected as a whole, even when only one of its Agents does not fit ([Training cap on assigning Agents](#training-cap-on-assigning-agents)).
-- **Count above a cap:** After a Player cheat action, e.g. `addAgents`, a count may exceed its cap; nothing is removed and only further additions are rejected ([Counts above a cap](#counts-above-a-cap)).
+- **Training or Contracting cap reached:** An order to Training or Contracting that would exceed its cap is rejected as a whole, even when only one of its Agents does not fit ([Caps on assigning Agents](#caps-on-assigning-agents)).
+- **Contracting locked:** Until Contracting is unlocked, the Contracting cap is 0 whatever Missions are Won, so no Agent can be assigned to Contracting and income is funding alone ([Contracting cap](#contracting-cap)).- **Count above a cap:** After a Player cheat action, e.g. `addAgents`, a count may exceed its cap; nothing is removed and only further additions are rejected ([Counts above a cap](#counts-above-a-cap)).
 - **Zero funding:** With funding 0 and no Agent working on Contracting, income is 0 and the Agency income step leaves money unchanged. A funding change that would take funding below 0 leaves it at 0 ([Agency income](#agency-income), [Funding changes](#funding-changes)).
 - **Several funding changes in one step:** They are added up before the floor is applied, so their order does not matter ([Funding changes](#funding-changes)).
 - **Upkeep making money negative:** Upkeep is paid in full and money may become negative ([Upkeep](#upkeep)).
 - **Agent Killed in the same Advance turn:** An Agent Killed in the Mission resolution step was counted in the Upkeep step before it, and is not counted in any later Advance turn ([Upkeep](#upkeep)).
 - **Arriving Agents:** An Agent arriving at Contracting in the Previous turn transit arrivals step earns nothing in that Advance turn but is counted in Upkeep ([Agency income](#agency-income), [Upkeep](#upkeep)).
-- **Untrained Agents on Contracting:** An Agent with effective skill 0 still contributes `(1 − 100 / contracting_skill_scale) × contracting_income_per_agent`, e.g. half of it with `contracting_skill_scale` 200 ([Agency income](#agency-income)).
+- **Tired or untrained Agents on Contracting:** An Agent with effective skill 0 still contributes `(1 − 100 / contracting_skill_scale) × contracting_income_per_agent`, e.g. half of it with `contracting_skill_scale` 200, and an Agent whose work brings it to `exhaustion_work_limit` keeps the income of that Advance turn ([Agency income](#agency-income)).
 - **Dismissing an Agent that is not on Standby, At assignment:** Rejected as a whole; e.g., an Agent on Standby but In transit, an Agent on Contracting, and a Deployed Agent cannot be dismissed ([Dismissing Agents](#dismissing-agents)).
 - **Dismissing every Agent:** Valid; an Agency with no Serving Agent pays no upkeep. Whether the Campaign ends is decided under [Defeat](panic-and-endings.md#defeat) ([Dismissing Agents](#dismissing-agents)).
 - **Unknown Upgrade:** `purchaseUpgrade` with an identifier that names no Upgrade GDR, including one naming a GDR of another Type, is rejected ([Purchasing Upgrades](#purchasing-upgrades)).

@@ -2,18 +2,23 @@ id: mechanics_contracting
 type: CompendiumArticle
 category: mechanics
 title: Contracting
-terms: [Contracting]
+terms: [Contracting, Contracting cap]
 body: >-
-  Contracting sends an Agent out to work for money. It is your steady income beside funding, and it pays a little more for a
-  skilled Agent. An Agent on Contracting is away from base, so getting it back for a
-  Mission takes a turn.
+  Contracting sends an Agent out to work for money. It is your steady income beside funding, and it pays a little more
+  for a skilled Agent and a little less for a tired one. An Agent on Contracting is away from base, so getting it back
+  for a Mission takes a turn. No Agent can contract until a Lead has found you the work, and only as many at once as
+  the Contracting cap allows.
 formulas:
   - label: 'Income of one Agent each turn'
     text: '{economy.contracting_income_per_agent} × (1 + (effective skill − 100) ÷ {economy.contracting_skill_scale})'
   - label: 'Total'
     text: 'The income of every Agent on Contracting is added up, then rounded down'
   - label: 'Exhaustion'
-    text: 'None: Contracting never tires an Agent'
+    text: '+{agent_parameters.exhaustion_per_contracting_turn} each turn, after the income is paid'
+  - label: 'Contracting cap'
+    text: '0 until a Lead unlocks Contracting; then {economy.base_contracting_cap} Agents'
+  - label: 'Raising the Contracting cap'
+    text: '+{economy.contracting_cap_per_initiative_level} the first time you win a Mission at an Initiative Mission site of each operation level, against any Faction'
   - label: 'Getting there and back'
     text: 'One turn in transit each way, with no income'
-see_also: [mechanics_money_and_funding, mechanics_exhaustion, mechanics_transit]
+see_also: [mechanics_money_and_funding, mechanics_exhaustion, mechanics_transit, contracting_opportunities_article]

@@ -173,7 +173,7 @@ The Data sheet of a Lead shows where the Lead belongs and what it leads to, unde
 | Faction | The FactionArchetype that `faction` references. A Lead without `faction` has no such row. |
 | [Required progress](../../mechanics/leads-and-progression.md#glossary) | `required_progress` when the Lead is an [Assessed Lead](../../mechanics/investigations.md#glossary); otherwise "Unknown", in Text muted. |
 | Reveals | The MissionSiteArchetype that the `create_mission_site` Effect of `on_completion` names. A Lead without that Effect has no such row. |
-| On completion | "Eliminates the Faction" for an `eliminate_faction` Effect of `on_completion` and "Wins the [Campaign](../../foundation/core-concepts.md#campaign-and-session)" for a `win_campaign` Effect, each in Positive. A Lead with neither Effect has no such row. |
+| On completion | "Eliminates the Faction" for an `eliminate_faction` Effect of `on_completion`, "Unlocks [Contracting](../../mechanics/agents-spec.md#assignments)" for an `unlock_contracting` Effect, and "Wins the [Campaign](../../foundation/core-concepts.md#campaign-and-session)" for a `win_campaign` Effect, each in Positive. A Lead with none of these Effects has no such row. |
 | Can be investigated again | By the `investigate_again` the Lead has, under [Lead](../../mechanics/leads-and-progression.md#lead) in Leads and Progression: "Never" for `never`, "Until its [Mission](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) is won" for `until_mission_won`, and "Always" for `always`. |
 
 ## Mission site data sheet

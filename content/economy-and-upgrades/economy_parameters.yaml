@@ -7,3 +7,5 @@ contracting_skill_scale: 200 # effective skill above 100 that adds one more cont
 base_agent_cap: 20
 base_transport_cap: 8
 base_training_cap: 10
+base_contracting_cap: 4 # once a Lead unlocks Contracting; 0 before
+contracting_cap_per_initiative_level: 4 # for the first Won Initiative Mission at each Initiative operation level

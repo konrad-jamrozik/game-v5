@@ -1,3 +1,11 @@
+id: contracting_opportunities
+type: Lead
+name: Contracting opportunities
+description: Find clients who will pay for the Agency's skills and ask no questions.
+required_progress: 3
+on_completion:
+  - unlock_contracting: true
+---
 id: criminal_organizations
 type: Lead
 name: Criminal organizations

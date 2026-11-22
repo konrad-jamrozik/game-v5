@@ -17,7 +17,7 @@ formulas:
   - label: 'In transit, deployed, or on Recovery'
     text: 'Cannot be given orders'
   - label: 'Starting Contracting, Training, or an Investigation'
-    text: 'Needs full health and exhaustion 0'
+    text: 'Needs full health and exhaustion of at most {agent_parameters.exhaustion_work_start_max}'
   - label: 'Dismissing'
     text: 'Only an Agent on Standby that is not in transit'
 see_also:

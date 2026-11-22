@@ -116,7 +116,7 @@ No [Campaign configuration](../foundation/campaign-state.md#glossary) value chan
 
 ## Required progress range and outcome
 
-The Required progress range of a Lead with Required progress R is every whole number from R to `round down(R × required_progress_max_pct / 100)`, both included. E.g., with `required_progress_max_pct` 150, a Required progress of 30 gives the range 30 to 45, and a Required progress of 3 gives 3 to 4, because round down(4.5) is 4.
+The Required progress range of a Lead with Required progress R is every whole number from R to `round up(R × required_progress_max_pct / 100)`, both included, under [Round up](../foundation/numbers.md#glossary) in Numbers. E.g., with `required_progress_max_pct` 150, a Required progress of 30 gives the range 30 to 45, and a Required progress of 3 gives 3 to 5, because round up(4.5) is 5.
 
 Each successful `startInvestigation` has exactly one named random outcome, the **Required progress outcome** of the new Investigation: a uniform whole-number outcome over the Required progress range of its Lead, under [Uniform whole-number outcomes](../foundation/numbers.md#uniform-whole-number-outcomes) in Numbers. Its value becomes the Investigation's Actual required progress, which never changes afterwards. A rejected `startInvestigation` draws none.
 

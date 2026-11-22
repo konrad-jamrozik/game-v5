@@ -5,12 +5,15 @@ title: Training
 terms: [Training, Training cap]
 body: >-
   Training raises an Agent's skill a little every turn. It happens at base, so an Agent on Training can be deployed to
-  a Mission site at once. Only as many Agents can train at one time as the Training cap allows.
+  a Mission site at once. Only as many Agents can train at one time as the Training cap allows, and a tired Agent may
+  learn nothing in a turn.
 formulas:
   - label: 'Skill gained each turn'
     text: '+{agent_parameters.training_skill_gain_per_turn}, plus Upgrades'
+  - label: 'Chance to gain it'
+    text: 'Certain up to {agent_parameters.exhaustion_free_points} exhaustion; above it, {agent_parameters.skill_penalty_pct_per_exhaustion}% less likely for each further point'
   - label: 'Exhaustion'
-    text: 'None: Training never tires an Agent, and only a fully rested Agent can start it'
+    text: '+{agent_parameters.exhaustion_per_training_turn} each turn'
   - label: 'Training cap'
     text: '{economy.base_training_cap} Agents, plus Upgrades'
   - label: 'Moving between Standby and Training'

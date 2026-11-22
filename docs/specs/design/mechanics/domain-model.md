@@ -175,6 +175,7 @@ The game has the following Effect kinds. This table is exhaustive.
 | `funding` | The Agency's funding. | [Money and funding Effect kinds](economy-and-upgrades.md#money-and-funding-effect-kinds) in Economy and Upgrades |
 | `panic` | Panic. | [Panic Effect kind](panic-and-endings.md#panic-effect-kind) in Panic and Endings |
 | `eliminate_faction` | Whether a Faction is Eliminated. | [Elimination](factions.md#elimination) in Factions |
+| `unlock_contracting` | Whether the Agency may hire its Agents out for money. | [Contracting Effect kind](economy-and-upgrades.md#contracting-effect-kind) in Economy and Upgrades |
 | `defeat` | Whether the Campaign is lost in this Advance turn. | [Defeat Effect kind](panic-and-endings.md#defeat-effect-kind) in Panic and Endings |
 | `win_campaign` | Whether the Campaign is won in this Advance turn. | [Victory Effect kind](panic-and-endings.md#victory-effect-kind) in Panic and Endings |
 | `create_mission_site` | It creates one Initiative Mission site. | [Mission site Effect kind](missions.md#mission-site-effect-kind) in Missions |

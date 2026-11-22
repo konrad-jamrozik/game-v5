@@ -20,12 +20,13 @@ The Agents View is where the Player manages the roster: who serves, what each [A
 
 # Header
 
-After the title, side by side, 40 px after the title and 40 px apart, the header shows how many places are still free under two caps, so that the Player sees how much room is left to hire and to train:
+After the title, side by side, 16 px after the title and 16 px apart, the header shows how many places are still free under three caps, so that the Player sees how much room is left to hire, to train, and to contract:
 
 1. **Agent places free:** the [Agent cap](../../mechanics/domain-model.md#agency-and-agents) minus the number of [Serving](../../mechanics/agents-spec.md#agent-statuses) Agents, against the Agent cap.
 2. **Training places free:** the [Training cap](../../mechanics/economy-and-upgrades.md#glossary) minus the number of Agents counted against it, against the Training cap.
+3. **Contracting places free:** the [Contracting cap](../../mechanics/economy-and-upgrades.md#glossary) minus the number of Agents counted against it, against the Contracting cap, e.g. "0 / 0" while Contracting is not unlocked, under [Contracting cap](../../mechanics/economy-and-upgrades.md#contracting-cap) in Economy and Upgrades.
 
-Each is its Label above its free count, in the Figure style, followed by its cap bar, under [Cap bars](../visual-design.md#cap-bars) in Visual Design, and the two together are as tall as the title's line and centred on it, under [Alignment](../visual-design.md#alignment) in Visual Design. A free count is never shown below 0. A cap bar fills with the share of its cap that is taken, not the share that is free, e.g. with Training places free 4 / 12, its cap bar is filled two thirds of the way from the left.
+Each is its Label above its free count, in the Figure style, followed by its cap bar, under [Cap bars](../visual-design.md#cap-bars) in Visual Design, and the three together are as tall as the title's line and centred on it, under [Alignment](../visual-design.md#alignment) in Visual Design. A free count is never shown below 0, and the cap bar of a cap of 0 is an empty track. A cap bar fills with the share of its cap that is taken, not the share that is free, e.g. with Training places free 4 / 12, its cap bar is filled two thirds of the way from the left.
 
 Under the title row, the header holds these controls, in this order:
 
@@ -84,7 +85,8 @@ A row whose Agent cannot be selected, under [Filters](#filters), has its checkbo
 5. **Already on Standby, Contracting, or Training:** the Assignment filter that is on is for the Assignment it has.
 6. **Too exhausted:** it is not [Fit to start work](../../mechanics/agents-spec.md#assignments) and the Assignment filter that is on is for Contracting or Training.
 7. **Training full:** the Training Assignment filter is on and the [Training cap](../../mechanics/economy-and-upgrades.md#glossary) has no place left.
-8. **Otherwise:** the message of the rejection that Action preview reports.
+8. **Contracting full:** the Contracting Assignment filter is on and the [Contracting cap](../../mechanics/economy-and-upgrades.md#glossary) has no place left, which includes a Contracting cap of 0 while Contracting is not unlocked.
+9. **Otherwise:** the message of the rejection that Action preview reports.
 
 # Memorial
 
@@ -122,7 +124,7 @@ Each row leads to what it records, so that the Player can see how each Mission t
 
 # Artboard
 
-![Agents View panel Artboard: the header with the Agent places free and Training places free, each with its cap bar, the Hire button, the Assign to group of Standby, Contracting, and Training buttons each with its Assignment filter, the Contracting one on, the Dismiss button, and the number of selected Agents with their Combat rating; the Show agents filters All, In base, Away, and Memorial on a Control backdrop, with the Hide with exhaustion and Hide recovering checkboxes below them, and the close control on the title's line; and the table of Serving Agents with a Select all checkbox, their skill and Experience, colour-coded health and exhaustion, weapon damage, Assignment, and Blocked by, sorted first by the locked Blocked by tier so that the Agents that can be selected come first and then by effective skill, with each muted row saying what blocks it](../../../../images/artboards/agents-view.png)
+![Agents View panel Artboard: the header with the Agent places free, Training places free, and Contracting places free, each with its cap bar, the Hire button, the Assign to group of Standby, Contracting, and Training buttons each with its Assignment filter, the Contracting one on, the Dismiss button, and the number of selected Agents with their Combat rating; the Show agents filters All, In base, Away, and Memorial on a Control backdrop, with the Hide with exhaustion and Hide recovering checkboxes below them, and the close control on the title's line; and the table of Serving Agents with a Select all checkbox, their skill and Experience, colour-coded health and exhaustion, weapon damage, Assignment, and Blocked by, sorted first by the locked Blocked by tier so that the Agents that can be selected come first and then by effective skill, with each muted row saying what blocks it](../../../../images/artboards/agents-view.png)
 
 ![Agents View Memorial panel Artboard: the Memorial filter on, the Hide checkboxes, the Assign to group, and Dismiss disabled, and the table of Terminated Agents with base skill, Experience, effective max health, Turn terminated, cause, Missions, Turns with the Agency, Enemies killed, and, for a Killed Agent, the Enemy that killed it and the Mission site where](../../../../images/artboards/agents-memorial.png)
 
