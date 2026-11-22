@@ -169,7 +169,7 @@ function startPoint(live: Any): number[] {
 /**
  * The Basic Autopilot AI, with its Player API wrapped so that the bench sees each Turn's player phase end: just before
  * the AI requests Advance turn, it reads the Serving Agents, and once the Advance turn has ended the Turn, it reads the
- * Turn report and the next Turn's start. It also reads the money each `hireAgent` and `purchaseUpgrade` spent, the
+ * Turn report and the next Turn's start. It also reads the money each `hireAgents` and `purchaseUpgrade` spent, the
  * money after it less the money before, as the Action record holds it. The AI plays exactly as it would unwrapped.
  */
 function observed(ai: Any, holder: { campaign: Campaign | null }): Any {
@@ -181,7 +181,14 @@ function observed(ai: Any, holder: { campaign: Campaign | null }): Any {
       // The slot of `spent` each action that spends money adds to. Only these read the money before and after, since
       // reading the World state is costly in a Campaign of many Agents and the AI requests many other actions a Turn.
       const slotOf = (op: string, args: unknown[]): 0 | 1 | 2 | null =>
-        op === 'hireAgent' ? 0 : op === 'purchaseUpgrade' ? (capUpgrades.has(args[0] as string) ? 1 : 2) : null
+        // `hireAgent` is the name before hiring took a count; an Implementation at an older baseline still has it.
+        op === 'hireAgents' || op === 'hireAgent'
+          ? 0
+          : op === 'purchaseUpgrade'
+            ? capUpgrades.has(args[0] as string)
+              ? 1
+              : 2
+            : null
       const logging = holder.campaign?.log != null
       // Every Player action the AI requests, other than Advance turn, goes to the log's Turn line with its outcome,
       // a rejected one included. Without a log, only the actions that spend money are wrapped.

@@ -24,7 +24,18 @@ A player knows only what the game chooses to show, and acts only through the mov
 
 The mechanics specification owning each gameplay action, e.g. `assignAgents(...)` or `purchaseUpgrade(...)`, states the action's preconditions, what the player observes when a precondition fails, and the action's state changes: when they apply, which values change, and by how much. A rejected action changes nothing, under [World state integrity](engine-contract.md#world-state-integrity) in Engine Contract, and a successful one is one [Player action](engine-contract.md#player-actions-and-turns), under [Player actions](engine-contract.md#player-actions) in Engine Contract.
 
-The gameplay action inventory is extensible; future gameplay actions follow the same atomicity, visibility, and replay contract.
+A successful gameplay action also returns what it changed, under [Action results](#action-results). The gameplay action inventory is extensible; future gameplay actions follow the same atomicity, visibility, replay, and result contract.
+
+# Action results
+
+A caller that makes many gameplay actions in a row, e.g. an Autopilot AI playing a Turn, needs to know after each one what the World state queries would now return. Querying the whole [Current world state](engine-contract.md#player-actions-and-turns) again after every Player action costs work in proportion to the size of the [Campaign](core-concepts.md#campaign-and-session), so each successful gameplay action returns what it changed instead. The following rules are complete for every `player.actions` operation other than `advanceTurn()`:
+
+- **What it returns:** A successful action returns every change it made to what `getCurrentLiveWorldState()` and `getCurrentRetiredWorldState()` return, under [Current world state, Turn report, and history](world-history.md#current-world-state-turn-report-and-history) in History and Turn Report: each [Campaign instance](core-concepts.md#campaign-instances) or fact whose Player-visible information changed, with that information in full as its query now returns it, including a [Derived value](core-concepts.md#value-classification) that changed because something it is calculated from changed, e.g. the effective values of every Agent after an Upgrade purchase raises them; each one that entered either part, e.g. a hired [Agent](../mechanics/domain-model.md#agency-and-agents); each one that left the [Live world state](campaign-state.md#glossary) for the [Retired world state](campaign-state.md#glossary), e.g. a dismissed Agent; and each other value of the world that changed. It always returns the [Agency](../mechanics/domain-model.md#agency-and-agents).
+- **Agrees with the queries:** Each value it returns equals what the matching query returns right after the action, and every value it does not return is what that query returned right before. A caller that applies the returned changes to the results of both queries from before the action therefore holds exactly what both queries now return.
+- **Reveals nothing more:** It returns only Player-visible information, under [Information boundary](#information-boundary).
+- **A rejected action** returns its rejection and nothing else, and changes nothing.
+
+`advanceTurn()` returns no changes, because it changes nearly every value and the [Turn report](campaign-state.md#glossary) besides; a caller queries again after it.
 
 # Action preview
 

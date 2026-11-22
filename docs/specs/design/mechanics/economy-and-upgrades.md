@@ -5,7 +5,7 @@
 | Spec ID | ECON |
 | Family | Mechanics |
 | Audience | Engine designer, Content designer, AI designer, Implementer |
-| Owns | The Agency's money, funding, and Upgrade Acquisitions, Agency income and upkeep, the Agent cap, Transport cap, and Training cap, Upgrade effects, the money change in each Action record, and the hireAgent, dismissAgents, purchaseUpgrade, and addMoney actions. |
+| Owns | The Agency's money, funding, and Upgrade Acquisitions, Agency income and upkeep, the Agent cap, Transport cap, and Training cap, Upgrade effects, the money change in each Action record, and the hireAgents, dismissAgents, purchaseUpgrade, and addMoney actions. |
 | Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
@@ -260,23 +260,28 @@ When Advance turn is committed from the Current world state, that state becomes 
 
 # Hiring Agents
 
-The Player action `player.actions.hireAgent()` hires one Agent. It has no parameters.
+The Player action `player.actions.hireAgents(count)` hires `count` Agents at once, so that filling the roster takes one Player action rather than one for each Agent.
 
-Preconditions: the action is rejected when either of the following holds:
+| Parameter | Meaning                                                |
+| --------- | ------------------------------------------------------ |
+| `count`   | How many Agents to hire: a whole number of at least 1. |
 
-1. The Agency's money is less than `hire_cost` of EconomyParameters.
-2. The number of Serving Agents is equal to or greater than the Agent cap, under [Agency caps](#agency-caps).
+Preconditions: the action is rejected as a whole, even when only some of the Agents do not fit, when any of the following holds:
+
+1. `count` is not a whole number or is less than 1.
+2. The Agency's money is less than `count` times `hire_cost` of EconomyParameters.
+3. The number of Serving Agents plus `count` is greater than the Agent cap, under [Agency caps](#agency-caps).
 
 Other preconditions apply to every Player action, e.g. that the Campaign has no [Campaign ending](domain-model.md#campaign-standing), under [After a Campaign ending](panic-and-endings.md#after-a-campaign-ending) and [Engine Contract](../foundation/engine-contract.md).
 
 Rejection: when a precondition fails, the action is rejected with an error that identifies at least one failed precondition; the exact error representation is the Implementer's choice. A rejected action changes nothing, under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract.
 
-State changes: when both preconditions hold, the action is one Player action that applies at once, within the same Turn:
+State changes: when every precondition holds, the action is one Player action that applies at once, within the same Turn:
 
-- The Agency's money falls by `hire_cost`. Because money was at least `hire_cost`, money afterwards is at least 0.
-- One Agent is created under [Agent creation](agents-spec.md#agent-creation) in Agents: Serving, on [Standby](agents-spec.md#assignments), In transit, with Turn hired equal to the current turn number.
+- The Agency's money falls by `count` times `hire_cost`. Because money was at least that, money afterwards is at least 0.
+- `count` Agents are created, one after another, each under [Agent creation](agents-spec.md#agent-creation) in Agents: Serving, on [Standby](agents-spec.md#assignments), In transit, with Turn hired equal to the current turn number.
 
-Nothing else changes. The new Agent counts toward the Agent cap and in projected upkeep at once. It arrives in the next Advance turn, under [Transit rule](agents-spec.md#transit-rule), and is counted in that Advance turn's Upkeep step. Hiring several Agents takes one `hireAgent` action each.
+Nothing else changes. The new Agents count toward the Agent cap and in projected upkeep at once. They arrive in the next Advance turn, under [Transit rule](agents-spec.md#transit-rule), and are counted in that Advance turn's Upkeep step. A `hireAgents` of `count` Agents leaves the same World state as `count` successive `hireAgents` actions of 1 Agent each, but it is one Player action, so the [Timeline](../foundation/timeline.md#glossary) holds one [Timeline entry](../foundation/timeline.md#glossary) for it, one undo takes back every Agent it hired, and the [Action record](../foundation/world-history.md#glossary) lists it as one item.
 
 # Dismissing Agents
 
@@ -443,7 +448,7 @@ The current Turn has a recorded value of Money at the start of turn but none of 
 
 ## Money in the Action record
 
-Every item of an [Action record](../foundation/world-history.md#glossary), under [Action record](../foundation/world-history.md#action-record) in History and Turn Report, also holds its money change: the Agency's money right after its Player action minus the Agency's money right before it. It is a whole number, negative for money spent and positive for money added; e.g., −`hire_cost` for `hireAgent`, minus the Upgrade's `price` for `purchaseUpgrade`, `amount` for `addMoney`, and 0 for a Player action that changes no money, e.g. `assignAgents`. The money changes are Player-visible information, so the money a Turn's Player actions spent can be read back after the Turn has ended.
+Every item of an [Action record](../foundation/world-history.md#glossary), under [Action record](../foundation/world-history.md#action-record) in History and Turn Report, also holds its money change: the Agency's money right after its Player action minus the Agency's money right before it. It is a whole number, negative for money spent and positive for money added; e.g., −`count` times `hire_cost` for `hireAgents`, minus the Upgrade's `price` for `purchaseUpgrade`, `amount` for `addMoney`, and 0 for a Player action that changes no money, e.g. `assignAgents`. The money changes are Player-visible information, so the money a Turn's Player actions spent can be read back after the Turn has ended.
 
 # Player cheat actions
 
@@ -494,9 +499,9 @@ Every value below is Player-visible information under [Player-visible informatio
 
 # Edge cases and failure behavior
 
-- **Exact affordability:** Money exactly equal to `hire_cost` or to an Upgrade's `price` satisfies the precondition; the action succeeds and leaves money 0 ([Hiring Agents](#hiring-agents), [Purchasing Upgrades](#purchasing-upgrades)).
-- **Insufficient money:** Money below the cost rejects `hireAgent` and `purchaseUpgrade`; nothing changes ([Hiring Agents](#hiring-agents), [Purchasing Upgrades](#purchasing-upgrades)).
-- **Agent cap reached:** With exactly as many Serving Agents as the Agent cap, `hireAgent` is rejected even with enough money. Serving Agents In transit, on Recovery, or Deployed count; Killed and Dismissed Agents do not ([Hiring Agents](#hiring-agents), [Agency caps](#agency-caps)).
+- **Exact affordability:** Money exactly equal to `count` times `hire_cost` or to an Upgrade's `price` satisfies the precondition; the action succeeds and leaves money 0 ([Hiring Agents](#hiring-agents), [Purchasing Upgrades](#purchasing-upgrades)).
+- **Insufficient money:** Money below the cost rejects `hireAgents` and `purchaseUpgrade`; nothing changes. A `hireAgents` that the money covers only in part hires nobody ([Hiring Agents](#hiring-agents), [Purchasing Upgrades](#purchasing-upgrades)).
+- **Agent cap reached:** With exactly as many Serving Agents as the Agent cap, `hireAgents` is rejected even with enough money, and with fewer, a `hireAgents` whose `count` would take the Serving Agents past the Agent cap hires nobody. Serving Agents In transit, on Recovery, or Deployed count; Killed and Dismissed Agents do not ([Hiring Agents](#hiring-agents), [Agency caps](#agency-caps)).
 - **Training cap reached:** An order to Training that would exceed the cap is rejected as a whole, even when only one of its Agents does not fit ([Training cap on assigning Agents](#training-cap-on-assigning-agents)).
 - **Count above a cap:** After a Player cheat action, e.g. `addAgents`, a count may exceed its cap; nothing is removed and only further additions are rejected ([Counts above a cap](#counts-above-a-cap)).
 - **Zero funding:** With funding 0 and no Agent working on Contracting, income is 0 and the Agency income step leaves money unchanged. A funding change that would take funding below 0 leaves it at 0 ([Agency income](#agency-income), [Funding changes](#funding-changes)).
@@ -515,7 +520,7 @@ Every value below is Player-visible information under [Player-visible informatio
 - **Armor of Agents who are not Serving:** A Killed or Dismissed Agent keeps its Final armor when an Armor Upgrade is purchased ([Armor Upgrade](#armor-upgrade)).
 - **Large values:** Money, Acquisitions, caps, effective weapon damage, effective max health, effective armor, and the rates a Rate Upgrade raises have no upper bound, and every computation is exact, under [Exact evaluation](../foundation/numbers.md#exact-evaluation) in Numbers.
 - **Invalid GDRs:** A Game build with an unknown `effect`, a missing or extra property, a negative or fractional value, a second EconomyParameters or AgencyArchetype, or a preset `starting_money` below 0 is defective, and no Campaign is created from it ([Economy GDR validation](#economy-gdr-validation), [Campaign configuration values](#campaign-configuration-values)). A World state violating an invariant of the Agency, e.g. negative funding, is an internal invariant violation, reported under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract.
-- **Campaign ended:** Once the Campaign has a Campaign ending, `hireAgent`, `dismissAgents`, `purchaseUpgrade`, `addMoney`, and Advance turn are rejected, under [After a Campaign ending](panic-and-endings.md#after-a-campaign-ending).
+- **Campaign ended:** Once the Campaign has a Campaign ending, `hireAgents`, `dismissAgents`, `purchaseUpgrade`, `addMoney`, and Advance turn are rejected, under [After a Campaign ending](panic-and-endings.md#after-a-campaign-ending).
 
 # TODOs
 

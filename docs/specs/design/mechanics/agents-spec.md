@@ -515,7 +515,7 @@ E.g., with the GDR values, a survivor of its first Mission that hit with two att
 
 # Agent creation
 
-Every Agent is created by this rule, whichever rule causes the creation: the [Initial roster](#initial-roster), the `hireAgent` Player action of [Economy and Upgrades](economy-and-upgrades.md), or the [Player cheat action](../foundation/engine-contract.md#player-actions-and-turns) under [Adding Agents](#adding-agents). Each new Agent has a fresh Instance ID under [Campaign instance identity scope](domain-model.md#campaign-instance-identity-scope) in Domain Model, and the following initial values, under [Campaign instance creation](../foundation/campaign-instances.md#campaign-instance-creation) in Campaign Instances. This table is exhaustive.
+Every Agent is created by this rule, whichever rule causes the creation: the [Initial roster](#initial-roster), the `hireAgents` Player action of [Economy and Upgrades](economy-and-upgrades.md), or the [Player cheat action](../foundation/engine-contract.md#player-actions-and-turns) under [Adding Agents](#adding-agents). Each new Agent has a fresh Instance ID under [Campaign instance identity scope](domain-model.md#campaign-instance-identity-scope) in Domain Model, and the following initial values, under [Campaign instance creation](../foundation/campaign-instances.md#campaign-instance-creation) in Campaign Instances. This table is exhaustive.
 
 | Value | Initial value | Source |
 | --- | --- | --- |

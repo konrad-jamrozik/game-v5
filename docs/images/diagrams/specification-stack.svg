@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1044" viewBox="0 0 1000 1044" role="img" aria-label="Specification layers from top to bottom. Mechanics, from its top layer to its bottom layer: Turn Advancement; Investigations; Leads and Progression; Missions; Economy and Upgrades, Panic and Endings; Agent Recovery, Combat, Factions; Agents, Compendium; Domain Model. Foundation, from its top layer to its bottom layer: Configuration; Autopilot, Developer Access, History and Turn Report; Campaign Lifecycle, Timeline; Campaign Instances, Numbers, Saves; Determinism and Randomness, Game Data Records; Campaign State, Conditions, Effect Lists, Player API; Engine Contract; Core Concepts.">
-  <title>Specification layers from top to bottom. Mechanics, from its top layer to its bottom layer: Turn Advancement; Investigations; Leads and Progression; Missions; Economy and Upgrades, Panic and Endings; Agent Recovery, Combat, Factions; Agents, Compendium; Domain Model. Foundation, from its top layer to its bottom layer: Configuration; Autopilot, Developer Access, History and Turn Report; Campaign Lifecycle, Timeline; Campaign Instances, Numbers, Saves; Determinism and Randomness, Game Data Records; Campaign State, Conditions, Effect Lists, Player API; Engine Contract; Core Concepts.</title>
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1044" viewBox="0 0 1000 1044" role="img" aria-label="Specification layers from top to bottom. Mechanics, from its top layer to its bottom layer: Turn Advancement; Investigations; Leads and Progression; Missions; Economy and Upgrades, Panic and Endings; Agent Recovery, Combat, Factions; Agents, Compendium; Domain Model. Foundation, from its top layer to its bottom layer: Configuration; Autopilot, Developer Access, History and Turn Report; Campaign Lifecycle, Timeline; Campaign Instances, Numbers, Saves; Determinism and Randomness, Game Data Records, Player API; Campaign State, Conditions, Effect Lists; Engine Contract; Core Concepts.">
+  <title>Specification layers from top to bottom. Mechanics, from its top layer to its bottom layer: Turn Advancement; Investigations; Leads and Progression; Missions; Economy and Upgrades, Panic and Endings; Agent Recovery, Combat, Factions; Agents, Compendium; Domain Model. Foundation, from its top layer to its bottom layer: Configuration; Autopilot, Developer Access, History and Turn Report; Campaign Lifecycle, Timeline; Campaign Instances, Numbers, Saves; Determinism and Randomness, Game Data Records, Player API; Campaign State, Conditions, Effect Lists; Engine Contract; Core Concepts.</title>
   <style>
     :root { --bg: #ffffff; --muted: #5b6676; --frame: #c3c9d4; --frame-fill: #f8f9fb;
       --r0-bg: #e9ebef; --r0-fg: #3d4452;
@@ -139,20 +139,20 @@
   <text class="chip-text ink-r4" x="629" y="749">Saves</text>
   <rect class="fill-r3" x="40" y="771" width="920" height="42" rx="7"/>
   <text class="row-label ink-r3" x="50" y="796">LAYER 4</text>
-  <rect class="chip stroke-r3" x="306.6" y="778" width="223.6" height="28" rx="14"/>
-  <text class="chip-text ink-r3" x="418.4" y="797">Determinism and Randomness</text>
-  <rect class="chip stroke-r3" x="538.2" y="778" width="155.2" height="28" rx="14"/>
-  <text class="chip-text ink-r3" x="615.8" y="797">Game Data Records</text>
+  <rect class="chip stroke-r3" x="251.6" y="778" width="223.6" height="28" rx="14"/>
+  <text class="chip-text ink-r3" x="363.4" y="797">Determinism and Randomness</text>
+  <rect class="chip stroke-r3" x="483.2" y="778" width="155.2" height="28" rx="14"/>
+  <text class="chip-text ink-r3" x="560.8" y="797">Game Data Records</text>
+  <rect class="chip stroke-r3" x="646.4" y="778" width="102" height="28" rx="14"/>
+  <text class="chip-text ink-r3" x="697.4" y="797">Player API</text>
   <rect class="fill-r2" x="40" y="819" width="920" height="42" rx="7"/>
   <text class="row-label ink-r2" x="50" y="844">LAYER 3</text>
-  <rect class="chip stroke-r2" x="261.2" y="826" width="132.4" height="28" rx="14"/>
-  <text class="chip-text ink-r2" x="327.4" y="845">Campaign State</text>
-  <rect class="chip stroke-r2" x="401.6" y="826" width="102" height="28" rx="14"/>
-  <text class="chip-text ink-r2" x="452.6" y="845">Conditions</text>
-  <rect class="chip stroke-r2" x="511.6" y="826" width="117.2" height="28" rx="14"/>
-  <text class="chip-text ink-r2" x="570.2" y="845">Effect Lists</text>
-  <rect class="chip stroke-r2" x="636.8" y="826" width="102" height="28" rx="14"/>
-  <text class="chip-text ink-r2" x="687.8" y="845">Player API</text>
+  <rect class="chip stroke-r2" x="316.2" y="826" width="132.4" height="28" rx="14"/>
+  <text class="chip-text ink-r2" x="382.4" y="845">Campaign State</text>
+  <rect class="chip stroke-r2" x="456.6" y="826" width="102" height="28" rx="14"/>
+  <text class="chip-text ink-r2" x="507.6" y="845">Conditions</text>
+  <rect class="chip stroke-r2" x="566.6" y="826" width="117.2" height="28" rx="14"/>
+  <text class="chip-text ink-r2" x="625.2" y="845">Effect Lists</text>
   <rect class="fill-r1" x="40" y="867" width="920" height="42" rx="7"/>
   <text class="row-label ink-r1" x="50" y="892">LAYER 2</text>
   <rect class="chip stroke-r1" x="430" y="874" width="140" height="28" rx="14"/>
@@ -161,6 +161,6 @@
   <text class="row-label ink-r0" x="50" y="940">LAYER 1</text>
   <rect class="chip stroke-r0" x="437.6" y="922" width="124.8" height="28" rx="14"/>
   <text class="chip-text ink-r0" x="500" y="941">Core Concepts</text>
-  <text class="caption" x="500" y="992">No Foundation specification depends on a Mechanics specification.</text>
+  <text class="caption" x="500" y="992">Some Foundation specifications depend on Mechanics specifications.</text>
   <text class="caption" x="500" y="1012">UI, Autopilot AIs, Mandatory, Guidance, Content and Recipes specifications sit beside the stack and are not drawn.</text>
 </svg>

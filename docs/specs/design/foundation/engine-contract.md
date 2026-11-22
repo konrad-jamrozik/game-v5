@@ -93,7 +93,7 @@ The engine API is the source of truth for execution and access behavior. Every u
 
 Every user interface is equivalent to the engine API it adapts: an action taken through any user interface has exactly the result that the same operation called directly through the engine API has, and no user interface shows gameplay information that the engine API does not return; e.g., graphics never add information that Player API withholds. E.g., assigning the same Agents to the same mission through the command-line interface, the graphical interface, and the engine API produces equal Campaign state and equal query results.
 
-The complete namespace inventory is `session`, `player`, and `developer`. The following tree is the required starter operation inventory. Additional gameplay and developer operations may be added under the same ownership rules; the two gameplay operations and two Player cheat actions shown here do not exhaust future functionality. Names declare conceptual API operations; exact signatures, argument [Types](core-concepts.md#data-modeling), and results are the implementer's choice.
+The complete namespace inventory is `session`, `player`, and `developer`. The following tree is the required starter operation inventory. Additional gameplay and developer operations may be added under the same ownership rules; the two gameplay operations and two Player cheat actions shown here do not exhaust future functionality. Names declare conceptual API operations; exact signatures, argument [Types](core-concepts.md#data-modeling), and results are the implementer's choice, except that each `player.actions` operation returns what it changed, under [Action results](player-api.md#action-results) in Player API.
 
 ```text
 Engine API

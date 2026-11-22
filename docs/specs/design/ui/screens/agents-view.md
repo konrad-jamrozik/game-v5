@@ -29,7 +29,7 @@ Each is its Label above its free count, in the Figure style, followed by its cap
 
 Under the title row, the header holds these controls, in this order:
 
-1. **Hire,** labelled with `hire_cost`, which makes one `hireAgent` [Player action](../../foundation/engine-contract.md#player-actions-and-turns), under [Hiring Agents](../../mechanics/economy-and-upgrades.md#hiring-agents) in Economy and Upgrades.
+1. **Hire,** labelled with `hire_cost`, which makes one `hireAgents` of 1 [Agent](../../mechanics/domain-model.md#agency-and-agents), one [Player action](../../foundation/engine-contract.md#player-actions-and-turns), under [Hiring Agents](../../mechanics/economy-and-upgrades.md#hiring-agents) in Economy and Upgrades.
 2. **Assign to,** a group under that label holding the buttons **[Standby](../../mechanics/agents-spec.md#assignments),** **[Contracting](../../mechanics/agents-spec.md#assignments),** and **[Training](../../mechanics/agents-spec.md#assignments),** each followed by its Assignment filter. Each button makes one `assignAgents` with the selected Agents and that [Assignment](../../mechanics/domain-model.md#agency-and-agents), under [Assigning Agents](../../mechanics/agents-spec.md#assigning-agents) in Agents, at once and without a confirmation, because Undo Action takes it back.
 3. **Dismiss,** a destructive button, which makes one `dismissAgents` with the selected Agents, under [Dismissing Agents](../../mechanics/economy-and-upgrades.md#dismissing-agents) in Economy and Upgrades, after the Player confirms the Agents it names.
 
