@@ -711,7 +711,7 @@
         operation_level_2: { on_win: { money: 30, funding: 5 }, on_ignored_or_lost: { panic: 0.1, funding: -1 } },
         operation_level_3: { on_win: { money: 100, funding: 20 }, on_ignored_or_lost: { panic: 0.3, funding: -4 } },
         operation_level_4: { on_win: { money: 300, funding: 40 }, on_ignored_or_lost: { panic: 1, funding: -8 } },
-        operation_level_5: {},
+        operation_level_5: { on_win: { money: 1000, funding: 80 } },
         apprehend_member: site(
           'initiative',
           0,
@@ -1073,7 +1073,7 @@
       )
       .join(
         '',
-      )}<tr><td class="name">${EXISTENTIAL}</td><td colspan="4" style="text-align:center;color:var(--muted)">existential: not stopping it loses the Campaign outright</td></tr></table></div>`,
+      )}<tr><td class="name">${EXISTENTIAL}</td><td>${inp(OL[EXISTENTIAL - 1] + '.on_win.money')}</td><td>${inp(OL[EXISTENTIAL - 1] + '.on_win.funding')}</td><td colspan="2" style="text-align:center;color:var(--muted)">existential: loses the Campaign outright</td></tr></table></div>`,
   )}
   ${panel('Starting levels and Panic limit', 'content/factions/faction_archetypes.yaml · panic-and-endings/ending_parameters.yaml', FA.map((x) => `<div class="kv"><span class="k"><code>${x}.initial_activity_level</code><small></small></span>${sel(x + '.initial_activity_level', AL)}</div>`).join('') + row('endings.defeat_at_panic_pct', 'Panic at which the Campaign is lost', { min: 1 }))}
   </div><div class="col">

@@ -129,8 +129,9 @@ function loadGdr(): Record<string, unknown> {
         const lost = Array.isArray(d['on_ignored_or_lost'])
           ? (d['on_ignored_or_lost'] as Record<string, unknown>[])
           : []
+        // An existential level has no loss values to balance, since not stopping it loses the Campaign, but its win rewards are balanced like any other level's.
         out[d.id] = lost.some((e) => 'defeat' in e)
-          ? {}
+          ? { on_win: effects(d['on_win'], ['money', 'funding']) }
           : {
               on_win: effects(d['on_win'], ['money', 'funding']),
               on_ignored_or_lost: effects(lost, ['panic', 'funding']),
