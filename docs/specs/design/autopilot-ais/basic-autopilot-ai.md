@@ -28,7 +28,7 @@ These terms are specific to the Basic Autopilot AI. General terms are in the [Do
 | Savings floor | The money the Basic Autopilot AI keeps unspent so that the [Agency](../mechanics/domain-model.md#agency-and-agents) can pay several [Turns](../foundation/engine-contract.md#player-actions-and-turns) of upkeep even if contracting income falls short. |
 | Expected income | The projected income the Agency will have once every Agent now [In transit](../mechanics/agents-spec.md#agent-statuses) to [Contracting](../mechanics/agents-spec.md#assignments) has arrived: its funding plus the contributions of every Agent whose Assignment is Contracting, each from its current [effective skill](../mechanics/agents-spec.md#combatant-attributes) and rounded down once in total, as [Agency income](../mechanics/economy-and-upgrades.md#agency-income) computes them. |
 | Tuning parameter | One of the values that the Basic Autopilot AI is built with, e.g. the Combat margin, under Tuning parameters. |
-| Required rating share | The least share of the [Combat rating](../mechanics/combat.md#combatant-condition-in-a-combat) of a Mission site's Enemies that a team's Combat rating must reach for the Basic Autopilot AI to deploy it there: the Combat margin plus the Loss margin step times the number of Lost Missions at Mission sites of the same MissionSiteArchetype, under Tuning parameters. E.g., with the Game designer values, 100% before any such Lost Mission and 110% after two. |
+| Required rating share | The least share of the [Combat rating](../mechanics/combat.md#combatant-condition-in-a-combat) of a Mission site's Enemies that a team's Combat rating must reach for the Basic Autopilot AI to deploy it there: the Combat margin plus the Loss margin step times the number of Lost Missions at Mission sites of the same MissionSiteArchetype, under Tuning parameters. E.g., with the Game designer values, 110% before any such Lost Mission and 120% after two. |
 | Muster | The team that the Basic Autopilot AI gathers for an [Initiative Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) that Deployable Agents alone cannot win yet, when Agents that are not yet Deployable Agents would complete a winning team for it within the Muster horizon, under step 3 of [Turn routine](#turn-routine). |
 | Mustered Agent | An Agent of the Muster: a Deployable Agent; an Agent on Contracting that is [Fit to start work](../mechanics/agents-spec.md#glossary), which step 3 recalls to Standby so that it is a Deployable Agent once it arrives, because exhaustion does not change [In transit](../mechanics/agents-spec.md#agent-statuses); or an Agent on Standby or Recovery that becomes a Deployable Agent within the Muster horizon by recovering where it is at the Agency's current rates, under [Agent Recovery](../mechanics/agent-recovery.md). |
 
@@ -123,8 +123,8 @@ The Game designer sets the following values of the Game build, so that an Implem
 | --- | --- |
 | Target roster | A base size of 20, plus 20 for each Upgrade other than a Cap Upgrade bought. |
 | Cap shares, Transport cap | 40% of the roster. |
-| Combat margin | 100%: a team whose Combat rating equals the Enemies' qualifies. |
-| Loss margin step | 5 percentage points, e.g. 105% after one Lost Mission and 110% after two. |
+| Combat margin | 110%: a team qualifies only when its Combat rating is at least 10% above the Enemies'. |
+| Loss margin step | 5 percentage points, e.g. 115% after one Lost Mission and 120% after two. |
 | Muster horizon | 2 Advance turns. |
 | Muster income floor | 60% of projected upkeep. |
 | Savings floor | 3 Turns of projected upkeep. |

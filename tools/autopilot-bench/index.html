@@ -564,6 +564,48 @@
         width: 360px;
         height: 120px;
       }
+      .chart h4 .expand {
+        float: right;
+        margin: -2px 0 0 6px;
+        padding: 0 4px;
+        border: 0;
+        background: none;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1;
+        cursor: pointer;
+      }
+      .chart h4 .expand:hover {
+        color: var(--text);
+      }
+      /* One chart shown full screen over a dimmed page; Escape or a press outside closes it. */
+      .chart-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 20;
+        background: rgba(13, 13, 11, 0.72);
+      }
+      .chart.full {
+        position: fixed;
+        inset: 24px;
+        z-index: 21;
+        width: auto;
+        overflow: auto;
+        padding: 12px 16px;
+      }
+      .chart.full h4 {
+        font-size: 15px;
+      }
+      .chart.full .leg {
+        font-size: 13px;
+      }
+      .chart.full svg {
+        width: 100%;
+        height: auto;
+      }
+      .chart.full svg text {
+        font-size: var(--fs, 9px);
+      }
       .chart svg text {
         font-family: var(--mono);
         font-size: 9px;
@@ -1026,12 +1068,12 @@
           ['Turn', 'The Current Turn', (s) => fmt(s.turn), 56],
           [
             'Outcome',
-            'The Campaign ending, and the Turn it came',
+            'The Campaign ending, the Turn it came, and its Ending reasons: objective, Panic at the limit, money below 0, or an existential operation not stopped, i.e. a Response Mission site of the Existential level Expired or Lost',
             (s) =>
               s.ending === null
                 ? '<span class="dim">playing</span>'
-                : `<span class="${s.ending.ending === 'Victory' ? 'good' : 'bad'}" title="${esc(s.ending.reasons.join(', '))}">${esc(s.ending.ending)} T${s.ending.turn}</span>`,
-            120,
+                : `<span class="${s.ending.ending === 'Victory' ? 'good' : 'bad'}" title="${esc(s.ending.reasons.join(', '))}">${esc(s.ending.ending)} T${s.ending.turn}</span> <span class="dim">${esc(s.ending.reasons.map((r) => REASON_TEXT[r] ?? r).join(', '))}</span>`,
+            230,
             true,
           ],
           ['Panic', 'Panic', (s) => `${(s.panicHundredths / 100).toFixed(1)}%`, 64],
@@ -1160,6 +1202,13 @@
       }
 
       const LAYER_NAMES = ['Agency', 'Work', 'Strength', 'Missions']
+      /** Short names of the engine's Ending reasons, for the Outcome. */
+      const REASON_TEXT = {
+        CampaignObjectiveAchieved: 'objective',
+        PanicAtTheLimit: 'Panic limit',
+        MoneyBelowZero: 'money < 0',
+        ExistentialOperationNotStopped: 'existential op',
+      }
       let LAYOUT = null
       let layoutKey = ''
 
@@ -1493,21 +1542,41 @@
       }
 
       /** The four charts of a Campaign block, from every Turn it has played. */
-      function chartsHtml(turns) {
+      function chartsHtml(turns, expanded) {
         if (turns.length === 0) return ''
-        return Object.entries(CHARTS)
-          .map(([kind, ch]) => `<div class="chart"><h4>${esc(ch.title)}</h4>${ch.legend(turns)}${ch.draw(turns)}</div>`)
-          .join('')
+        return (
+          (expanded ? '<div class="chart-backdrop"></div>' : '') +
+          Object.entries(CHARTS)
+            .map(([kind, ch]) => {
+              const full = kind === expanded
+              const svg = full
+                ? ch.draw(turns).replace('preserveAspectRatio="none"', 'preserveAspectRatio="xMidYMid meet"')
+                : ch.draw(turns)
+              return `<div class="chart${full ? ' full' : ''}"><h4>${esc(ch.title)}<button type="button" class="expand" data-act="expand" data-kind="${kind}" title="${full ? 'Close (Esc)' : 'Show full screen'}" aria-label="${full ? 'Close' : 'Show full screen'}">${full ? '✕' : '⤢'}</button></h4>${ch.legend(turns)}${svg}</div>`
+            })
+            .join('')
+        )
       }
 
       function drawCharts(row, c) {
         const turns = turnsOf(c)
         const last = turns[turns.length - 1]
-        const key = `${turns.length}|${JSON.stringify(last ?? null)}`
+        const key = `${turns.length}|${JSON.stringify(last ?? null)}|${row.expanded ?? ''}`
         if (row.chartKey === key) return
         row.chartKey = key
         row.turns = turns
-        row.charts.innerHTML = chartsHtml(turns)
+        row.charts.innerHTML = chartsHtml(turns, row.expanded)
+        // A chart shown full screen scales its viewBox up; its labels keep a readable size on screen instead.
+        const full = row.charts.querySelector('.chart.full svg')
+        if (full) full.style.setProperty('--fs', `${(12 * CW) / Math.max(full.clientWidth, 1)}px`)
+      }
+
+      /** Shows one chart of a Campaign block full screen, or closes it when it already is. */
+      function expandChart(row, kind) {
+        if (!row) return
+        row.expanded = row.expanded === kind ? null : kind
+        row.chartKey = null
+        drawCharts(row, row.campaign)
       }
 
       /** The tooltip of a chart: the Turn under the pointer and its values. */
@@ -1712,7 +1781,17 @@
           else if (a === 'stop') post('api/stop', { ids: [id] })
           else if (a === 'remove') post('api/remove', { ids: [id] })
           else if (a === 'use') useParams(rows.get(id).campaign.params)
+          else if (a === 'expand') expandChart(rows.get(id), b.dataset.kind)
         }
+        // Escape, or a press on the backdrop around it, closes a chart shown full screen.
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') for (const row of rows.values()) if (row.expanded) expandChart(row, row.expanded)
+        })
+        $('ct').addEventListener('pointerdown', (e) => {
+          if (!e.target.classList?.contains('chart-backdrop')) return
+          const row = rows.get(e.target.closest('[data-id]').dataset.id)
+          if (row?.expanded) expandChart(row, row.expanded)
+        })
         $('ct').addEventListener('pointerdown', (e) => e.button === 0 && act(e))
         $('ct').addEventListener('click', (e) => e.detail === 0 && act(e))
         $('ct').addEventListener('mousemove', hover)
