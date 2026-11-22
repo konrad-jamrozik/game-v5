@@ -513,11 +513,10 @@
       <div class="intro">
         <h1>GDR Balance Bench</h1>
         <p>
-          Every balance value of the Bootstrap GDRs, next to what it causes. Change a value and the readouts recompute
-          from the rules of the specifications. Nothing here writes to the repository: copy the list of changes at the
-          bottom and hand it to Claude to apply to <code>content/</code>. The GDR values are read from
-          <code>content/</code>, and the engine is run from the <code>game-v5-impl-web</code> clone, each time this page
-          loads.
+          Every balance value of the GDRs, next to what it causes. Change a value and the readouts recompute from the
+          rules of the specifications. Nothing here writes to the repository: copy the list of changes at the bottom and
+          hand it to Claude to apply to <code>content/</code>. The GDR values are read from <code>content/</code>, and
+          the engine is run from the <code>game-v5-impl-web</code> clone, each time this page loads.
         </p>
       </div>
       <div class="bar">
@@ -538,7 +537,7 @@
 
     <script>
       'use strict'
-      /* ---------- Bootstrap GDR values, copied from content/*.yaml ---------- */
+      /* ---------- GDR values, copied from content/*.yaml ---------- */
       const EN = [
         'initiate',
         'operative',
@@ -971,7 +970,7 @@
       function inp(p, o = {}) {
         const v = get(cur, p),
           b = get(BASE, p)
-        return `<input type="number" inputmode="decimal" id="${sid(p)}" data-p="${p}" value="${v}" step="${o.step || 1}" min="${o.min ?? 0}" title="${esc(p)} · Bootstrap value ${b}" aria-label="${esc(p)}"${v !== b ? ' class="chg"' : ''}>`
+        return `<input type="number" inputmode="decimal" id="${sid(p)}" data-p="${p}" value="${v}" step="${o.step || 1}" min="${o.min ?? 0}" title="${esc(p)} · GDR value ${b}" aria-label="${esc(p)}"${v !== b ? ' class="chg"' : ''}>`
       }
       function sel(p, opts) {
         const v = get(cur, p)
@@ -1081,7 +1080,7 @@
   </div></div></section>`)
         /* Changes */
         h.push(
-          `<section id="changes"><div class="shead"><h2>Changes</h2><p>Every value that differs from the Bootstrap GDRs, grouped by the YAML file that records it.</p></div>${panel('Changed values', '', `<div class="chg-list" id="chglist"></div><textarea id="chgtext" readonly aria-label="Changes as text"></textarea>`)}</section>`,
+          `<section id="changes"><div class="shead"><h2>Changes</h2><p>Every value that differs from the GDRs, grouped by the YAML file that records it.</p></div>${panel('Changed values', '', `<div class="chg-list" id="chglist"></div><textarea id="chgtext" readonly aria-label="Changes as text"></textarea>`)}</section>`,
         )
         document.getElementById('app').innerHTML = h.join('')
         paintLevels()
@@ -1818,7 +1817,7 @@
 
       /* ---------- changes ---------- */
       function changesText(ch) {
-        if (!ch.length) return 'No changes: every value equals the Bootstrap GDRs.'
+        if (!ch.length) return 'No changes: every value equals the GDRs.'
         const L = ['GDR balance changes to apply under content/ (old -> new):']
         FILES.forEach(([file, ids]) => {
           const mine = ch.filter((p) => ids.includes(p.split('.')[0]))

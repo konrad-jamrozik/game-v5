@@ -100,11 +100,11 @@ Each Batch moves from drafting to review to acceptance in the same way, so that 
 
 For each authorized batch:
 
-1. Inspect the brief, accepted dependencies, related drafts, and relevant game-ts code where useful.
+1. Inspect the brief, accepted dependencies, and related drafts.
 2. Draft the contract using the accepted conventions. Record where a rule is taken from the inherited game in an Informative rationale.
 3. Add formulas, boundary cases, worked examples, and relevant updates to GDRs.
 4. Check internal consistency and cross-specification references. Identify unresolved dependencies and decisions.
-5. Present a concise review summary: proposed behavior, departures from game-ts, trade-offs, open questions, and affected documents. Set the work state to In review; the specification remains Draft.
+5. Present a concise review summary: proposed behavior, trade-offs, open questions, and affected documents. Set the work state to In review; the specification remains Draft.
 6. Pause before advancing to the next batch so the user can review. Incorporate feedback or follow explicit instructions to continue. Record acceptance only when it is explicitly given.
 
 ## Backlog updates

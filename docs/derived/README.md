@@ -87,7 +87,7 @@ These informative views are derived from the registered Markdown specifications.
 
 | ID | Document | Owns |
 | --- | --- | --- |
-| BOOT | [Bootstrap GDRs](../specs/design/content/bootstrap-gdrs.md) | Which Game Data Records (GDRs) a Game build supplies so that a complete Campaign can be played from creation to an ending, and how those GDRs form the Victory path. |
+| GDRS | [GDRs](../specs/design/content/gdrs.md) | Which Game Data Records (GDRs) a Game build supplies so that a complete Campaign can be played from creation to an ending, and how those GDRs form the Victory path. |
 
 ## UI
 

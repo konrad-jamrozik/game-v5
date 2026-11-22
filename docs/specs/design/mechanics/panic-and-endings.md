@@ -70,7 +70,7 @@ The Campaign ending is in exactly one of the states No Campaign ending, Victory,
 
 # Ending GDRs
 
-The GDRs a [Game build](../foundation/core-concepts.md#game-build-and-content) supplies, and their values, are listed by [Bootstrap GDRs](../content/bootstrap-gdrs.md#glossary) and the YAML files it names.
+The GDRs a [Game build](../foundation/core-concepts.md#game-build-and-content) supplies, and their values, are listed by [GDRs](../content/gdrs.md) and the YAML files it names.
 
 ## EndingParameters
 
@@ -180,8 +180,6 @@ Victory holds exactly when the [Pending victory](#pending-victory) of this Advan
 A Game build is not required to supply a Lead whose `on_completion` holds a `win_campaign` Effect. a Campaign of a Game build that supplies none never has Victory and can end only in Defeat.
 
 When Victory holds, the Campaign ending becomes Victory, the Ending reasons become the one Ending reason Campaign objective achieved, and no Defeat condition is evaluated or recorded, whatever Panic and money are.
-
-**Informative rationale:** game-ts won the same way, by completing its last Lead, which appears once every Faction is terminated. An earlier v5 rule won the Campaign as soon as every Faction was Eliminated.
 
 ## Defeat
 

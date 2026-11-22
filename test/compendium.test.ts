@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs'
 
 import { describe, expect, test } from 'vitest'
 
-import { BOOTSTRAP_GDRS_PATH, collectContentFiles, compendiumFindings } from '../scripts/compendium-check.ts'
+import { GDRS_PATH, collectContentFiles, compendiumFindings } from '../scripts/compendium-check.ts'
 import {
   coverageExemptions,
   coverageFindings,
@@ -245,7 +245,7 @@ describe('Article resolution', () => {
 })
 
 describe('Compendium coverage', () => {
-  const bootstrap = [
+  const gdrsText = [
     '# Compendium coverage',
     '',
     '| GDR | Property | Why it is exempt |',
@@ -258,7 +258,7 @@ describe('Compendium coverage', () => {
   ].join('\n')
 
   test('reads the exemption table of the section only', () => {
-    expect(coverageExemptions(bootstrap)).toEqual(['agent_parameters.experience_per_mission_survived'])
+    expect(coverageExemptions(gdrsText)).toEqual(['agent_parameters.experience_per_mission_survived'])
   })
 
   test('reports an uncovered property, a covered exemption, and an exemption that names nothing', () => {
@@ -269,7 +269,7 @@ describe('Compendium coverage', () => {
     ])
     const covered = loadGameData([...GAME, COVERING])
     expect(coverageFindings(covered, loadCompendium(covered), [])).toEqual([])
-    expect(coverageFindings(covered, loadCompendium(covered), coverageExemptions(bootstrap))).toEqual([
+    expect(coverageFindings(covered, loadCompendium(covered), coverageExemptions(gdrsText))).toEqual([
       expect.stringContaining('is exempt from Compendium coverage, but an article names it'),
     ])
     expect(coverageFindings(covered, loadCompendium(covered), ['music.volume'])).toEqual([
@@ -281,7 +281,7 @@ describe('Compendium coverage', () => {
 describe('the game data of the repository', () => {
   test('passes the Compendium check', async () => {
     const contentFiles = await collectContentFiles(process.cwd())
-    expect(compendiumFindings(contentFiles, readFileSync(BOOTSTRAP_GDRS_PATH, 'utf8'))).toEqual([])
+    expect(compendiumFindings(contentFiles, readFileSync(GDRS_PATH, 'utf8'))).toEqual([])
   })
 
   test('has the Placeholder sources that the Compendium specification lists', () => {

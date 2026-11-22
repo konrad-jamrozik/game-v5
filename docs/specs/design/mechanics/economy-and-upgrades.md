@@ -35,7 +35,7 @@ These terms are specific to the [Agency](domain-model.md#agency-and-agents)'s ec
 
 # Economy GDRs
 
-The Game Data Records ([GDRs](../foundation/core-concepts.md#game-build-and-content)) a [Game build](../foundation/core-concepts.md#game-build-and-content) supplies, and their values, are listed by [Bootstrap GDRs](../content/bootstrap-gdrs.md#glossary) and the YAML files it names. Every property table below is exhaustive apart from the `id` and `type` that every GDR has.
+The Game Data Records ([GDRs](../foundation/core-concepts.md#game-build-and-content)) a [Game build](../foundation/core-concepts.md#game-build-and-content) supplies, and their values, are listed by [GDRs](../content/gdrs.md) and the YAML files it names. Every property table below is exhaustive apart from the `id` and `type` that every [GDR](../foundation/core-concepts.md#game-build-and-content) has.
 
 ## EconomyParameters
 
@@ -216,11 +216,11 @@ Inputs:
 | 100 and 500 | Constants of this rule, not GDR values: effective skill 100 earns exactly `contracting_income_per_agent`, and each 100 points of effective skill above or below it change the contribution by one fifth of it. | Skill points. |
 | money before | The Agency's money as the Step-start value of the Agency income step. | Money; any whole number. |
 
-Evaluation: each contribution is evaluated exactly, under [Exact evaluation](../foundation/numbers.md#exact-evaluation) in Numbers, the contributions are summed exactly, and the sum is rounded once, with [Round down](../foundation/numbers.md#glossary); no contribution is rounded on its own. Because effective skill is at least 0, each contribution is at least `0.8 × contracting_income_per_agent`, so income is a whole number of at least 0 and money never falls in this step. E.g., an Agent with effective skill 100 contributes exactly 30 with the Bootstrap value 30; one with effective skill 83 contributes `30 × (1 − 17 / 500) = 28.98`; and one trained to effective skill 150 contributes `30 × (1 + 50 / 500) = 33`, so the three together give `round down(91.98) = 91`.
+Evaluation: each contribution is evaluated exactly, under [Exact evaluation](../foundation/numbers.md#exact-evaluation) in Numbers, the contributions are summed exactly, and the sum is rounded once, with [Round down](../foundation/numbers.md#glossary); no contribution is rounded on its own. Because effective skill is at least 0, each contribution is at least `0.8 × contracting_income_per_agent`, so income is a whole number of at least 0 and money never falls in this step. E.g., an Agent with effective skill 100 contributes exactly 30 with the GDR value 30; one with effective skill 83 contributes `30 × (1 − 17 / 500) = 28.98`; and one trained to effective skill 150 contributes `30 × (1 + 50 / 500) = 33`, so the three together give `round down(91.98) = 91`.
 
 An Agent [In transit](domain-model.md#agency-and-agents) to Contracting is not in C, including one that arrives in the Previous turn transit arrivals step of the same Advance turn, because that step comes after the Agency income step. The Agency income step is the first step, so funding, C, and each effective skill equal their values in the [Turn-end state](../foundation/engine-contract.md#player-actions-and-turns). After the income is added, every Agent in C gains [exhaustion](agents-spec.md#combatant-attributes) and may have a [Forced return](agents-spec.md#assignments), under [Work exhaustion](agents-spec.md#work-exhaustion) and [Forced return](agents-spec.md#forced-return) in Agents; the income already added is kept.
 
-**Informative rationale:** The contribution formula is the game-ts contracting income: work pays more for a skilled Agent and less for a worn-down one, but only gently, so that Contracting stays a dependable source of money.
+**Informative rationale:** Work pays more for a skilled Agent and less for a worn-down one, but only gently, so that Contracting stays a dependable source of money.
 
 ## Upkeep
 
@@ -407,7 +407,7 @@ An Armor Upgrade, i.e. an Upgrade whose `effect` is `agent_armor`, changes no st
 effective armor = base armor + Upgrade bonus of agent_armor
 ```
 
-Inputs: [base armor](agents-spec.md#combatant-attributes) is the Agent's own, a whole number of at least 0, which no Upgrade changes, and is the starting value under [Upgrade bonus](#upgrade-bonus); the Upgrade bonus is that of the World state in which the value is read. The result is a whole number of at least the Agent's base armor. E.g., with the Bootstrap GDRs every Agent's base armor is 0, so its effective armor is 0 until the first acquisition of the Armor Upgrade, whose Increment is 5, then 5 for every Serving Agent, then 10 after the second, and so on.
+Inputs: [base armor](agents-spec.md#combatant-attributes) is the Agent's own, a whole number of at least 0, which no Upgrade changes, and is the starting value under [Upgrade bonus](#upgrade-bonus); the Upgrade bonus is that of the World state in which the value is read. The result is a whole number of at least the Agent's base armor. E.g., with the GDRs every Agent's base armor is 0, so its effective armor is 0 until the first acquisition of the Armor Upgrade, whose Increment is 5, then 5 for every Serving Agent, then 10 after the second, and so on.
 
 The formula holds for every Serving Agent alike, whatever its Assignment and Agent status and whichever Turn it was created in, and it rises by the Increment at once, within the same Turn, so the first [Combat](domain-model.md#combat) fought after a purchase already starts every Agent with the raised [current armor](agents-spec.md#combatant-attributes). Effective armor lets an Agent take hits in a Combat without losing current health, and so without losing effective skill, under [Effects of an attack](combat.md#effects-of-an-attack) in Combat; it changes no current health, no effective max health, and no effective skill. A Terminated Agent is not affected: it keeps the Final armor recorded when it became Terminated, under [Service record](agents-spec.md#service-record) in Agents. The effect changes no stored Agent value, no Armor GDR, and no Enemy. Each acquisition also raises the [Combat rating](combat.md#combat-rating) of every Serving Agent through its rating factor, under Combat rating in Combat, by what it adds to the Agent's effective armor.
 

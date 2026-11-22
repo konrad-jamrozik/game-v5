@@ -417,9 +417,9 @@ function templatedTexts(article: Article): readonly string[] {
   return [article.body, ...article.formulas.flatMap((row) => [row.label, row.text])]
 }
 
-/** The rows of the exemption table under Compendium coverage in Bootstrap GDRs, each as `gdr_id.property`. */
-export function coverageExemptions(bootstrapGdrs: string): readonly string[] {
-  const section = bootstrapGdrs.split(/^# Compendium coverage$/m)[1]?.split(/^# /m)[0] ?? ''
+/** The rows of the exemption table under Compendium coverage in GDRs, each as `gdr_id.property`. */
+export function coverageExemptions(gdrs: string): readonly string[] {
+  const section = gdrs.split(/^# Compendium coverage$/m)[1]?.split(/^# /m)[0] ?? ''
   return [...section.matchAll(/^\| `([^`]+)`\s*\| `([^`]+)`\s*\|/gm)].map((match) => `${match[1]}.${match[2]}`)
 }
 
@@ -448,7 +448,7 @@ export function coverageFindings(
         }
       } else if (!compendium.placeholderKeys.has(key)) {
         findings.push(
-          `${gdr.path}: no Compendium article names ${key} in a placeholder; explain it in an article of category mechanics, or add it to the exemptions under Compendium coverage in Bootstrap GDRs.`,
+          `${gdr.path}: no Compendium article names ${key} in a placeholder; explain it in an article of category mechanics, or add it to the exemptions under Compendium coverage in GDRs.`,
         )
       }
     }

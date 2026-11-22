@@ -27,9 +27,9 @@ These terms are specific to Agent Recovery. General terms are in the [Agents glo
 
 # Recovery parameters
 
-The [GDRs](../foundation/core-concepts.md#game-build-and-content) a [Game build](../foundation/core-concepts.md#game-build-and-content) supplies, and their values, are listed by [Bootstrap GDRs](../content/bootstrap-gdrs.md#glossary) and the YAML files it names.
+The [GDRs](../foundation/core-concepts.md#game-build-and-content) a [Game build](../foundation/core-concepts.md#game-build-and-content) supplies, and their values, are listed by [GDRs](../content/gdrs.md) and the YAML files it names.
 
-RecoveryParameters bundles the two recovery rates. This table is exhaustive apart from the `id` and `type` that every GDR has.
+RecoveryParameters bundles the two recovery rates. This table is exhaustive apart from the `id` and `type` that every [GDR](../foundation/core-concepts.md#game-build-and-content) has.
 
 | Property | Meaning | Read by |
 | --- | --- | --- |
@@ -72,7 +72,7 @@ The recovery rules of the next two sections read each Agent's own values at the 
 
 # Health recovery
 
-An Agent recovers a percentage of its effective max health in each Advance turn. **Informative rationale:** game-ts recovered health the same way and kept the resulting current health fractional.
+An Agent recovers a percentage of its effective max health in each Advance turn.
 
 v5 keeps an Agent's current health as a Decimal quantity, under [Decimal quantities](../foundation/numbers.md#decimal-quantities) in Numbers, so the amount recovered in one Advance turn is rounded up to hundredths. The Health recovery rate of an Agent is the following [Derived value](../foundation/core-concepts.md#value-classification):
 
@@ -113,7 +113,7 @@ For each Agent that is on Standby or on Recovery and satisfies the conditions un
 Exact exhaustion after = max( 0, Exact exhaustion before − exhaustion recovery )
 ```
 
-where [Exact exhaustion](agents-spec.md#combatant-attributes) before is the Agent's [Exact exhaustion](agents-spec.md#combatant-attributes) at the start of the step and exhaustion recovery is `exhaustion_recovery_per_turn` of RecoveryParameters plus what every acquired Upgrade with the effect `exhaustion_recovery` adds, under [Rate Upgrades](economy-and-upgrades.md#rate-upgrades) in Economy and Upgrades, in exhaustion points, a Decimal quantity of at least 0. No rounding occurs, because every term is a Decimal quantity. The result is a Decimal quantity from 0 to Exact exhaustion before, so the clamp under [Attribute ranges](agents-spec.md#attribute-ranges) is applied by this rule and Exact exhaustion never falls below 0. The Agent's exhaustion after the step is `round up( Exact exhaustion after )`, under [Exhaustion and Exact exhaustion](agents-spec.md#exhaustion-and-exact-exhaustion) in Agents; e.g., an Exact exhaustion of 5 that recovers 1.6 becomes 3.40, an exhaustion of 4. While the exhaustion recovery is a whole number, as with the Bootstrap value, Exact exhaustion and exhaustion are equal.
+where [Exact exhaustion](agents-spec.md#combatant-attributes) before is the Agent's [Exact exhaustion](agents-spec.md#combatant-attributes) at the start of the step and exhaustion recovery is `exhaustion_recovery_per_turn` of RecoveryParameters plus what every acquired Upgrade with the effect `exhaustion_recovery` adds, under [Rate Upgrades](economy-and-upgrades.md#rate-upgrades) in Economy and Upgrades, in exhaustion points, a Decimal quantity of at least 0. No rounding occurs, because every term is a Decimal quantity. The result is a Decimal quantity from 0 to Exact exhaustion before, so the clamp under [Attribute ranges](agents-spec.md#attribute-ranges) is applied by this rule and Exact exhaustion never falls below 0. The Agent's exhaustion after the step is `round up( Exact exhaustion after )`, under [Exhaustion and Exact exhaustion](agents-spec.md#exhaustion-and-exact-exhaustion) in Agents; e.g., an Exact exhaustion of 5 that recovers 1.6 becomes 3.40, an exhaustion of 4. While the exhaustion recovery is a whole number, as with the GDR value, Exact exhaustion and exhaustion are equal.
 
 Exhaustion recovers on Standby and on Recovery alone. It does not recover on [Contracting](agents-spec.md#assignments), Training, or an Investigation, nor while the Agent is In transit or Deployed, under [Which Agents recover](#which-agents-recover). The rate is the same on Standby and on Recovery.
 
@@ -168,7 +168,7 @@ where effective max health and current health are the Agent's current values, in
 - **Agent whose Investigation completed in this Advance turn:** Its team is on Standby, In transit, from the Investigation progress step on, so its exhaustion does not recover in this Advance turn ([Which Agents recover](#which-agents-recover)).
 - **Recovery interrupted by a new Assignment:** No Player action can give a Recovering Agent a new Assignment, because it cannot take orders ([Agents that can take orders](agents-spec.md#agents-that-can-take-orders)); the only change of its Assignment is the move to Standby in the Agent recovery step. Whether an Agent on Recovery may be dismissed is decided under [Dismissing Agents](economy-and-upgrades.md#dismissing-agents).
 - **An Agent that is Killed:** A Killed Agent is not Serving, so it recovers nothing and has no Recovery turns remaining.
-- **Small Health recovery rate:** The Health recovery rate is at least 0.01, so every Agent on Recovery gains current health in every Advance turn in which it recovers; e.g., a test [effective max health](agents-spec.md#combatant-attributes) of 1 with the Bootstrap percentage gives `round up to hundredths(0.02) = 0.02` ([Health recovery](#health-recovery)).
+- **Small Health recovery rate:** The Health recovery rate is at least 0.01, so every Agent on Recovery gains current health in every Advance turn in which it recovers; e.g., a test [effective max health](agents-spec.md#combatant-attributes) of 1 with the GDR percentage gives `round up to hundredths(0.02) = 0.02` ([Health recovery](#health-recovery)).
 - **Percentage above 100:** The Health recovery rate may exceed effective max health; current health after is still effective max health ([Recovery GDR validation](#recovery-gdr-validation)).
 - **Exhaustion recovery rate of 0:** Exhaustion never falls on Standby or Recovery; health recovery and the move to Standby are unaffected ([Recovery GDR validation](#recovery-gdr-validation)).
 - **Invalid GDRs:** A Game build with no RecoveryParameters, two RecoveryParameters, a missing or extra property, a `health_recovery_pct_per_turn` of 0, a negative `exhaustion_recovery_per_turn`, or either value written with more than two digits after the decimal point fails [Recovery GDR validation](#recovery-gdr-validation), and no Campaign is created from it.

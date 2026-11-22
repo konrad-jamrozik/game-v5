@@ -14,16 +14,16 @@ import type { SourceFile } from './spec-linter/types.ts'
 
 /**
  * Checks the Compendium articles under `content/`: every rule of Compendium article GDR validation in the Compendium
- * specification, and Compendium coverage in Bootstrap GDRs. It reads files only and changes none.
+ * specification, and Compendium coverage in GDRs. It reads files only and changes none.
  */
 
-export const BOOTSTRAP_GDRS_PATH = 'docs/specs/design/content/bootstrap-gdrs.md'
+export const GDRS_PATH = 'docs/specs/design/content/gdrs.md'
 
-/** Every finding of the Compendium check for the given content files and the text of Bootstrap GDRs. */
-export function compendiumFindings(contentFiles: readonly SourceFile[], bootstrapGdrs: string): readonly string[] {
+/** Every finding of the Compendium check for the given content files and the text of GDRs. */
+export function compendiumFindings(contentFiles: readonly SourceFile[], gdrs: string): readonly string[] {
   const gameData = loadGameData(contentFiles)
   const compendium = loadCompendium(gameData)
-  return [...compendium.findings, ...coverageFindings(gameData, compendium, coverageExemptions(bootstrapGdrs))]
+  return [...compendium.findings, ...coverageFindings(gameData, compendium, coverageExemptions(gdrs))]
 }
 
 /** The YAML files under `content/`, outside the Cut content directory `content/cut/`, with paths relative to `root`. */
@@ -43,11 +43,11 @@ export async function collectContentFiles(root: string): Promise<readonly Source
 
 async function main(): Promise<void> {
   const root = process.cwd()
-  const [contentFiles, bootstrapGdrs] = await Promise.all([
+  const [contentFiles, gdrs] = await Promise.all([
     collectContentFiles(root),
-    readFile(resolve(root, BOOTSTRAP_GDRS_PATH), 'utf8'),
+    readFile(resolve(root, GDRS_PATH), 'utf8'),
   ])
-  const findings = compendiumFindings(contentFiles, bootstrapGdrs)
+  const findings = compendiumFindings(contentFiles, gdrs)
   for (const finding of findings) console.error(finding)
   process.exitCode = findings.length === 0 ? 0 : 1
 }

@@ -30,7 +30,7 @@ The [Investigation](domain-model.md#leads-investigations-mission-sites-and-missi
 
 # Investigation GDRs
 
-Investigations read the [Game Data Record](../foundation/core-concepts.md#game-build-and-content) (GDR) [Types](../foundation/core-concepts.md#data-modeling) InvestigationArchetype and InvestigationParameters and one property of the [Lead](domain-model.md#leads-investigations-mission-sites-and-missions) GDR. The GDRs a [Game build](../foundation/core-concepts.md#game-build-and-content) supplies, and their values, are listed by [Bootstrap GDRs](../content/bootstrap-gdrs.md#glossary) and the YAML files it names.
+Investigations read the [Game Data Record](../foundation/core-concepts.md#game-build-and-content) (GDR) [Types](../foundation/core-concepts.md#data-modeling) InvestigationArchetype and InvestigationParameters and one property of the [Lead](domain-model.md#leads-investigations-mission-sites-and-missions) GDR. The GDRs a [Game build](../foundation/core-concepts.md#game-build-and-content) supplies, and their values, are listed by [GDRs](../content/gdrs.md) and the YAML files it names.
 
 ## InvestigationArchetype
 
@@ -236,7 +236,7 @@ Evaluation: the product is formed before the division, under [Exact evaluation](
 
 Progress loss leaves Assessed unchanged: an Investigation that was Assessed stays Assessed, whatever progress remains. Progress loss applies to the "Assigned elsewhere" and "Forced return" occasions above; members leaving on Completion cost nothing, because the Investigation is then final. A Forced return happens only after the [Completion check](#completion-check) of the step, so it never costs the progress that completes an Investigation.
 
-**Informative rationale:** The members carry the current context of the work, and the most skilled carry the most, so removing a highly skilled Agent costs more than removing a rookie. This matches game-ts revision `f1835a29`, `removeAgentsFromInvestigation` in `web/src/redux/reducers/agentReducers.ts`, which also applies to the Agents its `unassignExhaustedAgents` sends back.
+**Informative rationale:** The members carry the current context of the work, and the most skilled carry the most, so removing a highly skilled Agent costs more than removing a rookie.
 
 ## Abandonment
 
@@ -284,7 +284,7 @@ Meaning: gain is `round down(S × n^e / n)` hundredths of a progress point, wher
 
 Evaluation: n^e is usually not a rational number, so the formula is stated as the inequality above, which uses only whole numbers and is evaluated exactly under [Exact evaluation](../foundation/numbers.md#exact-evaluation) in Numbers; its greatest k equals `round down(S × n^e / n)` exactly. E.g., with e = 0.8, 5 working members whose effective skill sums to 620 gain 449, because 449^5 × 5 ≤ 620^5 < 450^5 × 5; that is 4.49 progress points. The gain lies from 0 to S, because n^(q − p) is at least 1, and it is 0 exactly when S is 0. Investigation progress has no upper bound. Investigating lowers no [current health](agents-spec.md#combatant-attributes), and it raises a working member's [exhaustion](agents-spec.md#combatant-attributes) only after the progress and the completion of this step, under [Investigation progress](#investigation-progress), so the gain reads the effective skill of the working members at the start of the step.
 
-The following table gives the gain of working members of effective skill 100 each with the Bootstrap `team_efficiency_exponent` 0.8:
+The following table gives the gain of working members of effective skill 100 each with the GDR value `team_efficiency_exponent` 0.8:
 
 | Working members | S    | Gain, in hundredths | Gain per member |
 | --------------- | ---- | ------------------- | --------------- |
@@ -362,7 +362,7 @@ No Derived value states whether the next Advance turn completes an Investigation
 
 The [Player API](../foundation/engine-contract.md#api-surfaces) query `estimateTeamProgressGain(agents)` returns, for a set of Agents given by their Instance IDs, the gain that [Progress gain](#progress-gain) would add if exactly those Agents were the working members of an Investigation: the formula of Progress gain with n the number of distinct Agents in the set and S the sum of their current [Effective skill](agents-spec.md#effective-skill). An empty set gives 0. The value is a whole number of hundredths of a progress point. The query reads no Investigation and changes no Campaign state, so it answers for a team that does not exist yet, e.g. the Agents the player is about to start an Investigation with, or an Active Investigation's Current team together with the Agents the player may add to it. It rejects a set that names an Instance ID that is not of a [Serving](agents-spec.md#agent-statuses) Agent.
 
-The estimate takes every Agent in the set as working, whatever its Agent status and Assignment, so it leaves out the Advance turn an Agent spends [In transit](agents-spec.md#agent-statuses) before it works, under [Transit rule](agents-spec.md#transit-rule), and the exhaustion that work adds, under [Work exhaustion](agents-spec.md#work-exhaustion). It is therefore the gain per Advance turn once the team works, not the gain of the next Advance turn: for an Active Investigation whose members are all At assignment, the estimate of its Current team equals its projected progress gain, under [Projected progress gain](#projected-progress-gain), and otherwise it can be greater. E.g., with the Bootstrap `team_efficiency_exponent` 0.8, two Agents of effective skill 100 on Standby give 174, as in the table under Progress gain, while the Investigation they start has a projected progress gain of 0 until they arrive.
+The estimate takes every Agent in the set as working, whatever its Agent status and Assignment, so it leaves out the Advance turn an Agent spends [In transit](agents-spec.md#agent-statuses) before it works, under [Transit rule](agents-spec.md#transit-rule), and the exhaustion that work adds, under [Work exhaustion](agents-spec.md#work-exhaustion). It is therefore the gain per Advance turn once the team works, not the gain of the next Advance turn: for an Active Investigation whose members are all At assignment, the estimate of its Current team equals its projected progress gain, under [Projected progress gain](#projected-progress-gain), and otherwise it can be greater. E.g., with the GDR value `team_efficiency_exponent` 0.8, two Agents of effective skill 100 on Standby give 174, as in the table under Progress gain, while the Investigation they start has a projected progress gain of 0 until they arrive.
 
 # Turn report
 

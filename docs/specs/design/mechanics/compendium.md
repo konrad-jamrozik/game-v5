@@ -32,7 +32,7 @@ These terms are specific to the Compendium.
 
 # Compendium article GDRs
 
-An article is authored once, as a GDR, and everything the Player sees of it is computed from that GDR and the rest of the game data. The [GDRs](../foundation/core-concepts.md#game-build-and-content) a [Game build](../foundation/core-concepts.md#game-build-and-content) supplies, and their values, are listed by [Bootstrap GDRs](../content/bootstrap-gdrs.md#glossary) and the YAML files it names.
+An article is authored once, as a GDR, and everything the Player sees of it is computed from that GDR and the rest of the game data. The [GDRs](../foundation/core-concepts.md#game-build-and-content) a [Game build](../foundation/core-concepts.md#game-build-and-content) supplies, and their values, are listed by [GDRs](../content/gdrs.md) and the YAML files it names.
 
 ## CompendiumArticle
 
@@ -184,7 +184,7 @@ In each [World state](../foundation/engine-contract.md#player-actions-and-turns)
 
 Whether an article is Player-visible is a [Derived value](../foundation/core-concepts.md#value-classification) of the World state in which it is read; it is never stored. It changes only when the visibility of its subject changes, its subject becomes a Met subject, or its `visible_when` starts to hold, so a Subject article without `visible_when` about a subject of another Type becomes Player-visible in the same World state as its subject, e.g. in the World state after the Advance turn whose Mission resolution step discovers its Lead.
 
-The following table restates, for the Types the [Bootstrap GDRs](../content/bootstrap-gdrs.md#glossary) supply Subject articles for, when the specification that owns each Type makes one of its GDRs Player-visible. It is informative; each owning specification's Player-visible information section governs.
+The following table restates, for the Types the [GDRs](../content/gdrs.md) supply Subject articles for, when the specification that owns each Type makes one of its GDRs Player-visible. It is informative; each owning specification's Player-visible information section governs.
 
 | Subject Type | Owning specification | The subject is Player-visible |
 | --- | --- | --- |
@@ -205,7 +205,7 @@ Every EnemyArchetype, Weapon, and Armor is Player-visible in every World state, 
 - **Weapon:** a Weapon is a Met subject when it is the `weapon` of an AgentArchetype, or of an EnemyArchetype that is a Met subject in that World state.
 - **Armor:** an Armor is a Met subject when it is the `armor` of an AgentArchetype, or of an EnemyArchetype that is a Met subject in that World state.
 
-Whether a GDR is a Met subject is a Derived value of the World state, never stored. It follows the visibility of the MissionSiteArchetypes, so the article about an [Enemy](domain-model.md#combat) becomes Player-visible when a Lead is discovered that creates a Mission site holding that Enemy, or when a Mission site holding it is created, whichever comes first, e.g. with the Bootstrap GDRs, discovering a Lead that creates an Apprehend member Mission site makes the articles about the initiate, the operative, the basic pistol, and the combat pistol Player-visible, while the article about the service weapon is Player-visible from the start because every Agent carries one.
+Whether a GDR is a Met subject is a Derived value of the World state, never stored. It follows the visibility of the MissionSiteArchetypes, so the article about an [Enemy](domain-model.md#combat) becomes Player-visible when a Lead is discovered that creates a Mission site holding that Enemy, or when a Mission site holding it is created, whichever comes first, e.g. with the GDRs, discovering a Lead that creates an Apprehend member Mission site makes the articles about the initiate, the operative, the basic pistol, and the combat pistol Player-visible, while the article about the service weapon is Player-visible from the start because every Agent carries one.
 
 # Article resolution
 
@@ -235,7 +235,7 @@ In a World state, let V be the Compendium articles that are Player-visible in it
 
 **Hidden articles:** Only the Article terms of the articles in V take part. An article that is not Player-visible contributes no match, so the resolved form of every article is exactly what it would be if the Game build did not supply the hidden article, and no link, and no missing link, reveals that it exists.
 
-E.g., with the Bootstrap values, in a World state in which a Mechanics article with the Article terms `Agent` and `Agents` and another with the Article term `skill` are Player-visible, the Mechanics article of the YAML example under [CompendiumArticle](#compendiumarticle) resolves as follows, with each Article link in square brackets and each inserted value in angle brackets:
+E.g., with the GDR values, in a World state in which a Mechanics article with the Article terms `Agent` and `Agents` and another with the Article term `skill` are Player-visible, the Mechanics article of the YAML example under [CompendiumArticle](#compendiumarticle) resolves as follows, with each Article link in square brackets and each inserted value in angle brackets:
 
 | Templated text | Resolved segments |
 | --- | --- |
@@ -257,7 +257,7 @@ The See also entries of a Player-visible article in a World state are the articl
 
 A reference is only useful if it is complete: a Player who wants to know how a mechanic works must find every number behind it.
 
-The Compendium articles of the Bootstrap GDRs name, in a Placeholder of at least one article, every property of every parameter GDR, i.e. every GDR whose Type name ends in "Parameters", except the properties that the [Bootstrap GDRs](../content/bootstrap-gdrs.md#glossary) specification exempts because they describe no mechanic of the game. A new property of a parameter GDR therefore comes with the Mechanics article text that explains it. This is a requirement on the Bootstrap GDRs as authored, which the repository check `npm run compendium:check` enforces; it is not a rule of [Compendium article GDR validation](#compendium-article-gdr-validation), so a Game build whose articles leave a property out is not defective.
+The Compendium articles of the GDRs name, in a Placeholder of at least one article, every property of every parameter GDR, i.e. every GDR whose Type name ends in "Parameters", except the properties that the [GDRs](../content/gdrs.md) specification exempts because they describe no mechanic of the game. A new property of a parameter GDR therefore comes with the Mechanics article text that explains it. This is a requirement on the GDRs as authored, which the repository check `npm run compendium:check` enforces; it is not a rule of [Compendium article GDR validation](#compendium-article-gdr-validation), so a Game build whose articles leave a property out is not defective.
 
 # Revealed Compendium
 

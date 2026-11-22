@@ -27,7 +27,7 @@ These terms are specific to Factions. General terms are in the [Domain Model glo
 
 # Faction GDRs
 
-Factions are described by three [Game Data Record](../foundation/core-concepts.md#game-build-and-content) (GDR) [Types](../foundation/core-concepts.md#data-modeling): FactionArchetype, FactionActivityLevel, and FactionOperationLevel. The GDRs a [Game build](../foundation/core-concepts.md#game-build-and-content) supplies, and their values, are listed by [Bootstrap GDRs](../content/bootstrap-gdrs.md#glossary) and the YAML files it names.
+Factions are described by three [Game Data Record](../foundation/core-concepts.md#game-build-and-content) (GDR) [Types](../foundation/core-concepts.md#data-modeling): FactionArchetype, FactionActivityLevel, and FactionOperationLevel. The GDRs a [Game build](../foundation/core-concepts.md#game-build-and-content) supplies, and their values, are listed by [GDRs](../content/gdrs.md) and the YAML files it names.
 
 ## FactionArchetype
 
@@ -184,8 +184,6 @@ A Faction operation occurrence of a Faction F happens exactly when F's Turns unt
 A Faction operation occurrence is not a separate Campaign instance, and its Response Mission site retains these facts, under [Game concepts](domain-model.md#game-concepts) in Domain Model. A Response Mission site created in this step does not count down toward expiration in the same Advance turn, because [Mission site](domain-model.md#leads-investigations-mission-sites-and-missions) expiration precedes Faction activity under [Turn advancement steps](turn-advancement.md#turn-advancement-steps).
 
 A Faction operation occurrence does not depend on any existing Mission site. In particular, an Active Response Mission site of the same Faction, including one of the same Faction operation level, neither prevents nor delays a new occurrence, and consecutive occurrences may have the same Faction operation level. Which MissionSiteArchetype the Response Mission site has does depend on the Response Mission site of the same Faction's previous occurrence, under [MissionSiteArchetype selection](missions.md#missionsitearchetype-selection) in Missions.
-
-**Informative rationale:** game-ts also escalated Factions through activity levels and drew operations from per-level frequencies and severity weights. Factions keep that structure.
 
 # Elimination
 

@@ -78,7 +78,7 @@ A Data sheet follows the body of a Subject article. It has a heading and a table
 - **Subject articles listed:** a row that lists Subject articles shows the displayed title of each as an Article link, sorted by displayed title ignoring case and separated by "·". It lists only Player-visible articles, so it reveals nothing the Player cannot see yet.
 - **[Effect lists](../../foundation/effect-lists.md#glossary):** an [Effect list](../../foundation/effect-lists.md#glossary) is shown as its [Effects](../../foundation/effect-lists.md#glossary) in order, separated by "·", each as the table under [Effects shown](#effects-shown) words it, or as "None" when it holds no Effect.
 
-The following table gives the category name and the Data sheet heading of each subject Type. It is exhaustive for the Types the [Bootstrap GDRs](../../content/bootstrap-gdrs.md#glossary) supply Subject articles for; a Subject article whose subject has any other Type is listed under the category Other and has no Data sheet.
+The following table gives the category name and the Data sheet heading of each subject Type. It is exhaustive for the Types the [GDRs](../../content/gdrs.md) supply Subject articles for; a Subject article whose subject has any other Type is listed under the category Other and has no Data sheet.
 
 | Subject Type | Category | Data sheet heading |
 | --- | --- | --- |

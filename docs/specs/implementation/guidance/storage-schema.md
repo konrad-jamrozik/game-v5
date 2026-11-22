@@ -16,7 +16,7 @@ Two choices shape that layout. [Game storage](../../design/foundation/engine-con
 
 # Persisted layout
 
-GDRs, e.g. the [Bootstrap GDRs](../../design/content/bootstrap-gdrs.md#glossary), belong to the Game build, so Game storage never holds a copy of them; [Campaign state](../../design/foundation/core-concepts.md#campaign-and-session) refers to a GDR by its identifier.
+GDRs, e.g. the [GDRs](../../design/content/gdrs.md), belong to the Game build, so Game storage never holds a copy of them; [Campaign state](../../design/foundation/core-concepts.md#campaign-and-session) refers to a GDR by its identifier.
 
 # Timeline storage
 

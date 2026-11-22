@@ -25,15 +25,15 @@
   <text class="legend" x="66" y="36">referenced by</text>
   <rect class="box external" x="182.4" y="25" width="22" height="14" rx="3"/>
   <text class="legend" x="214.4" y="36">another family</text>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 102.9 113 C 102.9 147.5 231.4 147.5 231.4 182"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 102.9 113 C 102.9 147.5 249.9 147.5 249.9 182"/>
   <path class="edge edge-references" marker-end="url(#head-references)" d="M 293 113 C 293 147.5 278.2 147.5 278.2 182"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 453.5 113 C 453.5 147.5 325.1 147.5 325.1 182"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 453.5 113 C 453.5 147.5 306.6 147.5 306.6 182"/>
   <rect class="box external" x="24" y="68" width="157.8" height="45" rx="6"/>
   <text class="label" x="102.9" y="94">Foundation family</text>
   <rect class="box external" x="217.8" y="68" width="150.4" height="45" rx="6"/>
   <text class="label" x="293" y="94">Mechanics family</text>
   <rect class="box external" x="404.2" y="68" width="98.6" height="45" rx="6"/>
   <text class="label" x="453.5" y="94">UI family</text>
-  <rect class="box" x="184.5" y="185" width="187.4" height="45" rx="6"/>
-  <text class="label" x="278.2" y="211">BOOT — Bootstrap GDRs</text>
+  <rect class="box" x="221.5" y="185" width="113.4" height="45" rx="6"/>
+  <text class="label" x="278.2" y="211">GDRS — GDRs</text>
 </svg>

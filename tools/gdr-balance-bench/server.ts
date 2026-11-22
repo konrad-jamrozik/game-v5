@@ -56,7 +56,7 @@ function yamlFiles(dir: string): string[] {
   return out
 }
 
-/** The values of the Bootstrap GDRs in the shape the page edits; see `BASE` in the page. */
+/** The values of the GDRs in the shape the page edits; see `BASE` in the page. */
 function loadGdr(): Record<string, unknown> {
   const docs: Doc[] = []
   for (const file of yamlFiles(path.join(SPEC, 'content'))) {

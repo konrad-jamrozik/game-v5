@@ -1,8 +1,8 @@
-# Bootstrap GDRs
+# GDRs
 
 | Metadata | Value |
 | --- | --- |
-| Spec ID | BOOT |
+| Spec ID | GDRS |
 | Family | Content |
 | Audience | Engine designer, Content designer, Implementer |
 | Owns | Which Game Data Records (GDRs) a Game build supplies so that a complete Campaign can be played from creation to an ending, and how those GDRs form the Victory path. |
@@ -10,7 +10,7 @@
 
 # Overview
 
-A [Campaign](../foundation/core-concepts.md#campaign-and-session) cannot be played without content, e.g. Agents to hire and a [Faction](../mechanics/domain-model.md#factions) to fight. The Bootstrap GDRs are the Game Data Records ([GDRs](../foundation/core-concepts.md#game-build-and-content)) that a [Game build](../foundation/core-concepts.md#game-build-and-content) supplies for a complete Campaign, from its creation to its ending. They supply every kind of GDR that the [Domain Model](../mechanics/domain-model.md) requires, and their content, most values included, is transplanted from game-ts.
+A [Campaign](../foundation/core-concepts.md#campaign-and-session) cannot be played without content, e.g. Agents to hire and a [Faction](../mechanics/domain-model.md#factions) to fight. The GDRs are the Game Data Records ([GDRs](../foundation/core-concepts.md#game-build-and-content)) that a [Game build](../foundation/core-concepts.md#game-build-and-content) supplies for a complete Campaign, from its creation to its ending. They supply every kind of GDR that the [Domain Model](../mechanics/domain-model.md) requires.
 
 The content offers one way to win and three ways to lose. Each of the three Factions, Red Dawn, Exalt, and Black Lotus, has a chain of 14 [Leads](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), six of which each create one [Initiative Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), and the last of which makes that Faction [Eliminated](../mechanics/domain-model.md#factions). Once all three are Eliminated, completing the Lead Peace on Earth wins the Campaign. Meanwhile, every Faction not yet Eliminated creates [Response Mission sites](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions). One that is Expired, or whose [Mission](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) is Lost, raises [Panic](../mechanics/domain-model.md#campaign-standing), and the Campaign is lost when Panic reaches its limit, when the Agency's money falls below zero, or when an existential Faction operation is not stopped.
 
@@ -18,14 +18,13 @@ The content offers one way to win and three ways to lose. Each of the three Fact
 
 | Term | Definition |
 | --- | --- |
-| Bootstrap GDRs | The [GDRs](../foundation/core-concepts.md#game-build-and-content) that a [Game build](../foundation/core-concepts.md#game-build-and-content) supplies so that a complete [Campaign](../foundation/core-concepts.md#campaign-and-session), transplanted from game-ts, can be created and played to a win or a loss. |
-| Victory path | The chain of [Leads](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) and [Initiative Mission sites](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) by which the [Agency](../mechanics/domain-model.md#agency-and-agents) makes every [Faction](../mechanics/domain-model.md#factions) [Eliminated](../mechanics/domain-model.md#factions) and then completes the Lead that wins the Campaign with the Bootstrap GDRs. |
+| Victory path | The chain of [Leads](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) and [Initiative Mission sites](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) by which the [Agency](../mechanics/domain-model.md#agency-and-agents) makes every [Faction](../mechanics/domain-model.md#factions) [Eliminated](../mechanics/domain-model.md#factions) and then completes the Lead that wins the [Campaign](../foundation/core-concepts.md#campaign-and-session) with the GDRs. |
 
-# Bootstrap scope
+# Scope
 
-The Bootstrap GDRs supply every kind of GDR the [Game concepts](../mechanics/domain-model.md#game-concepts) of Domain Model require, as many of each as a full Campaign of game-ts has, except where [Appendix: Derivation from game-ts](#appendix-derivation-from-game-ts) states fewer. A GDR left out of them is kept as [Cut content](../foundation/game-data-records.md#cut-content). The following table is exhaustive: it counts every Bootstrap GDR by the Domain Model concept it serves, and the [Background artwork](../ui/visual-design.md#glossary) and [Soundtrack](../ui/music.md#glossary) GDRs, which serve the user interface rather than a Domain Model concept, in rows of their own.
+The GDRs supply every kind of [GDR](../foundation/core-concepts.md#game-build-and-content) the [Game concepts](../mechanics/domain-model.md#game-concepts) of Domain Model require. A GDR left out of them is kept as [Cut content](../foundation/game-data-records.md#cut-content). The following table is exhaustive: it counts every GDR by the Domain Model concept it serves, and the [Background artwork](../ui/visual-design.md#glossary) and [Soundtrack](../ui/music.md#glossary) GDRs, which serve the user interface rather than a Domain Model concept, in rows of their own.
 
-| Domain Model concept | Bootstrap GDRs | Count |
+| Domain Model concept | GDRs | Count |
 | --- | --- | --- |
 | [Campaign configuration](../foundation/campaign-state.md#glossary) | One [Campaign configuration preset](../foundation/configuration.md#glossary) and one parameter GDR naming it as the default | 2 |
 | Agency | One AgencyArchetype | 1 |
@@ -38,16 +37,16 @@ The Bootstrap GDRs supply every kind of GDR the [Game concepts](../mechanics/dom
 | Economy and upgrades | One parameter GDR and eight [Upgrades](../mechanics/economy-and-upgrades.md#glossary) | 9 |
 | Faction | Three FactionArchetypes, eight [Faction activity levels](../mechanics/factions.md#glossary), and five [Faction operation levels](../mechanics/factions.md#glossary) | 16 |
 | Panic and endings | One parameter GDR | 1 |
-| [Compendium article](../mechanics/compendium.md#glossary) | Six [Guide articles](../mechanics/compendium.md#glossary), 26 [Mechanics articles](../mechanics/compendium.md#glossary), and one [Subject article](../mechanics/compendium.md#glossary) about each of 103 other Bootstrap GDRs | 135 |
+| [Compendium article](../mechanics/compendium.md#glossary) | Six [Guide articles](../mechanics/compendium.md#glossary), 26 [Mechanics articles](../mechanics/compendium.md#glossary), and one [Subject article](../mechanics/compendium.md#glossary) about each of 103 other GDRs | 135 |
 | [Background artwork](../ui/visual-design.md#glossary) | Three BackgroundArtworks | 3 |
 | [Soundtrack](../ui/music.md#glossary) | One parameter GDR | 1 |
 | **Total** |  | 267 |
 
 A parameter GDR bundles the scalar values one Mechanics specification reads, e.g. the hire cost and upkeep of Economy and Upgrades in the GDR `economy`, instead of supplying each value as a GDR of its own.
 
-# Bootstrap GDR catalog
+# GDR catalog
 
-The Bootstrap GDRs are grouped by the specification that owns their [Type](../foundation/core-concepts.md#data-modeling), and each group is exhaustive. GDR purposes are those defined under [Purposes of GDRs](../foundation/game-data-records.md#purposes-of-gdrs). Every GDR whose Type has a `name` property also serves the Display content purpose, which the tables do not list.
+The GDRs are grouped by the specification that owns their [Type](../foundation/core-concepts.md#data-modeling), and each group is exhaustive. GDR purposes are those defined under [Purposes of GDRs](../foundation/game-data-records.md#purposes-of-gdrs). Every GDR whose Type has a `name` property also serves the Display content purpose, which the tables do not list.
 
 ## Configuration GDRs
 
@@ -84,7 +83,7 @@ Type owner: [Economy and Upgrades](../mechanics/economy-and-upgrades.md).
 | `exhaustion_recovery` | Upgrade | Calculation parameter | Price and increment of the Upgrade raising the exhaustion every resting Agent loses. |
 | `health_recovery` | Upgrade | Calculation parameter | Price and increment of the Upgrade raising the percentage of [effective max health](../mechanics/agents-spec.md#combatant-attributes) every Agent on [Recovery](../mechanics/agents-spec.md#assignments) regains. |
 
-Three Upgrades raise an Agency-wide cap, two change a value of every Agent, and three raise a rate every Agent shares. No Bootstrap Upgrade is a [Max health Upgrade](../mechanics/economy-and-upgrades.md#glossary): Agents grow sturdier through armor, which costs them no [effective skill](../mechanics/agents-spec.md#combatant-attributes) when hit, rather than through more health.
+Three Upgrades raise an Agency-wide cap, two change a value of every Agent, and three raise a rate every Agent shares. No Upgrade is a [Max health Upgrade](../mechanics/economy-and-upgrades.md#glossary): Agents grow sturdier through armor, which costs them no [effective skill](../mechanics/agents-spec.md#combatant-attributes) when hit, rather than through more health.
 
 ## Leads and Progression GDRs
 
@@ -211,7 +210,7 @@ Type owner: [Factions](../mechanics/factions.md).
 | `operation_level_2`, `operation_level_3`, `operation_level_4` | FactionOperationLevel | Calculation parameter | As `operation_level_1`, for levels 2 to 4. |
 | `operation_level_5` | FactionOperationLevel | Calculation parameter | The existential level, named Existential: the money and funding gained when the Mission at a Response Mission site of level 5 is Won, and the Campaign lost, with Panic unchanged, when the site is Expired or its Mission Lost. |
 
-Each MissionSiteArchetype of kind response states its Faction operation level. A Faction selects a level by weight, and [MissionSiteArchetype selection](../mechanics/missions.md#missionsitearchetype-selection) in Missions then selects a MissionSiteArchetype of kind response with that level. The Bootstrap GDRs supply three MissionSiteArchetypes of kind response for each of levels 1 to 5.
+Each MissionSiteArchetype of kind response states its Faction operation level. A Faction selects a level by weight, and [MissionSiteArchetype selection](../mechanics/missions.md#missionsitearchetype-selection) in Missions then selects a MissionSiteArchetype of kind response with that level. The GDRs supply three MissionSiteArchetypes of kind response for each of levels 1 to 5.
 
 ## Panic and Endings GDRs
 
@@ -234,7 +233,7 @@ Type owner: [Compendium](../mechanics/compendium.md).
 | One `<subject>_article` for each of `criminal_organizations`, `locate_red_dawn_member`, `interrogate_red_dawn_member`, `red_dawn_profile`, `locate_red_dawn_safehouse`, `interrogate_red_dawn_handler`, `locate_red_dawn_outpost`, `interrogate_red_dawn_soldier`, `locate_red_dawn_logistics_hub`, `interrogate_red_dawn_commander`, `locate_red_dawn_regional_stronghold`, `interrogate_red_dawn_high_commander`, `locate_red_dawn_hq`, `interrogate_red_dawn_cult_leader`, `terminate_red_dawn`, `locate_exalt_member`, `interrogate_exalt_member`, `exalt_profile`, `locate_exalt_safehouse`, `interrogate_exalt_handler`, `locate_exalt_outpost`, `interrogate_exalt_soldier`, `locate_exalt_logistics_hub`, `interrogate_exalt_commander`, `locate_exalt_regional_stronghold`, `interrogate_exalt_high_commander`, `locate_exalt_hq`, `interrogate_exalt_cult_leader`, `terminate_exalt`, `locate_black_lotus_member`, `interrogate_black_lotus_member`, `black_lotus_profile`, `locate_black_lotus_safehouse`, `interrogate_black_lotus_handler`, `locate_black_lotus_outpost`, `interrogate_black_lotus_soldier`, `locate_black_lotus_logistics_hub`, `interrogate_black_lotus_commander`, `locate_black_lotus_regional_stronghold`, `interrogate_black_lotus_high_commander`, `locate_black_lotus_hq`, `interrogate_black_lotus_cult_leader`, `terminate_black_lotus`, and `peace_on_earth` | CompendiumArticle | Display content | A Subject article about that Lead, e.g. `red_dawn_profile_article` about the Lead `red_dawn_profile`. |
 | One `<subject>_article` for each of `apprehend_member`, `raid_safehouse`, `raid_outpost`, `raid_logistics_hub`, `raid_regional_stronghold`, `raid_hq`, `foil_recruitment_push`, `foil_sabotage`, `foil_supply_theft`, `foil_business_extortion`, `foil_vip_assassination`, `defend_against_office_raid`, `foil_financial_heist`, `intercept_arms_deal`, `foil_infrastructure_attack`, `counter_civilian_terror`, `foil_nuclear_plant_bombing`, `foil_prison_break`, `foil_bioweapon_release`, `foil_warhead_launch`, and `defend_against_hq_assault` | CompendiumArticle | Display content | A Subject article about that MissionSiteArchetype, e.g. `raid_hq_article` about the MissionSiteArchetype `raid_hq`. |
 
-Every AgentArchetype, EnemyArchetype, Weapon, Upgrade, FactionArchetype, Lead, and MissionSiteArchetype of the Bootstrap GDRs has a Subject article, and so does every Armor but `no_armor`, which has none, because "None" names no thing to look up. Only the three Subject articles about a FactionArchetype have `visible_when`, so a Faction's article becomes Player-visible once its profile Lead is completed, under [Article visibility](../mechanics/compendium.md#article-visibility), while every other Subject article is Player-visible whenever its subject is, and, for an EnemyArchetype, a Weapon, or an Armor, once its subject is a [Met subject](../mechanics/compendium.md#glossary). With these GDRs the first [World state](../foundation/engine-contract.md#player-actions-and-turns) of a Campaign therefore shows, of the Subject articles, only those about `field_agent`, `service_weapon`, `service_armor`, the eight Upgrades, and `criminal_organizations`; the articles about the other Enemies, Weapons, and Armors follow the Mission sites, e.g. the articles about `cult_leader`, `anti_materiel_rifle`, and `juggernaut_suit` become Player-visible once a `locate_<faction>_hq` Lead is discovered. The identifier of a Guide article starts with `guide_`, that of a Mechanics article with `mechanics_`, and that of a Subject article is the identifier of its subject followed by `_article`, so that no article's identifier equals that of another GDR; the identifiers carry no meaning beyond that, under [References](../foundation/campaign-instances.md#references) in Campaign Instances. Every value of a GDR that an article states is a [Placeholder](../mechanics/compendium.md#glossary), and only a number that is part of a rule itself is written out, e.g. the 100 and 500 of the contracting income formula; [Compendium coverage](#compendium-coverage) states which GDR values the articles must cover.
+Every AgentArchetype, EnemyArchetype, Weapon, Upgrade, FactionArchetype, Lead, and MissionSiteArchetype of the GDRs has a Subject article, and so does every Armor but `no_armor`, which has none, because "None" names no thing to look up. Only the three Subject articles about a FactionArchetype have `visible_when`, so a Faction's article becomes Player-visible once its profile Lead is completed, under [Article visibility](../mechanics/compendium.md#article-visibility), while every other Subject article is Player-visible whenever its subject is, and, for an EnemyArchetype, a Weapon, or an Armor, once its subject is a [Met subject](../mechanics/compendium.md#glossary). With these GDRs the first [World state](../foundation/engine-contract.md#player-actions-and-turns) of a Campaign therefore shows, of the Subject articles, only those about `field_agent`, `service_weapon`, `service_armor`, the eight Upgrades, and `criminal_organizations`; the articles about the other Enemies, Weapons, and Armors follow the Mission sites, e.g. the articles about `cult_leader`, `anti_materiel_rifle`, and `juggernaut_suit` become Player-visible once a `locate_<faction>_hq` Lead is discovered. The identifier of a Guide article starts with `guide_`, that of a Mechanics article with `mechanics_`, and that of a Subject article is the identifier of its subject followed by `_article`, so that no article's identifier equals that of another GDR; the identifiers carry no meaning beyond that, under [References](../foundation/campaign-instances.md#references) in Campaign Instances. Every value of a GDR that an article states is a [Placeholder](../mechanics/compendium.md#glossary), and only a number that is part of a rule itself is written out, e.g. the 100 and 500 of the contracting income formula; [Compendium coverage](#compendium-coverage) states which GDR values the articles must cover.
 
 ## Visual Design GDRs
 
@@ -254,11 +253,11 @@ Type owner: [Music](../ui/music.md).
 | --- | --- | --- | --- |
 | `music` | MusicParameters | Display content | The files of `assets/music/tracks/` excluded from the [Soundtrack](../ui/music.md#soundtrack). |
 
-# Bootstrap GDR files
+# GDR files
 
-The Bootstrap GDRs are authored in YAML files under the `content/` directory at the repository root. The YAML file of a GDR is the only place its values are recorded. The [Cut content](../foundation/game-data-records.md#cut-content) under `content/cut/` is not part of the Bootstrap GDRs. The layout of the files follows [GDR file layout](../foundation/game-data-records.md#gdr-file-layout) in Game Data Records.
+The GDRs are authored in YAML files under the `content/` directory at the repository root. The YAML file of a GDR is the only place its values are recorded. The [Cut content](../foundation/game-data-records.md#cut-content) under `content/cut/` is not part of the GDRs. The layout of the files follows [GDR file layout](../foundation/game-data-records.md#gdr-file-layout) in Game Data Records.
 
-The following table is exhaustive: it lists every Bootstrap GDR file, and the one directory that holds one file per GDR.
+The following table is exhaustive: it lists every GDR file, and the one directory that holds one file per GDR.
 
 | File | Type | GDRs |
 | --- | --- | --- |
@@ -291,7 +290,7 @@ The following table is exhaustive: it lists every Bootstrap GDR file, and the on
 
 The Compendium is a complete reference only if every number behind a mechanic can be looked up in it, so the Compendium articles must keep up with the parameter GDRs as mechanics are added.
 
-Every property, other than `id` and `type`, of every parameter GDR of the Bootstrap GDRs, i.e. of every GDR whose Type name ends in "Parameters", is named by a [Placeholder](../mechanics/compendium.md#glossary) of at least one Compendium article of the Bootstrap GDRs, as [Coverage of parameter GDRs](../mechanics/compendium.md#coverage-of-parameter-gdrs) in Compendium requires. A Placeholder with an index names the list property it indexes. The following properties are exempt, because none of them is part of a mechanic the Player plays with. The table is exhaustive, and a Placeholder must not name an exempt property.
+Every property, other than `id` and `type`, of every parameter GDR of the GDRs, i.e. of every GDR whose Type name ends in "Parameters", is named by a [Placeholder](../mechanics/compendium.md#glossary) of at least one Compendium article of the GDRs, as [Coverage of parameter GDRs](../mechanics/compendium.md#coverage-of-parameter-gdrs) in Compendium requires. A Placeholder with an index names the list property it indexes. The following properties are exempt, because none of them is part of a mechanic the Player plays with. The table is exhaustive, and a Placeholder must not name an exempt property.
 
 | GDR | Property | Why it is exempt |
 | --- | --- | --- |
@@ -308,7 +307,7 @@ Completing `criminal_organizations` discovers the first Lead of every Faction, `
 
 Throughout the Campaign, each Faction not yet Eliminated carries out [Faction operation occurrences](../mechanics/domain-model.md#factions), each with one Response Mission site. A Response Mission site that is Expired, or whose Mission is Lost, raises Panic, and the Campaign is lost once Panic reaches the [Panic limit](../mechanics/panic-and-endings.md#glossary); one of Faction operation level 5, the existential level, instead loses the Campaign outright. The Campaign is also lost when the Agency's money falls below zero.
 
-![Victory path of one Faction of the Bootstrap GDRs, e.g. Red Dawn: Criminal organizations discovers Locate Red Dawn member; in each of six tiers a locate Lead creates an Initiative Mission site and a Won Mission there discovers a follow-up Lead, with the Red Dawn profile Lead between tiers 1 and 2; after tier 6, Terminate Red Dawn makes the Faction Eliminated, and once all three Factions are Eliminated, Peace on Earth wins the Campaign; throughout the Campaign, the Faction's operations create Response Mission sites whose expiration or loss raises Panic until the Campaign is lost, and an existential operation not stopped loses it outright](../../../images/diagrams/bootstrap-victory-path.svg)
+![Victory path of one Faction of the GDRs, e.g. Red Dawn: Criminal organizations discovers Locate Red Dawn member; in each of six tiers a locate Lead creates an Initiative Mission site and a Won Mission there discovers a follow-up Lead, with the Red Dawn profile Lead between tiers 1 and 2; after tier 6, Terminate Red Dawn makes the Faction Eliminated, and once all three Factions are Eliminated, Peace on Earth wins the Campaign; throughout the Campaign, the Faction's operations create Response Mission sites whose expiration or loss raises Panic until the Campaign is lost, and an existential operation not stopped loses it outright](../../../images/diagrams/victory-path.svg)
 
 An Initiative Mission site that is Expired, or whose Mission is Lost, records no win, so its locate Lead stays available and the Agency can obtain a new Mission site from it. A Mission site cannot be attempted twice. The locate Leads of tiers 1 to 5 stay available after a win too, because their `investigate_again` is `always`, while `locate_<faction>_hq` stays available only until a Mission at a Mission site it created is Won. No Lead of a Faction can be investigated again once that Faction is Eliminated.
 
@@ -322,7 +321,7 @@ The Victory path works through these rules:
 
 # Initial Campaign state sources
 
-For each Campaign instance Type, the following table names the section that states which initial Campaign instances exist with the Bootstrap GDRs and the source of each initial value, as [Initial Campaign state](../mechanics/domain-model.md#initial-campaign-state) requires. This table is exhaustive.
+For each Campaign instance Type, the following table names the section that states which initial Campaign instances exist with the GDRs and the source of each initial value, as [Initial Campaign state](../mechanics/domain-model.md#initial-campaign-state) requires. This table is exhaustive.
 
 | Campaign instance Type | Section that states the initial Campaign instances and the source of each value |
 | --- | --- |
@@ -340,38 +339,4 @@ The Turn and Panic start from values that no GDR supplies: the Turn under [Turn 
 
 - TODO (later): Faction suppression after a Won Mission, under [Faction activity](../mechanics/factions.md#faction-activity) in Factions.
 - TODO (later): Partial success of a Lost Mission, under [Consequences](../mechanics/missions.md#consequences) in Missions.
-- TODO (later): The game-ts Lead Deep state, which had no effect in game-ts, under [Leads and Progression GDRs](#leads-and-progression-gdrs).
-
-# Appendix: Derivation from game-ts
-
-This appendix is informative. Its evidence comes from game-ts revision `f1835a29`, in its data tables and its initial game state factory.
-
-The items under [TODOs](#todos) list exhaustively what the Bootstrap GDRs leave out of game-ts or leave for later, in the order in which it is expected to return.
-
-Most Bootstrap GDR values are copied from game-ts. The following table is exhaustive: it lists every Bootstrap GDR value that deliberately differs from its game-ts counterpart, and why.
-
-| Bootstrap GDR value | game-ts | Bootstrap | Informative rationale |
-| --- | --- | --- | --- |
-| Weapons | A weapon damage number on each enemy kind, with no weapon of its own | Nine Weapons: the Service weapon of every Agent, and eight others, each shared by the EnemyArchetypes of equal base weapon damage | A Combatant's base weapon damage comes from a Weapon GDR. |
-| Target selection | Attacks spread over the opponents attacked least often, each attacker preferring an opponent near half its [effective skill](../mechanics/agents-spec.md#combatant-attributes), with wounded opponents dropping out at random | An Enemy targets an Agent [able to fight](../mechanics/combat.md#combatant-condition-in-a-combat) at random, each equally likely; an Agent targets an Enemy at random, weighted by how near its hit [Probability](../foundation/numbers.md#glossary) lies to `target_preferred_hit_chance` 0.8, from `target_base_weight` 100 down to 21, and discounted by the part of a hit of its effective weapon damage that the Enemy's current health and [current armor](../mechanics/agents-spec.md#combatant-attributes) could not take | Enemies spread their attacks over the team, and Agents prefer fights they are likely but not certain to win, without wasting their damage on Enemies too frail to take it, with every Enemy still a possible target. |
-| Enemy armor | No armor on any enemy kind | Seven Armors, each worn by one EnemyArchetype from `handler` up, with a base armor from 5 for `handler` to 80 for `cult_leader`; `initiate` and `operative` wear `no_armor` | Stronger Enemies absorb part of each hit as Agents do, so the `weapon_damage` Upgrade matters more against them. |
-| Agent equipment | Agents carry the same weapon as some enemies, and an Upgrade raises max health | Agents carry the Service weapon and wear the Service armor; the `armor` Upgrade raises armor, and no Upgrade raises max health | What the Agency upgrades is its own issued equipment, and armor protects an Agent without the lost health that would lower its effective skill. |
-| Starting transport cap | 6 | 4, raised by `transport_cap` | Transport capacity becomes something the Agency invests in. |
-| Starting training cap | 0 | 10, raised by `training_cap` | Training is available from the first Turn. |
-| Mission site expiration | An expiration of its own for each kind of mission site, longer for higher levels and tiers | 1 Advance turn for every Response MissionSiteArchetype and 3 for every Initiative one | A Response Mission site must be answered in the Turn it appears, or the opportunity is lost; an Initiative one leaves time to bring Agents back from Contracting. |
-| Faction operation levels | Six levels, the sixth, Existential, with one mission and no reward, and the fifth, Global conflict, with three missions | Five levels: the fifth, Existential, has three Response MissionSiteArchetypes and the reward of game-ts Global conflict, and the GDR of the former sixth level is [Cut content](../foundation/game-data-records.md#cut-content) | Every level offers three operations, and each existential operation is worth stopping. |
-| The existential level when ignored or lost | Panic is set to 100% | A `defeat` [Effect](../foundation/effect-lists.md#glossary), which loses the Campaign and leaves Panic unchanged | The Campaign ends with the Panic it had, and no Panic reduction of the same Advance turn can undo the loss. |
-| Response MissionSiteArchetypes | 16, among them Defend against facility raid, Defend against city government assault, Defend against retaliation strike, Foil coup attempt, and Defend military installation | 15: those five are left out, as [Cut content](../foundation/game-data-records.md#glossary), Foil nuclear plant bombing moves to level 4 and Defend against HQ assault to level 5, and Foil infrastructure attack, Foil prison break, Foil bioweapon release, and Foil warhead launch are new, each with the Enemies of a left-out MissionSiteArchetype of its level | Each operation is distinct from the others and is one the Agency, rather than another force, must answer. |
-| Initiative tiers | Eight, with Raid training facility and Raid command center at tiers 4 and 6 | Six: those two, their locate Leads, and their follow-up Leads, Interrogate lieutenant and Analyze command structure, are left out, as Cut content, together with their Subject articles | A shorter chain, whose sites grow steadily in size: safehouse, outpost, logistics hub, regional stronghold, HQ. |
-| First operation of a Faction that leaves `dormant` | Its countdown starts in the turn it wakes and is counted down in that same turn | Its countdown starts in the Advance turn it wakes and is first counted down in the next | An operation never happens in the Advance turn that sets its countdown. |
-| `exhaustion_free_points` | 5 | 30 | Work now raises exhaustion every Turn, so a longer free amount lets an Agent work for many Turns before it weakens. |
-| `exhaustion_work_start_max` and `exhaustion_work_limit` | A 30% "Ready" convention of the UI and AI; Agents at 100 cannot start work and leave an Investigation | 30 and 70, enforced by the engine | Tiredness stops at a level where a recalled Agent is still useful, and the rules no longer depend on the UI. |
-| `exhaustion_per_pct_killed` | 5 per 5% of the team lost, rounded up | 1 per 1%, rounded up | The same amount at every multiple of 5%, stated more plainly. |
-| Upgrades | 8, with no distinction between cap and stat upgrades | 8, in four kinds of Upgrade effect | game-ts left distinguishing the kinds of upgrade as an open item in its upgrade definitions. |
-| `<faction>_profile` Leads | A side branch that gated nothing; completing it only showed the faction on the factions screen | `locate_<faction>_safehouse` requires it, and its completion makes the Faction's Subject article Player-visible | Every Lead of the chain matters, and what the Player reads about a Faction waits until the Agency has profiled it. |
-| Visibility of a Faction's Faction activity level | Shown for a discovered faction | Never Player-visible, under [Player-visible information](../mechanics/factions.md#player-visible-information) in Factions | The Player judges how dangerous a Faction has become from the operations it carries out. |
-| The Lead Deep state | A Lead whose completion had no effect | Left out | It changed nothing in game-ts; it is listed under [TODOs](#todos). |
-| Faction suppression | A Won raid suppressed the faction's operations for a rolled number of turns | Left out: nothing slows a Faction but becoming Eliminated | Deferred; it is listed under [TODOs](#todos). |
-| MissionSiteArchetypes | Generated for each faction | Shared by the three Factions; a Mission site's target Faction is one of its Constants | Each Faction supplies only its own Leads. |
-| MissionSiteArchetype `name` values | Names that include the faction | Names without a Faction, e.g. Raid safehouse | A MissionSiteArchetype shared by the three Factions has one name, and the target Faction is a value of the Mission site. |
-| Panic precision | Six decimals | Two decimals, a [Decimal quantity](../foundation/numbers.md#glossary) | Two decimals hold every Panic value the Bootstrap GDRs state. |
+- TODO (later): A Lead Deep state, under [Leads and Progression GDRs](#leads-and-progression-gdrs).

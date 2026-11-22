@@ -34,7 +34,7 @@ These terms are specific to the Basic Autopilot AI. General terms are in the [Do
 
 # Goals
 
-The Basic Autopilot AI pursues the following goals. The list is exhaustive. The goals can conflict, e.g. a [Deployed](../mechanics/agents-spec.md#assignments) Agent earns no contracting income, so [Turn routine](#turn-routine) states which goal wins. The exact thresholds of the goals, e.g. how large the Agent reserve is, are the Implementer's choice, apart from the Game designer values under Tuning parameters; the informative [Appendix: Derivation from game-ts](#appendix-derivation-from-game-ts) gives proven starting values, and [Tuning parameters](#tuning-parameters) lists them.
+The Basic Autopilot AI pursues the following goals. The list is exhaustive. The goals can conflict, e.g. a [Deployed](../mechanics/agents-spec.md#assignments) Agent earns no contracting income, so [Turn routine](#turn-routine) states which goal wins. The exact thresholds of the goals, e.g. how large the Agent reserve is, are the Implementer's choice, apart from the Game designer values under [Tuning parameters](#tuning-parameters), which lists them.
 
 | Goal | What the Basic Autopilot AI aims for |
 | --- | --- |
@@ -57,7 +57,7 @@ Every assignment to or from Contracting and Investigations costs one Advance tur
 1. **It assigns only Agents that can take orders.** It gives no Assignment to an Agent that is In transit, on Recovery, or [Deployed](../mechanics/agents-spec.md#assignments), and it waits for a hired Agent to arrive, i.e. until the next Turn.
 2. **It counts an Agent In transit as already doing its destination work.** When it measures a goal, e.g. whether income covers upkeep or how many Agents investigate Leads, an Agent In transit to Contracting counts as contracting and an Agent In transit to an Investigation counts as investigating. Otherwise it would assign more Agents every Turn while the first ones are still travelling. Expected income is this principle applied to income.
 3. **It does not move an Agent that is doing useful work.** It assigns an Agent away from Contracting or Training only when a step of [Turn routine](#turn-routine) says so, because leaving Contracting costs the Agent an Advance turn in which it does nothing, and leaving Training ends its growth.
-4. **It leaves Investigations whole.** It never assigns an Agent away from an Active Investigation. Assigning the last member elsewhere would make the Investigation Abandoned and lose its progress, under [Abandonment](../mechanics/investigations.md#abandonment) in Investigations. Exhaustion is no reason to recall an investigating Agent either: the Agents it sends to Investigations are Fully rested Agents, and an Investigation raises their exhaustion by only 1 per Advance turn, so a Fully rested Agent works for about 70 Advance turns before its [Forced return](../mechanics/agents-spec.md#assignments), longer than any Bootstrap Lead needs.
+4. **It leaves Investigations whole.** It never assigns an Agent away from an Active Investigation. Assigning the last member elsewhere would make the Investigation Abandoned and lose its progress, under [Abandonment](../mechanics/investigations.md#abandonment) in Investigations. Exhaustion is no reason to recall an investigating Agent either: the Agents it sends to Investigations are Fully rested Agents, and an Investigation raises their exhaustion by only 1 per Advance turn, so a Fully rested Agent works for about 70 Advance turns before its [Forced return](../mechanics/agents-spec.md#assignments), longer than any Lead of the GDRs needs.
 5. **It deploys late without loss.** A deployment takes effect at once and the Combat is fought in the next Advance turn, under [Deploying Agents](../mechanics/missions.md#deploying-agents) in Missions. It can therefore deploy to a Mission site in the last Turn before that Mission site would expire, and it can form a team from Deployable Agents that are on Training without first recalling them.
 
 # Turn routine
@@ -89,7 +89,7 @@ To judge when a resting Agent becomes a Deployable Agent, for the Muster, it rea
 
 To judge whether it could win the Mission site a Lead creates, it reads the MissionSiteArchetype the Lead creates and the EnemyArchetypes that MissionSiteArchetype names. Both are Player-visible from the Lead's discovery, before any such Mission site exists, under [Player-visible information](../mechanics/leads-and-progression.md#player-visible-information) in Leads and Progression and [Player-visible information](../mechanics/combat.md#player-visible-information) in Combat.
 
-What discovers a Lead is not Player-visible, so it does not trace a Faction's chain itself. It reads how far along the chain a discovered Lead is as the Lead's Initiative operation level, which the engine derives and makes Player-visible under [Player-visible information](../mechanics/leads-and-progression.md#player-visible-information) in Leads and Progression. E.g., with the Bootstrap GDRs, `locate_red_dawn_outpost` has level 3 and `interrogate_red_dawn_handler` level 2, so the former comes first when both qualify.
+What discovers a Lead is not Player-visible, so it does not trace a Faction's chain itself. It reads how far along the chain a discovered Lead is as the Lead's Initiative operation level, which the engine derives and makes Player-visible under [Player-visible information](../mechanics/leads-and-progression.md#player-visible-information) in Leads and Progression. E.g., with the GDRs, `locate_red_dawn_outpost` has level 3 and `interrogate_red_dawn_handler` level 2, so the former comes first when both qualify.
 
 # Tuning parameters
 
@@ -143,28 +143,3 @@ The Game designer sets the following values of the Game build, so that an Implem
 | Every Agent is exhausted or cannot take orders, or the roster is empty | It makes no assignment and ends the Turn; buying an Agent still follows Grow with the threat. |
 | A Player action it attempts is rejected | It does not retry the same Player action in that Turn and continues with the next step, so a rejection cannot make it repeat itself until it fails. |
 | Only Leads that create Mission sites it cannot currently win remain | It leaves those Leads uninvestigated until the Agency is strong enough. |
-
-# Appendix: Derivation from game-ts
-
-This appendix is informative. The Basic Autopilot AI follows the basic AI player of game-ts revision `f1835a29`, in its basic intellect code and `docs/ai/basic_intellect.md`. Its goals and Turn routine are kept as far as the Mechanics specifications allow; the following table lists the game-ts values the Implementer can start from. game-ts stated exhaustion in percent; the same numbers are exhaustion points here.
-
-| Threshold | game-ts value |
-| --- | --- |
-| Max assignment exhaustion allowed: exhaustion above which an Agent on Contracting is recalled | 30 |
-| Agent reserve | 20% of the roster |
-| Contracting income target | 120% of upkeep |
-| Savings floor | Five Turns of half the upkeep |
-| Combat rating safety margin | 120% of the Enemies' Combat rating |
-| Agents needed for the number of Enemies | One Agent per three Enemies |
-| Agents investigating Leads | 1, plus 1 per 10 Agents |
-| Target roster size | 8, plus 4 per Upgrade other than a Cap Upgrade bought |
-| Transport cap and Training cap | 25% and 30% of the roster |
-
-game-ts differs from the Basic Autopilot AI in the following deliberate ways. The list is exhaustive.
-
-- game-ts broke ties at random; the Basic Autopilot AI breaks them in a fixed order so that its Player actions are reproducible.
-- game-ts kept counts of its own purchases in AI state; the Basic Autopilot AI reads them from Player-visible information instead.
-- game-ts formed a team only from the Agents ready that Turn; the Basic Autopilot AI also musters Agents on Contracting and resting Agents for an Initiative Mission site, under Muster for Initiative Mission sites.
-- game-ts required the same Combat rating safety margin for every Mission site; the Basic Autopilot AI raises it for a MissionSiteArchetype with each Lost Mission at a Mission site of it, by the Loss margin step.
-- In game-ts an order took effect at once. Here it costs one Advance turn of transit, so the Basic Autopilot AI follows the principles under [Assignments and transit](#assignments-and-transit).
-- game-ts gave new work to an Agent with exhaustion of at most 5, or at most 25 for urgent income, and kept its reserve on Standby only. The Basic Autopilot AI ties a Deployable Agent to Fit to start work, so that the Agent reserve could start any work at once, by default leaves an Agent on Contracting working until its Forced return rather than recall it above 30, lets the Agent reserve train, lets resting Agents finish resting to exhaustion 0, and refills the Agent reserve by recalling the most exhausted Agents from Training and Contracting.

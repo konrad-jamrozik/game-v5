@@ -1,6 +1,6 @@
 # GDR Balance Bench
 
-A local page for balancing the game. It shows every balance value of the Bootstrap GDRs next to what that value causes, e.g. how often a team wins a Mission site, how long an Agent can work before it tires, or how fast Panic rises. Change a value on the page and the readouts recompute.
+A local page for balancing the game. It shows every balance value of the GDRs next to what that value causes, e.g. how often a team wins a Mission site, how long an Agent can work before it tires, or how fast Panic rises. Change a value on the page and the readouts recompute.
 
 It is a tool for the Game designer, not a specification and not part of any Implementation. It writes nothing to the repository: the page lists the values that were changed, and those are then applied to the YAML files under `content/` by hand or by an agent.
 
@@ -49,7 +49,7 @@ The other readouts, e.g. the Turns an Investigation takes and the expected Panic
 
 ## Limits
 
-- The page knows the shape of the Bootstrap GDRs as they were when it was written. A new value of a parameter GDR on disk, e.g. of CombatParameters, appears as a row without a description and is passed to the engine. A new GDR, e.g. a new EnemyArchetype or Mission site, does not appear until the page is extended.
+- The page knows the shape of the GDRs as they were when it was written. A new value of a parameter GDR on disk, e.g. of CombatParameters, appears as a row without a description and is passed to the engine. A new GDR, e.g. a new EnemyArchetype or Mission site, does not appear until the page is extended.
 - Each `<faction>` Lead row sets the Lead of all three Factions, and shows the value of the first Faction.
 - The Lead chain's structure and the display-only GDRs, e.g. Compendium articles, artwork, and music, are not shown.
 

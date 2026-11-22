@@ -20,7 +20,7 @@ import type { SpecificationFamily } from './types.ts'
  * mention must link to the term's Glossary group in its owning specification, and each such mention makes the
  * specification reference the owner. Rule text excludes the Overview, sections titled as examples,
  * and examples introduced with "e.g.". A term spelled like its owner's title names that specification, e.g.
- * "Bootstrap GDRs", so it points to the specification rather than using a term of it, and does not count.
+ * "GDRs", so it points to the specification rather than using a term of it, and does not count.
  */
 
 export interface MentionSpecification {
