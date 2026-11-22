@@ -35,7 +35,7 @@ level: 4
 name: Regional destabilization
 on_win:
   - money: 2000
-  - funding: 50
+  - funding: 100
 on_ignored_or_lost:
   - panic: 10
   - funding: -25
@@ -46,6 +46,6 @@ level: 5
 name: Existential
 on_win:
   - money: 10000
-  - funding: 80
+  - funding: 200
 on_ignored_or_lost:
   - defeat: true

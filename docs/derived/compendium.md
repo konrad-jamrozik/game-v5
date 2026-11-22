@@ -1443,13 +1443,13 @@ Source: `content/compendium/compendium_articles/apprehend_member_article.yaml`
 
 A cult member has been found, lightly guarded. Bring the member in before the trail goes cold.
 
-| `apprehend_member` | MissionSiteArchetype           |
-| ------------------ | ------------------------------ |
-| `kind`             | `initiative`                   |
-| `name`             | `Apprehend member`             |
-| `expires_in_turns` | `3`                            |
-| `enemies`          | `{"initiate":2,"operative":1}` |
-| `on_win`           | `[{"money":10}]`               |
+| `apprehend_member` | MissionSiteArchetype            |
+| ------------------ | ------------------------------- |
+| `kind`             | `initiative`                    |
+| `name`             | `Apprehend member`              |
+| `expires_in_turns` | `3`                             |
+| `enemies`          | `{"initiate":2,"operative":1}`  |
+| `on_win`           | `[{"money":50},{"funding":10}]` |
 
 ### Counter civilian terror
 
@@ -1673,7 +1673,7 @@ The final assault on the headquarters of a cult. Winning it puts the [Cult leade
 | `name`             | `Raid HQ`                                                                                    |
 | `expires_in_turns` | `3`                                                                                          |
 | `enemies`          | `{"soldier":50,"elite":20,"lieutenant":10,"commander":6,"high_commander":2,"cult_leader":1}` |
-| `on_win`           | `[{"money":10000},{"funding":200},{"panic":-20}]`                                            |
+| `on_win`           | `[{"money":100000},{"funding":2000},{"panic":-20}]`                                          |
 
 ### Raid logistics hub
 
@@ -1687,7 +1687,7 @@ The hub that keeps the cult supplied. Taking it will hurt the cult for a long ti
 | `name` | `Raid logistics hub` |
 | `expires_in_turns` | `3` |
 | `enemies` | `{"initiate":8,"operative":12,"soldier":10,"elite":2,"handler":6,"lieutenant":2,"commander":1}` |
-| `on_win` | `[{"money":2000},{"funding":50},{"panic":-5}]` |
+| `on_win` | `[{"money":10000},{"funding":500},{"panic":-5}]` |
 
 ### Raid outpost
 
@@ -1701,7 +1701,7 @@ A fortified outpost where the cult gathers its people. Expect a determined defen
 | `name`             | `Raid outpost`                                                        |
 | `expires_in_turns` | `3`                                                                   |
 | `enemies`          | `{"initiate":4,"operative":8,"soldier":2,"handler":3,"lieutenant":1}` |
-| `on_win`           | `[{"money":1000},{"funding":20},{"panic":-2}]`                        |
+| `on_win`           | `[{"money":4000},{"funding":200},{"panic":-2}]`                       |
 
 ### Raid regional stronghold
 
@@ -1715,7 +1715,7 @@ A fortress that a [high commander](#high-commander) rules like a small kingdom. 
 | `name`                     | `Raid regional stronghold`                                                  |
 | `expires_in_turns`         | `3`                                                                         |
 | `enemies`                  | `{"soldier":30,"elite":12,"lieutenant":6,"commander":3,"high_commander":1}` |
-| `on_win`                   | `[{"money":5000},{"funding":100},{"panic":-10}]`                            |
+| `on_win`                   | `[{"money":30000},{"funding":1000},{"panic":-10}]`                          |
 
 ### Raid safehouse
 
@@ -1729,7 +1729,7 @@ Storm the safehouse of a cult before it is moved. Expect it to be well guarded.
 | `name`             | `Raid safehouse`                              |
 | `expires_in_turns` | `3`                                           |
 | `enemies`          | `{"initiate":4,"operative":4,"handler":1}`    |
-| `on_win`           | `[{"money":200},{"funding":10},{"panic":-1}]` |
+| `on_win`           | `[{"money":500},{"funding":50},{"panic":-1}]` |
 
 ## Subject articles: Upgrade
 

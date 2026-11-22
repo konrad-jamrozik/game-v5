@@ -7,7 +7,8 @@ enemies:
   initiate: 2
   operative: 1
 on_win:
-  - money: 10
+  - money: 50
+  - funding: 10
 ---
 id: raid_safehouse
 type: MissionSiteArchetype
@@ -19,8 +20,8 @@ enemies:
   operative: 4
   handler: 1
 on_win:
-  - money: 200
-  - funding: 10
+  - money: 500
+  - funding: 50
   - panic: -1
 ---
 id: raid_outpost
@@ -35,8 +36,8 @@ enemies:
   handler: 3
   lieutenant: 1
 on_win:
-  - money: 1000
-  - funding: 20
+  - money: 4000
+  - funding: 200
   - panic: -2
 ---
 id: raid_logistics_hub
@@ -53,8 +54,8 @@ enemies:
   lieutenant: 2
   commander: 1
 on_win:
-  - money: 2000
-  - funding: 50
+  - money: 10000
+  - funding: 500
   - panic: -5
 ---
 id: raid_regional_stronghold
@@ -69,8 +70,8 @@ enemies:
   commander: 3
   high_commander: 1
 on_win:
-  - money: 5000
-  - funding: 100
+  - money: 30000
+  - funding: 1000
   - panic: -10
 ---
 id: raid_hq
@@ -86,8 +87,8 @@ enemies:
   high_commander: 2
   cult_leader: 1
 on_win:
-  - money: 10000
-  - funding: 200
+  - money: 100000
+  - funding: 2000
   - panic: -20
 ---
 id: foil_recruitment_push
