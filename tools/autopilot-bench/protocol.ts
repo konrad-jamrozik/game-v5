@@ -57,8 +57,38 @@ export interface MissionCounts {
   expired: number
 }
 
+/**
+ * One Turn of a Campaign for the per-Turn charts, as arrays of small numbers so that a long Campaign stays cheap to
+ * send.
+ */
+export interface TurnPoint {
+  readonly turn: number
+  /** At Turn start: money, Serving Agents, Agent cap, Transport cap, and Training cap. */
+  readonly start: readonly number[]
+  /**
+   * At the end of the Turn's player phase, i.e. just before its Advance turn, or now for the Current Turn: Serving
+   * Agents in seven groups, Standby, Training, Contracting, Investigation, Deployed, Recovering, and In transit. Those
+   * In transit count only there, whatever their Assignment.
+   */
+  readonly status: readonly number[]
+  /** At the same moment: Serving Agents per effective skill band of 50, the lowest first, i.e. 0–49, 50–99, and so on. */
+  readonly skill: readonly number[]
+  /**
+   * The money of the ended Turn, none for the Current Turn: funding, contracting income, Mission rewards, upkeep,
+   * Agent hiring, Cap Upgrades, and other Upgrades, every expenditure a positive number.
+   */
+  readonly money: readonly number[] | null
+}
+
 /** What the page shows of a Campaign at its Current Turn, all read through Player API queries. */
 export interface CampaignStats {
+  /**
+   * The ended Turns not yet reported, in Turn order. server.ts appends them to the Campaign's series and sends the page
+   * only the part of it the page does not have.
+   */
+  readonly series: readonly TurnPoint[]
+  /** The Current Turn: its Turn-start values, and its Agents as they are now. */
+  readonly current: TurnPoint
   readonly turn: number
   readonly ending: { readonly ending: string; readonly reasons: readonly string[]; readonly turn: number } | null
   readonly panicHundredths: number

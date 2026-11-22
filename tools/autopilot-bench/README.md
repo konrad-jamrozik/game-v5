@@ -1,6 +1,6 @@
 # Autopilot Bench
 
-A local page for tuning the Basic Autopilot AI. Set its parameters, e.g. how fast it hires, how large a reserve it keeps, or which Upgrades it favors, launch a number of Campaigns played up to a Turn, and compare them: each Campaign is a row that shows the Agency, the work of its Agents, its strength, and its Missions at the Campaign's Current Turn. Play more Turns of one Campaign or of all of them at any time.
+A local page for tuning the Basic Autopilot AI. Set its parameters, e.g. how fast it hires, how large a reserve it keeps, or which Upgrades it favors, launch a number of Campaigns played up to a Turn, and compare them: each Campaign is a row that shows the Agency, the work of its Agents, its strength, and its Missions at the Campaign's Current Turn, and charts of every Turn it has played. Play more Turns of one Campaign or of all of them at any time.
 
 It is a tool for the Game designer and the AI designer, not a specification and not part of any Implementation. It writes nothing to the repository.
 
@@ -58,6 +58,11 @@ Every number is read through Player API queries, as a player could see it, excep
   The last three are the tests of the Basic Autopilot AI's winning team, read from all Deployable Agents together.
 
 - **Fought**, below the layers, one per line: the last four Missions, the latest first, each read from the Turn report of the Advance turn that fought its Combat, which the worker thread reads after every Turn. Each shows the Turn, the kind of Mission site and its name, the Agents sent, the Combat rating of the team against that of the Enemies at Combat start, the result, and the Agents Killed and Incapacitated in the Combat.
+- **Charts**, at the bottom of the block, side by side where the page is wide enough: four per-Turn charts of every Turn the Campaign has played, from Turn 1 to its Current Turn, which grow as it plays. Hovering a Turn shows its values. The worker thread wraps the Basic Autopilot AI's Player API, without changing what the AI does, so that it reads the Serving Agents just before the AI requests Advance turn, i.e. at the end of the Turn's player phase, and the Turn report and the next Turn's start right after it. Each Turn's values go to the page once, as a few short arrays of numbers.
+  - **Agents by status**: a stacked bar per Turn of the Serving Agents at the end of its player phase, and of the Current Turn as they are now, in seven groups, bottom to top: on Standby, on Training, Contracting, on an Investigation, Deployed, Recovering, and In transit, whatever the Assignment they are in transit to.
+  - **Finances**: per ended Turn, its income stacked above 0, i.e. the funding the income step used, contracting income, which is the income less that funding, and the money of the Consequences of the Missions its Advance turn resolved; and its expenditures stacked below 0, i.e. upkeep, the money `hireAgent` spent, and the money `purchaseUpgrade` spent on Cap Upgrades and on the other Upgrades, each the money after the action less the money before, as the Action record holds it. The Net flow line is the money at the next Turn's start less the money at this Turn's start, so it also holds what no bar shows, e.g. the money of an Expired Mission site's Consequences, or a Mission's Consequences that cost money, which Mission rewards leaves out.
+  - **Assets at Turn start**: lines per Turn of the money, on the left axis, and of the Serving Agents, the Agent cap, the Transport cap, and the Training cap, on the right axis.
+  - **Agents by effective skill**: a stacked bar per Turn, at the same moment as Agents by status, of the Serving Agents per effective skill band of 50, i.e. 0–49, 50–99, and so on up to the highest band any Agent of the Campaign reached, the lowest at the bottom. A band without an Agent draws nothing.
 
 ## Parameters
 

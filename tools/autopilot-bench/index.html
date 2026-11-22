@@ -509,9 +509,93 @@
         white-space: normal;
         font-size: 12px;
       }
+      /* Below the Missions fought, four per-Turn charts, side by side where the block is wide enough. */
+      .charts {
+        grid-column: 1 / -1;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 14px;
+        padding: 6px 0 2px;
+      }
+      .charts:empty {
+        display: none;
+      }
+      .chart {
+        width: 360px;
+        box-sizing: content-box;
+        flex: none;
+        background: var(--surface);
+        border: 1px solid var(--divider);
+        padding: 4px 6px 2px;
+      }
+      .chart h4 {
+        margin: 0;
+        font-family: var(--head);
+        font-weight: 600;
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .chart .leg {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0 8px;
+        font-size: 11px;
+        color: var(--text2);
+        line-height: 1.4;
+        min-height: 31px;
+      }
+      .chart .leg i,
+      .tip i {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        margin-right: 3px;
+        vertical-align: baseline;
+      }
+      .chart .leg i.ln,
+      .tip i.ln {
+        height: 2px;
+        vertical-align: middle;
+      }
+      .chart svg {
+        display: block;
+        width: 360px;
+        height: 120px;
+      }
+      .chart svg text {
+        font-family: var(--mono);
+        font-size: 9px;
+        fill: var(--muted);
+      }
+      .tip {
+        position: fixed;
+        z-index: 10;
+        pointer-events: none;
+        background: var(--raised);
+        border: 1px solid var(--border);
+        padding: 4px 7px;
+        font-family: var(--mono);
+        font-variant-numeric: tabular-nums;
+        font-size: 11px;
+        color: var(--text);
+        line-height: 1.45;
+        white-space: nowrap;
+        display: none;
+      }
+      .tip b {
+        font-weight: 500;
+        color: var(--accent-text);
+      }
+      .tip .v {
+        float: right;
+        margin-left: 12px;
+      }
     </style>
   </head>
   <body>
+    <div class="tip" id="tip"></div>
     <div class="wrap">
       <div class="intro">
         <h1>Autopilot Bench</h1>
@@ -911,7 +995,7 @@
       }
 
       function renderCampaignsSection() {
-        return `<section id="campaigns"><div class="shead"><h2>Campaigns</h2><p>Each block is one Campaign at its Current Turn, in four layers: the Agency, the work of its Agents, its strength, and its Missions. Its parameters are those it was launched with.</p></div>
+        return `<section id="campaigns"><div class="shead"><h2>Campaigns</h2><p>Each block is one Campaign at its Current Turn, in four layers: the Agency, the work of its Agents, its strength, and its Missions, and below them charts of every Turn it has played. Its parameters are those it was launched with.</p></div>
   <div class="panel read"><div class="ctl">
     <label><span class="lbl">Campaigns</span><input type="number" id="l_count" min="1" step="1" value="${esc(launchForm.count)}" /></label>
     <label><span class="lbl">Until turn</span><input type="number" id="l_until" min="1" step="1" value="${esc(launchForm.untilTurn)}" /></label>
@@ -1084,7 +1168,7 @@
 
       function renderHead() {
         $('legend').innerHTML =
-          `<b>CR ready</b> is the Combat rating of the Deployable Agents, under Glossary below; their number out of all Serving Agents is in brackets, e.g. (29/155), and a team is further limited by the free Transport cap. <b>CR all</b> is the Combat rating of every Serving Agent at full health and exhaustion 0. A label with <b>+</b>, e.g. <b>+Weapon</b>, is how many times that Upgrade was bought. Work counts Serving Agents by Assignment, In transit included; <b>Deployable</b> and <b>Non-deployable</b> split those on Training and on Standby, so the two Deployable counts add up to the number after CR ready.Each Faction shows the next Initiative Mission site to win against it, one level above the highest Won. Below it, four checks, 🟢 when it holds and 🔴 when not: <b>Site</b>, whether a Mission site of it is available, and otherwise the state of the Lead that creates it; then the three tests of the Basic Autopilot AI's winning team, with the Campaign's parameters: <b>CR</b>, CR ready against the Enemies' Combat rating, as a percentage, above the Combat margin; <b>Agents</b>, the Deployable Agents against the Agents needed, one per <code>enemiesPerAgent</code> Enemies (<b>en</b>); and <b>Transport</b>, the free Transport cap against the Agents needed. Missions: Won / Lost / Expired. Below the layers, <b>Fought</b> lists the last four Missions fought, the latest first: the Turn, the kind and name of the Mission site, the Agents sent (<b>ag</b>), the team's Combat rating against the Enemies' at Combat start, the result, and the Agents Killed (<b>dead</b>) and Incapacitated (<b>incap</b>). Hover a label for its meaning. Time is the latest run's wall-clock time, and the total of every run. <b>Load params</b> copies a Campaign's parameters into the Parameters editor above, e.g. to launch a variant of it.`
+          `<b>CR ready</b> is the Combat rating of the Deployable Agents, under Glossary below; their number out of all Serving Agents is in brackets, e.g. (29/155), and a team is further limited by the free Transport cap. <b>CR all</b> is the Combat rating of every Serving Agent at full health and exhaustion 0. A label with <b>+</b>, e.g. <b>+Weapon</b>, is how many times that Upgrade was bought. Work counts Serving Agents by Assignment, In transit included; <b>Deployable</b> and <b>Non-deployable</b> split those on Training and on Standby, so the two Deployable counts add up to the number after CR ready.Each Faction shows the next Initiative Mission site to win against it, one level above the highest Won. Below it, four checks, 🟢 when it holds and 🔴 when not: <b>Site</b>, whether a Mission site of it is available, and otherwise the state of the Lead that creates it; then the three tests of the Basic Autopilot AI's winning team, with the Campaign's parameters: <b>CR</b>, CR ready against the Enemies' Combat rating, as a percentage, above the Combat margin; <b>Agents</b>, the Deployable Agents against the Agents needed, one per <code>enemiesPerAgent</code> Enemies (<b>en</b>); and <b>Transport</b>, the free Transport cap against the Agents needed. Missions: Won / Lost / Expired. Below the layers, <b>Fought</b> lists the last four Missions fought, the latest first: the Turn, the kind and name of the Mission site, the Agents sent (<b>ag</b>), the team's Combat rating against the Enemies' at Combat start, the result, and the Agents Killed (<b>dead</b>) and Incapacitated (<b>incap</b>). At the bottom, four charts of every Turn played: the Serving Agents by status and by effective skill band of 50, both at the end of each Turn's player phase, just before its Advance turn, and for the Current Turn as they are now; the income above 0, the expenditures below 0, and the Net flow line of each ended Turn; and the money (left axis) and the Agents and caps (right axis) at each Turn start. Hover a chart for a Turn's values. Hover a label for its meaning. Time is the latest run's wall-clock time, and the total of every run. <b>Load params</b> copies a Campaign's parameters into the Parameters editor above, e.g. to launch a variant of it.`
       }
 
       const rows = new Map()
@@ -1173,6 +1257,324 @@
         ].join('')
       }
 
+      /* ---------- Per-Turn charts ---------- */
+
+      /** Every ended Turn of each Campaign, by its ID, as the server sent them: only the part not held is sent again. */
+      const SERIES = new Map()
+
+      const STATUS_GROUPS = [
+        ['Standby', '#7FD45F'],
+        ['In training', '#2E8B3E'],
+        ['Contracting', '#E8C547'],
+        ['Investigating', '#A77BDB'],
+        ['Deployed', '#F28C28'],
+        ['Recovering', '#D2453D'],
+        ['In transit', '#3D8FD9'],
+      ]
+      const INCOME = [
+        ['Funding', '#3E8E41'],
+        ['Contracting income', '#6CC05B'],
+        ['Mission rewards', '#A9DD8F'],
+      ]
+      const SPENDING = [
+        ['Upkeep', '#A8322D'],
+        ['Agent hiring', '#D9473F'],
+        ['Cap Upgrades', '#FF6F61'],
+        ['Other Upgrades', '#F2A39B'],
+      ]
+      const NET = ['Net flow', '#E8C547']
+      const ASSETS = [
+        ['Money', '#8BC34A'],
+        ['Serving Agents', '#A1887F'],
+        ['Agent cap', '#D7CCC8'],
+        ['Transport cap', '#3D8FD9'],
+        ['Training cap', '#E8C547'],
+      ]
+      const BAND_COLORS = ['#3B2C6E', '#3E4A8A', '#2F6E8E', '#23918A', '#3FAF6F', '#8CC63F', '#D6D23A', '#F5E9A0']
+      const SKILL_BAND = 50
+      const bandColor = (i) => BAND_COLORS[Math.min(i, BAND_COLORS.length - 1)]
+      const bandName = (i) => `${i * SKILL_BAND}–${i * SKILL_BAND + SKILL_BAND - 1}`
+
+      /** The plot area of every chart, in the units of its 360 × 120 viewBox. */
+      const CW = 360
+      const CH = 120
+      const PAD = { l: 34, r: 30, t: 6, b: 13 }
+
+      /** The least of 1, 2, 2.5, or 5 times a power of ten that is at least `v`, for an axis end. */
+      function niceCeil(v) {
+        if (!(v > 0)) return 1
+        const p = 10 ** Math.floor(Math.log10(v))
+        for (const m of [1, 2, 2.5, 5, 10]) if (m * p >= v) return m * p
+        return 10 * p
+      }
+      const compact = (v) => {
+        const a = Math.abs(v)
+        if (a >= 1e6) return `${+(v / 1e6).toFixed(a >= 1e7 ? 0 : 1)}M`
+        if (a >= 1e4) return `${+(v / 1e3).toFixed(0)}k`
+        if (a >= 1e3) return `${+(v / 1e3).toFixed(1)}k`
+        return String(Math.round(v))
+      }
+      const legend = (items, line) =>
+        `<div class="leg">${items.map(([name, color], i) => `<span><i class="${line?.(i) ? 'ln' : ''}" style="background:${color}"></i>${esc(name)}</span>`).join('')}</div>`
+
+      /**
+       * The skeleton of one chart: its frame, axis labels, and the marks given, with the plot geometry on the svg so
+       * that a hover can tell the Turn under the pointer.
+       */
+      function chartSvg(kind, n, marks, labels) {
+        const w = CW - PAD.l - PAD.r
+        return `<svg viewBox="0 0 ${CW} ${CH}" preserveAspectRatio="none" data-chart="${kind}" data-n="${n}">${marks}${labels}<rect class="hov" x="0" y="${PAD.t}" width="0" height="${CH - PAD.t - PAD.b}" fill="rgba(232,228,216,0.12)" /><text x="${PAD.l}" y="${CH - 2}">T1</text><text x="${PAD.l + w}" y="${CH - 2}" text-anchor="end">T${n}</text></svg>`
+      }
+
+      /** Stacked bars, one per Turn: `rows[i]` lists the values of Turn i+1 bottom-up from `base(i)` going `dir`. */
+      function stackBars(rows, colors, y, dir) {
+        const n = rows.length
+        const w = CW - PAD.l - PAD.r
+        const bw = w / Math.max(n, 1)
+        const gap = bw > 4 ? 1 : 0
+        let out = ''
+        rows.forEach((vals, i) => {
+          let acc = 0
+          const x = PAD.l + i * bw
+          vals.forEach((v, j) => {
+            if (!(v > 0)) return
+            const y0 = y(dir * acc)
+            const y1 = y(dir * (acc + v))
+            acc += v
+            out += `<rect x="${x.toFixed(2)}" y="${Math.min(y0, y1).toFixed(2)}" width="${Math.max(bw - gap, 0.4).toFixed(2)}" height="${Math.abs(y1 - y0).toFixed(2)}" fill="${colors(j)}" />`
+          })
+        })
+        return out
+      }
+
+      function polyline(values, y, color, width) {
+        const n = values.length
+        const w = CW - PAD.l - PAD.r
+        const bw = w / Math.max(n, 1)
+        const pts = values
+          .map((v, i) => (v === null ? null : `${(PAD.l + (i + 0.5) * bw).toFixed(2)},${y(v).toFixed(2)}`))
+          .filter((p) => p !== null)
+        if (pts.length === 1) pts.push(pts[0])
+        return `<polyline points="${pts.join(' ')}" fill="none" stroke="${color}" stroke-width="${width}" vector-effect="non-scaling-stroke" stroke-linejoin="round" />`
+      }
+
+      const yScale = (lo, hi) => (v) => PAD.t + ((hi - v) / (hi - lo || 1)) * (CH - PAD.t - PAD.b)
+      const axisLabel = (v, y, right) =>
+        `<text x="${right ? CW - PAD.r + 3 : PAD.l - 3}" y="${(y + 3).toFixed(1)}" text-anchor="${right ? 'start' : 'end'}">${compact(v)}</text>`
+      const gridLine = (y, strong) =>
+        `<line x1="${PAD.l}" x2="${CW - PAD.r}" y1="${y.toFixed(2)}" y2="${y.toFixed(2)}" stroke="${strong ? 'var(--border)' : 'var(--divider)'}" stroke-width="1" vector-effect="non-scaling-stroke" />`
+
+      /** Every Turn of a Campaign, Turn 1 to its Current Turn: the ended Turns, then the Current Turn. */
+      function turnsOf(c) {
+        const ended = SERIES.get(c.id) ?? []
+        const cur = c.stats?.current
+        return cur && (ended.length === 0 || ended[ended.length - 1].turn < cur.turn) ? [...ended, cur] : ended
+      }
+
+      /** The values of each chart at Turn index i, for its tooltip. */
+      const CHARTS = {
+        status: {
+          title: 'Agents by status',
+          legend: () => legend(STATUS_GROUPS),
+          draw(turns) {
+            const rows = turns.map((p) => p.status)
+            const hi = niceCeil(Math.max(1, ...rows.map((r) => r.reduce((a, b) => a + b, 0))))
+            const y = yScale(0, hi)
+            return chartSvg(
+              'status',
+              turns.length,
+              gridLine(y(hi / 2)) + stackBars(rows, (j) => STATUS_GROUPS[j][1], y, 1) + gridLine(y(0), true),
+              axisLabel(0, y(0)) + axisLabel(hi / 2, y(hi / 2)) + axisLabel(hi, y(hi)),
+            )
+          },
+          tip: (p) => [
+            ...STATUS_GROUPS.map(([name, color], j) => [name, color, p.status[j]]).reverse(),
+            ['Serving', null, p.status.reduce((a, b) => a + b, 0)],
+          ],
+        },
+        money: {
+          title: 'Finances',
+          legend: () => legend([...INCOME, ...SPENDING, NET], (i) => i === INCOME.length + SPENDING.length),
+          draw(turns) {
+            // The ended Turns only: the Current Turn has no income or upkeep yet. Net flow needs the next Turn's start.
+            const ended = turns.filter((p) => p.money !== null)
+            const n = Math.max(ended.length, 1)
+            const inc = ended.map((p) => p.money.slice(0, 3))
+            const exp = ended.map((p) => p.money.slice(3))
+            const net = ended.map((p, i) => (turns[i + 1] ? turns[i + 1].start[0] - p.start[0] : null))
+            const hi = niceCeil(
+              Math.max(1, ...inc.map((r) => r.reduce((a, b) => a + b, 0)), ...net.filter((v) => v !== null)),
+            )
+            const lo = -niceCeil(
+              Math.max(
+                1,
+                ...exp.map((r) => r.reduce((a, b) => a + b, 0)),
+                ...net.filter((v) => v !== null).map((v) => -v),
+              ),
+            )
+            const y = yScale(lo, hi)
+            return chartSvg(
+              'money',
+              n,
+              stackBars(inc, (j) => INCOME[j][1], y, 1) +
+                stackBars(exp, (j) => SPENDING[j][1], y, -1) +
+                gridLine(y(0), true) +
+                (ended.length ? polyline(net, y, NET[1], 2) : ''),
+              axisLabel(hi, y(hi)) + axisLabel(0, y(0)) + axisLabel(lo, y(lo)),
+            )
+          },
+          points: (turns) => turns.filter((p) => p.money !== null),
+          tip: (p, i, turns) => {
+            const next = turns.find((q) => q.turn === p.turn + 1)
+            return [
+              ...INCOME.map(([name, color], j) => [name, color, p.money[j]]),
+              ...SPENDING.map(([name, color], j) => [name, color, p.money[3 + j] ? -p.money[3 + j] : 0]),
+              [NET[0], NET[1], next ? next.start[0] - p.start[0] : null, true],
+            ]
+          },
+        },
+        assets: {
+          title: 'Assets at Turn start',
+          legend: () => legend(ASSETS, () => true),
+          draw(turns) {
+            const money = turns.map((p) => p.start[0])
+            const mHi = niceCeil(Math.max(1, ...money))
+            const mLo = Math.min(0, ...money) < 0 ? -niceCeil(-Math.min(...money)) : 0
+            const aHi = niceCeil(Math.max(1, ...turns.flatMap((p) => p.start.slice(1))))
+            const ym = yScale(mLo, mHi)
+            const ya = yScale(0, aHi)
+            const lines = ASSETS.slice(1)
+              .map(([, color], j) =>
+                polyline(
+                  turns.map((p) => p.start[1 + j]),
+                  ya,
+                  color,
+                  1.5,
+                ),
+              )
+              .reverse()
+              .join('')
+            return chartSvg(
+              'assets',
+              turns.length,
+              gridLine(ya(aHi / 2)) + gridLine(ym(0), true) + lines + polyline(money, ym, ASSETS[0][1], 2),
+              axisLabel(mLo, ym(mLo)) +
+                axisLabel(mHi, ym(mHi)) +
+                axisLabel(0, ya(0), true) +
+                axisLabel(aHi / 2, ya(aHi / 2), true) +
+                axisLabel(aHi, ya(aHi), true),
+            )
+          },
+          tip: (p) => ASSETS.map(([name, color], j) => [name, color, p.start[j], true]),
+        },
+        skill: {
+          title: 'Agents by effective skill',
+          legend: (turns) => {
+            const top = Math.max(0, ...turns.map((p) => p.skill.length - 1))
+            return legend(Array.from({ length: top + 1 }, (_, i) => [bandName(i), bandColor(i)]))
+          },
+          draw(turns) {
+            const rows = turns.map((p) => p.skill)
+            const hi = niceCeil(Math.max(1, ...rows.map((r) => r.reduce((a, b) => a + b, 0))))
+            const y = yScale(0, hi)
+            return chartSvg(
+              'skill',
+              turns.length,
+              gridLine(y(hi / 2)) + stackBars(rows, bandColor, y, 1) + gridLine(y(0), true),
+              axisLabel(0, y(0)) + axisLabel(hi / 2, y(hi / 2)) + axisLabel(hi, y(hi)),
+            )
+          },
+          tip: (p) =>
+            p.skill
+              .map((v, i) => [bandName(i), bandColor(i), v])
+              .filter((r) => r[2] > 0)
+              .reverse(),
+        },
+      }
+
+      /** The four charts of a Campaign block, from every Turn it has played. */
+      function chartsHtml(turns) {
+        if (turns.length === 0) return ''
+        return Object.entries(CHARTS)
+          .map(([kind, ch]) => `<div class="chart"><h4>${esc(ch.title)}</h4>${ch.legend(turns)}${ch.draw(turns)}</div>`)
+          .join('')
+      }
+
+      function drawCharts(row, c) {
+        const turns = turnsOf(c)
+        const last = turns[turns.length - 1]
+        const key = `${turns.length}|${JSON.stringify(last ?? null)}`
+        if (row.chartKey === key) return
+        row.chartKey = key
+        row.turns = turns
+        row.charts.innerHTML = chartsHtml(turns)
+      }
+
+      /** The tooltip of a chart: the Turn under the pointer and its values. */
+      function hover(e) {
+        const tip = $('tip')
+        const svg = e.target.closest?.('svg[data-chart]')
+        const row = svg && rows.get(svg.closest('[data-id]').dataset.id)
+        for (const r of document.querySelectorAll('svg .hov[width]:not([width="0"])'))
+          if (!svg || r.ownerSVGElement !== svg) r.setAttribute('width', '0')
+        if (!svg || !row?.turns) {
+          tip.style.display = 'none'
+          return
+        }
+        const ch = CHARTS[svg.dataset.chart]
+        const points = ch.points ? ch.points(row.turns) : row.turns
+        const box = svg.getBoundingClientRect()
+        const x = ((e.clientX - box.left) / box.width) * CW
+        const w = CW - PAD.l - PAD.r
+        const i = Math.floor(((x - PAD.l) / w) * points.length)
+        const p = points[i]
+        if (p === undefined) {
+          tip.style.display = 'none'
+          return
+        }
+        const bw = w / points.length
+        const hov = svg.querySelector('.hov')
+        hov.setAttribute('x', String(PAD.l + i * bw))
+        hov.setAttribute('width', String(Math.max(bw, 1)))
+        const now = p.money === null && svg.dataset.chart !== 'assets' ? ' <span class="dim">now</span>' : ''
+        tip.innerHTML =
+          `<b>Turn ${fmt(p.turn)}</b>${now}<br>` +
+          ch
+            .tip(p, i, row.turns)
+            .map(
+              ([name, color, v, line]) =>
+                `${color ? `<i class="${line ? 'ln' : ''}" style="background:${color}"></i>` : '<i></i>'}${esc(name)}<span class="v">${v === null ? '—' : fmt(v)}</span>`,
+            )
+            .join('<br>')
+        tip.style.display = 'block'
+        const tw = tip.offsetWidth
+        const th = tip.offsetHeight
+        const left = e.clientX + 14 + tw > window.innerWidth ? e.clientX - 14 - tw : e.clientX + 14
+        tip.style.left = `${Math.max(4, left)}px`
+        tip.style.top = `${Math.max(4, Math.min(e.clientY - th / 2, window.innerHeight - th - 4))}px`
+      }
+
+      /** Adds the part of each Campaign's series the server sent to the part already held. */
+      function mergeSeries() {
+        const seen = new Set()
+        for (const c of STATE.campaigns) {
+          seen.add(c.id)
+          const held = SERIES.get(c.id) ?? []
+          if (c.seriesFrom === 0) SERIES.set(c.id, c.series ?? [])
+          else if (c.seriesFrom === held.length) held.push(...(c.series ?? []))
+          // A part that does not follow what is held: drop it all, and the next poll sends the whole series.
+          else SERIES.delete(c.id)
+          delete c.series
+        }
+        for (const id of SERIES.keys()) if (!seen.has(id)) SERIES.delete(id)
+      }
+
+      const haveQuery = () =>
+        [...SERIES.entries()]
+          .filter(([, s]) => s.length > 0)
+          .map(([id, s]) => `${id}.${s.length}`)
+          .join(',')
+
       function rowSkeleton(c) {
         const el = document.createElement('div')
         el.className = 'crow'
@@ -1184,7 +1586,7 @@
           { length: RECENT_LINES },
           (_, i) =>
             `<div class="line rm l${LAYER_NAMES.length + i + 1}"><span class="c layer"${i === 0 ? ' title="The last Missions fought, the latest first"' : ''}>${i === 0 ? 'Fought' : ''}</span><span data-k="rm${i}"></span></div>`,
-        ).join('')}</div>`
+        ).join('')}</div><div class="charts"></div>`
         $('cbody').appendChild(el)
         const cells = {}
         for (const k of el.querySelectorAll('[data-k]')) cells[k.dataset.k] = k
@@ -1192,6 +1594,9 @@
           el,
           cells,
           cache: {},
+          charts: el.querySelector('.charts'),
+          chartKey: '',
+          turns: null,
           run: el.querySelector('[data-t="run"]'),
           total: el.querySelector('[data-t="total"]'),
         }
@@ -1225,6 +1630,7 @@
               row.cells[k].innerHTML = html
             }
           }
+          drawCharts(row, c)
         }
         for (const [id, row] of rows) {
           if (!seen.has(id)) {
@@ -1309,6 +1715,8 @@
         }
         $('ct').addEventListener('pointerdown', (e) => e.button === 0 && act(e))
         $('ct').addEventListener('click', (e) => e.detail === 0 && act(e))
+        $('ct').addEventListener('mousemove', hover)
+        $('ct').addEventListener('mouseleave', hover)
       }
 
       function useParams(p) {
@@ -1333,9 +1741,13 @@
       let polling = null
       async function poll(once) {
         try {
-          const r = await fetch('api/state', { cache: 'no-store' })
+          const have = haveQuery()
+          const r = await fetch(`api/state${have ? `?have=${have}` : ''}`, {
+            cache: 'no-store',
+          })
           STATE = await r.json()
           clockOffset = STATE.now - Date.now()
+          mergeSeries()
           renderCampaigns()
         } catch {}
         if (!once) {

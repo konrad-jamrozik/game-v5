@@ -9,7 +9,7 @@ import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { parentPort, workerData } from 'node:worker_threads'
 
-import type { CampaignStats, MissionRecord, ToWorker } from './protocol.ts'
+import type { CampaignStats, MissionRecord, ToWorker, TurnPoint } from './protocol.ts'
 
 const impl = (workerData as { impl: string }).impl
 const port = parentPort!
@@ -39,6 +39,126 @@ interface Campaign {
   /** The last Missions fought, the latest first, and the Turn of the last Turn report read for them. */
   recentMissions: MissionRecord[]
   missionsReadTurn: number
+  /** The Turn-start values of the Current Turn, as `TurnPoint.start` holds them. */
+  turnStart: number[]
+  /** The money the Current Turn's Player actions spent so far: on hiring, on Cap Upgrades, and on other Upgrades. */
+  spent: [number, number, number]
+  /** The ended Turns not yet reported to server.ts. */
+  unsent: TurnPoint[]
+  /** The Serving Agents of the Turn whose Advance turn was requested last, read just before it. */
+  turnEnd: { status: number[]; skill: number[] } | null
+  /** The last Turn recorded in the series. */
+  recordedTurn: number
+}
+
+/** The Upgrades whose effect raises a cap, by ID: the Cap Upgrades. */
+const capUpgrades = new Set<string>()
+const CAP_EFFECTS = new Set(['agent_cap', 'transport_cap', 'training_cap'])
+
+/** The width of an effective skill band of the skill chart. */
+const SKILL_BAND = 50
+
+/** The Agents of a Turn point, from the Serving Agents as they are now. */
+function agentsPoint(agents: readonly Any[]): {
+  status: number[]
+  skill: number[]
+} {
+  const status = [0, 0, 0, 0, 0, 0, 0]
+  const skill: number[] = []
+  for (const a of agents) {
+    const kind = a.assignment?.kind as string | undefined
+    const group =
+      a.agentStatus === 'InTransit'
+        ? 6
+        : a.agentStatus === 'Recovering' || kind === 'Recovery'
+          ? 5
+          : kind === 'Standby'
+            ? 0
+            : kind === 'Training'
+              ? 1
+              : kind === 'Contracting'
+                ? 2
+                : kind === 'Investigation'
+                  ? 3
+                  : kind === 'Deployed'
+                    ? 4
+                    : 0
+    status[group]! += 1
+    const band = Math.max(0, Math.floor((a.effectiveSkill as number) / SKILL_BAND))
+    while (skill.length <= band) skill.push(0)
+    skill[band]! += 1
+  }
+  return { status, skill }
+}
+
+function startPoint(live: Any): number[] {
+  const agency = live.agency
+  return [agency.money, agency.servingAgents, agency.agentCap, agency.transportCap, agency.trainingCap]
+}
+
+/**
+ * The Basic Autopilot AI, with its Player API wrapped so that the bench sees each Turn's player phase end: just before
+ * the AI requests Advance turn, it reads the Serving Agents, and once the Advance turn has ended the Turn, it reads the
+ * Turn report and the next Turn's start. It also reads the money each `hireAgent` and `purchaseUpgrade` spent, the
+ * money after it less the money before, as the Action record holds it. The AI plays exactly as it would unwrapped.
+ */
+function observed(ai: Any, holder: { campaign: Campaign | null }): Any {
+  return {
+    ...ai,
+    step: ({ player }: Any) => {
+      const host = () => holder.campaign?.engine.player
+      const money = () => ok<Any>(host().queries.getCurrentLiveWorldState()).agency.money as number
+      const spend = async (slot: 0 | 1 | 2, action: () => Promise<Any>) => {
+        const campaign = holder.campaign
+        if (campaign === null) return action()
+        const before = money()
+        const result = await action()
+        campaign.spent[slot] += before - money()
+        return result
+      }
+      const actions = {
+        ...player.actions,
+        hireAgent: () => spend(0, () => player.actions.hireAgent()),
+        purchaseUpgrade: (upgrade: string) =>
+          spend(capUpgrades.has(upgrade) ? 1 : 2, () => player.actions.purchaseUpgrade(upgrade)),
+        advanceTurn: async () => {
+          const campaign = holder.campaign
+          if (campaign === null) return player.actions.advanceTurn()
+          campaign.turnEnd = agentsPoint(ok<Any>(host().queries.getCurrentLiveWorldState()).agents)
+          const result = await player.actions.advanceTurn()
+          endTurn(campaign)
+          return result
+        },
+      }
+      return ai.step({ player: { ...player, actions } })
+    },
+  }
+}
+
+/**
+ * Records the Turn that an Advance turn has just ended, from its Turn report, and the start of the next one, once per
+ * Turn report. It runs right after the Advance turn, and again after each step and after the engagement ends, since
+ * an Advance turn that ends the engagement can let the run finish before the wrapper above resumes.
+ */
+function endTurn(campaign: Campaign) {
+  const player = campaign.engine.player
+  const end = campaign.turnEnd
+  const report = ok<Any>(player.queries.getTurnReport())
+  if (report === null || end === null || report.turn <= campaign.recordedTurn) return
+  campaign.recordedTurn = report.turn
+  campaign.turnEnd = null
+  const funding = report.income.funding as number
+  const rewards = (report.missions as Any[]).reduce((sum, m) => sum + Math.max(0, m.consequence.money as number), 0)
+  const [hiring, caps, other] = campaign.spent
+  campaign.unsent.push({
+    turn: report.turn,
+    start: campaign.turnStart,
+    status: end.status,
+    skill: end.skill,
+    money: [funding, report.income.income - funding, rewards, report.upkeep.upkeep, hiring, caps, other],
+  })
+  campaign.spent = [0, 0, 0]
+  campaign.turnStart = startPoint(ok<Any>(player.queries.getCurrentLiveWorldState()))
 }
 
 /** How many of the last Missions fought a Campaign keeps. */
@@ -95,6 +215,9 @@ async function boot() {
     name: u.name as string,
     effect: u.effect as string,
   }))
+  for (const u of upgrades) {
+    if (CAP_EFFECTS.has(u.effect)) capUpgrades.add(u.id)
+  }
   // Each Initiative operation level's MissionSiteArchetype, from Developer API on the scratch Campaign alone, so that
   // a row can name the next Initiative Mission site to win against each Faction. It is fixed game data.
   ok(scratch.session.developer.enable())
@@ -193,6 +316,13 @@ function statsOf(campaign: Campaign): CampaignStats {
     }
   }
   return {
+    series: campaign.unsent.splice(0),
+    current: {
+      turn: live.turn,
+      start: campaign.turnStart,
+      ...agentsPoint(agents),
+      money: null,
+    },
     turn: live.turn,
     ending:
       live.ending === null
@@ -288,17 +418,19 @@ async function create(id: string, seed: string, params: unknown) {
       yieldToHost: async () => {
         const campaign = holder.campaign
         if (campaign !== null && campaign.engagementId !== null) {
+          endTurn(campaign)
           readMissions(campaign)
           report(campaign, false)
         }
         await new Promise((resolve) => setImmediate(resolve))
       },
     },
-    { autopilotAis: [b.createBasicAutopilotAi({ ...b.BASIC_AI_THRESHOLDS, ...(params as object) })] },
+    { autopilotAis: [observed(b.createBasicAutopilotAi({ ...b.BASIC_AI_THRESHOLDS, ...(params as object) }), holder)] },
   )
   ok(await engine.session.globalConfiguration.set('autosaveLimit', 0))
   ok(await engine.session.campaign.create({ seed }))
-  const initialAgents = ok<Any>(engine.player.queries.getCurrentLiveWorldState()).agents.length
+  const live = ok<Any>(engine.player.queries.getCurrentLiveWorldState())
+  const initialAgents = live.agents.length
   const campaign: Campaign = {
     id,
     engine,
@@ -307,6 +439,11 @@ async function create(id: string, seed: string, params: unknown) {
     lastReport: 0,
     recentMissions: [],
     missionsReadTurn: 0,
+    turnStart: startPoint(live),
+    spent: [0, 0, 0],
+    unsent: [],
+    turnEnd: null,
+    recordedTurn: 0,
   }
   holder.campaign = campaign
   campaigns.set(id, campaign)
@@ -324,6 +461,7 @@ async function play(campaign: Campaign, turns: number) {
   campaign.engagementId = engaged.engagementId
   const result = ok<Any>(await engine.session.autopilot.whenDisengaged(engaged.engagementId))
   campaign.engagementId = null
+  endTurn(campaign)
   readMissions(campaign)
   port.postMessage({
     type: 'done',

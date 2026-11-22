@@ -15,7 +15,7 @@ import path from 'node:path'
 import { Worker } from 'node:worker_threads'
 import { execFileSync } from 'node:child_process'
 
-import type { CampaignStats, FromWorker, ToWorker, UpgradeInfo } from './protocol.ts'
+import type { CampaignStats, FromWorker, ToWorker, TurnPoint, UpgradeInfo } from './protocol.ts'
 
 const arg = (name: string, fallback: string) => {
   const at = process.argv.indexOf(`--${name}`)
@@ -51,6 +51,8 @@ interface Campaign {
   readonly thread: Thread
   state: 'starting' | 'running' | 'idle' | 'failed'
   stats: CampaignStats | null
+  /** Every ended Turn of the Campaign, in Turn order, for the per-Turn charts. */
+  readonly series: TurnPoint[]
   run: Run | null
   /** The time of every earlier run together, in milliseconds. */
   priorMs: number
@@ -140,7 +142,9 @@ function onMessage(m: FromWorker) {
   if (c === undefined) {
     return
   }
-  c.stats = m.stats
+  // A message carries only the ended Turns not reported before, so they are appended, and the stats keep none.
+  c.series.push(...m.stats.series)
+  c.stats = { ...m.stats, series: [] }
   if (c.state === 'starting') {
     startLaunchRun(c)
     return
@@ -191,6 +195,7 @@ async function launch(count: number, untilTurn: number, seedPrefix: string, para
       thread,
       state: 'starting',
       stats: null,
+      series: [],
       // The launch's run starts at once, so its time includes starting the engine and creating the Campaign.
       run: { turns: untilTurn - 1, startTurn: 1, startedAt: Date.now(), endedAt: null, reason: null, detail: null },
       priorMs: 0,
@@ -269,8 +274,16 @@ function readInfo(): Promise<{ defaults: Record<string, unknown>; upgrades: read
   })
 }
 
-function view(c: Campaign) {
+/**
+ * A Campaign as the page reads it. `have` is how many ended Turns of its series the page already holds, so that only
+ * the rest is sent; `seriesFrom` is where the part sent starts, 0 when the page holds more than there is, e.g. after a
+ * restart reused the Campaign's ID.
+ */
+function view(c: Campaign, have: number) {
+  const from = have <= c.series.length ? have : 0
   return {
+    seriesFrom: from,
+    series: c.series.slice(from),
     id: c.id,
     n: c.n,
     batch: c.batch,
@@ -296,7 +309,7 @@ const whole = (value: unknown, min: number, max: number): number | null =>
 
 const server = http.createServer((req, res) => {
   void (async () => {
-    const url = (req.url ?? '/').split('?')[0]
+    const [url, query] = (req.url ?? '/').split('?')
     if (req.method === 'GET' && url === '/') {
       res.writeHead(200, { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' })
       res.end(fs.readFileSync(path.join(HERE, 'index.html'), 'utf8'))
@@ -304,9 +317,15 @@ const server = http.createServer((req, res) => {
       const info = await readInfo().catch((e: unknown) => ({ engineError: e instanceof Error ? e.message : String(e) }))
       json(res, 200, { ...info, engine: engineVersion(), impl: IMPL, threads: THREADS })
     } else if (req.method === 'GET' && url === '/api/state') {
+      // `have=c1.40,c2.12`: how many ended Turns of each Campaign's series the page already holds.
+      const have = new Map<string, number>()
+      for (const part of (new URLSearchParams(query ?? '').get('have') ?? '').split(',')) {
+        const [id, n] = part.split('.')
+        if (id && Number.isInteger(Number(n))) have.set(id, Math.max(0, Number(n)))
+      }
       json(res, 200, {
         now: Date.now(),
-        campaigns: [...campaigns.values()].map(view),
+        campaigns: [...campaigns.values()].map((c) => view(c, have.get(c.id) ?? 0)),
         batches: batches.map((b) => ({ id: b.id, engine: b.engine, createdAt: b.createdAt })),
       })
     } else if (req.method === 'POST' && url === '/api/launch') {
