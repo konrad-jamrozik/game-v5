@@ -133,6 +133,9 @@ A chart with several series needs more hues than the roles above can spare, and 
 | Assets | [Transport cap](../mechanics/economy-and-upgrades.md#glossary) | `#3D8FD9` |
 | Assets | [Training cap](../mechanics/economy-and-upgrades.md#glossary) | `#E8C547` |
 | Agents by [effective skill](../mechanics/agents-spec.md#combatant-attributes) | Skill bands 1 to 12, from the lowest | `#6A5ACD`, `#4A86D9`, `#2FB0B8`, `#45BF6E`, `#A3CC3F`, `#E3C43A`, `#F0913A`, `#E8605A`, `#D94A8C`, `#B45AD6`, `#F2A6D8`, `#F4EFE6` |
+| Agents by effective skill | Recovering | `#FF4D4D` |
+| Agents by effective skill | Exhaustion above `exhaustion_work_limit` | `#FF9A2E` |
+| Agents by effective skill | Exhaustion above `exhaustion_free_points` | `#FFE14D` |
 | Combat strength | Deployable Agents | `#4A86D9` |
 | Combat strength | Other Agents | `#2E4E78` |
 | Combat strength | Last [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) | `#E8605A` |
@@ -372,6 +375,7 @@ Charts must let the Player read a trend across the whole Campaign without squint
 - Grid lines are Raised; the baseline is Border.
 - A chart with one series draws it as a 2 px line in Text colour with its latest point marked by a dot. A chart with several series draws each in its colour under [Chart series colours](#chart-series-colours): a line series as a 2 px line with its latest point marked by a dot, and a bar series as a segment of a stacked bar.
 - A stacked bar stands for one Turn and is 70% as wide as one Turn's share of the plot, with no gap between its segments. Its segments are stacked in the order of the legend, outward from the baseline, and a series whose value is 0 in that Turn draws no segment.
+- A line series drawn over stacked bars has a 4 px Background outline beneath its 2 px line, so that it stays apart from a bar segment of a like colour behind it.
 - A legend lists the series in their order, each as a 10 px square in its colour, or a 10 px by 2 px stroke for a line series, followed by its name in the Axis style in Text secondary, and wraps onto further lines when the chart is too narrow for one.
 - While the pointer rests on a Turn of a chart with a legend, a line below the chart reads that Turn's values in the Axis style in Text secondary: "Turn" and its number, then each series with its value in legend order, leaving out every series whose value is 0. A chart whose stacked bars all count one quantity above the baseline, e.g. Agents, starts the list with "Total" and the sum of the bar, because the total is what its legend cannot show, e.g. "Turn 94: Total 40 · [Standby](../mechanics/agents-spec.md#assignments) 8 · [Training](../mechanics/agents-spec.md#assignments) 6 · [Contracting](../mechanics/agents-spec.md#assignments) 10". The line keeps its height while the pointer rests on no Turn, so that the charts below it never move.
 - A chart whose series count two kinds of quantity, e.g. money and Agents, labels the vertical axis of the first on the left and of the second on the right, and names the right-axis series in its legend after the left-axis ones.
