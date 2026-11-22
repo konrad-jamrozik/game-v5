@@ -19,8 +19,8 @@ These informative views are derived from the registered Markdown specifications.
 | Design             | Content       | 1              |
 | Design             | UI            | 17             |
 | Design             | Autopilot AIs | 1              |
-| Implementation     | Mandatory     | 6              |
-| Implementation     | Guidance      | 4              |
+| Implementation     | Mandatory     | 7              |
+| Implementation     | Guidance      | 5              |
 | Implementation     | Recipes       | 3              |
 
 ## Conventions
@@ -126,6 +126,7 @@ These informative views are derived from the registered Markdown specifications.
 | LICENSE | [Implementation License](../specs/implementation/mandatory/implementation-license.md) | The license under which each Implementation is published, and the files that state it. |
 | PLACE | [Implementation Placement](../specs/implementation/mandatory/implementation-placement.md) | Where each implementation and everything it needs reside, relative to the Spec repo. |
 | REUSE | [Rule Reuse](../specs/implementation/mandatory/rule-reuse.md) | That each Developer tool runs the code that play runs, that a rule which another rule reads runs as one implementation, and the tests that show it. |
+| TESTVAL | [Test Values](../specs/implementation/mandatory/test-values.md) | Where an automated test of an Implementation takes the values it checks against. |
 | TRACK | [Specification Tracking](../specs/implementation/mandatory/specification-tracking.md) | The Specification baseline and Specification map records that tie each Implementation to the specifications it conforms to. |
 
 ## Guidance
@@ -136,6 +137,7 @@ These informative views are derived from the registered Markdown specifications.
 | HEADLESS | [Headless First](../specs/implementation/guidance/headless-first.md) | Guidance that an Implementation becomes fully playable headlessly, through its Command-Line Interface, before work on its Graphical User Interface begins. |
 | SCHEMA | [Storage Schema](../specs/implementation/guidance/storage-schema.md) | Non-behavioural guidance on the physical layout of everything the game persists. |
 | STACK | [Tech Stack Suggestion](../specs/implementation/guidance/tech-stack-suggestion.md) | A suggested technology stack for a browser Implementation. |
+| TFOCUS | [Test Focus](../specs/implementation/guidance/test-focus.md) | Non-behavioural guidance on which properties of an Implementation its automated tests are best spent on. |
 
 ## Recipes
 

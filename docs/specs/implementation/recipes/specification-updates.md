@@ -46,6 +46,10 @@ Moving content between specifications changes where rules are owned without alwa
 - **Deleted or merged specification:** its section leaves the Specification map, and its files move to the sections of the specifications that now cover them, under [Edge cases and failure behavior](../mandatory/specification-tracking.md#edge-cases-and-failure-behavior).
 - **New specification:** the implementer implements it and adds its section, which may hold `No files.`.
 
+# Tests that fail after a change
+
+An existing test that fails during an update shows either a rule that changed or a defect that the update made, and the difference tells the two apart. For each such test, the implementer should find the changed passage that explains its failure, e.g. a formula that the target Specification revision rewrote, and change the test only as that passage requires. A failure that no changed passage explains should be treated as a defect of the update and fixed in the code, with the test left unchanged. When the update is split among subagents, no subagent should be told that the code is correct and that failing tests are to follow it, because that would hide such a defect. A test that fails only because a [Retunable value](../mandatory/test-values.md#glossary) changed is fixed under A test that breaks at a retune, under [Edge cases and failure behavior](../mandatory/test-values.md#edge-cases-and-failure-behavior) in Test Values.
+
 # Completing an update
 
 An update is complete when the Implementation conforms to the target Specification revision and its tracking and feedback files say so, so that the next update can start from the new Specification baseline. In one change to the Implementation, the implementer should:

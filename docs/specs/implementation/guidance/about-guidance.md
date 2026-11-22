@@ -24,9 +24,13 @@ The Design specifications deliberately leave many technical matters open, e.g. t
 
 [Storage Schema](storage-schema.md) answers _how might everything persisted be laid out?_ It steers implementers toward one physical layout for Game storage.
 
+## Test Focus
+
+[Test Focus](test-focus.md) answers _which properties are tests best spent on?_ It suggests covering first what a person playing would not notice, e.g. determinism, saves, and the Timeline, checking each rule once at the lowest level that can, and keeping tests that drive a user interface to what only an interface shows.
+
 # How they relate
 
-The Guidance specifications do not depend on one another; each builds only on Design specifications. Gameplay Dependency Direction uses the vocabulary and determinism guarantees of the Foundation family, together with the Graphical User Interface and Basic Autopilot AI, whose code it keeps behind the engine API. Headless First uses Engine Contract and both user interfaces of the UI family, whose order of construction it suggests. Storage Schema uses the data ownership, Campaign save, and Timeline contracts of the Foundation family.
+The Guidance specifications do not depend on one another; each builds only on Design specifications. Gameplay Dependency Direction uses the vocabulary and determinism guarantees of the Foundation family, together with the Graphical User Interface and Basic Autopilot AI, whose code it keeps behind the engine API. Headless First uses Engine Contract and both user interfaces of the UI family, whose order of construction it suggests. Storage Schema uses the data ownership, Campaign save, and Timeline contracts of the Foundation family. Test Focus uses the Artboards of Visual Design, against which it suggests checking presentation by looking rather than by test.
 
 <!-- generated:family-diagram:start -->
 

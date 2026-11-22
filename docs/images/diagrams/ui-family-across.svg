@@ -25,25 +25,26 @@
   <text class="legend" x="66" y="36">referenced by</text>
   <rect class="box external" x="182.4" y="25" width="22" height="14" rx="3"/>
   <text class="legend" x="214.4" y="36">another family</text>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 859.4 325 C 859.4 408.5 862.6 408.5 862.6 492 L 862.6 537 C 862.6 571.5 771.8 571.5 771.8 606"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 331.3 325 C 331.3 408.5 363.8 408.5 363.8 492 L 363.8 537 C 363.8 571.5 350.5 571.5 350.5 606"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 363.3 325 C 363.3 408.5 418.8 408.5 418.8 492 L 418.8 537 C 418.8 571.5 514.5 571.5 514.5 606"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 395.4 325 C 395.4 408.5 469.6 408.5 469.6 492 L 469.6 537 C 469.6 571.5 690.5 571.5 690.5 606"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 745.8 537 C 745.8 571.5 589.7 571.5 589.7 606"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 793.5 537 C 793.5 571.5 744.7 571.5 744.7 606"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 532.7 537 C 532.7 571.5 395.7 571.5 395.7 606"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 575.9 537 C 575.9 571.5 552.1 571.5 552.1 606"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 619 537 C 619 571.5 717.6 571.5 717.6 606"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 859.4 325 C 859.4 408.5 894.4 408.5 894.4 492 L 894.4 537 C 894.4 571.5 791.3 571.5 791.3 606"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 331.3 325 C 331.3 408.5 372.8 408.5 372.8 492 L 372.8 537 C 372.8 571.5 370.1 571.5 370.1 606"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 363.3 325 C 363.3 408.5 427.5 408.5 427.5 492 L 427.5 537 C 427.5 571.5 534.1 571.5 534.1 606"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 395.4 325 C 395.4 408.5 478.3 408.5 478.3 492 L 478.3 537 C 478.3 571.5 710 571.5 710 606"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 568.7 537 C 568.7 571.5 571.7 571.5 571.7 606"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 616.4 537 C 616.4 571.5 737.1 571.5 737.1 606"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 734.5 537 C 734.5 571.5 415.3 571.5 415.3 606"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 838.1 537 C 838.1 571.5 926 571.5 926 606"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 769.1 537 C 769.1 571.5 609.3 571.5 609.3 606"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 803.6 537 C 803.6 571.5 764.2 571.5 764.2 606"/>
   <path class="edge edge-references" marker-end="url(#head-references)" d="M 515.8 113 C 515.8 147.5 551.7 147.5 551.7 182"/>
   <path class="edge edge-references" marker-end="url(#head-references)" d="M 411.8 113 C 411.8 190.3 143.6 190.3 143.6 267.5"/>
   <path class="edge edge-references" marker-end="url(#head-references)" d="M 541.8 113 C 541.8 195 817.1 195 817.1 277"/>
   <path class="edge edge-references" marker-end="url(#head-references)" d="M 437.8 113 C 437.8 195 363.3 195 363.3 277"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 489.8 113 C 489.8 149 459.4 149 459.4 185 L 459.4 420 C 459.4 454.5 745.8 454.5 745.8 489"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 463.8 113 C 463.8 149 447.4 149 447.4 185 L 447.4 420 C 447.4 454.5 547.1 454.5 547.1 489"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 463.8 113 C 463.8 149 447.4 149 447.4 185 L 447.4 420 C 447.4 454.5 568.7 454.5 568.7 489"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 489.8 113 C 489.8 149 459.4 149 459.4 185 L 459.4 420 C 459.4 454.5 757.6 454.5 757.6 489"/>
   <path class="edge edge-references" marker-end="url(#head-references)" d="M 833.5 113 C 833.5 147.5 624.1 147.5 624.1 182"/>
   <path class="edge edge-references" marker-end="url(#head-references)" d="M 863.6 113 C 863.6 195 901.7 195 901.7 277"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 923.8 113 C 923.8 149 1060.9 149 1060.9 185 L 1060.9 420 C 1060.9 454.5 793.5 454.5 793.5 489"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 893.7 113 C 893.7 149 1006.4 149 1006.4 185 L 1006.4 420 C 1006.4 454.5 604.6 454.5 604.6 489"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 893.7 113 C 893.7 149 1006.4 149 1006.4 185 L 1006.4 420 C 1006.4 454.5 616.4 454.5 616.4 489"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 923.8 113 C 923.8 149 1060.9 149 1060.9 185 L 1060.9 420 C 1060.9 454.5 815.1 454.5 815.1 489"/>
   <rect class="box external" x="385.8" y="68" width="182" height="45" rx="6"/>
   <text class="label" x="476.8" y="94">Foundation family</text>
   <rect class="box external" x="803.4" y="68" width="150.4" height="45" rx="6"/>
@@ -67,14 +68,16 @@
   <text class="label" x="587.9" y="401">UVIEW — Upgrades View</text>
   <rect class="box" x="732.4" y="280" width="254" height="45" rx="6"/>
   <text class="label" x="859.4" y="306">GUI — Graphical User Interface</text>
-  <rect class="box" x="489.6" y="492" width="172.6" height="45" rx="6"/>
-  <text class="label" x="575.9" y="518">VIS — Visual Design</text>
-  <rect class="box" x="698.2" y="492" width="143" height="45" rx="6"/>
-  <text class="label" x="769.7" y="518">SOUNDS — Sounds</text>
-  <rect class="box external" x="305.3" y="609" width="135.6" height="45" rx="6"/>
-  <text class="label" x="373.1" y="635">Content family</text>
-  <rect class="box external" x="476.9" y="609" width="150.4" height="45" rx="6"/>
-  <text class="label" x="552.1" y="635">Mandatory family</text>
-  <rect class="box external" x="663.3" y="609" width="135.6" height="45" rx="6"/>
-  <text class="label" x="731.1" y="635">Recipes family</text>
+  <rect class="box" x="521" y="492" width="143" height="45" rx="6"/>
+  <text class="label" x="592.5" y="518">SOUNDS — Sounds</text>
+  <rect class="box" x="700" y="492" width="172.6" height="45" rx="6"/>
+  <text class="label" x="786.3" y="518">VIS — Visual Design</text>
+  <rect class="box external" x="324.9" y="609" width="135.6" height="45" rx="6"/>
+  <text class="label" x="392.7" y="635">Content family</text>
+  <rect class="box external" x="496.5" y="609" width="150.4" height="45" rx="6"/>
+  <text class="label" x="571.7" y="635">Mandatory family</text>
+  <rect class="box external" x="682.9" y="609" width="135.6" height="45" rx="6"/>
+  <text class="label" x="750.7" y="635">Recipes family</text>
+  <rect class="box external" x="854.5" y="609" width="143" height="45" rx="6"/>
+  <text class="label" x="926" y="635">Guidance family</text>
 </svg>
