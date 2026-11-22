@@ -75,13 +75,13 @@ function agentsPoint(agents: readonly Any[]): {
 } {
   const status = [0, 0, 0, 0, 0, 0, 0]
   const skill: number[] = []
-  // Agents recovering, i.e. whose Assignment is Recovery, In transit to it included; and Agents of exhaustion above 70
-  // and above 30.
+  // Agents recovering, i.e. whose Assignment is Recovery, In transit to it included; and Agents of exhaustion above 30
+  // and above 0.
   const worn = [0, 0, 0]
   for (const a of agents) {
     if (a.assignment?.kind === 'Recovery') worn[0]! += 1
-    if ((a.exhaustion as number) > 70) worn[1]! += 1
-    if ((a.exhaustion as number) > 30) worn[2]! += 1
+    if ((a.exhaustion as number) > 30) worn[1]! += 1
+    if ((a.exhaustion as number) > 0) worn[2]! += 1
     const kind = a.assignment?.kind as string | undefined
     const group =
       a.agentStatus === 'InTransit'
@@ -490,7 +490,7 @@ function statsOf(campaign: Campaign): CampaignStats {
   const skillFresh = agents.reduce((s, a) => s + Math.floor((a.skillHundredths as number) / 100), 0)
   const ratingFresh = Math.round(skillFresh * (skillNow > 0 ? ratingNow / skillNow : 1))
   // The Agents the Basic Autopilot AI may form a team of for a Mission site: its Rested deployable Agents.
-  const ready = agents.filter(isRestedDeployable)
+  const ready = agents.filter(isDeployable)
   const ratingReady = ratingOf(player, ready)
   const missions = { Response: { won: 0, lost: 0, expired: 0 }, Initiative: { won: 0, lost: 0, expired: 0 } }
   const siteById = new Map<string, Any>(retired.missionSites.map((s: Any) => [s.id, s]))

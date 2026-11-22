@@ -747,18 +747,18 @@
       // has that is not listed here appears under Other, without a description, and is passed to the AI as edited.
       const GROUPS = [
         {
-          title: 'Hiring',
+          title: 'Agent groups',
           params: [
             [
-              'baseRoster',
-              'roster',
-              'Target roster size before any Upgrade is bought. While the roster is below the target, the AI hires before it buys anything else, and buys Agent cap when the cap is in the way.',
+              'reserveSharePct',
+              'reserve',
+              'The Reserve quota, as a % of the roster, rounded down: Agents on Standby, Training, Recovery, or Deployed, In transit included, whether rested or not.',
               1,
             ],
             [
-              'rosterPerUpgrade',
-              'roster/upg',
-              'Agents added to the target roster for each Upgrade bought other than a Cap Upgrade. Higher hires faster as the Agency grows.',
+              'investigatorSharePct',
+              'inv',
+              'The Investigator quota, as a % of the roster, rounded down. Every Agent beyond both quotas goes to Contracting.',
               1,
             ],
           ],
@@ -769,7 +769,13 @@
             [
               'combatMarginPct',
               'margin',
-              'A team is deployed only when its Combat rating exceeds this % of the Enemies’ Combat rating. The same test decides whether a Lead whose Mission site it could not win is investigated.',
+              'A team is deployed only when its Combat rating is at least this % of the Enemies’ Combat rating. The same test decides whether a Lead whose Mission site it could not win is investigated.',
+              1,
+            ],
+            [
+              'lossMarginStepPct',
+              'loss margin',
+              'How much each Lost Mission at a Mission site of one MissionSiteArchetype raises the required % for later Mission sites of that MissionSiteArchetype.',
               1,
             ],
             [
@@ -779,71 +785,28 @@
               0.5,
             ],
             [
-              'lossMarginStepPct',
-              'loss margin',
-              'How much each Lost Mission at a Mission site of one MissionSiteArchetype raises the share of Deploy only to win for later Mission sites of that MissionSiteArchetype: the Required rating share of a Mission site is the Combat margin plus the Loss margin step times the number of Lost Missions at Mission sites of its MissionSiteArchetype.',
+              'recoveryLookaheadTurns',
+              'lookahead',
+              'Advance turns of recovery over which resting Agents are projected for a Muster and for choosing Leads.',
               1,
             ],
           ],
         },
         {
-          title: 'Investigations',
+          title: 'Purchases',
           params: [
-            ['baseInvestigators', 'inv', 'Agents investigating Leads, before the roster grows.', 1],
             [
-              'investigatorsPerRoster',
-              'inv per',
-              'One more investigating Agent for each this many Agents in the roster.',
+              'capSharePct',
+              'cap share',
+              'Transport cap and Training cap are each bought while below this % of the Agent cap.',
               1,
             ],
-          ],
-        },
-        {
-          title: 'Reserve and money',
-          params: [
-            ['reservePct', 'reserve', 'The size of the Agent reserve, as a % of the roster.', 1],
             [
               'savingsFloorTurns',
               'floor',
-              'The Savings floor, in Turns of half the projected upkeep. Nothing is bought below it.',
+              'The Savings floor, in Turns of projected upkeep after the purchase. Nothing is bought or hired below it.',
               1,
             ],
-            [
-              'incomeTargetPct',
-              'income',
-              'Agents go to Contracting until Expected income is this % of projected upkeep.',
-              1,
-            ],
-          ],
-        },
-        {
-          title: 'Work',
-          params: [
-            [
-              'contractingSharePct',
-              'contract',
-              'At least this % of the roster is kept on Contracting, even once the income target is met; 0 leaves only the income target.',
-              1,
-            ],
-            [
-              'trainingSharePct',
-              'train',
-              'At most this % of the roster is put on Training; 100 leaves only the Training cap as the limit.',
-              1,
-            ],
-            [
-              'maxAssignmentExhaustionAllowed',
-              'max exh',
-              'An Agent on Training or Contracting with more exhaustion than this is recalled to Standby to rest. The default, exhaustion_work_limit (70), recalls none: Forced return sends the Agent to Standby at 70 first, so a higher value has the same effect.',
-              1,
-            ],
-          ],
-        },
-        {
-          title: 'Upgrades',
-          params: [
-            ['transportCapPct', 'transport', 'Transport cap is bought while it is below this % of the roster.', 1],
-            ['trainingCapPct', 'training cap', 'Training cap is bought while it is below this % of the roster.', 1],
           ],
           weights: true,
         },
@@ -947,19 +910,23 @@
         ],
         [
           'Rested deployable Agent',
-          'A Deployable Agent that is also Fit to start work (exhaustion of at most <code>exhaustion_work_start_max</code> and no health lost): an Agent the AI deploys to a Mission site.',
+          'A Deployable Agent that is also Fit to start work, i.e. with exhaustion 0 and no health lost.',
         ],
         [
           'Agent reserve',
-          'The Rested deployable Agents the AI holds back from Contracting and Investigations, so that it can form a team for the next Mission site. Its target size is <code>reservePct</code> of the roster.',
+          'Every Agent on Standby, Training, Recovery, or Deployed, In transit included, whether rested or not. Its quota is <code>reserveSharePct</code> of the roster, rounded down.',
+        ],
+        [
+          'Spare Agent',
+          'A Fit to start work Agent of the Agent reserve, on Standby or Training and not in the Muster, while the Agent reserve exceeds its quota; the AI sends Spare Agents to Investigations, then to Contracting.',
+        ],
+        [
+          'Muster',
+          'A team for an Initiative Mission site that Deployable Agents alone cannot win yet, drawn from the Agent reserve projected over <code>recoveryLookaheadTurns</code> and from Contractors, who are recalled only when the rest of the team is ready within one Advance turn.',
         ],
         [
           'Savings floor',
-          'The money the AI keeps unspent so that the Agency can pay several Turns of upkeep even if contracting income falls short. <code>savingsFloorTurns</code> sets it.',
-        ],
-        [
-          'Expected income',
-          'The projected income the Agency will have once every Agent In transit to Contracting has arrived: its funding plus the contributions of every Agent whose Assignment is Contracting.',
+          'The money the AI keeps unspent: <code>savingsFloorTurns</code> Turns of the projected upkeep the Agency would have after the purchase.',
         ],
       ]
 
@@ -1184,14 +1151,14 @@
         const L4 = [
           [
             'Rested deployable',
-            'Rested deployable Agents on Training and on Standby; together, the number after CR ready',
+            'Rested deployable Agents on Training and on Standby, i.e. Deployable Agents with exhaustion 0 and no health lost',
             (s) => pair(dep(s, 'Training'), dep(s, 'Standby')),
             200,
             true,
           ],
           [
             'Not rested',
-            'Agents on Training and on Standby, In transit included, that are not Rested deployable Agents, e.g. resting until Fully rested, or not Fit to start work',
+            'Agents on Training and on Standby, In transit included, that are not Rested deployable Agents, e.g. resting on Standby until their exhaustion is 0',
             (s) => pair(n(s, 'Training') - dep(s, 'Training'), n(s, 'Standby') - dep(s, 'Standby')),
             200,
             true,
@@ -1218,7 +1185,7 @@
         const L2 = [
           [
             'CR ready',
-            'Combat rating of the Rested deployable Agents; after it, their number of all Serving Agents',
+            'Combat rating of the Deployable Agents, the Agents the AI deploys a team from now; after it, their number of all Serving Agents',
             (s) => `${fmt(s.ratingReady)} <span class="dim">(${fmt(s.ready)}/${fmt(s.agents)})</span>`,
             210,
           ],
@@ -1263,18 +1230,18 @@
               // Whether a Mission site is available, then the three tests of the Basic Autopilot AI's winning team, with
               // this Campaign's parameters.
               const p = { ...DEFAULTS, ...(c?.params ?? {}) }
-              const margin = Number(p.combatMarginPct ?? 120)
+              const margin = Number(p.combatMarginPct ?? 110)
               const perAgent = Number(p.enemiesPerAgent ?? 3)
               const mark = (pass) => (pass ? '🟢' : '🔴')
               const pct = x.next.enemiesRating > 0 ? (s.ratingReady / x.next.enemiesRating) * 100 : null
-              const crPass = s.ratingReady * 100 > x.next.enemiesRating * margin
+              const crPass = s.ratingReady * 100 >= x.next.enemiesRating * margin
               const needed = Math.max(1, Math.ceil(x.next.enemies / perAgent - 1e-9))
               const free = s.transportCap - (s.assignments?.Deployed ?? 0)
               const site = x.next.site
               const checks = [
                 `<span title="An Active Mission site of it against the Faction, which a team can be deployed to now; otherwise the state of the Lead that creates it">${mark(site !== null)} <span class="dim">Site</span> ${site !== null ? `<span class="good">available</span> <span class="dim">· expires in ${fmt(site.turnsUntilExpiration)}</span>` : status}</span>`,
-                `<span title="CR ready must exceed ${margin}% of the Enemies' Combat rating">${mark(crPass)} <span class="dim">CR</span> ${fmt(s.ratingReady)} <span class="dim">/</span> ${fmt(x.next.enemiesRating)} <span class="dim">=</span> <span class="${crPass ? 'good' : 'bad'}">${pct === null ? '—' : `${pct.toFixed(0)}%`}</span> <span class="dim">&gt;${margin}%</span></span>`,
-                `<span title="Rested deployable Agents against the Agents needed: one per ${perAgent} Enemies, rounded up">${mark(s.ready >= needed)} <span class="dim">Agents</span> ${fmt(s.ready)} <span class="dim">/</span> ${fmt(needed)} <span class="dim">(${fmt(x.next.enemies)} en ÷ ${perAgent})</span></span>`,
+                `<span title="CR ready must reach ${margin}% of the Enemies' Combat rating">${mark(crPass)} <span class="dim">CR</span> ${fmt(s.ratingReady)} <span class="dim">/</span> ${fmt(x.next.enemiesRating)} <span class="dim">=</span> <span class="${crPass ? 'good' : 'bad'}">${pct === null ? '—' : `${pct.toFixed(0)}%`}</span> <span class="dim">&gt;${margin}%</span></span>`,
+                `<span title="Deployable Agents against the Agents needed: one per ${perAgent} Enemies, rounded up">${mark(s.ready >= needed)} <span class="dim">Agents</span> ${fmt(s.ready)} <span class="dim">/</span> ${fmt(needed)} <span class="dim">(${fmt(x.next.enemies)} en ÷ ${perAgent})</span></span>`,
                 `<span title="Free Transport cap, i.e. Transport cap less the Deployed Agents, against the Agents needed">${mark(free >= needed)} <span class="dim">Transport</span> ${fmt(free)} <span class="dim">/</span> ${fmt(needed)} <span class="dim">(cap ${fmt(s.transportCap)})</span></span>`,
               ]
               return `<span class="dim">L${x.next.level}</span> ${esc(x.next.name)}<br>${checks.join('<br>')}`
@@ -1462,11 +1429,11 @@
         if (p.skill.length > LAST_BAND) out.push(p.skill.slice(LAST_BAND).reduce((a, b) => a + b, 0))
         return out
       }
-      /** The lines over the skill chart: Agents recovering, of exhaustion above 70, and of exhaustion above 30. */
+      /** The lines over the skill chart: Agents recovering, of exhaustion above 30, and of exhaustion above 0. */
       const WORN_LINES = [
         ['Recovering', '#FF4D4D'],
-        ['Exhaustion > 70', '#FF9A2E'],
-        ['Exhaustion > 30', '#FFE14D'],
+        ['Exhaustion > 30', '#FF9A2E'],
+        ['Exhaustion > 0', '#FFE14D'],
       ]
 
       /** The plot area of every chart, in the units of its 360 × 120 viewBox. */

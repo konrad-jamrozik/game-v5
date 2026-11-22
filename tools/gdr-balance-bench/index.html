@@ -637,7 +637,7 @@
         standard: { starting_money: 500, starting_funding: 20 },
         field_agent: { base_skill: 100, base_health: 30, weapon: 'service_weapon', armor: 'service_armor' },
         agent_parameters: {
-          initial_roster_size: 4,
+          initial_roster_size: 8,
           exhaustion_incapacitation: 100,
           exhaustion_free_points: 30,
           skill_penalty_pct_per_exhaustion: 1,
@@ -645,11 +645,6 @@
           exhaustion_per_defense: 1,
           exhaustion_per_mission: 5,
           exhaustion_per_pct_killed: 1,
-          exhaustion_per_contracting_turn: 1,
-          exhaustion_per_training_turn: 1,
-          exhaustion_per_investigation_turn: 1,
-          exhaustion_work_start_max: 30,
-          exhaustion_work_limit: 70,
           training_skill_gain_per_turn: 1,
           experience_per_attack_hit: 4,
           experience_per_attack_miss: 2,
@@ -1070,7 +1065,7 @@
   </section>`)
         /* Agents */
         h.push(`<section id="agents"><div class="shead"><h2>Agents</h2><p>How long an Agent can work before it tires, how fast it rests and heals, and how fast it grows.</p></div><div class="cols"><div class="col">
-  ${panel('Work, growth and experience', 'content/agents/agent_parameters.yaml', row(ap + '.initial_roster_size', 'Agents at campaign creation') + row(ap + '.exhaustion_per_contracting_turn', '') + row(ap + '.exhaustion_per_training_turn', '') + row(ap + '.exhaustion_per_investigation_turn', '') + row(ap + '.exhaustion_per_mission', 'to every survivor') + row(ap + '.exhaustion_per_pct_killed', 'per 1% of the team Killed') + row(ap + '.exhaustion_work_start_max', 'most exhaustion at which work can start') + row(ap + '.exhaustion_work_limit', 'exhaustion that forces a return') + row(ap + '.training_skill_gain_per_turn', 'base skill per Turn of Training', { step: 0.1 }) + row(ap + '.experience_per_attack_hit', '') + row(ap + '.experience_per_attack_miss', '') + row(ap + '.experience_per_defense_hit', '') + row(ap + '.experience_per_defense_miss', '') + [0, 1, 2, 3].map((i) => row(ap + '.experience_per_mission_survived.' + i, ['first Mission survived', 'second', 'third', 'every later one'][i])).join('') + extra(ap))}
+  ${panel('Work, growth and experience', 'content/agents/agent_parameters.yaml', row(ap + '.initial_roster_size', 'Agents at campaign creation') + row(ap + '.exhaustion_per_mission', 'to every survivor') + row(ap + '.exhaustion_per_pct_killed', 'per 1% of the team Killed') + row(ap + '.training_skill_gain_per_turn', 'base skill per Turn of Training', { step: 0.1 }) + row(ap + '.experience_per_attack_hit', '') + row(ap + '.experience_per_attack_miss', '') + row(ap + '.experience_per_defense_hit', '') + row(ap + '.experience_per_defense_miss', '') + [0, 1, 2, 3].map((i) => row(ap + '.experience_per_mission_survived.' + i, ['first Mission survived', 'second', 'third', 'every later one'][i])).join('') + extra(ap))}
   ${panel('Recovery', 'content/agent-recovery/recovery_parameters.yaml', row('recovery.health_recovery_pct_per_turn', '% of effective max health per Turn', { step: 0.1 }) + row('recovery.exhaustion_recovery_per_turn', 'on Standby or Recovery', { step: 0.5 }) + extra('recovery'))}
   </div><div class="col">
   ${panel('Effective skill by exhaustion', '', `<div class="chart" id="ch_skill"></div>`, 'read')}
@@ -1639,7 +1634,7 @@
         /* agents */
         const pen = (x) =>
           Math.max(0, 100 - a.skill_penalty_pct_per_exhaustion * Math.max(0, x - a.exhaustion_free_points))
-        const xm = Math.max(a.exhaustion_incapacitation, a.exhaustion_work_limit) + 10,
+        const xm = a.exhaustion_incapacitation + 10,
           pts = []
         for (let x = 0; x <= xm; x++) pts.push([x, pen(x)])
         lineChart($('ch_skill'), {
@@ -1648,50 +1643,29 @@
           ymax: 100,
           xl: 'Exhaustion',
           label: 'Effective skill as a percentage of base skill, by exhaustion',
-          vl: [
-            { x: a.exhaustion_work_start_max, label: 'can start work' },
-            { x: a.exhaustion_work_limit, label: 'forced return' },
-            { x: a.exhaustion_incapacitation, label: 'Incapacitated' },
-          ],
+          vl: [{ x: a.exhaustion_incapacitation, label: 'Incapacitated' }],
           fmt: (p) => `exhaustion ${p[0]} → ${f(p[1], 0)}% of base skill`,
         })
         const rec = cur.recovery,
-          stretch = (k) => (a[k] > 0 ? Math.ceil(a.exhaustion_work_limit / a[k]) : Infinity),
-          rest =
-            rec.exhaustion_recovery_per_turn > 0
-              ? Math.ceil(
-                  Math.max(0, a.exhaustion_work_limit - a.exhaustion_work_start_max) / rec.exhaustion_recovery_per_turn,
-                )
-              : Infinity,
-          restFull =
-            rec.exhaustion_recovery_per_turn > 0
-              ? Math.ceil(a.exhaustion_work_limit / rec.exhaustion_recovery_per_turn)
-              : Infinity,
-          ws = stretch('exhaustion_per_contracting_turn')
+          // Work adds no exhaustion, so only a Mission tires an Agent: a survivor gains exhaustion_per_mission, plus
+          // what its Combat added, and must rest to 0 before it can start work again.
+          restAfter = (x) =>
+            rec.exhaustion_recovery_per_turn > 0 ? Math.ceil(x / rec.exhaustion_recovery_per_turn) : Infinity
         const xp = a.experience_per_mission_survived,
           hr = Math.ceil(rec.health_recovery_pct_per_turn * th - 1e-9) / 100
         $('o_agents').innerHTML = out([
-          ['Turns a rested Agent contracts before a forced return', f(ws, 0)],
-          ['… investigates', f(stretch('exhaustion_per_investigation_turn'), 0)],
-          ['… trains', f(stretch('exhaustion_per_training_turn'), 0)],
+          ['Turns of work an Agent can do without rest', 'Unlimited <small>work adds no exhaustion</small>'],
           [
-            'Turns of work at full skill',
-            f(
-              a.exhaustion_per_contracting_turn > 0
-                ? Math.floor(a.exhaustion_free_points / a.exhaustion_per_contracting_turn)
-                : Infinity,
-              0,
-            ),
+            'Turns of rest after a Mission, before it can start work',
+            f(restAfter(a.exhaustion_per_mission), 0) +
+              ' <small>at the least, from the Mission exhaustion alone</small>',
           ],
-          ['Effective skill at the forced return', f(pen(a.exhaustion_work_limit), 0) + '%'],
-          ['Turns of rest until it can start work again', f(rest, 0)],
-          ['Turns of rest to zero exhaustion', f(restFull, 0)],
-          ['Share of Turns working, rest to zero each cycle', f((ws / (ws + restFull)) * 100, 0) + '%'],
+          ['Turns of rest from the skill-penalty threshold to 0', f(restAfter(a.exhaustion_free_points), 0)],
           ['Turns on Recovery after losing half its health', f(Math.ceil(th / 2 / hr - 1e-9), 0)],
           ['Turns on Recovery from 1 health', f(Math.ceil((th - 1) / hr - 1e-9), 0)],
           [
-            'Base skill from one full Training stretch',
-            `+${f(stretch('exhaustion_per_training_turn') * a.training_skill_gain_per_turn, 1)} <small>at most; a tired Agent gains less often</small>`,
+            'Base skill from 10 Turns of Training',
+            `+${f(10 * a.training_skill_gain_per_turn, 1)} <small>before Upgrades; an Agent on Training is always fully rested, so it gains every Turn</small>`,
           ],
           [
             'Experience for surviving Missions 1 to 4',
@@ -1788,17 +1762,8 @@
             ["Turns of investigating for one Faction's 18 Leads", f(fac, 0)],
             ['Whole Victory path, one team, Factions in turn', f(c0 + 3 * fac + pe, 0)],
             ['Whole Victory path, three such teams side by side', f(c0 + fac + pe, 0)],
-            [
-              'Turns one stretch of investigating lasts',
-              f(
-                a.exhaustion_per_investigation_turn > 0
-                  ? Math.ceil(a.exhaustion_work_limit / a.exhaustion_per_investigation_turn)
-                  : Infinity,
-                0,
-              ) + ' <small>before a forced return</small>',
-            ],
           ]) +
-          `<div class="note" style="margin-top:8px">Turns are the mean over the Actual required progress range, for members at full skill. They leave out transit, the Missions between Leads, and the skill a tired member loses.</div>`
+          `<div class="note" style="margin-top:8px">Turns are the mean over the Actual required progress range, for members at full skill. They leave out transit and the Missions between Leads.</div>`
         /* factions */
         const opPanic = (k) => (k < EXISTENTIAL ? cur['operation_level_' + k].on_ignored_or_lost.panic : 0)
         const lv = {}

@@ -70,7 +70,7 @@ These informative views are derived from the registered Markdown specifications.
 
 | ID | Document | Owns |
 | --- | --- | --- |
-| AGENT | [Agents](../specs/design/mechanics/agents-spec.md) | What an Agent has, the Combatant Role Type, Agent status, Assignments and the transit rule, effective skill, Training, Mission growth and Experience, work exhaustion, the start-work gate and Forced return, Agent creation and the initial roster, and the assignAgents and addAgents actions. |
+| AGENT | [Agents](../specs/design/mechanics/agents-spec.md) | What an Agent has, the Combatant Role Type, Agent status, Assignments and the transit rule, effective skill, Training, Mission growth and Experience, the start-work gate, Agent creation and the initial roster, and the assignAgents and addAgents actions. |
 | COMBAT | [Combat](../specs/design/mechanics/combat.md) | Enemies and the Combat GDRs, how a Combat is fought in Combat rounds, attacks and their random outcomes, Incapacitated, Combat rating with base Combat rating, rating factor, and team size factor, Combat outcomes, and the Combat report. |
 | COMP | [Compendium](../specs/design/mechanics/compendium.md) | The CompendiumArticle GDR, how the Placeholders and Article links of a Compendium article are resolved, when a Compendium article is Player-visible, including which EnemyArchetypes, Weapons, and Armors are Met subjects, what Player API reports of it, and the Revealed Compendium. |
 | DOM | [Domain Model](../specs/design/mechanics/domain-model.md) | Game concepts, how they relate, and the structural invariants that span several concepts. |
@@ -115,7 +115,7 @@ These informative views are derived from the registered Markdown specifications.
 
 | ID | Document | Owns |
 | --- | --- | --- |
-| BASICAI | [Basic Autopilot AI](../specs/design/autopilot-ais/basic-autopilot-ai.md) | The goals the Basic Autopilot AI pursues, how it prioritizes them within a Turn, what it deliberately leaves alone, and the Tuning parameters it is built with. |
+| BASICAI | [Basic Autopilot AI](../specs/design/autopilot-ais/basic-autopilot-ai.md) | How the Basic Autopilot AI divides the roster among the Agent reserve, Investigations, and Contracting, how it deploys and musters teams, which Leads it investigates, what it buys and in which order, and the Tuning parameters it is built with. |
 
 ## Mandatory
 

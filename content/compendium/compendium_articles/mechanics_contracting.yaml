@@ -5,7 +5,7 @@ title: Contracting
 terms: [Contracting]
 body: >-
   Contracting sends an Agent out to work for money. It is your steady income beside funding, and it pays a little more for a
-  skilled Agent and a little less for a tired one. An Agent on Contracting is away from base, so getting it back for a
+  skilled Agent. An Agent on Contracting is away from base, so getting it back for a
   Mission takes a turn.
 formulas:
   - label: 'Income of one Agent each turn'
@@ -13,7 +13,7 @@ formulas:
   - label: 'Total'
     text: 'The income of every Agent on Contracting is added up, then rounded down'
   - label: 'Exhaustion'
-    text: '+{agent_parameters.exhaustion_per_contracting_turn} each turn, after the income is paid'
+    text: 'None: Contracting never tires an Agent'
   - label: 'Getting there and back'
     text: 'One turn in transit each way, with no income'
 see_also: [mechanics_money_and_funding, mechanics_exhaustion, mechanics_transit]

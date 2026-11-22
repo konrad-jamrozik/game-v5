@@ -5,14 +5,14 @@
 | Spec ID | AGENT |
 | Family | Mechanics |
 | Audience | Engine designer, Content designer, AI designer, Implementer |
-| Owns | What an Agent has, the Combatant Role Type, Agent status, Assignments and the transit rule, effective skill, Training, Mission growth and Experience, work exhaustion, the start-work gate and Forced return, Agent creation and the initial roster, and the assignAgents and addAgents actions. |
+| Owns | What an Agent has, the Combatant Role Type, Agent status, Assignments and the transit rule, effective skill, Training, Mission growth and Experience, the start-work gate, Agent creation and the initial roster, and the assignAgents and addAgents actions. |
 | Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 
 Agents are the player's main resource: an [Agent](domain-model.md#agency-and-agents) is an operative of the [Agency](domain-model.md#agency-and-agents) who can do only one thing at a time, and changing what it does costs time. That one thing is its [Assignment](domain-model.md#agency-and-agents), e.g. Contracting to earn money or Training to gain base skill. Standby and Training are in the Agency's base, and Contracting and Investigations away. Every trip to or from away work costs an Advance turn In transit, and only an Agent In base, unless Recovering, can be sent away or deployed to a [Mission site](domain-model.md#leads-investigations-mission-sites-and-missions), so an Agent Away is not at hand.
 
-How well an Agent works and fights is its effective skill: its base skill, lowered by lost current health and by exhaustion above a free amount. Training and Missions raise base skill; work and [Combats](domain-model.md#combat) wear it down, so choosing an Assignment trades present output against future strength. An Agent is Serving until it is Killed in a Combat or Dismissed, and it is never removed, so its record outlasts its service.
+How well an Agent works and fights is its effective skill: its base skill, lowered by lost current health and by exhaustion above a free amount. Training and Missions raise base skill, and only [Combats](domain-model.md#combat) wear it down; an Agent starts work only once fully rested and healed. An Agent is Serving until it is Killed in a Combat or Dismissed, and it is never removed, so its record outlasts its service.
 
 Agents builds on [Domain Model](domain-model.md): Domain Model says how an Agent connects to the Agency and its work, and Agents says what one Agent is and how it works.
 
@@ -58,10 +58,9 @@ The [Assignments](domain-model.md#agency-and-agents) that are neither an [Invest
 | Deployed | Sent on a Mission at a [Mission site](domain-model.md#leads-investigations-mission-sites-and-missions) as a member of its [Current team](domain-model.md#leads-investigations-mission-sites-and-missions), and fighting there in the next Advance turn. An Agent becomes Deployed the moment the player deploys it, without transit. That Mission and its Mission site are Deployed for as long as the Agent is, under [Mission lifecycle](missions.md#mission-lifecycle) and [Mission site lifecycle](missions.md#mission-site-lifecycle) in Missions. |  |
 | Base Assignment | Standby or Training, the Assignments an Agent carries out in the Agency's base. Moving between them takes no transit, and only an Agent on one can be deployed or given an Away Assignment. |  |
 | Away Assignment | Contracting or an [Investigation](domain-model.md#leads-investigations-mission-sites-and-missions), the Assignments an Agent carries out away from base. Every move to or from them starts [In transit](domain-model.md#agency-and-agents), and an Agent on one can only be recalled to Standby. |  |
-| Work Assignment | Contracting, Training, or an Investigation, the Assignments on which an Agent works and so gains exhaustion, under [Work exhaustion](#work-exhaustion). |  |
-| Fit to start work | Of an Agent: whose exhaustion is at most `exhaustion_work_start_max` and whose health lost is 0, so that it may start a Work Assignment, under [Start-work gate](#start-work-gate). |  |
+| Work Assignment | Contracting, Training, or an Investigation, the Assignments on which an Agent works. An Agent starts one only when it is Fit to start work, and its work changes neither its exhaustion nor its health lost, under [Changes to attributes](#changes-to-attributes). |  |
+| Fit to start work | Of an Agent: whose exhaustion is 0 and whose health lost is 0, i.e. fully rested and healed, so that it may start a Work Assignment, under [Start-work gate](#start-work-gate). |  |
 | Working Agent | In an Advance turn: an Agent whose Assignment is a Work Assignment and that is [At assignment](domain-model.md#agency-and-agents) on it when the [Turn advancement step](domain-model.md#turn-advancement-steps) of its work begins, so that it works in that Advance turn, under [Transit rule](#transit-rule). An Agent In transit to a Work Assignment is not a Working Agent; it arrives only in the Previous turn transit arrivals step, after every step of work. |  |
-| Forced return | The move of a Working Agent to Standby that an Advance turn makes when its work raises its exhaustion to `exhaustion_work_limit` or more, under [Forced return](#forced-return). |  |
 
 ## Agent statuses
 
@@ -84,7 +83,7 @@ How an Agent's base skill grows. Skill gain and Experience are separate ideas: a
 | Term | Definition | Prohibited synonyms |
 | --- | --- | --- |
 | Skill gain | Base skill an Agent gains. It has exactly two sources: its training skill gain, under [Training growth](#training-growth), and its Experience, of which every point it gains gives it exactly one point of base skill, under [Mission growth](#mission-growth). |  |
-| Training skill gain | The base skill an Agent on Training gains in one Advance turn whose Training gain outcome is "gains": `training_skill_gain_per_turn` plus what the acquired Upgrades add, under [Training growth](#training-growth). It is not Experience. |  |
+| Training skill gain | The base skill an Agent on Training gains in each Advance turn in which it trains: `training_skill_gain_per_turn` plus what the acquired Upgrades add, under [Training growth](#training-growth). It is not Experience. |  |
 | Experience | What an Agent learns from the Missions it survives, counted in whole points, which it gains as Mission experience under [Mission growth](#mission-growth). An Agent's Experience is the sum of every Mission experience it has gained. Every point of Experience an Agent gains is also a skill gain of exactly one point of base skill; this conversion is fixed by the rules and is no GDR value. | XP; experience points |
 | Combat experience | The Experience one Agent earns in one Combat from the attacks it made and the attacks made on it, under [Combat experience](combat.md#combat-experience) in Combat. The Agent gains it only if it survives the Mission, under [Mission growth](#mission-growth). | Combat skill gain |
 | Survival experience | The Experience an Agent earns for surviving a Mission, which falls with the number of Missions it has survived, under [Mission growth](#mission-growth). | Survival bonus; survival skill gain |
@@ -120,12 +119,7 @@ AgentParameters bundles the values that the Agent rules read, and the values tha
 | `exhaustion_per_defense` | The exhaustion a defending Combatant gains. | [Combat](combat.md), which owns its meaning |
 | `exhaustion_per_mission` | The exhaustion every surviving Agent of a Mission gains when the Mission is resolved. | [Missions](missions.md), which owns its meaning |
 | `exhaustion_per_pct_killed` | The further exhaustion a surviving Agent of a Mission gains for each percent of its team that was Killed. | [Missions](missions.md), which owns its meaning |
-| `exhaustion_per_contracting_turn` | The exhaustion an Agent gains in each Advance turn in which it works on Contracting. | [Work exhaustion](#work-exhaustion) |
-| `exhaustion_per_training_turn` | The exhaustion an Agent gains in each Advance turn in which it works on Training. | [Work exhaustion](#work-exhaustion) |
-| `exhaustion_per_investigation_turn` | The exhaustion an Agent gains in each Advance turn in which it works on an Investigation. | [Work exhaustion](#work-exhaustion) |
-| `exhaustion_work_start_max` | The highest exhaustion at which an Agent can be Fit to start work. | [Start-work gate](#start-work-gate) |
-| `exhaustion_work_limit` | The exhaustion at or above which work makes an Agent return to Standby. | [Forced return](#forced-return) |
-| `training_skill_gain_per_turn` | The base skill an Agent on Training gains in one Advance turn when its Training gain outcome is "gains", before any [Upgrade](domain-model.md#agency-and-agents). It is a [Decimal quantity](../foundation/numbers.md#glossary). | [Training growth](#training-growth) |
+| `training_skill_gain_per_turn` | The base skill an Agent on Training gains in one Advance turn in which it trains, before any [Upgrade](domain-model.md#agency-and-agents). It is a [Decimal quantity](../foundation/numbers.md#glossary). | [Training growth](#training-growth) |
 | `experience_per_attack_hit` | The combat experience an attacking Agent earns from each of its attacks that hits. | [Combat](combat.md), which owns its meaning |
 | `experience_per_attack_miss` | The combat experience an attacking Agent earns from each of its attacks that misses. | [Combat](combat.md), which owns its meaning |
 | `experience_per_defense_hit` | The combat experience a defending Agent earns from each attack on it that hits. | [Combat](combat.md), which owns its meaning |
@@ -149,7 +143,6 @@ The GDRs a Game build supplies must satisfy every rule below. The list is exhaus
 3. **Exact properties:** The AgentArchetype and the AgentParameters GDR each have exactly the properties their table above lists, apart from `id` and `type`: no listed property is missing and no other property is present.
 4. **Archetype values are valid:** The AgentArchetype's `base_skill` is a whole number of at least 0, its `base_health` is a whole number of at least 1, its `weapon` references a Weapon GDR the Game build supplies, and its `armor` references an Armor GDR the Game build supplies.
 5. **Parameters are valid:** `training_skill_gain_per_turn` is a number of at least 0 written with at most two digits after the decimal point, under [Decimal quantities](../foundation/numbers.md#decimal-quantities) in Numbers. `experience_per_mission_survived` is a list of one or more entries, each a whole number of at least 0. Every other property of AgentParameters is a whole number of at least 0.
-6. **Exhaustion thresholds are ordered:** `exhaustion_work_start_max` is less than `exhaustion_work_limit`, and `exhaustion_work_limit` is at most `exhaustion_incapacitation`. An Agent that is Fit to start work therefore starts below the exhaustion that ends its work, and work ends no later than at the exhaustion at which the Agent would stop fighting in a Combat.
 
 [Combat GDR validation](combat.md#combat-gdr-validation) adds further rules, e.g. that the Weapon `base_weapon_damage` is a whole number of at least 1 and the Armor `base_armor` a whole number of at least 0. These rules guarantee that every newly created Agent satisfies [Attribute ranges](#attribute-ranges) and that the effective skill formula never divides by zero.
 
@@ -271,7 +264,7 @@ exhaustion = round up( Exact exhaustion )
 
 Exact exhaustion is a Decimal quantity of at least 0, and [Round up](../foundation/numbers.md#glossary) is applied once, so exhaustion is a whole number of at least 0 and equals Exact exhaustion whenever that is whole. The following statements are complete.
 
-1. **Every rule reads exhaustion:** Every rule of every specification that reads an Agent's exhaustion reads this whole number, e.g. [Effective skill](#effective-skill), the [Start-work gate](#start-work-gate), [Forced return](#forced-return), and the incapacitation condition of [Combat](combat.md). Whatever is shown to the player as an Agent's exhaustion is this whole number too, except where Exact exhaustion itself is shown, to tell how near the next whole number it is. Only [Exhaustion recovery](agent-recovery.md#exhaustion-recovery) in Agent Recovery reads Exact exhaustion.
+1. **Every rule reads exhaustion:** Every rule of every specification that reads an Agent's exhaustion reads this whole number, e.g. [Effective skill](#effective-skill), the [Start-work gate](#start-work-gate), and the incapacitation condition of [Combat](combat.md). Whatever is shown to the player as an Agent's exhaustion is this whole number too, except where Exact exhaustion itself is shown, to tell how near the next whole number it is. Only [Exhaustion recovery](agent-recovery.md#exhaustion-recovery) in Agent Recovery reads Exact exhaustion.
 2. **A rule that changes exhaustion changes Exact exhaustion:** A rule that raises an Agent's exhaustion by a whole number of points raises its Exact exhaustion by that number, so its exhaustion rises by exactly that number. A rule that sets an Agent's exhaustion sets its Exact exhaustion to the same value. Exhaustion recovery lowers Exact exhaustion by an amount that need not be whole.
 3. **Clamp:** The clamp of exhaustion at 0 above applies to Exact exhaustion.
 
@@ -370,13 +363,13 @@ The following table is the exhaustive list of rules that change an Agent's attri
 | Base skill | [Training growth](#training-growth); [Mission growth](#mission-growth) | No rule |
 | Health lost | [Combat](combat.md), in a Combat, which lowers current health | [Agent Recovery](agent-recovery.md), which raises current health |
 | Base health | No rule | No rule |
-| Exhaustion | [Combat](combat.md), in a Combat, by `exhaustion_per_attack` and `exhaustion_per_defense`; [Mission exhaustion](missions.md#mission-exhaustion) in Missions; [Work exhaustion](#work-exhaustion) | [Agent Recovery](agent-recovery.md) |
+| Exhaustion | [Combat](combat.md), in a Combat, by `exhaustion_per_attack` and `exhaustion_per_defense`; [Mission exhaustion](missions.md#mission-exhaustion) in Missions | [Agent Recovery](agent-recovery.md) |
 | Base weapon damage | No rule | No rule |
 | Base armor | No rule | No rule |
 
 A Combat lowers only the current armor of its Combatants, which exists only while the Combat lasts, so it changes no base armor and no effective armor, under [Effects of an attack](combat.md#effects-of-an-attack) in Combat.
 
-Standby, Recovery, and being In transit leave exhaustion unchanged except through [Agent Recovery](agent-recovery.md), which lowers it on Standby and Recovery. Each specification named in the table applies the clamps under [Attribute ranges](#attribute-ranges).
+Work leaves an Agent worn down by nothing: Contracting, Training, and an Investigation change neither its exhaustion nor its health lost. Standby, Recovery, and being In transit leave exhaustion unchanged except through [Agent Recovery](agent-recovery.md), which lowers it on Standby and Recovery. Each specification named in the table applies the clamps under [Attribute ranges](#attribute-ranges).
 
 # Modifiable values
 
@@ -413,18 +406,18 @@ A new Work Assignment also requires that the Agent is Fit to start work, under [
 
 ## Start-work gate
 
-An Agent worn down by work or by a Combat must rest, and heal, before it takes on new work, so that tiredness builds up only as far as the player lets it.
+An Agent worn down by a Combat must rest, and heal, completely before it takes on new work, so that every Agent at work is at full strength and stays so: no work wears an Agent down, under [Changes to attributes](#changes-to-attributes).
 
 An Agent is Fit to start work exactly when both of the following hold:
 
-1. Its exhaustion is at most `exhaustion_work_start_max`.
+1. Its exhaustion is 0.
 2. Its health lost is 0, i.e. its current health equals its effective max health.
 
 Whether an Agent is Fit to start work is a Derived value, never stored. Every Player action that gives an Agent a Work Assignment it does not already have requires that the Agent is Fit to start work: `assignAgents` with `Contracting` or `Training` under [Assigning Agents](#assigning-agents), and `startInvestigation` and `assignAgentsToInvestigation` under [Investigations](investigations.md). No other Player action requires it; e.g., an Agent of any exhaustion can be assigned to Standby and can be deployed, under [Deploying Agents](missions.md#deploying-agents) in Missions.
 
-The gate applies only when the work starts. An Agent already on a Work Assignment keeps working whatever its exhaustion, until it is assigned elsewhere or until its [Forced return](#forced-return). E.g., with the GDR values, an Agent on Contracting with exhaustion 45 keeps earning and can be recalled to Standby, and once In base cannot be assigned to Contracting, Training, or an Investigation until its exhaustion falls to 30.
+The gate applies only when the work starts. Because no work changes exhaustion or health lost, an Agent on a Work Assignment stays Fit to start work for as long as it works, and leaves its work only when it is assigned elsewhere or its Investigation ends. E.g., with the GDR values, an Agent that survives a Mission with exhaustion 12 and no health lost returns to Standby, and can be assigned to Contracting, Training, or an Investigation only after three Agent recovery steps have brought its exhaustion to 0, under [Exhaustion recovery](agent-recovery.md#exhaustion-recovery) in Agent Recovery. It can be deployed again at once, under [Deploying Agents](missions.md#deploying-agents) in Missions.
 
-Being Fit to start work says nothing about how well the Agent would fight. No rule relates `exhaustion_work_start_max` to `exhaustion_free_points`, and a Game build may set the former above the latter, so an Agent that is Fit to start work may have its effective skill lowered by exhaustion, and may even meet the incapacitation condition, under [Incapacitation condition](combat.md#incapacitation-condition) in Combat. E.g., with `exhaustion_free_points` 30, `skill_penalty_pct_per_exhaustion` 3, and `exhaustion_work_start_max` 60, an Agent with exhaustion 60 and no health lost is Fit to start work, and its penalty factor of 10 leaves it an effective skill of at most 10% of its base skill, at or below an `incapacitation_skill_fraction` of 0.1. [Deploying Agents](missions.md#deploying-agents) in Missions rejects such an Agent.
+An Agent that is Fit to start work has exhaustion 0, which is at most `exhaustion_free_points`, and no health lost, so its effective skill equals its base skill, under [Effective skill](#effective-skill).
 
 ## Assignment changes
 
@@ -443,15 +436,13 @@ The following table lists every allowed change of a Serving Agent's Assignment o
 | Recovery; In transit | Recovery; Recovering | Advance turn, in the Previous turn transit arrivals step. | This document, under [Transit rule](#transit-rule) |
 | An Investigation; At assignment or In transit | Standby; In transit | Advance turn: the Investigation completes in the [Investigation progress](domain-model.md#leads-investigations-mission-sites-and-missions) step. From In transit, this is a new transit, which does not arrive in the same Advance turn. | [Investigations](investigations.md) |
 | An Investigation; At assignment or In transit | Standby; In transit | Advance turn: the Investigation is interrupted at the end of the Mission resolution step, because its [Lead](domain-model.md#leads-investigations-mission-sites-and-missions) is not available. From In transit, this is a new transit, which does not arrive in the same Advance turn. | [Investigations](investigations.md), under [Lead no longer available](investigations.md#lead-no-longer-available) |
-| Contracting or an Investigation; At assignment | Standby; In transit | Advance turn: the Agent's work raises its exhaustion to `exhaustion_work_limit` or more, in the Agency income or Investigation progress step. | This document, under [Forced return](#forced-return) |
-| Training; At assignment | Standby; At assignment | Advance turn: the Agent's work raises its exhaustion to `exhaustion_work_limit` or more, in the Training step. | This document, under [Forced return](#forced-return) |
 | Deployed; At assignment | Recovery; In transit | Advance turn: the Agent survives the Combat in the Mission resolution step with current health below its effective max health. | [Missions](missions.md) |
 | Deployed; At assignment | Standby; In transit | Advance turn: the Agent survives the Combat in the Mission resolution step with current health equal to its effective max health. | [Missions](missions.md) |
 | Recovery; Recovering | Standby; At assignment | Advance turn: the Agent's current health reaches its effective max health in the Agent recovery step. | [Agent Recovery](agent-recovery.md) |
 
 Every change not listed is impossible; e.g., an Agent on Recovery cannot be assigned to Contracting, a Deployed Agent cannot be recalled, an Agent In transit cannot take orders, so it can be neither assigned anywhere nor deployed, and changes Assignment only when the Investigation it travels to completes or is interrupted, and an Agent on Contracting or an Investigation cannot be assigned to Training, Contracting, or an Investigation, or deployed. Recalling an Agent is assigning it from Contracting or an Investigation to Standby, which starts In transit; the Agent can be given new work only after it arrives.
 
-The following diagram draws the table. Each box is one pair of Assignment and Agent status; Standby and Training form the base, and Contracting and Investigations are away. A Forced return follows the same arrow as recalling the Agent to Standby.
+The following diagram draws the table. Each box is one pair of Assignment and Agent status; Standby and Training form the base, and Contracting and Investigations are away.
 
 ![Agent Assignment transitions: Standby and Training, the Base Assignments, switch to each other at once and are the only Assignments an Agent can be deployed from; only an Agent on one can be ordered to Contracting or an Investigation, the Away Assignments, and an Agent on an Away Assignment can only be recalled to Standby; every move to or from an Away Assignment passes through In transit for one Advance turn, and an Agent In transit cannot take orders; Deployed and Recovering are left only by an Advance turn; Killed and Dismissed are final](../../../images/diagrams/agent-assignment-transitions.svg)
 
@@ -479,25 +470,17 @@ Wherever the rule of a Turn advancement step applies to Agents At assignment or 
 
 # Training growth
 
-A worn-down Agent learns less, so Training pays off in full only for an Agent whose effective skill is not lowered.
+Training raises an Agent's base skill by a fixed amount in every Advance turn it trains, so that an Upgrade can improve it in fractions of a point, e.g. by 0.5.
 
-In the Training step of every Advance turn, each Working Agent whose Assignment is Training has one named random outcome, the **Training gain** outcome. Its possible values are "gains" and "does not gain". It takes the value "gains" with the [Probability](../foundation/numbers.md#glossary):
-
-```text
-training gain Probability = current health × penalty factor / (effective max health × 100)
-```
-
-where current health, effective max health, and the penalty factor are those of [Effective skill](#effective-skill), from the Agent's [Step-start values](domain-model.md#turn-advancement-steps) of the Training step. The Probability is effective skill divided by base skill before Round down, so it reads the same health and exhaustion as effective skill and needs no base skill; it is defined even for an Agent of base skill 0. It is an exact Probability under [Probabilities](../foundation/numbers.md#probabilities) in Numbers, never rounded, from 0 to 1, both included, because each of its two factors lies from 0 to 1. When the outcome is "gains", the Agent gains base skill:
+In the Training step of every Advance turn, each Working Agent whose Assignment is Training gains base skill:
 
 ```text
 base skill after = base skill before + training skill gain
 ```
 
-Inputs: base skill before is the Agent's base skill at the start of the Training step, a Decimal quantity of at least 0; training skill gain is `training_skill_gain_per_turn` of AgentParameters plus what every acquired Upgrade with the effect `training_skill_gain` adds, under [Rate Upgrades](economy-and-upgrades.md#rate-upgrades) in Economy and Upgrades, a Decimal quantity of at least 0. No rounding occurs, because the sum of two Decimal quantities is a Decimal quantity, under [Decimal quantities](../foundation/numbers.md#decimal-quantities) in Numbers. The result is a Decimal quantity of at least base skill before; base skill has no upper bound. E.g., a base skill of 101.65 and a training skill gain of 1.10 give 102.75. When the outcome is "does not gain", base skill is unchanged. An Agent whose exhaustion is at most `exhaustion_free_points` and whose current health equals its effective max health has Probability 1, so it always gains; e.g., with the GDR values, an Agent with exhaustion 50 gains with Probability 80 / 100. An Agent In transit when the Training step begins has no Training gain outcome and gains nothing, under [Transit rule](#transit-rule). Training also raises the Agent's exhaustion, under [Work exhaustion](#work-exhaustion), and changes no other value of the Agent.
+Inputs: base skill before is the Agent's base skill at the start of the Training step, a Decimal quantity of at least 0; training skill gain is `training_skill_gain_per_turn` of AgentParameters plus what every acquired Upgrade with the effect `training_skill_gain` adds, under [Rate Upgrades](economy-and-upgrades.md#rate-upgrades) in Economy and Upgrades, a Decimal quantity of at least 0. No rounding occurs, because the sum of two Decimal quantities is a Decimal quantity, under [Decimal quantities](../foundation/numbers.md#decimal-quantities) in Numbers. The result is a Decimal quantity of at least base skill before; base skill has no upper bound. E.g., a base skill of 101.65 and a training skill gain of 1.50 give 103.15. The gain involves no chance: it reads neither exhaustion nor current health, because every Agent on Training started it Fit to start work, under [Start-work gate](#start-work-gate), and Training changes neither value. An Agent In transit when the Training step begins gains nothing, under [Transit rule](#transit-rule). Training changes no other value of the Agent.
 
-The outcome of one Agent does not depend on any other Agent, so the result is the same whatever order an implementation processes the Agents in.
-
-**Informative rationale:** With the Probability, the expected gain is exactly the training skill gain scaled by effective skill relative to base skill, and every gain an Agent does receive is the whole training skill gain the Agency has.
+The gain of one Agent does not depend on any other Agent, so the result is the same whatever order an implementation processes the Agents in.
 
 # Mission growth
 
@@ -529,37 +512,6 @@ Evaluation: every amount of Experience is a whole number, so the sums are exact 
 E.g., with the GDR values, a survivor of its first Mission that hit with two attacks, missed with one, was hit once, and was missed once has the combat experience `4 + 4 + 2 + 1 + 2 = 13`, the survival experience 30, and the Mission experience 43, so its Experience and its base skill each rise by 43; its second, third, and fourth Missions survived give survival experience of 25, 20, and 15, and every later one 15.
 
 **Informative rationale:** The amounts are named Experience so that the Compendium can explain where Experience comes from apart from what it gives, and the conversion of one point of base skill for each point of Experience is fixed rather than a GDR value so that the Compendium can state it in words that no Game build can make false.
-
-# Work exhaustion
-
-Work wears an Agent down a little in every Advance turn, so an Agent cannot work without end: it must be rotated to Standby to rest.
-
-In each Advance turn, every Working Agent gains exhaustion in the [Turn advancement step](turn-advancement.md#glossary) of its work, after that step has read the Agent's values for the work itself. The following table is exhaustive:
-
-| Work Assignment | Its Working Agents | Step and the work read first | Exhaustion gained |
-| --- | --- | --- | --- |
-| Contracting | Every Agent counted in the contracting income, under [Agency income](economy-and-upgrades.md#agency-income) in Economy and Upgrades | Agency income, after the Agency's income is added | `exhaustion_per_contracting_turn` |
-| Training | Every Agent that has a Training gain outcome, under [Training growth](#training-growth) | Training, after its Training gain outcome and any gain of base skill | `exhaustion_per_training_turn` |
-| An Investigation | Every Working Agent in the Current team of an Investigation, under [Progress gain](investigations.md#progress-gain) in Investigations, whether or not that Investigation completes in the step | Investigation progress, after the Investigation's progress gain, Completion check, and any completion, under [Investigation progress](investigations.md#investigation-progress) | `exhaustion_per_investigation_turn` |
-
-```text
-exhaustion after = exhaustion before + exhaustion gained
-```
-
-Exhaustion before is the Agent's exhaustion at the start of the step and exhaustion gained the value of AgentParameters in the table, each a whole number of at least 0; no rounding occurs and no upper clamp applies, under [Attribute ranges](#attribute-ranges). The Agent's Exact exhaustion rises by the same amount, under [Exhaustion and Exact exhaustion](#exhaustion-and-exact-exhaustion). Because the work is read first, the exhaustion an Agent gains from a work turn never lowers what that turn's work achieves: e.g., an Agent on Contracting with exhaustion 30 earns its full income in the Agency income step and then has exhaustion 31. An Agent In transit when the step of its work begins, including one that arrives in the Previous turn transit arrivals step of the same Advance turn, does not work, under [Transit rule](#transit-rule), and gains no exhaustion. The gain of one Agent reads no other Agent, so the result does not depend on the order an implementation processes the Agents in.
-
-## Forced return
-
-An Agent worn down too far stops working on its own, so that tiredness never reaches the point at which a Combat would find the Agent unable to fight.
-
-In the same step, right after an Agent gains exhaustion under [Work exhaustion](#work-exhaustion), the Agent has a Forced return when both of the following hold:
-
-1. Its exhaustion is at least `exhaustion_work_limit`.
-2. Its Assignment is still the Work Assignment it worked on; e.g., a member of an Investigation that completed in the same step is already on Standby, under [Completion](investigations.md#completion) in Investigations, and has no Forced return.
-
-On a Forced return the Agent's Assignment becomes Standby. Its Agent status becomes In transit when it was on Contracting or an Investigation, which are Away Assignments, and stays At assignment when it was on Training, a Base Assignment, under [Transit rule](#transit-rule). An Agent that leaves an Investigation this way leaves its Current team under [Leaving an Investigation](investigations.md#leaving-an-investigation) in Investigations, and the Investigation becomes Abandoned when it was the last member, under [Abandonment](investigations.md#abandonment). The work the Agent did in this step still counts: e.g., the income it earned is kept, and the Investigation progress it added was added before the Investigation loses progress for its leaving, under [Progress loss](investigations.md#progress-loss).
-
-A Forced return makes the Agent Fit to start work again only after it has rested, under [Start-work gate](#start-work-gate) and [Agent Recovery](agent-recovery.md). E.g., with the GDR values, an Agent on Contracting that reaches exhaustion 70 is In transit to Standby, arrives in the next Advance turn, and then loses 5 exhaustion in each Advance turn on Standby, so it is Fit to start work again with exhaustion 30, after eight Advance turns of rest.
 
 # Agent creation
 
@@ -649,10 +601,9 @@ Effect: the operation creates `count` Agents, each under [Agent creation](#agent
 The [Turn report](../foundation/campaign-state.md#glossary) of an Advance turn holds, of its Agents:
 
 - **Arrivals:** the Agents that arrived at their Assignment in its Previous turn transit arrivals step, under [Transit rule](#transit-rule).
-- **Training:** for each Agent with a Training gain outcome in it, that outcome and the Agent's base skill and exhaustion after its Training step, under [Training growth](#training-growth).
-- **Forced returns:** each Agent that had a Forced return in it, with the Assignment it was returned from, under [Forced return](#forced-return).
+- **Training:** for each Agent that trained in it, the base skill it gained and its base skill after its Training step, under [Training growth](#training-growth).
 
-Each lists its Agents by Instance ID, in the order of the Agents in Campaign state. The [History entry](../foundation/world-history.md#glossary) of the Turn the Advance turn ends holds none of these, and holds the number of Serving Agents in the [Turn-start state](../foundation/engine-contract.md#player-actions-and-turns) and in the Turn-end state of that Turn. Of the Turn-end state, it also holds the number of Serving Agents In transit, the number Recovering, and the number At assignment on each of Standby, Training, Contracting, an Investigation, and Deployed, which together are every Serving Agent, the effective skill of each Serving Agent, without its Instance ID, and three counts of Serving Agents: those whose Assignment is Recovery, whether Recovering or In transit; those whose exhaustion is above `exhaustion_work_limit`; and those whose exhaustion is above `exhaustion_free_points`. All are [Player-visible information](../foundation/engine-contract.md#api-surfaces), under [Turn report and history](../foundation/world-history.md#turn-report-and-history) in History and Turn Report.
+Each lists its Agents by Instance ID, in the order of the Agents in Campaign state. The [History entry](../foundation/world-history.md#glossary) of the Turn the Advance turn ends holds none of these, and holds the number of Serving Agents in the [Turn-start state](../foundation/engine-contract.md#player-actions-and-turns) and in the Turn-end state of that Turn. Of the Turn-end state, it also holds the number of Serving Agents In transit, the number Recovering, and the number At assignment on each of Standby, Training, Contracting, an Investigation, and Deployed, which together are every Serving Agent, the effective skill of each Serving Agent, without its Instance ID, and three counts of Serving Agents: those whose Assignment is Recovery, whether Recovering or In transit; those whose exhaustion is above 0, i.e. who are still resting from exhaustion and so not Fit to start work; and those whose exhaustion is above `exhaustion_free_points`. All are [Player-visible information](../foundation/engine-contract.md#api-surfaces), under [Turn report and history](../foundation/world-history.md#turn-report-and-history) in History and Turn Report.
 
 # Player-visible information
 
@@ -678,14 +629,11 @@ Every value below is [Player-visible information](../foundation/engine-contract.
 - **Exhaustion at the free amount:** An exhaustion exactly equal to `exhaustion_free_points` gives a penalty factor of 100; the first point above it lowers the penalty factor by `skill_penalty_pct_per_exhaustion` ([Effective skill](#effective-skill)).
 - **Penalty below zero:** When `skill_penalty_pct_per_exhaustion × (exhaustion − exhaustion_free_points)` exceeds 100, the penalty factor is 0 and effective skill is 0; the Combatant is still alive and keeps its base skill ([Effective skill](#effective-skill)).
 - **Very high exhaustion:** Exhaustion has no upper bound and may exceed `exhaustion_incapacitation`, e.g. after a costly Mission under [Mission exhaustion](missions.md#mission-exhaustion) in Missions; the penalty factor is 0 once `skill_penalty_pct_per_exhaustion × (exhaustion − exhaustion_free_points)` reaches 100, and the Agent needs a longer rest before it is Fit to start work ([Attribute ranges](#attribute-ranges), [Start-work gate](#start-work-gate)).
-- **Exact exhaustion just above a threshold:** An Agent with Exact exhaustion 30.40 has exhaustion 31, so with `exhaustion_work_start_max` 30 it is not Fit to start work; with Exact exhaustion 30 it is ([Exhaustion and Exact exhaustion](#exhaustion-and-exact-exhaustion), [Start-work gate](#start-work-gate)).
+- **Exact exhaustion just above zero:** An Agent with Exact exhaustion 0.40 has exhaustion 1, so it is not Fit to start work; once its Exact exhaustion is 0 it is ([Exhaustion and Exact exhaustion](#exhaustion-and-exact-exhaustion), [Start-work gate](#start-work-gate)).
 - **Current health just below effective max health:** An Agent with current health 29.99 of 30 has an effective skill below its base skill wherever the exact value falls below the next whole number, e.g. `round down(100 × 29.99 × 100 / 3000) = round down(99.96…) = 99` ([Effective skill](#effective-skill)).
-- **Exhaustion exactly at a threshold:** An Agent with exhaustion equal to `exhaustion_work_start_max` and no health lost is Fit to start work, and an Agent whose work brings its exhaustion exactly to `exhaustion_work_limit` has a Forced return ([Start-work gate](#start-work-gate), [Forced return](#forced-return)).
 - **Health lost outside Recovery:** Missions sends an Agent that survives a Combat with health lost to Recovery, which ends only once its health lost is 0, under [Agent Recovery](agent-recovery.md), so an Agent that can take orders normally has no health lost. Should one have health lost, it is not Fit to start work whatever its exhaustion ([Start-work gate](#start-work-gate)).
-- **Fit to start work but not deployable:** With `exhaustion_work_start_max` above `exhaustion_free_points`, an Agent that is Fit to start work may meet the incapacitation condition of Combat; it can still start work, but it cannot be deployed ([Start-work gate](#start-work-gate)).
-- **Assigning a tired Agent:** `assignAgents` to Contracting or Training, `startInvestigation`, and `assignAgentsToInvestigation` reject, as a whole, a list with an Agent that is not Fit to start work; assigning it to Standby or deploying it is accepted ([Start-work gate](#start-work-gate)).
-- **Forced return from Training:** The Agent is on Standby, At assignment, at once, so it recovers exhaustion in the Agent recovery step of the same Advance turn, under [Which Agents recover](agent-recovery.md#which-agents-recover) in Agent Recovery ([Forced return](#forced-return)).
-- **Forced return of the last member of an Investigation:** The Investigation loses all its progress under Progress loss, although this turn's progress was added first, and becomes Abandoned ([Forced return](#forced-return)).
+- **Assigning a tired Agent:** `assignAgents` to Contracting or Training, `startInvestigation`, and `assignAgentsToInvestigation` reject, as a whole, a list with an Agent that is not Fit to start work, e.g. one with exhaustion 1; assigning it to Standby or deploying it is accepted ([Start-work gate](#start-work-gate)).
+- **Working without end:** An Agent on Contracting, Training, or an Investigation keeps its exhaustion and health lost however long it works, so no Advance turn moves it off its work for being worn down ([Changes to attributes](#changes-to-attributes)).
 - **Zero current health:** A Serving Agent never has zero current health in a World state: the Combat that brings its current health to zero makes it Killed ([Agent status](#agent-status)). An Enemy with zero current health has an effective skill of 0 ([Effective skill](#effective-skill)).
 - **Recovery completion:** An Agent on Recovery whose current health reaches effective max health under [Agent Recovery](agent-recovery.md) becomes Standby, At assignment, at once, without transit, under [Assignment changes](#assignment-changes).
 - **Moving within base:** An Agent moved between Standby and Training is At assignment at once, so it can take orders again in the same Turn, e.g. from Training to Standby and then to Contracting, or dismissed from Standby ([Transit rule](#transit-rule)).

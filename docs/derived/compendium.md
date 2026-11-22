@@ -66,7 +66,7 @@ Agents are the people of your Agency. Each one has [skill](#skill), [health](#he
 
 | Formulas            |                                                                  |
 | ------------------- | ---------------------------------------------------------------- |
-| Starting team       | 4 Agents, ready for orders on the first [turn](#turns)           |
+| Starting team       | 8 Agents, ready for orders on the first [turn](#turns)           |
 | A new Agent         | Skill 100, health 30, no exhaustion, armed with a Service weapon |
 | A hired Agent       | Starts on Standby and arrives next turn                          |
 | Killed or dismissed | The Agent is gone for good, and its skill with it                |
@@ -85,7 +85,7 @@ Every [Agent](#agents) has exactly one Assignment: Standby, [Contracting](#contr
 | From Standby or Training | Switch to the other at once, go to Contracting or an Investigation, or deploy to a [Mission site](#mission-sites) |
 | From Contracting or an Investigation | Can only be recalled to Standby |
 | In transit, deployed, or on Recovery | Cannot be given orders |
-| Starting Contracting, Training, or an Investigation | Needs full [health](#health) and [exhaustion](#exhaustion) of at most 30 |
+| Starting Contracting, Training, or an Investigation | Needs full [health](#health) and [exhaustion](#exhaustion) 0 |
 | Dismissing | Only an Agent on Standby that is not in transit |
 
 See also: [Contracting](#contracting) · [Training](#training) · [Investigations](#investigations) · [Missions](#missions) · [Recovery](#recovery) · [Transit](#transit)
@@ -129,13 +129,13 @@ See also: [Combat](#combat) · [Retreat](#retreat) · [Damage](#damage) · [Skil
 
 Source: `content/compendium/compendium_articles/mechanics_contracting.yaml`
 
-Contracting sends an [Agent](#agents) out to work for [money](#money-and-funding). It is your steady income beside funding, and it pays a little more for a skilled Agent and a little less for a [tired](#exhaustion) one. An Agent on Contracting is away from base, so getting it back for a [Mission](#missions) takes a [turn](#turns).
+Contracting sends an [Agent](#agents) out to work for [money](#money-and-funding). It is your steady income beside funding, and it pays a little more for a skilled Agent. An Agent on Contracting is away from base, so getting it back for a [Mission](#missions) takes a [turn](#turns).
 
 | Formulas                      |                                                                         |
 | ----------------------------- | ----------------------------------------------------------------------- |
 | Income of one Agent each turn | 30 × (1 + ([effective skill](#skill) − 100) ÷ 200)                      |
 | Total                         | The income of every Agent on Contracting is added up, then rounded down |
-| Exhaustion                    | +1 each turn, after the income is paid                                  |
+| [Exhaustion](#exhaustion)     | None: Contracting never tires an Agent                                  |
 | Getting there and back        | One turn [in transit](#transit) each way, with no income                |
 
 See also: [Money and funding](#money-and-funding) · [Exhaustion](#exhaustion) · [Transit](#transit)
@@ -162,21 +162,18 @@ See also: [Combat](#combat) · [Health](#health) · [Weapon damage](#weapon-dama
 
 Source: `content/compendium/compendium_articles/mechanics_exhaustion.yaml`
 
-Exhaustion measures how tired an [Agent](#agents) is. Work and fighting raise it, and only rest on [Standby](#assignments) or [Recovery](#recovery) lowers it. A tired Agent works and fights worse, one that is too tired cannot start new work, and one that works on regardless is sent back to rest.
+Exhaustion measures how tired an [Agent](#agents) is. Only fighting raises it: work never tires an Agent. Only rest on [Standby](#assignments) or [Recovery](#recovery) lowers it. A tired Agent fights worse, and it cannot start new work until it is fully rested.
 
 | Formulas |  |
 | --- | --- |
-| Each [turn](#turns) of [Contracting](#contracting) | +1 |
-| Each turn of [Training](#training) | +1 |
-| Each turn on an [Investigation](#investigations) | +1 |
 | Each attack made in a [Combat](#combat) | +1, hit or miss |
 | Each attack defended against | +1, hit or miss |
 | Each [Mission](#missions) survived | +5, and +1 for each 1% of the team that was killed, rounded up |
-| Each turn on Standby or Recovery | −5, plus [Upgrades](#upgrades), never below 0 |
+| Each [turn](#turns) on Standby or Recovery | −5, plus [Upgrades](#upgrades), never below 0 |
 | [In transit](#transit) or deployed | No rest |
+| [Contracting](#contracting), [Training](#training), or an [Investigation](#investigations) | No change |
 | [Skill](#skill) penalty | −1% of skill for each point above 30 |
-| New work can start at most at | 30; deploying to a [Mission site](#mission-sites) needs only that the Agent could still fight |
-| Work ends at | 70 or more: after that turn's work the Agent is sent to Standby |
+| New work can start at | 0 only; deploying to a [Mission site](#mission-sites) needs only that the Agent could still fight |
 | Unable to fight at | 100 or more |
 
 See also: [Recovery](#recovery) · [Skill](#skill) · [Assignments](#assignments) · [Exhaustion recovery](#exhaustion-recovery)
@@ -282,7 +279,7 @@ An Investigation is a team of [Agents](#agents) following a [Lead](#leads). Each
 | Removing Agents | Progress × (effective skill that stays ÷ effective skill before), rounded down |
 | Removing every Agent | The Investigation is abandoned; a new one starts from zero |
 | Completion | The effect of the Lead takes place, e.g. a Mission site appears, and the team goes to [Standby](#assignments), [in transit](#transit) |
-| [Exhaustion](#exhaustion) | +1 for each Agent each turn of work |
+| [Exhaustion](#exhaustion) | None: an Investigation never tires an Agent |
 | Joining | Agents are in transit for a turn before they add progress |
 
 See also: [Leads](#leads) · [Mission sites](#mission-sites) · [Exhaustion](#exhaustion) · [Following Leads](#following-leads)
@@ -434,13 +431,12 @@ See also: [Skill](#skill) · [Training](#training) · [Experience](#experience) 
 
 Source: `content/compendium/compendium_articles/mechanics_training.yaml`
 
-Training raises an [Agent](#agents)'s [skill](#skill) a little every [turn](#turns). It happens at base, so an Agent on Training can be [deployed](#missions) to a [Mission site](#mission-sites) at once. Only as many Agents can train at one time as the Training cap allows, and a [tired](#exhaustion) Agent may learn nothing in a turn.
+Training raises an [Agent](#agents)'s [skill](#skill) a little every [turn](#turns). It happens at base, so an Agent on Training can be [deployed](#missions) to a [Mission site](#mission-sites) at once. Only as many Agents can train at one time as the Training cap allows.
 
 | Formulas |  |
 | --- | --- |
 | Skill gained each turn | +1, plus [Upgrades](#upgrades) |
-| Chance to gain it | Certain up to 30 exhaustion; above it, 1% less likely for each further point |
-| Exhaustion | +1 each turn |
+| [Exhaustion](#exhaustion) | None: Training never tires an Agent, and only a fully rested Agent can start it |
 | Training cap | 10 Agents, plus Upgrades |
 | Moving between [Standby](#assignments) and Training | At once, without [transit](#transit) |
 
