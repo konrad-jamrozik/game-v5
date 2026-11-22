@@ -41,6 +41,6 @@ One chart for each [Faction](../../mechanics/domain-model.md#factions) shows how
 
 # Artboard
 
-![Charts View panel Artboard: a full-width Panic chart with its loss limit above three smaller charts for Money at start, Serving Agents and Funding, then four full-width Agency charts of Agent activity, Money flow, Assets, and Agents by effective skill, and below them one chart of response sites for each of Red Dawn, Exalt, and Black Lotus](../../../../images/artboards/charts-view.png)
+![Charts View panel Artboard: a full-width Panic chart with its loss limit above three smaller charts for Money at start, Serving Agents and Funding, then four full-width Agency charts of Agent activity, with the line that reads its last Turn's Total and values, Money flow, Assets, and Agents by effective skill, and below them one chart of response sites for each of Red Dawn, Exalt, and Black Lotus](../../../../images/artboards/charts-view.png)
 
 The sample values, e.g. the Turn numbers and the values of each series, appear only on the Artboard, under [Reading Artboards](../visual-design.md#reading-artboards) in Visual Design.
