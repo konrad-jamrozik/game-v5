@@ -606,6 +606,39 @@
       .chart.full svg text {
         font-size: var(--fs, 9px);
       }
+      /* Below a full-screen chart, the values of the Turn under the pointer, as the game's charts show them; it keeps
+         its height while no Turn is under the pointer, so that the chart never moves. */
+      .chart .readout {
+        display: none;
+      }
+      .chart.full .readout {
+        display: block;
+        min-height: 1.5em;
+        margin-top: 8px;
+        font-family: var(--mono);
+        font-variant-numeric: tabular-nums;
+        font-size: 13px;
+        color: var(--text2);
+        white-space: normal;
+      }
+      .chart.full .readout b {
+        font-weight: 500;
+        color: var(--accent-text);
+      }
+      .chart.full .readout i {
+        display: inline-block;
+        width: 9px;
+        height: 9px;
+        margin: 0 4px 0 0;
+      }
+      .chart.full .readout i.ln {
+        height: 2px;
+        vertical-align: middle;
+      }
+      .chart.full .readout .sep {
+        color: var(--muted);
+        margin: 0 8px;
+      }
       .chart svg text {
         font-family: var(--mono);
         font-size: 9px;
@@ -1605,7 +1638,7 @@
               const svg = full
                 ? ch.draw(turns).replace('preserveAspectRatio="none"', 'preserveAspectRatio="xMidYMid meet"')
                 : ch.draw(turns)
-              return `<div class="chart${full ? ' full' : ''}"><h4>${esc(ch.title)}<button type="button" class="expand" data-act="expand" data-kind="${kind}" title="${full ? 'Close (Esc)' : 'Show full screen'}" aria-label="${full ? 'Close' : 'Show full screen'}">${full ? '✕' : '⤢'}</button></h4>${ch.legend(turns)}${svg}</div>`
+              return `<div class="chart${full ? ' full' : ''}"><h4>${esc(ch.title)}<button type="button" class="expand" data-act="expand" data-kind="${kind}" title="${full ? 'Close (Esc)' : 'Show full screen'}" aria-label="${full ? 'Close' : 'Show full screen'}">${full ? '✕' : '⤢'}</button></h4>${ch.legend(turns)}${svg}${full ? '<div class="readout">&nbsp;</div>' : ''}</div>`
             })
             .join('')
         )
@@ -1639,6 +1672,9 @@
         const row = svg && rows.get(svg.closest('[data-id]').dataset.id)
         for (const r of document.querySelectorAll('svg .hov[width]:not([width="0"])'))
           if (!svg || r.ownerSVGElement !== svg) r.setAttribute('width', '0')
+        // A full-screen chart shows the values in its readout below the plot rather than in the tooltip.
+        const readout = svg?.closest('.chart.full')?.querySelector('.readout') ?? null
+        for (const r of document.querySelectorAll('.chart.full .readout')) if (r !== readout) r.innerHTML = '&nbsp;'
         if (!svg || !row?.turns) {
           tip.style.display = 'none'
           return
@@ -1652,6 +1688,7 @@
         const p = points[i]
         if (p === undefined) {
           tip.style.display = 'none'
+          if (readout) readout.innerHTML = '&nbsp;'
           return
         }
         const bw = w / points.length
@@ -1659,6 +1696,19 @@
         hov.setAttribute('x', String(PAD.l + i * bw))
         hov.setAttribute('width', String(Math.max(bw, 1)))
         const now = p.money === null && svg.dataset.chart !== 'assets' ? ' <span class="dim">now</span>' : ''
+        if (readout) {
+          tip.style.display = 'none'
+          readout.innerHTML =
+            `<b>Turn ${fmt(p.turn)}</b>${now}: ` +
+            ch
+              .tip(p, i, row.turns)
+              .map(
+                ([name, color, v, line]) =>
+                  `${color ? `<i class="${line ? 'ln' : ''}" style="background:${color}"></i>` : ''}${esc(name)} ${v === null ? '—' : fmt(v)}`,
+              )
+              .join('<span class="sep">·</span>')
+          return
+        }
         tip.innerHTML =
           `<b>Turn ${fmt(p.turn)}</b>${now}<br>` +
           ch
