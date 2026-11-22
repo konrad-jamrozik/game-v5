@@ -45,7 +45,7 @@ type: FactionOperationLevel
 level: 5
 name: Existential
 on_win:
-  - money: 1000
+  - money: 10000
   - funding: 80
 on_ignored_or_lost:
   - defeat: true

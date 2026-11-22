@@ -152,7 +152,7 @@ The Data sheet of an Upgrade shows what one acquisition costs and adds, under [U
 | `agent_weapon_damage` | "+1 weapon damage for every Agent" |
 | `agent_max_health` | "+1 max health for every Agent" |
 | `agent_armor` | "+1 armor for every Agent" |
-| `training_skill_gain` | "+0.20 skill for each turn of [Training](../../mechanics/agents-spec.md#assignments)" |
+| `training_skill_gain` | "+0.50 skill for each turn of [Training](../../mechanics/agents-spec.md#assignments)" |
 | `exhaustion_recovery` | "+1.00 [exhaustion](../../mechanics/agents-spec.md#combatant-attributes) recovered each turn" |
 | `health_recovery` | "+1.00% of max health recovered each turn" |
 
