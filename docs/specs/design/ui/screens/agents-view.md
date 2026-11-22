@@ -20,7 +20,7 @@ The Agents View is where the Player manages the roster: who serves, what each [A
 
 # Header
 
-After the title, side by side, the header shows how many places are still free under two caps, so that the Player sees how much room is left to hire and to train:
+After the title, side by side, 40 px after the title and 40 px apart, the header shows how many places are still free under two caps, so that the Player sees how much room is left to hire and to train:
 
 1. **Agent places free:** the [Agent cap](../../mechanics/domain-model.md#agency-and-agents) minus the number of [Serving](../../mechanics/agents-spec.md#agent-statuses) Agents, against the Agent cap.
 2. **Training places free:** the [Training cap](../../mechanics/economy-and-upgrades.md#glossary) minus the number of Agents counted against it, against the Training cap.
@@ -43,7 +43,7 @@ The Agents View has two kinds of filter: one decides which Agents the table show
 
 ## Row filters
 
-At the right of the title row, a group labelled "Show agents" holds four filters, each with its count, of which exactly one is on at a time. All is on whenever the Agents View opens. The filters sit level with the close control, with their Label above them, under [Alignment](../visual-design.md#alignment) in Visual Design.
+At the right of the title row, a group labelled "Show agents" holds four filters, each with its count, of which exactly one is on at a time. All is on whenever the Agents View opens. The group, its Label above its filters and its checkboxes below them, stands on a Control backdrop, under [Colours](../visual-design.md#colours) in Visual Design, so that the [Background artwork](../visual-design.md#glossary) interferes less with reading it, and ends 8 px before the close control, which stays on the title's line, under [Detail views and navigation](../visual-design.md#detail-views-and-navigation) in Visual Design.
 
 - **All:** every Serving [Agent](../../mechanics/domain-model.md#agency-and-agents).
 - **[In base](../../mechanics/agents-spec.md#agent-statuses):** every Agent In base, i.e. [At assignment](../../mechanics/domain-model.md#agency-and-agents) on Standby or Training, or [Recovering](../../mechanics/agents-spec.md#agent-statuses), whatever its [current health](../../mechanics/agents-spec.md#combatant-attributes) and [exhaustion](../../mechanics/agents-spec.md#combatant-attributes).
@@ -52,10 +52,10 @@ At the right of the title row, a group labelled "Show agents" holds four filters
 
 In base and Away split the Serving Agents, so their counts add up to the count of All.
 
-Below the four filters, two checkboxes, each with its label, under [Checkboxes](../visual-design.md#checkboxes) in Visual Design, hide more Agents from the table that All, In base, or Away shows, so that the Player can keep in view only the Agents ready for work:
+Below the four filters, two checkboxes, one above the other in this order, each with its label, under [Checkboxes](../visual-design.md#checkboxes) in Visual Design, hide more Agents from the table that All, In base, or Away shows, so that the Player can keep in view only the Agents ready for work:
 
-- **Hide recovering:** hides every Agent whose Assignment is [Recovery](../../mechanics/agents-spec.md#assignments), whether it is Recovering or In transit.
 - **Hide with exhaustion > N,** where N is `exhaustion_free_points` of [AgentParameters](../../mechanics/agents-spec.md#agentparameters), e.g. "Hide with exhaustion > 30": hides every Agent whose exhaustion is above N, i.e. whose exhaustion already lowers its [effective skill](../../mechanics/agents-spec.md#combatant-attributes), under [Effective skill](../../mechanics/agents-spec.md#effective-skill) in Agents.
+- **Hide recovering:** hides every Agent whose Assignment is [Recovery](../../mechanics/agents-spec.md#assignments), whether it is Recovering or In transit.
 
 Both are unchecked whenever the Agents View opens, and either can be checked with the other. They change no count of the row filters, so the counts still add up as above. While Memorial is on, both are disabled and keep their check, because a Terminated Agent has no Assignment and no exhaustion.
 
@@ -122,7 +122,7 @@ Each row leads to what it records, so that the Player can see how each Mission t
 
 # Artboard
 
-![Agents View panel Artboard: the header with the Agent places free and Training places free, each with its cap bar, the Hire button, the Assign to group of Standby, Contracting, and Training buttons each with its Assignment filter, the Contracting one on, the Dismiss button, and the number of selected Agents with their Combat rating; the Show agents filters All, In base, Away, and Memorial, with the Hide recovering and Hide with exhaustion checkboxes below them; and the table of Serving Agents with a Select all checkbox, their skill and Experience, colour-coded health and exhaustion, weapon damage, Assignment, and Blocked by, sorted first by the locked Blocked by tier so that the Agents that can be selected come first and then by effective skill, with each muted row saying what blocks it](../../../../images/artboards/agents-view.png)
+![Agents View panel Artboard: the header with the Agent places free and Training places free, each with its cap bar, the Hire button, the Assign to group of Standby, Contracting, and Training buttons each with its Assignment filter, the Contracting one on, the Dismiss button, and the number of selected Agents with their Combat rating; the Show agents filters All, In base, Away, and Memorial on a Control backdrop, with the Hide with exhaustion and Hide recovering checkboxes below them, and the close control on the title's line; and the table of Serving Agents with a Select all checkbox, their skill and Experience, colour-coded health and exhaustion, weapon damage, Assignment, and Blocked by, sorted first by the locked Blocked by tier so that the Agents that can be selected come first and then by effective skill, with each muted row saying what blocks it](../../../../images/artboards/agents-view.png)
 
 ![Agents View Memorial panel Artboard: the Memorial filter on, the Hide checkboxes, the Assign to group, and Dismiss disabled, and the table of Terminated Agents with base skill, Experience, effective max health, Turn terminated, cause, Missions, Turns with the Agency, Enemies killed, and, for a Killed Agent, the Enemy that killed it and the Mission site where](../../../../images/artboards/agents-memorial.png)
 
