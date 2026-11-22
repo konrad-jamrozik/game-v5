@@ -48,7 +48,7 @@ Every Serving Agent belongs to exactly one of the Agent reserve, the Investigato
 | Investigators | The Investigator quota. |
 | Contractors | Every other Serving Agent. |
 
-E.g., with the Game designer values and a Roster size of 100, the Reserve quota is 40 and the Investigator quota 10, so 50 Agents are Contractors. When 11 of the Agents are on Recovery, 5 rest on Standby with some exhaustion, and 6 are Deployed, the Agent reserve of 40 holds those 22 and 18 Agents on Training. With the initial roster of 8 Agents, the Reserve quota is 3 and the Investigator quota 0, so 5 Agents go to Contracting.
+E.g., with the Game designer values and a Roster size of 100, the Reserve quota is 35 and the Investigator quota 5, so 60 Agents are Contractors. When 11 of the Agents are on Recovery, 5 rest on Standby with some exhaustion, and 6 are Deployed, the Agent reserve of 35 holds those 22 and 13 Agents on Training. With the initial roster of 8 Agents, the Reserve quota is 2 and the Investigator quota 0, so 6 Agents go to Contracting.
 
 The Basic Autopilot AI moves an Agent from one group to another only as follows, and this list is exhaustive:
 
@@ -110,7 +110,7 @@ The Basic Autopilot AI spends money in a fixed cycle: it fills the Agent cap, ra
 
 A purchase is made only when money stays at or above the Savings floor after it; when the first purchase due does not fit, the Basic Autopilot AI buys nothing more that Turn, rather than a later item of the list. Every value the list reads, e.g. the acquisitions of each Upgrade and each cap, is Player-visible, so the cycle needs no plan across Turns.
 
-E.g., with the GDR values, a new Campaign starts with an Agent cap of 20, a Transport cap of 8, and a Training cap of 10, both at least 30% of 20, and an Upgrade budget of 0. The Basic Autopilot AI therefore hires up to 20 Agents first, then buys an Agent cap Upgrade to 40, then up to 2000 of Other Upgrades, then a Transport cap Upgrade to 16 and a Training cap Upgrade to 20, which reach 30% of 40, i.e. 12, and then hires toward 40.
+E.g., with the GDR values, a new Campaign starts with an Agent cap of 20, a Transport cap of 8, and a Training cap of 10, both at least 25% of 20, and an Upgrade budget of 0. The Basic Autopilot AI therefore hires up to 20 Agents first, then buys an Agent cap Upgrade to 40, then up to 2000 of Other Upgrades, then a Transport cap Upgrade to 16, because the Transport cap of 8 is below 25% of 40, i.e. 10, and no Training cap Upgrade, because the Training cap of 10 already reaches it, and then hires toward 40.
 
 # Information
 
@@ -146,9 +146,9 @@ The Game designer sets the following values of the Game build, so that an Implem
 
 | Tuning parameter | Value in the Game build |
 | --- | --- |
-| Reserve share | 40% of the Roster size, rounded down. |
-| Investigator share | 10% of the Roster size, rounded down. |
-| Cap share | 30% of the Agent cap, for each of the Transport cap and the Training cap, because at least a tenth of the roster is expected to be on Recovery or resting rather than on Training or Deployed. |
+| Reserve share | 35% of the Roster size, rounded down. |
+| Investigator share | 5% of the Roster size, rounded down. |
+| Cap share | 25% of the Agent cap, for each of the Transport cap and the Training cap, because at least a tenth of the roster is expected to be on Recovery or resting rather than on Training or Deployed. |
 | Savings floor | 5 Turns of projected upkeep. |
 | Combat margin | 110%: a team qualifies only when its Combat rating is at least 10% above the Enemies'. |
 | Loss margin step | 5 percentage points, e.g. 115% after one Lost Mission and 120% after two. |
