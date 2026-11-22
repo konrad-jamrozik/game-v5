@@ -39,7 +39,7 @@ The layout puts what the Player most often wants, the Campaign saves, in the wid
 
 # Artboard
 
-![Main menu screen Artboard: Campaign saves grouped by Campaign on the left, with Load and Delete side by side on each save and Delete campaign in each Campaign header; New Campaign and Settings panels on the right](../../../../images/artboards/main-menu.png)
+![Main menu screen Artboard: Campaign saves grouped by Campaign on the left, with Load and Delete side by side on each save and Delete campaign in each Campaign header; New Campaign and Settings panels on the right, the Settings panel ending with its Changed settings row, at which every setting is at its default](../../../../images/artboards/main-menu.png)
 
 The following appear only on the [Artboard](../visual-design.md#glossary) and must not be implemented, under [Reading Artboards](../visual-design.md#reading-artboards) in Visual Design:
 

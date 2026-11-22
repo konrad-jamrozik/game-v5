@@ -44,6 +44,7 @@ A Game build has exactly the following Global configuration settings. Each is st
 | [Autosave limit](saves.md#limits), [Autopilot Autosave limit](saves.md#limits) | [Limits](saves.md#limits) in Saves |
 | Music on, Music volume | [Music settings](../ui/music.md#music-settings) in Music |
 | Sounds on, Sounds volume | [Sound settings](../ui/sounds.md#sound-settings) in Sounds |
+| Autopilot controls shown, [Autopilot](engine-contract.md#autopilot) [Turns](engine-contract.md#player-actions-and-turns) | [Autopilot settings](../ui/screens/campaign-screen.md#autopilot-settings) in Campaign Screen |
 
 Global configuration stores only values the player has set. A setting the player has not set follows the current [Game build default](engine-contract.md#persisted-data), so a changed Game build default in a later Game build reaches it. Resetting a setting removes its stored value.
 

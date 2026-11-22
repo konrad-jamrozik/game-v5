@@ -48,10 +48,15 @@ The Settings panel is titled Settings and holds these rows from top to bottom, e
 
 1. **Music volume:** the [Music volume slider](music.md#music-volume-slider).
 2. **Sounds:** the Sounds toggle and the Sounds volume slider, under [Sound settings](sounds.md#sound-settings).
-3. **Other settings:** one row for each other Global configuration setting, e.g. the [Autosave limit](../foundation/saves.md#glossary), with its input.
-4. **Tools,** on the Campaign Screen only: a neutral button for the keyboard shortcuts, under [Keyboard shortcuts](screens/campaign-screen.md#keyboard-shortcuts) in Campaign Screen, and one for the developer tools. Each closes the Settings panel and opens what it names, which the Player closes with its close control or the Escape key, under Close controls.
+3. **Other settings:** one row for each other Global configuration setting, e.g. the [Autosave limit](../foundation/saves.md#glossary), with its input, except the Autopilot settings, which the Player sets where they are used, under [Autopilot settings](screens/campaign-screen.md#autopilot-settings) in Campaign Screen.
+4. **Changed settings:** what the Player has changed, under Changed settings.
+5. **Tools,** on the Campaign Screen only: a neutral button for the keyboard shortcuts, under [Keyboard shortcuts](screens/campaign-screen.md#keyboard-shortcuts) in Campaign Screen, and one for the developer tools. Each closes the Settings panel and opens what it names, which the Player closes with its close control or the Escape key, under Close controls.
 
 Music on and Sounds on have no rows of their own beyond these: Music on is set with the Music control, and Sounds on with the Sounds toggle.
+
+## Changed settings
+
+A setting changed long ago, or in another place, is easy to forget, so the Settings panel lists in one place every Global configuration setting whose stored value overrides its [Game build default](../foundation/engine-contract.md#persisted-data), as `session.globalConfiguration.get()` reports them, whatever row or control sets it. The row is headed "Changed settings" and lists them in the order of the Global configuration table in Configuration, one line each in Body: the setting's name, its value, and its Game build default, in plain words, e.g. "Autopilot Turns: 100 (default 10)", "Autopilot controls: shown (default hidden)", or "Music: off (default on)". A volume reads as a percentage, e.g. "Music volume: 30% (default 50%)". Each line ends with a neutral Reset button that calls `session.globalConfiguration.reset(setting)`, so that the setting follows its Game build default again and its line leaves the list. While no setting is changed, the row says "Every setting is at its default." in Text muted.
 
 # Reveal hidden content
 
