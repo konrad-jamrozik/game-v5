@@ -470,7 +470,7 @@ The [Turn report](../foundation/campaign-state.md#glossary) of an Advance turn h
 - **Funding:** the Agency's funding in the Turn-end state and after the Advance turn.
 - **Money:** the Agency's money in the Turn-end state and after the Advance turn.
 
-The [History entry](../foundation/world-history.md#glossary) of the Turn the Advance turn ends holds, of these, the income, the upkeep, and the Agency's money and funding after the Advance turn, and holds the Agency's money and funding in the Turn-start state and in the Turn-end state of that Turn. All are Player-visible information, under [Turn report and history](../foundation/world-history.md#turn-report-and-history) in History and Turn Report.
+The [History entry](../foundation/world-history.md#glossary) of the Turn the Advance turn ends holds, of these, the funding the Agency income step used, the income, the upkeep, and the Agency's money and funding after the Advance turn, and holds the Agency's money and funding in the Turn-start state and in the Turn-end state of that Turn, and its Agent cap, Transport cap, and Training cap in the Turn-start state, under Agency caps. All are Player-visible information, under [Turn report and history](../foundation/world-history.md#turn-report-and-history) in History and Turn Report.
 
 # Player-visible information
 

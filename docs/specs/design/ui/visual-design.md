@@ -104,6 +104,34 @@ Each colour has one role, so that the same colour always means the same thing ac
 | Limit band | `#E5484D` at 12% opacity | The band that marks a losing limit on a chart. |
 | Scrim | `#0D0D0B` at 72% opacity | The layer that dims the screen behind a dialog. |
 
+## Chart series colours
+
+A chart with several series needs more hues than the roles above can spare, and each must stay apart from its neighbours in a stacked bar. These colours are used only for the series of the charts named here, under [Agency charts](screens/charts-view.md#agency-charts) in Charts View, and nowhere else. Related series share a hue family, e.g. every income is green and every expenditure red, so that the Player reads the kind of a series before its legend. This table is exhaustive.
+
+| Chart | Series | Value |
+| --- | --- | --- |
+| Agent activity | Standby | `#7FD45F` |
+| Agent activity | Training | `#2E8B3E` |
+| Agent activity | Contracting | `#E8C547` |
+| Agent activity | Investigating | `#A77BDB` |
+| Agent activity | Deployed | `#F28C28` |
+| Agent activity | Recovering | `#D2453D` |
+| Agent activity | [In transit](../mechanics/domain-model.md#agency-and-agents) | `#3D8FD9` |
+| Money flow | Funding | `#3E8E41` |
+| Money flow | Contracting income | `#6CC05B` |
+| Money flow | Mission rewards | `#A9DD8F` |
+| Money flow | Upkeep | `#A8322D` |
+| Money flow | Hiring | `#D9473F` |
+| Money flow | [Cap Upgrades](../mechanics/economy-and-upgrades.md#glossary) | `#FF6F61` |
+| Money flow | Other [Upgrades](../mechanics/domain-model.md#agency-and-agents) | `#F2A39B` |
+| Money flow | Net flow | `#E8C547` |
+| Assets | Money | `#8BC34A` |
+| Assets | Serving Agents | `#A1887F` |
+| Assets | [Agent cap](../mechanics/domain-model.md#agency-and-agents) | `#D7CCC8` |
+| Assets | [Transport cap](../mechanics/economy-and-upgrades.md#glossary) | `#3D8FD9` |
+| Assets | [Training cap](../mechanics/economy-and-upgrades.md#glossary) | `#E8C547` |
+| Agents by [effective skill](../mechanics/agents-spec.md#combatant-attributes) | Skill bands 1 to 8, from the lowest | `#6A5ACD`, `#4A86D9`, `#2FB0B8`, `#45BF6E`, `#A3CC3F`, `#E3C43A`, `#F0913A`, `#E8605A`; every higher band takes the eighth |
+
 ## Typography
 
 Three typefaces separate three kinds of text: condensed headings name things, the body font explains them, and the monospaced font carries every number and identifier. All three are Google Fonts. This table is exhaustive.
@@ -332,9 +360,12 @@ A [Progress circle](gui.md#glossary) is 18 px wide and sits on the text line it 
 
 # Charts
 
-Charts must let the Player read a trend across the whole Campaign without squinting. Every chart sits in its own panel with its title on the left and its current value on the right in the Headline figure style.
+Charts must let the Player read a trend across the whole Campaign without squinting. Every chart sits in its own panel with its title on the left and its current value on the right in the Headline figure style. A chart with several series shows a legend there instead of a current value, because no one value sums it up.
 
-- A chart's vertical axis starts at 0 and labels its top and bottom values; the horizontal axis labels the first and last [Turn](../foundation/engine-contract.md#player-actions-and-turns), in the Axis style.
+- A chart's vertical axis starts at 0 and labels its top and bottom values; the horizontal axis labels the first and last [Turn](../foundation/engine-contract.md#player-actions-and-turns), in the Axis style. A chart whose series also fall below 0 labels its top and bottom values and draws its baseline at 0.
 - Grid lines are Raised; the baseline is Border.
-- A series is a 2 px line in Text colour with its latest point marked by a dot.
+- A chart with one series draws it as a 2 px line in Text colour with its latest point marked by a dot. A chart with several series draws each in its colour under [Chart series colours](#chart-series-colours): a line series as a 2 px line with its latest point marked by a dot, and a bar series as a segment of a stacked bar.
+- A stacked bar stands for one Turn and is 70% as wide as one Turn's share of the plot, with no gap between its segments. Its segments are stacked in the order of the legend, outward from the baseline, and a series whose value is 0 in that Turn draws no segment.
+- A legend lists the series in their order, each as a 10 px square in its colour, or a 10 px by 2 px stroke for a line series, followed by its name in the Axis style in Text secondary, and wraps onto further lines when the chart is too narrow for one.
+- A chart whose series count two kinds of quantity, e.g. money and Agents, labels the vertical axis of the first on the left and of the second on the right, and names the right-axis series in its legend after the left-axis ones.
 - At a window 1280 px wide, a chart's plot area is at least 120 px tall, and at most three charts sit side by side.
