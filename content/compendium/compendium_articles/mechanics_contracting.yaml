@@ -9,7 +9,7 @@ body: >-
   Mission takes a turn.
 formulas:
   - label: 'Income of one Agent each turn'
-    text: '{economy.contracting_income_per_agent} × (1 + (effective skill − 100) ÷ 500)'
+    text: '{economy.contracting_income_per_agent} × (1 + (effective skill − 100) ÷ {economy.contracting_skill_scale})'
   - label: 'Total'
     text: 'The income of every Agent on Contracting is added up, then rounded down'
   - label: 'Exhaustion'

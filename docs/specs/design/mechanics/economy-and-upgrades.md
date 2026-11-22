@@ -46,6 +46,7 @@ EconomyParameters bundles the scalar values that hiring, upkeep, Agency income, 
 | `hire_cost` | The money one hire costs. | [Hiring Agents](#hiring-agents) |
 | `upkeep_per_agent` | The money each [Serving](agents-spec.md#agent-statuses) [Agent](domain-model.md#agency-and-agents) costs in one Advance turn. | [Upkeep](#upkeep) |
 | `contracting_income_per_agent` | The money each Agent working on [Contracting](agents-spec.md#assignments) with [effective skill](agents-spec.md#combatant-attributes) 100 earns in one Advance turn. | [Agency income](#agency-income) |
+| `contracting_skill_scale` | How strongly contracting income depends on effective skill: the points of effective skill above or below 100 that change an Agent's contribution by one whole `contracting_income_per_agent`. | [Agency income](#agency-income) |
 | `base_agent_cap` | The Agent cap before any Upgrade is acquired. | [Agency caps](#agency-caps) |
 | `base_transport_cap` | The Transport cap before any Upgrade is acquired. | [Agency caps](#agency-caps) |
 | `base_training_cap` | The Training cap before any Upgrade is acquired. | [Agency caps](#agency-caps) |
@@ -78,7 +79,7 @@ The GDRs a Game build supplies must satisfy every rule below. The list is exhaus
 1. **One AgencyArchetype:** The Game build supplies exactly one AgencyArchetype, so no rule selects among AgencyArchetypes.
 2. **One EconomyParameters:** The Game build supplies exactly one EconomyParameters GDR.
 3. **Exact properties:** Each GDR of the three Types has exactly the properties its table above lists, apart from `id` and `type`: no listed property is missing and no other property is present.
-4. **Parameters are valid:** Each of `hire_cost`, `upkeep_per_agent`, `contracting_income_per_agent`, `base_agent_cap`, `base_transport_cap`, and `base_training_cap` is a whole number of at least 0.
+4. **Parameters are valid:** Each of `hire_cost`, `upkeep_per_agent`, `contracting_income_per_agent`, `base_agent_cap`, `base_transport_cap`, and `base_training_cap` is a whole number of at least 0, and `contracting_skill_scale` is a whole number of at least 100, so that no Agent's contracting contribution is negative under [Agency income](#agency-income).
 5. **Upgrades are valid:** Each Upgrade's `price` is a whole number of at least 0. Its `increment` is a whole number of at least 0, except that the `increment` of a Rate Upgrade is a number of at least 0 written with at most two digits after the decimal point, under [Decimal quantities](../foundation/numbers.md#decimal-quantities) in Numbers. Its `effect` is exactly one of `agent_cap`, `transport_cap`, `training_cap`, `agent_weapon_damage`, `agent_max_health`, `agent_armor`, `training_skill_gain`, `exhaustion_recovery`, and `health_recovery`.
 6. **Names are present:** The `name` of the AgencyArchetype and of each Upgrade is non-empty text.
 
@@ -200,7 +201,7 @@ In every Advance turn the Agency earns money and pays for its Agents, and the di
 In the Agency income step of every Advance turn, under [Turn advancement steps](turn-advancement.md#turn-advancement-steps), the Agency's money rises by its income:
 
 ```text
-contribution of one Agent = contracting_income_per_agent × (1 + (effective skill − 100) / 500)
+contribution of one Agent = contracting_income_per_agent × (1 + (effective skill − 100) / contracting_skill_scale)
 income                    = funding + round down( sum of the contributions of the Agents in C )
 money after               = money before + income
 ```
@@ -211,12 +212,13 @@ Inputs:
 | --- | --- | --- |
 | funding | The Agency's funding, as the [Step-start value](domain-model.md#turn-advancement-steps) of the Agency income step. | Money; a whole number of at least 0. |
 | `contracting_income_per_agent` | The value of EconomyParameters. | Money per Agent; a whole number of at least 0. |
+| `contracting_skill_scale` | The value of EconomyParameters. | Skill points; a whole number of at least 100. |
 | C | The Working Agents whose Assignment is Contracting, i.e. the Agents on Contracting that are [At assignment](domain-model.md#agency-and-agents) as Step-start values of the Agency income step, under [Transit rule](agents-spec.md#transit-rule) in Agents. | A set of Agents, possibly empty. |
 | effective skill | The Agent's [Effective skill](agents-spec.md#effective-skill), from its Step-start values of the Agency income step. | Skill points; a whole number of at least 0. |
-| 100 and 500 | Constants of this rule, not GDR values: effective skill 100 earns exactly `contracting_income_per_agent`, and each 100 points of effective skill above or below it change the contribution by one fifth of it. | Skill points. |
+| 100 | A constant of this rule, not a GDR value: effective skill 100 earns exactly `contracting_income_per_agent`, and each `contracting_skill_scale` points of effective skill above or below it change the contribution by one whole `contracting_income_per_agent`. | Skill points. |
 | money before | The Agency's money as the Step-start value of the Agency income step. | Money; any whole number. |
 
-Evaluation: each contribution is evaluated exactly, under [Exact evaluation](../foundation/numbers.md#exact-evaluation) in Numbers, the contributions are summed exactly, and the sum is rounded once, with [Round down](../foundation/numbers.md#glossary); no contribution is rounded on its own. Because effective skill is at least 0, each contribution is at least `0.8 × contracting_income_per_agent`, so income is a whole number of at least 0 and money never falls in this step. E.g., an Agent with effective skill 100 contributes exactly 30 with the GDR value 30; one with effective skill 83 contributes `30 × (1 − 17 / 500) = 28.98`; and one trained to effective skill 150 contributes `30 × (1 + 50 / 500) = 33`, so the three together give `round down(91.98) = 91`.
+Evaluation: each contribution is evaluated exactly, under [Exact evaluation](../foundation/numbers.md#exact-evaluation) in Numbers, the contributions are summed exactly, and the sum is rounded once, with [Round down](../foundation/numbers.md#glossary); no contribution is rounded on its own. Because effective skill is at least 0 and `contracting_skill_scale` is at least 100, each contribution is at least `(1 − 100 / contracting_skill_scale) × contracting_income_per_agent`, which is at least 0, so income is a whole number of at least 0 and money never falls in this step. E.g., with the GDR values 30 and 500, an Agent with effective skill 100 contributes exactly 30; one with effective skill 83 contributes `30 × (1 − 17 / 500) = 28.98`; and one trained to effective skill 150 contributes `30 × (1 + 50 / 500) = 33`, so the three together give `round down(91.98) = 91`.
 
 An Agent [In transit](domain-model.md#agency-and-agents) to Contracting is not in C, including one that arrives in the Previous turn transit arrivals step of the same Advance turn, because that step comes after the Agency income step. The Agency income step is the first step, so funding, C, and each effective skill equal their values in the [Turn-end state](../foundation/engine-contract.md#player-actions-and-turns). After the income is added, every Agent in C gains [exhaustion](agents-spec.md#combatant-attributes) and may have a [Forced return](agents-spec.md#assignments), under [Work exhaustion](agents-spec.md#work-exhaustion) and [Forced return](agents-spec.md#forced-return) in Agents; the income already added is kept.
 
@@ -502,7 +504,7 @@ Every value below is Player-visible information under [Player-visible informatio
 - **Upkeep making money negative:** Upkeep is paid in full and money may become negative ([Upkeep](#upkeep)).
 - **Agent Killed in the same Advance turn:** An Agent Killed in the Mission resolution step was counted in the Upkeep step before it, and is not counted in any later Advance turn ([Upkeep](#upkeep)).
 - **Arriving Agents:** An Agent arriving at Contracting in the Previous turn transit arrivals step earns nothing in that Advance turn but is counted in Upkeep ([Agency income](#agency-income), [Upkeep](#upkeep)).
-- **Tired or untrained Agents on Contracting:** An Agent with effective skill 0 still contributes four fifths of `contracting_income_per_agent`, and an Agent whose work brings it to `exhaustion_work_limit` keeps the income of that Advance turn ([Agency income](#agency-income)).
+- **Tired or untrained Agents on Contracting:** An Agent with effective skill 0 still contributes `(1 − 100 / contracting_skill_scale) × contracting_income_per_agent`, e.g. four fifths of it with `contracting_skill_scale` 500, and an Agent whose work brings it to `exhaustion_work_limit` keeps the income of that Advance turn ([Agency income](#agency-income)).
 - **Dismissing an Agent that is not on Standby, At assignment:** Rejected as a whole; e.g., an Agent on Standby but In transit, an Agent on Contracting, and a Deployed Agent cannot be dismissed ([Dismissing Agents](#dismissing-agents)).
 - **Dismissing every Agent:** Valid; an Agency with no Serving Agent pays no upkeep. Whether the Campaign ends is decided under [Defeat](panic-and-endings.md#defeat) ([Dismissing Agents](#dismissing-agents)).
 - **Unknown Upgrade:** `purchaseUpgrade` with an identifier that names no Upgrade GDR, including one naming a GDR of another Type, is rejected ([Purchasing Upgrades](#purchasing-upgrades)).

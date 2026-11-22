@@ -3,6 +3,7 @@ type: EconomyParameters
 hire_cost: 50
 upkeep_per_agent: 10 # per turn, every Serving Agent
 contracting_income_per_agent: 30 # per turn, each Agent on Contracting
+contracting_skill_scale: 500 # effective skill above 100 that adds one more contracting_income_per_agent
 base_agent_cap: 20
 base_transport_cap: 8
 base_training_cap: 10

@@ -672,6 +672,7 @@
           hire_cost: 50,
           upkeep_per_agent: 10,
           contracting_income_per_agent: 30,
+          contracting_skill_scale: 500,
           base_agent_cap: 20,
           base_transport_cap: 8,
           base_training_cap: 10,
@@ -1078,7 +1079,7 @@
   </div></div></section>`)
         /* Economy */
         h.push(`<section id="economy"><div class="shead"><h2>Economy</h2><p>What an Agent earns and costs, what Upgrades cost in Turns of work, and what Missions pay.</p></div><div class="cols"><div class="col">
-  ${panel('Starting money and economy', 'content/configuration/campaign_configurations.yaml · economy-and-upgrades/economy_parameters.yaml', `<div class="kv"><span class="k"><code>standard.starting_money</code><small></small></span>${inp('standard.starting_money')}</div><div class="kv"><span class="k"><code>standard.starting_funding</code><small>income every Turn</small></span>${inp('standard.starting_funding')}</div>` + row('economy.hire_cost', '') + row('economy.upkeep_per_agent', 'every Serving Agent, every Turn') + row('economy.contracting_income_per_agent', 'at effective skill 100') + row('economy.base_agent_cap', '') + row('economy.base_transport_cap', 'Agents that can be Deployed at once') + row('economy.base_training_cap', '') + extra('economy'))}
+  ${panel('Starting money and economy', 'content/configuration/campaign_configurations.yaml · economy-and-upgrades/economy_parameters.yaml', `<div class="kv"><span class="k"><code>standard.starting_money</code><small></small></span>${inp('standard.starting_money')}</div><div class="kv"><span class="k"><code>standard.starting_funding</code><small>income every Turn</small></span>${inp('standard.starting_funding')}</div>` + row('economy.hire_cost', '') + row('economy.upkeep_per_agent', 'every Serving Agent, every Turn') + row('economy.contracting_income_per_agent', 'at effective skill 100') + row('economy.contracting_skill_scale', 'effective skill above 100 that adds one more contracting income', { min: 100 }) + row('economy.base_agent_cap', '') + row('economy.base_transport_cap', 'Agents that can be Deployed at once') + row('economy.base_training_cap', '') + extra('economy'))}
   ${panel('Upgrades', 'content/economy-and-upgrades/upgrades.yaml', `<div class="tw"><table><tr><th>Upgrade</th><th>price</th><th>increment</th><th class="d">Contractor-Turns</th></tr>${UP.map((u) => `<tr><td class="name">${title(u)}</td><td>${inp(u + '.price')}</td><td>${inp(u + '.increment', { step: 0.1 })}</td><td class="d" id="ut_${u}"></td></tr>`).join('')}</table></div><div class="note">Contractor-Turns is the price divided by what one skill-100 Agent on Contracting earns after its own upkeep.</div>`)}
   </div><div class="col">
   ${panel('What these values cause', '', `<div id="o_econ"></div>`, 'read')}
@@ -1709,7 +1710,14 @@
           idle = n0 * e.upkeep_per_agent - st.starting_funding
         $('o_econ').innerHTML = out([
           ['One skill-100 contractor nets, per Turn', f(net, 1)],
-          ['A contractor of skill 200 nets', f(e.contracting_income_per_agent * 1.2 - e.upkeep_per_agent, 1)],
+          [
+            'A contractor of skill 200 nets',
+            f(e.contracting_income_per_agent * (1 + 100 / e.contracting_skill_scale) - e.upkeep_per_agent, 1),
+          ],
+          [
+            'A contractor of skill 0 nets',
+            f(e.contracting_income_per_agent * (1 - 100 / e.contracting_skill_scale) - e.upkeep_per_agent, 1),
+          ],
           ['Turns for a hire to repay its cost by Contracting', f(net > 0 ? e.hire_cost / net : Infinity, 1)],
           ['Idle Agents one contractor pays for', f(e.upkeep_per_agent > 0 ? net / e.upkeep_per_agent : Infinity, 2)],
           [

@@ -73,7 +73,7 @@ Type owner: [Economy and Upgrades](../mechanics/economy-and-upgrades.md).
 | GDR | Type | GDR purpose | What it supplies |
 | --- | --- | --- | --- |
 | `agency` | AgencyArchetype | Archetype | The Agency's display name. |
-| `economy` | EconomyParameters | Calculation parameter | Hire cost, upkeep per Agent, contracting income per Agent, and the starting [Agent cap](../mechanics/economy-and-upgrades.md#glossary), [Transport cap](../mechanics/economy-and-upgrades.md#glossary), and [Training cap](../mechanics/economy-and-upgrades.md#glossary). |
+| `economy` | EconomyParameters | Calculation parameter | Hire cost, upkeep per Agent, contracting income per Agent and how strongly it depends on [effective skill](../mechanics/agents-spec.md#combatant-attributes), and the starting [Agent cap](../mechanics/economy-and-upgrades.md#glossary), [Transport cap](../mechanics/economy-and-upgrades.md#glossary), and [Training cap](../mechanics/economy-and-upgrades.md#glossary). |
 | `agent_cap` | Upgrade | Calculation parameter | Price and increment of the [Upgrade](../mechanics/domain-model.md#agency-and-agents) raising the [Agent cap](../mechanics/domain-model.md#agency-and-agents). |
 | `transport_cap` | Upgrade | Calculation parameter | Price and increment of the Upgrade raising the Transport cap. |
 | `training_cap` | Upgrade | Calculation parameter | Price and increment of the Upgrade raising the Training cap. |
