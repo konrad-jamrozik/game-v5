@@ -406,6 +406,24 @@
         flex-wrap: wrap;
         gap: 10px 18px;
       }
+      /* A number field with what it adds beside it, e.g. the Upgrades' +8 weapon damage. */
+      .ctl .inrow {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .ctl .add {
+        font-family: var(--mono);
+        font-size: 13px;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+      .ico {
+        width: 10px;
+        height: 10px;
+        margin-left: 1px;
+        vertical-align: -1px;
+      }
       .ctl label {
         display: flex;
         flex-direction: column;
@@ -920,7 +938,6 @@
       const TEAM0 = {
         n: 4,
         skill: 100,
-        ex: 0,
         wu: 0,
         au: 0,
         target: 90,
@@ -960,6 +977,7 @@
           if (!s) return
           for (const p in s.d) if (PATHS.includes(p)) set(cur, p, s.d[p])
           Object.assign(T, s.T || {})
+          delete T.ex
         } catch (e) {}
       }
 
@@ -980,8 +998,11 @@
         `<div class="kv"><span class="k"><code>${esc(p.split('.').slice(1).join('.'))}</code><small>${hint}</small></span>${inp(p, o)}</div>`
       const panel = (title, src, body, cls = '') =>
         `<div class="panel ${cls}"><h3>${title}</h3>${src ? `<div class="src">${src}</div>` : ''}${body}</div>`
-      const tin = (k, label, o = {}) =>
-        `<label><span class="lbl">${label}</span><input type="number" id="t_${k}" data-t="${k}" value="${T[k]}" step="${o.step || 1}" min="${o.min ?? 0}"${o.max ? ` max="${o.max}"` : ''}></label>`
+      /* A number field of the test team; `o.add` puts beside it what the value adds, e.g. the Upgrades' points. */
+      const tin = (k, label, o = {}) => {
+        const field = `<input type="number" id="t_${k}" data-t="${k}" value="${T[k]}" step="${o.step || 1}" min="${o.min ?? 0}"${o.max ? ` max="${o.max}"` : ''}>`
+        return `<label><span class="lbl">${label}</span>${o.add ? `<span class="inrow">${field}<span class="add" id="t_${k}_add"></span></span>` : field}</label>`
+      }
       /* A checkbox of the test team, e.g. whether to search each site for the team that reaches the target. */
       const tcheck = (k, label) =>
         `<label class="chk"><input type="checkbox" id="t_${k}" data-t="${k}"${T[k] !== false ? ' checked' : ''}><span class="lbl">${label}</span></label>`
@@ -1003,7 +1024,7 @@
   ${panel('Combat parameters', 'content/combat/combat_parameters.yaml', row(cp + '.weapon_damage_range', 'damage roll is base damage ± this fraction', { step: 0.05 }) + row(cp + '.retreat_below_agent_rating_fraction', 'Agents retreat below this fraction of their starting Combat rating…', { step: 0.05 }) + row(cp + '.retreat_at_enemy_to_agent_rating', "…while Enemies hold at least this ratio of the Agents' rating", { step: 0.05 }) + row(cp + '.incapacitation_skill_fraction', 'Incapacitated at this fraction of base skill or less', { step: 0.05 }) + row(cp + '.rating_base_health', 'effective max health at which the health term of the rating factor is 1') + row(cp + '.rating_base_armor', 'effective armor at which the armor term of the rating factor is 1') + row(cp + '.rating_base_weapon_damage', 'effective weapon damage at which the attack term of the rating factor is 1') + row(cp + '.rating_team_size_exponent', 'a side of n Combatants able to fight is rated n ^ (this − 1) times the sum of what each adds', { min: 1, step: 0.05 }) + extra(cp))}
   ${panel('Field agent and Combat exhaustion', 'content/agents/agent_archetypes.yaml · agent_parameters.yaml', `<div class="kv"><span class="k"><code>field_agent.base_skill</code><small>a newly hired Agent</small></span>${inp('field_agent.base_skill')}</div><div class="kv"><span class="k"><code>field_agent.base_health</code><small></small></span>${inp('field_agent.base_health', { min: 1 })}</div><div class="kv"><span class="k"><code>field_agent.weapon</code><small></small></span>${sel('field_agent.weapon', WP)}</div><div class="kv"><span class="k"><code>field_agent.armor</code><small>the Armor Upgrades add to its base armor</small></span>${sel('field_agent.armor', AR)}</div>` + row(ap + '.exhaustion_per_attack', 'to the attacker, hit or miss') + row(ap + '.exhaustion_per_defense', 'to the defender, hit or miss') + row(ap + '.exhaustion_free_points', 'exhaustion up to this costs no skill') + row(ap + '.skill_penalty_pct_per_exhaustion', '% of skill lost per point above the free points', { step: 0.5 }) + row(ap + '.exhaustion_incapacitation', 'Incapacitated at this exhaustion'))}
   </div></div>
-  ${panel('Test team', 'not a GDR: the team every Mission site below is fought with', `<div class="ctl">${tin('n', 'Agents', { min: 1, max: 300 })}${tin('skill', 'Base skill', { min: 1 })}${tin('ex', 'Starting exhaustion')}${tin('wu', 'Weapon damage upgrades')}${tin('au', 'Armor upgrades')}${tin('target', 'Target win %', { min: 1, max: 100 })}${tcheck('team', 'Find team for target')}</div><div class="teamcr" id="teamcr"></div><div class="note" id="teamnote"></div><div class="note" id="simstatus"></div>`, 'read')}
+  ${panel('Test team', 'not a GDR: the team every Mission site below is fought with', `<div class="ctl">${tin('n', 'Agents', { min: 1, max: 300 })}${tin('skill', 'Base skill', { min: 1 })}${tin('wu', 'Weapon damage upgrades', { add: true })}${tin('au', 'Armor upgrades', { add: true })}${tin('target', 'Target win %', { min: 1, max: 100 })}${tcheck('team', 'Find team for target')}</div><div class="teamcr" id="teamcr"></div><div class="note" id="teamnote"></div><div class="note" id="simstatus"></div>`, 'read')}
   ${panel(
     'Mission sites',
     'content/missions/mission_site_archetypes.yaml',
@@ -1093,6 +1114,11 @@
         return [Math.ceil(w * (1 - r) - 1e-9), Math.floor(w * (1 + r) + 1e-9)]
       }
       const wdmg = (w) => cur[w].base_weapon_damage
+      /* The icons of weapon damage and armor, as the Combat rating bench shows them. */
+      const SWORD =
+        '<svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><g stroke="currentColor" stroke-linecap="round" fill="none"><line x1="13.5" y1="2.5" x2="6.5" y2="9.5" stroke-width="2.2"/><line x1="4" y1="8" x2="8" y2="12" stroke-width="1.6"/><line x1="5.5" y1="10.5" x2="2.5" y2="13.5" stroke-width="2"/></g></svg>'
+      const SHIELD =
+        '<svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5 14 3.5V8c0 3.5-3 5.8-6 6.8C5 13.8 2 11.5 2 8V3.5z" fill="currentColor"/></svg>'
       const TRIALS = 100,
         MAXN = 300
       /* LOCAL is what server.ts reported when the page loaded: the engine it runs and the GDR values it read from disk. */
@@ -1166,12 +1192,7 @@
        * `agent` is one Agent's effective skill and `adds` what it adds to the sum.
        */
       function teamRatings() {
-        const a = cur.agent_parameters,
-          agent = Math.floor(
-            (T.skill *
-              Math.max(0, 100 - a.skill_penalty_pct_per_exhaustion * Math.max(0, T.ex - a.exhaustion_free_points))) /
-              100,
-          ),
+        const agent = Math.floor(T.skill),
           n = Math.max(0, Math.round(T.n)),
           terms = ratingTerms(cur.field_agent.base_health, testAgentArmor(), testAgentWeapon()),
           adds = agent * terms.factor
@@ -1342,7 +1363,7 @@
             baseSkill: Math.round(T.skill * 100) / 100,
             currentHealth: mh,
             effectiveMaxHealth: mh,
-            exhaustion: Math.round(T.ex),
+            exhaustion: 0,
             effectiveWeaponDamage: w,
           },
           gdrValues = simParams(),
@@ -1564,6 +1585,10 @@
           [tlo, thi] = dmgRange(tw)
         const tr = teamRatings(),
           pct = (x) => (x >= 0 ? '+' : '−') + f(Math.abs(x) * 100, 1) + '%'
+        const wAdd = tw - wdmg(fa.weapon),
+          aAdd = ta - armorOf(fa.armor)
+        $('t_wu_add').innerHTML = `${wAdd >= 0 ? '+' : '−'}${f(Math.abs(wAdd), 0)}${SWORD}`
+        $('t_au_add').innerHTML = `${aAdd >= 0 ? '+' : '−'}${f(Math.abs(aAdd), 0)}${SHIELD}`
         $('teamcr').innerHTML =
           `<span><span class="k">Team Combat rating</span><span class="v eff">${f(tr.eff, 0)}</span></span>` +
           `<span><span class="k">Base, the sum of effective skills</span><span class="v">${f(tr.base, 0)}</span></span>` +
