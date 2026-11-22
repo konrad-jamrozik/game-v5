@@ -315,7 +315,7 @@ A Mission is your team's one attempt at a [Mission site](#mission-sites). You de
 | Formulas |  |
 | --- | --- |
 | Who can deploy | Agents on [Standby](#assignments) or [Training](#training), however tired, unless too worn down to fight |
-| Transport cap | 4 Agents deployed at one time, over all Missions, plus [Upgrades](#upgrades) |
+| Transport cap | 8 Agents deployed at one time, over all Missions, plus [Upgrades](#upgrades) |
 | Won | No Enemy is able to fight; the rewards of the Mission site apply |
 | Lost | The team [retreats](#retreat), or no Agent is able to fight; no reward, and a [Faction operation](#faction-operations) that was not stopped applies its penalty |
 | Exhaustion of survivors | +5, and +1 for each 1% of the team that was killed, rounded up |
@@ -1808,9 +1808,9 @@ Adds vehicles so that more [Agents](#agents) can be [deployed](#missions) to [Mi
 | `transport_cap` | Upgrade         |
 | --------------- | --------------- |
 | `name`          | `Transport cap` |
-| `price`         | `2000`          |
+| `price`         | `1500`          |
 | `effect`        | `transport_cap` |
-| `increment`     | `4`             |
+| `increment`     | `8`             |
 
 ### Weapon damage
 

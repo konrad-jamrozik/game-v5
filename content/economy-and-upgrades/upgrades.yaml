@@ -8,9 +8,9 @@ increment: 20
 id: transport_cap
 type: Upgrade
 name: Transport cap
-price: 2000
+price: 1500
 effect: transport_cap
-increment: 4
+increment: 8
 ---
 id: training_cap
 type: Upgrade
