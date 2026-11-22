@@ -271,6 +271,9 @@
         width: 140px;
         text-align: left;
       }
+      input:disabled {
+        opacity: 0.4;
+      }
       input.chg {
         border-color: var(--accent);
         color: var(--accent-text);
@@ -842,7 +845,8 @@
       let UPGRADES = []
       let edited = {}
       let weights = {}
-      let launchForm = { count: 10, untilTurn: 200, seedPrefix: 'seed' }
+      // `seed`, when not empty, is an exact Campaign seed: the launch plays that one Campaign, e.g. to replay one.
+      let launchForm = { count: 10, untilTurn: 200, seedPrefix: 'seed', seed: '' }
       let moreTurns = 50
       let STATE = { now: Date.now(), campaigns: [], batches: [] }
       let clockOffset = 0
@@ -1111,10 +1115,11 @@
     <label><span class="lbl">Campaigns</span><input type="number" id="l_count" min="1" step="1" value="${esc(launchForm.count)}" /></label>
     <label><span class="lbl">Until turn</span><input type="number" id="l_until" min="1" step="1" value="${esc(launchForm.untilTurn)}" /></label>
     <label><span class="lbl">Seed prefix</span><input class="wide" id="l_seed" value="${esc(launchForm.seedPrefix)}" /></label>
+    <label><span class="lbl">Exact seed</span><input class="wide" id="l_exact" placeholder="none" value="${esc(launchForm.seed)}" /></label>
     <button class="pri" id="launch">Launch</button>
     <span class="note" style="align-self:center">with <span id="launchParams"></span></span>
   </div>
-  <div class="note">Campaign <i>i</i> of a launch has the Campaign seed <code>&lt;prefix&gt;-&lt;i&gt;</code>, so two launches with the same prefix play the same Campaigns, and differ only by their parameters. The launch plays each Campaign from Turn 1 until the Turn given.</div>
+  <div class="note">Campaign <i>i</i> of a launch has the Campaign seed <code>&lt;prefix&gt;-&lt;i&gt;</code>, so two launches with the same prefix play the same Campaigns, and differ only by their parameters. With an <b>Exact seed</b>, the launch plays the one Campaign of that seed instead, e.g. to replay a Campaign after <b>Load params</b> filled it in; clear it to launch by prefix again. The launch plays each Campaign from Turn 1 until the Turn given.</div>
   <div class="ctl">
     <label><span class="lbl">More turns</span><input type="number" id="more" min="1" step="1" value="${esc(moreTurns)}" /></label>
     <button id="playAll">Play more · all</button><button id="stopAll">Stop all</button><button id="removeAll">Remove all</button>
@@ -1288,7 +1293,7 @@
       /** The parts of a Campaign block, by key, so that only the parts that changed are written again. */
       function cellsOf(c) {
         const cells = {}
-        cells.n = `<b>${c.n}</b>${esc(c.seed)} <span class="dim">· launch ${c.batch}</span>`
+        cells.n = `<b>${c.n}</b><span class="dim">seed</span> <code title="The Campaign seed; Load params fills it in as Exact seed">${esc(c.seed)}</code> <span class="dim">· launch ${c.batch}</span>`
         cells.params = diffText(c.params) + (c.error ? `<div class="err">${esc(c.error)}</div>` : '')
         const run = c.run
         const turn = c.stats?.turn ?? null
@@ -1309,7 +1314,7 @@
         cells.acts =
           c.state === 'running' || c.state === 'starting'
             ? `<button data-act="stop">Stop</button>`
-            : `<button data-act="play"${ended || c.state === 'failed' ? ' disabled' : ''}>Play more</button><button data-act="use" title="Copy this Campaign's parameters into the Parameters editor above">Load params</button><button data-act="remove" title="Remove this Campaign">✕</button>`
+            : `<button data-act="play"${ended || c.state === 'failed' ? ' disabled' : ''}>Play more</button><button data-act="use" title="Copy this Campaign's parameters into the Parameters editor above, and its seed into Exact seed">Load params</button><button data-act="remove" title="Remove this Campaign">✕</button>`
         LAYOUT.forEach((L, i) =>
           L.forEach((x, j) => {
             cells[`${i}_${j}`] = c.stats === null ? '' : x[2](c.stats, c)
@@ -1953,14 +1958,25 @@
       function bindCampaigns() {
         const num = (id) => Math.floor(Number($(id).value))
         const remember = () => {
-          launchForm = { count: num('l_count'), untilTurn: num('l_until'), seedPrefix: $('l_seed').value }
+          launchForm = {
+            count: num('l_count'),
+            untilTurn: num('l_until'),
+            seedPrefix: $('l_seed').value,
+            seed: $('l_exact').value.trim(),
+          }
           moreTurns = num('more')
+          seedMode()
           save()
         }
-        for (const id of ['l_count', 'l_until', 'l_seed', 'more']) $(id).addEventListener('input', remember)
+        for (const id of ['l_count', 'l_until', 'l_seed', 'l_exact', 'more']) $(id).addEventListener('input', remember)
+        seedMode()
         $('launch').addEventListener('click', () => {
           remember()
-          post('api/launch', { ...launchForm, params: params() })
+          const { seed, seedPrefix, ...rest } = launchForm
+          post(
+            'api/launch',
+            seed === '' ? { ...rest, seedPrefix, params: params() } : { ...rest, count: 1, seed, params: params() },
+          )
         })
         const ids = () => STATE.campaigns.map((c) => c.id)
         $('playAll').addEventListener('click', () => post('api/play', { ids: ids(), turns: num('more') }))
@@ -1979,7 +1995,7 @@
           if (a === 'play') post('api/play', { ids: [id], turns: num('more') })
           else if (a === 'stop') post('api/stop', { ids: [id] })
           else if (a === 'remove') post('api/remove', { ids: [id] })
-          else if (a === 'use') useParams(rows.get(id).campaign.params)
+          else if (a === 'use') useCampaign(rows.get(id).campaign)
           else if (a === 'expand') expandChart(rows.get(id), b.dataset.kind)
           else if (a === 'copylog') {
             const done = (label) => {
@@ -2022,6 +2038,21 @@
         $('ct').addEventListener('click', (e) => e.detail === 0 && act(e))
         $('ct').addEventListener('mousemove', hover)
         $('ct').addEventListener('mouseleave', hover)
+      }
+
+      /** With an Exact seed, the launch plays one Campaign of it, so the Campaigns and Seed prefix fields do not apply. */
+      function seedMode() {
+        const exact = $('l_exact').value.trim() !== ''
+        $('l_count').disabled = exact
+        $('l_seed').disabled = exact
+        $('l_exact').classList.toggle('chg', exact)
+      }
+
+      /** Load params: the Campaign's parameters into the Parameters editor, and its seed into Exact seed. */
+      function useCampaign(c) {
+        $('l_exact').value = c.seed
+        $('l_exact').dispatchEvent(new Event('input'))
+        useParams(c.params)
       }
 
       function useParams(p) {

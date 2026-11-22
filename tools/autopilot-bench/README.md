@@ -29,9 +29,9 @@ A change to the Bench reaches it without a restart wherever it can, because the 
 
 The page plays nothing by itself. Loading or reloading it only reads: it shows the Campaigns the server holds, as they are, and never plays a Turn of them.
 
-- **Launch** creates the number of Campaigns given and plays each from Turn 1 until the Turn given. Campaign `i` of a launch has the Campaign seed `<prefix>-<i>`, so two launches with the same prefix play the same Campaigns and differ only by their parameters.
+- **Launch** creates the number of Campaigns given and plays each from Turn 1 until the Turn given. Campaign `i` of a launch has the Campaign seed `<prefix>-<i>`, so two launches with the same prefix play the same Campaigns and differ only by their parameters. With an **Exact seed**, the launch instead creates the one Campaign of that seed, and the Campaigns and Seed prefix fields do not apply; clearing Exact seed launches by prefix again. Each Campaign block shows its seed.
 - **Play more** plays the number of Turns given in More turns of one Campaign; **Play more · all** does so for every Campaign that is not playing and has not ended.
-- **Stop** disengages Autopilot after the Turn being played. **Load params** copies a Campaign's parameters into the Parameters editor, e.g. to launch a variant of it.
+- **Stop** disengages Autopilot after the Turn being played. **Load params** copies a Campaign's parameters into the Parameters editor and its seed into Exact seed, so that Launch replays that Campaign exactly, or, after an edit of the parameters, a variant of it on the same seed.
 
 A Campaign that reaches a Campaign ending stops there.
 

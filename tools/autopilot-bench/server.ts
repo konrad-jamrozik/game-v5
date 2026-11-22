@@ -188,7 +188,16 @@ function play(c: Campaign, turns: number) {
   send(c, { type: 'play', id: c.id, turns })
 }
 
-async function launch(count: number, untilTurn: number, seedPrefix: string, params: Record<string, unknown>) {
+/**
+ * Launches `count` Campaigns. Campaign `i` has the Campaign seed `<prefix>-<i>`, or, for an exact seed, the seed as
+ * given, which the page uses to replay one Campaign.
+ */
+async function launch(
+  count: number,
+  untilTurn: number,
+  seeds: { readonly prefix: string } | { readonly exact: string },
+  params: Record<string, unknown>,
+) {
   const threads = Array.from({ length: Math.min(count, THREADS) }, () => startThread())
   const batch: Batch = { id: batches.length + 1, engine: engineVersion(), createdAt: Date.now(), threads }
   batches.push(batch)
@@ -198,7 +207,7 @@ async function launch(count: number, untilTurn: number, seedPrefix: string, para
     const thread = threads[i % threads.length]!
     thread.campaigns += 1
     const id = `c${nextCampaign}`
-    const seed = `${seedPrefix}-${i + 1}`
+    const seed = 'exact' in seeds ? seeds.exact : `${seeds.prefix}-${i + 1}`
     const c: Campaign = {
       id,
       n: nextCampaign,
@@ -355,14 +364,16 @@ const server = http.createServer((req, res) => {
       const b = await body(req)
       const count = whole(b.count, 1, MAX_CAMPAIGNS - campaigns.size)
       const untilTurn = whole(b.untilTurn, 1, MAX_TURNS)
-      const seedPrefix = typeof b.seedPrefix === 'string' && b.seedPrefix.trim() !== '' ? b.seedPrefix.trim() : 'seed'
+      const text = (value: unknown) => (typeof value === 'string' && value.trim() !== '' ? value.trim() : null)
+      const exact = text(b.seed)
+      const seeds = exact === null ? { prefix: text(b.seedPrefix) ?? 'seed' } : { exact }
       if (count === null || untilTurn === null || typeof b.params !== 'object' || b.params === null) {
         json(res, 400, {
           error: `Give 1 to ${MAX_CAMPAIGNS - campaigns.size} Campaigns, a Turn of 1 to ${MAX_TURNS}, and the parameters.`,
         })
         return
       }
-      await launch(count, untilTurn, seedPrefix, b.params as Record<string, unknown>)
+      await launch(count, untilTurn, seeds, b.params as Record<string, unknown>)
       json(res, 200, { ok: true })
     } else if (req.method === 'POST' && url === '/api/play') {
       const b = await body(req)
