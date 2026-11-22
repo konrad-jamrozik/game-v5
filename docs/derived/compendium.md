@@ -28,7 +28,7 @@ See also: [Upgrades](#upgrades) · [Money and funding](#money-and-funding)
 
 Source: `content/compendium/compendium_articles/guide_missions.yaml`
 
-A [Mission site](#mission-sites) is a place where Enemies wait, and it expires after a few [turns](#turns). [Deploy](#missions) a team to it and the [Combat](#combat) is fought when the turn advances. A won Mission brings its rewards; a lost or ignored one can raise [Panic](#panic). [Tired](#exhaustion) [Agents](#agents) fight worse, so check exhaustion before you deploy, and compare your team's Combat rating with the Enemies'. Agents who survive a Mission gain [skill](#skill), win or lose.
+A [Mission site](#mission-sites) is a place where Enemies wait, and it expires after a few [turns](#turns). [Deploy](#missions) a team to it and the [Combat](#combat) is fought when the turn advances. A won Mission brings its rewards; a lost or ignored one can raise [Panic](#panic). [Tired](#exhaustion) [Agents](#agents) fight worse, so check exhaustion before you deploy, and compare your team's [Combat rating](#combat-rating) with the Enemies'. Agents who survive a Mission gain [skill](#skill), win or lose.
 
 See also: [Mission sites](#mission-sites) · [Missions](#missions) · [Combat](#combat) · [Retreat](#retreat)
 
@@ -104,10 +104,26 @@ A Combat is fought in rounds. In each round every [Agent](#agents) attacks once,
 | Agent target | Any Enemy able to fight, with a weight of 100 minus one for each whole hundredth by which the chance to hit it lies above or below 0.8, times the share of the Agent's [weapon damage](#damage) that the Enemy's health and armor can still take, rounded up |
 | Each attack | +1 [exhaustion](#exhaustion) for the attacker and +1 for the defender, hit or miss |
 | Incapacitated | Alive but unable to fight: effective skill at or below 0.1 × skill, or exhaustion of 100 or more |
-| Combat rating | For each Combatant of a side who is able to fight, its effective skill times its rating factor: half the sum of its weapon damage divided by 10, its max health divided by 30, and its armor divided by 20, so that an Agent without [Upgrades](#upgrades) has a rating factor of 1. Added up for the side, then multiplied by n ^ (1.2 − 1), where n is the number of those Combatants, so that a larger side counts for more than its sum, and rounded down |
 | End of the Combat | As soon as no Enemy or no Agent is able to fight, or after a round in which the team retreats |
 
-See also: [Damage](#damage) · [Retreat](#retreat) · [Skill](#skill) · [Missions](#missions)
+See also: [Combat rating](#combat-rating) · [Damage](#damage) · [Retreat](#retreat) · [Skill](#skill) · [Missions](#missions)
+
+### Combat rating
+
+Source: `content/compendium/compendium_articles/mechanics_combat_rating.yaml`
+
+A Combat rating measures how strong a side is in a [Combat](#combat), so that you can weigh your team against the Enemies before you [deploy](#missions) it. [Effective skill](#skill) carries most of it, and a rating factor adjusts it for how hard a Combatant hits, how much harm it can take, and how much its [armor](#damage) absorbs. Your team also weighs it during a Combat, to decide whether to [retreat](#retreat).
+
+| Formulas |  |
+| --- | --- |
+| Rating factor | Half the sum of weapon damage ÷ 10, [max health](#health) ÷ 30, and armor ÷ 20 |
+| At the rating bases | A Combatant with weapon damage 10, max health 30, and no armor has a rating factor of 1 |
+| One Combatant | Its effective skill × its rating factor, rounded down |
+| A side | The sum of effective skill × rating factor over its Combatants able to fight, × n ^ (1.2 − 1), where n is their number, rounded down once, so that a larger side counts for more than its sum |
+| Incapacitated Combatants | Add nothing to the Combat rating of their side |
+| Base Combat rating | An [Agent](#agents)'s effective skill alone, shown beside its Combat rating so that you can see how much [Upgrades](#upgrades) add |
+
+See also: [Combat](#combat) · [Retreat](#retreat) · [Damage](#damage) · [Skill](#skill) · [Missions](#missions)
 
 ### Contracting
 
@@ -302,7 +318,7 @@ A Mission site is a place where Enemies wait for a fight. Some appear when an [I
 | Expired, from an Investigation | No penalty |
 | Expired, from a Faction operation | The same penalty as a lost Mission |
 | Faction eliminated | Its open Mission sites are cancelled, with no reward and no penalty |
-| Enemies | Listed at the Mission site before you deploy, with their [Combat rating](#combat) |
+| Enemies | Listed at the Mission site before you deploy, with their [Combat rating](#combat-rating) |
 
 See also: [Missions](#missions) · [Faction operations](#faction-operations) · [Leads](#leads)
 
@@ -379,7 +395,7 @@ Your team does not fight to the last [Agent](#agents). After each round of a [Co
 
 | Formulas |  |
 | --- | --- |
-| The team retreats when both hold | Its Combat rating is below 0.5 × what it was at the start, and the Combat rating of the Enemies is at least 0.8 × that of the team now |
+| The team retreats when both hold | Its [Combat rating](#combat-rating) is below 0.5 × what it was at the start, and the Combat rating of the Enemies is at least 0.8 × that of the team now |
 | Checked | After each round, once both sides have attacked |
 | Result | The Mission is lost |
 | [Exhaustion](#exhaustion) | Survivors gain as much as after any other Mission |

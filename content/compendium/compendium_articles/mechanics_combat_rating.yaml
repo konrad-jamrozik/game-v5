@@ -1,0 +1,24 @@
+id: mechanics_combat_rating
+type: CompendiumArticle
+category: mechanics
+title: Combat rating
+terms: [Combat rating, Combat ratings]
+body: >-
+  A Combat rating measures how strong a side is in a Combat, so that you can weigh your team against the Enemies before
+  you deploy it. Effective skill carries most of it, and a rating factor adjusts it for how hard a Combatant hits, how
+  much harm it can take, and how much its armor absorbs. Your team also weighs it during a Combat, to decide whether to
+  retreat.
+formulas:
+  - label: 'Rating factor'
+    text: 'Half the sum of weapon damage ÷ {combat_parameters.rating_base_weapon_damage}, max health ÷ {combat_parameters.rating_base_health}, and armor ÷ {combat_parameters.rating_base_armor}'
+  - label: 'At the rating bases'
+    text: 'A Combatant with weapon damage {combat_parameters.rating_base_weapon_damage}, max health {combat_parameters.rating_base_health}, and no armor has a rating factor of 1'
+  - label: 'One Combatant'
+    text: 'Its effective skill × its rating factor, rounded down'
+  - label: 'A side'
+    text: 'The sum of effective skill × rating factor over its Combatants able to fight, × n ^ ({combat_parameters.rating_team_size_exponent} − 1), where n is their number, rounded down once, so that a larger side counts for more than its sum'
+  - label: 'Incapacitated Combatants'
+    text: 'Add nothing to the Combat rating of their side'
+  - label: 'Base Combat rating'
+    text: "An Agent's effective skill alone, shown beside its Combat rating so that you can see how much Upgrades add"
+see_also: [mechanics_combat, mechanics_retreat, mechanics_damage, mechanics_skill, mechanics_missions]
