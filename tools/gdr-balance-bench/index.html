@@ -316,6 +316,10 @@
       td input {
         width: 58px;
       }
+      input.wide,
+      td input.wide {
+        width: 96px;
+      }
       td.w input {
         width: 44px;
       }
@@ -1009,8 +1013,10 @@
       const f = (x, d = 1) => (Number.isFinite(x) ? (+x.toFixed(d)).toLocaleString('en-US') : '–')
       function inp(p, o = {}) {
         const v = get(cur, p),
-          b = get(BASE, p)
-        return `<input type="number" inputmode="decimal" id="${sid(p)}" data-p="${p}" value="${v}" step="${o.step || 1}" min="${o.min ?? 0}" title="${esc(p)} · GDR value ${b}" aria-label="${esc(p)}"${v !== b ? ' class="chg"' : ''}>`
+          b = get(BASE, p),
+          /* An amount of money, e.g. an Upgrade's price, is wide enough for five digits and more. */
+          cls = [/(money|funding|price)$/.test(p) ? 'wide' : '', v !== b ? 'chg' : ''].filter(Boolean).join(' ')
+        return `<input type="number" inputmode="decimal" id="${sid(p)}" data-p="${p}" value="${v}" step="${o.step || 1}" min="${o.min ?? 0}" title="${esc(p)} · GDR value ${b}" aria-label="${esc(p)}"${cls ? ` class="${cls}"` : ''}>`
       }
       function sel(p, opts) {
         const v = get(cur, p)
