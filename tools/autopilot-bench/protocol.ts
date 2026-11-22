@@ -2,7 +2,15 @@
 
 /** From server.ts to a worker thread. */
 export type ToWorker =
-  | { readonly type: 'create'; readonly id: string; readonly seed: string; readonly params: unknown }
+  | {
+      readonly type: 'create'
+      readonly id: string
+      readonly seed: string
+      readonly params: unknown
+      /** The Campaign log file the worker thread writes, and what its first line tells of the launch. */
+      readonly log: string
+      readonly launch: { readonly batch: number; readonly engine: string; readonly impl: string }
+    }
   | { readonly type: 'play'; readonly id: string; readonly turns: number }
   | { readonly type: 'stop'; readonly id: string }
   | { readonly type: 'remove'; readonly id: string }

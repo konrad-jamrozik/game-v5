@@ -25,6 +25,14 @@ const HERE = import.meta.dirname
 const SPEC = path.resolve(HERE, '../..')
 const IMPL = path.resolve(arg('impl', path.join(SPEC, '../game-v5-impl-web')))
 const PORT = Number(arg('port', '4718'))
+/**
+ * Where the Campaign logs go: one folder per server start, so that a restart, which reuses the Campaign IDs, never
+ * writes into the logs of an earlier one. It is outside the repository.
+ */
+const LOGS = path.join(
+  path.resolve(arg('logs', path.join(os.tmpdir(), 'autopilot-bench'))),
+  new Date().toISOString().replace(/[:.]/g, '-'),
+)
 const THREADS = Math.max(1, os.availableParallelism() - 1)
 const MAX_CAMPAIGNS = 500
 const MAX_TURNS = 100_000
@@ -48,6 +56,8 @@ interface Campaign {
   readonly seed: string
   /** The parameters of the Basic Autopilot AI, every one of them, as they were at launch. */
   readonly params: Record<string, unknown>
+  /** The Campaign log file, which its worker thread writes. */
+  readonly log: string
   readonly thread: Thread
   state: 'starting' | 'running' | 'idle' | 'failed'
   stats: CampaignStats | null
@@ -183,15 +193,19 @@ async function launch(count: number, untilTurn: number, seedPrefix: string, para
   const batch: Batch = { id: batches.length + 1, engine: engineVersion(), createdAt: Date.now(), threads }
   batches.push(batch)
   const created: Campaign[] = []
+  fs.mkdirSync(LOGS, { recursive: true })
   for (let i = 0; i < count; i += 1) {
     const thread = threads[i % threads.length]!
     thread.campaigns += 1
+    const id = `c${nextCampaign}`
+    const seed = `${seedPrefix}-${i + 1}`
     const c: Campaign = {
-      id: `c${nextCampaign}`,
+      id,
       n: nextCampaign,
       batch: batch.id,
-      seed: `${seedPrefix}-${i + 1}`,
+      seed,
       params,
+      log: path.join(LOGS, `${id}-${seed.replace(/[^\w.-]/g, '_')}.jsonl`),
       thread,
       state: 'starting',
       stats: null,
@@ -208,7 +222,15 @@ async function launch(count: number, untilTurn: number, seedPrefix: string, para
   }
   for (const c of created) {
     c.thread.ready.then(
-      () => send(c, { type: 'create', id: c.id, seed: c.seed, params }),
+      () =>
+        send(c, {
+          type: 'create',
+          id: c.id,
+          seed: c.seed,
+          params,
+          log: c.log,
+          launch: { batch: batch.id, engine: batch.engine, impl: IMPL },
+        }),
       (e: unknown) => fail(c, `The engine did not start: ${e instanceof Error ? e.message : String(e)}`),
     )
   }
@@ -289,6 +311,7 @@ function view(c: Campaign, have: number) {
     batch: c.batch,
     seed: c.seed,
     params: c.params,
+    log: c.log,
     state: c.state,
     stats: c.stats,
     run: c.run,
@@ -381,5 +404,6 @@ const server = http.createServer((req, res) => {
 server.listen(PORT, '127.0.0.1', () => {
   console.log(`Autopilot Bench: http://127.0.0.1:${PORT}/`)
   console.log(`  engine  ${IMPL} (${engineVersion()}), up to ${THREADS} worker threads per launch`)
+  console.log(`  logs    ${LOGS}`)
   console.log('Each launch starts the engine again from the source on disk; its Campaigns keep that engine.')
 })

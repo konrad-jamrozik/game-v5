@@ -5,6 +5,7 @@
  * with that Campaign's parameters, and its Turns are played by ordinary Autopilot engagements with the Autopilot limit
  * `turnAdvancements`. Everything the thread reports is read through Player API queries.
  */
+import fs from 'node:fs'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { parentPort, workerData } from 'node:worker_threads'
@@ -46,7 +47,10 @@ interface Campaign {
   /** The ended Turns not yet reported to server.ts. */
   unsent: TurnPoint[]
   /** The Serving Agents of the Turn whose Advance turn was requested last, read just before it. */
-  turnEnd: { status: number[]; skill: number[]; worn: number[]; strength: number[] } | null
+  turnEnd: { status: number[]; skill: number[]; worn: number[]; strength: number[]; state: unknown } | null
+  /** The Campaign log file, and the Player actions the AI requested in the Current Turn, for its next Turn line. */
+  readonly log: string
+  actions: unknown[]
   /** The Creation Combat rating of every Mission site seen so far, by Instance ID. */
   siteRatings: Map<string, number>
   /** The last Turn recorded in the series. */
@@ -179,17 +183,40 @@ function observed(ai: Any, holder: { campaign: Campaign | null }): Any {
         campaign.spent[slot] += before - money()
         return result
       }
+      // Every Player action the AI requests, other than Advance turn, goes to the log's Turn line with its outcome,
+      // a rejected one included.
+      const logged: Record<string, Any> = {}
+      for (const [op, action] of Object.entries(player.actions as Record<string, Any>)) {
+        if (op === 'advanceTurn' || typeof action !== 'function') continue
+        logged[op] = async (...args: unknown[]) => {
+          const campaign = holder.campaign
+          if (campaign === null) return action(...args)
+          const before = money()
+          const result = await action(...args)
+          campaign.actions.push({
+            op,
+            args,
+            ok: result.ok,
+            ...(result.ok ? {} : { error: result.error }),
+            moneyChange: money() - before,
+          })
+          return result
+        }
+      }
       const actions = {
         ...player.actions,
-        hireAgent: () => spend(0, () => player.actions.hireAgent()),
+        ...logged,
+        hireAgent: () => spend(0, () => logged.hireAgent()),
         purchaseUpgrade: (upgrade: string) =>
-          spend(capUpgrades.has(upgrade) ? 1 : 2, () => player.actions.purchaseUpgrade(upgrade)),
+          spend(capUpgrades.has(upgrade) ? 1 : 2, () => logged.purchaseUpgrade(upgrade)),
         advanceTurn: async () => {
           const campaign = holder.campaign
           if (campaign === null) return player.actions.advanceTurn()
+          const live = ok<Any>(host().queries.getCurrentLiveWorldState())
           campaign.turnEnd = {
-            ...agentsPoint(ok<Any>(host().queries.getCurrentLiveWorldState()).agents),
+            ...agentsPoint(live.agents),
             strength: strengthPoint(campaign, host()),
+            state: logState(live, ok<Any>(host().queries.getCurrentRetiredWorldState())),
           }
           const result = await player.actions.advanceTurn()
           endTurn(campaign)
@@ -198,6 +225,105 @@ function observed(ai: Any, holder: { campaign: Campaign | null }): Any {
       }
       return ai.step({ player: { ...player, actions } })
     },
+  }
+}
+
+/* ---------- Campaign log ---------- */
+
+/** Appends one line to the Campaign log. A log that cannot be written never stops the Campaign. */
+function writeLog(campaign: { log: string }, line: unknown) {
+  try {
+    fs.appendFileSync(campaign.log, `${JSON.stringify(line)}\n`)
+  } catch (e) {
+    console.error(`Campaign log ${campaign.log}: ${e instanceof Error ? e.message : String(e)}`)
+  }
+}
+
+/**
+ * The Campaign as the AI left it at the end of a Turn's player phase, for the log's Turn line: the Agency, every
+ * Serving Agent, Active Mission site, Investigation, discovered Lead, and Faction, each reduced to the values that
+ * explain the AI's choices, so that a long Campaign keeps a log of a manageable size.
+ */
+function logState(live: Any, retired: Any): unknown {
+  const agency = live.agency
+  return {
+    panicHundredths: live.panicHundredths,
+    agency: {
+      money: agency.money,
+      funding: agency.funding,
+      projectedIncome: agency.projectedIncome,
+      projectedUpkeep: agency.projectedUpkeep,
+      servingAgents: agency.servingAgents,
+      deployedAgents: agency.deployedAgents,
+      trainingAgents: agency.trainingAgents,
+      agentCap: agency.agentCap,
+      transportCap: agency.transportCap,
+      trainingCap: agency.trainingCap,
+      hireCost: agency.hireCost,
+      upgrades: Object.fromEntries((agency.upgrades as Any[]).map((u) => [u.id, u.acquisitions])),
+    },
+    agents: (live.agents as Any[]).map((a) => ({
+      id: a.id,
+      status: a.agentStatus,
+      assignment: a.assignment,
+      skill: a.skillHundredths / 100,
+      effectiveSkill: a.effectiveSkill,
+      health: `${a.currentHealthHundredths / 100}/${a.effectiveMaxHealth}`,
+      exhaustion: a.exhaustion,
+      fitForWork: a.fitForWork,
+      ableToFight: a.ableToFight,
+      deployable: a.deployable,
+      combatRating: a.combatRating,
+      recoveryTurnsRemaining: a.recoveryTurnsRemaining,
+      missions: (a.participationHistory as Any[]).filter((p) => p.kind === 'Mission').length,
+    })),
+    missionSites: (live.missionSites as Any[]).map((s) => ({
+      id: s.id,
+      archetype: s.archetype,
+      kind: s.kind,
+      targetFaction: s.targetFaction,
+      initiativeOperationLevel: s.initiativeOperationLevel,
+      operationLevel: s.operationLevel,
+      lifecycle: s.lifecycle,
+      turnsUntilExpiration: s.turnsUntilExpiration,
+      enemies: (s.enemies as Any[]).length,
+      enemiesCombatRating: s.enemiesCombatRating,
+      creationCombatRating: s.creationCombatRating,
+      rewards: s.rewards,
+      penalties: s.penalties,
+      mission: s.mission,
+    })),
+    investigations: (live.investigations as Any[]).map((i) => ({
+      id: i.id,
+      lead: i.lead,
+      turnStarted: i.turnStarted,
+      progress: i.progress,
+      assessed: i.assessed,
+      projectedProgressGain: i.projectedProgressGain,
+      team: (i.currentTeam as Any[]).map((m) => m.agent),
+    })),
+    leads: (retired.leads as Any[]).map((l) => ({
+      id: l.id,
+      faction: l.faction,
+      status: l.status,
+      canBeInvestigatedNow: l.canBeInvestigatedNow,
+      completionCount: l.completionCount,
+      requiredProgress: l.requiredProgress,
+      createsMissionSite: l.createsMissionSite,
+      initiativeOperationLevel: l.initiativeOperationLevel,
+    })),
+    factions: live.factions,
+  }
+}
+
+/** A Turn report for the log: in full, except each Combat's attack log, of which it keeps only the count. */
+function logReport(report: Any): unknown {
+  return {
+    ...report,
+    combatReports: (report.combatReports as Any[]).map(({ log, ...combat }) => ({
+      ...combat,
+      attacks: (log as Any[]).length,
+    })),
   }
 }
 
@@ -227,6 +353,26 @@ function endTurn(campaign: Campaign) {
   })
   campaign.spent = [0, 0, 0]
   campaign.turnStart = startPoint(ok<Any>(player.queries.getCurrentLiveWorldState()))
+  writeLog(campaign, {
+    kind: 'turn',
+    turn: report.turn,
+    state: end.state,
+    actions: campaign.actions.splice(0),
+    report: logReport(report),
+  })
+}
+
+/** Ends a run in the log: why it ended, and the whole Campaign as the Player API shows it, unreduced. */
+function logRun(campaign: Campaign, reason: string, detail: unknown) {
+  const player = campaign.engine.player
+  const live = ok<Any>(player.queries.getCurrentLiveWorldState())
+  writeLog(campaign, { kind: 'run', turn: live.turn, reason, detail, at: new Date().toISOString() })
+  writeLog(campaign, {
+    kind: 'snapshot',
+    turn: live.turn,
+    live,
+    retired: ok<Any>(player.queries.getCurrentRetiredWorldState()),
+  })
 }
 
 /** How many of the last Missions fought a Campaign keeps. */
@@ -461,8 +607,10 @@ function report(campaign: Campaign, force: boolean) {
   port.postMessage({ type: 'stats', id: campaign.id, stats: statsOf(campaign) })
 }
 
-async function create(id: string, seed: string, params: unknown) {
+async function create(message: Extract<ToWorker, { type: 'create' }>) {
+  const { id, seed, params, log } = message
   const b = await booted
+  const thresholds = { ...b.BASIC_AI_THRESHOLDS, ...(params as object) }
   let n = 0
   const holder: { campaign: Campaign | null } = { campaign: null }
   const engine = await b.createEngine(
@@ -482,11 +630,32 @@ async function create(id: string, seed: string, params: unknown) {
         await new Promise((resolve) => setImmediate(resolve))
       },
     },
-    { autopilotAis: [observed(b.createBasicAutopilotAi({ ...b.BASIC_AI_THRESHOLDS, ...(params as object) }), holder)] },
+    { autopilotAis: [observed(b.createBasicAutopilotAi(thresholds), holder)] },
   )
   ok(await engine.session.globalConfiguration.set('autosaveLimit', 0))
   ok(await engine.session.campaign.create({ seed }))
   const live = ok<Any>(engine.player.queries.getCurrentLiveWorldState())
+  fs.writeFileSync(log, '')
+  writeLog(
+    { log },
+    {
+      kind: 'campaign',
+      id,
+      seed,
+      ...message.launch,
+      createdAt: new Date().toISOString(),
+      // Every parameter of the Basic Autopilot AI, and those that differ from BASIC_AI_THRESHOLDS.
+      thresholds,
+      changed: Object.fromEntries(
+        Object.entries(thresholds).filter(
+          ([k, v]) => JSON.stringify(v) !== JSON.stringify((b.BASIC_AI_THRESHOLDS as Record<string, unknown>)[k]),
+        ),
+      ),
+      configuration: ok<Any>(engine.player.queries.getCampaignConfiguration()),
+      gameData: ok<Any>(engine.player.queries.getGameData()),
+      start: logState(live, ok<Any>(engine.player.queries.getCurrentRetiredWorldState())),
+    },
+  )
   const initialAgents = live.agents.length
   const campaign: Campaign = {
     id,
@@ -502,6 +671,8 @@ async function create(id: string, seed: string, params: unknown) {
     turnEnd: null,
     siteRatings: new Map(),
     recordedTurn: 0,
+    log,
+    actions: [],
   }
   holder.campaign = campaign
   campaigns.set(id, campaign)
@@ -521,6 +692,7 @@ async function play(campaign: Campaign, turns: number) {
   campaign.engagementId = null
   endTurn(campaign)
   readMissions(campaign)
+  logRun(campaign, result.reason, result.detail ?? null)
   port.postMessage({
     type: 'done',
     id: campaign.id,
@@ -532,7 +704,7 @@ async function play(campaign: Campaign, turns: number) {
 
 async function handle(message: ToWorker) {
   if (message.type === 'create') {
-    await create(message.id, message.seed, message.params)
+    await create(message)
     return
   }
   const campaign = campaigns.get(message.id)
@@ -559,11 +731,15 @@ booted.then(
 )
 
 port.on('message', (message: ToWorker) => {
-  handle(message).catch((e: unknown) =>
+  handle(message).catch((e: unknown) => {
+    const campaign = campaigns.get(message.id)
+    if (campaign !== undefined) {
+      writeLog(campaign, { kind: 'error', message: e instanceof Error ? (e.stack ?? e.message) : String(e) })
+    }
     port.postMessage({
       type: 'failed',
       id: 'id' in message ? message.id : null,
       message: e instanceof Error ? e.message : String(e),
-    }),
-  )
+    })
+  })
 })

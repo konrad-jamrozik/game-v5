@@ -520,6 +520,20 @@
       .charts:empty {
         display: none;
       }
+      /* Below the charts, the path of the Campaign log, to hand to Claude. */
+      .logline {
+        grid-column: 1 / -1;
+        font-size: 12px;
+        padding: 2px 0 4px;
+        white-space: normal;
+        overflow-wrap: anywhere;
+      }
+      .logline code {
+        user-select: all;
+      }
+      .logline:empty {
+        display: none;
+      }
       .chart {
         width: 360px;
         box-sizing: content-box;
@@ -1106,8 +1120,7 @@
     <button id="playAll">Play more · all</button><button id="stopAll">Stop all</button><button id="removeAll">Remove all</button>
     <span id="summary" style="align-self:center"></span>
   </div><span class="err" id="launchErr"></span></div>
-  <div class="panel"><div class="clist" id="ct"><div id="cbody"></div></div>
-  <div class="note" id="legend"></div></div></section>`
+  <div class="panel"><div class="clist" id="ct"><div id="cbody"></div></div></div></section>`
       }
 
       /** The four layers of a Campaign, each a list of [label, title, cell(stats) → html, width in px, left-aligned]. */
@@ -1270,11 +1283,6 @@
       const cell = (x, key) =>
         `<span class="c${x[4] ? ' left' : ''}" style="width:${x[3]}px"><span class="cl" title="${esc(x[1])}">${esc(x[0])}</span><span data-k="${key}"></span></span>`
 
-      function renderHead() {
-        $('legend').innerHTML =
-          `<b>CR ready</b> is the Combat rating of the Rested deployable Agents, under Glossary below; their number out of all Serving Agents is in brackets, e.g. (29/155), and a team is further limited by the free Transport cap. <b>CR all</b> is the Combat rating of every Serving Agent at full health and exhaustion 0. A label with <b>+</b>, e.g. <b>+Weapon</b>, is how many times that Upgrade was bought. Work counts Serving Agents by Assignment, In transit included; <b>Rested deployable</b> and <b>Not rested</b> split those on Training and on Standby, so the two Rested deployable counts add up to the number after CR ready. Each Faction shows the next Initiative Mission site to win against it, one level above the highest Won. Below it, four checks, 🟢 when it holds and 🔴 when not: <b>Site</b>, whether a Mission site of it is available, and otherwise the state of the Lead that creates it; then the three tests of the Basic Autopilot AI's winning team, with the Campaign's parameters: <b>CR</b>, CR ready against the Enemies' Combat rating, as a percentage, above the Combat margin; <b>Agents</b>, the Rested deployable Agents against the Agents needed, one per <code>enemiesPerAgent</code> Enemies (<b>en</b>); and <b>Transport</b>, the free Transport cap against the Agents needed. Missions: Won / Lost / Expired. Below the layers, <b>Fought</b> lists the last four Missions fought, the latest first: the Turn, the kind and name of the Mission site, the Agents sent (<b>ag</b>), the team's Combat rating against the Enemies' at Combat start, the result, and the Agents Killed (<b>dead</b>) and Incapacitated (<b>incap</b>). At the bottom, five charts of every Turn played: the Serving Agents by status and by effective skill band, with lines of the Agents recovering and of those of exhaustion above 70 and above 30, both at the end of each Turn's player phase, just before its Advance turn, and for the Current Turn as they are now; the income above 0, the expenditures below 0, and the Net flow line of each ended Turn; the money (left axis) and the Agents and caps (right axis) at each Turn start; and the Combat strength: the Combat rating of every Serving Agent as a bar, its Deployable Agents' part at the bottom, against lines of the Combat rating of the last Mission site created and the mean of the last five, as each was when created. Hover a chart for a Turn's values. Hover a label for its meaning. Time is the latest run's wall-clock time, and the total of every run. <b>Load params</b> copies a Campaign's parameters into the Parameters editor above, e.g. to launch a variant of it.`
-      }
-
       const rows = new Map()
 
       /** The parts of a Campaign block, by key, so that only the parts that changed are written again. */
@@ -1316,6 +1324,9 @@
                 ? '<span class="f dim">none yet</span>'
                 : ''
         }
+        cells.log = c.log
+          ? `<span class="dim" title="Every Turn of the Campaign as JSON Lines: the Agency, Agents, Mission sites, Investigations and Leads at the end of each player phase, the Player actions the AI requested, and the Turn report; and the whole Campaign at the end of every run">Log</span> <code>${esc(c.log)}</code> <button type="button" data-act="copylog" title="Copy the log's path">Copy path</button>`
+          : ''
         return cells
       }
 
@@ -1844,7 +1855,7 @@
           { length: RECENT_LINES },
           (_, i) =>
             `<div class="line rm l${LAYER_NAMES.length + i + 1}"><span class="c layer"${i === 0 ? ' title="The last Missions fought, the latest first"' : ''}>${i === 0 ? 'Fought' : ''}</span><span data-k="rm${i}"></span></div>`,
-        ).join('')}</div><div class="charts"></div>`
+        ).join('')}</div><div class="charts"></div><div class="logline" data-k="log"></div>`
         $('cbody').appendChild(el)
         const cells = {}
         for (const k of el.querySelectorAll('[data-k]')) cells[k.dataset.k] = k
@@ -1868,7 +1879,6 @@
         if (LAYOUT === null || key !== layoutKey) {
           LAYOUT = layers()
           layoutKey = key
-          renderHead()
           $('cbody').innerHTML = ''
           rows.clear()
         }
@@ -1971,6 +1981,20 @@
           else if (a === 'remove') post('api/remove', { ids: [id] })
           else if (a === 'use') useParams(rows.get(id).campaign.params)
           else if (a === 'expand') expandChart(rows.get(id), b.dataset.kind)
+          else if (a === 'copylog') {
+            const done = (label) => {
+              b.textContent = label
+              setTimeout(() => (b.textContent = 'Copy path'), 1500)
+            }
+            try {
+              navigator.clipboard.writeText(rows.get(id).campaign.log).then(
+                () => done('Copied'),
+                () => done('Select it and press Ctrl+C'),
+              )
+            } catch {
+              done('Select it and press Ctrl+C')
+            }
+          }
         }
         // Escape, or a press on the backdrop around it, closes a chart shown full screen.
         document.addEventListener('keydown', (e) => {

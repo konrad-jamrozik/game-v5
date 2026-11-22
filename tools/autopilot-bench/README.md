@@ -2,7 +2,7 @@
 
 A local page for tuning the Basic Autopilot AI. Set its parameters, e.g. how fast it hires, how large a reserve it keeps, or which Upgrades it favors, launch a number of Campaigns played up to a Turn, and compare them: each Campaign is a row that shows the Agency, the work of its Agents, its strength, and its Missions at the Campaign's Current Turn, and charts of every Turn it has played. Play more Turns of one Campaign or of all of them at any time.
 
-It is a tool for the Game designer and the AI designer, not a specification and not part of any Implementation. It writes nothing to the repository.
+It is a tool for the Game designer and the AI designer, not a specification and not part of any Implementation. It writes nothing to the repository; it writes only the Campaign logs, outside it.
 
 ## Run it
 
@@ -15,7 +15,7 @@ npm run autopilot:bench
 Then open <http://127.0.0.1:4718/>. To use another clone or another port:
 
 ```bash
-node tools/autopilot-bench/server.ts --impl <game-v5-impl-web clone> --port <number>
+node tools/autopilot-bench/server.ts --impl <game-v5-impl-web clone> --port <number> --logs <folder>
 ```
 
 A change to the Bench reaches it without a restart wherever it can, because the Campaigns live in the server process and a restart loses them:
@@ -65,6 +65,17 @@ Every number is read through Player API queries, as a player could see it, excep
   - **Agents by effective skill**: a stacked bar per Turn, at the same moment as Agents by status, of the Serving Agents per effective skill band, as the game's chart has them: eleven 50 wide, i.e. 0–49, 50–99, and so on up to 500–549, and a last band `550+`, the lowest at the bottom, each in the game's colour for it, up to the highest band any Agent of the Campaign reached. A band without an Agent draws nothing. Three lines over the bars count, at the same moment, the Agents recovering, i.e. whose Assignment is Recovery, In transit to it included, in red; those of exhaustion above 70, in orange; and those of exhaustion above 30, in yellow, which include those above 70.
   - **Combat strength**: per Turn, at the same moment as Agents by status, the game's Combat strength chart: a stacked bar of the Combat rating of every Serving Agent taken as one side, as `previewDeployment` reports it, whose lower part is that of the Deployable Agents and upper part the rest of it; and two lines, the Creation Combat rating of the last Mission site created and the mean of the last five, rounded down, from the first Turn a Mission site exists. The worker thread takes a Mission site's `creationCombatRating` when the engine reports one, and otherwise the Combat rating of its Enemies the first time it sees the Mission site, while they are still as created; a Campaign launched before the chart existed shows it empty.
 
+## Campaign log
+
+Below its charts, each Campaign block shows the path of its log, with a **Copy path** button, e.g. to hand the log to Claude to find out what went wrong in the Campaign. The worker thread writes it as the Campaign plays, as JSON Lines, one JSON object per line, whose `kind` tells what it holds:
+
+- `campaign`, the first line: the Campaign seed, the launch and its engine commit, every parameter of the Basic Autopilot AI and those that differ from `BASIC_AI_THRESHOLDS`, the Campaign configuration, the game data of `getGameData`, and the Campaign at its start, reduced as a `turn` line reduces it.
+- `turn`, one per ended Turn: `state`, the Campaign at the end of the Turn's player phase, i.e. just before its Advance turn, reduced to the Agency, every Serving Agent, Active Mission site, Investigation, discovered Lead, and Faction, each with the values that explain the AI's choices; `actions`, every Player action the AI requested in the Turn other than Advance turn, in order, with its arguments, whether it was committed or the error that rejected it, and the money it changed; and `report`, the Turn report of its Advance turn in full, except that each Combat keeps only the number of its attacks rather than their log.
+- `run`, at the end of every run: the Current Turn and the disengagement reason, e.g. `limitReached` or `campaignEnded`; then `snapshot`, the whole Campaign as `getCurrentLiveWorldState` and `getCurrentRetiredWorldState` show it, unreduced.
+- `error`, when the worker thread failed to play the Campaign, with the error's stack.
+
+The logs of one server start are in one folder, named by the time it started, under `--logs`, by default `autopilot-bench` in the operating system's temporary folder, so that a restart, which reuses the Campaign IDs, never writes into an earlier log. A log is named by the Campaign's ID and seed, e.g. `c3-seed-3.jsonl`. Removing a Campaign keeps its log. A Campaign of 150 Turns logs about 3 MB.
+
 ## Parameters
 
 The page lists every value of `BASIC_AI_THRESHOLDS`, the engine's defaults, and the weight of every Upgrade other than a Cap Upgrade. A value the engine has that the page does not know appears under Other, without a description, and is passed to the AI as edited. The edits, the launch fields, and More turns are kept in the browser for the next visit.
@@ -73,9 +84,9 @@ The page lists every value of `BASIC_AI_THRESHOLDS`, the engine's defaults, and 
 
 ## Files
 
-| Path          | Content                                                                                     |
-| ------------- | ------------------------------------------------------------------------------------------- |
-| `index.html`  | The page: the parameters, the launch, the Campaign rows, and the glossary.                  |
-| `server.ts`   | Serves the page, holds the Campaigns and their runs, and starts the worker threads.         |
-| `worker.ts`   | Loads the engine and the AI from the Implementation clone and plays the Campaigns given it. |
-| `protocol.ts` | The messages between the server and its worker threads, and the stats a Campaign reports.   |
+| Path | Content |
+| --- | --- |
+| `index.html` | The page: the parameters, the launch, the Campaign rows, and the glossary. |
+| `server.ts` | Serves the page, holds the Campaigns and their runs, and starts the worker threads. |
+| `worker.ts` | Loads the engine and the AI from the Implementation clone, plays the Campaigns given it, and writes their logs. |
+| `protocol.ts` | The messages between the server and its worker threads, and the stats a Campaign reports. |
