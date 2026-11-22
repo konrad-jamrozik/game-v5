@@ -941,6 +941,7 @@
         wu: 0,
         au: 0,
         target: 90,
+        trials: 100,
         team: true,
         inv_n: 4,
         inv_skill: 100,
@@ -1024,7 +1025,7 @@
   ${panel('Combat parameters', 'content/combat/combat_parameters.yaml', row(cp + '.weapon_damage_range', 'damage roll is base damage ± this fraction', { step: 0.05 }) + row(cp + '.retreat_below_agent_rating_fraction', 'Agents retreat below this fraction of their starting Combat rating…', { step: 0.05 }) + row(cp + '.retreat_at_enemy_to_agent_rating', "…while Enemies hold at least this ratio of the Agents' rating", { step: 0.05 }) + row(cp + '.incapacitation_skill_fraction', 'Incapacitated at this fraction of base skill or less', { step: 0.05 }) + row(cp + '.rating_base_health', 'effective max health at which the health term of the rating factor is 1') + row(cp + '.rating_base_armor', 'effective armor at which the armor term of the rating factor is 1') + row(cp + '.rating_base_weapon_damage', 'effective weapon damage at which the attack term of the rating factor is 1') + row(cp + '.rating_team_size_exponent', 'a side of n Combatants able to fight is rated n ^ (this − 1) times the sum of what each adds', { min: 1, step: 0.05 }) + extra(cp))}
   ${panel('Field agent and Combat exhaustion', 'content/agents/agent_archetypes.yaml · agent_parameters.yaml', `<div class="kv"><span class="k"><code>field_agent.base_skill</code><small>a newly hired Agent</small></span>${inp('field_agent.base_skill')}</div><div class="kv"><span class="k"><code>field_agent.base_health</code><small></small></span>${inp('field_agent.base_health', { min: 1 })}</div><div class="kv"><span class="k"><code>field_agent.weapon</code><small></small></span>${sel('field_agent.weapon', WP)}</div><div class="kv"><span class="k"><code>field_agent.armor</code><small>the Armor Upgrades add to its base armor</small></span>${sel('field_agent.armor', AR)}</div>` + row(ap + '.exhaustion_per_attack', 'to the attacker, hit or miss') + row(ap + '.exhaustion_per_defense', 'to the defender, hit or miss') + row(ap + '.exhaustion_free_points', 'exhaustion up to this costs no skill') + row(ap + '.skill_penalty_pct_per_exhaustion', '% of skill lost per point above the free points', { step: 0.5 }) + row(ap + '.exhaustion_incapacitation', 'Incapacitated at this exhaustion'))}
   </div></div>
-  ${panel('Test team', 'not a GDR: the team every Mission site below is fought with', `<div class="ctl">${tin('n', 'Agents', { min: 1, max: 300 })}${tin('skill', 'Base skill', { min: 1 })}${tin('wu', 'Weapon damage upgrades', { add: true })}${tin('au', 'Armor upgrades', { add: true })}${tin('target', 'Target win %', { min: 1, max: 100 })}${tcheck('team', 'Find team for target')}</div><div class="teamcr" id="teamcr"></div><div class="note" id="teamnote"></div><div class="note" id="simstatus"></div>`, 'read')}
+  ${panel('Test team', 'not a GDR: the team every Mission site below is fought with', `<div class="ctl">${tin('n', 'Agents', { min: 1, max: 300 })}${tin('skill', 'Base skill', { min: 1 })}${tin('wu', 'Weapon damage upgrades', { add: true })}${tin('au', 'Armor upgrades', { add: true })}${tin('target', 'Target win %', { min: 1, max: 100 })}${tin('trials', 'Combats per site', { min: 1, max: 10000 })}${tcheck('team', 'Find team for target')}</div><div class="teamcr" id="teamcr"></div><div class="note" id="teamnote"></div><div class="note" id="simstatus"></div>`, 'read')}
   ${panel(
     'Mission sites',
     'content/missions/mission_site_archetypes.yaml',
@@ -1034,10 +1035,10 @@
     ]
       .map(
         ([kind, list]) =>
-          `<h4 class="sites">${kind} Mission sites</h4><div class="tw"><table><tr><th>MissionSiteArchetype</th><th style="text-align:left">Kind</th><th>expires</th>${EN.map((e) => `<th title="${e}">${EN_AB[e]}</th>`).join('')}<th class="d">Enemies</th><th class="d">Rating</th><th class="d" title="This site's Rating divided by the Rating of the row above">× above</th><th class="d" title="Team Combat rating divided by this site's Rating">Team / Rating</th><th class="d">Test team wins, of ${TRIALS} Combats</th><th class="d">Agents killed</th><th class="d">Team for target</th><th class="d">Transport upgrades</th><th class="d">Search</th></tr>${list.map((s, i) => `<tr${rowClass(s, i, list)}><td class="name">${title(s)}</td><td id="sl_${s}" style="text-align:left;font-family:var(--body);color:var(--text2)">${BASE[s].level ? 'Response · operation level ' + BASE[s].level : 'Initiative'}</td><td>${inp(s + '.expires_in_turns', { min: 1 })}</td>${EN.map((e) => `<td class="w">${inp(s + '.enemies.' + e)}</td>`).join('')}<td class="d" id="sc_${s}"></td><td class="d" id="sr_${s}"></td><td class="d" id="sm_${s}"></td><td class="d" id="sp_${s}"></td><td class="d" id="sw_${s}" style="text-align:left"></td><td class="d" id="sk_${s}"></td><td class="d" id="sn_${s}"></td><td class="d" id="st_${s}"></td><td class="d" id="sx_${s}"></td></tr>`).join('')}</table></div>`,
+          `<h4 class="sites">${kind} Mission sites</h4><div class="tw"><table><tr><th>MissionSiteArchetype</th><th style="text-align:left">Kind</th><th>expires</th>${EN.map((e) => `<th title="${e}">${EN_AB[e]}</th>`).join('')}<th class="d">Enemies</th><th class="d">Rating</th><th class="d" title="This site's Rating divided by the Rating of the row above">× above</th><th class="d" title="Team Combat rating divided by this site's Rating">Team / Rating</th><th class="d">Test team wins</th><th class="d">Agents killed</th><th class="d">Team for target</th><th class="d" title="The Combat rating of the team for target">Its rating</th><th class="d" title="The Combat rating of the team for target divided by this site's Rating">Its rating / Rating</th><th class="d">Transport upgrades</th><th class="d">Search</th></tr>${list.map((s, i) => `<tr${rowClass(s, i, list)}><td class="name">${title(s)}</td><td id="sl_${s}" style="text-align:left;font-family:var(--body);color:var(--text2)">${BASE[s].level ? 'Response · operation level ' + BASE[s].level : 'Initiative'}</td><td>${inp(s + '.expires_in_turns', { min: 1 })}</td>${EN.map((e) => `<td class="w">${inp(s + '.enemies.' + e)}</td>`).join('')}<td class="d" id="sc_${s}"></td><td class="d" id="sr_${s}"></td><td class="d" id="sm_${s}"></td><td class="d" id="sp_${s}"></td><td class="d" id="sw_${s}" style="text-align:left"></td><td class="d" id="sk_${s}"></td><td class="d" id="sn_${s}"></td><td class="d" id="sq_${s}"></td><td class="d" id="sv_${s}"></td><td class="d" id="st_${s}"></td><td class="d" id="sx_${s}"></td></tr>`).join('')}</table></div>`,
       )
       .join('') +
-      `<div class="note"><b>× above</b> is a site's Rating divided by the Rating of the row above it in the same table, and <b>Team / Rating</b> is the team Combat rating as a percentage of the site's Rating.<b>Every Combat is fought by the game-v5-impl-web engine itself</b>, through <code>developer.tools.fightCombatBatch</code>, with the values on this page passed as its Combatants and GDR values; this page has no Combat rules of its own. <b>Each win rate is the share of ${TRIALS} Combats the test team Prevailed in</b>, and Agents killed is the mean over those ${TRIALS}. A Mission is Won only when the Combat outcome is Prevailed, so a retreat counts as a loss. Team for target is the smallest team of the test team's skill and upgrades that reaches the target win rate, searched up to ${MAXN} Agents; the search starts from the team size that the Combat ratings estimate, and each team size tried is one batch of at most ${TRIALS} Combats that stops as soon as its answer is certain. Transport upgrades is how many it takes to deploy that team at once. The Initiative operation levels come from <code>developer.queries.getInitiativeOperationLevels</code>. Each Combat's Detached seed is fixed, so a changed number reflects your edit and not new dice: Combat <i>i</i> of a team of <i>n</i> at a Mission site has the Detached seed <code>&lt;site&gt;|&lt;n&gt;#&lt;i&gt;</code>, which <code>developer.tools.fightCombat</code> shows in full.</div>`,
+      `<div class="note"><b>× above</b> is a site's Rating divided by the Rating of the row above it in the same table, and <b>Team / Rating</b> is the team Combat rating as a percentage of the site's Rating.<b>Every Combat is fought by the game-v5-impl-web engine itself</b>, through <code>developer.tools.fightCombatBatch</code>, with the values on this page passed as its Combatants and GDR values; this page has no Combat rules of its own. <b>Each win rate is the share of the test team's Combats per site that it Prevailed in</b>, and Agents killed is the mean over those Combats. A Mission is Won only when the Combat outcome is Prevailed, so a retreat counts as a loss. Team for target is the smallest team of the test team's skill and upgrades that reaches the target win rate, searched up to ${MAXN} Agents; the search starts from the team size that the Combat ratings estimate, and each team size tried is one batch of at most the Combats per site that stops as soon as its answer is certain. <b>Its rating</b> is the Combat rating of the team for target, and <b>Its rating / Rating</b> that rating divided by the site's Rating. Transport upgrades is how many it takes to deploy that team at once. The Initiative operation levels come from <code>developer.queries.getInitiativeOperationLevels</code>. Each Combat's Detached seed is fixed, so a changed number reflects your edit and not new dice: Combat <i>i</i> of a team of <i>n</i> at a Mission site has the Detached seed <code>&lt;site&gt;|&lt;n&gt;#&lt;i&gt;</code>, which <code>developer.tools.fightCombat</code> shows in full.</div>`,
   )}
   </section>`)
         /* Agents */
@@ -1119,8 +1120,7 @@
         '<svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><g stroke="currentColor" stroke-linecap="round" fill="none"><line x1="13.5" y1="2.5" x2="6.5" y2="9.5" stroke-width="2.2"/><line x1="4" y1="8" x2="8" y2="12" stroke-width="1.6"/><line x1="5.5" y1="10.5" x2="2.5" y2="13.5" stroke-width="2"/></g></svg>'
       const SHIELD =
         '<svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5 14 3.5V8c0 3.5-3 5.8-6 6.8C5 13.8 2 11.5 2 8V3.5z" fill="currentColor"/></svg>'
-      const TRIALS = 100,
-        MAXN = 300
+      const MAXN = 300
       /* LOCAL is what server.ts reported when the page loaded: the engine it runs and the GDR values it read from disk. */
       let ENGINE = '',
         LOCAL = null,
@@ -1274,7 +1274,15 @@
         SITES.forEach((s) => {
           cell('sw', s).textContent = '–'
           cell('sn', s).textContent = '–'
+          paintFit(s, 0)
         })
+      }
+      /* Paints the Combat rating of a site's team for target of `need` Agents, and its ratio to the site's Rating; `blank` when there is none. */
+      function paintFit(s, need, blank = '–') {
+        const r = siteRating(s).rating,
+          q = need ? rateSide(need * teamRatings().adds, need) : 0
+        cell('sq', s).textContent = need ? f(q, 0) : blank
+        cell('sv', s).textContent = need && r ? '×' + f(q / r, 2) : blank
       }
       /* Paints one result message; true when it is the last message of its Mission site. */
       function paintMsg(m) {
@@ -1296,12 +1304,14 @@
         if (m.type === 'need' && m.need === 'skipped') {
           /* Find team for target is off: only the test team was fought. */
           cell('sn', s).textContent = '–'
+          paintFit(s, 0)
           cell('st', s).textContent = '–'
           return true
         }
         if (m.type === 'need') {
           const need = m.need
           cell('sn', s).textContent = need ? need : '>' + MAXN
+          paintFit(s, need)
           if (need) {
             const cap = cur.economy.base_transport_cap,
               inc = cur.transport_cap.increment,
@@ -1316,6 +1326,7 @@
           cell('sw', s).textContent = 'rejected'
           cell('sw', s).title = m.message
           cell('sn', s).textContent = '–'
+          paintFit(s, 0)
           cell('st', s).textContent = '–'
           return true
         }
@@ -1406,7 +1417,7 @@
             gdrValues,
             target: T.target,
             findTeam: T.team !== false,
-            trials: TRIALS,
+            trials: T.trials,
             maxn: MAXN,
             rating: siteRating(s).rating,
             agentRating: ratings.adds,
@@ -1442,6 +1453,7 @@
           cell('sw', s).title = ''
           cell('sk', s).textContent = ''
           cell('sn', s).textContent = '…'
+          paintFit(s, 0, '')
           cell('st', s).textContent = ''
           cell('sx', s).textContent = ''
         })
@@ -1897,7 +1909,11 @@
           if (!Number.isFinite(v)) return
           const k = el.dataset.t
           T[k] =
-            k === 'n' || k === 'inv_n' ? Math.max(1, Math.min(k === 'n' ? 300 : 99, Math.round(v))) : Math.max(0, v)
+            k === 'n' || k === 'inv_n'
+              ? Math.max(1, Math.min(k === 'n' ? 300 : 99, Math.round(v)))
+              : k === 'trials'
+                ? Math.max(1, Math.min(10000, Math.round(v)))
+                : Math.max(0, v)
           later()
         }
       }
