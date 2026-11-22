@@ -46,7 +46,9 @@ interface Campaign {
   /** The ended Turns not yet reported to server.ts. */
   unsent: TurnPoint[]
   /** The Serving Agents of the Turn whose Advance turn was requested last, read just before it. */
-  turnEnd: { status: number[]; skill: number[] } | null
+  turnEnd: { status: number[]; skill: number[]; strength: number[] } | null
+  /** The Creation Combat rating of every Mission site seen so far, by Instance ID. */
+  siteRatings: Map<string, number>
   /** The last Turn recorded in the series. */
   recordedTurn: number
 }
@@ -91,6 +93,60 @@ function agentsPoint(agents: readonly Any[]): {
   return { status, skill }
 }
 
+/**
+ * A Deployable Agent, as the engine defines it: In base and able to take orders, i.e. At assignment on Standby or
+ * Training, and Capable for deployment, i.e. not meeting the incapacitation condition with its current values, which
+ * the engine reports as `ableToFight`.
+ */
+const isDeployable = (a: Any): boolean =>
+  a.canBeAssigned && (a.assignment?.kind === 'Standby' || a.assignment?.kind === 'Training') && a.ableToFight
+
+/**
+ * A Rested deployable Agent of the Basic Autopilot AI: a Deployable Agent that is also Fit to start work, i.e. one the
+ * AI may form a team of for a Mission site.
+ */
+const isRestedDeployable = (a: Any): boolean => isDeployable(a) && a.fitForWork
+
+/** The Combat rating of the given Agents taken as one side, as `previewDeployment` reports it; 0 for none. */
+function ratingOf(player: Any, agents: readonly Any[]): number {
+  if (agents.length === 0) return 0
+  return ok<Any>(
+    player.queries.previewDeployment(
+      null,
+      agents.map((a) => a.id),
+    ),
+  ).teamCombatRating as number
+}
+
+/** The number that ends a Mission site's Instance ID, which orders the Mission sites by creation. */
+function siteNumber(id: string): number {
+  return Number(/(\d+)$/.exec(id)?.[1] ?? 0)
+}
+
+/**
+ * The Combat strength of a Turn point, as the game's Combat strength chart holds it: the Combat rating of the
+ * Deployable Agents and of every Serving Agent, each taken as one side, then the Creation Combat rating of the last
+ * Mission site created and the mean of the last five, rounded down, or -1 for both while no Mission site exists. A
+ * Mission site's Creation Combat rating is the engine's `creationCombatRating` when it reports one, and otherwise the
+ * Combat rating of its Enemies the first time the bench sees it, i.e. while they are still as created, since the bench
+ * reads every Turn.
+ */
+function strengthPoint(campaign: Campaign, player: Any): number[] {
+  const live = ok<Any>(player.queries.getCurrentLiveWorldState())
+  const retired = ok<Any>(player.queries.getCurrentRetiredWorldState())
+  const agents: Any[] = live.agents
+  for (const site of [...(live.missionSites as Any[]), ...(retired.missionSites as Any[])]) {
+    if (!campaign.siteRatings.has(site.id)) {
+      campaign.siteRatings.set(site.id, (site.creationCombatRating ?? site.enemiesCombatRating) as number)
+    }
+  }
+  const ordered = [...campaign.siteRatings.entries()].sort((x, y) => siteNumber(x[0]) - siteNumber(y[0]))
+  const last = ordered.slice(-5).map(([, rating]) => rating)
+  const sites =
+    last.length === 0 ? [-1, -1] : [last[last.length - 1]!, Math.floor(last.reduce((a, b) => a + b, 0) / last.length)]
+  return [ratingOf(player, agents.filter(isDeployable)), ratingOf(player, agents), ...sites]
+}
+
 function startPoint(live: Any): number[] {
   const agency = live.agency
   return [agency.money, agency.servingAgents, agency.agentCap, agency.transportCap, agency.trainingCap]
@@ -124,7 +180,10 @@ function observed(ai: Any, holder: { campaign: Campaign | null }): Any {
         advanceTurn: async () => {
           const campaign = holder.campaign
           if (campaign === null) return player.actions.advanceTurn()
-          campaign.turnEnd = agentsPoint(ok<Any>(host().queries.getCurrentLiveWorldState()).agents)
+          campaign.turnEnd = {
+            ...agentsPoint(ok<Any>(host().queries.getCurrentLiveWorldState()).agents),
+            strength: strengthPoint(campaign, host()),
+          }
           const result = await player.actions.advanceTurn()
           endTurn(campaign)
           return result
@@ -155,6 +214,7 @@ function endTurn(campaign: Campaign) {
     start: campaign.turnStart,
     status: end.status,
     skill: end.skill,
+    strength: end.strength,
     money: [funding, report.income.income - funding, rewards, report.upkeep.upkeep, hiring, caps, other],
   })
   campaign.spent = [0, 0, 0]
@@ -266,21 +326,9 @@ function statsOf(campaign: Campaign): CampaignStats {
   const skillNow = agents.reduce((s, a) => s + (a.ableToFight ? (a.effectiveSkill as number) : 0), 0)
   const skillFresh = agents.reduce((s, a) => s + Math.floor((a.skillHundredths as number) / 100), 0)
   const ratingFresh = Math.round(skillFresh * (skillNow > 0 ? ratingNow / skillNow : 1))
-  // The Agents the Basic Autopilot AI may form a team of for a Mission site: its Deployable Agents, i.e. those In base,
-  // i.e. on Standby or Training and able to take orders, that are Fit to start work and do not meet the incapacitation
-  // condition with their current values, which the engine reports as `ableToFight`, so that deployAgents accepts them.
-  const isDeployable = (a: Any): boolean =>
-    a.canBeAssigned &&
-    (a.assignment?.kind === 'Standby' || a.assignment?.kind === 'Training') &&
-    a.fitForWork &&
-    a.ableToFight
-  const ready = agents.filter(isDeployable)
-  const ratingReady = ok<Any>(
-    player.queries.previewDeployment(
-      null,
-      ready.map((a) => a.id),
-    ),
-  ).teamCombatRating as number
+  // The Agents the Basic Autopilot AI may form a team of for a Mission site: its Rested deployable Agents.
+  const ready = agents.filter(isRestedDeployable)
+  const ratingReady = ratingOf(player, ready)
   const missions = { Response: { won: 0, lost: 0, expired: 0 }, Initiative: { won: 0, lost: 0, expired: 0 } }
   const siteById = new Map<string, Any>(retired.missionSites.map((s: Any) => [s.id, s]))
   const best = new Map<string, { level: number | null; name: string }>()
@@ -307,12 +355,12 @@ function statsOf(campaign: Campaign): CampaignStats {
   }
   const all = [...agents, ...(retired.agents as Any[])]
   const assignments: Record<string, number> = {}
-  const deployable: Record<string, number> = {}
+  const restedDeployable: Record<string, number> = {}
   for (const a of agents) {
     const kind = (a.assignment?.kind as string | undefined) ?? 'None'
     assignments[kind] = (assignments[kind] ?? 0) + 1
-    if (isDeployable(a)) {
-      deployable[kind] = (deployable[kind] ?? 0) + 1
+    if (isRestedDeployable(a)) {
+      restedDeployable[kind] = (restedDeployable[kind] ?? 0) + 1
     }
   }
   return {
@@ -321,6 +369,7 @@ function statsOf(campaign: Campaign): CampaignStats {
       turn: live.turn,
       start: campaign.turnStart,
       ...agentsPoint(agents),
+      strength: strengthPoint(campaign, player),
       money: null,
     },
     turn: live.turn,
@@ -338,7 +387,7 @@ function statsOf(campaign: Campaign): CampaignStats {
     transportCap: agency.transportCap,
     trainingCap: agency.trainingCap,
     assignments,
-    deployable,
+    restedDeployable,
     meanSkill:
       agents.length === 0 ? 0 : agents.reduce((s, a) => s + (a.skillHundredths as number), 0) / agents.length / 100,
     upgrades: Object.fromEntries((agency.upgrades as Any[]).map((u) => [u.id, u.acquisitions as number])),
@@ -443,6 +492,7 @@ async function create(id: string, seed: string, params: unknown) {
     spent: [0, 0, 0],
     unsent: [],
     turnEnd: null,
+    siteRatings: new Map(),
     recordedTurn: 0,
   }
   holder.campaign = campaign

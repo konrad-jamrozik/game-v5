@@ -132,6 +132,10 @@ A chart with several series needs more hues than the roles above can spare, and 
 | Assets | [Transport cap](../mechanics/economy-and-upgrades.md#glossary) | `#3D8FD9` |
 | Assets | [Training cap](../mechanics/economy-and-upgrades.md#glossary) | `#E8C547` |
 | Agents by [effective skill](../mechanics/agents-spec.md#combatant-attributes) | Skill bands 1 to 12, from the lowest | `#6A5ACD`, `#4A86D9`, `#2FB0B8`, `#45BF6E`, `#A3CC3F`, `#E3C43A`, `#F0913A`, `#E8605A`, `#D94A8C`, `#B45AD6`, `#F2A6D8`, `#F4EFE6` |
+| Combat strength | Deployable Agents | `#4A86D9` |
+| Combat strength | Other Agents | `#2E4E78` |
+| Combat strength | Last [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) | `#E8605A` |
+| Combat strength | Last 5 Mission sites | `#E3C43A` |
 
 ## Typography
 

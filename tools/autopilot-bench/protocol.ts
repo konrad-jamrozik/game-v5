@@ -74,6 +74,12 @@ export interface TurnPoint {
   /** At the same moment: Serving Agents per effective skill band of 50, the lowest first, i.e. 0–49, 50–99, and so on. */
   readonly skill: readonly number[]
   /**
+   * At the same moment: the Combat rating of the Deployable Agents and of every Serving Agent, each taken as one side,
+   * then the Creation Combat rating of the last Mission site created and the mean of the last five, rounded down, or
+   * -1 for both while no Mission site exists.
+   */
+  readonly strength: readonly number[]
+  /**
    * The money of the ended Turn, none for the Current Turn: funding, contracting income, Mission rewards, upkeep,
    * Agent hiring, Cap Upgrades, and other Upgrades, every expenditure a positive number.
    */
@@ -102,15 +108,15 @@ export interface CampaignStats {
   readonly trainingCap: number
   /** Serving Agents by the kind of their Current assignment, those In transit included. */
   readonly assignments: Record<string, number>
-  /** The Basic Autopilot AI's Deployable Agents by the kind of their Current assignment, Standby or Training. */
-  readonly deployable: Record<string, number>
+  /** The Basic Autopilot AI's Rested deployable Agents by the kind of their Current assignment, Standby or Training. */
+  readonly restedDeployable: Record<string, number>
   /** The mean base skill of the Serving Agents. */
   readonly meanSkill: number
   /** Acquisitions by Upgrade ID. */
   readonly upgrades: Record<string, number>
   /**
    * The Combat rating, as `previewDeployment` reports it, of the Agents the Basic Autopilot AI may form a team of: its
-   * Deployable Agents.
+   * Rested deployable Agents.
    */
   readonly ratingReady: number
   /** How many Agents that is. */

@@ -509,7 +509,7 @@
         white-space: normal;
         font-size: 12px;
       }
-      /* Below the Missions fought, four per-Turn charts, side by side where the block is wide enough. */
+      /* Below the Missions fought, five per-Turn charts, side by side where the block is wide enough. */
       .charts {
         grid-column: 1 / -1;
         display: flex;
@@ -863,11 +863,15 @@
       const GLOSSARY = [
         [
           'Deployable Agent',
-          'An Agent the AI can deploy to a Mission site now: In base, Fit to start work (exhaustion of at most <code>exhaustion_work_start_max</code> and no health lost), and not meeting the incapacitation condition with its current values, so that the engine accepts it. Such an Agent is on Standby or Training.',
+          'An Agent the engine can deploy to a Mission site now: In base and able to take orders, i.e. on Standby or Training, and Capable for deployment, i.e. not meeting the incapacitation condition with its current values. A Recovering Agent is In base but never Deployable.',
+        ],
+        [
+          'Rested deployable Agent',
+          'A Deployable Agent that is also Fit to start work (exhaustion of at most <code>exhaustion_work_start_max</code> and no health lost): an Agent the AI deploys to a Mission site.',
         ],
         [
           'Agent reserve',
-          'The Deployable Agents the AI holds back from Contracting and Investigations, so that it can form a team for the next Mission site. Its target size is <code>reservePct</code> of the roster.',
+          'The Rested deployable Agents the AI holds back from Contracting and Investigations, so that it can form a team for the next Mission site. Its target size is <code>reservePct</code> of the roster.',
         ],
         [
           'Savings floor',
@@ -1061,7 +1065,7 @@
         const ml = (m) =>
           `<span class="good">${m.won}</span><span class="dim">/</span><span class="bad">${m.lost}</span><span class="dim">/${m.expired}</span>`
         const n = (s, kind) => s.assignments?.[kind] ?? 0
-        const dep = (s, kind) => s.deployable?.[kind] ?? 0
+        const dep = (s, kind) => s.restedDeployable?.[kind] ?? 0
         const pair = (training, standby) =>
           `Training ${fmt(training)} <span class="dim">·</span> Standby ${fmt(standby)}`
         const L1 = [
@@ -1098,15 +1102,15 @@
         ]
         const L4 = [
           [
-            'Deployable',
-            'Deployable Agents on Training and on Standby; together, the number after CR ready',
+            'Rested deployable',
+            'Rested deployable Agents on Training and on Standby; together, the number after CR ready',
             (s) => pair(dep(s, 'Training'), dep(s, 'Standby')),
             200,
             true,
           ],
           [
-            'Non-deployable',
-            'Agents on Training and on Standby, In transit included, that are not Deployable Agents, e.g. resting until Fully rested, or not Fit to start work',
+            'Not rested',
+            'Agents on Training and on Standby, In transit included, that are not Rested deployable Agents, e.g. resting until Fully rested, or not Fit to start work',
             (s) => pair(n(s, 'Training') - dep(s, 'Training'), n(s, 'Standby') - dep(s, 'Standby')),
             200,
             true,
@@ -1133,7 +1137,7 @@
         const L2 = [
           [
             'CR ready',
-            'Combat rating of the Deployable Agents; after it, their number of all Serving Agents',
+            'Combat rating of the Rested deployable Agents; after it, their number of all Serving Agents',
             (s) => `${fmt(s.ratingReady)} <span class="dim">(${fmt(s.ready)}/${fmt(s.agents)})</span>`,
             140,
           ],
@@ -1158,7 +1162,7 @@
           ['Initiative', 'Initiative Missions Won / Lost / Expired', (s) => ml(s.missions.Initiative), 104],
           ...factions.map((f, i) => [
             f.name,
-            `The next Initiative Mission site to win against ${f.name}: one Initiative operation level above the highest it has Won; Eliminated once the Faction is. Below it, four checks, each 🟢 when it holds and 🔴 when not. First, whether a Mission site of it is available, i.e. Active; when not, the state of the Lead that creates it: available for the first time, investigated for the first time, or completed at least once. Then the three tests of the Basic Autopilot AI's winning team, with this Campaign's parameters: CR ready against the Enemies' Combat rating and the Combat margin; the Deployable Agents against the Agents needed for the Enemies; and the free Transport cap against the Agents needed`,
+            `The next Initiative Mission site to win against ${f.name}: one Initiative operation level above the highest it has Won; Eliminated once the Faction is. Below it, four checks, each 🟢 when it holds and 🔴 when not. First, whether a Mission site of it is available, i.e. Active; when not, the state of the Lead that creates it: available for the first time, investigated for the first time, or completed at least once. Then the three tests of the Basic Autopilot AI's winning team, with this Campaign's parameters: CR ready against the Enemies' Combat rating and the Combat margin; the Rested deployable Agents against the Agents needed for the Enemies; and the free Transport cap against the Agents needed`,
             (s, c) => {
               const x = s.factions[i]
               if (!x) return ''
@@ -1189,7 +1193,7 @@
               const checks = [
                 `<span title="An Active Mission site of it against the Faction, which a team can be deployed to now; otherwise the state of the Lead that creates it">${mark(site !== null)} <span class="dim">Site</span> ${site !== null ? `<span class="good">available</span> <span class="dim">· expires in ${fmt(site.turnsUntilExpiration)}</span>` : status}</span>`,
                 `<span title="CR ready must exceed ${margin}% of the Enemies' Combat rating">${mark(crPass)} <span class="dim">CR</span> ${fmt(s.ratingReady)} <span class="dim">/</span> ${fmt(x.next.enemiesRating)} <span class="dim">=</span> <span class="${crPass ? 'good' : 'bad'}">${pct === null ? '—' : `${pct.toFixed(0)}%`}</span> <span class="dim">&gt;${margin}%</span></span>`,
-                `<span title="Deployable Agents against the Agents needed: one per ${perAgent} Enemies, rounded up">${mark(s.ready >= needed)} <span class="dim">Agents</span> ${fmt(s.ready)} <span class="dim">/</span> ${fmt(needed)} <span class="dim">(${fmt(x.next.enemies)} en ÷ ${perAgent})</span></span>`,
+                `<span title="Rested deployable Agents against the Agents needed: one per ${perAgent} Enemies, rounded up">${mark(s.ready >= needed)} <span class="dim">Agents</span> ${fmt(s.ready)} <span class="dim">/</span> ${fmt(needed)} <span class="dim">(${fmt(x.next.enemies)} en ÷ ${perAgent})</span></span>`,
                 `<span title="Free Transport cap, i.e. Transport cap less the Deployed Agents, against the Agents needed">${mark(free >= needed)} <span class="dim">Transport</span> ${fmt(free)} <span class="dim">/</span> ${fmt(needed)} <span class="dim">(cap ${fmt(s.transportCap)})</span></span>`,
               ]
               return `<span class="dim">L${x.next.level}</span> ${esc(x.next.name)}<br>${checks.join('<br>')}`
@@ -1217,7 +1221,7 @@
 
       function renderHead() {
         $('legend').innerHTML =
-          `<b>CR ready</b> is the Combat rating of the Deployable Agents, under Glossary below; their number out of all Serving Agents is in brackets, e.g. (29/155), and a team is further limited by the free Transport cap. <b>CR all</b> is the Combat rating of every Serving Agent at full health and exhaustion 0. A label with <b>+</b>, e.g. <b>+Weapon</b>, is how many times that Upgrade was bought. Work counts Serving Agents by Assignment, In transit included; <b>Deployable</b> and <b>Non-deployable</b> split those on Training and on Standby, so the two Deployable counts add up to the number after CR ready.Each Faction shows the next Initiative Mission site to win against it, one level above the highest Won. Below it, four checks, 🟢 when it holds and 🔴 when not: <b>Site</b>, whether a Mission site of it is available, and otherwise the state of the Lead that creates it; then the three tests of the Basic Autopilot AI's winning team, with the Campaign's parameters: <b>CR</b>, CR ready against the Enemies' Combat rating, as a percentage, above the Combat margin; <b>Agents</b>, the Deployable Agents against the Agents needed, one per <code>enemiesPerAgent</code> Enemies (<b>en</b>); and <b>Transport</b>, the free Transport cap against the Agents needed. Missions: Won / Lost / Expired. Below the layers, <b>Fought</b> lists the last four Missions fought, the latest first: the Turn, the kind and name of the Mission site, the Agents sent (<b>ag</b>), the team's Combat rating against the Enemies' at Combat start, the result, and the Agents Killed (<b>dead</b>) and Incapacitated (<b>incap</b>). At the bottom, four charts of every Turn played: the Serving Agents by status and by effective skill band of 50, both at the end of each Turn's player phase, just before its Advance turn, and for the Current Turn as they are now; the income above 0, the expenditures below 0, and the Net flow line of each ended Turn; and the money (left axis) and the Agents and caps (right axis) at each Turn start. Hover a chart for a Turn's values. Hover a label for its meaning. Time is the latest run's wall-clock time, and the total of every run. <b>Load params</b> copies a Campaign's parameters into the Parameters editor above, e.g. to launch a variant of it.`
+          `<b>CR ready</b> is the Combat rating of the Rested deployable Agents, under Glossary below; their number out of all Serving Agents is in brackets, e.g. (29/155), and a team is further limited by the free Transport cap. <b>CR all</b> is the Combat rating of every Serving Agent at full health and exhaustion 0. A label with <b>+</b>, e.g. <b>+Weapon</b>, is how many times that Upgrade was bought. Work counts Serving Agents by Assignment, In transit included; <b>Rested deployable</b> and <b>Not rested</b> split those on Training and on Standby, so the two Rested deployable counts add up to the number after CR ready. Each Faction shows the next Initiative Mission site to win against it, one level above the highest Won. Below it, four checks, 🟢 when it holds and 🔴 when not: <b>Site</b>, whether a Mission site of it is available, and otherwise the state of the Lead that creates it; then the three tests of the Basic Autopilot AI's winning team, with the Campaign's parameters: <b>CR</b>, CR ready against the Enemies' Combat rating, as a percentage, above the Combat margin; <b>Agents</b>, the Rested deployable Agents against the Agents needed, one per <code>enemiesPerAgent</code> Enemies (<b>en</b>); and <b>Transport</b>, the free Transport cap against the Agents needed. Missions: Won / Lost / Expired. Below the layers, <b>Fought</b> lists the last four Missions fought, the latest first: the Turn, the kind and name of the Mission site, the Agents sent (<b>ag</b>), the team's Combat rating against the Enemies' at Combat start, the result, and the Agents Killed (<b>dead</b>) and Incapacitated (<b>incap</b>). At the bottom, five charts of every Turn played: the Serving Agents by status and by effective skill band of 50, both at the end of each Turn's player phase, just before its Advance turn, and for the Current Turn as they are now; the income above 0, the expenditures below 0, and the Net flow line of each ended Turn; the money (left axis) and the Agents and caps (right axis) at each Turn start; and the Combat strength: the Combat rating of every Serving Agent as a bar, its Deployable Agents' part at the bottom, against lines of the Combat rating of the last Mission site created and the mean of the last five, as each was when created. Hover a chart for a Turn's values. Hover a label for its meaning. Time is the latest run's wall-clock time, and the total of every run. <b>Load params</b> copies a Campaign's parameters into the Parameters editor above, e.g. to launch a variant of it.`
       }
 
       const rows = new Map()
@@ -1339,6 +1343,17 @@
         ['Transport cap', '#3D8FD9'],
         ['Training cap', '#E8C547'],
       ]
+      /** The Combat strength chart's series, as the game's Combat strength chart colours them. */
+      const STRENGTH_BARS = [
+        ['Deployable Agents', '#4A86D9'],
+        ['Other Agents', '#2E4E78'],
+      ]
+      const STRENGTH_LINES = [
+        ['Last Mission site', '#E8605A'],
+        ['Last 5 Mission sites', '#E3C43A'],
+      ]
+      /** A Turn point's strength: a Campaign launched before the chart existed reports none. */
+      const strengthOf = (p) => p.strength ?? [0, 0, -1, -1]
       const BAND_COLORS = ['#3B2C6E', '#3E4A8A', '#2F6E8E', '#23918A', '#3FAF6F', '#8CC63F', '#D6D23A', '#F5E9A0']
       const SKILL_BAND = 50
       const bandColor = (i) => BAND_COLORS[Math.min(i, BAND_COLORS.length - 1)]
@@ -1539,9 +1554,47 @@
               .filter((r) => r[2] > 0)
               .reverse(),
         },
+        strength: {
+          title: 'Combat strength',
+          legend: () => legend([...STRENGTH_BARS, ...STRENGTH_LINES], (i) => i >= STRENGTH_BARS.length),
+          draw(turns) {
+            // The bar of a Turn is the Combat rating of every Serving Agent: the Deployable Agents' at the bottom, and
+            // the rest of it, i.e. the whole less theirs, on top.
+            const rows = turns.map((p) => {
+              const [deployable, all] = strengthOf(p)
+              return [deployable, Math.max(0, all - deployable)]
+            })
+            const line = (j) => turns.map((p) => (strengthOf(p)[2 + j] < 0 ? null : strengthOf(p)[2 + j]))
+            const hi = niceCeil(
+              Math.max(1, ...turns.map((p) => Math.max(strengthOf(p)[1], strengthOf(p)[2], strengthOf(p)[3]))),
+            )
+            const y = yScale(0, hi)
+            const lines = STRENGTH_LINES.map(([, color], j) =>
+              line(j).some((v) => v !== null) ? polyline(line(j), y, color, 2) : '',
+            )
+              .reverse()
+              .join('')
+            return chartSvg(
+              'strength',
+              turns.length,
+              gridLine(y(hi / 2)) + stackBars(rows, (j) => STRENGTH_BARS[j][1], y, 1) + gridLine(y(0), true) + lines,
+              axisLabel(0, y(0)) + axisLabel(hi / 2, y(hi / 2)) + axisLabel(hi, y(hi)),
+            )
+          },
+          tip: (p) => {
+            const [deployable, all, last, last5] = strengthOf(p)
+            return [
+              ['All Agents', null, all],
+              [STRENGTH_BARS[0][0], STRENGTH_BARS[0][1], deployable],
+              [STRENGTH_BARS[1][0], STRENGTH_BARS[1][1], Math.max(0, all - deployable)],
+              [STRENGTH_LINES[0][0], STRENGTH_LINES[0][1], last < 0 ? null : last, true],
+              [STRENGTH_LINES[1][0], STRENGTH_LINES[1][1], last5 < 0 ? null : last5, true],
+            ]
+          },
+        },
       }
 
-      /** The four charts of a Campaign block, from every Turn it has played. */
+      /** The five charts of a Campaign block, from every Turn it has played. */
       function chartsHtml(turns, expanded) {
         if (turns.length === 0) return ''
         return (
