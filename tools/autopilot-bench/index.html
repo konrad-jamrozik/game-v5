@@ -274,6 +274,17 @@
       input:disabled {
         opacity: 0.4;
       }
+      /* The Write log checkbox sits on the inputs' baseline, not under a label of its own. */
+      .ctl label.logbox {
+        flex-direction: row;
+        align-items: center;
+        gap: 6px;
+        align-self: center;
+        font-size: 13px;
+      }
+      .logbox input {
+        width: auto;
+      }
       input.chg {
         border-color: var(--accent);
         color: var(--accent-text);
@@ -846,7 +857,7 @@
       let edited = {}
       let weights = {}
       // `seed`, when not empty, is an exact Campaign seed: the launch plays that one Campaign, e.g. to replay one.
-      let launchForm = { count: 10, untilTurn: 200, seedPrefix: 'seed', seed: '' }
+      let launchForm = { count: 10, untilTurn: 200, seedPrefix: 'seed', seed: '', log: true }
       let moreTurns = 50
       let STATE = { now: Date.now(), campaigns: [], batches: [] }
       let clockOffset = 0
@@ -1116,6 +1127,7 @@
     <label><span class="lbl">Until turn</span><input type="number" id="l_until" min="1" step="1" value="${esc(launchForm.untilTurn)}" /></label>
     <label><span class="lbl">Seed prefix</span><input class="wide" id="l_seed" value="${esc(launchForm.seedPrefix)}" /></label>
     <label><span class="lbl">Exact seed</span><input class="wide" id="l_exact" placeholder="none" value="${esc(launchForm.seed)}" /></label>
+    <label class="logbox" title="Write a Campaign log of every Turn, for Claude to analyze; it costs some speed"><input type="checkbox" id="l_log"${launchForm.log ? ' checked' : ''} /> Write log</label>
     <button class="pri" id="launch">Launch</button>
     <span class="note" style="align-self:center">with <span id="launchParams"></span></span>
   </div>
@@ -1208,13 +1220,13 @@
             'CR ready',
             'Combat rating of the Rested deployable Agents; after it, their number of all Serving Agents',
             (s) => `${fmt(s.ratingReady)} <span class="dim">(${fmt(s.ready)}/${fmt(s.agents)})</span>`,
-            140,
+            210,
           ],
           [
             'CR all',
             'Combat rating of every Serving Agent together at full health and exhaustion 0',
             (s) => `<span style="color:var(--accent-text)">${fmt(s.ratingFresh)}</span>`,
-            80,
+            110,
           ],
           ['Skill', 'Mean base skill of the Serving Agents', (s) => fmt1(s.meanSkill), 64],
           ['Transport cap', 'Transport cap', (s) => fmt(s.transportCap), 96],
@@ -1331,7 +1343,7 @@
         }
         cells.log = c.log
           ? `<span class="dim" title="Every Turn of the Campaign as JSON Lines: the Agency, Agents, Mission sites, Investigations and Leads at the end of each player phase, the Player actions the AI requested, and the Turn report; and the whole Campaign at the end of every run">Log</span> <code>${esc(c.log)}</code> <button type="button" data-act="copylog" title="Copy the log's path">Copy path</button>`
-          : ''
+          : '<span class="dim">No log: launched without Write log</span>'
         return cells
       }
 
@@ -1963,12 +1975,14 @@
             untilTurn: num('l_until'),
             seedPrefix: $('l_seed').value,
             seed: $('l_exact').value.trim(),
+            log: $('l_log').checked,
           }
           moreTurns = num('more')
           seedMode()
           save()
         }
-        for (const id of ['l_count', 'l_until', 'l_seed', 'l_exact', 'more']) $(id).addEventListener('input', remember)
+        for (const id of ['l_count', 'l_until', 'l_seed', 'l_exact', 'l_log', 'more'])
+          $(id).addEventListener('input', remember)
         seedMode()
         $('launch').addEventListener('click', () => {
           remember()

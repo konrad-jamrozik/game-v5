@@ -7,8 +7,11 @@ export type ToWorker =
       readonly id: string
       readonly seed: string
       readonly params: unknown
-      /** The Campaign log file the worker thread writes, and what its first line tells of the launch. */
-      readonly log: string
+      /**
+       * The Campaign log file the worker thread writes, none when the launch asked for no log, and what its first line
+       * tells of the launch.
+       */
+      readonly log: string | null
       readonly launch: { readonly batch: number; readonly engine: string; readonly impl: string }
     }
   | { readonly type: 'play'; readonly id: string; readonly turns: number }

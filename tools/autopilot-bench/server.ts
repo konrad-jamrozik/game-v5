@@ -56,8 +56,8 @@ interface Campaign {
   readonly seed: string
   /** The parameters of the Basic Autopilot AI, every one of them, as they were at launch. */
   readonly params: Record<string, unknown>
-  /** The Campaign log file, which its worker thread writes. */
-  readonly log: string
+  /** The Campaign log file, which its worker thread writes; none when its launch asked for no log. */
+  readonly log: string | null
   readonly thread: Thread
   state: 'starting' | 'running' | 'idle' | 'failed'
   stats: CampaignStats | null
@@ -197,12 +197,13 @@ async function launch(
   untilTurn: number,
   seeds: { readonly prefix: string } | { readonly exact: string },
   params: Record<string, unknown>,
+  logged: boolean,
 ) {
   const threads = Array.from({ length: Math.min(count, THREADS) }, () => startThread())
   const batch: Batch = { id: batches.length + 1, engine: engineVersion(), createdAt: Date.now(), threads }
   batches.push(batch)
   const created: Campaign[] = []
-  fs.mkdirSync(LOGS, { recursive: true })
+  if (logged) fs.mkdirSync(LOGS, { recursive: true })
   for (let i = 0; i < count; i += 1) {
     const thread = threads[i % threads.length]!
     thread.campaigns += 1
@@ -214,7 +215,7 @@ async function launch(
       batch: batch.id,
       seed,
       params,
-      log: path.join(LOGS, `${id}-${seed.replace(/[^\w.-]/g, '_')}.jsonl`),
+      log: logged ? path.join(LOGS, `${id}-${seed.replace(/[^\w.-]/g, '_')}.jsonl`) : null,
       thread,
       state: 'starting',
       stats: null,
@@ -373,7 +374,7 @@ const server = http.createServer((req, res) => {
         })
         return
       }
-      await launch(count, untilTurn, seeds, b.params as Record<string, unknown>)
+      await launch(count, untilTurn, seeds, b.params as Record<string, unknown>, b.log !== false)
       json(res, 200, { ok: true })
     } else if (req.method === 'POST' && url === '/api/play') {
       const b = await body(req)

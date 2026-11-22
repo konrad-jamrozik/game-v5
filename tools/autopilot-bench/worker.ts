@@ -48,8 +48,11 @@ interface Campaign {
   unsent: TurnPoint[]
   /** The Serving Agents of the Turn whose Advance turn was requested last, read just before it. */
   turnEnd: { status: number[]; skill: number[]; worn: number[]; strength: number[]; state: unknown } | null
-  /** The Campaign log file, and the Player actions the AI requested in the Current Turn, for its next Turn line. */
-  readonly log: string
+  /**
+   * The Campaign log file, none when the launch asked for no log, and the Player actions the AI requested in the
+   * Current Turn, for its next Turn line.
+   */
+  readonly log: string | null
   actions: unknown[]
   /** The Creation Combat rating of every Mission site seen so far, by Instance ID. */
   siteRatings: Map<string, number>
@@ -175,40 +178,40 @@ function observed(ai: Any, holder: { campaign: Campaign | null }): Any {
     step: ({ player }: Any) => {
       const host = () => holder.campaign?.engine.player
       const money = () => ok<Any>(host().queries.getCurrentLiveWorldState()).agency.money as number
-      const spend = async (slot: 0 | 1 | 2, action: () => Promise<Any>) => {
-        const campaign = holder.campaign
-        if (campaign === null) return action()
-        const before = money()
-        const result = await action()
-        campaign.spent[slot] += before - money()
-        return result
-      }
+      // The slot of `spent` each action that spends money adds to. Only these read the money before and after, since
+      // reading the World state is costly in a Campaign of many Agents and the AI requests many other actions a Turn.
+      const slotOf = (op: string, args: unknown[]): 0 | 1 | 2 | null =>
+        op === 'hireAgent' ? 0 : op === 'purchaseUpgrade' ? (capUpgrades.has(args[0] as string) ? 1 : 2) : null
+      const logging = holder.campaign?.log != null
       // Every Player action the AI requests, other than Advance turn, goes to the log's Turn line with its outcome,
-      // a rejected one included.
-      const logged: Record<string, Any> = {}
+      // a rejected one included. Without a log, only the actions that spend money are wrapped.
+      const wrapped: Record<string, Any> = {}
       for (const [op, action] of Object.entries(player.actions as Record<string, Any>)) {
         if (op === 'advanceTurn' || typeof action !== 'function') continue
-        logged[op] = async (...args: unknown[]) => {
+        if (!logging && slotOf(op, []) === null) continue
+        wrapped[op] = async (...args: unknown[]) => {
           const campaign = holder.campaign
           if (campaign === null) return action(...args)
-          const before = money()
+          const slot = slotOf(op, args)
+          const before = slot === null ? 0 : money()
           const result = await action(...args)
-          campaign.actions.push({
-            op,
-            args,
-            ok: result.ok,
-            ...(result.ok ? {} : { error: result.error }),
-            moneyChange: money() - before,
-          })
+          const change = slot === null ? 0 : money() - before
+          if (slot !== null) campaign.spent[slot] -= change
+          if (logging) {
+            campaign.actions.push({
+              op,
+              args,
+              ok: result.ok,
+              ...(result.ok ? {} : { error: result.error }),
+              ...(slot === null ? {} : { moneyChange: change }),
+            })
+          }
           return result
         }
       }
       const actions = {
         ...player.actions,
-        ...logged,
-        hireAgent: () => spend(0, () => logged.hireAgent()),
-        purchaseUpgrade: (upgrade: string) =>
-          spend(capUpgrades.has(upgrade) ? 1 : 2, () => logged.purchaseUpgrade(upgrade)),
+        ...wrapped,
         advanceTurn: async () => {
           const campaign = holder.campaign
           if (campaign === null) return player.actions.advanceTurn()
@@ -216,7 +219,7 @@ function observed(ai: Any, holder: { campaign: Campaign | null }): Any {
           campaign.turnEnd = {
             ...agentsPoint(live.agents),
             strength: strengthPoint(campaign, host()),
-            state: logState(live, ok<Any>(host().queries.getCurrentRetiredWorldState())),
+            state: logging ? logState(live, ok<Any>(host().queries.getCurrentRetiredWorldState())) : null,
           }
           const result = await player.actions.advanceTurn()
           endTurn(campaign)
@@ -230,8 +233,12 @@ function observed(ai: Any, holder: { campaign: Campaign | null }): Any {
 
 /* ---------- Campaign log ---------- */
 
-/** Appends one line to the Campaign log. A log that cannot be written never stops the Campaign. */
-function writeLog(campaign: { log: string }, line: unknown) {
+/**
+ * Appends one line to the Campaign log, unless the Campaign has none. A log that cannot be written never stops the
+ * Campaign.
+ */
+function writeLog(campaign: { log: string | null }, line: unknown) {
+  if (campaign.log === null) return
   try {
     fs.appendFileSync(campaign.log, `${JSON.stringify(line)}\n`)
   } catch (e) {
@@ -353,6 +360,7 @@ function endTurn(campaign: Campaign) {
   })
   campaign.spent = [0, 0, 0]
   campaign.turnStart = startPoint(ok<Any>(player.queries.getCurrentLiveWorldState()))
+  if (campaign.log === null) return
   writeLog(campaign, {
     kind: 'turn',
     turn: report.turn,
@@ -364,6 +372,7 @@ function endTurn(campaign: Campaign) {
 
 /** Ends a run in the log: why it ended, and the whole Campaign as the Player API shows it, unreduced. */
 function logRun(campaign: Campaign, reason: string, detail: unknown) {
+  if (campaign.log === null) return
   const player = campaign.engine.player
   const live = ok<Any>(player.queries.getCurrentLiveWorldState())
   writeLog(campaign, { kind: 'run', turn: live.turn, reason, detail, at: new Date().toISOString() })
@@ -635,7 +644,9 @@ async function create(message: Extract<ToWorker, { type: 'create' }>) {
   ok(await engine.session.globalConfiguration.set('autosaveLimit', 0))
   ok(await engine.session.campaign.create({ seed }))
   const live = ok<Any>(engine.player.queries.getCurrentLiveWorldState())
-  fs.writeFileSync(log, '')
+  if (log !== null) {
+    fs.writeFileSync(log, '')
+  }
   writeLog(
     { log },
     {
@@ -653,7 +664,7 @@ async function create(message: Extract<ToWorker, { type: 'create' }>) {
       ),
       configuration: ok<Any>(engine.player.queries.getCampaignConfiguration()),
       gameData: ok<Any>(engine.player.queries.getGameData()),
-      start: logState(live, ok<Any>(engine.player.queries.getCurrentRetiredWorldState())),
+      start: log === null ? null : logState(live, ok<Any>(engine.player.queries.getCurrentRetiredWorldState())),
     },
   )
   const initialAgents = live.agents.length
