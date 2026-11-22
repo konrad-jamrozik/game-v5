@@ -46,7 +46,7 @@ The page has no Combat rules of its own. For each Mission site, it sends the tes
 
 The Combats run on one worker thread per spare CPU core; server.ts runs each site's search, in search.ts, and hands each team size to try to whichever thread is free. A Combat of 300 Agents against `raid_hq` takes about 12 ms in the engine, most of it in drawing each attacker's target among its candidates.
 
-The other readouts, e.g. the Turns an Investigation takes and the expected Panic by Turn, are computed in the page from the formulas of the specifications; the page says where one is an estimate.
+The other readouts, e.g. the Turns an Investigation takes and the expected Panic, Response Mission Combat rating, Funding, and money by Turn for a chosen share of Response Missions won, are computed in the page from the formulas of the specifications; the page says where one is an estimate.
 
 ## Limits
 

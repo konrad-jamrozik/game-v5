@@ -476,6 +476,25 @@
       .chart {
         position: relative;
       }
+      .chart-title {
+        margin: 18px 0 2px;
+      }
+      .op-legend {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px 14px;
+        margin-top: 12px;
+        font-size: 13px;
+        color: var(--text2);
+      }
+      .op-legend i {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        margin-right: 6px;
+        vertical-align: -1px;
+      }
       .chart svg {
         display: block;
         width: 100%;
@@ -620,6 +639,10 @@
       const LEVELS = [1, 2, 3, 4, 5]
       const EXISTENTIAL = LEVELS[LEVELS.length - 1]
       const OL = LEVELS.map((n) => 'operation_level_' + n)
+      /* The stacked bars of expected operations per Turn, one color per level: a cool ramp, darkest first, so the
+       * Accent line stays the figure, and Danger for the existential level. */
+      const OP_COLORS = ['#2f4d63', '#3f7aa6', '#72aed8', '#c6e2f5', '#ff7f78']
+      const OP_ALPHA = 0.5
       const site = (kind, lv, exp, en, win) => {
         const e = {}
         EN.forEach((k) => (e[k] = en[k] || 0))
@@ -966,7 +989,7 @@
         team: true,
         inv_n: 4,
         inv_skill: 100,
-        ign: 100,
+        win: 50,
       }
       let T = clone(TEAM0)
       const get = (o, p) => p.split('.').reduce((a, k) => (a == null ? a : a[k]), o)
@@ -999,7 +1022,10 @@
           if (!s) return
           for (const p in s.d) if (PATHS.includes(p)) set(cur, p, s.d[p])
           Object.assign(T, s.T || {})
+          /* An earlier page saved the share of operations ignored or lost, the complement of the share won. */
+          if (s.T && s.T.ign != null && s.T.win == null) T.win = 100 - s.T.ign
           delete T.ex
+          delete T.ign
         } catch (e) {}
       }
 
@@ -1120,7 +1146,18 @@
   )}
   ${panel('Starting levels and Panic limit', 'content/factions/faction_archetypes.yaml · panic-and-endings/ending_parameters.yaml', FA.map((x) => `<div class="kv"><span class="k"><code>${x}.initial_activity_level</code><small></small></span>${sel(x + '.initial_activity_level', AL)}</div>`).join('') + row('endings.defeat_at_panic_pct', 'Panic at which the Campaign is lost', { min: 1 }))}
   </div><div class="col">
-  ${panel('Expected Panic if operations are not stopped', '', `<div class="ctl">${tin('ign', 'Operations ignored or lost, %', { max: 100, step: 5 })}</div><div class="chart" id="ch_panic"></div><div id="o_panic"></div><div class="note">An expected-value estimate with no Faction Eliminated and no Panic reduction from Won Missions: each level lasts its mean duration and operations arrive at the mean interval.</div>`, 'read')}
+  ${panel(
+    'Expected Response Missions by Turn',
+    '',
+    `<div class="ctl">${tin('win', 'Response Missions won, %', { max: 100, step: 5 })}</div>` +
+      `<div class="op-legend"><span class="lbl">Expected operations per Turn, right axis</span>${LEVELS.map((k, i) => `<span><i style="background:${OP_COLORS[i]};opacity:${OP_ALPHA}"></i>Level ${k}${k === EXISTENTIAL ? ', existential' : ''}</span>`).join('')}</div>` +
+      `<div class="lbl chart-title">Panic</div><div class="chart" id="ch_panic"></div>` +
+      `<div class="lbl chart-title">Combat rating of Response Missions, mean of the last 10 Turns</div><div class="chart" id="ch_cr"></div>` +
+      `<div class="lbl chart-title">Cumulative Funding change</div><div class="chart" id="ch_fund"></div>` +
+      `<div class="lbl chart-title">Money from won Response Missions per Turn, over the last 10 Turns</div><div class="chart" id="ch_money"></div>` +
+      `<div id="o_panic"></div><div class="note">An expected-value estimate with no Faction Eliminated and no Panic reduction from won Initiative Missions: each level lasts its mean duration, operations arrive at the mean interval, each operation's Response Mission site is equally likely to be any of its level's, and every operation not won is ignored or lost. A Response Mission's Combat rating is its Enemies' at full health; the band marks the test team's Combat rating. Funding and money count every operation, including the ones after the Campaign may already have been lost.</div>`,
+    'read',
+  )}
   </div></div></section>`)
         /* Changes */
         h.push(
@@ -1528,15 +1565,16 @@
       function lineChart(host, o) {
         const W = 640,
           H = 260,
-          m = { l: 46, r: 16, t: 30, b: 38 },
+          m = { l: 52, r: o.bars ? 44 : 16, t: 30, b: 38 },
+          ymin = o.ymin || 0,
           X = (x) => m.l + (x / o.xmax) * (W - m.l - m.r),
-          Y = (y) => H - m.b - (y / o.ymax) * (H - m.t - m.b)
+          Y = (y) => H - m.b - ((y - ymin) / (o.ymax - ymin)) * (H - m.t - m.b)
         let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(o.label)}">`
-        if (o.band != null && o.band <= o.ymax)
-          s += `<rect x="${m.l}" y="${m.t}" width="${W - m.l - m.r}" height="${Math.max(0, Y(o.band) - m.t)}" fill="var(--limit)"/><line x1="${m.l}" x2="${W - m.r}" y1="${Y(o.band)}" y2="${Y(o.band)}" stroke="var(--danger)" stroke-width="1"/><text x="${W - m.r - 4}" y="${Y(o.band) + 14}" text-anchor="end" font-size="11" fill="var(--danger)" font-family="var(--mono)">${esc(o.bandLabel)}</text>`
-        const ys = niceStep(o.ymax, 4),
+        if (o.band != null && o.band <= o.ymax && o.band >= ymin)
+          s += `<rect x="${m.l}" y="${m.t}" width="${W - m.l - m.r}" height="${Math.max(0, Y(o.band) - m.t)}" fill="var(--limit)"/><line x1="${m.l}" x2="${W - m.r}" y1="${Y(o.band)}" y2="${Y(o.band)}" stroke="var(--danger)" stroke-width="1"/><text x="${W - m.r - 4}" y="${Y(o.band) + 14 > H - m.b - 4 ? Y(o.band) - 6 : Y(o.band) + 14}" text-anchor="end" font-size="11" fill="var(--danger)" font-family="var(--mono)">${esc(o.bandLabel)}</text>`
+        const ys = niceStep(o.ymax - ymin, 4),
           xs = niceStep(o.xmax, 6)
-        for (let y = 0; y <= o.ymax + 1e-9; y += ys)
+        for (let y = Math.ceil(ymin / ys - 1e-9) * ys; y <= o.ymax + 1e-9; y += ys)
           s += `<line x1="${m.l}" x2="${W - m.r}" y1="${Y(y)}" y2="${Y(y)}" stroke="var(--divider)" stroke-width="1"/><text x="${m.l - 6}" y="${Y(y) + 4}" text-anchor="end" font-size="11" fill="var(--axis)" font-family="var(--mono)">${f(y, 2)}</text>`
         for (let x = 0; x <= o.xmax + 1e-9; x += xs)
           s += `<text x="${X(x)}" y="${H - m.b + 15}" text-anchor="middle" font-size="11" fill="var(--axis)" font-family="var(--mono)">${f(x, 0)}</text>`
@@ -1546,7 +1584,32 @@
           .forEach((v, i) => {
             s += `<line x1="${X(v.x)}" x2="${X(v.x)}" y1="${m.t - 4 + (i % 2) * 0}" y2="${H - m.b}" stroke="var(--muted)" stroke-width="1" stroke-dasharray="3 3"/><text x="${X(v.x)}" y="${10 + (i % 2) * 12}" text-anchor="${X(v.x) > W - 90 ? 'end' : 'middle'}" font-size="10.5" fill="var(--text2)" font-family="var(--body)">${esc(v.label)}</text>`
           })
-        s += `<polyline fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" points="${o.pts.map((p) => X(p[0]).toFixed(1) + ',' + Y(Math.min(p[1], o.ymax)).toFixed(1)).join(' ')}"/>`
+        /* Stacked bars on their own scale, read on the right axis, e.g. the expected operations per Turn by level. */
+        if (o.bars) {
+          const d = o.bars.data,
+            top = Math.max(1e-9, ...d.slice(1, o.xmax + 1).map((n) => n.reduce((a, b) => a + b, 0))),
+            bs = niceStep(top, 4),
+            bmax = Math.ceil(top / bs - 1e-9) * bs,
+            y0 = H - m.b,
+            BY = (v) => (v / bmax) * (H - m.t - m.b),
+            bw = (W - m.l - m.r) / o.xmax
+          s += `<g opacity="${OP_ALPHA}">`
+          for (let t = 1; t <= o.xmax && t < d.length; t++) {
+            let acc = 0
+            d[t].forEach((v, i) => {
+              if (v <= 0) return
+              const h = BY(v)
+              s += `<rect x="${(X(t) - bw).toFixed(2)}" y="${(y0 - BY(acc) - h).toFixed(2)}" width="${bw.toFixed(2)}" height="${h.toFixed(2)}" fill="${o.bars.colors[i]}"/>`
+              acc += v
+            })
+          }
+          s += `</g>`
+          for (let v = 0; v <= bmax + 1e-9; v += bs)
+            s += `<text x="${W - m.r + 6}" y="${y0 - BY(v) + 4}" font-size="11" fill="var(--axis)" font-family="var(--mono)">${f(v, 2)}</text>`
+          s += `<text x="${W - 4}" y="${H - 5}" text-anchor="end" font-size="10.5" fill="var(--axis)" font-family="var(--body)">ops / Turn</text>`
+        }
+        const clampY = (y) => Math.max(ymin, Math.min(y, o.ymax))
+        s += `<polyline fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" points="${o.pts.map((p) => X(p[0]).toFixed(1) + ',' + Y(clampY(p[1])).toFixed(1)).join(' ')}"/>`
         s += `<g class="hv" visibility="hidden"><line y1="${m.t}" y2="${H - m.b}" stroke="var(--text2)" stroke-width="1"/><circle r="4.5" fill="var(--accent)" stroke="var(--surface)" stroke-width="2"/></g></svg><div class="tip" hidden></div>`
         host.innerHTML = s
         const svg = host.querySelector('svg'),
@@ -1559,7 +1622,7 @@
           let best = o.pts[0]
           for (const p of o.pts) if (Math.abs(p[0] - x) < Math.abs(best[0] - x)) best = p
           const px = X(best[0]),
-            py = Y(Math.min(best[1], o.ymax))
+            py = Y(clampY(best[1]))
           hv.setAttribute('visibility', 'visible')
           hv.querySelector('line').setAttribute('x1', px)
           hv.querySelector('line').setAttribute('x2', px)
@@ -1769,13 +1832,15 @@
         const lv = {}
         AL.forEach((x) => {
           const L = cur[x],
-            o = { rate: 0, ep: 0, ex: 0 }
+            o = { rate: 0, ep: 0, ex: 0, w: {} }
+          LEVELS.forEach((k) => (o.w[k] = 0))
           if (L.operation_every_turns) {
             const W = LEVELS.reduce((s, k) => s + L.operation_level_weights[k], 0)
             o.rate = 1 / mean(L.operation_every_turns)
             if (W > 0) {
-              o.ep = LEVELS.reduce((s, k) => s + (L.operation_level_weights[k] / W) * opPanic(k), 0)
-              o.ex = L.operation_level_weights[EXISTENTIAL] / W
+              LEVELS.forEach((k) => (o.w[k] = L.operation_level_weights[k] / W))
+              o.ep = LEVELS.reduce((s, k) => s + o.w[k] * opPanic(k), 0)
+              o.ex = o.w[EXISTENTIAL]
             }
           }
           lv[x] = o
@@ -1799,45 +1864,125 @@
           AL.forEach((l) => ($('at_' + l + '_' + x).textContent = m[l] != null ? f(m[l], 0) : '–'))
         })
         const lim = cur.endings.defeat_at_panic_pct,
-          ign = T.ign / 100,
+          win = Math.min(100, T.win) / 100,
+          ign = 1 - win,
+          WINDOW = 10,
           levelAt = (x, t) => {
             let r = null
             for (const l of AL) if (tl[x][l] != null && tl[x][l] <= t) r = l
             return r
           }
-        const pp = [[0, 0]]
+        /* Per operation level: the mean Combat rating of its Response Mission sites, each equally likely, and its Effects. */
+        const crOf = {},
+          ol = (k) => cur['operation_level_' + k]
+        LEVELS.forEach((k) => {
+          const rs = RESP.filter((s) => cur[s].level === k).map((s) => siteRating(s).rating)
+          crOf[k] = rs.length ? rs.reduce((a, b) => a + b, 0) / rs.length : 0
+        })
+        const fundOf = (k) =>
+            win * ol(k).on_win.funding + (k < EXISTENTIAL ? ign * ol(k).on_ignored_or_lost.funding : 0),
+          moneyOf = (k) => win * ol(k).on_win.money
+        const pp = [[0, 0]],
+          crp = [],
+          fp = [[0, 0]],
+          mp = [[0, 0]],
+          ops = [LEVELS.map(() => 0)]
         let panic = 0,
+          fund = 0,
           surv = 1,
           tLim = null,
           tHalf = null,
           tEx = null
         const HOR = 1500
         for (let t = 1; t <= HOR; t++) {
+          const n = LEVELS.map(() => 0)
           for (const x of FA) {
             const o = lv[levelAt(x, t)]
             panic += o.rate * o.ep * ign
             surv *= 1 - Math.min(1, o.rate * o.ex * ign)
             if (tEx == null && o.ex > 0 && o.rate > 0) tEx = t
+            LEVELS.forEach((k, i) => (n[i] += o.rate * o.w[k]))
           }
+          ops.push(n)
+          fund += LEVELS.reduce((s, k, i) => s + n[i] * fundOf(k), 0)
+          /* The last WINDOW Turns, or every Turn so far while fewer have passed. */
+          let cnt = 0,
+            crSum = 0,
+            money = 0
+          for (let u = Math.max(1, t - WINDOW + 1); u <= t; u++)
+            LEVELS.forEach((k, i) => {
+              cnt += ops[u][i]
+              crSum += ops[u][i] * crOf[k]
+              money += ops[u][i] * moneyOf(k)
+            })
+          if (cnt > 0) crp.push([t, crSum / cnt])
+          mp.push([t, money / Math.min(t, WINDOW)])
           panic = Math.min(100, panic)
           pp.push([t, panic])
+          fp.push([t, fund])
           if (tLim == null && panic >= lim) tLim = t
           if (tHalf == null && surv <= 0.5) tHalf = t
         }
-        const xmax = Math.min(HOR, Math.max(200, Math.ceil(((tLim || tHalf || 600) * 1.2) / 50) * 50))
+        /* The charts show the first 500 Turns; the readouts below still look as far as HOR. */
+        const xmax = 500,
+          upTo = (a) => a.filter((p) => p[0] <= xmax),
+          bars = { data: ops, colors: OP_COLORS },
+          opsText = (t) => (ops[t] ? ' · ops ' + ops[t].map((v, i) => `L${LEVELS[i]} ${f(v, 2)}`).join(' ') : ''),
+          vl = [
+            tEx && { x: tEx, label: 'existential ops begin' },
+            tHalf && { x: tHalf, label: '50% lost outright' },
+          ].filter(Boolean),
+          span = (a) => {
+            const ys = a.map((p) => p[1])
+            return [Math.min(0, ...ys), Math.max(1, ...ys)]
+          }
         lineChart($('ch_panic'), {
-          pts: pp.filter((p) => p[0] <= xmax),
+          pts: upTo(pp),
           xmax,
           ymax: Math.max(10, Math.min(100, lim * 1.1)),
           xl: 'Turn',
           label: 'Expected Panic by Turn',
           band: lim,
           bandLabel: 'Panic limit ' + lim,
-          vl: [
-            tEx && { x: tEx, label: 'existential ops begin' },
-            tHalf && { x: tHalf, label: '50% lost outright' },
-          ].filter(Boolean),
-          fmt: (p) => `Turn ${p[0]} → Panic ${f(p[1], 2)}`,
+          vl,
+          bars,
+          fmt: (p) => `Turn ${p[0]} → Panic ${f(p[1], 2)}${opsText(p[0])}`,
+        })
+        const teamCr = teamRatings().eff,
+          crMax = Math.max(teamCr, ...upTo(crp).map((p) => p[1]))
+        lineChart($('ch_cr'), {
+          pts: upTo(crp).length ? upTo(crp) : [[0, 0]],
+          xmax,
+          ymax: Math.max(10, crMax * 1.1),
+          xl: 'Turn',
+          label: 'Expected Combat rating of Response Missions, mean of the last 10 Turns',
+          band: teamCr,
+          bandLabel: 'Test team Combat rating ' + f(teamCr, 0),
+          vl,
+          bars,
+          fmt: (p) => `Turn ${p[0]} → Combat rating ${f(p[1], 0)}${opsText(p[0])}`,
+        })
+        const [f0, f1] = span(upTo(fp))
+        lineChart($('ch_fund'), {
+          pts: upTo(fp),
+          xmax,
+          ymin: f0 < 0 ? f0 * 1.1 : 0,
+          ymax: f1 * 1.1,
+          xl: 'Turn',
+          label: 'Expected cumulative Funding change',
+          vl,
+          bars,
+          fmt: (p) => `Turn ${p[0]} → Funding ${p[1] >= 0 ? '+' : '−'}${f(Math.abs(p[1]), 1)}${opsText(p[0])}`,
+        })
+        lineChart($('ch_money'), {
+          pts: upTo(mp),
+          xmax,
+          ymax: span(upTo(mp))[1] * 1.1,
+          xl: 'Turn',
+          label: 'Expected money from won Response Missions per Turn, over the last 10 Turns',
+          vl,
+          bars,
+          fmt: (p) => `Turn ${p[0]} → ${f(p[1], 1)} money per Turn${opsText(p[0])}`,
         })
         $('o_panic').innerHTML = out([
           ['Expected Panic reaches the limit on Turn', tLim ? f(tLim, 0) : `not within ${HOR}`],
@@ -1847,6 +1992,11 @@
             tHalf ? f(tHalf, 0) : `not within ${HOR}`,
           ],
           ['Expected Panic on Turn 200', f(pp[200][1], 2)],
+          [
+            'Expected cumulative Funding change by Turn 200',
+            (fp[200][1] >= 0 ? '+' : '−') + f(Math.abs(fp[200][1]), 1),
+          ],
+          ['Expected money per Turn from won Response Missions, Turns 191 to 200', f(mp[200][1], 1)],
         ])
         renderChanges()
         runSims()
