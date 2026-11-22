@@ -93,6 +93,7 @@ Each colour has one role, so that the same colour always means the same thing ac
 | Accent text | `#FF8A33` | Text that needs attention, e.g. a count on a navigation button, a low health value, or an expired [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions); and a figure the Player decides by, e.g. a [Combat rating](../mechanics/combat.md#combat-rating), under [Combat ratings](screens/missions-view.md#combat-ratings) in Missions View. |
 | On accent | `#1A0B00` | Text on an Accent fill. |
 | Positive | `#B7C77A` | Gains and successes, e.g. income, a won [Mission](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), an Agent on an assignment, or a hit by an Agent in the Combat log. |
+| Positive bright | `#5FE08A` | A figure comfortably past what the Player needs, brighter than Positive, e.g. a deployment's Combat rating of at least 110% of the Enemies' one, under [Deployment](screens/missions-view.md#deployment) in Missions View. |
 | Danger | `#FF7F78` | Losses, destructive actions, and limits, e.g. upkeep, Delete, the [Panic limit](../mechanics/panic-and-endings.md#glossary), and a hit by an Enemy in the Combat log. |
 | Danger border | `#5E2A26` | The border of a destructive button. |
 | Warning | `#E3C14B` | Values that need watching before they become a problem, e.g. an Agent's exhaustion at which it can no longer start work, under [Agent condition](#agent-condition), and the outline and text of a weighty button. |
