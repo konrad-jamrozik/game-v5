@@ -16,7 +16,7 @@ Because it adds no presentation of its own, the CLI is headless: it shows what t
 
 # Reach of the CLI
 
-Every [Session API](../foundation/engine-contract.md#api-surfaces) and [Player API](../foundation/engine-contract.md#api-surfaces) operation under [API hierarchy](../foundation/engine-contract.md#api-hierarchy) is reachable through the CLI, and so is every [Developer API](../foundation/engine-contract.md#api-surfaces) operation while [Dev mode](../foundation/engine-contract.md#principals-and-access) is enabled. A whole [Session](../foundation/core-concepts.md#campaign-and-session) can therefore be carried out through it, under [Session lifecycle](../foundation/campaign-lifecycle.md#session-lifecycle): e.g. creating a Campaign, playing it to its end, saving and loading it, navigating the [Timeline](../foundation/engine-contract.md#persisted-data), and engaging [Autopilot](../foundation/engine-contract.md#autopilot).
+Every [Session API](../foundation/engine-contract.md#api-surfaces) and [Player API](../foundation/engine-contract.md#api-surfaces) operation of the [API hierarchy](../foundation/engine-contract.md#api-hierarchy) is reachable through the CLI, and so is every [Developer API](../foundation/engine-contract.md#api-surfaces) operation while [Dev mode](../foundation/engine-contract.md#principals-and-access) is enabled.
 
 # Output forms
 
@@ -25,9 +25,9 @@ The CLI reports the result of each operation in two forms, each complete on its 
 - **Readable output:** text that a human can read in a terminal.
 - **Structured output:** a machine-readable form of the same result, for a script or an LLM-based agent.
 
-Both forms carry exactly what the engine API returns, so a caller never needs the other form to learn more, under [Information boundary](../foundation/player-api.md#information-boundary) in Player API. E.g., a Compendium article is reported in its resolved form, under [Article resolution](../mechanics/compendium.md#article-resolution) in Compendium, so both forms give the text, the inserted values, and the Article links that the graphical user interface shows.
+Both forms carry [exactly what the engine API returns](../foundation/player-api.md#information-boundary), so a caller never needs the other form to learn more. E.g., a Compendium article is reported in its [resolved form](../mechanics/compendium.md#article-resolution), so both forms give the text, the inserted values, and the Article links that the graphical user interface shows.
 
 # TODOs
 
-- TODO: State how the CLI names operations and their arguments, and how a caller discovers the available ones, under [Reach of the CLI](#reach-of-the-cli).
-- TODO: State how a caller chooses between readable and structured output, and what the structured output looks like, under [Output forms](#output-forms).
+- TODO: State how the CLI names [the operations it reaches](#reach-of-the-cli) and their arguments, and how a caller discovers the available ones.
+- TODO: State how a caller chooses between [readable and structured output](#output-forms), and what the structured output looks like.

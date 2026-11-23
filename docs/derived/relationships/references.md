@@ -16,7 +16,7 @@ A → B means A is referenced by B: the text of B links to A. Layer 1 is drawn a
 | --- | --- | --- |
 | 1 | CORE Core Concepts |  |
 | 2 | ENG Engine Contract | CORE |
-| 3 | CLI Command-Line Interface | CORE, ENG |
+| 3 | CLI Command-Line Interface | ENG |
 | 3 | COND Conditions | CORE, ENG |
 | 3 | CSTATE Campaign State | CORE, ENG |
 | 3 | DEPDIR Gameplay Dependency Direction | CORE, ENG |

@@ -2,7 +2,6 @@
   "awaitingCut": [
     "docs/specs/README.md",
     "docs/specs/design/ui/about-ui.md",
-    "docs/specs/design/ui/cli.md",
     "docs/specs/design/ui/screens/agents-view.md",
     "docs/specs/design/ui/screens/campaign-screen.md",
     "docs/specs/design/ui/screens/charts-view.md",
@@ -83,7 +82,7 @@
     "docs/specs/design/mechanics/panic-and-endings.md": 1900,
     "docs/specs/design/mechanics/turn-advancement.md": 2680,
     "docs/specs/design/ui/about-ui.md": 890,
-    "docs/specs/design/ui/cli.md": 370,
+    "docs/specs/design/ui/cli.md": 340,
     "docs/specs/design/ui/gui.md": 2420,
     "docs/specs/design/ui/music.md": 1840,
     "docs/specs/design/ui/screens/agents-view.md": 3210,
