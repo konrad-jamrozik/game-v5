@@ -122,7 +122,7 @@ A Campaign configuration value belongs to the Mechanics specification whose rule
 
 # TODOs
 
-- TODO: Define the inventory of Campaign configuration values that are adjustable during play, e.g. the values representing difficulty, and the Mechanics specification that introduces each. Only two [Campaign configuration values](../mechanics/economy-and-upgrades.md#campaign-configuration-values) exist so far, starting money and starting funding, which are both fixed after Campaign creation, so neither is adjustable during play.
+- TODO: Define the inventory of Campaign configuration values that are adjustable during play, e.g. the values representing difficulty, and the Mechanics specification that introduces each. Three Campaign configuration values exist so far: [starting money and starting funding](../mechanics/economy-and-upgrades.md#campaign-configuration-values), and the [Prologue](../mechanics/turn-advancement.md#prologue). All three are fixed after Campaign creation, so none is adjustable during play.
 - TODO: Define what `session.campaignConfiguration.set(values)` reports. Affects [Changing Campaign configuration during play](#changing-campaign-configuration-during-play).
 - TODO (later): Allow Campaign-specific overrides of Global configuration preferences, see [Global configuration](#global-configuration).
 - TODO (later): Store a selected preset or Preset edits beyond the Session, e.g. a player-saved custom preset or a remembered last selection, see [Preset selection and edits](#preset-selection-and-edits).
