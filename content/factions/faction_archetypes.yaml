@@ -1,17 +1,14 @@
 id: red_dawn
 type: FactionArchetype
 name: Red Dawn
-initial_activity_level: faint
-initial_lasts_turns: null # faint's own lasts_turns applies
+initial_lasts_turns: [0, 0] # never dormant: starts at faint
 ---
 id: exalt
 type: FactionArchetype
 name: Exalt
-initial_activity_level: dormant
 initial_lasts_turns: [10, 20]
 ---
 id: black_lotus
 type: FactionArchetype
 name: Black Lotus
-initial_activity_level: dormant
 initial_lasts_turns: [10, 20]

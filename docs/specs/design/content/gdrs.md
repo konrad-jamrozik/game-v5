@@ -200,10 +200,10 @@ Type owner: [Factions](../mechanics/factions.md).
 
 | GDR | Type | GDR purpose | What it supplies |
 | --- | --- | --- | --- |
-| `red_dawn` | FactionArchetype | Archetype | The Faction Red Dawn: its name and its initial Faction activity level, `faint`, which lasts as long as `faint` sets. |
-| `exalt` | FactionArchetype | Archetype | The Faction Exalt: its name, its initial Faction activity level, `dormant`, and how long it stays at `dormant`. |
-| `black_lotus` | FactionArchetype | Archetype | The Faction Black Lotus: its name, its initial Faction activity level, `dormant`, and how long it stays at `dormant`. |
-| `dormant` | FactionActivityLevel | Calculation parameter | A level without operations, at which a Faction only starts: the next level, `faint`; each FactionArchetype starting at it sets how long it lasts. |
+| `red_dawn` | FactionArchetype | Archetype | The Faction Red Dawn: its name and how long it stays at `dormant`, `[0, 0]`, so it is never at `dormant` and starts at `faint`. |
+| `exalt` | FactionArchetype | Archetype | The Faction Exalt: its name and how long it stays at `dormant`. |
+| `black_lotus` | FactionArchetype | Archetype | The Faction Black Lotus: its name and how long it stays at `dormant`. |
+| `dormant` | FactionActivityLevel | Calculation parameter | The first level, at which every Faction starts, without operations: the next level, `faint`; each FactionArchetype sets how long it lasts. |
 | `faint` | FactionActivityLevel | Calculation parameter | How long the level lasts, how often an operation occurs, the weight of each Faction operation level, and the next level, `emerging`. |
 | `emerging`, `active`, `expanding`, `escalating`, `war` | FactionActivityLevel | Calculation parameter | As `faint`; each is the next level of the one before it, and the next level of `war` is `total_war`. |
 | `total_war` | FactionActivityLevel | Calculation parameter | As `faint`, except that it lasts indefinitely and has no next level. |

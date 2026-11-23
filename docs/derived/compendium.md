@@ -762,11 +762,10 @@ Source: `content/compendium/compendium_articles/black_lotus_article.yaml`
 
 A ruthless cult that trades in fear and silence. Follow its members up the chain to its headquarters and its leader, and a final [operation](#faction-operations) ends Black Lotus for good.
 
-| `black_lotus`            | FactionArchetype |
-| ------------------------ | ---------------- |
-| `name`                   | `Black Lotus`    |
-| `initial_activity_level` | `dormant`        |
-| `initial_lasts_turns`    | `[10,20]`        |
+| `black_lotus`         | FactionArchetype |
+| --------------------- | ---------------- |
+| `name`                | `Black Lotus`    |
+| `initial_lasts_turns` | `[10,20]`        |
 
 ### Exalt
 
@@ -774,11 +773,10 @@ Source: `content/compendium/compendium_articles/exalt_article.yaml`
 
 A secretive cult that hides behind charity and patronage while it buys influence. Follow its members up the chain to its headquarters and its leader, and a final [operation](#faction-operations) ends Exalt for good.
 
-| `exalt`                  | FactionArchetype |
-| ------------------------ | ---------------- |
-| `name`                   | `Exalt`          |
-| `initial_activity_level` | `dormant`        |
-| `initial_lasts_turns`    | `[10,20]`        |
+| `exalt`               | FactionArchetype |
+| --------------------- | ---------------- |
+| `name`                | `Exalt`          |
+| `initial_lasts_turns` | `[10,20]`        |
 
 ### Red Dawn
 
@@ -786,11 +784,10 @@ Source: `content/compendium/compendium_articles/red_dawn_article.yaml`
 
 A violent cult that recruits in the shadows and grows bolder the longer it is left alone. Follow its members up the chain to its headquarters and its leader, and a final [operation](#faction-operations) ends Red Dawn for good.
 
-| `red_dawn`               | FactionArchetype |
-| ------------------------ | ---------------- |
-| `name`                   | `Red Dawn`       |
-| `initial_activity_level` | `faint`          |
-| `initial_lasts_turns`    | `null`           |
+| `red_dawn`            | FactionArchetype |
+| --------------------- | ---------------- |
+| `name`                | `Red Dawn`       |
+| `initial_lasts_turns` | `[0,0]`          |
 
 ## Subject articles: Lead
 
