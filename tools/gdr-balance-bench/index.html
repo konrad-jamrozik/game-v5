@@ -1246,7 +1246,7 @@
         `Combat rating of Response Missions, mean of each ${OP_BUCKET} Turns`,
         `<div class="chart" id="ch_cr"></div>`,
       ) +
-      `<div id="o_panic"></div><div class="note">An expected-value estimate with no Faction Eliminated and no Panic reduction from won Initiative Missions: each level lasts its mean duration, operations arrive at the mean interval, each operation's Response Mission site is equally likely to be any of its level's, and every operation not won is ignored or lost. A Response Mission's Combat rating is its Enemies' at full health; the band marks the test team's Combat rating. Funding and money count every operation, including the ones after the Campaign may already have been lost. The Funding received counts the starting Funding only when its checkbox is on; the money counts only won Response Missions, not the starting money or any spending.</div>`,
+      `<div id="o_panic"></div><div class="note">An expected-value estimate with no Faction Eliminated and no Panic reduction from won Initiative Missions: each level lasts its mean duration, operations arrive at the mean interval, each operation's Response Mission site is equally likely to be any of its level's, and every operation not won is ignored or lost. A Response Mission's Combat rating is its Enemies' at full health; the band marks the test team's Combat rating. Each red mark gives the Combat rating of the strongest Response Mission site its 10 Turns can bring, and its saturation the chance that site comes at least once in them, taking the operations as a Poisson process. Funding and money count every operation, including the ones after the Campaign may already have been lost. The Funding received counts the starting Funding only when its checkbox is on; the money counts only won Response Missions, not the starting money or any spending.</div>`,
     'read',
   )}
   </div></div></section>`)
@@ -1709,6 +1709,18 @@
         }
         const clampY = (y) => Math.max(ymin, Math.min(y, o.ymax))
         /*
+         * Horizontal marks, each across its bucket's Turns, in Danger, more saturated the higher its `alpha`, e.g. a
+         * chance from 0 to 1. The opacity runs from 0.15 to 1, so that an unlikely mark stays visible.
+         */
+        ;(o.marks || [])
+          .filter((k) => k.from <= o.xmax)
+          .forEach((k) => {
+            const x0 = X(k.from - 1),
+              x1 = Math.max(x0 + 0.5, X(Math.min(k.to, o.xmax)) - 1),
+              y = Y(clampY(k.y)).toFixed(1)
+            s += `<line x1="${x0.toFixed(1)}" x2="${x1.toFixed(1)}" y1="${y}" y2="${y}" stroke="var(--danger)" stroke-width="3" stroke-opacity="${(0.15 + 0.85 * Math.max(0, Math.min(1, k.alpha))).toFixed(3)}"/>`
+          })
+        /*
          * The lines, each with its color, width, and dots, e.g. a flow and its running total on the same axes. Without
          * `o.series` the chart draws `o.pts` alone, in Accent. The hover follows `o.pts`.
          */
@@ -2013,10 +2025,12 @@
           }
         /* Per operation level: the mean Combat rating of its Response Mission sites, each equally likely, and its Effects. */
         const crOf = {},
+          siteCount = {},
           ol = (k) => cur['operation_level_' + k]
         LEVELS.forEach((k) => {
           const rs = RESP.filter((s) => cur[s].level === k).map((s) => siteRating(s).rating)
           crOf[k] = rs.length ? rs.reduce((a, b) => a + b, 0) / rs.length : 0
+          siteCount[k] = rs.length
         })
         const fundOf = (k) =>
             win * ol(k).on_win.funding + (k < EXISTENTIAL ? ign * ol(k).on_ignored_or_lost.funding : 0),
@@ -2066,7 +2080,21 @@
           /* What the bucket's operations bring: their mean Combat rating, Funding change, and money per Turn. */
           const cnt = n.reduce((a, b) => a + b, 0),
             sum = (g) => LEVELS.reduce((s, k, i) => s + n[i] * g(k), 0)
+          /*
+           * The strongest Response Mission site that can occur in the bucket: of the sites of every level with expected
+           * operations in it, the one with the highest Combat rating. Its expected count is its level's operations
+           * shared equally among that level's sites, and the chance it occurs at least once is 1 − e^−count, taking the
+           * operations as a Poisson process.
+           */
+          let top = null
+          RESP.forEach((s) => {
+            const k = cur[s].level,
+              lambda = (n[k - 1] || 0) / (siteCount[k] || 1),
+              r = siteRating(s).rating
+            if (lambda > 0 && (!top || r > top.cr)) top = { site: s, cr: r, p: 1 - Math.exp(-lambda) }
+          })
           buckets.push({
+            top,
             from,
             to,
             n,
@@ -2117,7 +2145,8 @@
         })
         const crPts = bpts((b) => b.cr),
           teamCr = teamRatings().eff,
-          crMax = Math.max(teamCr, ...crPts.map((p) => p[1]))
+          tops = buckets.filter((b) => b.top && b.from <= xmax),
+          crMax = Math.max(teamCr, ...crPts.map((p) => p[1]), ...tops.map((b) => b.top.cr))
         lineChart($('ch_cr'), {
           pts: crPts.length ? crPts : [[0, 0]],
           xmax,
@@ -2128,8 +2157,17 @@
           bandLabel: 'Test team Combat rating ' + f(teamCr, 0),
           vl,
           bars,
+          /* The strongest site each bucket can bring, its saturation the chance it comes at least once. */
+          marks: tops.map((b) => ({ from: b.from, to: b.to, y: b.top.cr, alpha: b.top.p })),
           dots: true,
-          fmt: (p) => tipOf(p, `Combat rating ${f(p[1], 0)}`),
+          fmt: (p) =>
+            tipOf(
+              p,
+              `Combat rating ${f(p[1], 0)}` +
+                (p[2] && p[2].top
+                  ? `\nStrongest ${f(p[2].top.cr, 0)}: ${title(p[2].top.site)}, ${f(p[2].top.p * 100, 0)}% at least once`
+                  : ''),
+            ),
         })
         /*
          * What the Campaign receives in each bucket, and in all buckets so far: the money of its won Response Missions,
