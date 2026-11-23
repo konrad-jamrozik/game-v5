@@ -10,77 +10,79 @@ The family reads from abstract to concrete: words, then engine promises, then da
 
 # Documents
 
+The specifications are listed in reading order; Numbers is read as needed.
+
 ## Core Concepts
 
-[Core Concepts](core-concepts.md) answers _what do the shared words mean?_ It owns the vocabulary used across the whole game contract, e.g. Campaign, Session, and Game build. It defines meanings only, not behavior, data layout, or mechanics: Engine Contract owns what a Session holds and what is persisted, and Campaign State owns how Campaign state divides into components. Nearly every other specification uses it, so each term has a single definition.
+[Core Concepts](core-concepts.md) answers _what do the shared words mean?_ It defines meanings only, and nearly every other specification uses it, so each term has a single definition.
 
 ## Engine Contract
 
-[Engine Contract](engine-contract.md) answers _what is true of the engine as a whole?_ It owns how the engine divides, into engine subsystems, API operations, and data, which callers may use which operations, and the guarantees every engine subsystem keeps, e.g. World state integrity. It owns no engine subsystem: it names the one owner of each, without stating that subsystem's behavior.
+[Engine Contract](engine-contract.md) answers _what is true of the engine as a whole?_ It owns no engine subsystem: it names the one owner of each, without stating that subsystem's behavior.
 
 ## Player API
 
-[Player API](player-api.md) answers _what can the player see, and how do gameplay actions change a Campaign?_ It owns how a specification declares a value Player-visible, the contract every gameplay action follows, and the information boundary that keeps every channel of Player API from revealing what its queries hide.
+[Player API](player-api.md) answers _what can the player see, and how do gameplay actions change a Campaign?_
 
 ## Campaign State
 
-[Campaign State](campaign-state.md) answers _what is a Campaign's data made of?_ It divides Campaign state into the Timeline of World states with its Timeline pointer, the History, the Campaign configuration, and the Turn report, says what the Game rules read of it, and says how Campaign initialization produces the first Campaign state. It builds on Core Concepts, which names Campaign state and leaves its components to Campaign State. It stays generic: the rules would hold for any game built on this engine.
+[Campaign State](campaign-state.md) answers _what is a Campaign's data made of?_ It stays generic: the rules would hold for any game built on this engine.
 
 ## Campaign Instances
 
-[Campaign Instances](campaign-instances.md) answers _how is one thing in a Campaign's world modeled?_ Every such thing is a Campaign instance with the same four properties, created with a fresh Instance ID, referenced only through valid references, and able to adopt Role Types. It builds on Core Concepts, which names the Campaign instance, and on Campaign State, which places every Campaign instance in World state.
+[Campaign Instances](campaign-instances.md) answers _how is one thing in a Campaign's world modeled?_
 
 ## History and Turn Report
 
-[History and Turn Report](world-history.md) answers _what must a Campaign remember?_ It keeps the historical facts that the Game rules and queries need, the Turn series that charts use, and the Turn report and History entries, and what Player API returns of them. It details Campaign State's History and Turn report components.
+[History and Turn Report](world-history.md) answers _what must a Campaign remember?_
 
 ## Game Data Records
 
-[Game Data Records](game-data-records.md) answers _what can a Game Data Record (GDR) be used for?_ It owns the six purposes a GDR can serve and a worked example of each.
+[Game Data Records](game-data-records.md) answers _what can a Game Data Record (GDR) be used for?_
 
 ## Effect Lists
 
-[Effect Lists](effect-lists.md) answers _how does game data say what changes when something happens?_ It owns the Effect list, a plain list of Effects that a GDR declares for one occasion, and what the definition of each Effect kind must state. It defines no Effect kind: each Mechanics specification defines the Effect kinds that change the values it owns.
+[Effect Lists](effect-lists.md) answers _how does game data say what changes when something happens?_ It defines no Effect kind: each Mechanics specification defines the Effect kinds that change the values it owns.
 
 ## Conditions
 
-[Conditions](conditions.md) answers _how does game data say when something may happen?_ It owns the Condition, a yes-or-no question about a Campaign that a GDR declares, how Conditions combine with "all", "any", and "not", and what the definition of each Condition kind must state. It defines no Condition kind: each Mechanics specification defines the Condition kinds that check the facts it owns.
+[Conditions](conditions.md) answers _how does game data say when something may happen?_ It defines no Condition kind: each Mechanics specification defines the Condition kinds that check the facts it owns.
 
 ## Campaign Lifecycle
 
-[Campaign Lifecycle](campaign-lifecycle.md) answers _how does a Session get, change, and lose its Current campaign?_ It owns when a Session starts and ends, creating, loading, selecting, and closing the Current campaign, what `session.getStatus()` reports, and which Session API operations need no Current campaign.
+[Campaign Lifecycle](campaign-lifecycle.md) answers _how does a Session get, change, and lose its Current campaign?_
 
 ## Developer Access
 
-[Developer Access](developer-access.md) answers _how can the Session controller inspect and change a Campaign beyond ordinary play?_ It owns Dev mode, full Campaign state inspection, Player cheat actions, and random outcome overrides.
+[Developer Access](developer-access.md) answers _how can the Session controller inspect and change a Campaign beyond ordinary play?_
 
 ## Determinism and Randomness
 
-[Determinism and Randomness](determinism-and-randomness.md) answers _what makes a Campaign reproducible?_ It owns the determinism guarantee, the Campaign seed, the rules every random outcome obeys, and how unique identifiers behave under replay. Each Mechanics specification still owns the distributions of its own random outcomes.
+[Determinism and Randomness](determinism-and-randomness.md) answers _what makes a Campaign reproducible?_ Each Mechanics specification still owns the distributions of its own random outcomes.
 
 ## Saves
 
-[Saves](saves.md) answers _what do saving and loading do, and what does the engine save by itself?_ It owns what a Campaign save holds, saving, loading, the Autosaves the engine writes, the Save size limit, and which Campaign saves a Game build loads.
+[Saves](saves.md) answers _what do saving and loading do, and what does the engine save by itself?_
 
 ## Timeline
 
-[Timeline](timeline.md) answers _how does the player go back and forward, within a Turn and across Turns?_ It owns the structure of the Timeline, undo and redo of the Player actions of the current Turn by moving the Timeline pointer, undo and redo across Turns by Autosave navigation, and what returning to a World state guarantees.
+[Timeline](timeline.md) answers _how does the player go back and forward, within a Turn and across Turns?_
 
 ## Configuration
 
-[Configuration](configuration.md) answers _where does each setting live, and which value applies?_ It owns the kinds of setting, Global configuration, the Campaign configuration presets a Game build supplies, the configuration cascade, and changing Campaign configuration during play.
+[Configuration](configuration.md) answers _where does each setting live, and which value applies?_
 
 ## Autopilot
 
-[Autopilot](autopilot.md) answers _how does an AI play on the player's behalf?_ It owns Autopilot limits, what an Autopilot AI receives, and how an Autopilot engagement ends.
+[Autopilot](autopilot.md) answers _how does an AI play on the player's behalf?_
 
 ## Numbers
 
-[Numbers](numbers.md) answers _how do the game's numbers behave?_ It owns that every stored quantity is held as a whole number, of units or of hundredths, the two rounding operations, how percentages and probabilities are computed, and exact evaluation. It owns nothing about randomness: Determinism and Randomness owns [Determinism](determinism-and-randomness.md#determinism) and the [Campaign seed](determinism-and-randomness.md#campaign-seed), and each Mechanics specification owns the distributions of its own random outcomes.
+[Numbers](numbers.md) answers _how do the game's numbers behave?_ It owns nothing about randomness.
 
 # How they relate
 
-Core Concepts sits underneath everything, and Engine Contract, which states the guarantees shared by every subsystem, comes next. Campaign State, Effect Lists, Conditions, and Player API build directly on those two. Determinism and Randomness and Game Data Records build on Campaign State; Campaign Instances, Numbers, and Saves build on Determinism and Randomness; Timeline and Campaign Lifecycle build on Saves; History and Turn Report, Autopilot, and Developer Access build on Timeline; and Configuration, which uses History and Turn Report for the Turn series of a Campaign configuration value, is the top layer. No Foundation specification references a Mechanics specification; the [Mechanics family](../mechanics/about-mechanics.md) builds on this one, with Domain Model as its base.
+Core Concepts sits underneath everything, and Engine Contract, which states the guarantees shared by every engine subsystem, comes next. Every other Foundation specification builds on those two and on the specifications whose terms its rules use. The diagrams below are generated from those links, so they show each specification's present layer. The [Mechanics family](../mechanics/about-mechanics.md) builds on this one, with Domain Model as its base.
 
 <!-- generated:family-diagram:start -->
 
@@ -110,12 +112,3 @@ _Generated from the links between the specifications by `npm run docs:generate`;
 - **Saves versus Timeline:** Saves holds what most games have: saving, loading, and the Autosaves the engine writes. It needs nothing from Timeline. Timeline holds all undo and redo and builds on Saves. Undo and redo within a Turn work without any Campaign save; undo and redo across Turns load Autosaves, so Timeline uses Saves rather than the reverse.
 - **Numbers:** several Mechanics documents depend on the same arithmetic, e.g. the same rounding operations, so it does not belong inside a single mechanic.
 - **Determinism and Randomness versus Engine Contract:** determinism, the Campaign seed, random outcomes, and unique identifiers share one test, whether replay must reproduce a result, and change together, so one document holds them in detail. Each Mechanics document owns the distributions of its own random outcomes, and how a random rule is written is owned by Specification Conventions.
-
-# Reading order
-
-1. [Core Concepts](core-concepts.md) for the vocabulary.
-2. [Engine Contract](engine-contract.md) for what the engine promises and the data it owns, then [Player API](player-api.md) for what the player sees and does.
-3. [Campaign State](campaign-state.md), [Campaign Instances](campaign-instances.md), [History and Turn Report](world-history.md), [Game Data Records](game-data-records.md), [Effect Lists](effect-lists.md), and [Conditions](conditions.md) for how campaign data and game data are shaped.
-4. [Campaign Lifecycle](campaign-lifecycle.md), [Saves](saves.md), [Timeline](timeline.md), [Configuration](configuration.md), [Autopilot](autopilot.md), [Developer Access](developer-access.md), and [Determinism and Randomness](determinism-and-randomness.md) for the engine subsystems.
-5. [Numbers](numbers.md) as needed.
-6. The [Mechanics family](../mechanics/about-mechanics.md) for the game itself.
