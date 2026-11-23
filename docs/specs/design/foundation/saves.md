@@ -16,15 +16,13 @@ Campaign saves come from two sources. The [Session controller](engine-contract.m
 
 # Glossary
 
-General terms are in the [Engine Contract glossary](engine-contract.md#glossary). The [Independent identifier](determinism-and-randomness.md#glossary) is in the [Determinism and Randomness glossary](determinism-and-randomness.md#glossary).
-
 ## Identifiers
 
 The identifiers of [Campaigns](core-concepts.md#campaign-and-session) and their [Campaign saves](engine-contract.md#persisted-data).
 
 | Term | Definition |
 | --- | --- |
-| Campaign ID | The Independent identifier identifying one Campaign, assigned when the Campaign is created and shared by every Campaign save of that Campaign. It is not [Campaign state](core-concepts.md#campaign-and-session), and the [Game rules](core-concepts.md#game-build-and-content) never read it. |
+| Campaign ID | The [Independent identifier](determinism-and-randomness.md#glossary) identifying one Campaign, assigned when the Campaign is created and shared by every Campaign save of that Campaign. It is not [Campaign state](core-concepts.md#campaign-and-session), and the [Game rules](core-concepts.md#game-build-and-content) never read it. |
 | Campaign save ID | The Independent identifier identifying one Campaign save, assigned when that Campaign save is created. |
 
 ## Autosave kinds

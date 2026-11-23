@@ -16,8 +16,6 @@ The engine divides into engine subsystems, into API operations grouped by which 
 
 # Glossary
 
-Shared vocabulary, including [Session](core-concepts.md#campaign-and-session), is defined by [Core Concepts](core-concepts.md#glossary).
-
 ## Engine subsystem kinds
 
 The parts of the engine that each have one owning specification, listed under [Engine subsystems](#engine-subsystems).
@@ -30,7 +28,7 @@ The parts of the engine that each have one owning specification, listed under [E
 
 ## Principals and access
 
-Kinds of engine API caller and the Session access settings that govern them.
+Kinds of engine API caller and the [Session](core-concepts.md#campaign-and-session) access settings that govern them.
 
 | Term | Definition | Prohibited synonyms |
 | --- | --- | --- |

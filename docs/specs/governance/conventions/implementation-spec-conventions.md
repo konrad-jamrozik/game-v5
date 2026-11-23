@@ -16,11 +16,9 @@ What decides how far one binds is its Binding. A Mandatory specification states 
 
 # Glossary
 
-Terms about [specifications](spec-conventions.md#specifications) in general are in the Specification Conventions glossary.
-
 | Term | Definition |
 | --- | --- |
-| Binding | Whether an [Implementation](spec-conventions.md#artifacts) specification is Guidance, which implementations may ignore, or Mandatory, which every implementation must follow; it follows from the specification's [Family](spec-conventions.md#specifications). |
+| Binding | Whether an [Implementation](spec-conventions.md#artifacts) [specification](spec-conventions.md#specifications) is Guidance, which implementations may ignore, or Mandatory, which every implementation must follow; it follows from the specification's [Family](spec-conventions.md#specifications). |
 
 # What belongs in an Implementation specification
 

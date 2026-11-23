@@ -16,8 +16,6 @@ It reads like a small reference work. The Player narrows from a category to an a
 
 # Glossary
 
-These terms are specific to the Compendium View.
-
 | Term | Definition |
 | --- | --- |
 | Article history | The articles the Player has shown one after another in the Compendium View, with the place among them of the one shown now, through which the Previous article and Next article buttons move. |

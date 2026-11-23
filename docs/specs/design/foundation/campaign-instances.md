@@ -16,16 +16,14 @@ Because every thing has this one shape, any of them can be created, referenced, 
 
 # Glossary
 
-These terms are specific to Campaign Instances. [Campaign instance](core-concepts.md#campaign-instances), [Archetype](core-concepts.md#campaign-instances), [State](core-concepts.md#campaign-instances), [Constants](core-concepts.md#campaign-instances), and other general terms are in the [Core Concepts glossary](core-concepts.md#glossary) and the [Campaign State glossary](campaign-state.md#glossary).
-
 | Term | Definition | Prohibited synonyms |
 | --- | --- | --- |
-| Instance ID | The identifier of one Campaign instance, unique within a declared identity scope and stable for the Campaign instance's lifetime, formed from its Campaign instance [Type](core-concepts.md#data-modeling) and that Type's creation count under [Campaign instance identity](#campaign-instance-identity). It is a [Campaign-scoped identifier](determinism-and-randomness.md#glossary). | ID; Entity ID. GDR identifiers, Spec IDs, and other identifiers keep their own names. |
+| Instance ID | The identifier of one [Campaign instance](core-concepts.md#campaign-instances), unique within a declared identity scope and stable for the Campaign instance's lifetime, formed from its Campaign instance [Type](core-concepts.md#data-modeling) and that Type's creation count under [Campaign instance identity](#campaign-instance-identity). It is a [Campaign-scoped identifier](determinism-and-randomness.md#glossary). | ID; Entity ID. GDR identifiers, Spec IDs, and other identifiers keep their own names. |
 | Role Type | A [Type](core-concepts.md#data-modeling) that Campaign instance Types can adopt. It states the properties a Campaign instance Type must have to adopt it, and the properties its Campaign instances gain for a stated duration. |  |
 
 # Campaign instance structure
 
-Every thing in a [Campaign](core-concepts.md#campaign-and-session)'s world is described in the same terms, so any two of them can be compared, inspected, and referenced alike. A Campaign instance Type always has exactly four properties: Instance ID, an Archetype reference, Constants, and State. Every Campaign instance has exactly these four properties. E.g., the singleton [Agency](../mechanics/domain-model.md#agency-and-agents) is not exempt: its Archetype reference is required like that of any other Campaign instance.
+Every thing in a [Campaign](core-concepts.md#campaign-and-session)'s world is described in the same terms, so any two of them can be compared, inspected, and referenced alike. A Campaign instance Type always has exactly four properties: Instance ID, an [Archetype](core-concepts.md#campaign-instances) reference, [Constants](core-concepts.md#campaign-instances), and [State](core-concepts.md#campaign-instances). Every Campaign instance has exactly these four properties. E.g., the singleton [Agency](../mechanics/domain-model.md#agency-and-agents) is not exempt: its Archetype reference is required like that of any other Campaign instance.
 
 The four-property shape is the ubiquitous language for Campaign instances. It is chosen for uniformity and ease of reasoning: every Campaign instance is described, compared, and inspected in the same terms. The shape therefore belongs in this specification under the vocabulary criterion of [What belongs in a Design specification](../../governance/conventions/design-spec-conventions.md#what-belongs-in-a-design-specification) and must not be removed or weakened as an implementation detail.
 

@@ -16,8 +16,6 @@ Its screens follow the life of a [Session](../foundation/core-concepts.md#campai
 
 # Glossary
 
-These terms are specific to the Graphical User Interface.
-
 | Term | Definition |
 | --- | --- |
 | Detail view | A panel of the [Campaign screen](screens/campaign-screen.md) for one part of the [Campaign](../foundation/core-concepts.md#campaign-and-session) that the Player looks at in detail or acts on, opened from the Side panel over the Globe stage. |

@@ -16,15 +16,13 @@ The work accumulates. In every Advance turn, [Investigation progress](domain-mod
 
 # Glossary
 
-[Investigation progress](domain-model.md#leads-investigations-mission-sites-and-missions) and other general terms are in the [Domain Model glossary](domain-model.md#glossary).
-
 | Term | Definition |
 | --- | --- |
 | Required progress range | The whole numbers of [progress points](domain-model.md#leads-investigations-mission-sites-and-missions) from a [Lead](domain-model.md#leads-investigations-mission-sites-and-missions)'s [Required progress](leads-and-progression.md#glossary) up to the maximum that InvestigationParameters allow, from which an [Investigation](domain-model.md#leads-investigations-mission-sites-and-missions)'s Actual required progress is drawn. |
 | Actual required progress | The progress points an Investigation must reach to complete, drawn when it starts. It is hidden from the player. |
 | Assessed | Whether an Investigation's progress has ever reached the assessment threshold of its Lead, under [Assessment](#assessment). |
 | Assessed Lead | A Lead with at least one Assessed Investigation. Its Required progress and Required progress range are Player-visible. |
-| Working member | In an Advance turn: a member of an Investigation's [Current team](domain-model.md#leads-investigations-mission-sites-and-missions) that is a [Working Agent](agents-spec.md#assignments), i.e. that is [At assignment](domain-model.md#agency-and-agents) on the Investigation when the Investigation progress step begins. A member [In transit](domain-model.md#agency-and-agents) to the Investigation is not a Working member, including one that arrives in the Previous turn transit arrivals step of that Advance turn. |
+| Working member | In an Advance turn: a member of an Investigation's [Current team](domain-model.md#leads-investigations-mission-sites-and-missions) that is a [Working Agent](agents-spec.md#assignments), i.e. that is [At assignment](domain-model.md#agency-and-agents) on the Investigation when the [Investigation progress](domain-model.md#leads-investigations-mission-sites-and-missions) step begins. A member [In transit](domain-model.md#agency-and-agents) to the Investigation is not a Working member, including one that arrives in the Previous turn transit arrivals step of that Advance turn. |
 
 The [Investigation](domain-model.md#leads-investigations-mission-sites-and-missions) states Active, Completed, and Abandoned are defined by the state table under [Investigation lifecycle](#investigation-lifecycle).
 
@@ -99,7 +97,7 @@ An Investigation also has one [Derived value](../foundation/core-concepts.md#val
 
 ## Investigation creation
 
-An Investigation is created on exactly one occasion: a successful `startInvestigation` Player action, under [Starting an Investigation](#starting-an-investigation). The initial [Campaign state](../foundation/core-concepts.md#campaign-and-session) contains no Investigation, and no [Turn advancement step](turn-advancement.md#glossary) creates one. Each new Investigation has a fresh [Instance ID](../foundation/campaign-instances.md#glossary) under [Campaign instance identity scope](domain-model.md#campaign-instance-identity-scope) in Domain Model, and the following initial values, under [Campaign instance creation](../foundation/campaign-instances.md#campaign-instance-creation) in Campaign Instances. This table is exhaustive.
+An Investigation is created on exactly one occasion: a successful `startInvestigation` Player action, under [Starting an Investigation](#starting-an-investigation). The initial [Campaign state](../foundation/core-concepts.md#campaign-and-session) contains no Investigation, and no [Turn advancement step](domain-model.md#turn-advancement-steps) creates one. Each new Investigation has a fresh [Instance ID](../foundation/campaign-instances.md#glossary) under [Campaign instance identity scope](domain-model.md#campaign-instance-identity-scope) in Domain Model, and the following initial values, under [Campaign instance creation](../foundation/campaign-instances.md#campaign-instance-creation) in Campaign Instances. This table is exhaustive.
 
 | Value | Initial value | Source |
 | --- | --- | --- |
@@ -275,7 +273,7 @@ Inputs:
 | --- | --- | --- |
 | working member | A Working member of the Investigation in this Advance turn, under [Glossary](#glossary). | An Agent. |
 | n | The number of working members. | A whole number of at least 0. |
-| [effective skill](agents-spec.md#combatant-attributes) | A working member's [Effective skill](agents-spec.md#effective-skill), computed from its [Step-start values](turn-advancement.md#glossary) of this step. | Skill points; a whole number of at least 0. |
+| [effective skill](agents-spec.md#combatant-attributes) | A working member's [Effective skill](agents-spec.md#effective-skill), computed from its [Step-start values](domain-model.md#turn-advancement-steps) of this step. | Skill points; a whole number of at least 0. |
 | S | The sum of the effective skill of every working member; 0 when n is 0. | Skill points; a whole number of at least 0. |
 | p and q | The `team_efficiency_exponent` of InvestigationParameters as the fraction p / q in lowest terms, e.g. 4 and 5 for 0.8. | Whole numbers with 1 ≤ p ≤ q ≤ 100. |
 | Investigation progress before | The Investigation's Investigation progress when the step begins. | Hundredths of a progress point; a whole number of at least 0. |

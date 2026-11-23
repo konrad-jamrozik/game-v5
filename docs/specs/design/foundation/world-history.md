@@ -16,8 +16,6 @@ What a Turn leaves behind is written once, when Advance turn ends it, into the [
 
 # Glossary
 
-These terms are specific to History and Turn Report. General terms are in the [Campaign State glossary](campaign-state.md#glossary).
-
 | Term | Definition |
 | --- | --- |
 | Retained | Describes model data kept available for the [Game rules](core-concepts.md#game-build-and-content), [Player API](engine-contract.md#api-surfaces) queries, or reference resolution. Retained describes availability, not where the data is kept: it may be in the [History](campaign-state.md#glossary) or in a [World state](engine-contract.md#player-actions-and-turns), e.g. a Retired Campaign instance. Retention does not establish mutability or a lifecycle state. |

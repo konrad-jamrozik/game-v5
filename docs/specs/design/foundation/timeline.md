@@ -16,13 +16,11 @@ The Turn divides undo and redo into two forms. [Action navigation](#action-navig
 
 # Glossary
 
-General terms are in the [Engine Contract glossary](engine-contract.md#glossary), and [Autosave](saves.md#autosave-kinds) terms are in the [Saves glossary](saves.md#glossary).
-
 | Term | Definition |
 | --- | --- |
 | Timeline entry | One [Player action](engine-contract.md#player-actions-and-turns) of the current [Turn](engine-contract.md#player-actions-and-turns), other than Advance turn, together with the [World state](engine-contract.md#player-actions-and-turns) it produced, as the [Timeline](engine-contract.md#persisted-data) holds them after its [Turn-start state](engine-contract.md#player-actions-and-turns). |
 | Undone action | A Timeline entry after the [Timeline pointer](engine-contract.md#persisted-data), which redo can reach again. The Undone actions are always the last Timeline entries of the Timeline, and committing a new action removes all of them. |
-| Furthest progress Autosave | The Autosave holding the furthest [World state](engine-contract.md#player-actions-and-turns) of the current line of play, which the [Session controller](engine-contract.md#principals-and-access) left by going back through [Autosave navigation](#autosave-navigation), so redo can return to it, e.g. to a Turn the player has not ended and that therefore has no Turn-end Autosave. |
+| Furthest progress Autosave | The [Autosave](saves.md#autosave-kinds) holding the furthest [World state](engine-contract.md#player-actions-and-turns) of the current line of play, which the [Session controller](engine-contract.md#principals-and-access) left by going back through [Autosave navigation](#autosave-navigation), so redo can return to it, e.g. to a Turn the player has not ended and that therefore has no Turn-end Autosave. |
 
 # Timeline structure
 

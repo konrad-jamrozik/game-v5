@@ -16,8 +16,6 @@ Campaign state is organized by what changes it. Each Player action of the curren
 
 # Glossary
 
-These terms are specific to Campaign State. General terms are in the [Core Concepts glossary](core-concepts.md#glossary) and the [Engine Contract glossary](engine-contract.md#glossary); terms about the past are in the [History and Turn Report glossary](world-history.md#glossary).
-
 | Term | Definition | Prohibited synonyms |
 | --- | --- | --- |
 | Live world state | The part of a [World state](engine-contract.md#player-actions-and-turns) other than its Retired world state: every [Campaign instance](core-concepts.md#campaign-instances) still in play, and every other value of the world, e.g. the turn number. | Active world state |

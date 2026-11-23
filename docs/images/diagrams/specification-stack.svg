@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1044" viewBox="0 0 1000 1044" role="img" aria-label="Specification layers from top to bottom. Mechanics, from its top layer to its bottom layer: Turn Advancement; Investigations; Leads and Progression; Missions; Economy and Upgrades, Panic and Endings; Agent Recovery, Combat, Factions; Agents, Compendium; Domain Model. Foundation, from its top layer to its bottom layer: Configuration; Autopilot, Developer Access, History and Turn Report; Campaign Lifecycle, Timeline; Campaign Instances, Numbers, Saves; Determinism and Randomness, Game Data Records, Player API; Campaign State, Conditions, Effect Lists; Engine Contract; Core Concepts.">
-  <title>Specification layers from top to bottom. Mechanics, from its top layer to its bottom layer: Turn Advancement; Investigations; Leads and Progression; Missions; Economy and Upgrades, Panic and Endings; Agent Recovery, Combat, Factions; Agents, Compendium; Domain Model. Foundation, from its top layer to its bottom layer: Configuration; Autopilot, Developer Access, History and Turn Report; Campaign Lifecycle, Timeline; Campaign Instances, Numbers, Saves; Determinism and Randomness, Game Data Records, Player API; Campaign State, Conditions, Effect Lists; Engine Contract; Core Concepts.</title>
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1044" viewBox="0 0 1000 1044" role="img" aria-label="Specification layers from top to bottom. Mechanics, from its top layer to its bottom layer: Turn Advancement; Investigations; Leads and Progression; Missions; Economy and Upgrades, Panic and Endings; Agent Recovery, Combat, Factions; Agents, Compendium; Domain Model. Foundation, from its top layer to its bottom layer: Configuration; Developer Access, History and Turn Report; Autopilot, Campaign Lifecycle, Timeline; Campaign Instances, Numbers, Saves; Determinism and Randomness, Game Data Records, Player API; Campaign State, Conditions, Effect Lists; Engine Contract; Core Concepts.">
+  <title>Specification layers from top to bottom. Mechanics, from its top layer to its bottom layer: Turn Advancement; Investigations; Leads and Progression; Missions; Economy and Upgrades, Panic and Endings; Agent Recovery, Combat, Factions; Agents, Compendium; Domain Model. Foundation, from its top layer to its bottom layer: Configuration; Developer Access, History and Turn Report; Autopilot, Campaign Lifecycle, Timeline; Campaign Instances, Numbers, Saves; Determinism and Randomness, Game Data Records, Player API; Campaign State, Conditions, Effect Lists; Engine Contract; Core Concepts.</title>
   <style>
     :root { --bg: #ffffff; --muted: #5b6676; --frame: #c3c9d4; --frame-fill: #f8f9fb;
       --r0-bg: #e9ebef; --r0-fg: #3d4452;
@@ -117,18 +117,18 @@
   <text class="chip-text ink-r7" x="500" y="605">Configuration</text>
   <rect class="fill-r6" x="40" y="627" width="920" height="42" rx="7"/>
   <text class="row-label ink-r6" x="50" y="652">LAYER 7</text>
-  <rect class="chip stroke-r6" x="270.6" y="634" width="94.4" height="28" rx="14"/>
-  <text class="chip-text ink-r6" x="317.8" y="653">Autopilot</text>
-  <rect class="chip stroke-r6" x="373" y="634" width="147.6" height="28" rx="14"/>
-  <text class="chip-text ink-r6" x="446.8" y="653">Developer Access</text>
-  <rect class="chip stroke-r6" x="528.6" y="634" width="200.8" height="28" rx="14"/>
-  <text class="chip-text ink-r6" x="629" y="653">History and Turn Report</text>
+  <rect class="chip stroke-r6" x="321.8" y="634" width="147.6" height="28" rx="14"/>
+  <text class="chip-text ink-r6" x="395.6" y="653">Developer Access</text>
+  <rect class="chip stroke-r6" x="477.4" y="634" width="200.8" height="28" rx="14"/>
+  <text class="chip-text ink-r6" x="577.8" y="653">History and Turn Report</text>
   <rect class="fill-r5" x="40" y="675" width="920" height="42" rx="7"/>
   <text class="row-label ink-r5" x="50" y="700">LAYER 6</text>
-  <rect class="chip stroke-r5" x="371.2" y="682" width="162.8" height="28" rx="14"/>
-  <text class="chip-text ink-r5" x="452.6" y="701">Campaign Lifecycle</text>
-  <rect class="chip stroke-r5" x="542" y="682" width="86.8" height="28" rx="14"/>
-  <text class="chip-text ink-r5" x="585.4" y="701">Timeline</text>
+  <rect class="chip stroke-r5" x="320" y="682" width="94.4" height="28" rx="14"/>
+  <text class="chip-text ink-r5" x="367.2" y="701">Autopilot</text>
+  <rect class="chip stroke-r5" x="422.4" y="682" width="162.8" height="28" rx="14"/>
+  <text class="chip-text ink-r5" x="503.8" y="701">Campaign Lifecycle</text>
+  <rect class="chip stroke-r5" x="593.2" y="682" width="86.8" height="28" rx="14"/>
+  <text class="chip-text ink-r5" x="636.6" y="701">Timeline</text>
   <rect class="fill-r4" x="40" y="723" width="920" height="42" rx="7"/>
   <text class="row-label ink-r4" x="50" y="748">LAYER 5</text>
   <rect class="chip stroke-r4" x="339" y="730" width="162.8" height="28" rx="14"/>

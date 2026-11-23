@@ -16,12 +16,10 @@ Because a setting's value can come from more than one place, a configuration cas
 
 # Glossary
 
-These terms are specific to Configuration. General terms are in the [Engine Contract glossary](engine-contract.md#glossary); [Campaign configuration](campaign-state.md#glossary) is in the [Campaign State glossary](campaign-state.md#glossary).
-
 | Term | Definition |
 | --- | --- |
 | Game build default preset | The one [Campaign configuration preset](game-data-records.md#glossary) that the [Game build](core-concepts.md#game-build-and-content) designates as selected when the player has selected no other. |
-| Preset edit | A value the player sets before creating a [Campaign](core-concepts.md#campaign-and-session) to override one Campaign configuration value of one Campaign configuration preset. The [Session](core-concepts.md#campaign-and-session) holds it. |
+| Preset edit | A value the player sets before creating a [Campaign](core-concepts.md#campaign-and-session) to override one [Campaign configuration](campaign-state.md#glossary) value of one Campaign configuration preset. The [Session](core-concepts.md#campaign-and-session) holds it. |
 
 # Kinds of setting
 

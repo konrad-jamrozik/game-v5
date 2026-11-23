@@ -16,11 +16,9 @@ Two exceptions keep this workable. A Non-term is a word deliberately left undefi
 
 # Glossary
 
-Terms about [specifications](spec-conventions.md#specifications) in general are in the Specification Conventions glossary.
-
 | Term | Definition |
 | --- | --- |
-| Canonical term | The sole term assigned to one concept within the specification set. |
+| Canonical term | The sole term assigned to one concept within the [specification](spec-conventions.md#specifications) set. |
 | Non-term | A word that specifications use without defining it, either because its meaning deliberately depends on context or because it appears in the definition of a formal term. |
 | Prohibited synonym | A word or phrase that competes with a canonical term for the same concept, and that specifications must not use for that concept. |
 

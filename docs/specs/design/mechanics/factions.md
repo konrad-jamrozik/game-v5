@@ -18,8 +18,6 @@ Factions builds on [Domain Model](domain-model.md): Domain Model says that Facti
 
 # Glossary
 
-These terms are specific to Factions. General terms are in the [Domain Model glossary](domain-model.md#glossary).
-
 | Term | Definition | Prohibited synonyms |
 | --- | --- | --- |
 | Faction activity level | How aggressively a [Faction](domain-model.md#factions) currently acts: how often it carries out operations and how severe they are. |  |
@@ -88,7 +86,7 @@ A Faction is a [Campaign instance](../foundation/core-concepts.md#campaign-insta
 | Eliminated | Whether the Faction is [Eliminated](domain-model.md#factions): no or yes. | Authoritative value. Starts as no and changes only under [Elimination](#elimination). |
 | Eliminated turn | The turn number of the [Turn](../foundation/engine-contract.md#player-actions-and-turns) whose Advance turn made the Faction Eliminated, or absent. | Authoritative value. A whole number of at least 1. Absent exactly when Eliminated is no. |
 
-**Range invariant:** In every [World state](../foundation/engine-contract.md#player-actions-and-turns), for every Faction whose Eliminated is no, Turns until the next operation and Turns until the next level are each at least 1 whenever present. The rules under [Escalation](#escalation) and [Faction operation occurrence generation](#faction-operation-occurrence-generation) maintain this: a countdown that reaches zero takes, within the same [Turn advancement step](turn-advancement.md#glossary), the value of a [Level duration](#level-duration) or [Operation interval](#operation-interval) outcome that is at least 1, or becomes absent; a Level duration outcome of 0 is never kept, at creation or later, because the Faction skips that level under [Escalation](#escalation). For a Faction whose Eliminated is yes, both countdowns keep the values they had when it became Eliminated and are never read again.
+**Range invariant:** In every [World state](../foundation/engine-contract.md#player-actions-and-turns), for every Faction whose Eliminated is no, Turns until the next operation and Turns until the next level are each at least 1 whenever present. The rules under [Escalation](#escalation) and [Faction operation occurrence generation](#faction-operation-occurrence-generation) maintain this: a countdown that reaches zero takes, within the same [Turn advancement step](domain-model.md#turn-advancement-steps), the value of a [Level duration](#level-duration) or [Operation interval](#operation-interval) outcome that is at least 1, or becomes absent; a Level duration outcome of 0 is never kept, at creation or later, because the Faction skips that level under [Escalation](#escalation). For a Faction whose Eliminated is yes, both countdowns keep the values they had when it became Eliminated and are never read again.
 
 A Faction's name is not a State property: it is the `name` of its FactionArchetype. A Faction has no [Turn series](../foundation/world-history.md#glossary).
 

@@ -16,8 +16,6 @@ Each Work item is tied to the review that will settle it: it names the [Batch](w
 
 # Glossary
 
-Batch is defined in the [Specification Work Plan and Backlog glossary](work-plan.md#glossary).
-
 | Term | Definition |
 | --- | --- |
 | Work item | One known outstanding issue in one or more [registered](../conventions/spec-conventions.md#specifications) [specifications](../conventions/spec-conventions.md#specifications), recorded in this document until it is resolved or found obsolete. |

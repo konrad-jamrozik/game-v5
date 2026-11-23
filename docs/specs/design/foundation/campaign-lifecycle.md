@@ -16,8 +16,6 @@ A Session plays at most one Campaign at a time, its Current campaign. Creating a
 
 # Glossary
 
-These terms are specific to Campaign Lifecycle. General terms are in the [Core Concepts glossary](core-concepts.md#glossary) and the [Engine Contract glossary](engine-contract.md#glossary).
-
 | Term | Definition |
 | --- | --- |
 | Campaign selection | The [Session](core-concepts.md#campaign-and-session)'s choice of [Current campaign](core-concepts.md#campaign-and-session), made by a successful campaign creation or load and ended by closure or by another selection. |

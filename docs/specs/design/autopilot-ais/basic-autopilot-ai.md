@@ -16,8 +16,6 @@ Its play follows from one idea: the roster is split into three fixed shares. The
 
 # Glossary
 
-These terms are specific to the Basic Autopilot AI. General terms are in the [Domain Model glossary](../mechanics/domain-model.md#glossary) and the [Engine Contract glossary](../foundation/engine-contract.md#glossary).
-
 | Term | Definition |
 | --- | --- |
 | Basic Autopilot AI | The [Autopilot AI](../foundation/engine-contract.md#principals-and-access) described by this document. |

@@ -16,12 +16,10 @@ The guiding principle is that an Autopilot AI plays as an ordinary player would,
 
 # Glossary
 
-These terms are specific to [Autopilot](engine-contract.md#autopilot). General terms are in the [Engine Contract glossary](engine-contract.md#glossary); [Independent identifier](determinism-and-randomness.md#glossary) is in the [Determinism and Randomness glossary](determinism-and-randomness.md#glossary), and [Undone action](timeline.md#glossary) is in the [Timeline glossary](timeline.md#glossary).
-
 | Term | Definition | Prohibited synonyms |
 | --- | --- | --- |
-| Autopilot limit | The bound on an [Autopilot engagement](engine-contract.md#autopilot), fixed when Autopilot is engaged: one [Player action](engine-contract.md#player-actions-and-turns) other than Advance turn, the Player actions of the current [Turn](engine-contract.md#player-actions-and-turns), or a number of Turn advancements. | Delegation scope |
-| Autopilot engagement ID | The Independent identifier identifying one Autopilot engagement, assigned when Autopilot is engaged. |  |
+| Autopilot limit | The bound on an [Autopilot engagement](engine-contract.md#autopilot), fixed when [Autopilot](engine-contract.md#autopilot) is engaged: one [Player action](engine-contract.md#player-actions-and-turns) other than Advance turn, the Player actions of the current [Turn](engine-contract.md#player-actions-and-turns), or a number of Turn advancements. | Delegation scope |
+| Autopilot engagement ID | The [Independent identifier](determinism-and-randomness.md#glossary) identifying one Autopilot engagement, assigned when Autopilot is engaged. |  |
 | Autopilot progress | The number of Player actions other than Advance turn and the number of Advance turn actions that have committed in the current Autopilot engagement, reported to the [Session controller](engine-contract.md#principals-and-access). The [Autopilot AI](engine-contract.md#principals-and-access) does not receive it. |  |
 
 # Available Autopilot AIs

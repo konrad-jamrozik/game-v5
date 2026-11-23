@@ -206,7 +206,7 @@ Run `npm run lint:specs` to validate the complete registered specification corpu
 - [Linked first mentions of terms and cycles among the specifications](artifact-relationships.md#deterministic-validation), and links from a Conventions specification to a Design or Implementation specification.
 - The presence, structure, and coverage of the [overviews of each Specification kind and Family](overview-conventions.md#family-overviews).
 - Objectively prohibited terminology and the shape of the [Prohibited synonyms column](glossary-conventions.md#prohibited-synonyms-column).
-- The length limits and the phrases that describe the document, for [every section](#subject-before-document), the [Overview](overview-conventions.md#specification-overview), and [Glossary groups](glossary-conventions.md#glossary-groups).
+- The length limit of the [Overview](overview-conventions.md#specification-overview), the phrases that describe the document in [any section](#subject-before-document), and a [Glossary that opens with anything but its terms](glossary-conventions.md#glossary-groups).
 - [Word budgets](#word-budgets).
 - Repetition: the removed closing section for boundary cases, a phrase that claims a list is whole or that nothing happens, a clause that only names a section, and a sentence of twelve words or more that another place already holds.
 

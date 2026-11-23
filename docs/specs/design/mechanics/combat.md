@@ -20,11 +20,9 @@ Combat builds on [Agents](agents-spec.md): Agents says what makes a Combatant st
 
 # Glossary
 
-These terms are specific to [Combat](domain-model.md#combat). General terms are in the [Domain Model glossary](domain-model.md#glossary); terms about [base skill](agents-spec.md#combatant-attributes), [current health](agents-spec.md#combatant-attributes), [exhaustion](agents-spec.md#combatant-attributes), and [base weapon damage](agents-spec.md#combatant-attributes) are in the [Agents glossary](agents-spec.md#glossary).
-
 ## Combat rounds and results
 
-How a Combat is divided, and how it ends.
+How a [Combat](domain-model.md#combat) is divided, and how it ends.
 
 | Term | Definition | Prohibited synonyms |
 | --- | --- | --- |
@@ -40,7 +38,7 @@ How a Combat is divided, and how it ends.
 | Selection weight | How strongly an attacker is drawn to one opponent able to fight, as a whole number of at least 1; an attacker picks the opponent it attacks at random, in proportion to these weights. |  |
 | Combat log | The list of every attack of one Combat, in the order in which it was made, kept in its [Combat report](domain-model.md#combat). |  |
 | Armor removed | The [current armor](agents-spec.md#combatant-attributes) one attack takes from its defender: the smaller of the damage outcome and the defender's current armor before the attack, or 0 on a miss, under [Effects of an attack](#effects-of-an-attack). | Armor damage |
-| Health removed | The current health one attack takes from its defender: the smaller of the damage outcome less the armor removed and the defender's current health before the attack, or 0 on a miss. | Damage, as a noun on its own |
+| Health removed | The [current health](agents-spec.md#combatant-attributes) one attack takes from its defender: the smaller of the damage outcome less the armor removed and the defender's current health before the attack, or 0 on a miss. | Damage, as a noun on its own |
 | Damage dealt | The sum of the health removed by every attack one participant made in one Combat. |  |
 | Damage taken | The sum of the health removed by every attack on one participant in one Combat. It is equivalent to the participant's [health lost](agents-spec.md#combatant-attributes): the current health it lost in that Combat. |  |
 | Combat outcome | How a Combat ended for the [Agency](domain-model.md#agency-and-agents)'s team: Won, when no Enemy can fight on; Wiped, when no Agent can fight on; or Retreated, when the team withdrew. | Battle outcome; "Prevailed" for the Combat outcome Won, which is named Won like the Mission it decides. |
@@ -69,7 +67,7 @@ An EnemyArchetype is the [Archetype](../foundation/core-concepts.md#campaign-ins
 | Property | Meaning | Read by |
 | --- | --- | --- |
 | `name` | The display name of the kind of Enemy. | [Player-visible information](#player-visible-information) |
-| `base_skill` | The base skill of a newly created Enemy. | [Enemy creation](#enemy-creation) |
+| `base_skill` | The [base skill](agents-spec.md#combatant-attributes) of a newly created Enemy. | [Enemy creation](#enemy-creation) |
 | `base_health` | The [base health](agents-spec.md#combatant-attributes) of a newly created Enemy, which starts with no health lost. | [Enemy creation](#enemy-creation) |
 | `weapon` | A reference to the Weapon GDR a newly created Enemy is equipped with. | [Enemy creation](#enemy-creation) |
 | `armor` | A reference to the Armor GDR a newly created Enemy is equipped with. | [Enemy creation](#enemy-creation) |
@@ -78,7 +76,7 @@ Which EnemyArchetypes a [Mission site](domain-model.md#leads-investigations-miss
 
 ## Weapon
 
-A Weapon GDR describes the base weapon damage of the Combatants equipped with it. The table below is exhaustive apart from `id` and `type`.
+A Weapon GDR describes the [base weapon damage](agents-spec.md#combatant-attributes) of the Combatants equipped with it. The table below is exhaustive apart from `id` and `type`.
 
 | Property | Meaning | Read by |
 | --- | --- | --- |
@@ -117,7 +115,7 @@ CombatParameters bundles the scalar values that Combats read. The table below is
 
 ## AgentParameters values this document reads
 
-Combats read seven values of [AgentParameters](agents-spec.md#agentparameters), and read exhaustion's effect on effective skill only through [Effective skill](agents-spec.md#effective-skill):
+Combats read seven values of [AgentParameters](agents-spec.md#agentparameters), and read [exhaustion](agents-spec.md#combatant-attributes)'s effect on effective skill only through [Effective skill](agents-spec.md#effective-skill):
 
 | Property | Meaning and use | Read by |
 | --- | --- | --- |
@@ -259,7 +257,7 @@ Outside a Combat, a Combatant is able to fight exactly when its current health i
 
 ## Combat timing
 
-A Combat begins and ends within one [Turn advancement step](turn-advancement.md#glossary) of one Advance turn, the step in which [Missions](missions.md) has it fought; nothing else happens between its first and its last attack. A Detached Combat is the one exception: it begins and ends within one call of `developer.tools.fightCombat(setup)` or `developer.tools.fightCombatBatch(setup, count, stop)` and belongs to no Advance turn. No [World state](../foundation/engine-contract.md#player-actions-and-turns) therefore contains a Combat in progress, a Combat round, the Incapacitated property, or current armor. Only the Combat's outputs are ever part of a World state.
+A Combat begins and ends within one [Turn advancement step](domain-model.md#turn-advancement-steps) of one Advance turn, the step in which [Missions](missions.md) has it fought; nothing else happens between its first and its last attack. A Detached Combat is the one exception: it begins and ends within one call of `developer.tools.fightCombat(setup)` or `developer.tools.fightCombatBatch(setup, count, stop)` and belongs to no Advance turn. No [World state](../foundation/engine-contract.md#player-actions-and-turns) therefore contains a Combat in progress, a Combat round, the Incapacitated property, or current armor. Only the Combat's outputs are ever part of a World state.
 
 # Combat rating
 

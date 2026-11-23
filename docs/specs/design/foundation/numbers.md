@@ -18,8 +18,6 @@ A Probability is kept exact instead: it is a ratio of two whole numbers, never s
 
 # Glossary
 
-These terms are specific to numbers. General terms are in the [Core Concepts glossary](core-concepts.md#glossary); terms about saves, actions, and the seed are in the [Engine Contract](engine-contract.md#glossary) and [Determinism and Randomness](determinism-and-randomness.md#glossary) glossaries.
-
 | Term | Definition |
 | --- | --- |
 | Whole quantity | A stored quantity that is a whole number of its unit, e.g. an amount of money or a count. Every stored quantity is one unless the specification that defines it names it a Decimal quantity. |

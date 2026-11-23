@@ -1180,33 +1180,26 @@ describe('specification linter', () => {
       expect(diagnosticCodes(files)).toEqual(['SPEC215', 'SPEC215'])
     })
 
-    test.each([
-      ['no introduction', []],
-      ['one sentence', ['These terms are specific to Alpha.']],
-      [
-        'two sentences with e.g. and i.e.',
-        [
-          'These terms, e.g. Apple, are specific to Alpha, i.e. its rules.',
-          'General terms are in the [Specification Conventions glossary](../../governance/conventions/spec-conventions.md#glossary).',
-        ],
-      ],
-    ])('accepts a Glossary introduction with %s', (_name, introduction) => {
-      expect(glossaryCodes([...introduction, '', ...glossaryTable('Apple')])).toEqual([])
+    test('accepts a Glossary that opens with its table or with its first group', () => {
+      expect(glossaryCodes(glossaryTable('Apple'))).toEqual([])
+      expect(
+        glossaryCodes([...glossaryGroup('Fruit', 'Apple', 'Pear'), ...glossaryGroup('Tools', 'Hammer', 'Saw')]),
+      ).toEqual([])
     })
 
     test.each([
-      ['three sentences', ['These terms are specific to Alpha. General terms are elsewhere. Refunds are elsewhere.']],
-      ['three paragraphs', ['One sentence.', '', 'Another sentence.', '', 'A third without a period']],
+      ['a sentence naming its subject', ['These terms are specific to Alpha.']],
       [
-        'three sentences before groups',
+        'a pointer to another Glossary',
         [
-          'One sentence. Another sentence! A third?',
-          '',
-          ...glossaryGroup('Fruit', 'Apple', 'Pear'),
-          ...glossaryGroup('Tools', 'Hammer', 'Saw'),
+          'General terms are in the [Specification Conventions glossary](../../governance/conventions/spec-conventions.md#glossary).',
         ],
       ],
-    ])('rejects a Glossary introduction with %s', (_name, introduction) => {
+      [
+        'a sentence before groups',
+        ['One sentence.', '', ...glossaryGroup('Fruit', 'Apple', 'Pear'), ...glossaryGroup('Tools', 'Hammer', 'Saw')],
+      ],
+    ])('rejects a Glossary that opens with %s', (_name, introduction) => {
       const glossary = introduction.some((line) => line.startsWith('## '))
         ? introduction
         : [...introduction, '', ...glossaryTable('Apple')]

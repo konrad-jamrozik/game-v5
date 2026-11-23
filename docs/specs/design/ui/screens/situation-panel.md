@@ -14,8 +14,6 @@ The Situation panel keeps the work under way and the work waiting for the Player
 
 # Glossary
 
-These terms are specific to the Situation Panel.
-
 | Term | Definition |
 | --- | --- |
 | Situation panel | The panel of the [Campaign](../../foundation/core-concepts.md#campaign-and-session) screen that lists the work under way and the work waiting for the Player, under [Groups](#groups). |

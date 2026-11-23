@@ -16,8 +16,6 @@ The game still has chance, e.g. whether an attack hits. Chance stays reproducibl
 
 # Glossary
 
-These terms are specific to Determinism and Randomness. General terms are in the [Core Concepts glossary](core-concepts.md#glossary) and the [Engine Contract glossary](engine-contract.md#glossary).
-
 | Term | Definition |
 | --- | --- |
 | Campaign seed | The value from which every random outcome of one [Campaign](core-concepts.md#campaign-and-session) derives. It is set when the Campaign is created, supplied by the [Session controller](engine-contract.md#principals-and-access) or otherwise chosen by the engine, and never changes. It is [Campaign state](core-concepts.md#campaign-and-session) and is not [Player-visible information](engine-contract.md#api-surfaces). |

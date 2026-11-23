@@ -18,11 +18,9 @@ By default a Lead that creates a Mission site can be investigated again until a 
 
 # Glossary
 
-These terms are specific to [Leads](domain-model.md#leads-investigations-mission-sites-and-missions). [Lead availability](domain-model.md#leads-investigations-mission-sites-and-missions) and other general terms are in the [Domain Model glossary](domain-model.md#glossary).
-
 | Term | Definition | Prohibited synonyms |
 | --- | --- | --- |
-| Required progress | The [progress points](domain-model.md#leads-investigations-mission-sites-and-missions) an [Investigation](domain-model.md#leads-investigations-mission-sites-and-missions) of a Lead needs at least to complete, set by the Lead's `required_progress`. | Lead difficulty; resistance |
+| Required progress | The [progress points](domain-model.md#leads-investigations-mission-sites-and-missions) an [Investigation](domain-model.md#leads-investigations-mission-sites-and-missions) of a [Lead](domain-model.md#leads-investigations-mission-sites-and-missions) needs at least to complete, set by the Lead's `required_progress`. | Lead difficulty; resistance |
 | Discovered Lead | A Lead the player has learned of, under [Lead discovery](#lead-discovery). Only a discovered Lead is Player-visible, and a Lead once discovered stays discovered. |  |
 | Completed Lead | A Lead with at least one Completed Investigation, i.e. whose completion count is at least 1, under [Missions from a Lead](#missions-from-a-lead). | Investigated Lead; successfully investigated Lead. An Abandoned or Active Investigation has also investigated its Lead. |
 | Initiative operation level | How far into a [Faction](domain-model.md#factions)'s Initiative Missions a Lead or an [Initiative Mission site](domain-model.md#leads-investigations-mission-sites-and-missions) lies: a whole number derived from the [Game build](../foundation/core-concepts.md#game-build-and-content)'s Leads, under [Initiative operation level](#initiative-operation-level). The first Initiative Mission site the [Agency](domain-model.md#agency-and-agents) can reach against a Faction has level 1, and each one reachable only after winning another has a higher level. | Initiative level; Mission site level |

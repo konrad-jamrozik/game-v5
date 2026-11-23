@@ -18,8 +18,6 @@ Agent Recovery builds on [Agents](agents-spec.md): Agents says what current heal
 
 # Glossary
 
-These terms are specific to Agent Recovery. General terms are in the [Agents glossary](agents-spec.md#glossary).
-
 | Term | Definition |
 | --- | --- |
 | Health recovery rate | The [current health](agents-spec.md#combatant-attributes), as a [Decimal quantity](../foundation/numbers.md#glossary), that one [Agent](domain-model.md#agency-and-agents) regains in each Advance turn in which it recovers; it depends on the Agent's [effective max health](agents-spec.md#combatant-attributes). |

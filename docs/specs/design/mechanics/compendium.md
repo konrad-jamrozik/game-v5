@@ -16,8 +16,6 @@ Two principles shape every article. An article never states a value of the game 
 
 # Glossary
 
-These terms are specific to the Compendium.
-
 | Term | Definition |
 | --- | --- |
 | Compendium article | One entry of the Compendium, a [GDR](../foundation/core-concepts.md#game-build-and-content) of [Type](../foundation/core-concepts.md#data-modeling) CompendiumArticle: a Guide article, a Mechanics article, or a Subject article. |

@@ -18,8 +18,6 @@ Agents builds on [Domain Model](domain-model.md): Domain Model says how an Agent
 
 # Glossary
 
-These terms are specific to Agents. General terms are in the [Domain Model glossary](domain-model.md#glossary); terms about regaining health, [Combats](domain-model.md#combat), and the [Agency](domain-model.md#agency-and-agents)'s caps are in the [Agent Recovery](agent-recovery.md#glossary), [Combat](combat.md#glossary), and [Economy and Upgrades](economy-and-upgrades.md#glossary) glossaries.
-
 ## Combatant attributes
 
 What makes an [Agent](domain-model.md#agency-and-agents) or an [Enemy](domain-model.md#combat) able to work and to fight, and how worn down it is. The names follow one rule:
@@ -31,10 +29,10 @@ What makes an [Agent](domain-model.md#agency-and-agents) or an [Enemy](domain-mo
 
 | Term | Definition | Prohibited synonyms |
 | --- | --- | --- |
-| Base skill | How capable a [Combatant](domain-model.md#combat) is at its work and in a Combat, before its lost current health and its exhaustion reduce it. An Agent's base skill is a [Decimal quantity](../foundation/numbers.md#glossary), so Training can raise it by less than one point. | Skill, naming the stored value |
+| Base skill | How capable a [Combatant](domain-model.md#combat) is at its work and in a [Combat](domain-model.md#combat), before its lost current health and its exhaustion reduce it. An Agent's base skill is a [Decimal quantity](../foundation/numbers.md#glossary), so Training can raise it by less than one point. | Skill, naming the stored value |
 | Effective skill | A Combatant's base skill as reduced by its lost current health and its exhaustion; the value every rule uses when a Combatant works or fights. |  |
 | Base health | The highest current health a Combatant can have before any [Upgrade](domain-model.md#agency-and-agents) raises it, as a stored whole number. | Maximum health; full health |
-| Effective max health | The highest current health a Combatant can have now: its base health, raised for a Serving Agent by what the Agency's Upgrades add. |  |
+| Effective max health | The highest current health a Combatant can have now: its base health, raised for a Serving Agent by what the [Agency](domain-model.md#agency-and-agents)'s Upgrades add. |  |
 | Health lost | The harm a Combatant has taken and not yet recovered, from zero up to its effective max health; the stored value behind current health. |  |
 | Current health | How much more harm a Combatant can take now: its effective max health less its health lost, from zero up to its effective max health under [Attribute ranges](#attribute-ranges); an Agent whose current health reaches zero is dead. | Hit points; hit-point; health, naming a Combatant value. Unqualified health remains valid in its general sense, e.g. Health recovery. |
 | Exhaustion | How worn down a Combatant is, as a whole number of at least zero with no upper bound; beyond a free amount it lowers effective skill. The specifications that raise or lower it own accumulation and recovery. An Agent's exhaustion is its Exact exhaustion rounded up. | Fatigue |
@@ -331,7 +329,7 @@ Penalty clamp: when `p × max(0, exhaustion − f)` exceeds 100, the penalty fac
 
 Range: the result is a whole number from 0 to base skill, both included, because current health divided by effective max health and the penalty factor divided by 100 each lie from 0 to 1. A Combatant whose current health equals its effective max health and whose exhaustion is at most `f` has an effective skill equal to its base skill rounded down, e.g. 102 for a base skill of 102.75. A Combatant with zero current health, e.g. a Killed Agent, has an effective skill of 0.
 
-Effective skill is never stored. Whenever a rule reads it, it is computed from the Combatant's values at that moment, so it follows every change of base skill, current health, or exhaustion at once, under [Derived value consistency](../foundation/engine-contract.md#derived-value-consistency) in Engine Contract. Which moment's values a [Turn advancement step](turn-advancement.md#glossary) reads is stated under [Turn advancement steps](turn-advancement.md#turn-advancement-steps).
+Effective skill is never stored. Whenever a rule reads it, it is computed from the Combatant's values at that moment, so it follows every change of base skill, current health, or exhaustion at once, under [Derived value consistency](../foundation/engine-contract.md#derived-value-consistency) in Engine Contract. Which moment's values a [Turn advancement step](domain-model.md#turn-advancement-steps) reads is stated under [Turn advancement steps](turn-advancement.md#turn-advancement-steps).
 
 ## Effective weapon damage
 
@@ -532,7 +530,7 @@ E.g., with the GDR values, a survivor of its first Mission that hit with two att
 
 Work wears an Agent down a little in every Advance turn, so an Agent cannot work without end: it must be rotated to Standby to rest.
 
-In each Advance turn, every Working Agent gains exhaustion in the [Turn advancement step](turn-advancement.md#glossary) of its work, after that step has read the Agent's values for the work itself. The following table is exhaustive:
+In each Advance turn, every Working Agent gains exhaustion in the [Turn advancement step](domain-model.md#turn-advancement-steps) of its work, after that step has read the Agent's values for the work itself. The following table is exhaustive:
 
 | Work Assignment | Its Working Agents | Step and the work read first | Exhaustion gained |
 | --- | --- | --- | --- |

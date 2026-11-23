@@ -18,11 +18,9 @@ Economy and Upgrades builds on [Domain Model](domain-model.md): Domain Model say
 
 # Glossary
 
-These terms are specific to the [Agency](domain-model.md#agency-and-agents)'s economy. General terms are in the [Domain Model glossary](domain-model.md#glossary); terms about Agents are in the [Agents glossary](agents-spec.md#glossary).
-
 | Term | Definition | Prohibited synonyms |
 | --- | --- | --- |
-| Acquisitions | For one [Upgrade](domain-model.md#agency-and-agents), the number of times the Agency has purchased it. |  |
+| Acquisitions | For one [Upgrade](domain-model.md#agency-and-agents), the number of times the [Agency](domain-model.md#agency-and-agents) has purchased it. |  |
 | Increment | How much one acquisition of an Upgrade raises the value it improves: the Upgrade's `increment`. |  |
 | Upgrade bonus | For one effect identifier, what every Upgrade with that effect adds to the starting value of the value they improve: the sum of each such Upgrade's Increment × its Acquisitions. |  |
 | Cap Upgrade | An Upgrade that raises the [Agent cap](domain-model.md#agency-and-agents), the Transport cap, or the Training cap. | Cap effect |
@@ -154,7 +152,7 @@ Funding is never below 0. Every rule of another specification that changes fundi
 funding after = max(0, funding before + sum of the amounts)
 ```
 
-Inputs: funding before is the Agency's funding as the [Step-start value](turn-advancement.md#glossary) of the [Turn advancement step](turn-advancement.md#glossary) that makes the changes, a whole number of at least 0; the amounts are every funding change that rules apply in that one [Turn advancement step](domain-model.md#turn-advancement-steps), each a whole number of money. When one Turn advancement step makes several funding changes, they are added up first and the floor is applied once, to the sum, so the result does not depend on the order in which an implementation applies them. No rounding occurs, because every term is a whole number. The result is a whole number of at least 0.
+Inputs: funding before is the Agency's funding as the [Step-start value](domain-model.md#turn-advancement-steps) of the [Turn advancement step](domain-model.md#turn-advancement-steps) that makes the changes, a whole number of at least 0; the amounts are every funding change that rules apply in that one [Turn advancement step](domain-model.md#turn-advancement-steps), each a whole number of money. When one Turn advancement step makes several funding changes, they are added up first and the floor is applied once, to the sum, so the result does not depend on the order in which an implementation applies them. No rounding occurs, because every term is a whole number. The result is a whole number of at least 0.
 
 E.g., with funding 3, one change of −10 gives 0, and two changes of +5 and −10 in the same step give max(0, 3 + 5 − 10) = 0, whichever is applied first.
 

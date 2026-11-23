@@ -18,8 +18,6 @@ Every concept is modeled with the vocabulary of [Campaign State](../foundation/c
 
 # Glossary
 
-These terms name the concepts of the game. Modeling terms are in the [Core Concepts](../foundation/core-concepts.md#glossary), [Campaign State](../foundation/campaign-state.md#glossary), and [Campaign Instances](../foundation/campaign-instances.md#glossary) glossaries; terms about a single concept are in the Glossary of the Mechanics specification that details it, e.g. the [Agents](agents-spec.md#glossary) and [Combat](combat.md#glossary) glossaries.
-
 ## Agency and Agents
 
 The player-controlled organization, its Agents, what each Agent is doing, and what each has taken part in. [Economy and Upgrades](economy-and-upgrades.md) states what each Upgrade does and how the Agent cap is set.

@@ -16,13 +16,11 @@ Within an Advance turn, [Panic](domain-model.md#campaign-standing) does not move
 
 # Glossary
 
-These terms are specific to [Panic](domain-model.md#campaign-standing) and [Campaign endings](domain-model.md#campaign-standing). Panic, Campaign ending, and other general terms are in the [Domain Model glossary](domain-model.md#glossary).
-
 | Term | Definition |
 | --- | --- |
-| Panic limit | The Panic at which the [Campaign](../foundation/core-concepts.md#campaign-and-session) is lost: the value of `defeat_at_panic_pct` in the EndingParameters [Game Data Record](../foundation/core-concepts.md#game-build-and-content) (GDR). |
+| Panic limit | The [Panic](domain-model.md#campaign-standing) at which the [Campaign](../foundation/core-concepts.md#campaign-and-session) is lost: the value of `defeat_at_panic_pct` in the EndingParameters [Game Data Record](../foundation/core-concepts.md#game-build-and-content) (GDR). |
 | Pending panic change | The sum of every Panic increase minus every Panic reduction that the rules of the earlier [Turn advancement steps](turn-advancement.md#turn-advancement-steps) of one Advance turn have added so far, which the [Turn advancement step](domain-model.md#turn-advancement-steps) Panic then applies. |
-| Ending reason | A condition that held when a Campaign ending was recorded and caused it: Campaign objective achieved, Panic at the limit, Money below zero, or Existential operation not stopped. Each is defined under [Ending reasons](#ending-reasons). |
+| Ending reason | A condition that held when a [Campaign ending](domain-model.md#campaign-standing) was recorded and caused it: Campaign objective achieved, Panic at the limit, Money below zero, or Existential operation not stopped. Each is defined under [Ending reasons](#ending-reasons). |
 | Pending victory | Whether a `win_campaign` [Effect](../foundation/effect-lists.md#glossary) has been applied so far in one Advance turn, which the Ending check step then reads. |
 | Pending defeat | Whether a `defeat` [Effect](../foundation/effect-lists.md#glossary) has been applied so far in one Advance turn, which the Ending check step then reads. |
 
@@ -117,7 +115,7 @@ A rule may apply a `panic` Effect only in a Turn advancement step before the Pan
 
 In the Turn advancement step Panic, Panic changes by the Pending panic change and is then clamped to the range 0 to 100. This is a formula, with the following parts:
 
-- **Inputs:** `P0` is Panic as it is when the step begins, a Decimal quantity from 0 to 100, which is the [Step-start value](turn-advancement.md#glossary) of this step. `C` is the Pending panic change of this Advance turn, a Decimal quantity that may be negative.
+- **Inputs:** `P0` is Panic as it is when the step begins, a Decimal quantity from 0 to 100, which is the [Step-start value](domain-model.md#turn-advancement-steps) of this step. `C` is the Pending panic change of this Advance turn, a Decimal quantity that may be negative.
 - **Expression:** the new Panic is `max(0, min(100, P0 + C))`.
 - **Rounding:** no rounding occurs, because every input is a Decimal quantity or a whole number and the expression uses only addition, a minimum, and a maximum, each of which gives a whole multiple of 0.01, under [Decimal quantities](../foundation/numbers.md#decimal-quantities) in Numbers.
 - **Range:** the new Panic is a Decimal quantity from 0 to 100, both included.

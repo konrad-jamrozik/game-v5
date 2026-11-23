@@ -105,7 +105,6 @@ const REPEATED_SENTENCE_MINIMUM_WORDS = 12
 const TODO_PREFIX = /^TODO(?: \(later\))?:/
 const BLOCKING_TODO_PREFIX = 'TODO:'
 const OVERVIEW_WORD_LIMIT = 200
-const GLOSSARY_INTRODUCTION_SENTENCE_LIMIT = 2
 const DOCUMENT_DESCRIBING_PHRASES =
   /\bthis document (?:defines|states|owns|describes|specifies|refines)\b|\bdoes not own\b|\bownership pointer\b|\bfollows? constraints on\b/gi
 const GENERIC_TOPIC_HEADINGS = /^(?:Concepts and contract|Concepts|Contract|Requirements|Details|Specification)$/i
@@ -1108,24 +1107,7 @@ function hasProhibitedSynonymsColumn(table: Table): boolean {
   return termTableHeader(table)?.[2] === PROHIBITED_SYNONYMS_HEADING
 }
 
-/**
- * Counts sentences deterministically: each run of ".", "?", or "!" (optionally followed by closing quotation marks or
- * parentheses) that is followed by whitespace or the end of the text ends a sentence, and trailing text without such an
- * ending is one more sentence. The abbreviations "e.g." and "i.e." do not end a sentence. Callers pass prose text, which
- * already excludes link targets and code spans.
- */
-function sentenceCount(text: string): number {
-  const normalized = text
-    .replace(/\b(?:e\.g|i\.e)\./gi, 'eg')
-    .replace(/\s+/g, ' ')
-    .trim()
-  if (!normalized) return 0
-  const endings = [...normalized.matchAll(/[.?!]+["'”’)]*(?=\s|$)/g)]
-  const last = endings.at(-1)
-  const trailing = last ? normalized.slice((last.index ?? 0) + last[0].length).trim() : normalized
-  return endings.length + (trailing ? 1 : 0)
-}
-
+/** Rejects any text between the Glossary heading and its first table or group. */
 function validateGlossaryIntroduction(
   specification: Specification,
   nodes: readonly RootContent[],
@@ -1133,14 +1115,13 @@ function validateGlossaryIntroduction(
 ): void {
   const end = nodes.findIndex((node) => isTable(node) || isHeading(node))
   const introduction = nodes.slice(0, end < 0 ? nodes.length : end)
-  const sentences = sentenceCount(introduction.map(proseText).join(' '))
-  if (sentences > GLOSSARY_INTRODUCTION_SENTENCE_LIMIT) {
+  if (introduction.some((node) => proseText(node).trim() !== '')) {
     addDiagnostic(
       diagnostics,
       specification.path,
       introduction[0],
       'SPEC506',
-      `The Glossary introduction has ${sentences} sentences; it must have at most ${GLOSSARY_INTRODUCTION_SENTENCE_LIMIT}.`,
+      'A Glossary opens with its table or its first group; do not say whose terms these are or where other terms are defined.',
     )
   }
 }

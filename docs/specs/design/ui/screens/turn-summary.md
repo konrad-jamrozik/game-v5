@@ -14,8 +14,6 @@ The Turn summary tells the Player, as soon as an Advance turn ends, what it did 
 
 # Glossary
 
-These terms are specific to the Turn Summary.
-
 | Term | Definition |
 | --- | --- |
 | Turn summary | The dialog that summarizes what an Advance turn did, shown after it only when it did something the Player must know, under [Groups](#groups). |

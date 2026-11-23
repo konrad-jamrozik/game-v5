@@ -16,8 +16,6 @@ Every screen listed by the [Graphical User Interface](gui.md) is drawn with the 
 
 # Glossary
 
-These terms are specific to Visual Design.
-
 | Term | Definition |
 | --- | --- |
 | Artboard | A mockup of one screen or one panel of the graphical user interface, exported from the Design canvas and kept in the repository as an image in `docs/images/artboards`. |
