@@ -2,7 +2,9 @@
 
 A local page for finding a Combat rating formula that tells the player when a team is safe: one under which a team whose rating is a set share of the Enemies' rating, e.g. 110%, wins nearly every Combat, e.g. 95% of them, whatever the team and whatever the Enemies.
 
-It differs from the [Combat Rating Bench](../combat-rating-bench/README.md) in what it measures. That bench sizes each Agent team by the formula under study, so a changed formula needs new Combats. This one measures first, whatever the formula: for every pairing of an Agent type and an Enemy team it sweeps the Agent count and records the win rate at each count. Any formula is then scored against those win rates without fighting anything again.
+It finds the formula from controlled experiments, not from the game's content. One Combatant, the **reference**, is the yardstick: the strength of a team is the number of reference Combatants it is an even match for, which the game's own engine measures and no formula enters. Changing one value of a team at a time then shows what that value alone is worth. A grouping of arbitrary teams by one of their values cannot show this, because the teams differ in everything else too.
+
+It differs from the [Combat Rating Bench](../combat-rating-bench/README.md), which sizes each Agent team by the formula under study and fights it against the Mission sites.
 
 It is a tool for the Game designer, not a specification and not part of any Implementation. It writes nothing to the repository outside its own `data/` folder, which git ignores: a formula found with it is applied to the specifications by hand or by an agent.
 
@@ -20,80 +22,87 @@ Then open <http://127.0.0.1:4720/>. Reloading the page starts the engine again f
 node tools/cr-sweep-bench/server.ts --impl <game-v5-impl-web clone> --spec <game-v5 clone> --port <number>
 ```
 
-The same sweeps and scores run without the page, on the same files:
+The same sweeps and readings run without the page, on the same files:
 
 ```bash
 node tools/cr-sweep-bench/cli.ts run
 node tools/cr-sweep-bench/cli.ts score
 ```
 
-`run` sweeps the pairings of the saved state that have no result yet. `score` prints, for the current formula and each pinned one, its scores, the pairings that need the highest and the lowest rating ratio, and the pairings in four groups by one feature. `score` takes `--level <percent>`, `--ignore <percent>`, `--feature <id>`, e.g. `--feature enemyCount`, and `--rows <number>`; the feature ids are in `lib/model.js`. Both take `--impl` and `--spec`.
+`run` sweeps what the saved state asks for and has no result for yet. `score` prints every reading below as text and scores the current formula and each pinned one; `--rows <number>` sets how many rows each list shows. Both take `--impl` and `--spec`.
 
-## What is swept
+## A measurement
 
-A **pairing** is one Agent type against one Enemy team. The page takes both as text:
+A measurement fixes one side and sweeps the count of one Combatant type on the other. For each, one worker thread:
 
-- **Enemy teams** are the Mission sites read from `content/`, the Cut content under `content/cut/` excepted, each with its Enemies at their EnemyArchetypes' values, and any further teams typed one per line as groups joined by `+`, e.g. `boss and minions: 1 x s400 h60 d20 a40 + 12 x s40 h20 d8`. In a group, `s` is skill, `h` max health, `d` weapon damage, and `a` armor, which is 0 when left out. The typed teams are for fights the Mission sites lack, e.g. a swarm of weak Enemies or one champion.
-- **Agent types** are typed one per line, e.g. `veteran, rifle and vest: s200 h30 d14 a20`. A team is any number of Agents of one type, at full health and rested. The defaults are three skills, each with the gear the Agency issues, the best Weapon and Armor of the content, and three mixes between them.
-- **Rules** are the content's Combat values, with any typed in their place, one `name = value` per line, e.g. `exhaustion_per_defense = 0`. Retreat is off unless **Agents may retreat** is checked, by setting `retreat_below_agent_rating_fraction` to 0, because the Retreated check reads the game's own Combat rating and not the formula under study; when it is on, a retreat is not a win.
+1. Doubles the swept count from 1 until the swept side gets its way in at least 99% of a small batch, the probe, or the count reaches **Most swept**. The swept side gets its way when the Agents win, if it is the Agents, and when they do not, if it is the Enemies.
+2. Finds the climb, the counts over which that share rises from at most 2% to at least 99%, by probing evenly spaced counts inside it ever closer, until every count is probed or the climb has more counts than **Most counts in a climb**.
+3. Fights the full batch, **Combats per count**, at every probed count of the climb.
 
-For each pairing, one worker thread:
+From the win rates, made non-decreasing in the swept count and read between whole counts in a straight line, come two counts:
 
-1. Doubles the Agent count from 1 until the team wins at least 99% of a small batch, the probe, or the count reaches **Most Agents**.
-2. Finds the climb, the counts over which the win rate rises from at most 2% to at least 99%, by probing evenly spaced counts inside it ever closer, until every count is probed or the climb has more counts than **Most counts in a climb**.
-3. Fights the full batch, **Combats per count**, at every probed count of the climb, and at higher counts while the team still wins less than 99%.
+- **Even odds:** the swept count at which the Agents win half the Combats.
+- **95%:** the swept count at which the Agents win 95% of them.
 
-Each batch is one call of the engine's `developer.tools.fightCombatBatch` on explicit Combatants, with the Agent team as the Agents' side, as in a Mission. Agents given by explicit values spend no Ammo. The Detached seed of a batch is the pairing's key and the Agent count, so the same pairing gives the same numbers on every run.
+A measurement whose even odds lie below one swept Combatant, or beyond **Most swept**, is unresolved and listed apart.
 
-## The files under `data/`
+Each batch is one call of the engine's `developer.tools.fightCombatBatch`. Every Combatant is given by explicit values, at full health and rested. A Combatant of explicit values has no AmmoType, so no Agent spends Ammo or falls back to its knife, whatever the fight. The Detached seed of a batch is the measurement's key and the swept count, so one measurement gives the same numbers on every run.
 
-Both are written by the server and by `cli.ts`, so that the page, the command line, and an agent asked to analyse a sweep all read the same ones:
+**Rules** are the content's Combat values, with any typed in their place, one `name = value` per line, e.g. `exhaustion_per_defense = 0`. Retreat is off unless **Agents may retreat** is checked, by setting `retreat_below_agent_rating_fraction` to 0, because the Retreated check reads the game's own Combat rating and not the formula under study; when it is on, a retreat is not a win.
 
-- **`state.json`** holds what the page shows: the configuration, the current formula, the pinned formulas, and the view settings. Without it the defaults apply.
-- **`results.ndjson`** holds one line per swept pairing: its Agent type, its Enemy team, the GDR values and engine commit it was fought with, and the Combats won, retreated from, and lost at each Agent count. A later line of the same key replaces an earlier one.
+## The experiments
 
-A pairing's key hashes its Agent type, its Enemy team, the GDR values, and the engine's commit, so results fought under other rules or by another engine are kept apart and never mixed. An engine with uncommitted changes under `src` has one key for all such changes: delete `results.ndjson` after changing the engine without committing.
+The **strength** of a team is its even odds against the reference Combatant: the number of reference Enemies a team of Agents is an even match for, or the number of reference Agents a team of Enemies is. Every team is measured in both roles, because Agents strike first and choose their targets while Enemies do not.
+
+- **One value changed:** a team of the **Team size**, by default 10, whose every Combatant is the reference with one value changed, for each value listed under Skill, Weapon damage, Max health, and Armor. The curve of strength against that value is what the value alone is worth, e.g. "doubling weapon damage multiplies strength by ×1.3".
+- **One type at each size:** a team of one Combatant type at each of the **Team sizes of one type**, for the reference and each type under **Other Combatant types**. The curve shows whether twice the Combatants are twice the strength.
+- **Two values changed:** a team with two values changed, each to the lowest and the highest listed. If the two acted independently, the strength would be the base strength times the two single effects; the **gap** is the measured strength over that.
+- **Two types in one team:** a team of half one type and half another. If strength were a plain sum, it would be worth its two halves together; the gap is the measured strength over that.
+- **Cross-checks:** Agents of each type swept against Enemy teams of each type, at each of the **Enemy team sizes of the cross-checks**. Neither side is the reference, so these are fights the yardstick did not see. The yardstick still predicts them: the Enemy team is worth so many reference Agents, those are worth so many reference Enemies, and the Agent type's own size curve says how many of it are worth as many. The gap between the measured and the predicted count is what no rating that gives each side one number can explain, so its spread is the least error any formula can have.
+- **Mission sites:** Agents of each type swept against each Mission site of the content, the Cut content under `content/cut/` excepted. They are the final exam: no formula is fitted to them.
+
+**The dice** is read from every sweep of reference Agents: the count that wins 95% over the count that wins half, against the same Enemies. No formula changes it. It is how far a safe ratio must lie above even odds, and it is larger in fights of few Combatants, which few attacks decide.
 
 ## The formula
 
-A formula is up to four JavaScript expressions and its parameters:
+A formula is up to five JavaScript expressions and its parameters:
 
 - **Rating of one Combatant** reads `skill`, `damage`, `health`, `armor`, and `count`, the number of Combatants of its side. `skill` is the effective skill, which for a Combatant at full health and rested is its base skill.
 - **Second number of one Combatant** is optional and reads the same; its sum over the side is `sum2`.
 - **Rating of a side** reads `sum`, the sum of the ratings of its Combatants, `sum2`, and `count`.
-- **Rating of one Enemy** is optional and replaces the first expression for Enemies, so that Agents and Enemies can be rated apart.
+- **Rating of one Enemy** and **Rating of the Enemies' side** are optional and replace the first and the third expression for Enemies, so that the two sides can be rated apart.
 
-Every expression also reads the parameters, the functions `sqrt min max pow log exp abs ceil floor round`, and the means of the other side, `opp_count`, `opp_skill`, `opp_damage`, `opp_health`, and `opp_armor`. A formula that reads the other side rates one team differently against each opponent, so those serve to find out what a formula misses, e.g. damage wasted on Enemies too frail to take it, and not as a rating to show the player.
+Every expression also reads the parameters, the functions `sqrt min max pow log exp abs ceil floor round`, and the means of the other side, `opp_count`, `opp_skill`, `opp_damage`, `opp_health`, and `opp_armor`. A formula that reads the other side rates one team differently against each opponent, so those serve to find out what a formula misses and not as a rating to show the player.
 
 The pinned formulas start with the game's own, under Combat rating in Combat, and with the square law, `skill * sqrt(damage * (health + k * armor)) / base` summed over the side and multiplied by `count ** e`. **Pin for comparison** adds the current formula under a name, and **Load** makes a pinned one current.
 
 ## How a formula is scored
 
-The scores read only the swept win rates and the formula. A pairing's win rates are first made non-decreasing in the Agent count, because more Agents never truly win less, and read between the fought counts in a straight line.
+A perfect formula rates the two sides of every measurement equal at even odds, i.e. gives a rating ratio, Agents to Enemies, of 100% there.
 
-- **Agents needed**, of a pairing: the Agent count at which the win rate reaches the **Win rate to promise**, by default 95%. It does not depend on the formula. A pairing in which one Agent already wins that often, or in which **Most Agents** never do, has none and is left out.
-- **Ratio needed**, of a pairing: the rating ratio, Agents to Enemies, that the formula gives at the Agents needed.
-- **Safe ratio**: the highest ratio needed of any pairing. A team at or above it wins at least the promised share of its Combats against every Enemy team swept, so it is the ratio the game could promise, e.g. 131%. **Ignore the worst pairings** leaves the given share of pairings with the highest ratio needed out of it, to see how much a few pairings cost.
-- **Over-deployment**, of a pairing: the Agents the safe ratio asks for, over the Agents needed, e.g. ×1.2 when the safe ratio asks for 12 Agents where 10 win 95%. It is what a formula costs the player. Unlike the safe ratio it does not shrink when a rating is only rescaled, e.g. by showing its square root, so formulas are compared by its mean, and **Fit** searches the checked parameters by Nelder-Mead for the lowest mean.
-- **Ratio at even odds**: the mean ratio at which a team wins half its Combats.
+- **Experiments** covers every measurement but the Mission sites: how far the ratio at even odds typically lies from 100%, as the root mean square of its logarithm, and the furthest. **Fit** searches the checked parameters by Nelder-Mead for the lowest such error, and never reads the Mission sites.
+- **Mission sites** gives the same for the sites, and the **safe ratio**: the highest ratio any site measurement has at its 95% count. A team at or above it wins at least 95% against every site swept, so it is the ratio the game could promise.
 
-A perfect formula gives every pairing the same ratio needed and so an over-deployment of ×1 everywhere. What keeps a formula from it shows in three places:
+The charts of **What one value is worth** draw the formula's prediction as lines over the measured dots, so a formula's error shows as the value it misjudges. **Every measurement** lists each with the formula's ratio at even odds and at 95%; clicking one shows its win rate at each swept count.
 
-- **Rating ratio each pairing needs** plots every pairing's ratio needed against one feature of the pairing, e.g. the Agent skill against the mean Enemy skill or the hits an Agent needs per Enemy. A slope means the formula misjudges that feature.
-- **Pairings in four groups** gives the median and highest ratio needed of the pairings in four groups of equal size by that feature. The points of the first chart are coloured by the same groups.
-- **Pairings** lists every pairing, sorted by any column; the ones that need the highest ratio set the safe ratio. Clicking one shows its win rate at each Agent count, with the Agents needed and the Agents the safe ratio asks for.
+## The files under `data/`
 
-Part of the distance between even odds and the safe ratio is the dice, which no formula removes: a fight of few Combatants is decided by few attacks. Such pairings need a high ratio under every formula.
+Both are written by the server and by `cli.ts`, so that the page, the command line, and an agent asked to analyse a sweep all read the same ones:
+
+- **`state.json`** holds what the page shows: the configuration, the current formula, and the pinned formulas. Without it the defaults apply.
+- **`results.ndjson`** holds one line per sweep: its two sides, the GDR values it was fought with, and the Combats won, retreated from, and lost at each swept count. A later line of the same key replaces an earlier one.
+
+A sweep's key hashes its two sides, the GDR values, and the git tree of the engine's source, `src/engine` of the Implementation clone. Results fought under other rules or by another engine are therefore kept apart, and a commit that leaves the engine alone keeps every result. An engine with uncommitted changes has one key for all such changes: delete `results.ndjson` after changing the engine without committing.
 
 ## Files
 
-| Path           | Content                                                                                             |
-| -------------- | --------------------------------------------------------------------------------------------------- |
-| `index.html`   | The page: what to sweep, the formula, the scores, the charts, and the tables.                       |
-| `lib/model.js` | What the page and the scripts share: the text forms, the formulas, the scoring, and the fit.        |
-| `server.ts`    | Serves the page and answers its requests.                                                           |
-| `cli.ts`       | Sweeps and scores from the command line.                                                            |
-| `store.ts`     | Reads the GDR values from `content/`, and reads and writes the state and the results under `data/`. |
-| `run.ts`       | Sweeps the pairings of a configuration that have no result yet.                                     |
-| `pool.ts`      | The worker threads.                                                                                 |
-| `worker.ts`    | Loads the engine from the Implementation clone and sweeps one pairing at a time.                    |
+| Path           | Content                                                                                           |
+| -------------- | ------------------------------------------------------------------------------------------------- |
+| `index.html`   | The page: the experiments, their readings, the formula, and every measurement.                    |
+| `lib/model.js` | What the page and the scripts share: the text forms, the formulas, the readings, and the scoring. |
+| `server.ts`    | Serves the page and answers its requests.                                                         |
+| `cli.ts`       | Sweeps and reports from the command line.                                                         |
+| `store.ts`     | Reads the GDR values from `content/`, plans the measurements, and reads and writes under `data/`. |
+| `run.ts`       | Sweeps what a configuration asks for and has no result for yet.                                   |
+| `pool.ts`      | The worker threads.                                                                               |
+| `worker.ts`    | Loads the engine from the Implementation clone and sweeps one measurement at a time.              |

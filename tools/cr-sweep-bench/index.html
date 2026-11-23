@@ -24,12 +24,10 @@
         --accent-text: #ff8a33;
         --on-accent: #1a0b00;
         --danger: #ff7f78;
-        /* Chart marks: one blue for a single series, and four steps of it, dark to light, for four groups low to high. */
-        --mark: #3987e5;
-        --step1: #184f95;
-        --step2: #2a78d6;
-        --step3: #6da7ec;
-        --step4: #b7d3f6;
+        /* Chart marks: the first series, the second series, and what a formula predicts. */
+        --one: #3987e5;
+        --two: #d95926;
+        --three: #199e70;
         --head: 'Barlow Condensed', 'Arial Narrow', sans-serif;
         --body: 'Barlow', 'Segoe UI', system-ui, sans-serif;
         --mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
@@ -84,12 +82,17 @@
       }
       p {
         margin: 0 0 8px;
-        max-width: 110ch;
+        max-width: 115ch;
         color: var(--text2);
       }
       .note {
         color: var(--muted);
         font-size: 13px;
+      }
+      .finding {
+        color: var(--text);
+        font-size: 14px;
+        margin: 6px 0 0;
       }
       .error {
         color: var(--danger);
@@ -101,7 +104,10 @@
         gap: 16px;
       }
       .cols2 {
-        grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(440px, 1fr));
+      }
+      .cols3 {
+        grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
       }
       .panel {
         background: var(--surface);
@@ -111,6 +117,7 @@
         min-width: 0;
       }
       textarea,
+      select,
       input[type='text'],
       input[type='number'] {
         width: 100%;
@@ -122,12 +129,15 @@
         font: 13px/1.45 var(--mono);
       }
       textarea {
-        min-height: 150px;
+        min-height: 96px;
         resize: vertical;
         white-space: pre;
       }
       input[type='number'] {
         width: 90px;
+      }
+      select {
+        width: auto;
       }
       label.check {
         display: inline-flex;
@@ -139,7 +149,7 @@
       .row {
         display: flex;
         flex-wrap: wrap;
-        align-items: center;
+        align-items: flex-end;
         gap: 10px 16px;
         margin: 8px 0;
       }
@@ -147,6 +157,9 @@
         display: flex;
         flex-direction: column;
         gap: 2px;
+      }
+      .field.wide {
+        flex: 1 1 220px;
       }
       .lbl {
         font-size: 13px;
@@ -221,6 +234,10 @@
       tr.selected td {
         background: var(--raised);
       }
+      .scroll {
+        max-height: 300px;
+        overflow: auto;
+      }
       .tiles {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
@@ -240,13 +257,10 @@
         color: var(--muted);
         font-size: 13px;
       }
-      .chart {
-        position: relative;
-      }
-      .chart canvas {
+      canvas {
         display: block;
         width: 100%;
-        height: 340px;
+        height: 280px;
       }
       .legend {
         display: flex;
@@ -264,6 +278,13 @@
         border-radius: 50%;
         margin-right: 5px;
       }
+      .legend i.line {
+        width: 16px;
+        height: 0;
+        border-radius: 0;
+        border-top: 2px solid;
+        vertical-align: middle;
+      }
       .legend i.rule {
         width: 16px;
         height: 0;
@@ -280,11 +301,8 @@
         border-radius: 4px;
         padding: 6px 10px;
         font-size: 13px;
-        max-width: 420px;
+        max-width: 440px;
         color: var(--text);
-      }
-      #tip b {
-        font-weight: 600;
       }
       #tip span {
         color: var(--text2);
@@ -313,40 +331,67 @@
       <header>
         <h1>CR Sweep Bench</h1>
         <p>
-          Finds a Combat rating formula that tells the player when a team is safe. For every pairing of an Agent type
-          and an Enemy team, it sweeps the Agent count and measures the win rate with the game's own engine, whatever
-          the formula. A formula is then scored against those win rates without fighting anything again.
+          Finds a Combat rating formula from controlled experiments. One Combatant, the <b>reference</b>, is the
+          yardstick: the strength of a team is the number of reference Combatants it is an even match for, measured by
+          the game's own engine. Changing one value of a team at a time shows what that value alone is worth, and a
+          formula is scored by how close it comes to those measurements.
         </p>
         <div id="engine" class="note">Starting the engine…</div>
       </header>
 
       <section>
-        <h2>1. What to sweep</h2>
+        <h2>1. The experiments</h2>
         <div class="grid cols2">
           <div class="panel">
-            <h3>Enemy teams</h3>
+            <h3>The yardstick and the values tried</h3>
+            <div class="row">
+              <label class="field wide"
+                ><span class="lbl">Reference Combatant</span><input type="text" id="reference" spellcheck="false"
+              /></label>
+              <label class="field"
+                ><span class="lbl">Team size</span><input type="number" id="baseCount" min="2"
+              /></label>
+            </div>
+            <div class="row">
+              <label class="field wide"><span class="lbl">Skill</span><input type="text" id="skills" /></label>
+              <label class="field wide"><span class="lbl">Weapon damage</span><input type="text" id="damages" /></label>
+            </div>
+            <div class="row">
+              <label class="field wide"><span class="lbl">Max health</span><input type="text" id="healths" /></label>
+              <label class="field wide"><span class="lbl">Armor</span><input type="text" id="armors" /></label>
+            </div>
+            <div class="row">
+              <label class="field wide"
+                ><span class="lbl">Team sizes of one type</span><input type="text" id="counts"
+              /></label>
+              <label class="field wide"
+                ><span class="lbl">Enemy team sizes of the cross-checks</span><input type="text" id="checkCounts"
+              /></label>
+            </div>
+            <p class="note">
+              <code>s</code> is skill, <code>h</code> max health, <code>d</code> weapon damage, and
+              <code>a</code> armor. Each value is tried on a team of the team size whose every Combatant is the
+              reference with that one value changed. Every team is measured twice, once as the Agents' side and once as
+              the Enemies' side, because Agents strike first and choose their targets. Everyone is at full health and
+              rested, and no one runs out of Ammo.
+            </p>
+            <div class="error" id="referenceErrors"></div>
+          </div>
+          <div class="panel">
+            <h3>Other Combatant types</h3>
+            <p class="note">
+              One per line, e.g. <code>elite: s400 h30 d10 a0</code>. Each is measured at every team size, mixed half
+              and half with every other type, and sent as Agents against Enemy teams of every type and against the
+              Mission sites.
+            </p>
+            <textarea id="typesText" spellcheck="false"></textarea>
+            <div class="error" id="typeErrors"></div>
             <div class="row">
               <label class="check"
                 ><input type="checkbox" id="sites" /> <span id="sitesLabel">Mission sites</span></label
               >
               <label class="check"><input type="checkbox" id="responseSites" /> Response sites too</label>
             </div>
-            <p class="note">
-              More teams, one per line, as groups joined by <code>+</code>, e.g.
-              <code>boss and minions: 1 x s400 h60 d20 a40 + 12 x s40 h20 d8</code>: <code>s</code> skill,
-              <code>h</code> max health, <code>d</code> weapon damage, <code>a</code> armor.
-            </p>
-            <textarea id="enemyText" spellcheck="false"></textarea>
-            <div class="error" id="enemyErrors"></div>
-          </div>
-          <div class="panel">
-            <h3>Agent types</h3>
-            <p class="note">
-              One per line, e.g. <code>veteran, rifle and vest: s200 h30 d14 a20</code>. A team is any number of Agents
-              of one type, at full health and rested.
-            </p>
-            <textarea id="agentText" spellcheck="false"></textarea>
-            <div class="error" id="agentErrors"></div>
           </div>
           <div class="panel">
             <h3>Rules</h3>
@@ -357,12 +402,12 @@
             </div>
             <p class="note">
               GDR values to fight with in place of the content's, one per line, e.g.
-              <code>exhaustion_per_defense = 0</code>. Pairings under other rules are swept and kept apart.
+              <code>exhaustion_per_defense = 0</code>. Measurements under other rules are swept and kept apart.
             </p>
             <textarea id="overridesText" spellcheck="false" style="min-height: 70px"></textarea>
             <div class="error" id="overrideErrors"></div>
             <details>
-              <summary>The content's values</summary>
+              <summary>The values in force</summary>
               <div id="contentValues" class="note" style="font-family: var(--mono)"></div>
             </details>
           </div>
@@ -376,15 +421,15 @@
                 ><span class="lbl">Combats per probe</span><input type="number" id="probeTrials" min="10" step="5"
               /></label>
               <label class="field"
-                ><span class="lbl">Most Agents</span><input type="number" id="maxAgents" min="1"
+                ><span class="lbl">Most swept</span><input type="number" id="maxCount" min="1"
               /></label>
               <label class="field"
                 ><span class="lbl">Most counts in a climb</span><input type="number" id="maxPoints" min="4"
               /></label>
             </div>
             <p class="note">
-              For each pairing the Agent count is doubled until the team wins nearly every probe, the counts over which
-              the win rate climbs are found, and the full number of Combats is fought at each of them.
+              A measurement fixes one side and sweeps the count of one Combatant type on the other, to find the count at
+              which the Agents win half the Combats and the count at which they win 95%.
             </p>
             <div class="row">
               <button class="primary" id="run">Run</button>
@@ -397,7 +442,80 @@
       </section>
 
       <section>
-        <h2>2. Formula</h2>
+        <h2>2. What one value is worth</h2>
+        <p>
+          Each chart changes one thing and holds everything else at the reference. The dots are measured strengths, in
+          reference Combatants; the lines are what the formula of section 5 predicts. Where a line leaves the dots, the
+          formula misjudges that value.
+        </p>
+        <div class="legend">
+          <span><i style="background: var(--one)"></i>Measured, team as the Agents' side</span>
+          <span><i style="background: var(--two)"></i>Measured, team as the Enemies' side</span>
+          <span><i class="line" style="border-color: var(--one)"></i>Formula, as Agents</span>
+          <span><i class="line" style="border-color: var(--two)"></i>Formula, as Enemies</span>
+        </div>
+        <div class="grid cols3" id="factorCharts"></div>
+      </section>
+
+      <section>
+        <h2>3. Whether the values combine simply</h2>
+        <div class="grid cols2">
+          <div class="panel">
+            <h3>Two values changed together</h3>
+            <p class="note">
+              If two values acted independently, changing both would multiply their two effects. A gap of 100% means
+              they do; a gap away from it means the formula needs a term that ties the two together.
+            </p>
+            <div class="finding" id="pairsFinding"></div>
+            <div class="scroll"><table id="pairs"></table></div>
+          </div>
+          <div class="panel">
+            <h3>Two types in one team</h3>
+            <p class="note">
+              If strength were a plain sum over the Combatants, a team of two types would be worth its two halves
+              together. A gap of 100% means it is.
+            </p>
+            <div class="finding" id="mixesFinding"></div>
+            <div class="scroll"><table id="mixes"></table></div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>4. Whether one number can work, and what the dice cost</h2>
+        <div class="grid cols2">
+          <div class="panel">
+            <h3>Fights the yardstick did not see</h3>
+            <p class="note">
+              Agents of one type against an Enemy team that is not the reference. The yardstick says how many reference
+              Combatants each side is worth, and so how many Agents make an even match. If one number per side could
+              describe a team, every dot would lie on the line. The spread is the least error any formula can have.
+            </p>
+            <div class="legend">
+              <span><i style="background: var(--one)"></i>Cross-checks</span>
+              <span><i style="background: var(--two)"></i>Mission sites</span>
+              <span><i class="line" style="border-color: var(--muted)"></i>Yardstick exact</span>
+            </div>
+            <canvas id="chartChecks"></canvas>
+            <div class="finding" id="checksFinding"></div>
+          </div>
+          <div class="panel">
+            <h3>The dice</h3>
+            <p class="note">
+              How many more reference Agents win 95% of the Combats than win half of them, against the same Enemies. No
+              formula changes this: it is how far the safe ratio must lie above even odds.
+            </p>
+            <div class="legend">
+              <span><i style="background: var(--one)"></i>One sweep of reference Agents</span>
+            </div>
+            <canvas id="chartDice"></canvas>
+            <div class="finding" id="diceFinding"></div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>5. Formula</h2>
         <div class="grid cols2">
           <div class="panel">
             <div class="field">
@@ -413,6 +531,10 @@
             <div class="field" style="margin-top: 8px">
               <span class="lbl">Rating of one Enemy, when it differs; may be empty</span
               ><input type="text" id="fEnemy" spellcheck="false" />
+            </div>
+            <div class="field" style="margin-top: 8px">
+              <span class="lbl">Rating of the Enemies' side, when it differs; may be empty</span
+              ><input type="text" id="fEnemyTeam" spellcheck="false" />
             </div>
             <div class="error" id="formulaError"></div>
             <details>
@@ -436,113 +558,85 @@
               <button id="fit">Fit the checked parameters</button>
               <span class="note" id="fitNote"></span>
             </div>
-            <div class="row">
-              <label class="field"
-                ><span class="lbl">Win rate to promise, %</span
-                ><input type="number" id="level" min="50" max="99.5" step="0.5"
-              /></label>
-              <label class="field"
-                ><span class="lbl">Ignore the worst pairings, %</span
-                ><input type="number" id="ignoreWorst" min="0" max="50" step="1"
-              /></label>
-            </div>
+            <p class="note">
+              Fit brings the rating ratio at even odds as close to 100% as it can over the experiments. It never reads
+              the Mission sites, which only examine the result.
+            </p>
             <div class="row">
               <input type="text" id="pinName" placeholder="Name to pin this formula under" style="width: 280px" />
               <button id="pin">Pin for comparison</button>
             </div>
           </div>
         </div>
-      </section>
-
-      <section>
-        <h2>3. How the formula does</h2>
-        <div class="tiles" id="tiles"></div>
-        <p class="note" style="margin-top: 10px">
-          The <b>safe ratio</b> is the lowest rating ratio, Agents to Enemies, at or above which a team wins that often
-          against every Enemy team: the highest ratio any pairing needs. <b>Over-deployment</b> is the Agents the safe
-          ratio asks for, over the Agents a pairing truly needs. It is what a formula costs the player, and unlike the
-          safe ratio it does not shrink when a rating is only rescaled, e.g. by showing its square root, so it is what
-          Fit makes smallest and what formulas are best compared by.
-        </p>
+        <div class="tiles" id="tiles" style="margin-top: 16px"></div>
         <div class="panel" style="margin-top: 12px">
           <h3>Pinned formulas</h3>
-          <table id="pinned"></table>
+          <div style="overflow-x: auto"><table id="pinned"></table></div>
         </div>
       </section>
 
       <section>
+        <h2>6. Every measurement</h2>
         <div class="grid cols2">
           <div class="panel">
-            <h3>Win rate against rating ratio, every fought count</h3>
-            <div class="legend" id="legendA"></div>
-            <div class="chart"><canvas id="chartA"></canvas></div>
-          </div>
-          <div class="panel">
-            <h3>Rating ratio each pairing needs</h3>
-            <div class="row" style="margin: 0">
+            <div class="row" style="margin-top: 0">
               <label class="field"
-                ><span class="lbl">Against, and grouped by</span
-                ><select
-                  id="feature"
-                  style="background: var(--bg); color: var(--text); border: 1px solid var(--border); padding: 4px"
-                ></select
-              ></label>
-              <div class="legend" id="legendB"></div>
+                ><span class="lbl">Show</span
+                ><select id="kind">
+                  <option value="">All</option>
+                  <option value="factor">One value changed</option>
+                  <option value="count">One type at each size</option>
+                  <option value="pair">Two values changed</option>
+                  <option value="mix">Two types in one team</option>
+                  <option value="check">Cross-checks</option>
+                  <option value="site">Mission sites</option>
+                </select></label
+              >
+              <button class="small" id="showAll">Show all</button>
             </div>
-            <div class="chart"><canvas id="chartB"></canvas></div>
-          </div>
-        </div>
-        <div class="grid cols2" style="margin-top: 16px">
-          <div class="panel">
-            <h3 id="groupsTitle">Pairings in four groups</h3>
-            <table id="groups"></table>
-            <p class="note" style="margin-top: 8px">
-              A formula that rates every kind of fight alike gives every group the same median ratio. A group that needs
-              a higher ratio is a kind of fight the formula rates too kindly for the Agents.
-            </p>
+            <div style="overflow-x: auto"><table id="rows"></table></div>
+            <details>
+              <summary id="unresolvedSummary">Unresolved measurements</summary>
+              <table id="unresolved"></table>
+            </details>
           </div>
           <div class="panel">
-            <h3 id="detailTitle">One pairing</h3>
-            <div class="legend" id="legendC"></div>
-            <div class="chart"><canvas id="chartC" style="height: 260px"></canvas></div>
-            <div class="note" id="detailNote">Click a pairing in a chart or in the table.</div>
+            <h3 id="detailTitle">One measurement</h3>
+            <div class="legend" id="detailLegend"></div>
+            <canvas id="chartDetail"></canvas>
+            <div class="note" id="detailNote">Click a row, or a dot in a chart.</div>
           </div>
-        </div>
-        <div class="panel" style="margin-top: 16px">
-          <h3>Pairings</h3>
-          <div style="overflow-x: auto"><table id="pairings"></table></div>
-          <div class="row">
-            <button class="small" id="showAll">Show all</button><span class="note" id="pairingsNote"></span>
-          </div>
-          <details>
-            <summary id="excludedSummary">Pairings left out</summary>
-            <table id="excluded"></table>
-          </details>
         </div>
       </section>
     </div>
     <div id="tip" hidden></div>
 
     <script type="module">
-      import { FEATURES, fit, prepare, score } from './lib/model.js'
+      import { analyse, fit, formatGroups, logSlope, predictEven, prepare, ratioAt, score } from './lib/model.js'
 
       const $ = (id) => document.getElementById(id)
       const esc = (s) =>
         String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c])
       const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim()
-      const pct = (v, digits = 0) => (Number.isFinite(v) ? `${(v * 100).toFixed(digits)}%` : '—')
-      const times = (v) => (Number.isFinite(v) ? `×${v.toFixed(2)}` : 'never')
-      const num = (v) => (v >= 100 ? v.toFixed(0) : v >= 10 ? v.toFixed(1) : v.toFixed(2))
-      const STEPS = ['--step1', '--step2', '--step3', '--step4']
+      const pct = (v, digits = 0) => (v !== null && Number.isFinite(v) ? `${(v * 100).toFixed(digits)}%` : '—')
+      const off = (v) => (v !== null && Number.isFinite(v) ? `±${(v * 100).toFixed(0)}%` : '—')
+      const num = (v) =>
+        v === null || !Number.isFinite(v) ? '—' : v >= 100 ? v.toFixed(0) : v >= 10 ? v.toFixed(1) : v.toFixed(2)
+      const times = (v) => (v !== null && Number.isFinite(v) ? `×${v.toFixed(2)}` : '—')
+      const ROLES = ['agents', 'enemies']
+      const ROLE_COLOR = { agents: '--one', enemies: '--two' }
+      const ROLE_NAME = { agents: 'as Agents', enemies: 'as Enemies' }
+      const STAT_NAME = { skill: 'Skill', damage: 'Weapon damage', health: 'Max health', armor: 'Armor' }
 
       let info = null
       let state = null
-      let pairings = []
-      let prepared = { pairings: [], excluded: [], level: 0.95 }
-      let scored = { rows: [], summary: null }
+      let measurements = []
+      let prepared = []
+      let analysis = null
+      let scored = { rows: [] }
       let selected = null
       let showAll = false
-      let sort = { column: 'ratio', down: true }
+      let sort = { column: 'even', down: true }
       let running = false
 
       const api = async (method, url, body) => {
@@ -564,18 +658,25 @@
       const saveSoon = later(() => api('PUT', '/api/state', state), 400)
 
       /* ---------- setup ---------- */
-      const TEXTS = ['enemyText', 'agentText', 'overridesText']
+      const TEXTS = [
+        'reference',
+        'skills',
+        'damages',
+        'healths',
+        'armors',
+        'counts',
+        'checkCounts',
+        'typesText',
+        'overridesText',
+      ]
       const CHECKS = ['sites', 'responseSites', 'retreat']
-      const NUMBERS = ['trials', 'probeTrials', 'maxAgents', 'maxPoints']
+      const NUMBERS = ['baseCount', 'trials', 'probeTrials', 'maxCount', 'maxPoints']
 
       function showConfig() {
         const c = state.config
         TEXTS.forEach((id) => ($(id).value = c[id]))
         CHECKS.forEach((id) => ($(id).checked = c[id]))
         NUMBERS.forEach((id) => ($(id).value = c[id]))
-        $('level').value = state.view.level ?? 95
-        $('ignoreWorst').value = state.view.ignoreWorst ?? 0
-        $('feature').value = feature().id
       }
 
       const lookupSoon = later(refresh, 500)
@@ -593,28 +694,34 @@
         lookupSoon()
       }
 
-      /** Asks the server for the pairings of the configuration and their swept results. */
+      /** Asks the server for the measurements of the configuration and their swept results. */
       async function refresh() {
         const found = await api('POST', '/api/lookup', state.config)
-        pairings = found.pairings
+        measurements = found.measurements
         const errors = (where) =>
           found.errors
             .filter((e) => e.where === where)
-            .map((e) => `Line ${e.line}: ${e.message}`)
+            .map((e) => (where === 'Reference' ? e.message : `Line ${e.line}: ${e.message}`))
             .join('\n')
-        $('enemyErrors').textContent = errors('Enemy teams')
-        $('agentErrors').textContent = errors('Agent types')
+        $('referenceErrors').textContent = errors('Reference')
+        $('typeErrors').textContent = errors('Types')
         $('overrideErrors').textContent = errors('GDR values')
+        $('contentValues').innerHTML = Object.entries(found.gdrValues)
+          .map(([k, v]) => `${esc(k)} = ${v}`)
+          .join('<br />')
         recompute()
       }
 
       function showProgress(extra = '') {
-        const swept = pairings.filter((p) => p.thorough).length
-        const todo = pairings.length - swept
-        $('run').textContent = todo === 0 ? 'Nothing to run' : `Run ${todo} pairings`
-        $('run').disabled = running || todo === 0 || info?.engineError
+        // Measurements of one key share one sweep.
+        const sweeps = [...new Map(measurements.map((m) => [m.key, m])).values()]
+        const swept = sweeps.filter((m) => m.thorough).length
+        const todo = sweeps.length - swept
+        $('run').textContent = todo === 0 ? 'Nothing to run' : `Run ${todo} sweeps`
+        $('run').disabled = running || todo === 0 || Boolean(info?.engineError)
         $('stop').disabled = !running
-        $('progress').textContent = `${swept} of ${pairings.length} pairings swept.${extra}`
+        $('progress').textContent =
+          `${swept} of ${sweeps.length} sweeps done, for ${measurements.length} measurements.${extra}`
       }
 
       async function run() {
@@ -627,8 +734,8 @@
         })
         const reader = response.body.getReader()
         const decoder = new TextDecoder()
-        const byKey = new Map(pairings.map((p) => [p.key, p]))
-        const recomputeSoon = later(recompute, 800)
+        const byKey = Map.groupBy(measurements, (m) => m.key)
+        const recomputeSoon = later(recompute, 1000)
         let buffer = ''
         let failed = 0
         for (;;) {
@@ -641,10 +748,11 @@
           buffer = parts.pop()
           for (const part of parts.filter(Boolean)) {
             const message = JSON.parse(part)
-            const pairing = byKey.get(message.key)
-            if (message.record && pairing) {
-              pairing.record = message.record
-              pairing.thorough = true
+            if (message.record) {
+              for (const m of byKey.get(message.key) ?? []) {
+                m.record = message.record
+                m.thorough = true
+              }
             } else if (message.error) {
               failed += 1
               console.error(message.error)
@@ -658,7 +766,13 @@
       }
 
       /* ---------- formula ---------- */
-      const EXPRESSIONS = { fCombatant: 'combatant', fAux: 'aux', fTeam: 'team', fEnemy: 'enemyCombatant' }
+      const EXPRESSIONS = {
+        fCombatant: 'combatant',
+        fAux: 'aux',
+        fTeam: 'team',
+        fEnemy: 'enemyCombatant',
+        fEnemyTeam: 'enemyTeam',
+      }
 
       function showFormula() {
         const f = state.formula
@@ -678,14 +792,13 @@
             .join('')
       }
 
-      const recomputeSoon = later(recompute, 150)
+      const rescoreSoon = later(rescore, 150)
       function readFormula() {
-        const f = state.formula
         for (const [id, key] of Object.entries(EXPRESSIONS)) {
-          f[key] = $(id).value
+          state.formula[key] = $(id).value
         }
         saveSoon()
-        recomputeSoon()
+        rescoreSoon()
       }
 
       $('params').addEventListener('input', (event) => {
@@ -699,7 +812,7 @@
           return
         }
         saveSoon()
-        recomputeSoon()
+        rescoreSoon()
       })
       // A name is taken when its box loses focus, so that the table is not rebuilt at every key.
       $('params').addEventListener('change', (event) => {
@@ -720,7 +833,7 @@
         f.fit = f.fit.map((n) => (n === old ? name : n))
         showFormula()
         saveSoon()
-        recompute()
+        rescore()
       })
       $('params').addEventListener('click', (event) => {
         const name = event.target.dataset.paramRemove
@@ -729,7 +842,7 @@
           state.formula.fit = state.formula.fit.filter((n) => n !== name)
           showFormula()
           saveSoon()
-          recompute()
+          rescore()
         }
       })
       $('addParam').addEventListener('click', () => {
@@ -742,21 +855,19 @@
         saveSoon()
       })
 
-      const options = () => ({ ignoreWorst: (Number(state.view.ignoreWorst) || 0) / 100 })
-
       $('fit').addEventListener('click', () => {
         const names = state.formula.fit.filter((n) => n in state.formula.params)
-        if (names.length === 0 || prepared.pairings.length === 0) {
-          $('fitNote').textContent = names.length === 0 ? 'Check a parameter to fit.' : 'No swept pairing to fit to.'
+        if (names.length === 0 || scored.rows.length === 0) {
+          $('fitNote').textContent =
+            names.length === 0 ? 'Check a parameter to fit.' : 'No resolved measurement to fit to.'
           return
         }
         $('fitNote').textContent = 'Fitting…'
         setTimeout(() => {
-          const found = fit(state.formula, names, prepared, options())
-          state.formula = found.formula
+          state.formula = fit(state.formula, names, prepared).formula
           showFormula()
           saveSoon()
-          recompute()
+          rescore()
           $('fitNote').textContent = `Fitted ${names.join(', ')}.`
         }, 20)
       })
@@ -781,7 +892,7 @@
           $('pinName').value = state.pinned[Number(load)].name
           showFormula()
           saveSoon()
-          recompute()
+          rescore()
         } else if (remove !== undefined) {
           state.pinned.splice(Number(remove), 1)
           saveSoon()
@@ -790,109 +901,71 @@
       })
 
       /* ---------- results ---------- */
+      /** The measurements changed: read them again, then score. */
       function recompute() {
-        const records = pairings.filter((p) => p.record).map((p) => ({ ...p.record, agent: p.agent, enemy: p.enemy }))
-        const level = Math.min(0.995, Math.max(0.5, (Number(state.view.level) || 95) / 100))
-        prepared = prepare(records, level)
-        scored = score(state.formula, prepared, options())
-        $('formulaError').textContent = scored.error ?? ''
-        if (scored.error) {
-          scored = { rows: [], summary: null }
-        }
+        prepared = prepare(measurements)
+        analysis = analyse(prepared)
         showProgress()
+        showCombining()
+        showChecks()
+        showDice()
+        rescore()
+      }
+
+      /** The formula changed: score it and draw what shows it. */
+      function rescore() {
+        const result = score(state.formula, prepared)
+        $('formulaError').textContent = result.error ?? ''
+        scored = result.error ? { rows: [], compiled: null } : result
+        showFactors()
         showTiles()
         showPinned()
-        showCharts()
-        showGroups()
-        showPairings()
+        showRows()
         showDetail()
       }
 
       function showTiles() {
-        const s = scored.summary
-        const notSwept = pairings.filter((p) => !p.record).length
         const tile = (value, what) =>
           `<div class="tile"><div class="value">${value}</div><div class="what">${what}</div></div>`
+        const e = scored.experiments
+        const s = scored.sites
+        const resolved = prepared.filter((m) => m.status === 'ok').length
         $('tiles').innerHTML =
-          (s === null
-            ? tile('—', 'No swept pairing to score yet')
-            : tile(pct(s.threshold), `Safe ratio: a team at or above it wins at least ${pct(prepared.level, 1)}`) +
-              tile(times(s.overMean), 'Mean over-deployment') +
-              tile(times(s.overMax), 'Highest over-deployment') +
-              tile(pct(s.lowest), 'Lowest ratio any pairing needs') +
-              tile(pct(s.evenRatio), 'Ratio at even odds, mean') +
-              (s.unsafePoints > 0
-                ? tile(s.unsafePoints, 'Fought counts above the safe ratio that won too rarely')
-                : '')) +
-          tile(
-            `${scored.rows.length} / ${pairings.length}`,
-            `Pairings scored; ${prepared.excluded.length} left out, ${notSwept} not swept` +
-              (s?.ignored ? `, ${s.ignored} ignored as the worst` : ''),
-          )
+          (e && e.count > 0
+            ? tile(off(e.typical), 'Experiments: how far the rating ratio at even odds typically lies from 100%') +
+              tile(off(e.worst), 'Experiments: furthest from 100%')
+            : tile('—', 'No resolved experiment to score yet')) +
+          (s && s.count > 0
+            ? tile(off(s.typical), 'Mission sites: typically from 100% at even odds') +
+              tile(pct(s.safeRatio), 'Mission sites: the safe ratio, at or above which every team wins 95%') +
+              tile(pct(s.lowestSafe), 'Mission sites: the lowest ratio any pairing needs for 95%')
+            : '') +
+          tile(`${resolved} / ${prepared.length}`, 'Measurements resolved')
       }
 
       function showPinned() {
         const rows = state.pinned.map((p, i) => {
-          const s = prepared.pairings.length > 0 ? score(p.formula, prepared, options()) : { summary: null }
-          const cells = s.summary
-            ? `<td class="num">${pct(s.summary.threshold)}</td><td class="num">${times(s.summary.overMean)}</td>` +
-              `<td class="num">${times(s.summary.overMax)}</td><td class="num">${pct(s.summary.lowest)}</td>` +
-              `<td class="num">${pct(s.summary.evenRatio)}</td>`
-            : `<td colspan="5" class="name">${esc(s.error ?? 'nothing to score')}</td>`
+          const r = score(p.formula, prepared)
+          const cells =
+            r.error || !r.experiments || r.experiments.count === 0
+              ? `<td colspan="5" class="name">${esc(r.error ?? 'nothing to score')}</td>`
+              : `<td class="num">${off(r.experiments.typical)}</td><td class="num">${off(r.experiments.worst)}</td>` +
+                `<td class="num">${off(r.sites.typical)}</td><td class="num">${pct(r.sites.safeRatio)}</td>` +
+                `<td class="num">${pct(r.sites.lowestSafe)}</td>`
+          const params = Object.entries(p.formula.params)
+            .map(([k, v]) => `${k} ${v}`)
+            .join(', ')
           return (
             `<tr><td class="name">${esc(p.name)}</td>${cells}` +
-            `<td class="name"><code>${esc(p.formula.combatant)}</code> · <code>${esc(p.formula.team)}</code> · ` +
-            `${esc(
-              Object.entries(p.formula.params)
-                .map(([k, v]) => `${k} ${v}`)
-                .join(', '),
-            )}</td>` +
+            `<td class="name"><code>${esc(p.formula.combatant)}</code> · <code>${esc(p.formula.team)}</code> · ${esc(params)}</td>` +
             `<td><button class="small" data-load="${i}">Load</button> <button class="small" data-remove="${i}">Remove</button></td></tr>`
           )
         })
         $('pinned').innerHTML =
-          '<tr><th>Name</th><th class="num">Safe ratio</th><th class="num">Mean over-deployment</th>' +
-          '<th class="num">Highest</th><th class="num">Lowest ratio needed</th><th class="num">Even odds at</th>' +
+          '<tr><th>Name</th><th class="num">Experiments, typical</th><th class="num">Furthest</th>' +
+          '<th class="num">Sites, typical</th><th class="num">Sites, safe ratio</th><th class="num">Sites, lowest needed</th>' +
           '<th>Formula</th><th></th></tr>' +
           rows.join('')
-      }
-
-      const feature = () => FEATURES.find((f) => f.id === state.view.feature) ?? FEATURES[0]
-
-      /** The rows in four groups of equal size by the feature, lowest first; each row gets its group number. */
-      function grouped() {
-        const f = feature()
-        const sorted = [...scored.rows].sort((a, b) => f.get(a.pairing) - f.get(b.pairing))
-        const groups = []
-        for (let i = 0; i < 4; i += 1) {
-          const rows = sorted.slice(Math.floor((i * sorted.length) / 4), Math.floor(((i + 1) * sorted.length) / 4))
-          rows.forEach((row) => (row.group = i))
-          if (rows.length > 0) {
-            groups.push({ index: i, rows, from: f.get(rows[0].pairing), to: f.get(rows[rows.length - 1].pairing) })
-          }
-        }
-        return groups
-      }
-
-      const median = (values) => [...values].sort((a, b) => a - b)[Math.floor(values.length / 2)]
-
-      function showGroups() {
-        const f = feature()
-        const groups = grouped()
-        $('groupsTitle').textContent = `Pairings in four groups by ${f.label}`
-        $('groups').innerHTML =
-          `<tr><th>${esc(f.label)}</th><th class="num">Pairings</th><th class="num">Median ratio needed</th>` +
-          '<th class="num">Highest</th><th class="num">Median over-deployment</th></tr>' +
-          groups
-            .map(
-              (g) =>
-                `<tr><td><i style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(${STEPS[g.index]});margin-right:6px"></i>` +
-                `${num(g.from)} to ${num(g.to)}</td><td class="num">${g.rows.length}</td>` +
-                `<td class="num">${pct(median(g.rows.map((r) => r.ratio)))}</td>` +
-                `<td class="num">${pct(Math.max(...g.rows.map((r) => r.ratio)))}</td>` +
-                `<td class="num">${times(median(g.rows.map((r) => r.over)))}</td></tr>`,
-            )
-            .join('')
       }
 
       /* ---------- charts ---------- */
@@ -908,7 +981,7 @@
           return out
         }
         const span = hi / lo
-        const mantissas = span < 12 ? [1, 1.25, 1.5, 2, 2.5, 3, 4, 5, 6, 8] : span < 2000 ? [1, 2, 5] : [1]
+        const mantissas = span < 12 ? [1, 1.25, 1.5, 2, 2.5, 3, 4, 5, 6, 8] : span < 3000 ? [1, 2, 5] : [1]
         const out = []
         for (let e = Math.floor(Math.log10(lo)); e <= Math.ceil(Math.log10(hi)); e += 1) {
           for (const m of mantissas) {
@@ -922,8 +995,8 @@
       }
 
       /**
-       * Draws a scatter chart on a canvas: `points` as dots, `lines` as polylines, and `rules` as dashed reference
-       * lines, on one x and one y axis. The canvas keeps what it drew so that hovering can find the nearest dot.
+       * Draws a chart on a canvas: `points` as dots, `lines` as polylines, and `rules` as dashed reference lines, on
+       * one x and one y axis. The canvas keeps what it drew so that hovering can find the nearest dot.
        */
       function draw(canvas, spec) {
         const dpr = window.devicePixelRatio || 1
@@ -949,7 +1022,7 @@
         g.fillStyle = css('--muted')
         g.textAlign = 'center'
         g.textBaseline = 'top'
-        for (const v of ticks(x0, x1, spec.x.log)) {
+        for (const v of spec.x.ticks ?? ticks(x0, x1, spec.x.log)) {
           g.beginPath()
           g.moveTo(sx(v), m.top)
           g.lineTo(sx(v), height - m.bottom)
@@ -999,7 +1072,9 @@
           g.strokeStyle = line.color
           g.lineWidth = 2
           g.beginPath()
-          line.points.forEach((p, i) => (i === 0 ? g.moveTo(sx(p.x), sy(p.y)) : g.lineTo(sx(p.x), sy(p.y))))
+          line.points
+            .filter((p) => Number.isFinite(sx(p.x)) && Number.isFinite(sy(p.y)))
+            .forEach((p, i) => (i === 0 ? g.moveTo(sx(p.x), sy(p.y)) : g.lineTo(sx(p.x), sy(p.y))))
           g.stroke()
         }
         const placed = []
@@ -1009,9 +1084,8 @@
           if (!Number.isFinite(px) || !Number.isFinite(py)) {
             continue
           }
-          g.globalAlpha = p.alpha ?? 1
           g.beginPath()
-          g.arc(px, py, p.r, 0, Math.PI * 2)
+          g.arc(px, py, p.r ?? 4, 0, Math.PI * 2)
           if (p.hollow) {
             g.strokeStyle = p.color
             g.lineWidth = 2
@@ -1019,15 +1093,12 @@
           } else {
             g.fillStyle = p.color
             g.fill()
-            if (p.ring) {
-              g.strokeStyle = css('--surface')
-              g.lineWidth = 2
-              g.stroke()
-            }
+            g.strokeStyle = css('--surface')
+            g.lineWidth = 2
+            g.stroke()
           }
           placed.push({ px, py, p })
         }
-        g.globalAlpha = 1
         g.restore()
         canvas.placed = placed
         canvas.spec = spec
@@ -1049,282 +1120,434 @@
         }
         return best
       }
-      for (const id of ['chartA', 'chartB', 'chartC']) {
-        const canvas = $(id)
+      function interactive(canvas) {
         canvas.addEventListener('mousemove', (event) => {
           const hit = nearest(canvas, event)
-          if (hit === null || !canvas.spec.tip) {
+          if (hit === null || !canvas.spec?.tip) {
             tip.hidden = true
             canvas.style.cursor = ''
             return
           }
           tip.innerHTML = canvas.spec.tip(hit.p)
           tip.hidden = false
-          tip.style.left = `${Math.min(event.clientX + 14, window.innerWidth - 440)}px`
+          tip.style.left = `${Math.min(event.clientX + 14, window.innerWidth - 460)}px`
           tip.style.top = `${event.clientY + 14}px`
-          canvas.style.cursor = canvas.spec.pick ? 'pointer' : ''
+          canvas.style.cursor = hit.p.key ? 'pointer' : ''
         })
         canvas.addEventListener('mouseleave', () => (tip.hidden = true))
         canvas.addEventListener('click', (event) => {
           const hit = nearest(canvas, event)
-          if (hit !== null && canvas.spec.pick) {
-            canvas.spec.pick(hit.p)
+          if (hit?.p.key) {
+            select(hit.p.key)
           }
         })
       }
 
-      const span = (values, lo, hi) => {
-        const finite = values.filter((v) => Number.isFinite(v) && v > 0)
+      /** A domain that holds the values with a little room, for a log or a linear axis. */
+      const domain = (values, log) => {
+        const finite = values.filter((v) => Number.isFinite(v) && (!log || v > 0))
         if (finite.length === 0) {
-          return [lo, hi]
+          return log ? [1, 10] : [0, 1]
         }
-        return [Math.max(lo, Math.min(...finite) / 1.08), Math.min(hi, Math.max(...finite) * 1.08)]
+        const [lo, hi] = [Math.min(...finite), Math.max(...finite)]
+        if (log) {
+          return [lo / 1.15, hi * 1.15]
+        }
+        const pad = (hi - lo) * 0.06 || 1
+        return [Math.min(0, lo), hi + pad]
       }
-      const pairingName = (p) => `<b>${esc(p.agent.name)}</b> <span>against</span> <b>${esc(p.enemy.name)}</b>`
-      const rowTip = (row) =>
-        `${pairingName(row.pairing)}<br /><span>Needs</span> ${num(row.pairing.needed)} <span>Agents, a ratio of</span> ${pct(row.ratio)}` +
-        `<br /><span>The safe ratio asks for</span> ${num(row.safeCount)} <span>Agents:</span> ${times(row.over)}`
 
-      function showCharts() {
-        const groups = grouped()
-        const s = scored.summary
-        const colors = STEPS.map(css)
-        const f = feature()
-        $('legendA').innerHTML =
-          groups
+      /**
+       * One chart of section 2: the measurements of one experiment, e.g. one stat or one type's team sizes, by role,
+       * with the formula's prediction for each planned team.
+       */
+      function factorChart(canvas, test, label, log) {
+        const points = []
+        const lines = []
+        const all = []
+        for (const role of ROLES) {
+          const color = css(ROLE_COLOR[role])
+          const mine = prepared
+            .filter((m) => test(m) && m.meta.role === role)
+            .sort((a, b) => a.meta.value - b.meta.value)
+          for (const m of mine.filter((x) => x.status === 'ok')) {
+            points.push({ x: m.meta.value, y: m.even, color, key: m.key, m })
+            all.push(m.even)
+          }
+          if (scored.compiled) {
+            const line = mine
+              .filter((m) => m.record)
+              .map((m) => ({ x: m.meta.value, y: predictEven(scored.compiled, m, m.even ?? 10) }))
+              .filter((p) => p.y !== null)
+            lines.push({ color, points: line })
+          }
+        }
+        const xs = [...new Set(prepared.filter(test).map((m) => m.meta.value))].sort((a, b) => a - b)
+        draw(canvas, {
+          x: { domain: domain(xs, log), log, label, format: String, ticks: xs },
+          y: {
+            domain: domain(all, true),
+            log: true,
+            label: 'Strength, reference Combatants',
+            format: (v) => String(Number(v.toPrecision(3))),
+          },
+          points,
+          lines,
+          tip: (p) => `${esc(p.m.label)}<br /><span>Worth</span> ${num(p.y)} <span>reference Combatants</span>`,
+        })
+      }
+
+      /** What doubling a value does to the measured strength, by role, as a sentence. */
+      function doubling(curves, what) {
+        const parts = ROLES.map((role) => {
+          const slope = logSlope((curves?.[role] ?? []).map(([x, y]) => [x, y]))
+          return slope === null ? null : `${times(2 ** slope)} ${ROLE_NAME[role]}`
+        }).filter(Boolean)
+        return parts.length === 0
+          ? 'Not measured yet.'
+          : `Doubling ${what} multiplies strength by ${parts.join(' and ')}.`
+      }
+
+      function showFactors() {
+        const host = $('factorCharts')
+        if (host.children.length === 0) {
+          host.innerHTML =
+            ['skill', 'damage', 'health', 'armor']
+              .map(
+                (stat) =>
+                  `<div class="panel"><h3>${STAT_NAME[stat]}</h3><canvas id="chart-${stat}"></canvas>` +
+                  `<div class="finding" id="finding-${stat}"></div></div>`,
+              )
+              .join('') +
+            '<div class="panel"><div class="row" style="margin-top:0"><h3 style="margin:0">Team size of</h3>' +
+            '<select id="countType"></select></div><canvas id="chart-count"></canvas><div class="finding" id="finding-count"></div></div>'
+          host.querySelectorAll('canvas').forEach(interactive)
+          $('countType').addEventListener('input', () => {
+            state.view.countType = $('countType').value
+            saveSoon()
+            showFactors()
+          })
+        }
+        const base = state.config.baseCount
+        for (const stat of ['skill', 'damage', 'health', 'armor']) {
+          factorChart(
+            $(`chart-${stat}`),
+            (m) => m.kind === 'factor' && m.meta.factor === stat,
+            `${STAT_NAME[stat]} of each of ${base} Combatants`,
+            stat !== 'armor',
+          )
+          const curves = analysis.factors[stat]
+          if (stat === 'armor') {
+            const text = ROLES.map((role) => {
+              const c = curves?.[role] ?? []
+              return c.length < 2 ? null : `${times(c[c.length - 1][1] / c[0][1])} ${ROLE_NAME[role]}`
+            }).filter(Boolean)
+            $(`finding-${stat}`).textContent =
+              text.length === 0
+                ? 'Not measured yet.'
+                : `Going from the least armor to the most multiplies strength by ${text.join(' and ')}.`
+          } else {
+            $(`finding-${stat}`).textContent = doubling(curves, STAT_NAME[stat].toLowerCase())
+          }
+        }
+        const types = Object.keys(analysis.counts)
+        const planned = [...new Set(prepared.filter((m) => m.kind === 'count').map((m) => m.meta.type))]
+        const select = $('countType')
+        if (select.options.length !== planned.length) {
+          select.innerHTML = planned.map((t) => `<option>${esc(t)}</option>`).join('')
+        }
+        const type = planned.includes(state.view.countType) ? state.view.countType : (planned[0] ?? '')
+        select.value = type
+        factorChart(
+          $('chart-count'),
+          (m) => m.kind === 'count' && m.meta.type === type,
+          `Number of ${type} Combatants`,
+          true,
+        )
+        $('finding-count').textContent = types.includes(type)
+          ? doubling(analysis.counts[type], 'the team size')
+          : 'Not measured yet.'
+      }
+
+      const spreadOf = (gaps) => {
+        const logs = gaps.filter((g) => g.gap !== null).map((g) => Math.log(g.gap))
+        if (logs.length === 0) {
+          return null
+        }
+        return {
+          count: logs.length,
+          typical: Math.exp(Math.sqrt(logs.reduce((s, v) => s + v * v, 0) / logs.length)) - 1,
+          worst: Math.exp(Math.max(...logs.map(Math.abs))) - 1,
+        }
+      }
+
+      function gapTable(id, gaps, predictedLabel) {
+        const rows = gaps
+          .filter((g) => g.gap !== null)
+          .sort((a, b) => Math.abs(Math.log(b.gap)) - Math.abs(Math.log(a.gap)))
+        $(id).innerHTML =
+          `<tr><th>Team</th><th class="num">Measured</th><th class="num">${predictedLabel}</th><th class="num">Gap</th></tr>` +
+          rows
             .map(
               (g) =>
-                `<span><i style="background:${colors[g.index]}"></i>${esc(f.label)} ${num(g.from)} to ${num(g.to)}</span>`,
+                `<tr class="pick" data-key="${g.m.key}"><td class="name">${esc(g.m.label)}</td><td class="num">${num(g.m.even)}</td>` +
+                `<td class="num">${num(g.predicted)}</td><td class="num">${pct(g.gap)}</td></tr>`,
             )
-            .join('') +
-          (s
-            ? `<span><i class="rule" style="border-color:${css('--accent')}"></i>Safe ratio ${pct(s.threshold)}</span>` +
-              `<span><i class="rule" style="border-color:${css('--muted')}"></i>Win rate ${pct(prepared.level, 1)}</span>`
-            : '')
-        $('legendB').innerHTML = s
-          ? `<span><i class="rule" style="border-color:${css('--accent')}"></i>Safe ratio ${pct(s.threshold)}</span>` +
-            (s.ignored > 0
-              ? `<span><i style="background:none;border:2px solid ${css('--mark')}"></i>Ignored as the worst</span>`
-              : '')
-          : ''
-        // A: every fought count of every scored pairing.
-        const cloud = []
-        for (const row of scored.rows) {
-          for (const p of row.pairing.record.points) {
-            cloud.push({
-              x: row.ratioFn(p.n),
-              y: p.won / p.trials,
-              r: 2.5,
-              alpha: 0.75,
-              color: colors[row.group],
-              row,
-              point: p,
-            })
-          }
+            .join('')
+      }
+
+      function showCombining() {
+        const say = (gaps, what) => {
+          const s = spreadOf(gaps)
+          return s === null
+            ? 'Not measured yet.'
+            : `${s.count} teams: typically ${off(s.typical)} from ${what}, at most ${off(s.worst)}.`
         }
-        const threshold = s?.threshold ?? 1
-        draw($('chartA'), {
+        $('pairsFinding').textContent = say(analysis.pairs, 'independent effects')
+        $('mixesFinding').textContent = say(analysis.mixes, 'the sum of the halves')
+        gapTable('pairs', analysis.pairs, 'If independent')
+        gapTable('mixes', analysis.mixes, 'Sum of halves')
+      }
+
+      function showChecks() {
+        const dots = [
+          ...analysis.checks.map((g) => ({ ...g, color: css('--one') })),
+          ...analysis.sites.map((g) => ({ ...g, color: css('--two') })),
+        ]
+          .filter((g) => g.predicted !== null)
+          .map((g) => ({ x: g.predicted, y: g.m.even, color: g.color, hollow: g.beyond, key: g.m.key, g }))
+        const d = domain(
+          dots.flatMap((p) => [p.x, p.y]),
+          true,
+        )
+        draw($('chartChecks'), {
           x: {
-            domain: span([threshold * 2.5, threshold / 4, ...cloud.map((c) => c.x)], threshold / 5, threshold * 3),
+            domain: d,
             log: true,
-            label: 'Rating ratio, Agents to Enemies',
-            format: (v) => pct(v),
-          },
-          y: { domain: [0, 1], log: false, label: 'Win rate', format: (v) => pct(v) },
-          rules: s
-            ? [
-                { y: prepared.level, color: css('--muted') },
-                { x: threshold, color: css('--accent') },
-              ]
-            : [],
-          points: cloud,
-          tip: (c) =>
-            `${pairingName(c.row.pairing)}<br />${c.point.n} <span>Agents, ratio</span> ${pct(c.x)}<span>: won</span> ` +
-            `${c.point.won} <span>of</span> ${c.point.trials}` +
-            (c.point.retreated > 0 ? `<span>, retreated from</span> ${c.point.retreated}` : ''),
-          pick: (c) => select(c.row.pairing.key),
-        })
-        // B: one dot per pairing.
-        const dots = scored.rows.map((row) => ({
-          x: f.get(row.pairing),
-          y: row.ratio,
-          r: row.pairing.key === selected ? 6 : 4,
-          ring: true,
-          hollow: row.ignored,
-          color: row.pairing.key === selected ? css('--accent') : css('--mark'),
-          row,
-        }))
-        const xs = dots.map((d) => d.x)
-        draw($('chartB'), {
-          x: {
-            domain: f.log ? span(xs, 1e-6, 1e9) : [Math.min(0, ...xs), Math.max(1, ...xs) * 1.05],
-            log: f.log,
-            label: f.label,
+            label: 'Agents for even odds, by the yardstick',
             format: (v) => String(Number(v.toPrecision(3))),
           },
           y: {
-            domain: span(
-              dots.map((d) => d.y),
-              1e-6,
-              1e9,
+            domain: d,
+            log: true,
+            label: 'Agents for even odds, measured',
+            format: (v) => String(Number(v.toPrecision(3))),
+          },
+          lines: [
+            {
+              color: css('--muted'),
+              points: [
+                { x: d[0], y: d[0] },
+                { x: d[1], y: d[1] },
+              ],
+            },
+          ],
+          points: dots,
+          tip: (p) =>
+            `${esc(p.g.m.label)}<br /><span>Measured</span> ${num(p.y)}<span>, yardstick</span> ${num(p.x)}<span>: gap</span> ${pct(p.g.gap)}` +
+            (p.g.beyond ? '<br /><span>Read beyond the measured team sizes</span>' : ''),
+        })
+        const [c, s] = [spreadOf(analysis.checks), spreadOf(analysis.sites)]
+        $('checksFinding').textContent =
+          c === null && s === null
+            ? 'Not measured yet.'
+            : [
+                c && `Cross-checks: typically ${off(c.typical)} from the yardstick, at most ${off(c.worst)}.`,
+                s && `Mission sites: typically ${off(s.typical)}, at most ${off(s.worst)}.`,
+              ]
+                .filter(Boolean)
+                .join(' ')
+      }
+
+      function showDice() {
+        const dots = analysis.dice.map((d) => ({ x: d.m.even, y: d.margin, color: css('--one'), key: d.m.key, d }))
+        draw($('chartDice'), {
+          x: {
+            domain: domain(
+              dots.map((p) => p.x),
+              true,
             ),
             log: true,
-            label: 'Rating ratio needed',
-            format: (v) => pct(v),
+            label: 'Reference Agents at even odds',
+            format: (v) => String(Number(v.toPrecision(3))),
           },
-          rules: s ? [{ y: threshold, color: css('--accent') }] : [],
+          y: {
+            domain: [1, Math.max(1.5, ...dots.map((p) => p.y)) * 1.05],
+            log: false,
+            label: 'Agents for 95%, over Agents for even odds',
+            format: (v) => `×${v.toFixed(2)}`,
+          },
           points: dots,
-          tip: (d) => rowTip(d.row),
-          pick: (d) => select(d.row.pairing.key),
+          tip: (p) =>
+            `${esc(p.d.m.label)}<br />${num(p.d.m.even)} <span>reference Agents win half,</span> ${num(p.d.m.safe)} <span>win 95%:</span> ${times(p.y)}`,
         })
-      }
-
-      function select(key) {
-        selected = key
-        showCharts()
-        showPairings()
-        showDetail()
-      }
-
-      function showDetail() {
-        const row = scored.rows.find((r) => r.pairing.key === selected)
-        const left = prepared.excluded.find((e) => e.key === selected)
-        const item = row?.pairing ?? left
-        if (!item) {
-          $('detailTitle').textContent = 'One pairing'
-          $('detailNote').textContent = 'Click a pairing in a chart or in the table.'
-          $('legendC').innerHTML = ''
-          draw($('chartC'), {
-            x: { domain: [0, 10], log: false, label: 'Agents', format: String },
-            y: { domain: [0, 1], log: false, label: 'Win rate', format: (v) => pct(v) },
-            points: [],
+        const band = (lo, hi) =>
+          analysis.dice
+            .filter((d) => d.m.even >= lo && d.m.even < hi)
+            .map((d) => d.margin)
+            .sort((a, b) => a - b)
+        const parts = [
+          [1, 4, 'under 4'],
+          [4, 16, '4 to 16'],
+          [16, Infinity, '16 and up'],
+        ]
+          .map(([lo, hi, name]) => {
+            const margins = band(lo, hi)
+            return margins.length === 0
+              ? null
+              : `${name} Agents: ${times(margins[Math.floor(margins.length / 2)])}, at most ${times(margins[margins.length - 1])}`
           })
-          return
-        }
-        const full = Math.max(...item.record.points.map((p) => p.trials))
-        const points = item.record.points.map((p) => ({
-          x: p.n,
-          y: p.won / p.trials,
-          r: p.trials >= full ? 4 : 2.5,
-          ring: p.trials >= full,
-          color: p.trials >= full ? css('--mark') : css('--muted'),
-          point: p,
-        }))
-        const top = Math.max(...item.curve.map((c) => c.n), row && Number.isFinite(row.safeCount) ? row.safeCount : 0)
-        $('detailTitle').innerHTML = `${esc(item.agent.name)} against ${esc(item.enemy.name)}`
-        $('legendC').innerHTML =
-          `<span><i style="background:${css('--mark')}"></i>Full batch</span><span><i style="background:${css('--muted')}"></i>Probe</span>` +
-          (row
-            ? `<span><i class="rule" style="border-color:${css('--muted')}"></i>Needed, ${num(row.pairing.needed)} Agents</span>` +
-              `<span><i class="rule" style="border-color:${css('--accent')}"></i>Asked for by the safe ratio, ${num(row.safeCount)} Agents</span>`
-            : '')
-        draw($('chartC'), {
-          x: { domain: [0, top * 1.08 + 1], log: false, label: 'Agents', format: String },
-          y: { domain: [0, 1], log: false, label: 'Win rate', format: (v) => pct(v) },
-          rules: row
-            ? [
-                { x: row.pairing.needed, color: css('--muted') },
-                ...(Number.isFinite(row.safeCount) ? [{ x: row.safeCount, color: css('--accent') }] : []),
-              ]
-            : [],
-          lines: [{ color: css('--step3'), points: item.curve.map((c) => ({ x: c.n, y: c.rate })) }],
-          points,
-          tip: (d) =>
-            `${d.point.n} <span>Agents: won</span> ${d.point.won} <span>of</span> ${d.point.trials}` +
-            (row ? `<br /><span>Rating ratio</span> ${pct(row.ratioFn(d.point.n))}` : '') +
-            `<br /><span>Agents dead per Combat</span> ${(d.point.agentsDead / d.point.trials).toFixed(1)}`,
-        })
-        const groups = item.enemy.groups
-          .map((g) => `${g.count} × s${g.skill} h${g.health} d${g.damage} a${g.armor}`)
-          .join(' + ')
-        const a = item.agent
-        $('detailNote').innerHTML =
-          `Agents s${a.skill} h${a.health} d${a.damage} a${a.armor}; Enemies ${esc(groups)}. ` +
-          (row
-            ? `Even odds at ${row.pairing.even === null ? '—' : num(row.pairing.even)} Agents, ratio ${pct(row.evenRatio ?? NaN)}; ` +
-              `${pct(prepared.level, 1)} at ${num(row.pairing.needed)} Agents, ratio ${pct(row.ratio)}; over-deployment ${times(row.over)}.`
-            : `Left out: ${esc(left.reason)}.`) +
-          ` Swept in ${(item.record.ms / 1000).toFixed(1)} s.`
+          .filter(Boolean)
+        $('diceFinding').textContent =
+          parts.length === 0 ? 'Not measured yet.' : `Median margin for fights of ${parts.join('; ')}.`
       }
 
+      /* ---------- every measurement ---------- */
       const COLUMNS = [
-        { id: 'agent', label: 'Agent type', get: (r) => r.pairing.agent.name, text: true },
-        { id: 'enemy', label: 'Enemy team', get: (r) => r.pairing.enemy.name, text: true },
-        { id: 'enemies', label: 'Enemies', get: (r) => r.pairing.enemyStats.count, show: String },
-        { id: 'ratio', label: 'Ratio needed', get: (r) => r.ratio, show: (v) => pct(v) },
-        { id: 'over', label: 'Over-deployment', get: (r) => r.over, show: times },
-        { id: 'needed', label: 'Agents needed', get: (r) => r.pairing.needed, show: num },
+        { id: 'label', label: 'Measurement', get: (r) => r.m.label, text: true },
         {
-          id: 'safe',
-          label: 'Agents asked for',
-          get: (r) => r.safeCount,
-          show: (v) => (Number.isFinite(v) ? num(v) : 'never'),
+          id: 'even',
+          label: 'Formula at even odds',
+          get: (r) => r.evenRatio,
+          show: (v) => pct(v),
+          by: (v) => Math.abs(Math.log(v)),
         },
-        { id: 'even', label: 'Even odds at ratio', get: (r) => r.evenRatio ?? NaN, show: (v) => pct(v) },
-        { id: 'feature', label: null, get: (r) => feature().get(r.pairing), show: num },
+        { id: 'safe', label: 'Formula at 95%', get: (r) => r.safeRatio ?? NaN, show: (v) => pct(v) },
+        { id: 'measured', label: 'Even at', get: (r) => r.m.even, show: num },
+        { id: 'predicted', label: 'Formula says', get: (r) => r.predicted ?? NaN, show: num },
+        { id: 'safeCount', label: '95% at', get: (r) => r.m.safe ?? NaN, show: num },
       ]
 
-      function showPairings() {
-        const column = COLUMNS.find((c) => c.id === sort.column) ?? COLUMNS[4]
-        const rows = [...scored.rows].sort((a, b) => {
-          const [x, y] = [column.get(a), column.get(b)]
-          const order = column.text ? String(x).localeCompare(String(y)) : x - y
-          return sort.down ? -order : order
-        })
-        const shown = showAll ? rows : rows.slice(0, 30)
-        $('pairings').innerHTML =
+      function showRows() {
+        const kind = $('kind').value
+        const column = COLUMNS.find((c) => c.id === sort.column) ?? COLUMNS[1]
+        const key = (r) => (column.by ? column.by(column.get(r)) : column.get(r))
+        const rows = scored.rows
+          .filter((r) => kind === '' || r.m.kind === kind)
+          .sort((a, b) => {
+            const [x, y] = [key(a), key(b)]
+            const order = column.text
+              ? String(x).localeCompare(String(y))
+              : (Number.isNaN(x) ? -Infinity : x) - (Number.isNaN(y) ? -Infinity : y)
+            return sort.down ? -order : order
+          })
+        const shown = showAll ? rows : rows.slice(0, 25)
+        $('rows').innerHTML =
           '<tr>' +
           COLUMNS.map(
             (c) =>
               `<th class="sortable ${c.text ? '' : 'num'} ${c.id === sort.column ? 'sorted' : ''}" data-sort="${c.id}">` +
-              `${esc(c.label ?? feature().label)}${c.id === sort.column ? (sort.down ? ' ▼' : ' ▲') : ''}</th>`,
+              `${esc(c.label)}${c.id === sort.column ? (sort.down ? ' ▼' : ' ▲') : ''}</th>`,
           ).join('') +
           '</tr>' +
           shown
             .map(
               (r) =>
-                `<tr class="pick ${r.pairing.key === selected ? 'selected' : ''}" data-key="${r.pairing.key}">` +
+                `<tr class="pick ${r.m.key === selected ? 'selected' : ''}" data-key="${r.m.key}">` +
                 COLUMNS.map((c) =>
                   c.text ? `<td class="name">${esc(c.get(r))}</td>` : `<td class="num">${c.show(c.get(r))}</td>`,
                 ).join('') +
                 '</tr>',
             )
             .join('')
-        $('showAll').hidden = rows.length <= 30
-        $('showAll').textContent = showAll ? 'Show the first 30' : `Show all ${rows.length}`
-        $('pairingsNote').textContent = 'Click a heading to sort and a row to see its win rates.'
-        $('excludedSummary').textContent = `${prepared.excluded.length} pairings left out`
-        $('excluded').innerHTML =
-          '<tr><th>Agent type</th><th>Enemy team</th><th>Why</th></tr>' +
-          prepared.excluded
+        $('showAll').hidden = rows.length <= 25
+        $('showAll').textContent = showAll ? 'Show the first 25' : `Show all ${rows.length}`
+        const unresolved = prepared.filter((m) => m.status !== 'ok' && (kind === '' || m.kind === kind))
+        $('unresolvedSummary').textContent = `${unresolved.length} measurements without a result`
+        $('unresolved').innerHTML =
+          '<tr><th>Measurement</th><th>Why</th></tr>' +
+          unresolved
             .map(
-              (e) =>
-                `<tr class="pick" data-key="${e.key}"><td class="name">${esc(e.agent.name)}</td><td class="name">${esc(e.enemy.name)}</td>` +
-                `<td class="name">${esc(e.reason)}</td></tr>`,
+              (m) =>
+                `<tr class="pick" data-key="${m.key}"><td class="name">${esc(m.label)}</td><td class="name">${esc(m.status)}</td></tr>`,
             )
             .join('')
       }
 
-      for (const id of ['pairings', 'excluded']) {
-        $(id).addEventListener('click', (event) => {
-          const heading = event.target.closest('th[data-sort]')
-          const row = event.target.closest('tr[data-key]')
-          if (heading) {
-            sort = { column: heading.dataset.sort, down: sort.column === heading.dataset.sort ? !sort.down : true }
-            showPairings()
-          } else if (row) {
-            select(row.dataset.key)
-          }
-        })
+      function select(key) {
+        selected = key
+        showRows()
+        showDetail()
       }
+
+      function showDetail() {
+        const m = prepared.find((x) => x.key === selected)
+        if (!m || !m.record) {
+          $('detailTitle').textContent = 'One measurement'
+          $('detailLegend').innerHTML = ''
+          $('detailNote').textContent = m ? 'Not swept yet.' : 'Click a row, or a dot in a chart.'
+          draw($('chartDetail'), {
+            x: { domain: [0, 10], log: false, label: 'Swept count', format: String },
+            y: { domain: [0, 1], log: false, label: "Agents' win rate", format: (v) => pct(v) },
+            points: [],
+          })
+          return
+        }
+        const row = scored.rows.find((r) => r.m.key === selected)
+        const full = Math.max(...m.record.points.map((p) => p.trials))
+        const win = (value) => (m.swept === 'agents' ? value : 1 - value)
+        const points = m.record.points.map((p) => ({
+          x: p.n,
+          y: p.won / p.trials,
+          r: p.trials >= full ? 4 : 2.5,
+          color: p.trials >= full ? css('--one') : css('--muted'),
+          point: p,
+        }))
+        const sweptName = m.swept === 'agents' ? 'Agents' : 'Enemies'
+        const top = Math.max(...m.curve.map((c) => c.n), row?.predicted ?? 0)
+        $('detailTitle').textContent = m.label
+        $('detailLegend').innerHTML =
+          `<span><i style="background:${css('--one')}"></i>Full batch</span><span><i style="background:${css('--muted')}"></i>Probe</span>` +
+          (m.even !== null
+            ? `<span><i class="rule" style="border-color:${css('--muted')}"></i>Even odds, ${num(m.even)}</span>`
+            : '') +
+          (m.safe !== null
+            ? `<span><i class="rule" style="border-color:${css('--three')}"></i>95%, ${num(m.safe)}</span>`
+            : '') +
+          (row?.predicted
+            ? `<span><i class="rule" style="border-color:${css('--accent')}"></i>Formula's even odds, ${num(row.predicted)}</span>`
+            : '')
+        draw($('chartDetail'), {
+          x: { domain: [0, top * 1.08 + 1], log: false, label: `Number of ${sweptName}`, format: String },
+          y: { domain: [0, 1], log: false, label: "Agents' win rate", format: (v) => pct(v) },
+          rules: [
+            ...(m.even !== null ? [{ x: m.even, color: css('--muted') }] : []),
+            ...(m.safe !== null ? [{ x: m.safe, color: css('--three') }] : []),
+            ...(row?.predicted ? [{ x: row.predicted, color: css('--accent') }] : []),
+          ],
+          lines: [{ color: css('--one'), points: m.curve.map((c) => ({ x: c.n, y: win(c.value) })) }],
+          points,
+          tip: (d) =>
+            `${d.point.n} <span>${sweptName}: the Agents won</span> ${d.point.won} <span>of</span> ${d.point.trials}` +
+            (scored.compiled ? `<br /><span>Rating ratio</span> ${pct(ratioAt(scored.compiled, m, d.point.n))}` : ''),
+        })
+        const unit = `s${m.unit.skill} h${m.unit.health} d${m.unit.damage} a${m.unit.armor}`
+        const fixed = formatGroups(m.swept === 'agents' ? m.enemies : m.agents)
+        $('detailNote').textContent =
+          `${m.swept === 'agents' ? 'Enemies' : 'Agents'}: ${fixed}. Swept ${sweptName}: ${unit}. ` +
+          (m.status === 'ok' ? '' : `Unresolved: ${m.status}. `) +
+          `Swept in ${(m.record.ms / 1000).toFixed(1)} s.`
+      }
+
+      document.addEventListener('click', (event) => {
+        const heading = event.target.closest('th[data-sort]')
+        const row = event.target.closest('tr[data-key]')
+        if (heading) {
+          sort = { column: heading.dataset.sort, down: sort.column === heading.dataset.sort ? !sort.down : true }
+          showRows()
+        } else if (row) {
+          select(row.dataset.key)
+        }
+      })
       $('showAll').addEventListener('click', () => {
         showAll = !showAll
-        showPairings()
+        showRows()
       })
+      $('kind').addEventListener('input', showRows)
 
       /* ---------- start ---------- */
       async function start() {
-        $('feature').innerHTML = FEATURES.map((f) => `<option value="${f.id}">${esc(f.label)}</option>`).join('')
+        ;['chartChecks', 'chartDice', 'chartDetail'].forEach((id) => interactive($(id)))
         ;[info, state] = await Promise.all([api('GET', '/api/info'), api('GET', '/api/state')])
         $('engine').innerHTML = info.engineError
           ? `<span class="error">The engine did not start: ${esc(info.engineError)}</span>`
@@ -1332,9 +1555,6 @@
         const responses = info.gdr.sites.filter((s) => s.kind === 'response').length
         $('sitesLabel').textContent =
           `The ${info.gdr.sites.length} Mission sites of the content, ${responses} of them Response sites`
-        $('contentValues').innerHTML = Object.entries(info.gdr.combatValues)
-          .map(([k, v]) => `${esc(k)} = ${v}`)
-          .join('<br />')
         showConfig()
         showFormula()
         await refresh()
@@ -1345,13 +1565,6 @@
       }
       for (const id of Object.keys(EXPRESSIONS)) {
         $(id).addEventListener('input', readFormula)
-      }
-      for (const id of ['level', 'ignoreWorst', 'feature']) {
-        $(id).addEventListener('input', () => {
-          state.view[id] = id === 'feature' ? $(id).value : Number($(id).value)
-          saveSoon()
-          recomputeSoon()
-        })
       }
       $('run').addEventListener('click', run)
       $('stop').addEventListener('click', () => api('POST', '/api/stop'))
@@ -1364,7 +1577,12 @@
       })
       window.addEventListener(
         'resize',
-        later(() => (showCharts(), showDetail()), 150),
+        later(() => {
+          showFactors()
+          showChecks()
+          showDice()
+          showDetail()
+        }, 150),
       )
       start()
     </script>

@@ -4,8 +4,8 @@
  *   node tools/cr-sweep-bench/server.ts [--impl <game-v5-impl-web clone>] [--spec <game-v5 clone>] [--port <number>]
  *
  * It serves the bench page at http://127.0.0.1:<port>/, reads the GDR values from the YAML files under <spec>/content
- * and starts the engine from the TypeScript source under <impl>/src again on every page load, sweeps the pairings the
- * page asks for on one worker thread per spare CPU core, and keeps the page's state and every swept pairing as files
+ * and starts the engine from the TypeScript source under <impl>/src again on every page load, sweeps the measurements the
+ * page asks for on one worker thread per spare CPU core, and keeps the page's state and every swept measurement as files
  * under data/.
  */
 import http from 'node:http'
@@ -21,6 +21,7 @@ import {
   SPEC,
   arg,
   defaultState,
+  engineKey,
   engineVersion,
   loadGdr,
   loadState,
@@ -55,15 +56,16 @@ const file = (res: http.ServerResponse, name: string, type: string) => {
   res.end(fs.readFileSync(path.join(HERE, name), 'utf8'))
 }
 
-/** The pairings of a configuration, each with its swept result when there is one. */
+/** The measurements of a configuration, each with its swept result when there is one. */
 function lookup(config: Config) {
   const gdr = loadGdr()
-  const planned = plan(config, gdr, engineVersion())
+  const planned = plan(config, gdr, engineKey())
   return {
     errors: planned.errors,
-    pairings: planned.pairings.map((pairing) => {
-      const record = results.get(pairing.key) ?? null
-      return { ...pairing, record, thorough: record !== null && satisfies(record, config) }
+    gdrValues: planned.gdrValues,
+    measurements: planned.measurements.map((m) => {
+      const record = results.get(m.key) ?? null
+      return { ...m, record, thorough: record !== null && satisfies(record, config) }
     }),
   }
 }
@@ -93,7 +95,7 @@ const server = http.createServer((req, res) => {
     } else if (req.method === 'POST' && url === '/api/run') {
       const config = JSON.parse(await body(req)) as Config
       const gdr = loadGdr()
-      const engine = engineVersion()
+      const engine = engineKey()
       // A new run replaces the one before.
       stream?.end()
       stream = res
