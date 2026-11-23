@@ -1020,7 +1020,14 @@
         win: 70,
         turns: 200,
         base: false,
+        /* The beelining Investigation teams of the Initiative Missions chart, and whether the Combat rating chart shows their sites. */
+        bl_n: 4,
+        bl_skill: 100,
+        bl_teams: 3,
+        initcr: false,
       }
+      /* The color of the Initiative Mission site Combat rating line, wherever it is drawn. */
+      const INIT_CR_COLOR = '#c9a2ff'
       let T = clone(TEAM0)
       const get = (o, p) => p.split('.').reduce((a, k) => (a == null ? a : a[k]), o)
       const set = (o, p, v) => {
@@ -1240,13 +1247,29 @@
           )
           .join('')}</div><div class="chart" id="ch_econ"></div>`,
       ) +
+      fold(
+        'init',
+        'Money and Funding from Initiative Missions, Investigation teams beelining',
+        `<div class="ctl">${tin('bl_n', 'Agents per team', { min: 1 })}${tin('bl_skill', 'Effective skill each', { min: 1 })}${tin('bl_teams', 'Teams at once, 1 per Faction', { min: 1, max: 3 })}</div><div class="op-legend">${[
+          [MONEY_COLOR, 3, `Money from won Initiative Missions, per ${OP_BUCKET} Turns`],
+          [MONEY_COLOR, 1.25, 'Money, cumulative'],
+          [FUNDING_COLOR, 3, `Funding, per ${OP_BUCKET} Turns`],
+          [FUNDING_COLOR, 1.25, 'Funding, cumulative'],
+          [INIT_CR_COLOR, 2, 'Highest Initiative Mission Combat rating so far'],
+        ]
+          .map(
+            ([c, w, t]) =>
+              `<span><i style="background:${c};height:${w}px;width:16px;vertical-align:middle"></i>${t}</span>`,
+          )
+          .join('')}</div><div class="chart" id="ch_init"></div>`,
+      ) +
       fold('panic', `Panic at the end of each ${OP_BUCKET} Turns`, `<div class="chart" id="ch_panic"></div>`) +
       fold(
         'cr',
         `Combat rating of Response Missions, mean of each ${OP_BUCKET} Turns`,
-        `<div class="chart" id="ch_cr"></div>`,
+        `<div class="ctl">${tcheck('initcr', 'Show the highest Initiative Mission Combat rating so far')}</div><div class="chart" id="ch_cr"></div>`,
       ) +
-      `<div id="o_panic"></div><div class="note">An expected-value estimate with no Faction Eliminated and no Panic reduction from won Initiative Missions: each level lasts its mean duration, operations arrive at the mean interval, each operation's Response Mission site is equally likely to be any of its level's, and every operation not won is ignored or lost. A Response Mission's Combat rating is its Enemies' at full health; the band marks the test team's Combat rating. Each red mark gives the Combat rating of the strongest Response Mission site its 10 Turns can bring, and its saturation the chance that site comes at least once in them, taking the operations as a Poisson process. Funding and money count every operation, including the ones after the Campaign may already have been lost. The Funding received counts the starting Funding only when its checkbox is on; the money counts only won Response Missions, not the starting money or any spending.</div>`,
+      `<div id="o_panic"></div><div class="note">An expected-value estimate with no Faction Eliminated and no Panic reduction from won Initiative Missions: each level lasts its mean duration, operations arrive at the mean interval, each operation's Response Mission site is equally likely to be any of its level's, and every operation not won is ignored or lost. A Response Mission's Combat rating is its Enemies' at full health; the band marks the test team's Combat rating. Each red mark gives the Combat rating of the strongest Response Mission site its 10 Turns can bring, and its saturation the chance that site comes at least once in them, taking the operations as a Poisson process. Funding and money count every operation, including the ones after the Campaign may already have been lost. The Initiative Missions chart assumes the set number of Investigation teams, each beelining one Faction's Victory path at a time, the Factions in turn: one team first investigates Criminal organizations, then each Lead takes its mean Turns for that team, and each Initiative Mission site a Lead creates is Won in the last Turn before it expires, which discovers the next Lead. Its Funding is the Funding change of the Initiative Missions won, received every Turn from the one it is won in; its Combat rating line is the highest Combat rating of the Initiative Mission sites created so far, so it never falls. Response operations go on as above, with no Faction Eliminated. The Funding received counts the starting Funding only when its checkbox is on; the money counts only won Response Missions, not the starting money or any spending.</div>`,
     'read',
   )}
   </div></div></section>`)
@@ -1930,18 +1953,27 @@
         })
         /* leads */
         const ip = cur.investigation_parameters,
-          S = T.inv_n * T.inv_skill,
-          gain = Math.floor((S * Math.pow(T.inv_n, ip.team_efficiency_exponent)) / T.inv_n + 1e-9),
-          turns = {}
+          /* The progress per Turn of a team of n members of the given effective skill, in hundredths. */
+          gainOf = (n, skill) => Math.floor((n * skill * Math.pow(n, ip.team_efficiency_exponent)) / n + 1e-9),
+          /* The mean Turns each Lead takes such a team, over its Actual required progress range. */
+          leadTurns = (gain) => {
+            const o = {}
+            LEADS.forEach((l) => {
+              const R = cur[l[0]].required_progress,
+                hi = Math.max(R, Math.floor((R * ip.required_progress_max_pct) / 100 + 1e-9))
+              let t = 0
+              for (let x = R; x <= hi; x++) t += gain > 0 ? Math.ceil((x * 100) / gain) : Infinity
+              o[l[0]] = t / (hi - R + 1)
+            })
+            return o
+          },
+          gain = gainOf(T.inv_n, T.inv_skill),
+          turns = leadTurns(gain)
         LEADS.forEach((l) => {
           const R = cur[l[0]].required_progress,
             hi = Math.max(R, Math.floor((R * ip.required_progress_max_pct) / 100 + 1e-9))
-          let t = 0
-          for (let x = R; x <= hi; x++) t += gain > 0 ? Math.ceil((x * 100) / gain) : Infinity
-          t /= hi - R + 1
-          turns[l[0]] = t
           $('lr_' + sid(l[0])).textContent = R + '–' + hi
-          $('lt_' + sid(l[0])).textContent = f(t, 1)
+          $('lt_' + sid(l[0])).textContent = f(turns[l[0]], 1)
         })
         const fac = LEADS.slice(1, 19).reduce((x, l) => x + turns[l[0]], 0),
           c0 = turns.criminal_organizations,
@@ -1987,7 +2019,7 @@
           : ''
         if (bad.length) {
           FA.forEach((x) => AL.forEach((l) => ($('at_' + l + '_' + x).textContent = '–')))
-          ;['ch_panic', 'ch_cr', 'ch_econ'].forEach((id) => ($(id).innerHTML = ''))
+          ;['ch_panic', 'ch_cr', 'ch_econ', 'ch_init'].forEach((id) => ($(id).innerHTML = ''))
           $('o_panic').innerHTML =
             `<div class="bad">Cannot compute: the Faction duration inputs are invalid; see the list under Faction activity levels.</div>`
           renderChanges()
@@ -2143,12 +2175,73 @@
           dots: true,
           fmt: (p) => tipOf(p, `Panic ${f(p[1], 2)} at the end`),
         })
+        /*
+         * The Initiative Missions of beelining Investigation teams. One team investigates Criminal organizations; then
+         * each Faction's Victory path goes, in Faction order, to the team that is free first. A Lead takes its mean Turns
+         * for one such team; the Initiative Mission site it creates is Won in the last Turn before it expires, and that
+         * discovers the next Lead. Each event lands on the Turn its fractional time falls in.
+         */
+        const blTurns = leadTurns(gainOf(T.bl_n, T.bl_skill)),
+          path = LEADS.slice(1, 19),
+          wins = [],
+          /* When each team is free: every Faction's first Lead waits for Criminal organizations. */
+          free = Array(Math.max(1, Math.min(FA.length, T.bl_teams))).fill(blTurns.criminal_organizations)
+        FA.forEach((x) => {
+          const team = free.indexOf(Math.min(...free))
+          let t = free[team]
+          path.forEach((l) => {
+            t += blTurns[l[0]]
+            if (l[2] && cur[l[2]]) {
+              const site = l[2]
+              wins.push({ site, faction: x, created: t, cr: siteRating(site).rating })
+              t += cur[site].expires_in_turns
+              wins[wins.length - 1].won = t
+            }
+          })
+          free[team] = t
+        })
+        const turnOf = (t) => Math.max(1, Math.ceil(t - 1e-9))
+        let initMoney = 0,
+          initFundSum = 0,
+          initBest = null
+        buckets.forEach((b) => {
+          b.initMoney = 0
+          b.initIncome = 0
+          for (const w of wins) {
+            const tw = turnOf(w.won)
+            if (tw >= b.from && tw <= b.to) b.initMoney += cur[w.site].on_win.money
+            /* Funding raised by a win is received on every Turn from the one it is won in. */
+            const from = Math.max(b.from, tw)
+            if (from <= b.to) b.initIncome += (b.to - from + 1) * cur[w.site].on_win.funding
+            if (turnOf(w.created) <= b.to && (!initBest || w.cr > initBest.cr)) initBest = w
+          }
+          initMoney += b.initMoney
+          initFundSum += b.initIncome
+          b.initMoneySum = initMoney
+          b.initIncomeSum = initFundSum
+          b.initBest = initBest
+        })
+        const initBestLine = (w) =>
+          `Initiative ${f(w.cr, 0)}: ${title(w.site)} of ${title(w.faction)}, created Turn ${turnOf(w.created)}, Won Turn ${turnOf(w.won)}`
+        const initCrPts = bpts(
+          (b) => (b.initBest ? b.initBest.cr : null),
+          (b) => b.to,
+        )
         const crPts = bpts((b) => b.cr),
           teamCr = teamRatings().eff,
           tops = buckets.filter((b) => b.top && b.from <= xmax),
-          crMax = Math.max(teamCr, ...crPts.map((p) => p[1]), ...tops.map((b) => b.top.cr))
+          crMax = Math.max(
+            teamCr,
+            ...crPts.map((p) => p[1]),
+            ...tops.map((b) => b.top.cr),
+            ...(T.initcr ? initCrPts.map((p) => p[1]) : []),
+          )
         lineChart($('ch_cr'), {
           pts: crPts.length ? crPts : [[0, 0]],
+          series: [
+            { pts: crPts.length ? crPts : [[0, 0]], color: 'var(--accent)', width: 2, dots: true },
+            ...(T.initcr && initCrPts.length ? [{ pts: initCrPts, color: INIT_CR_COLOR, width: 2, dots: true }] : []),
+          ],
           xmax,
           ymax: Math.max(10, crMax * 1.1),
           xl: 'Turn',
@@ -2166,7 +2259,8 @@
               `Combat rating ${f(p[1], 0)}` +
                 (p[2] && p[2].top
                   ? `\nStrongest ${f(p[2].top.cr, 0)}: ${title(p[2].top.site)}, ${f(p[2].top.p * 100, 0)}% at least once`
-                  : ''),
+                  : '') +
+                (T.initcr && p[2] && p[2].initBest ? '\n' + initBestLine(p[2].initBest) : ''),
             ),
         })
         /*
@@ -2248,6 +2342,61 @@
                   'per Turn in these Turns',
                 ],
               ]),
+            ),
+        })
+        /* The Initiative Missions chart: money and Funding of the beelining teams' wins, and their sites' Combat rating. */
+        const initMoneyPts = bpts((b) => b.initMoney),
+          initSeries = [
+            {
+              pts: [
+                [0, 0],
+                ...bpts(
+                  (b) => b.initMoneySum,
+                  (b) => b.to,
+                ),
+              ],
+              color: MONEY_COLOR,
+              width: 1.25,
+              dots: true,
+            },
+            {
+              pts: [
+                [0, 0],
+                ...bpts(
+                  (b) => b.initIncomeSum,
+                  (b) => b.to,
+                ),
+              ],
+              color: FUNDING_COLOR,
+              width: 1.25,
+              dots: true,
+            },
+            { pts: bpts((b) => b.initIncome), color: FUNDING_COLOR, width: 2.5, dots: true },
+            ...(initCrPts.length ? [{ pts: initCrPts, color: INIT_CR_COLOR, width: 2, dots: true }] : []),
+            { pts: initMoneyPts, color: MONEY_COLOR, width: 2.5, dots: true },
+          ],
+          initMax = Math.max(1, ...initSeries.flatMap((l) => l.pts.filter((p) => p[0] <= xmax).map((p) => p[1]))),
+          /* A vertical line where each Faction's Victory path ends, i.e. its last Initiative Mission is Won. */
+          initVl = FA.map((x) => {
+            const last = wins.filter((w) => w.faction === x).pop()
+            return last && Number.isFinite(last.won) ? { x: turnOf(last.won), label: title(x) + ' path done' } : null
+          }).filter(Boolean)
+        lineChart($('ch_init'), {
+          pts: initMoneyPts,
+          series: initSeries,
+          xmax,
+          ymax: initMax * 1.1,
+          xl: 'Turn',
+          label: 'Expected money and Funding from the Initiative Missions of beelining Investigation teams',
+          vl: [...vl, ...initVl],
+          bars,
+          fmt: (p) =>
+            tipOf(
+              p,
+              tipTable([
+                ['Funding'.padEnd(8), '+' + fx(p[2].initIncome, 0), 'in these Turns · Σ', fx(p[2].initIncomeSum, 0)],
+                ['Money'.padEnd(8), '+' + fx(p[2].initMoney, 0), 'in these Turns · Σ', fx(p[2].initMoneySum, 0)],
+              ]) + (p[2].initBest ? '\n' + initBestLine(p[2].initBest) : ''),
             ),
         })
         $('o_panic').innerHTML = out([
@@ -2333,11 +2482,13 @@
           if (!Number.isFinite(v)) return
           const k = el.dataset.t
           T[k] =
-            k === 'n' || k === 'inv_n'
+            k === 'n' || k === 'inv_n' || k === 'bl_n'
               ? Math.max(1, Math.min(k === 'n' ? 300 : 99, Math.round(v)))
-              : k === 'trials'
-                ? Math.max(1, Math.min(10000, Math.round(v)))
-                : Math.max(0, v)
+              : k === 'bl_teams'
+                ? Math.max(1, Math.min(FA.length, Math.round(v)))
+                : k === 'trials'
+                  ? Math.max(1, Math.min(10000, Math.round(v)))
+                  : Math.max(0, v)
           later()
         }
       }
