@@ -4,21 +4,21 @@
 
 # What this family is for
 
-The game is developed in rounds: the specifications change, an Implementation follows them, and what that shows flows back into the specifications. Process specifications own how those rounds run and how the work on the specifications is planned and tracked.
+The game is developed in rounds: the Game designer says what should change, the specifications and the Implementation change to match, and playing the result shows what to change next. Process specifications own how those rounds run and how the work on the specifications is planned and tracked.
 
 # Documents
 
 ## Development Loop
 
-[Development Loop](development-loop.md) answers _how is the game developed?_ It explains how the Game designer keeps design control while LLMs write the specifications and Implementations, and which artifact is the truth for which question.
+[Development Loop](development-loop.md) answers _how is the game developed?_ It explains how the Game designer keeps design control while LLMs write the specifications and the Implementation, and which artifact is the truth for which question.
 
 ## Specification Work Plan and Backlog
 
-[Specification Work Plan and Backlog](work-plan.md) answers _in what order are specifications written and reviewed?_ It owns review batches, checkpoints, and work states.
+[Specification Work Plan and Backlog](work-plan.md) answers _in what order are specifications reviewed?_
 
 ## Outstanding Work Items
 
-[Outstanding Work Items](work-todos.md) answers _what known issues are waiting to be scheduled?_ It owns the register of unscheduled issues and the batches they affect.
+[Outstanding Work Items](work-todos.md) answers _what known issues are waiting to be scheduled?_
 
 # How they relate
 
@@ -41,4 +41,4 @@ No specification of this family links another specification of it.
 # Why these boundaries
 
 - **Work plan versus work items:** the plan owns the schedule; the work-item register only records issues, so adding an issue never changes the schedule.
-- **Development Loop versus the plan:** the Development Loop says how specifications and Implementations change together, which holds however the work is scheduled.
+- **Development Loop versus the plan:** the Development Loop says how the specifications and the Implementation change together, which holds however the work is scheduled.

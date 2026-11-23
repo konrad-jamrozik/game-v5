@@ -12,7 +12,7 @@
 
 Reviewing the specifications keeps turning up problems that cannot all be fixed at once. A Work item records one such issue in the registered specifications, one that should be addressed eventually but is not yet scheduled, completely enough that a reader with no other context can act on it.
 
-Each Work item is tied to the review that will settle it: it names the [Batch](work-plan.md#glossary) of each affected specification, as listed in [Batch sequence](work-plan.md#batch-sequence) in the [Specification Work Plan and Backlog](work-plan.md), so that it can be handled when that Batch is drafted or reviewed. Recording a Work item neither schedules it nor changes any Batch status, and each specification remains authoritative until it is revised. A link from a Work item to a specification is a citation, not a relationship.
+Each Work item is tied to the review that will settle it: it names the [Batch](work-plan.md#glossary) of each affected specification, so that it can be handled when that Batch is reviewed. Recording a Work item neither schedules it nor changes any Batch status, and each specification remains authoritative until it is revised. A link from a Work item to a specification is a citation, not a relationship.
 
 # Glossary
 
@@ -22,9 +22,9 @@ Each Work item is tied to the review that will settle it: it names the [Batch](w
 
 # Adding and removing Work items
 
-Add a Work item when an issue is found that is not fixed in the same change. Give it the next unused label, the form `TODO-NNN` with three digits, and a heading of the form `TODO-NNN: short title` under the matching category. Never reuse a label. The label is a short handle for discussion; references from other documents link to the Work item's heading, as required by [Requirement wording](../conventions/spec-conventions.md#requirement-wording).
+Add a Work item when an issue is found that is not fixed in the same change. Give it the next unused label, the form `TODO-NNN` with three digits, and a heading of the form `TODO-NNN: short title` under the matching category. Never reuse a label. The label is a short handle for discussion; other documents link to the Work item's heading.
 
-Remove a Work item in the same change that resolves it, or when the issue no longer exists. Do not mark Work items as done or keep resolved ones; Git history is the record. When a resolution changes only part of a Work item, update the remaining wording and quotations instead.
+Remove a Work item in the same change that resolves it, when the issue no longer exists, or when it is found to be wrong, with the reasoning in the commit message. Do not mark Work items as done or keep resolved ones; Git history is the record. When a resolution changes only part of a Work item, update the remaining wording and quotations instead. When a Work item conflicts with a later decision, the decision takes precedence and the Work item is revised or removed. A Work item whose specifications belong to several batches may be resolved in the earliest of them, or split so that each part is resolved with its own batch.
 
 # Work item format
 
@@ -34,58 +34,16 @@ Every Work item states the following, in this order:
 | --- | --- |
 | Category and priority | One of the categories below. |
 | Affected | Each affected specification's title and Spec ID, linked to the exact section. |
-| Batches | The batch of each affected specification under [Batch sequence](work-plan.md#batch-sequence), or a statement that the specification has no batch and how its review is scheduled instead. |
+| Batches | The batch of each affected specification in the [Batch sequence](work-plan.md#batch-sequence), or a statement that the specification has no batch and how its review is scheduled instead. |
 | Current wording | The exact current wording, quoted from the specification. Update the quotation when the wording changes without resolving the Work item. |
 | Why it is an issue | The rule or recorded decision it conflicts with, linked to its section. |
 | Suggested resolution | A proposed fix. It is a proposal only; the owning specification's review decides the actual change. |
 
-The complete set of categories, in descending priority, is:
+The categories, in descending priority, are:
 
 | Category | Meaning |
 | --- | --- |
-| Clear violation | The wording specifies a matter that [What belongs in a Design specification](../conventions/design-spec-conventions.md#what-belongs-in-a-design-specification) leaves to the implementer. |
+| Clear violation | The wording states something that [a Design specification never states](../conventions/design-spec-conventions.md#what-belongs-in-a-design-specification). |
 | Contradiction with a recorded decision | The wording plans or requires something that a recorded decision in another section has already excluded. |
-| Borderline | The underlying content belongs in a specification, but its wording describes a mechanism rather than an observable or designer-authored outcome. |
+| Borderline | The underlying content belongs in a specification, but its wording describes a mechanism rather than the decision. |
 | Other | Any other defect, e.g. a terminology or consistency error. |
-
-# Measuring rules
-
-The Work items below were measured against these recorded rules and decisions:
-
-- **Scope rule:** [What belongs in a Design specification](../conventions/design-spec-conventions.md#what-belongs-in-a-design-specification). A statement belongs only if it is Observable (a black-box test through the engine API, a save, or a replay could fail), Designer-authored (a [GDR](../../design/foundation/core-concepts.md#game-build-and-content) or a rule of the game), or Vocabulary. Everything else is the implementer's choice.
-- **Determinism decision:** [Determinism](../../design/foundation/determinism-and-randomness.md#determinism) and [Campaign seed](../../design/foundation/determinism-and-randomness.md#campaign-seed). Every [Campaign](../../design/foundation/core-concepts.md#campaign-and-session) has a [Campaign seed](../../design/foundation/determinism-and-randomness.md#glossary), supplied by the [Session controller](../../design/foundation/engine-contract.md#principals-and-access) at campaign creation or chosen by the engine, and every random outcome derives from it and from nothing else. The same [Game build](../../design/foundation/core-concepts.md#game-build-and-content), initial [Campaign configuration](../../design/foundation/campaign-state.md#glossary), Campaign seed, and ordered committed [Player actions](../../design/foundation/engine-contract.md#player-actions-and-turns) reproduce the same [Campaign state](../../design/foundation/core-concepts.md#campaign-and-session). Determinism is required only within one [implementation](../conventions/spec-conventions.md#artifacts) and Game build. How random outcomes are derived from the Campaign seed, the order of random draws, the order of [Campaign instance](../../design/foundation/core-concepts.md#campaign-instances) creation within one Player action, and the sequence and format of generated [Instance IDs](../../design/foundation/campaign-instances.md#glossary) are the implementer's choice.
-- **Creation decision:** creation of Campaign instances is specified by the specification of the creating behavior, under [Campaign instance creation](../../design/foundation/campaign-instances.md#campaign-instance-creation). The former Campaign instance constructor concept was removed.
-
-# Work items
-
-The Work items below were recorded from an audit on 2026-11-11. Quotations were checked against the specifications at that time.
-
-## Borderline
-
-Borderline Work items concern content that belongs in a specification but is worded as a mechanism rather than as an observable or designer-authored outcome.
-
-### TODO-013: Snapshot and read wording for Turn timing
-
-**Category and priority:** Borderline, low priority.
-
-**Affected:** Design Specification Conventions (DCONV), [Writing exact rules](../conventions/design-spec-conventions.md#writing-exact-rules).
-
-**Batches:** DCONV has no batch.
-
-**Current wording:**
-
-> - Which state snapshot supplies each input and when each effect becomes visible.
-
-(CONV, Writing exact [requirements](../conventions/spec-conventions.md#specifications) checklist.)
-
-**Why it is an issue:** Which values an input uses changes outcomes, so it is designer-authored and belongs in the specifications. The wording, however, describes a mechanism (snapshots and reads) rather than the outcome.
-
-**Suggested resolution:** Keep the content, and reword it in terms of outcomes, following [Values a step uses](../../design/mechanics/turn-advancement.md#values-a-step-uses), e.g. "uses the value after the [Training](../../design/mechanics/agents-spec.md#assignments) step", rather than snapshots and reads.
-
-# Edge cases and failure behavior
-
-If the quoted wording of a Work item changes without resolving it, update the quotation. If an affected section is renamed or moved, update the link. If a Work item is found to be wrong, remove it and record the reasoning in the commit message.
-
-Recording a Work item does not authorize the change it suggests. When a Work item conflicts with a later decision, the decision takes precedence and the Work item is revised or removed.
-
-If the specifications affected by one Work item belong to several batches, the Work item may be resolved in the earliest batch, or split so that each part is resolved with its own batch.

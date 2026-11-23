@@ -25,10 +25,9 @@
   <text class="legend" x="66" y="36">referenced by</text>
   <rect class="box external" x="182.4" y="25" width="22" height="14" rx="3"/>
   <text class="legend" x="214.4" y="36">another family</text>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 172.5 113 C 172.5 147.5 116.1 147.5 116.1 182"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 172.5 113 C 172.5 147.5 162.1 147.5 162.1 182"/>
   <path class="edge edge-references" marker-end="url(#head-references)" d="M 225.1 113 C 225.1 147.5 390.5 147.5 390.5 182"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 363.8 113 C 363.8 147.5 208.1 147.5 208.1 182"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 413.9 113 C 413.9 147.5 444.7 147.5 444.7 182"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 388.9 113 C 388.9 147.5 444.7 147.5 444.7 182"/>
   <path class="edge edge-references" marker-end="url(#head-references)" d="M 549.4 113 C 549.4 147.5 499 147.5 499 182"/>
   <rect class="box external" x="119.9" y="68" width="157.8" height="45" rx="6"/>
   <text class="label" x="198.8" y="94">Foundation family</text>

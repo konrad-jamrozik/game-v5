@@ -40,7 +40,7 @@ These informative views are derived from the registered Markdown specifications.
 
 | ID | Document | Owns |
 | --- | --- | --- |
-| LOOP | [Development Loop](../specs/governance/process/development-loop.md) | How the game is developed in a loop between specifications and Implementations, and the LLM skills that run it. |
+| LOOP | [Development Loop](../specs/governance/process/development-loop.md) | How the game is developed in a loop between the specifications and the Implementation, and the LLM skills that run it. |
 | PLAN | [Specification Work Plan and Backlog](../specs/governance/process/work-plan.md) | Specification authoring order, review checkpoints, and work tracking. |
 | TODOS | [Outstanding Work Items](../specs/governance/process/work-todos.md) | Known outstanding specification issues awaiting scheduling, with their affected batches. |
 

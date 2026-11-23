@@ -86,22 +86,10 @@ Before moving anything, decide whether the sentence whose mention closes the Cyc
 
 1. **A rule is lost or becomes vaguer:** the dependency is real. Keep the sentence and resolve the Cycle by moving the term or the rule. Rewording the sentence so that it avoids the term while it still needs what the term means is not a resolution; it hides the dependency.
 2. **Nothing is lost, because another specification states the same rule:** the sentence is a duplicate. Remove it from the specification the rule does not belong to and keep the statement in the one whose subject the rule is about, e.g. a rule about what a preset supplies belongs to the specification that owns presets, not to one that only mentions a value no preset supplies.
-3. **Nothing is lost, because the sentence only illustrates a general rule:** the sentence is an example that lacks its "e.g.". Mark it, under [Marking examples](spec-conventions.md#marking-examples); an example is not Rule text, so it makes no Reference.
+3. **Nothing is lost, because the sentence only illustrates a general rule:** the sentence is an example that lacks its "e.g.". [Mark it as an example](spec-conventions.md#marking-examples); an example is not Rule text, so it makes no Reference.
 
 Only the second and third outcomes remove a Reference, and only because the text never made one.
 
 # Deterministic validation
 
 `npm run lint:specs` rejects an unlinked first mention, a first mention linked to the wrong Glossary group, a Cycle in the Reference graph, and a Relationships section in a specification.
-
-# Edge cases and failure behavior
-
-| Case | Required result |
-| --- | --- |
-| A specification mentions a term only in its Overview or in an example | No Reference; the mention may be linked but need not be |
-| A specification links another as a whole or one of its sections | No Reference; the link is navigation |
-| A specification names a term it owns and links the specification that details it | No Reference from the owner; the detailing specification references the owner when its Rule text mentions the term |
-| The sentence that closes a Cycle restates a rule another specification states | Remove the restatement, under [Real and apparent dependencies](#real-and-apparent-dependencies) |
-| The sentence that closes a Cycle only illustrates a general rule | Mark it as an example, under [Real and apparent dependencies](#real-and-apparent-dependencies) |
-| The sentence that closes a Cycle needs the term to state its rule | Keep it and move the term or rule; never reword it to avoid the term |
-| A term moves to another specification | `npm run docs:link-terms` retargets its Term links |
