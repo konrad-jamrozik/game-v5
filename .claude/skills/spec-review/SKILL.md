@@ -5,7 +5,7 @@ description: Review repository specifications, either all of them or a named sub
 
 # Specification review
 
-The point of a review is the semantic check: finding statements that conflict, repeat, drift out of date, or say more than they need to. Deterministic checks come first only as a preflight, so the semantic review never spends effort on problems a command can find.
+The point of a review is the semantic check: finding statements that conflict, repeat, drift out of date, or record no decision. Deterministic checks come first only as a preflight, so the semantic review never spends effort on problems a command can find.
 
 The conventions are the authority for every rule this skill applies: [Specification Conventions](../../../docs/specs/governance/conventions/spec-conventions.md) and the specifications that build on it, all in `docs/specs/governance/conventions/`. Read the ones each Target follows, under [Following the conventions](../../../docs/specs/governance/conventions/spec-conventions.md#following-the-conventions), before reviewing; every rule in them is a review check. The generated [Specification Review Checklist](../../../docs/derived/review-checklist.md) lists every rule section of the conventions and marks those the linter already checks. The repository commands are the single executable authority for deterministic checks; do not copy the linter into this skill.
 
@@ -48,13 +48,13 @@ The semantic review looks for the anti-patterns below. Review every Target again
 ### Anti-patterns
 
 1. **Conflicting information:** two statements that cannot both hold, within one document or across documents. This includes inconsistent information, e.g. one value or rule stated differently in two places, and stale information, e.g. a statement that still describes a design that has since changed, or that cites a removed or renamed section, term, or API name.
-2. **Duplicate information:** a rule, definition, formula, parameter value, or API field stated in more than one place, even consistently. It has one owner, per [One owner per rule](../../../docs/specs/governance/conventions/spec-conventions.md#one-owner-per-rule); every other place links to the owner. Propose which document owns it.
+2. **Duplicate information:** a rule, definition, formula, parameter value, or API field stated in more than one place, even consistently, because [a rule is stated once](../../../docs/specs/governance/conventions/spec-conventions.md#one-owner-per-rule). This includes a second statement inside the same specification, e.g. a summary, a list of boundary cases that cites the sections stating them, or prose beside a transition table that says the same; a consequence of another specification's rule, e.g. what follows from the order in which rules apply; and a value, a count, or a list of identifiers copied from the game data under `content/`. Propose which place keeps the statement; every other place links to it or drops it.
 3. **Missing terminology:** a concept with no defined term, so documents describe it with repeated ad hoc phrases. This makes text verbose, and different documents describe it inconsistently, e.g. one says "the turn's closing bookkeeping" and another "end-of-turn updates" for the same step. Propose a term and the Glossary that should own it. Also flag a formal term used before or without its definition.
 4. **Forbidden terms:** a Prohibited synonym used for the concept of its canonical term, e.g. "entry" for a GDR; a near-synonym or shortened form of a defined term, e.g. "instance" for Campaign instance; or a Non-term treated as a defined term. Each causes inconsistency because readers cannot tell whether two words mean one concept or two. A likely synonym that the owning Glossary does not record as a Prohibited synonym is also a finding.
 5. **Meta documentation:** text about the document instead of its subject, as prohibited by Subject before document, e.g. "This section defines…", "X owns Y", or "This document details Z by specifying A, B, and C". This includes Overviews that inventory facts instead of orienting the reader, and topic sections without a lead sentence.
 6. **Verbosity:** text that can be shortened or removed without losing a rule, definition, or explanation the reader needs, e.g. a paragraph that restates its own heading, or rationale padding inside a normative rule. Do not flag multi-angle worked examples of foundational or complex concepts; the project owner wants them kept. Do flag verbosity in ordinary rules and in examples of simple concepts.
-7. **Out-of-scope content:** statements that the conventions of the Target's Specification kind do not admit, under [What belongs in a specification](../../../docs/specs/governance/conventions/spec-conventions.md#what-belongs-in-a-specification), e.g. internal ordering or code structure in a Design specification.
-8. **Gaps:** a rule that depends on an unstated choice, an Open decisions entry that the text already settles, or a `TODO:` item whose missing answer a rule in the Target already relies on.
+7. **Text that records no decision:** statements that [the conventions of the Target's Specification kind do not admit](../../../docs/specs/governance/conventions/spec-conventions.md#what-belongs-in-a-specification). In a Design specification the test is whether the Game designer would object if the code did it differently. What fails it goes, e.g. a proof that a value stays in range, a description of a case the rules make impossible, a statement that a list is whole, how malformed input is rejected, and internal ordering or code structure.
+8. **Missing decisions:** a decision the Game designer has made, or must make before a rule can be relied on, that no specification states, e.g. a `TODO:` item whose missing answer a rule in the Target already relies on. Silence alone is not a finding: where no decision is at stake, the code decides and the specification says nothing.
 
 ### Structural checks
 
@@ -65,7 +65,8 @@ These are semantic checks the linter deliberately cannot prove:
 - each section, rule, and term sits in the specification that should own it, and a topic that has outgrown its specification is split;
 - each Glossary group's name and description cover its terms;
 - every example is introduced with "e.g." or sits under an explicit Examples label, and every illustrative enumeration has at most three items;
-- formulas are precise and correct, every rule is exact enough to test on its own, and worked examples agree with the rules they illustrate.
+- formulas are precise and correct, and worked examples agree with the rules they illustrate;
+- every sentence a change adds records a decision, a term, a concept, or an explanation, and a raised [word budget](../../../docs/specs/governance/conventions/spec-conventions.md#word-budgets) is matched by a decision the change names.
 
 ## Severity
 
@@ -73,8 +74,8 @@ Assign each finding one severity:
 
 | Severity | When |
 | --- | --- |
-| Blocking | A conflict, duplicate, forbidden term, or missing term within the Targets or between a Target and any other document; anything a Target must resolve before it can be implemented. |
-| Minor | Meta documentation, verbosity, out-of-scope content, and imprecise wording that does not change a rule's meaning. |
+| Blocking | A conflict, duplicate, forbidden term, missing term, or missing decision within the Targets or between a Target and any other document. |
+| Minor | Meta documentation, verbosity, text that records no decision, and imprecise wording that does not change a rule's meaning. |
 
 Every document may change, so for a conflict between two documents, say which side should change on the merits, never because of its current wording.
 

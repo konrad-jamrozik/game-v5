@@ -26,7 +26,7 @@ Every change to the Spec repo follows [Spec repo changes in a worktree](../spec-
 3. Classify the feedback into one case of Designer feedback for each Family involved, noting the governing wording of each and what the Implementation does:
    - **The specifications say otherwise:** a conformance defect, only when every Family involved already specifies what the user expects, e.g. the rule and its GDR are both present.
    - **The specifications say what the Implementation does:** a design change.
-   - **The specifications leave it open:** an Implementer's choice or a gap.
+   - **The specifications leave it open:** they are silent, so the code decided.
 
    Name the Family that falls short under the table in Designer feedback, e.g. "the feature is specified but its GDR is missing" changes Content only, while "the feature is not specified" changes Mechanics first and then Content.
 

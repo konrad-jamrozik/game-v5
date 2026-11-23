@@ -39,7 +39,7 @@ const PASSIVE_DESCRIPTIONS: Readonly<Record<RelationshipKind, string>> = {
   references: 'A → B means A is referenced by B: the text of B links to A.',
 }
 const LAYER_DESCRIPTION =
-  'Layer 1 is drawn at the top and holds the specifications that reference no other specification in the diagram; every other specification is drawn in the layer below the lowest-drawn specification it references. Specifications that reference each other in a cycle share a layer.'
+  'Layer 1 is drawn at the top and holds the specifications that reference no other specification in the diagram; every other specification is drawn in the layer below the lowest-drawn specification it references. Specifications that reference each other in a cycle share a layer. The table below each diagram lists the same layers and references as text, so a change to either shows in a diff.'
 const FAMILY_DIAGRAM_NOTICE =
   '_Generated from the links between the specifications by `npm run docs:generate`; do not edit between the markers. An arrow runs from a specification to each specification that references it, i.e. links to it; layer 1 holds the specifications that reference no other specification of the Family, specifications that reference each other in a cycle share a layer, and dashed boxes stand for whole other Families._'
 const GENERATED_NOTICE =
@@ -320,22 +320,18 @@ function layeringRelationships(
     .flatMap((layeredSection) => layeredSection.relationships)
 }
 
-function renderRelationshipSvg(
+/** The specifications one diagram draws, and the layer of each. */
+function sectionLayers(
   corpus: SpecificationCorpus,
   kind: RelationshipKind,
   section: RelationshipSection,
-): string {
+): { readonly participants: readonly SpecificationRecord[]; readonly layers: ReadonlyMap<string, number> } {
   const participantIds = new Set(
     section.relationships.flatMap((relationship) => [relationship.dependencyId, relationship.dependentId]),
   )
   const participants = corpus.specifications
     .filter((specification) => participantIds.has(specification.id))
     .toSorted((left, right) => compareText(left.id, right.id))
-  const edges = section.relationships.map((relationship) => ({
-    from: relationship.dependencyId,
-    to: relationship.dependentId,
-    kinds: new Set<RelationshipKind>([relationship.kind]),
-  }))
   const layeringEdges = layeringRelationships(corpus, kind, section)
   const layers = computeLayers(
     [
@@ -346,6 +342,51 @@ function renderRelationshipSvg(
     ],
     layeringEdges.map((relationship) => ({ from: relationship.dependencyId, to: relationship.dependentId })),
   )
+  return { participants, layers }
+}
+
+/**
+ * The References of one diagram as text: each specification with its layer and the specifications it references. A
+ * change to the specifications that adds or removes a Reference, or moves a specification to another layer, changes
+ * one row here, so it shows in the change's diff.
+ */
+function renderReferenceTable(
+  corpus: SpecificationCorpus,
+  kind: RelationshipKind,
+  section: RelationshipSection,
+): readonly string[] {
+  const { participants, layers } = sectionLayers(corpus, kind, section)
+  const rows = participants
+    .map((specification) => ({
+      specification,
+      layer: layers.get(specification.id) ?? 1,
+      references: section.relationships
+        .filter((relationship) => relationship.dependentId === specification.id)
+        .map((relationship) => relationship.dependencyId)
+        .toSorted(compareText),
+    }))
+    .toSorted((left, right) => left.layer - right.layer || compareText(left.specification.id, right.specification.id))
+  return [
+    '| Layer | Specification | References |',
+    '| --- | --- | --- |',
+    ...rows.map(
+      (row) =>
+        `| ${row.layer} | ${row.specification.id} ${escapeTableCell(row.specification.title)} | ${row.references.join(', ')} |`,
+    ),
+  ]
+}
+
+function renderRelationshipSvg(
+  corpus: SpecificationCorpus,
+  kind: RelationshipKind,
+  section: RelationshipSection,
+): string {
+  const { participants, layers } = sectionLayers(corpus, kind, section)
+  const edges = section.relationships.map((relationship) => ({
+    from: relationship.dependencyId,
+    to: relationship.dependentId,
+    kinds: new Set<RelationshipKind>([relationship.kind]),
+  }))
   return renderSvgDiagram({
     label: relationshipSvgLabel(kind, section),
     nodes: participants.map((specification) => ({
@@ -374,6 +415,7 @@ function renderRelationshipKind(corpus: SpecificationCorpus, kind: RelationshipK
     if (section.heading !== undefined) lines.push('', `## ${section.heading}`)
     const svgPath = imagePath(relationshipSvgFileName(kind, section))
     lines.push('', `![${relationshipSvgLabel(kind, section)}](${relativeLink(relationshipOutputPath(kind), svgPath)})`)
+    lines.push('', ...renderReferenceTable(corpus, kind, section))
   }
   return `${lines.join('\n')}\n`
 }

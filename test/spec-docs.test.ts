@@ -2,7 +2,7 @@ import { resolve } from 'node:path'
 
 import { describe, expect, test } from 'vitest'
 
-import { collectMarkdownFiles } from '../scripts/lint-specs.ts'
+import { collectMarkdownFiles, readWordBudgets } from '../scripts/lint-specs.ts'
 import {
   renderDerivedDiagramFiles,
   renderDerivedDocumentation,
@@ -162,7 +162,9 @@ describe('derived specification renderer', () => {
     expect([...diagrams.values()].join('\n')).not.toContain('CONV')
     expect([...outputs.values()].join('\n')).not.toContain('```mermaid')
     expect(references).not.toContain('## ')
-    expect(references).not.toMatch(/^\|/m)
+    // The same references as text: each specification with its layer and what it references.
+    expect(references).toMatch(/^\| Layer +\| Specification +\| References +\|$/m)
+    expect(references).toMatch(/^\| 1 +\| AAA .*\| ZZZ +\|$/m)
   })
 
   test('notes in the index that no specification links another when there are no references', async () => {
@@ -421,7 +423,10 @@ describe('family overview diagrams', () => {
 
 describe('shared specification analysis', () => {
   test('derives one sorted references relationship per linking pair and none from game to governance', async () => {
-    const analysis = analyzeSpecifications({ files: await currentFiles() })
+    const analysis = analyzeSpecifications({
+      files: await currentFiles(),
+      wordBudgets: await readWordBudgets(process.cwd()),
+    })
     expect(analysis.diagnostics).toEqual([])
     const { relationships, specifications } = analysis.corpus
     expect(relationships.length).toBeGreaterThan(0)

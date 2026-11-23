@@ -9,7 +9,7 @@ import {
   loadGameData,
   renderCompendiumPreview,
 } from './compendium/compendium.ts'
-import { collectMarkdownFiles } from './lint-specs.ts'
+import { collectMarkdownFiles, readWordBudgets } from './lint-specs.ts'
 import {
   isGeneratedDiagramFilePath,
   renderDerivedDiagramFiles,
@@ -23,7 +23,7 @@ import { renderReviewChecklist } from './spec-docs/review-checklist.ts'
 import { analyzeSpecifications, formatDiagnostic, lintSectionReferences } from './spec-linter/linter.ts'
 import { columnOf, headingSlugs, isLink, lineOf, parseDocument, visit } from './spec-linter/markdown.ts'
 import { decodeUrlPart, isExternalUrl, resolvePath, splitUrl } from './spec-linter/paths.ts'
-import type { SourceFile } from './spec-linter/types.ts'
+import type { SourceFile, WordBudgets } from './spec-linter/types.ts'
 
 export interface DerivedDocsIO {
   readonly actualOutputs: ReadonlyMap<string, string>
@@ -142,8 +142,9 @@ export async function renderDerivedOutputs(
   files: readonly SourceFile[],
   formatterConfig: FormatterConfig = {},
   contentFiles?: readonly SourceFile[],
+  wordBudgets?: WordBudgets,
 ): Promise<DerivedOutputs | { readonly findings: readonly string[] }> {
-  const analysis = analyzeSpecifications({ files })
+  const analysis = analyzeSpecifications(wordBudgets ? { files, wordBudgets } : { files })
   if (analysis.diagnostics.length > 0) return { findings: analysis.diagnostics.map(formatDiagnostic) }
   const furtherViews: FurtherView[] = []
   if (contentFiles) {
@@ -211,6 +212,7 @@ export async function runDerivedDocumentation(
   io: DerivedDocsIO,
   formatterConfig: FormatterConfig = {},
   contentFiles?: readonly SourceFile[],
+  wordBudgets?: WordBudgets,
 ): Promise<0 | 1 | 2> {
   const mode = arguments_[0]
   if (arguments_.length !== 1 || (mode !== 'generate' && mode !== 'check')) {
@@ -218,7 +220,7 @@ export async function runDerivedDocumentation(
     return 2
   }
   try {
-    const rendered = await renderDerivedOutputs(files, formatterConfig, contentFiles)
+    const rendered = await renderDerivedOutputs(files, formatterConfig, contentFiles, wordBudgets)
     if ('findings' in rendered) {
       for (const finding of rendered.findings) io.writeError(finding)
       return 1
@@ -298,6 +300,7 @@ async function main(): Promise<void> {
     },
     formatterConfig,
     contentFiles,
+    await readWordBudgets(root),
   )
 }
 

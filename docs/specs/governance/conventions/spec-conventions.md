@@ -10,9 +10,9 @@
 
 # Overview
 
-Specifications are the durable authority for intended behavior. Code and tests implement that behavior and may be replaced without changing the contract. The [game design brief](../../../game-design-brief.md) explains intent and strategic tensions; the specifications resolve those ideas into precise rules.
+Specifications are the authority for what was decided about the game: where a specification states something, code and tests follow it. They do not describe everything the game does, and what no specification states is decided by the code. The [game design brief](../../../game-design-brief.md) explains intent and strategic tensions; the specifications resolve those ideas into precise rules.
 
-Every specification is written the same way, so a reader who knows one can find their way in any other: the same layout, one owner for every rule, exact wording, and visible marks for what is not settled. What a specification may contain differs by Specification kind, and further conventions add detail on terminology, Glossaries, Overviews, and each Specification kind.
+Every specification is written the same way, so a reader who knows one can find their way in any other: the same layout, one statement of every rule, exact wording, and visible marks for what is not settled. What a specification may contain differs by Specification kind, and further conventions add detail on terminology, Glossaries, Overviews, and each Specification kind.
 
 # Glossary
 
@@ -57,7 +57,7 @@ The kinds of participant in making, changing, or playing the game.
 
 The specifications differ first in what they govern, and that difference decides what each may contain and who must obey it. Governance specifications govern how specifications are written and how work on them proceeds; Design specifications describe the game itself; Implementation specifications steer how an Implementation is built from the Design specifications. Each Specification kind is divided into Families, and each Family is a single ownership category. Neither is tied to authoring order.
 
-Every registered specification declares exactly one of these Families in metadata, and its Specification kind follows from that Family. With the exception of the root index, its file must be a direct child of the directory the following table names for its Family, or of a subdirectory of that directory, one level deep, that groups specifications the Family's overview names together. The following table is exhaustive.
+Every registered specification declares exactly one of these Families in metadata, and its Specification kind follows from that Family. With the exception of the root index, its file must be a direct child of the directory the following table names for its Family, or of a subdirectory of that directory, one level deep, that groups specifications the Family's overview names together.
 
 | Specification kind | Family | Directory | Ownership boundary | Builds on |
 | --- | --- | --- | --- | --- |
@@ -78,7 +78,7 @@ The Game Specification Index has Family Conventions and remains at `docs/specs/R
 
 ## What belongs in a specification
 
-A statement belongs in a specification only when the conventions of its Specification kind admit it, and everything else is left out. The criteria for a Design specification are under [What belongs in a Design specification](design-spec-conventions.md#what-belongs-in-a-design-specification), and those for an Implementation specification under [What belongs in an Implementation specification](implementation-spec-conventions.md#what-belongs-in-an-implementation-specification). A Governance specification states only how specifications are written, related, and registered, or how the work on them proceeds.
+A statement belongs in a specification only when the conventions of its Specification kind admit it, and everything else is left out. [What a Design specification may state](design-spec-conventions.md#what-belongs-in-a-design-specification) and [what an Implementation specification may state](implementation-spec-conventions.md#what-belongs-in-an-implementation-specification) are decided by the conventions of each kind. A Governance specification states only how specifications are written, related, and registered, or how the work on them proceeds.
 
 ## Following the conventions
 
@@ -94,7 +94,7 @@ A specification is written and read by different participants, keeps changing as
 
 A Persona describes what a participant does with the game, independently of whether a human or an LLM-based agent fills it; in this project, LLM-based agents fill the Implementer Persona. One participant may fill several Personas. A Persona grants no engine API authority. Most Personas write specifications within their area, following these conventions.
 
-The following table is the exhaustive set of Personas. The last column names the Families each Persona mainly works with, as listed in [Specification kinds and Families](#specification-kinds-and-families), and links key specifications in them.
+The last column of the Personas table names the [Families](#specification-kinds-and-families) each Persona mainly works with.
 
 | Persona | Filled by | What the Persona does | Primary Families |
 | --- | --- | --- | --- |
@@ -110,17 +110,19 @@ The following table is the exhaustive set of Personas. The last column names the
 
 Every specification may change at any time, because the game is under active development. Its current wording, terms, API names, or the effort of changing it is never a reason to keep a design choice; justify proposals on their merits. Creating a document, generating tests, or successfully implementing it does not make it any less open to change.
 
-A specification states the current contract only. Do not record who requested or approved a change, or when: add no approval or revision metadata rows, approval notices, or prose describing a change's request or approval history. Git history records changes. Do not describe a document's maturity, e.g. that it is a draft or awaiting review, in metadata, body paragraphs, notices, or TODOs; what it has not settled yet is recorded as described under [Kinds of unspecified content](#kinds-of-unspecified-content).
+A specification states the current contract only. Do not record who requested or approved a change, or when: add no approval or revision metadata rows, approval notices, or prose describing a change's request or approval history. Git history records changes. Do not describe a document's maturity, e.g. that it is a draft or awaiting review, in metadata, body paragraphs, notices, or TODOs; what it has not settled yet is recorded as [a TODO or an exclusion](#kinds-of-unspecified-content).
 
-The TODOs section contains only the items that [Kinds of unspecified content](#kinds-of-unspecified-content) defines. Do not list already stated rules merely to request review. Omit the section when it would have no item.
+The TODOs section contains only TODO items. Do not list already stated rules merely to request review. Omit the section when it would have no item.
 
-Each specification has a stable Spec ID, Family, title, Audience, Owns summary, and Conventions row. The Audience metadata row lists the [Personas](#personas) who mainly read or act on the document, separated by commas, in the order of the Personas table; at least one Persona is required. Overview describes the subject of the specification under [Specification Overview](overview-conventions.md#specification-overview); do not add a Scope row to metadata. The Owns metadata row is a one-sentence summary of what the specification owns; the generated catalog lists it for navigation.
+Each specification has a stable Spec ID, Family, title, Audience, Owns summary, and Conventions row. The Audience metadata row lists the [Personas](#personas) who mainly read or act on the document, separated by commas, in the order of the Personas table; at least one Persona is required. The [Overview describes the subject of the specification](overview-conventions.md#specification-overview); do not add a Scope row to metadata. The Owns metadata row is a one-sentence summary of what the specification owns; the generated catalog lists it for navigation.
 
 ## One owner per rule
 
-A rule, formula, parameter value, or API field has one authoritative owner. Other specifications reference it instead of restating a competing version.
+A rule, formula, parameter value, or API field is stated once, in the specification that owns its subject. Nothing states it a second time: not another specification, not another section of the same specification, not a summary of what a section said, and not a copy that agrees with it. A copy that agrees today disagrees after the next change to one of the two.
 
-When a rule uses something another specification decides, link that section where the rule uses it. The link is the whole pointer. Do not write a sentence or clause whose only content is that another specification owns something. The one exception is a place where a reader would conclude that a rule is missing from all specifications; there, one clause with a link is enough. E.g., write "the Order is cancelled when its payment fails" with "payment fails" linked to the section that decides it, not "Payments owns when a payment fails". A table column that names the owner of each row is data a reader looks up, not narration, and remains valid.
+What follows from a rule is not written down either. A specification that relies on a rule uses the rule's term, or links the words that rely on it, and leaves the consequence to the reader.
+
+When a rule uses something another specification decides, link that section where the rule uses it. The link is the whole pointer, and any words of the sentence may carry it; the title of the section need not appear. Do not write a sentence or clause whose only content is that another specification owns something. The one exception is a place where a reader would conclude that a rule is missing from all specifications; there, one clause with a link is enough. E.g., write "the Order is cancelled when its payment fails" with "payment fails" linked to the section that decides it, not "Payments owns when a payment fails". A table column that names the owner of each row is data a reader looks up, not narration, and remains valid.
 
 # Predictable layout and allowed variation
 
@@ -130,15 +132,15 @@ Readers find their way through many specifications by knowing where everything s
    1. `# Overview`, describing the subject of the specification
    2. `# Glossary`
 2. Topic sections: one or more H1 sections, each named after a subject the specification owns; e.g., `# Order cancellation`. Topic sections state the specification's definitions, rules, requirements, and constraints, grouped by subject. Order them so that a topic follows the topics it builds on.
-3. Closing sections:
-   1. `# Edge cases and failure behavior`
-   2. `# TODOs`, containing every TODO of the specification under [Kinds of unspecified content](#kinds-of-unspecified-content)
+3. Closing section: `# TODOs`, containing every [TODO](#kinds-of-unspecified-content) of the specification
 
-Overview is required. Every other section is present only when it applies to the document. Appendices follow the closing sections.
+Overview is required. Every other section is present only when it applies to the document. Appendices follow the closing section.
+
+No section collects boundary cases or failures. A boundary that was decided is stated in the topic section of the rule it bounds, and a boundary that was not decided is not stated.
 
 Use a metadata table immediately below the document-title H1. All sections are unnumbered H1 headings. Subsections may nest from H2 through H6 when the hierarchy requires it, without skipping a heading level.
 
-Name a topic section after its subject, never after its role in the document. Generic topic headings, e.g. "Concepts and contract", "Requirements", "Details", or "Specification", are prohibited. State a requirement in the topic it constrains rather than in a separate collection. Do not state a contract twice merely to populate a section. Whether a section applies, and whether examples explain the contracts adequately, are semantic review concerns; the linter checks the order and content of framing and closing sections, not applicability.
+Name a topic section after its subject, never after its role in the document. Generic topic headings, e.g. "Concepts and contract", "Requirements", "Details", or "Specification", are prohibited. State a requirement in the topic it constrains rather than in a separate collection. Whether a section applies, and whether examples explain the contracts adequately, are semantic review concerns; the linter checks the order and content of the framing sections and the closing section, not applicability.
 
 ## One subject per specification
 
@@ -146,17 +148,17 @@ A specification has one subject, which its Overview can state in one sentence wi
 
 ## Subject before document
 
-Write about the subject, not about the document. Do not announce what a section will say, summarize what it said, explain why a rule is placed where it is, except in the statement of the subject's place under [Specification Overview](overview-conventions.md#specification-overview), or describe how the document treats game data values, examples, or other documents.
+Write about the subject, not about the document. Do not announce what a section will say, summarize what it said, explain why a rule is placed where it is, except in the [statement of the subject's place](overview-conventions.md#specification-overview) in the Overview, or describe how the document treats game data values, examples, or other documents.
 
 ### Orientation before detail
 
-Every topic section, and every subsection that states rules, opens with a lead: one to three sentences saying what the subject of the section is for or which problem its rules solve, before any list, table, subsection, or rule. E.g., a section on refunds opens "A refund returns money the store should not keep, e.g. for goods that never arrived," and then lists the rules; it does not open with "Refunds follow these complete rules:". A completeness statement, e.g. "The following rules are complete", follows the lead.
+Every topic section, and every subsection that states rules, opens with a lead: one to three sentences saying what the subject of the section is for or which problem its rules solve, before any list, table, subsection, or rule. E.g., a section on refunds opens "A refund returns money the store should not keep, e.g. for goods that never arrived," and then lists the rules; it does not open with "Refunds follow these rules:".
 
 ## Handling sections that do not apply
 
 Omit a section that does not apply. Do not keep its heading with a placeholder, e.g. "Not applicable", "N/A", or "None."; a present section is never empty.
 
-A missing decision is not "not applicable": record the missing content as a TODO in the TODOs section, naming the section to be written, under [Kinds of unspecified content](#kinds-of-unspecified-content). E.g., a specification can have no public function signatures while still defining inputs, outputs, and state changes.
+A missing decision is not "not applicable": record the missing content as a [TODO](#kinds-of-unspecified-content) in the TODOs section, naming the section to be written. E.g., a specification can have no public function signatures while still defining inputs, outputs, and state changes.
 
 # Requirement wording
 
@@ -166,7 +168,7 @@ Name each coherent requirement or contract with a descriptive section title, wit
 
 A section may combine complete obligations with explanation and clearly identified examples in a flowing narrative. State general constraints explicitly; example-specific choices must not silently become universal rules. Requirements belong in the topic sections they constrain. Follow the normal heading hierarchy and give sections distinct, descriptive titles within their document so references are unambiguous.
 
-Reference a requirement or other specification section with a Markdown hyperlink whose visible text is the exact section title and whose destination is that section's heading anchor. E.g., use `[Order total consistency](orders.md#order-total-consistency)`. Link each relevant section individually rather than using numbered labels, ranges, or a document-only link when a specific contract is meant. When a title changes or a section moves, update every reference and anchor together. When removing a section, remove or revise its references; Git history retains the historical record.
+Reference a requirement or other specification section with a Markdown hyperlink to that section's heading anchor, placed on the words of the sentence that use it. E.g., write `the Order is cancelled when its [payment fails](payments.md#failed-payments)`. Do not add a clause that only names the section, e.g. "under Failed payments": the link already says where the rule is. Link each relevant section individually rather than using numbered labels, ranges, or a document-only link when a specific contract is meant. When a section is renamed or moves, update every anchor that points to it. When removing a section, remove or revise its references; Git history retains the historical record.
 
 Content not yet written stays as descriptive TODOs in the TODOs section until concrete requirements can be written; do not reserve numbered labels for them.
 
@@ -178,29 +180,48 @@ Introduce every example with "e.g." so a reader never has to infer whether a sta
 
 ## Illustrative and exhaustive enumerations
 
-Every non-exhaustive enumeration must be marked under [Marking examples](#marking-examples), with "e.g." or an "Examples" label. This applies to inline enumerations, bullet lists, and illustrative tables. Each illustrative list must contain at most three examples. Do not split one list into smaller lists merely to evade this limit. Use the fewest representative examples needed and link to the authoritative enumeration when readers need the full set.
+Every enumeration that is not whole must be [marked as an example](#marking-examples), with "e.g." or an "Examples" label. This applies to inline enumerations, bullet lists, and illustrative tables. Each illustrative list must contain at most three examples. Do not split one list into smaller lists merely to evade this limit. Use the fewest representative examples needed and link to the authoritative enumeration when readers need the full set.
 
-Clearly identify exhaustive enumerations and maintain them in their authoritative owner. Elsewhere, reference that owner rather than copying the list. Do not shorten exhaustive contracts or procedures under the three-example limit, or relabel normative obligations as examples. This distinction prevents illustrative lists from looking like complete sets that must grow whenever a new value is added.
+An enumeration that is not so marked is whole, and nothing says that it is: do not write a sentence such as "this table is exhaustive" or "the following rules are complete". Maintain a whole enumeration in its one owner; elsewhere, link that owner rather than copying the list. Do not shorten a whole contract or procedure to fit the three-example limit, or relabel normative obligations as examples.
 
 # Validation and unspecified content
 
 Part of a specification's quality can be checked by a machine and the rest only by a reviewer, and whatever it has not settled yet must be visible rather than hidden.
 
+## Word budgets
+
+A rule against repeating needs judgement to apply, so a count backs it: a specification cannot grow unnoticed.
+
+Every document under `docs/specs` has a word budget, recorded in `docs/specs/word-budgets.json`, and the linter rejects a document that exceeds its budget. A budget is the size of the document when the budget was last set, plus one tenth, so a correction fits and a new section does not. Words are added to a specification only to record a decision. When they do not fit, raise the budget in the same change with `npm run specs:budget -- raise <path>`, so that the growth is one visible line of that change. A new document receives its budget with `npm run specs:budget -- cut <path>`.
+
+A document that the budgets file lists as awaiting its cut was written before the rules against repetition. The linter does not apply those rules to it, and its budget allows almost no growth. Once it is rewritten to follow them, `npm run specs:budget -- cut <path>` removes it from the list.
+
 ## Deterministic validation
 
-Run `npm run lint:specs` to validate the complete registered specification corpus. The repository-owned, read-only linter parses Markdown structurally and reports stable diagnostics for metadata completeness, Family directories under [Specification kinds and Families](#specification-kinds-and-families), required layout, local links and anchors, linked first mentions of terms and the absence of cycles among the specifications under [Deterministic validation](artifact-relationships.md#deterministic-validation), links from a Conventions specification to a Design or Implementation specification, the Conventions row under [Following the conventions](#following-the-conventions), Specification kind and Family overview presence, structure, and coverage under [Family overviews](overview-conventions.md#family-overviews), objectively prohibited terminology, the shape of the [Prohibited synonyms column](glossary-conventions.md#prohibited-synonyms-column), prohibited numbered requirement labels and section-title references, the length limits and prohibited document-describing phrases under [Subject before document](#subject-before-document), [Specification Overview](overview-conventions.md#specification-overview), and [Glossary groups](glossary-conventions.md#glossary-groups), topic sections and their subsections that open with a list, table, or subsection instead of a lead under [Orientation before detail](#orientation-before-detail), and the TODO rules under [Kinds of unspecified content](#kinds-of-unspecified-content). It performs no network access and offers no automatic fixes.
+Run `npm run lint:specs` to validate the complete registered specification corpus. The repository-owned, read-only linter parses Markdown structurally and reports stable diagnostics for:
 
-A successful deterministic lint means only that every machine-checkable convention passed. It does not establish conceptual synonymy, formula correctness, the agreement of examples with rules, or gameplay correctness. A review checks every rule of the conventions that a specification follows, under [Following the conventions](#following-the-conventions), including those the linter cannot check.
+- Metadata completeness, [Family directories](#specification-kinds-and-families), and the [Conventions row](#following-the-conventions).
+- The required layout, including a [lead that opens each topic section](#orientation-before-detail) and the [TODO rules](#kinds-of-unspecified-content).
+- Local links and anchors, and numbered requirement labels.
+- [Linked first mentions of terms and cycles among the specifications](artifact-relationships.md#deterministic-validation), and links from a Conventions specification to a Design or Implementation specification.
+- The presence, structure, and coverage of the [overviews of each Specification kind and Family](overview-conventions.md#family-overviews).
+- Objectively prohibited terminology and the shape of the [Prohibited synonyms column](glossary-conventions.md#prohibited-synonyms-column).
+- The length limits and the phrases that describe the document, for [every section](#subject-before-document), the [Overview](overview-conventions.md#specification-overview), and [Glossary groups](glossary-conventions.md#glossary-groups).
+- [Word budgets](#word-budgets).
+- Repetition: the removed closing section for boundary cases, a phrase that claims a list is whole or that nothing happens, a clause that only names a section, and a sentence of twelve words or more that another place already holds.
+
+It performs no network access and offers no automatic fixes.
+
+A successful deterministic lint means only that every machine-checkable convention passed. It does not establish conceptual synonymy, formula correctness, the agreement of examples with rules, or gameplay correctness, and it finds a repeated rule only when the wording is repeated too. A review checks every rule of the [conventions that a specification follows](#following-the-conventions), including those the linter cannot check.
 
 ## Kinds of unspecified content
 
-A specification leaves something unspecified in exactly one of three ways. This table is exhaustive.
+A specification marks something as unspecified in one of two ways. Silence is not one of them: what no specification states is not waiting to be specified, it is decided by the code, and nothing marks it.
 
 | Kind | Meaning | Where it is written | How it is marked |
 | --- | --- | --- | --- |
-| Implementer's choice | It will never be specified. Any implementation is correct. | At the rule it concerns, in the topic section. It is part of the contract. | The fixed phrase "Implementer's choice", e.g. "the exact error representation is the Implementer's choice". |
 | TODO | It will be specified, but is not yet. | Only in the closing `# TODOs` section, one list item per TODO. Each item links the section it affects, when that section exists. | `TODO:` when the specification cannot be implemented without it; `TODO (later):` when the specification is complete without it and the feature is to be added later. |
-| Out of scope | It is not part of the game, and there is no plan to specify it. | Nowhere, unless a reader would expect the rule; then one sentence in the topic section, under [Scope exclusions](design-spec-conventions.md#scope-exclusions). | The words "out of scope". |
+| Out of scope | It is not part of the game, and there is no plan to specify it. | Nowhere, unless a reader would expect the rule; then [one sentence in the topic section](design-spec-conventions.md#scope-exclusions). | The words "out of scope". |
 
 No TODO text appears outside the TODOs section. A specification may omit a section whose content is not written yet, and the TODO item names the section to be written. A `TODO:` item marks content without which the section it affects cannot be implemented. A `TODO (later):` item does not: without it, the specification is a complete contract for the game as it is now.
 

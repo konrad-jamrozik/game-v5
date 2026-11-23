@@ -12,7 +12,7 @@
 
 The [Game designer](../conventions/spec-conventions.md#participants) delegates as much of the game's development to LLMs as possible, but no more: LLMs write the specifications and the code, while the Game designer keeps every creative and design decision. That is how the game can be developed fast and still be tightly designed and fun to play, rather than generic.
 
-The split rests on one rule: the design lives only in the specifications, and an [Implementation](../conventions/spec-conventions.md#artifacts) is derived from them and can be rebuilt at any time. Every change therefore enters as a change to the specifications and reaches the code only through an Implementation update. Building and updating an Implementation teaches the [Implementer](../conventions/spec-conventions.md#participants) where the specifications fall short, which becomes Implementer feedback; playing it shows the Game designer what to change, which becomes Designer feedback. Both flow back into the specifications, and the loop repeats.
+The split rests on one rule: every design decision lives in the specifications, and the [Implementation](../conventions/spec-conventions.md#artifacts) follows them. A change to a decision therefore enters as a change to the specifications and reaches the code through an Implementation update, while what the specifications do not state is decided by the code. Building and updating an Implementation teaches the [Implementer](../conventions/spec-conventions.md#participants) where the specifications fall short, which becomes Implementer feedback; playing it shows the Game designer what to change, which becomes Designer feedback. Both flow back into the specifications, and the loop repeats.
 
 # Glossary
 
@@ -23,20 +23,42 @@ The split rests on one rule: the design lives only in the specifications, and an
 | Designer feedback | What the [Game designer](../conventions/spec-conventions.md#participants) finds wrong, or wants changed, after playing or reviewing an Implementation. |
 | LLM skill | A packaged set of instructions that an LLM agent loads to carry out one recurring task of the Development loop. |
 
-# Durable specifications and disposable Implementations
+# Sources of truth
 
-The Development loop rests on one asymmetry: the specifications are the only durable record of the design, and an Implementation is a product of them that can be thrown away and rebuilt. The following table of what takes part is exhaustive.
+Each question about the game has one source of truth, and no other artifact answers it. There is one Implementation, it is never rebuilt from the specifications, and so the specifications do not have to describe everything it does: they hold the decisions, and the code holds the rest.
+
+| Question | Source of truth |
+| --- | --- |
+| What is the game meant to be, and how is it meant to work? | The specifications: design decisions, terms, concepts, and diagrams, each stated once |
+| What is a value, e.g. a cost or a rate? | The game data under `content/`; a specification says what a property means and never repeats its value |
+| What happens where the specifications say nothing? | The code and tests of the Implementation |
+| How does a screen look? | Its [Artboard](../../design/ui/visual-design.md#glossary); how it behaves is stated by its specification |
+| What does a generated view say, e.g. the derived glossary or the Compendium preview? | Whatever it is generated from; a file under `docs/derived/` is never edited and never cited |
+| What was the intent behind the design? | The [game design brief](../../../game-design-brief.md), which decides no rule |
+
+When two artifacts disagree, the source of truth for the question stands and the other one changes:
+
+| Disagreement                                                 | What changes                                        |
+| ------------------------------------------------------------ | --------------------------------------------------- |
+| A specification states something and the code does otherwise | The code                                            |
+| A specification repeats a value and `content/` holds another | The specification, which loses the copy             |
+| A specification and an Artboard show different things        | The Artboard, which is redrawn in the same change   |
+| The specifications are silent                                | Nothing: the code decides, and it may change freely |
+
+The answer to a question the specifications are silent on is added to them only when it is a decision, i.e. when the Game designer would object to the code doing it differently, e.g. a rule the Player plans around. It is then stated once, in the specification that owns its subject.
+
+These artifacts take part in the Development loop:
 
 | Artifact | What it holds | Who changes it |
 | --- | --- | --- |
 | Governance specifications | How every specification is written, under [Specification Conventions](../conventions/spec-conventions.md), and how the Development loop runs | An LLM at the Game designer's request, or the Game designer |
 | [Design specifications](../conventions/spec-conventions.md#specifications) | The game: its concepts, rules, content, user interfaces, and [Autopilot AIs](../../design/foundation/engine-contract.md#principals-and-access) | An LLM at the Game designer's request, or the Game designer |
 | Implementation specifications | How an Implementer turns the specifications into an Implementation in the Game designer's environment | An LLM at the Game designer's request, or the Game designer |
-| Implementation | Code and tests that follow the specifications, together with its Implementer feedback and tracking files | The Implementer only, as derived from the specifications |
+| Implementation | Code and tests that follow the specifications and decide what they do not state, together with its Implementer feedback and tracking files | The Implementer |
 
 The Implementation specifications divide into Families by how binding they are, as described in [About Implementation specifications](../../implementation/about-implementation.md#families). Only the Mandatory [Family](../conventions/spec-conventions.md#specifications) binds every Implementation, and it requires exactly what the Development loop needs from one: where it lives, its Implementer feedback, and a record of which specifications it follows.
 
-The specifications live in one repository and each Implementation in its own directory outside it. Every change to an Implementation must be derived from the specifications: neither the Game designer nor an LLM changes an Implementation in a way that the specifications neither require nor leave to the Implementer. A change the Game designer wants is made to the specifications first, and the Implementation follows.
+The specifications live in one repository and the Implementation in its own directory outside it. A change to a decision is made to the specifications first, and the Implementation follows. A change to what the specifications do not state is made in the code alone.
 
 # Rounds of the Development loop
 
@@ -53,13 +75,13 @@ The loop reaches a fixed point when an update produces no new Implementer feedba
 
 ## Designer feedback
 
-Designer feedback is the Game designer's judgement of the game as played, and it enters the Development loop like every other change: through the specifications. What the Game designer's observation changes depends on what the specifications already say about it. The following cases are complete:
+Designer feedback is the Game designer's judgement of the game as played, and it enters the Development loop like every other change: through the specifications. What the Game designer's observation changes depends on what the specifications already say about it:
 
-- **The specifications say otherwise:** the Implementation does not conform. The specifications stay as they are and the Implementation is brought back into conformance with them, which is a change derived from the specifications. When ambiguous wording invited the mistake, the wording is also clarified, so the next Implementer does not repeat it.
+- **The specifications say otherwise:** the Implementation does not conform. The specifications stay as they are and the Implementation is brought back into conformance with them. When ambiguous wording invited the mistake, the wording is also clarified.
 - **The specifications say what the Implementation does:** the Implementation is right and the design is not what the Game designer wants. The Game designer changes the specifications, and an update follows.
-- **The specifications leave it open,** as an Implementer's choice or through a gap: the Game designer either specifies it, and an update follows, or accepts the Implementer's choice.
+- **The specifications are silent,** so the code decided: the Game designer either makes it a decision, which is written into the specifications and an update follows, or has the code changed and leaves the specifications silent.
 
-One observation usually involves several Families of the Design specifications at once, e.g. a missing [Mission site](../../design/mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) involves the rule that creates it, the [GDR](../../design/foundation/core-concepts.md#game-build-and-content) that supplies it, and the screen that shows it. The case is therefore decided for each Family involved, and a specification change goes to the Family that falls short, not to the first one found. The Implementation is a conformance defect only when every Family involved already specifies what the Game designer expects, e.g. the rule and its GDR are both present and the Implementation still leaves the feature out. Otherwise the following table, which is exhaustive, decides what changes:
+One observation usually involves several Families of the Design specifications at once, e.g. a missing [Mission site](../../design/mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) involves the rule that creates it, the [GDR](../../design/foundation/core-concepts.md#game-build-and-content) that supplies it, and the screen that shows it. The case is therefore decided for each Family involved, and a specification change goes to the Family that falls short, not to the first one found. The Implementation is a conformance defect only when every Family involved already specifies what the Game designer expects, e.g. the rule and its GDR are both present and the Implementation still leaves the feature out. Otherwise this table decides what changes:
 
 | Where the specifications fall short | What changes |
 | --- | --- |
@@ -105,9 +127,9 @@ The answer lies between: delegate as much as possible, but keep the key creative
 
 ## Why each part exists
 
-**Why does an Implementation live outside the Spec repo?** To make the line between the design and its product physical. Everything in an [Implementation repo](../../implementation/mandatory/implementation-placement.md#glossary) can be thrown away and rebuilt, so nothing there may be the only record of a decision. The separation also lets several Implementations exist side by side, and keeps any of them from depending on files of the Spec repo.
+**Why does the Implementation live outside the Spec repo?** To make the line between the decisions and the code that carries them out physical. No design decision may have its only record in an [Implementation repo](../../implementation/mandatory/implementation-placement.md#glossary): when the code holds a decision that no specification states, nobody can tell it from an accident of the code.
 
-**Why is an Implementation never changed directly?** Because a direct change lives only in a disposable [artifact](../conventions/spec-conventions.md#artifacts). A rebuild loses it, another Implementation never receives it, and the specifications still say the old thing, so the next Implementer repeats the mistake. Even without a rebuild, an update applies only the difference in the specifications, knows nothing of the direct change, and can undo it when it touches the same code.
+**Why do the specifications not describe everything the Implementation does?** Because they once did, and it cost more than it gave. Specifications complete enough to rebuild the Implementation from nothing grew larger than the code, every change had to be made twice, and the many restatements began to contradict the rules they restated. With one Implementation that is never rebuilt, a specification that holds the decisions once is enough, and a decision stated once cannot disagree with itself.
 
 **Why are there Specification Conventions?** Because the Game designer delegates writing the specifications too, and an LLM must be taught to write them well. The same conventions serve the readers: a predictable layout, one term for each concept, and explicit marks for what is left open make the specifications unambiguous to the LLMs that implement them, and let a command check part of them mechanically.
 

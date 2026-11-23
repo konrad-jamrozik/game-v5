@@ -51,7 +51,9 @@ import type {
   SpecificationFamily,
   SpecificationKind,
   SpecificationRecord,
+  WordBudgets,
 } from './types.ts'
+import { countWords, WORD_BUDGETS_PATH } from './word-budgets.ts'
 
 const DEFAULT_SPECIFICATION_ROOT = 'docs/specs'
 const DEFAULT_INDEX_PATH = 'docs/specs/README.md'
@@ -90,7 +92,16 @@ const PERSONAS = [
 const FRAMING_HEADINGS = ['Overview', 'Relationships', 'Glossary']
 const TODOS_HEADING = 'TODOs'
 const RENAMED_TODOS_HEADING = 'Open decisions'
-const CLOSING_HEADINGS = ['Edge cases and failure behavior', TODOS_HEADING]
+const CLOSING_HEADINGS = [TODOS_HEADING]
+/** The closing section that collected boundary cases; only a document awaiting its cut may still have it. */
+const REMOVED_CLOSING_HEADING = 'Edge cases and failure behavior'
+/** The order of the closing sections, with the removed one where it stood, so a document awaiting its cut keeps its order. */
+const CLOSING_ORDER = [REMOVED_CLOSING_HEADING, TODOS_HEADING]
+/** Phrases that state no rule: a claim that a list is whole, or that nothing happens. */
+const REPETITION_PHRASES =
+  /\b(?:is|are) exhaustive\b|\bthe following (?:[\w-]+ ){1,4}(?:is|are) complete\b|\bnot listed\b[^.]{0,60}\bis impossible\b|\bno rounding occurs\b|\bImplementer['’]s choice\b/gi
+/** A sentence shorter than this many words is too short to be judged a repetition. */
+const REPEATED_SENTENCE_MINIMUM_WORDS = 12
 const TODO_PREFIX = /^TODO(?: \(later\))?:/
 const BLOCKING_TODO_PREFIX = 'TODO:'
 const OVERVIEW_WORD_LIMIT = 200
@@ -147,6 +158,9 @@ interface ParsedInput {
   readonly casePaths: ReadonlyMap<string, string>
   readonly indexPath: string
   readonly specificationRoot: string
+  readonly wordBudgets: WordBudgets | undefined
+  /** Paths of the documents that the rules against repetition skip. */
+  readonly awaitingCut: ReadonlySet<string>
 }
 
 function isParagraph(node: Node): node is Paragraph {
@@ -260,7 +274,17 @@ function parseInput(input: LintInput, diagnostics: Diagnostic[]): ParsedInput {
       title: first && isHeading(first) ? headingText(first) : '',
     })
   }
-  return { specifications, overviews, allDocuments, exactPaths, casePaths, indexPath, specificationRoot }
+  return {
+    specifications,
+    overviews,
+    allDocuments,
+    exactPaths,
+    casePaths,
+    indexPath,
+    specificationRoot,
+    wordBudgets: input.wordBudgets,
+    awaitingCut: new Set((input.wordBudgets?.awaitingCut ?? []).map(normalizePath)),
+  }
 }
 
 /**
@@ -478,8 +502,8 @@ function validateLead(specification: Specification, heading: Heading, diagnostic
   )
 }
 
-function validateLayout(specifications: readonly Specification[], diagnostics: Diagnostic[]): void {
-  for (const specification of specifications) {
+function validateLayout(parsed: ParsedInput, diagnostics: Diagnostic[]): void {
+  for (const specification of parsed.specifications) {
     const headings = specification.document.headings
     const h1s = topLevelHeadings(specification.document)
     if (h1s.length === 0 || lineOf(h1s[0]) !== 1) {
@@ -510,6 +534,15 @@ function validateLayout(specifications: readonly Specification[], diagnostics: D
           heading,
           'SPEC202',
           'Major and subsection headings must not be numbered.',
+        )
+      }
+      if (text === REMOVED_CLOSING_HEADING && !parsed.awaitingCut.has(specification.path)) {
+        addDiagnostic(
+          diagnostics,
+          specification.path,
+          heading,
+          'SPEC203',
+          `Heading "${text}" is prohibited by Specification Conventions; state a decided boundary in its topic section.`,
         )
       }
       if (REMOVED_HEADINGS.test(text)) {
@@ -576,7 +609,7 @@ function validateLayout(specifications: readonly Specification[], diagnostics: D
     const closingName = (text: string): string => (text === RENAMED_TODOS_HEADING ? TODOS_HEADING : text)
     const category = (text: string): number => {
       if (FRAMING_HEADINGS.includes(text)) return 0
-      if (CLOSING_HEADINGS.includes(closingName(text))) return 2
+      if (CLOSING_ORDER.includes(closingName(text))) return 2
       if (text.startsWith('Appendix')) return 3
       return 1
     }
@@ -595,7 +628,7 @@ function validateLayout(specifications: readonly Specification[], diagnostics: D
         )
       }
       const current = category(text)
-      const closing = CLOSING_HEADINGS.indexOf(closingName(text))
+      const closing = CLOSING_ORDER.indexOf(closingName(text))
       const outOfOrder = current < previousCategory || (closing >= 0 && closing <= previousClosing)
       if (outOfOrder && !orderReported) {
         orderReported = true
@@ -633,8 +666,144 @@ function validateLayout(specifications: readonly Specification[], diagnostics: D
   }
 }
 
-function wordCount(text: string): number {
-  return text.split(/\s+/).filter((word) => /[\p{L}\p{N}]/u.test(word)).length
+const wordCount = countWords
+
+/**
+ * Checks every document under the specification root against its word budget, and the budgets file against the
+ * documents: a document has exactly one budget, and the file names no document that does not exist.
+ */
+function validateWordBudgets(parsed: ParsedInput, diagnostics: Diagnostic[]): void {
+  const wordBudgets = parsed.wordBudgets
+  if (!wordBudgets) return
+  const documents = [...parsed.specifications, ...parsed.overviews]
+  const paths = new Set(documents.map((document) => document.path))
+  for (const { path, document } of documents) {
+    const budget = wordBudgets.budgets[path]
+    if (budget === undefined) {
+      addDiagnostic(
+        diagnostics,
+        path,
+        undefined,
+        'SPEC802',
+        `No word budget is recorded in ${WORD_BUDGETS_PATH}; run npm run specs:budget -- cut ${path}.`,
+      )
+      continue
+    }
+    const words = wordCount(document.content)
+    if (words > budget) {
+      addDiagnostic(
+        diagnostics,
+        path,
+        undefined,
+        'SPEC801',
+        `The document has ${words} words; its budget is ${budget}. Remove what it restates, or raise the budget with npm run specs:budget -- raise ${path} when the added words record a decision.`,
+      )
+    }
+  }
+  for (const path of [...Object.keys(wordBudgets.budgets), ...wordBudgets.awaitingCut]) {
+    if (paths.has(normalizePath(path))) continue
+    addDiagnostic(
+      diagnostics,
+      WORD_BUDGETS_PATH,
+      undefined,
+      'SPEC803',
+      `"${path}" names no document under ${parsed.specificationRoot}; remove it.`,
+    )
+  }
+}
+
+/** Splits prose into sentences at a full stop, question mark, or exclamation mark followed by a capital or a quote. */
+function sentencesOf(text: string): readonly string[] {
+  return text
+    .replace(/\s+/g, ' ')
+    .split(/(?<=[.!?])\s+(?=[\p{Lu}"“(])/u)
+    .map((sentence) => sentence.trim())
+    .filter(Boolean)
+}
+
+/** The text a sentence is compared by: its words in lowercase, without punctuation. */
+function comparableSentence(sentence: string): string {
+  return sentence
+    .toLocaleLowerCase('en-US')
+    .replace(/[^\p{L}\p{N}\s]/gu, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+/**
+ * Rejects what repeats instead of stating a rule, in every specification not awaiting its cut: a phrase that claims a
+ * list is whole or that nothing happens, a clause that only points at a section by its title, and a sentence that
+ * another place already holds, in the same specification or in another one.
+ */
+function validateRepetition(parsed: ParsedInput, diagnostics: Diagnostic[]): void {
+  const specifications = parsed.specifications
+    .filter((specification) => !parsed.awaitingCut.has(specification.path))
+    .toSorted((left, right) => compareText(left.path, right.path))
+  const sectionsByPath = new Map(
+    parsed.specifications.map((specification) => [
+      specification.path,
+      new Map(headingsWithSlugs(specification.document).map(({ heading, slug }) => [slug, headingText(heading)])),
+    ]),
+  )
+  const firstSeen = new Map<string, { readonly path: string; readonly line: number }>()
+  for (const specification of specifications) {
+    const walk = (node: Node): void => {
+      if (isBlockquote(node) || node.type === 'code' || node.type === 'html') return
+      if (isParent(node)) {
+        node.children.forEach((child, index) => {
+          if (!isLink(child) || isExternalUrl(child.url)) return
+          const previous = node.children[index - 1]
+          if (!previous || previous.type !== 'text' || !/\b(?:under|per)\s+$/i.test(textOf(previous))) return
+          const parts = splitUrl(child.url)
+          const decodedPath = decodeUrlPart(parts.path)
+          const fragment = parts.fragment === undefined ? undefined : decodeUrlPart(parts.fragment)
+          if (decodedPath === undefined || !fragment) return
+          const destination = decodedPath ? resolvePath(specification.path, decodedPath) : specification.path
+          if (sectionsByPath.get(destination)?.get(fragment) !== textOf(child)) return
+          addDiagnostic(
+            diagnostics,
+            specification.path,
+            child,
+            'SPEC613',
+            `"${textOf(previous).trim().split(/\s+/).at(-1) ?? 'under'} ${textOf(child)}" only points at a section; link the words of the rule that use it instead.`,
+          )
+        })
+      }
+      if (node.type === 'paragraph' || node.type === 'heading' || node.type === 'tableCell') {
+        const prose = proseText(node).replace(/\s+/g, ' ')
+        for (const match of withoutQuotations(prose).matchAll(REPETITION_PHRASES)) {
+          addDiagnostic(
+            diagnostics,
+            specification.path,
+            node,
+            'SPEC218',
+            `Phrase "${match[0]}" states no rule; a list not marked "e.g." is complete without saying so, and what does not happen is not written down.`,
+          )
+        }
+        if (node.type === 'heading') return
+        for (const sentence of sentencesOf(prose)) {
+          if (/^e\.g\./i.test(sentence)) continue
+          const comparable = comparableSentence(sentence)
+          if (wordCount(comparable) < REPEATED_SENTENCE_MINIMUM_WORDS) continue
+          const first = firstSeen.get(comparable)
+          if (!first) {
+            firstSeen.set(comparable, { path: specification.path, line: lineOf(node) })
+            continue
+          }
+          addDiagnostic(
+            diagnostics,
+            specification.path,
+            node,
+            'SPEC614',
+            `The sentence "${sentence.slice(0, 60)}…" repeats ${first.path}:${first.line}; state a rule once and link to it.`,
+          )
+        }
+        return
+      }
+      if (isParent(node)) for (const child of node.children) walk(child)
+    }
+    walk(specification.document.tree)
+  }
 }
 
 function validateOverviewLength(specification: Specification, overview: Heading, diagnostics: Diagnostic[]): void {
@@ -1248,16 +1417,6 @@ function validateSectionReferences(parsed: ParsedInput, diagnostics: Diagnostic[
       new Map(headingsWithSlugs(specification.document).map(({ heading, slug }) => [slug, headingText(heading)])),
     ]),
   )
-  // A term link names the term, not the Glossary group it lands on, so its text need not be the group's title.
-  const glossaryGroups = new Set(
-    parsed.specifications.flatMap((specification) => {
-      let inGlossary = false
-      return headingsWithSlugs(specification.document).flatMap(({ heading, slug }) => {
-        if (heading.depth === 1) inGlossary = headingText(heading) === 'Glossary'
-        return inGlossary && heading.depth === 2 ? [`${specification.path}#${slug}`] : []
-      })
-    }),
-  )
   for (const [path, document] of parsed.allDocuments) {
     if (!includeDerived && path.startsWith('docs/derived/')) continue
     visit(document.tree, (node) => {
@@ -1291,18 +1450,6 @@ function validateSectionReferences(parsed: ParsedInput, diagnostics: Diagnostic[
           node,
           'SPEC606',
           'Section reference "' + node.url + '" does not resolve to a specification heading.',
-        )
-      } else if (
-        title !== 'Glossary' &&
-        !glossaryGroups.has(`${destinationPath}#${fragment}`) &&
-        textOf(node) !== title
-      ) {
-        addDiagnostic(
-          diagnostics,
-          path,
-          node,
-          'SPEC611',
-          'Section reference must use the exact heading title "' + title + '" as its visible text.',
         )
       }
     })
@@ -1417,7 +1564,9 @@ export function analyzeSpecifications(input: LintInput): SpecificationAnalysis {
   const index = parsed.specifications.find((specification) => specification.path === parsed.indexPath)
   const entries = registryEntries(parsed, index, diagnostics)
   validateMetadata(parsed, diagnostics)
-  validateLayout(parsed.specifications, diagnostics)
+  validateLayout(parsed, diagnostics)
+  validateWordBudgets(parsed, diagnostics)
+  validateRepetition(parsed, diagnostics)
   validateLinks(parsed, diagnostics)
   validateFamilyOverviews(parsed, diagnostics)
   validateNoRelationshipsSection(parsed.specifications, diagnostics)

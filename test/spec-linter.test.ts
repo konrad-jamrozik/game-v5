@@ -22,6 +22,8 @@ import {
   kindOverviewTitle,
 } from '../scripts/spec-linter/overviews.ts'
 import type { LintInput, SourceFile, SpecificationFamily, SpecificationKind } from '../scripts/spec-linter/types.ts'
+import { budgetFor, countWords, formatWordBudgets, parseWordBudgets } from '../scripts/spec-linter/word-budgets.ts'
+import { updateWordBudgets } from '../scripts/word-budgets.ts'
 
 function lines(values: readonly string[]): string {
   return values.join('\n')
@@ -179,7 +181,7 @@ function validCorpus(): SourceFile[] {
         '',
         'Alpha must be deterministic.',
         '',
-        '# Edge cases and failure behavior',
+        '# Alpha failures',
         '',
         'Failures are defined.',
         '',
@@ -376,8 +378,8 @@ describe('specification linter', () => {
     const files = mutate(
       validCorpus(),
       'docs/specs/design/foundation/alpha.md',
-      '# Edge cases and failure behavior',
-      '# Empty topic\n\n# Edge cases and failure behavior',
+      '# Alpha failures',
+      '# Empty topic\n\n# Alpha failures',
     )
     expect(diagnosticCodes(files)).toEqual(['SPEC204'])
   })
@@ -387,7 +389,7 @@ describe('specification linter', () => {
       validCorpus(),
       'docs/specs/design/foundation/alpha.md',
       '[Rule](#rule): the same input has the same result.',
-      '[Rule](#rule): the same input has the same result.\n\n# Late topic\n\nSeparate contract.',
+      '[Rule](#rule): the same input has the same result.\n\n# TODOs\n\n- TODO: Choose the representation.\n\n# Late topic\n\nSeparate contract.',
     )
     expect(diagnosticCodes(misplaced)).toEqual(['SPEC209'])
   })
@@ -402,7 +404,7 @@ describe('specification linter', () => {
 
   test.each([
     ['Alpha behavior', 'Contract.'],
-    ['Edge cases and failure behavior', 'Failures are defined.'],
+    ['Alpha failures', 'Failures are defined.'],
   ])('allows omitting %s when it does not apply', (section, body) => {
     const files = mutate(
       validCorpus(),
@@ -449,16 +451,16 @@ describe('specification linter', () => {
 
   test.each([
     ['# TODOs\n\nNone.', 'None'],
-    ['# Edge cases and failure behavior\n\nNot applicable — this document defines no operations.', 'Not applicable'],
+    ['# Alpha failures\n\nNot applicable — this document defines no operations.', 'Not applicable'],
     ['# Notes\n\nN/A', 'N/A'],
   ])('rejects a placeholder section instead of omission (%s)', (section, _name) => {
     const files = mutate(
       validCorpus(),
       'docs/specs/design/foundation/alpha.md',
-      '# Edge cases and failure behavior\n\nFailures are defined.\n\n[Rule](#rule): the same input has the same result.',
-      section.startsWith('# Edge')
+      '# Alpha failures\n\nFailures are defined.\n\n[Rule](#rule): the same input has the same result.',
+      section.startsWith('# Alpha failures')
         ? section
-        : '# Edge cases and failure behavior\n\nFailures are defined.\n\n[Rule](#rule): the same input has the same result.\n\n' +
+        : '# Alpha failures\n\nFailures are defined.\n\n[Rule](#rule): the same input has the same result.\n\n' +
             section,
     )
     expect(diagnosticCodes(files)).toContain('SPEC205')
@@ -510,7 +512,7 @@ describe('specification linter', () => {
     const files = mutate(
       mutate(validCorpus(), 'docs/specs/design/foundation/alpha.md', '# Alpha behavior\n\nContract.\n\n', ''),
       'docs/specs/design/foundation/alpha.md',
-      '\n\n# Edge cases and failure behavior\n\nFailures are defined.\n\n[Rule](#rule): the same input has the same result.',
+      '\n\n# Alpha failures\n\nFailures are defined.\n\n[Rule](#rule): the same input has the same result.',
       '',
     )
     expect(diagnosticCodes(files)).toEqual([])
@@ -523,7 +525,7 @@ describe('specification linter', () => {
         content: file.content.replaceAll('AAA', 'CMC').replaceAll('aaa-', 'cmc-'),
       })),
       'docs/specs/design/foundation/alpha.md',
-      '# Edge cases and failure behavior\n\nFailures are defined.\n\n',
+      '# Alpha failures\n\nFailures are defined.\n\n',
       '',
     )
     expect(lintSpecifications({ files })).toEqual([])
@@ -652,14 +654,14 @@ describe('specification linter', () => {
     expect(diagnosticCodes(files)).toContain('SPEC612')
   })
 
-  test('requires the exact section title as hyperlink text', () => {
+  test('accepts any words as the text of a link to a section', () => {
     const files = mutate(
       validCorpus(),
       'docs/specs/design/foundation/alpha.md',
       '[Rule](#rule)',
-      '[Other title](#rule)',
+      '[is deterministic](#rule)',
     )
-    expect(diagnosticCodes(files)).toEqual(['SPEC611'])
+    expect(diagnosticCodes(files)).toEqual([])
   })
 
   test('preserves game-data identifiers that are not specification labels', () => {
@@ -755,8 +757,7 @@ describe('specification linter', () => {
     ],
     [
       'standard heading order',
-      (files: SourceFile[]) =>
-        mutate(files, 'docs/specs/design/foundation/alpha.md', '# Alpha behavior', '# Edge cases and failure behavior'),
+      (files: SourceFile[]) => mutate(files, 'docs/specs/design/foundation/alpha.md', '# Alpha behavior', '# TODOs'),
       'SPEC209',
     ],
     [
@@ -859,6 +860,164 @@ describe('specification linter', () => {
     expect(diagnosticCodes(files)).toContain('SPEC504')
   })
 
+  describe('repetition', () => {
+    const alpha = 'docs/specs/design/foundation/alpha.md'
+    const removedSection = '# Edge cases and failure behavior\n\nA failed input changes nothing.'
+    const sentence = 'An Alpha that receives the same input twice returns the same result both times it is asked.'
+
+    function withRemovedSection(): SourceFile[] {
+      return mutate(validCorpus(), alpha, '# Alpha failures\n\nFailures are defined.', removedSection)
+    }
+
+    test('rejects the closing section that collected boundary cases', () => {
+      const diagnostics = lintSpecifications({ files: withRemovedSection() })
+      expect(diagnostics.map((diagnostic) => diagnostic.code)).toEqual(['SPEC203'])
+      expect(diagnostics[0]?.message).toContain('state a decided boundary in its topic section')
+    })
+
+    test('accepts that closing section in a document awaiting its cut, before TODOs only', () => {
+      const wordBudgets = { awaitingCut: [alpha], budgets: {} }
+      const files = withRemovedSection()
+      expect(lintSpecifications({ files, wordBudgets }).map((diagnostic) => diagnostic.code)).not.toContain('SPEC203')
+      const misplaced = mutate(files, alpha, '# Rule', '# TODOs\n\n- TODO: Choose the representation.\n\n# Rule')
+      expect(lintSpecifications({ files: misplaced, wordBudgets }).map((diagnostic) => diagnostic.code)).toContain(
+        'SPEC209',
+      )
+    })
+
+    test.each([
+      'This table is exhaustive.',
+      'The following transitions are exhaustive.',
+      'The following three statements are complete.',
+      'Every transition not listed in the table is impossible.',
+      'No rounding occurs, because every term is whole.',
+      'The exact error text is the Implementer’s choice.',
+    ])('rejects a phrase that states no rule: %s', (phrase) => {
+      expect(diagnosticCodes(mutate(validCorpus(), alpha, 'Contract.', `Contract. ${phrase}`))).toEqual(['SPEC218'])
+    })
+
+    test.each([
+      'An Alpha is complete when its last step ends.',
+      'Write "this table is exhaustive" nowhere.',
+      '`No rounding occurs` is a phrase the conventions prohibit.',
+    ])('accepts ordinary and quoted uses: %s', (text) => {
+      expect(diagnosticCodes(mutate(validCorpus(), alpha, 'Contract.', `Contract. ${text}`))).toEqual([])
+    })
+
+    test.each(['under', 'per'])('rejects a clause that only points at a section by its title: %s', (word) => {
+      const files = mutate(validCorpus(), alpha, 'Contract.', `The result is fixed, ${word} [Rule](#rule).`)
+      const diagnostics = lintSpecifications({ files })
+      expect(diagnostics.map((diagnostic) => diagnostic.code)).toEqual(['SPEC613'])
+      expect(diagnostics[0]?.message).toContain(`"${word} Rule" only points at a section`)
+    })
+
+    test('accepts a link to a section from the words of a rule', () => {
+      const files = mutate(validCorpus(), alpha, 'Contract.', 'The result is [fixed for an input](#rule).')
+      expect(diagnosticCodes(files)).toEqual([])
+    })
+
+    test('rejects a sentence that the same specification already holds', () => {
+      const files = mutate(validCorpus(), alpha, 'Contract.', `${sentence}\n\n## Again\n\n${sentence}`)
+      const diagnostics = lintSpecifications({ files })
+      expect(diagnostics.map((diagnostic) => diagnostic.code)).toEqual(['SPEC614'])
+      expect(diagnostics[0]?.message).toContain(`repeats ${alpha}:`)
+    })
+
+    test('rejects a sentence that another specification already holds, whatever its case and punctuation', () => {
+      const beta = 'docs/specs/design/foundation/beta.md'
+      const files = mutate(
+        mutate(pairCorpus(), alpha, 'Contract.', sentence),
+        beta,
+        'Contract.',
+        sentence.toUpperCase().replace('.', '!'),
+      )
+      const diagnostics = lintSpecifications({ files })
+      expect(diagnostics.map((diagnostic) => [diagnostic.code, diagnostic.path])).toEqual([['SPEC614', beta]])
+    })
+
+    test('accepts a repeated short sentence, a repeated example, and a copy in a document awaiting its cut', () => {
+      const beta = 'docs/specs/design/foundation/beta.md'
+      const example = `E.g., ${sentence}`
+      const repeated = mutate(
+        validCorpus(),
+        alpha,
+        'Contract.',
+        `It is whole.\n\n${example}\n\n${example}\n\nIt is whole.`,
+      )
+      expect(diagnosticCodes(repeated)).toEqual([])
+      const files = mutate(mutate(pairCorpus(), alpha, 'Contract.', sentence), beta, 'Contract.', sentence)
+      const codes = lintSpecifications({ files, wordBudgets: { awaitingCut: [beta], budgets: {} } }).map(
+        (diagnostic) => diagnostic.code,
+      )
+      expect(codes).not.toContain('SPEC614')
+    })
+  })
+
+  describe('word budgets', () => {
+    const alpha = 'docs/specs/design/foundation/alpha.md'
+
+    /** A budget for every document of the corpus, each exactly at its present size. */
+    function budgetsOf(files: readonly SourceFile[]): Record<string, number> {
+      return Object.fromEntries(
+        withOverviews(files)
+          .filter((file) => file.path.startsWith('docs/specs/'))
+          .map((file) => [file.path, countWords(file.content)]),
+      )
+    }
+
+    test('accepts every document at its budget and rejects one word more', () => {
+      const files = validCorpus()
+      const budgets = budgetsOf(files)
+      expect(lintSpecifications({ files, wordBudgets: { awaitingCut: [], budgets } })).toEqual([])
+      const longer = mutate(files, alpha, 'Contract.', 'Contract. More.')
+      const diagnostics = lintSpecifications({ files: longer, wordBudgets: { awaitingCut: [], budgets } })
+      expect(diagnostics.map((diagnostic) => [diagnostic.code, diagnostic.path])).toEqual([['SPEC801', alpha]])
+      expect(diagnostics[0]?.message).toContain(`its budget is ${budgets[alpha]}`)
+    })
+
+    test('requires a budget for every document and a document for every entry', () => {
+      const files = validCorpus()
+      const { [alpha]: _removed, ...budgets } = budgetsOf(files)
+      const codes = lintSpecifications({
+        files,
+        wordBudgets: { awaitingCut: ['docs/specs/gone.md'], budgets: { ...budgets, 'docs/specs/old.md': 10 } },
+      }).map((diagnostic) => [diagnostic.code, diagnostic.path])
+      expect(codes).toEqual([
+        ['SPEC802', alpha],
+        ['SPEC803', 'docs/specs/word-budgets.json'],
+        ['SPEC803', 'docs/specs/word-budgets.json'],
+      ])
+    })
+
+    test('sets a budget with headroom by the state of the document', () => {
+      expect(budgetFor(1000, false)).toBe(1100)
+      expect(budgetFor(1000, true)).toBe(1020)
+      expect(budgetFor(1001, true)).toBe(1030)
+      const files = validCorpus()
+      const current = { awaitingCut: [alpha], budgets: {} }
+      const words = countWords(files.find((file) => file.path === alpha)?.content ?? '')
+      expect(updateWordBudgets(current, files, 'raise', [alpha])).toEqual({
+        awaitingCut: [alpha],
+        budgets: { [alpha]: budgetFor(words, true) },
+      })
+      expect(updateWordBudgets(current, files, 'cut', [alpha])).toEqual({
+        awaitingCut: [],
+        budgets: { [alpha]: budgetFor(words, false) },
+      })
+      expect(() => updateWordBudgets(current, files, 'cut', ['docs/specs/gone.md'])).toThrow('is not a document')
+    })
+
+    test('reads and writes the budgets file with sorted paths', () => {
+      const text = formatWordBudgets({ awaitingCut: ['b.md', 'a.md'], budgets: { 'b.md': 2, 'a.md': 1 } })
+      expect(text).toBe(
+        '{\n  "awaitingCut": [\n    "a.md",\n    "b.md"\n  ],\n  "budgets": {\n    "a.md": 1,\n    "b.md": 2\n  }\n}\n',
+      )
+      expect(parseWordBudgets(text)).toEqual({ awaitingCut: ['a.md', 'b.md'], budgets: { 'a.md': 1, 'b.md': 2 } })
+      expect(() => parseWordBudgets('{"budgets": {"a.md": "many"}, "awaitingCut": []}')).toThrow('whole number')
+      expect(() => parseWordBudgets('[]')).toThrow('must hold an object')
+    })
+  })
+
   describe('TODOs', () => {
     const alpha = 'docs/specs/design/foundation/alpha.md'
     const alphaEnd = '[Rule](#rule): the same input has the same result.'
@@ -942,12 +1101,13 @@ describe('specification linter', () => {
     })
 
     test('counts Overview words in lists and tables', () => {
-      const filler = Array.from({ length: 100 }, (_, index) => `word${index}`).join(' ')
+      const items = Array.from({ length: 100 }, (_, index) => `item${index}`).join(' ')
+      const cells = Array.from({ length: 100 }, (_, index) => `cell${index}`).join(' ')
       const files = mutate(
         validCorpus(),
         alpha,
         overviewParagraph,
-        lines([`- ${filler}`, '', '| Column |', '| --- |', `| ${filler} |`]),
+        lines([`- ${items}`, '', '| Column |', '| --- |', `| ${cells} |`]),
       )
       expect(diagnosticCodes(files)).toEqual(['SPEC214'])
     })

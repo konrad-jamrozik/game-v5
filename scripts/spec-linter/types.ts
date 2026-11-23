@@ -11,10 +11,26 @@ export interface Diagnostic {
   readonly message: string
 }
 
+/**
+ * The word budget of every document under the specification root, under Word budgets in Specification Conventions,
+ * as recorded in `docs/specs/word-budgets.json`.
+ */
+export interface WordBudgets {
+  /** The most words each document may have, by its path. */
+  readonly budgets: Readonly<Record<string, number>>
+  /**
+   * Paths of documents written before the rules against repetition, and not yet rewritten to follow them. The rules
+   * that reject repetition skip these documents; their budgets still stop them from growing.
+   */
+  readonly awaitingCut: readonly string[]
+}
+
 export interface LintInput {
   readonly files: readonly SourceFile[]
   readonly specificationRoot?: string
   readonly indexPath?: string
+  /** Without it no budget is checked and no document is treated as awaiting its cut. */
+  readonly wordBudgets?: WordBudgets
 }
 
 export type SpecificationKind = 'Governance' | 'Design' | 'Implementation'

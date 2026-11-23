@@ -10,39 +10,32 @@
 
 # Overview
 
-A [Design specification](spec-conventions.md#specifications) is the only durable record of a design decision: an [Implementation](spec-conventions.md#artifacts) is built from it and can be rebuilt from it at any time. So it must say everything that matters to the game and nothing that does not. What matters is what a player, a save, or a replay could notice, together with the game data that the [Game designer](spec-conventions.md#participants) authors; everything else is left to the [Implementer](spec-conventions.md#participants), who decides it differently in every Implementation.
+A [Design specification](spec-conventions.md#specifications) records what the [Game designer](spec-conventions.md#participants) decided about the game: its terms, its concepts, its rules, and the diagrams that explain them. It states each decision once. It does not describe everything the game does: where it is silent, the code and tests of the [Implementation](spec-conventions.md#artifacts) decide, and they may change without any specification changing.
 
-What it says must also be exact enough to test. Every rule names its inputs, its boundaries, and its outcome, so that a test can check it. Design Specification Conventions builds on Specification Conventions: Specification Conventions says how any specification is written, and Design Specification Conventions says what a Design specification states and how precisely.
-
-# Glossary
-
-Terms about [specifications](spec-conventions.md#specifications) in general are in the Specification Conventions glossary.
-
-| Term | Definition |
-| --- | --- |
-| Evidence basis | Informative material inspected when drafting a specification; it is not a formal [requirement](spec-conventions.md#specifications) and makes no [Reference](artifact-relationships.md#references). |
+One test decides what belongs: would the Game designer object if the code did this differently? What passes is stated exactly, with its formula, its thresholds, and its rounding. What fails is left out, however easy it is to observe. Design Specification Conventions builds on Specification Conventions: Specification Conventions says how any specification is written, and Design Specification Conventions says what a Design specification states and how precisely.
 
 # What belongs in a Design specification
 
-[Design specifications](spec-conventions.md#specifications) describe the design of the game; any [implementation](spec-conventions.md#artifacts) that obeys them is acceptable. A statement belongs in a Design specification only if it meets at least one of the following criteria. This list is exhaustive:
+A [Design specification](spec-conventions.md#specifications) holds the decisions about the game and what is needed to state them; the code of the [Implementation](spec-conventions.md#artifacts) holds everything else. A statement belongs in a Design specification only when it is one of these:
 
-1. **Observable:** a black-box test through the engine API, a save, or a replay could fail when the statement is violated.
-2. **Designer-authored:** the statement is game data or a rule of the game that the [Engine designer](spec-conventions.md#participants) must write down.
-3. **Vocabulary:** the statement defines a term or structure needed to state observable or designer-authored statements.
+1. **A decision:** a rule, a behaviour, or the meaning of a piece of game data that the [Game designer](spec-conventions.md#participants) chose. The test is whether the Game designer would object if the code did it differently; e.g., a threshold a player plans around passes the test, and the order of two effects that no player can tell apart fails it.
+2. **Vocabulary:** a term, a concept, or a structure needed to state decisions.
+3. **An explanation:** a diagram or an example that shows what a decision or a concept means.
 
-Everything else is left to the implementer's discretion and must not be specified. E.g., the following are out of scope:
+That a test could observe a behaviour does not make it a decision. Where the Design specifications are silent, the code and its tests decide, and they may change without a [specification](spec-conventions.md#specifications) changing. A Design specification therefore never states any of the following:
 
-- Internal ordering, e.g. call order and the order of random draws.
-- Code structure, e.g. which code creates which objects, internal function signatures, and dependency injection.
-- Internal storage layout.
+- **What the code does on its own account**, e.g. internal ordering, code structure, storage layout, and how a malformed call or malformed game data is rejected.
+- **A proof.** A specification states rules and does not argue that they hold: it does not show that a value stays within a range, that a process ends, or that a state cannot be reached, and it does not describe a case that its rules make impossible.
+- **A consequence of another rule.** What follows from a rule is not written down, neither in the specification that owns the rule nor in one that relies on it.
+- **A value of game data.** A specification says what a property means; its value lives only in the game data files.
 
-A statement about one of these matters belongs in a specification only when it states an observable consequence, and then the specification states the consequence rather than the mechanism. Non-observable steering for implementers, e.g. architecture or code-quality advice, never belongs in a Design specification. Record it, when it is worth recording, only in an [Implementation](spec-conventions.md#artifacts) specification, under [What belongs in an Implementation specification](implementation-spec-conventions.md#what-belongs-in-an-implementation-specification).
+A rule about game data that expresses meaning, e.g. that one property is allowed only together with another, is a decision and is stated with the property. Steering for implementers, e.g. architecture or code-quality advice, belongs only in an [Implementation specification](implementation-spec-conventions.md#what-belongs-in-an-implementation-specification).
 
 ## Non-behavioural Design specifications
 
 Some Design specifications describe how the engine API is used rather than how the game behaves, so that a user interface or an AI that plays the game can be designed without changing any rule.
 
-UI specifications are non-behavioural. They guide how a user interface presents the engine API to the [Player](spec-conventions.md#participants), e.g. which screens exist, what each shows by default, and how the graphical user interface looks, but they add no gameplay information, engine API operation, or game data. What a user interface may show and call remains owned by the Foundation specifications that define the engine API and by the specification that owns each value.
+UI specifications are non-behavioural. They guide how a user interface presents the engine API to the [Player](spec-conventions.md#participants), e.g. which screens exist, what each shows by default, and how the graphical user interface looks, but they add no gameplay information, engine API operation, or game data. What a user interface may show and call remains owned by the Foundation specifications that define the engine API and by the specification that owns each value. Where a picture of a screen accompanies its specification, the text does not list what the picture shows: it states what a picture cannot, e.g. behaviour, the states a screen passes through, and the values several screens share.
 
 Autopilot AIs specifications describe how an AI that plays the game chooses its actions, e.g. which goals it pursues and in what order, but they add no engine API operation, rule of the game, or game data. What every such AI receives and may call remains owned by the Foundation specifications that define the engine API.
 
@@ -54,36 +47,21 @@ When specifying a game concept, state its applicable modeling role and mutabilit
 
 # Writing exact rules
 
-An [Implementer](spec-conventions.md#participants) reads a rule once and implements exactly what it says, so a rule leaves nothing to be guessed.
+A decision is stated exactly, so that nobody has to guess what was decided, and once, so that it cannot come to disagree with itself.
 
-A rule should make its trigger, inputs, preconditions, outcome, and state changes clear. Use a transition table or pseudocode where prose would conceal ordering. Define:
-
-- Valid and invalid inputs, including empty and duplicate collections.
-- Exact thresholds, inclusivity, caps, floors, and tie-breaking.
-- Which state snapshot supplies each input and when each effect becomes visible.
-- Atomicity and whether rejection changes state, history, or randomness.
-- Expected rejection of a player's action separately from an internal invariant violation.
+A rule states its trigger, its inputs, and its outcome. It states the thresholds, inclusivity, caps, floors, and tie-breaks that were decided, in the topic section of the rule they bound. Use a transition table or pseudocode where prose would conceal ordering. A rule names the point at which it applies and nothing more about timing: the one specification that owns the order in which rules apply states that order and what follows from it.
 
 ## Formula and state machine notations
 
-A specification may use either of the following notations where it fits the behavior being described. They are notations, not a classification: a specification is not required to label its statements, and behavior that fits neither is described in ordinary prose. A statement written in one of these notations is complete only when it states every item in that notation's checklist.
+A specification may use either of the following notations where it fits the behavior being described. They are notations, not a classification: a specification is not required to label its statements, and behavior that fits neither is described in ordinary prose.
 
-A **formula** computes one value from other values. It states:
+A **formula** computes one value from other values. It states its expression, and where rounding occurs with which rounding operation. A cap or a floor is part of the expression. Each input is named by the term or the game data property that defines it; an input that nothing else defines is defined at the formula, with its unit. A formula does not restate the definition of an input, and it states neither the range of its result nor the absence of rounding.
 
-- Its inputs, each with its unit and domain.
-- The expression.
-- Rounding: where rounding occurs and which rounding operation applies, or that no rounding occurs.
-- The valid range of the result.
+E.g., "The total price equals the unit price multiplied by the quantity, rounded down to a whole number of cents."
 
-E.g., "The total price equals the unit price multiplied by the quantity, rounded down to a whole number. The unit price is a nonnegative whole number of cents and the quantity is a positive whole number, so the total price is a nonnegative whole number of cents." [Formulas and uncertainty](#formulas-and-uncertainty) adds the requirements for symbols, evaluation order, random outcomes, and worked numerical examples.
+A **state machine** describes something that is in exactly one of a fixed set of states at a time. It is described once: as a transition table that gives each transition its source state, target state, trigger, and condition, or as prose, and never as both. A diagram may accompany either. A transition table holds every transition, so a transition it does not hold cannot happen.
 
-A **state machine** describes something that is in exactly one of a fixed set of states at a time. It states:
-
-- The exhaustive set of states.
-- A transition table listing, for each transition, its source state, target state, trigger, and condition.
-- That every transition not listed in the table is impossible.
-
-E.g., a door has the exhaustive states Open, Closed, and Locked, and this transition table:
+E.g., a door is Open, Closed, or Locked, and these are its transitions:
 
 | Source state | Target state | Trigger | Condition                   |
 | ------------ | ------------ | ------- | --------------------------- |
@@ -92,58 +70,44 @@ E.g., a door has the exhaustive states Open, Closed, and Locked, and this transi
 | Closed       | Locked       | Lock    | The opener holds the key.   |
 | Locked       | Closed       | Unlock  | The opener holds the key.   |
 
-Every transition not listed, e.g. from Open directly to Locked, is impossible.
-
 ## Formulas and uncertainty
 
-Define every symbol, unit, domain, and referenced parameter. Show evaluation order and rounding points; link common numeric rules rather than assuming real-number arithmetic equals runtime arithmetic.
+A formula is evaluated by a machine and a random rule is tested by fixing its outcomes, so both state what a reader could otherwise only assume.
 
-For random rules, state every random outcome as a distinct, named outcome: what it belongs to, its possible values, and its distribution, including interval boundaries and the success comparison. E.g., "each delivery has one delay outcome, late or on time, and each late delivery has one lateness outcome, a whole number of days from 1 to 10". A reader must be able to tell how many distinct random outcomes a rule has, because a named random outcome is what an example or a test fixes when it relies on a random result, under [Examples, conformance, and evidence](#examples-conformance-and-evidence). Also state which state each random outcome may depend on and which information is hidden. Do not state when or in which order random values are drawn.
+Show evaluation order and rounding points; link common numeric rules rather than assuming real-number arithmetic equals runtime arithmetic.
+
+For random rules, state every random outcome as a distinct, named outcome: what it belongs to, its possible values, and its distribution, including interval boundaries and the success comparison. E.g., "each delivery has one delay outcome, late or on time, and each late delivery has one lateness outcome, a whole number of days from 1 to 10". A reader must be able to tell how many distinct random outcomes a rule has, because a named random outcome is what an example or a test fixes when it relies on a random result. Also state which state each random outcome may depend on and which information is hidden. Do not state when or in which order random values are drawn.
 
 Distinguish the true probability, conditional probability, cumulative probability, and displayed estimate whenever relevant. Define what information an estimate conditions on, including previous outcomes.
 
-Include worked numerical examples for normal cases and boundaries. Equations, prose, pseudocode, and examples must agree. An unexplained "chance increases over time" or "diminishing returns" is not a complete rule.
+Give a formula one worked numerical example, with invented numbers rather than the present values of game data, which change. A specification of the Foundation [Family](spec-conventions.md#specifications) may show one rule through several examples, each from a different angle, because other specifications build on its concepts. Equations, prose, pseudocode, and examples must agree. An unexplained "chance increases over time" or "diminishing returns" is not a complete rule.
 
 ## Contracts and game data
 
-Public API specifications define exact names, types, argument shapes, outputs, and errors when they are complete. Conceptual domain specifications need not mirror implementation storage layouts.
+Game data and the engine API both exist twice, as a design and as files or code, and a specification holds only the design.
 
-Tables of game data define its stable identifiers, units, values, references, and their owning formulas. A name or a number appearing only inside an example is not implied game data. Use parameter references instead of copying balance values throughout specifications.
+A specification says what each property of game data means, its unit, and which rule reads it. It never states the value of a property, a count of records, or a list of record identifiers: those live only in the game data files, where they change without the specification changing. A name or a number appearing only inside an example is not implied game data.
 
-## Specialized material
-
-Some subjects recur across Design specifications and have settled shapes. Give each specialized subject its own topic section, or a subsection of the closest topic. The following shapes are common within a [Family](spec-conventions.md#specifications); they are not additional metadata categories or directories.
-
-| Specialized material | Examples of subsections                    |
-| -------------------- | ------------------------------------------ |
-| Mechanics rules      | State transitions; formulas; effect timing |
-| Numeric contracts    | Representation; rounding; test vectors     |
-| API contracts        | Functions; preconditions; results          |
-
-Long supporting tables may use descriptive appendices after the closing sections. State whether an appendix is normative or informative. If a topic repeatedly outgrows its specification, split it into an indexed specification with clear ownership.
+A specification describes the engine API by its operations, who may call them, and what they guarantee. Exact names, types, argument shapes, and error representations are stated only where the [Game designer](spec-conventions.md#participants) decided them. Conceptual domain specifications need not mirror implementation storage layouts.
 
 # Scope exclusions
 
-Something is out of scope when it is not part of the game and there is no plan to specify it. State it only where a reader would otherwise expect the missing rule, in the topic section where they would look for it, as one sentence. Do not collect exclusions in Overview or in a list. Something that will be specified later is not out of scope; it is a TODO under [Kinds of unspecified content](spec-conventions.md#kinds-of-unspecified-content).
+Something is out of scope when it is not part of the game and there is no plan to specify it. State it only where a reader would otherwise expect the missing rule, in the topic section where they would look for it, as one sentence. Do not collect exclusions in Overview or in a list. Something that will be specified later is not out of scope; it is a [TODO](spec-conventions.md#kinds-of-unspecified-content).
 
-Name each exclusion with its [canonical term](terminology-conventions.md#glossary), or with the title of the specification or section that owns it. Do not coin a descriptive phrase for an exclusion under [Canonical terminology](terminology-conventions.md#canonical-terminology); an exclusion that no defined term or owning section names is rarely worth stating.
+Name each exclusion with its [canonical term](terminology-conventions.md#glossary), or with the title of the specification or section that owns it. Do not [coin a descriptive phrase](terminology-conventions.md#canonical-terminology) for an exclusion; an exclusion that no defined term or owning section names is rarely worth stating.
 
 E.g., the section on placing an Order says in one sentence that gift wrapping is out of scope. The Overview of that specification says nothing about what the specification does not cover.
 
 # Examples, conformance, and evidence
 
-An example shows that a rule means what its author intended; the rule alone decides what is required. Every rule must therefore be exact enough to test on its own: its rule text states its inputs, boundaries, and outcome, and its boundary cases and failures are defined in rule text or under `# Edge cases and failure behavior`. A specification may explain its rules through worked examples alongside the concepts they illustrate, linking to the applicable [requirements](spec-conventions.md#specifications). Worked examples introduce no rules and need not be organized as test fixtures or command sequences. An example that relies on a random result fixes each random outcome it relies on by the name its rule gives it under [Formulas and uncertainty](#formulas-and-uncertainty), and never states a result that depends on a particular seed.
+An example shows that a rule means what its author intended; the rule alone decides what is required. A specification may explain its rules through worked examples alongside the concepts they illustrate. Worked examples introduce no rules and need not be organized as test fixtures or command sequences. An example that relies on a random result fixes each random outcome it relies on by the name its rule gives it, and never states a result that depends on a particular seed.
 
-Examples of one specification's rules stay in that specification. An example of an interaction between several game systems belongs to the specification that owns that interaction, e.g. the specification that owns the order of same-turn effects, and links the rules of the other specifications it exercises. How the implementation verifies conformance, e.g. its integration or end-to-end tests, is the implementer's choice.
+Examples of one specification's rules stay in that specification. An example of an interaction between several game systems belongs to the specification that owns that interaction, e.g. the specification that owns the order of same-turn effects, and links the rules of the other specifications it exercises.
 
-Test derivation must follow the specification; current code output is not an independent oracle. If code, tests, and the specification disagree, identify the discrepancy and resolve it explicitly. Do not rewrite a specification merely to bless existing behavior. Do not silently replace an accepted rule to match a newer brief passage; record the design conflict and proposed revision.
+When the code or a test disagrees with a decision a specification states, the code or the test is wrong. Do not rewrite a specification merely to bless existing behavior. Where the specifications are silent there is nothing to disagree with: a test of such behaviour records what the code does, so that a change to it is noticed, and the test changes when the behaviour is changed on purpose.
 
-For inherited-game evidence, identify relevant paths and, when a behavioral claim is carried into a drafted specification, the inspected revision where practical.
-
-Every statement of a Design specification is normative unless it is labelled **Informative rationale** or stands in a section or appendix that declares itself informative. A rule carries no label of its own, and in particular none that records where it came from or whether it has been reviewed. Where a rule's origin is worth recording, e.g. that it is taken from the inherited game, an Informative rationale states it. Legacy bugs and undocumented implementation quirks are not requirements. A legacy formula becomes a requirement only by being stated explicitly.
+Every statement of a Design specification is normative unless it is labelled **Informative rationale** or stands in a section or appendix that declares itself informative. A rule carries no label of its own, and in particular none that records where it came from or whether it has been reviewed.
 
 ## Consistency of rules and examples
 
-A rule and its examples are written together and must stay together. Boundary cases and failures must be defined for every rule, worked examples, where a specification has them, must agree with the rules they illustrate, and related contracts and tables of game data must agree with each other.
-
-When specified behavior changes, link to affected requirement sections by title and dependent specifications, revise their examples together, and record any save, replay, or API compatibility impact. Git history and review records provide change history; avoid duplicating every edit in per-document changelogs.
+A rule and its examples are written together and must stay together. When a decision changes, its examples, the game data that it reads, and the specifications that link to it change in the same change.

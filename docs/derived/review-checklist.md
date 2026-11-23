@@ -26,6 +26,7 @@ Applies to every specification.
   - [Marking examples](../specs/governance/conventions/spec-conventions.md#marking-examples)
   - [Illustrative and exhaustive enumerations](../specs/governance/conventions/spec-conventions.md#illustrative-and-exhaustive-enumerations)
 - [Validation and unspecified content](../specs/governance/conventions/spec-conventions.md#validation-and-unspecified-content)
+  - [Word budgets](../specs/governance/conventions/spec-conventions.md#word-budgets) — **linted**
   - [Deterministic validation](../specs/governance/conventions/spec-conventions.md#deterministic-validation)
   - [Kinds of unspecified content](../specs/governance/conventions/spec-conventions.md#kinds-of-unspecified-content) — **linted**
 
@@ -75,7 +76,6 @@ Applies to Design specifications.
   - [Formula and state machine notations](../specs/governance/conventions/design-spec-conventions.md#formula-and-state-machine-notations)
   - [Formulas and uncertainty](../specs/governance/conventions/design-spec-conventions.md#formulas-and-uncertainty)
   - [Contracts and game data](../specs/governance/conventions/design-spec-conventions.md#contracts-and-game-data)
-  - [Specialized material](../specs/governance/conventions/design-spec-conventions.md#specialized-material)
 - [Scope exclusions](../specs/governance/conventions/design-spec-conventions.md#scope-exclusions)
 - [Examples, conformance, and evidence](../specs/governance/conventions/design-spec-conventions.md#examples-conformance-and-evidence)
   - [Consistency of rules and examples](../specs/governance/conventions/design-spec-conventions.md#consistency-of-rules-and-examples)

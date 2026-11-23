@@ -20,6 +20,7 @@
     "terms:report": "node scripts/terms-report.ts",
     "docs:link-terms": "node scripts/link-terms.ts",
     "docs:plain": "node scripts/plain-docs.ts",
+    "specs:budget": "node scripts/word-budgets.ts",
     "artboards:export": "node scripts/export-artboards.ts",
     "balance:bench": "node --watch tools/gdr-balance-bench/server.ts",
     "autopilot:bench": "node --watch-path=tools/autopilot-bench/server.ts tools/autopilot-bench/server.ts",
