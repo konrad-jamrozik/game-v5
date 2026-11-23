@@ -38,7 +38,7 @@ The Implementer must not add a Git remote to the Implementation repo, push from 
 
 The Implementation repo must hold a `.gitattributes` file that stores every text file with LF line endings and checks it out with LF, e.g. `* text=auto eol=lf`. Without it, a checkout on Windows with `core.autocrlf` enabled shows files as modified whose content is unchanged, e.g. after the formatter rewrites them.
 
-The Implementation repo must hold an `AGENTS.md` file at its root that tells every agent not to start a session in the Implementation repo, and to start it in the Spec repo instead and work on the Implementation repo from there. The agent instructions, skills, and conventions that govern work on an Implementation, e.g. the `update-implementation` skill and the rules for editing files and running commands, reside in the Spec repo, and a session started in the Implementation repo does not load them. The file must name the Spec repo by its location relative to the Implementation repo, e.g. `../game-v5`, and must hold no other agent instruction, so that no instruction applies only to a session that starts there.
+The Implementation repo must hold an `AGENTS.md` file at its root that tells every agent not to start a session in the Implementation repo, and to start it in the Spec repo instead and work on the Implementation repo from there. The agent instructions, skills, and conventions that govern work on an Implementation, e.g. the `apply` skill and the rules for editing files and running commands, reside in the Spec repo, and a session started in the Implementation repo does not load them. The file must name the Spec repo by its location relative to the Implementation repo, e.g. `../game-v5`, and must hold no other agent instruction, so that no instruction applies only to a session that starts there.
 
 # Repository root of an Implementation
 
@@ -63,6 +63,10 @@ The [Sound set](../../design/ui/sounds.md#glossary) is authored under the `asset
 ## Artwork in an Implementation
 
 The [Background artwork](../../design/ui/visual-design.md#glossary) is authored under the `assets/images/` directory of the Spec repo. An Implementation that shows it must hold its own copy of every image file it shows inside its Implementation repo, unchanged, and its Game build must serve that copy rather than the `assets/images/` directory of the Spec repo; e.g., a web Implementation built with Vite copies the files to `public/images/`. The image path in a BackgroundArtwork [GDR](../../design/foundation/core-concepts.md#game-build-and-content) names a file of the Spec repo; the Game build shows the Implementation's copy of that file, e.g. the path `assets/images/chatgpt-agents-i2.png` is served as `public/images/chatgpt-agents-i2.png`.
+
+## Keeping the copies current
+
+A copy that drifts from its original makes the game differ from its design without anyone deciding so, so no copy is edited by hand. The Implementation repo holds one script, run as `npm run sync:spec`, that mirrors every copied file from a commit of the Spec repo: it adds, replaces, and deletes files until each copy equals its original, and with `--check` it only reports the differences. Each commit of the Implementation that follows the specifications names the commit of the Spec repo it follows in a `Spec:` trailer of its message.
 
 # Edge cases and failure behavior
 

@@ -19,9 +19,9 @@ These informative views are derived from the registered Markdown specifications.
 | Design             | Content       | 1              |
 | Design             | UI            | 17             |
 | Design             | Autopilot AIs | 1              |
-| Implementation     | Mandatory     | 7              |
+| Implementation     | Mandatory     | 5              |
 | Implementation     | Guidance      | 6              |
-| Implementation     | Recipes       | 3              |
+| Implementation     | Recipes       | 2              |
 
 ## Conventions
 
@@ -122,12 +122,10 @@ These informative views are derived from the registered Markdown specifications.
 | ID | Document | Owns |
 | --- | --- | --- |
 | CTEST | [Campaign Tests](../specs/implementation/mandatory/campaign-tests.md) | How much play an automated test or a verification run of an Implementation may simulate with an Autopilot AI, and what it may check. |
-| FEEDBACK | [Implementation Feedback](../specs/implementation/mandatory/implementation-feedback.md) | The feedback files of Specification problems and Implementation decisions that each Implementation keeps. |
 | LICENSE | [Implementation License](../specs/implementation/mandatory/implementation-license.md) | The license under which each Implementation is published, and the files that state it. |
 | PLACE | [Implementation Placement](../specs/implementation/mandatory/implementation-placement.md) | Where each implementation and everything it needs reside, relative to the Spec repo. |
 | REUSE | [Rule Reuse](../specs/implementation/mandatory/rule-reuse.md) | That each Developer tool runs the code that play runs, that a rule which another rule reads runs as one implementation, and the tests that show it. |
 | TESTVAL | [Test Values](../specs/implementation/mandatory/test-values.md) | Where an automated test of an Implementation takes the values it checks against. |
-| TRACK | [Specification Tracking](../specs/implementation/mandatory/specification-tracking.md) | The Specification baseline and Specification map records that tie each Implementation to the specifications it conforms to. |
 
 ## Guidance
 
@@ -146,4 +144,3 @@ These informative views are derived from the registered Markdown specifications.
 | --- | --- | --- |
 | GHPAGES | [GitHub Pages Deployment](../specs/implementation/recipes/github-pages-deployment.md) | Guidance on publishing an Implementation to a public GitHub repository that deploys every push to GitHub Pages and checks the Implementation once a day. |
 | GLOBE | [Globe Integration](../specs/implementation/recipes/globe-integration.md) | Guidance on carrying the reference globe of the Spec repo into an Implementation and showing it in its graphical user interface. |
-| UPDATES | [Specification Updates](../specs/implementation/recipes/specification-updates.md) | Non-behavioural guidance for bringing an Implementation from its Specification baseline to a later Specification revision. |

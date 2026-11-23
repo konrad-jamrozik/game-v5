@@ -43,7 +43,7 @@ An Implementation cannot draw its globe from `lib/globe/` directly, because it m
 
 Copying the files unchanged keeps the globe's look, its controls, and its failure handling exactly those of the reference viewer, and lets a later comparison with the Spec repo show only real changes. The implementer should not copy `index.html`, `README.md`, or the script: the viewer's page is replaced by the Implementation's own user interface, and the maps are rebuilt only in the Spec repo.
 
-The copied maps and code implement Globe Integration, so they are what the [Specification map](../mandatory/specification-tracking.md#specification-map) lists under it. A later change to `lib/globe/` is outside `docs/specs` and `content`; when updating the Implementation under [Finding what changed](specification-updates.md#finding-what-changed), the implementer should add `lib/globe` to the paths of the difference and copy again each file that changed.
+A later change to `lib/globe/` reaches the Implementation through its [sync script](../mandatory/implementation-placement.md#keeping-the-copies-current), which copies again each file that changed.
 
 # Full-quality maps
 

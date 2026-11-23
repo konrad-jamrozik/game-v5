@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="560" viewBox="0 0 1000 560" role="img" aria-label="The Development loop: the Game designer changes the specifications in the durable Spec repo; the Implementer builds the Implementation with build-implementation, or updates it with update-implementation, in its disposable Implementation repo; Implementer feedback flows back into the specifications with absorb-implementation-feedback, repeating until no feedback is open; the Game designer plays and reviews the Implementation and turns Designer feedback into specification changes with apply-designer-feedback">
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="500" viewBox="0 0 1000 500" role="img" aria-label="The Development loop: the Game designer says what should change; the apply skill changes the specifications in the Spec repo when a design decision changes, and then the code and tests in the Implementation repo; the Game designer plays the Implementation, which forms the next Designer feedback">
   <!-- Hand-kept diagram for docs/specs/governance/process/development-loop.md; not generated. -->
   <style>
     :root { --bg: #ffffff; --surface: #ffffff; --block: #f1f4f7; --fg: #1b2330; --muted: #5b6676; --line: #d5dae2; --accent: #2f7f95; --accenttint: #e6f2f5; }
@@ -13,22 +13,17 @@
     .m { fill: var(--muted); font-size: 11.5px; }
     .mid { text-anchor: middle; }
     .code { font-family: "Cascadia Mono", Consolas, ui-monospace, monospace; font-size: 11.5px; fill: var(--accent); }
-    .durable { fill: var(--surface); stroke: var(--accent); stroke-width: 1.8; }
-    .disposable { fill: none; stroke: var(--muted); stroke-width: 1.5; stroke-dasharray: 6 4; }
+    .repo { fill: var(--surface); stroke: var(--accent); stroke-width: 1.8; }
     .actor { fill: var(--accenttint); stroke: var(--accent); stroke-width: 1.8; }
     .inner { fill: var(--block); stroke: var(--line); stroke-width: 1.2; }
     .arrow { stroke: var(--muted); stroke-width: 1.6; fill: none; marker-end: url(#head); }
-    .cycle { stroke: var(--accent); stroke-width: 1.4; fill: none; stroke-dasharray: 4 3; marker-end: url(#headaccent); }
   </style>
   <defs>
     <marker id="head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
       <path d="M0 0L10 5L0 10z" style="fill: var(--muted)"/>
     </marker>
-    <marker id="headaccent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M0 0L10 5L0 10z" style="fill: var(--accent)"/>
-    </marker>
   </defs>
-  <rect class="bg" x="0" y="0" width="1000" height="560"/>
+  <rect class="bg" x="0" y="0" width="1000" height="500"/>
   <text class="title" x="24" y="30">The Development loop</text>
 
   <!-- Game designer -->
@@ -36,11 +31,10 @@
   <text class="b mid" x="500" y="75">Game designer</text>
   <text class="m mid" x="500" y="93">keeps every design decision</text>
 
-  <!-- 1 / 5: Game designer to specifications -->
+  <!-- 1: Game designer says what should change -->
   <path class="arrow" d="M420 79 L215 79 L215 166"/>
-  <text class="b" x="226" y="70">① Change the specifications</text>
-  <text x="226" y="98"><tspan class="b">⑤ </tspan><tspan class="code">apply-designer-feedback</tspan></text>
-  <text class="m" x="226" y="114">checked by spec-review</text>
+  <text class="b" x="226" y="70">① Say what should change</text>
+  <text x="226" y="98"><tspan class="m">carried out by </tspan><tspan class="code">apply</tspan></text>
 
   <!-- 4: Implementation to Game designer -->
   <path class="arrow" d="M785 168 L785 79 L582 79"/>
@@ -48,64 +42,51 @@
   <text class="m" x="618" y="98">forms Designer feedback</text>
 
   <!-- Spec repo -->
-  <rect class="durable" x="30" y="170" width="370" height="295" rx="10"/>
-  <text class="lane" x="48" y="192">SPEC REPO · DURABLE</text>
+  <rect class="repo" x="30" y="170" width="370" height="255" rx="10"/>
+  <text class="lane" x="48" y="192">SPEC REPO · THE DECISIONS</text>
 
-  <rect class="inner" x="48" y="205" width="334" height="65" rx="6"/>
-  <text class="b" x="62" y="229">Governance specifications</text>
-  <text class="m" x="62" y="248">Conventions, Process</text>
-  <text class="m" x="62" y="263">how specifications are written; how the loop runs</text>
+  <rect class="inner" x="48" y="205" width="334" height="80" rx="6"/>
+  <text class="b" x="62" y="229">Design specifications</text>
+  <text class="m" x="62" y="248">Foundation, Mechanics, Content, UI, Autopilot AIs</text>
+  <text class="m" x="62" y="264">decisions, terms, concepts, and diagrams,</text>
+  <text class="m" x="62" y="279">each stated once</text>
 
-  <rect class="inner" x="48" y="285" width="334" height="65" rx="6"/>
-  <text class="b" x="62" y="309">Design specifications</text>
-  <text class="m" x="62" y="328">Foundation, Mechanics, Content, UI, Autopilot AIs</text>
-  <text class="m" x="62" y="343">the game itself</text>
+  <rect class="inner" x="48" y="298" width="334" height="50" rx="6"/>
+  <text class="b" x="62" y="320">Game data and assets</text>
+  <text class="m" x="62" y="338">content/ holds every value; assets/ the music, sounds, art</text>
 
-  <rect class="inner" x="48" y="365" width="334" height="80" rx="6"/>
-  <text class="b" x="62" y="389">Implementation specifications</text>
-  <text class="m" x="62" y="408">Mandatory: placement, feedback, tracking</text>
-  <text class="m" x="62" y="424">Guidance and Recipes: suggestions and tasks</text>
-  <text class="m" x="62" y="439">Skills sit beside them in .claude/skills/</text>
+  <rect class="inner" x="48" y="361" width="334" height="50" rx="6"/>
+  <text class="b" x="62" y="383">Governance and Implementation specifications</text>
+  <text class="m" x="62" y="401">how specifications are written; how the code is kept</text>
 
   <!-- Implementation repo -->
-  <rect class="disposable" x="600" y="170" width="370" height="295" rx="10"/>
-  <text class="lane" x="618" y="192">IMPLEMENTATION REPO · DISPOSABLE</text>
+  <rect class="repo" x="600" y="170" width="370" height="255" rx="10"/>
+  <text class="lane" x="618" y="192">IMPLEMENTATION REPO · THE GAME</text>
 
-  <rect class="inner" x="618" y="205" width="334" height="65" rx="6"/>
-  <text class="b" x="632" y="229">Implementation</text>
-  <text class="m" x="632" y="248">code and tests</text>
-  <text class="m" x="632" y="263">changed only as derived from the specifications</text>
+  <rect class="inner" x="618" y="205" width="334" height="80" rx="6"/>
+  <text class="b" x="632" y="229">Code and tests</text>
+  <text class="m" x="632" y="248">follow every decision the specifications state,</text>
+  <text class="m" x="632" y="264">and decide whatever they do not state</text>
 
-  <rect class="inner" x="618" y="285" width="334" height="65" rx="6"/>
-  <text class="b" x="632" y="309">tracking/</text>
-  <text class="m" x="632" y="328">Specification baseline: which commit it follows</text>
-  <text class="m" x="632" y="343">Specification map: which files implement which spec</text>
+  <rect class="inner" x="618" y="298" width="334" height="50" rx="6"/>
+  <text class="b" x="632" y="320">Copies of game data and assets</text>
+  <text class="m" x="632" y="338">mirrored from the Spec repo, never edited by hand</text>
 
-  <rect class="inner" x="618" y="365" width="334" height="80" rx="6"/>
-  <text class="b" x="632" y="389">feedback/ · Implementer feedback</text>
-  <text class="m" x="632" y="408">Specification problems it met</text>
-  <text class="m" x="632" y="424">Implementation decisions it made</text>
-  <text class="m" x="632" y="439">each problem Open, Resolved, or Declined</text>
+  <rect class="inner" x="618" y="361" width="334" height="50" rx="6"/>
+  <text class="b" x="632" y="383">Commits</text>
+  <text class="m" x="632" y="401">each names the Spec repo commit it follows</text>
 
-  <!-- 2: build or update -->
-  <path class="arrow" d="M402 237 L598 237"/>
-  <text class="b mid" x="500" y="211">② Build or update</text>
-  <text class="code mid" x="500" y="227">build-implementation</text>
-  <text class="code mid" x="500" y="256">update-implementation</text>
+  <!-- 2: change the specifications -->
+  <text class="b mid" x="500" y="222">② Change the specifications</text>
+  <text class="m mid" x="500" y="239">only when a decision changes;</text>
+  <text class="m mid" x="500" y="254">checked by spec-review</text>
 
-  <!-- 3: absorb feedback -->
-  <path class="arrow" d="M616 405 L402 405"/>
-  <text class="b mid" x="500" y="395">③ Absorb feedback</text>
-  <text class="code mid" x="500" y="424" style="font-size: 10.5px">absorb-implementation-feedback</text>
-
-  <!-- fixed-point cycle -->
-  <path class="cycle" d="M540 380 C 572 350, 572 300, 540 272"/>
-  <text class="m mid" x="480" y="314">repeat ②–③ until</text>
-  <text class="m mid" x="480" y="330">no feedback is open</text>
-  <text class="m mid" x="480" y="346">(fixed point)</text>
+  <!-- 3: change the Implementation -->
+  <path class="arrow" d="M402 322 L598 322"/>
+  <text class="b mid" x="500" y="308">③ Change the Implementation</text>
+  <text class="m mid" x="500" y="342">always</text>
 
   <!-- footer -->
-  <text class="m" x="30" y="500">Every change enters at the specifications. The Implementation changes only through ② or a conformance fix from ⑤,</text>
-  <text class="m" x="30" y="518">so it can be thrown away and rebuilt from the specifications at any time.</text>
-  <text class="m" x="30" y="544">First build: ① → ②.   Specification change: ① → ②.   Implementer feedback: ③ → ② until fixed point.   Designer feedback: ④ → ⑤ → ②.</text>
+  <text class="m" x="30" y="456">A decision is stated in the specifications first and the code follows it. What no specification states is decided by the code</text>
+  <text class="m" x="30" y="474">and changed there alone, so the specifications grow by decisions and never by gaps.</text>
 </svg>

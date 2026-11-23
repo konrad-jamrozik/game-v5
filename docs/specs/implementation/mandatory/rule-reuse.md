@@ -21,7 +21,6 @@ For every [Developer tool](../../design/foundation/engine-contract.md#api-surfac
 - **One implementation:** The [Implementation repo](implementation-placement.md#glossary) must hold exactly one implementation of the part of the [Game rules](../../design/foundation/core-concepts.md#game-build-and-content) the Developer tool runs, e.g. one function that fights a Combat under [Fighting a Combat](../../design/mechanics/combat.md#fighting-a-combat) in Combat. The Developer tool and the step of play that runs that part, e.g. the Mission resolution step, must both call it.
 - **No second copy:** The Developer tool must not run a copy, a re-implementation, or a simplified version of that part, and must not bypass any branch of it, e.g. by skipping its random outcomes. Recording less of the outputs is not bypassing, when the owning specification allows it, e.g. a Combat that records only its Combat summary under [Fighting a Combat](../../design/mechanics/combat.md#fighting-a-combat) in Combat: the one implementation then still runs every step and only leaves out building what is not returned, and the step of play calls the same implementation with the full outputs recorded.
 - **Only inputs and outputs differ:** What the Developer tool adds around the shared implementation is limited to building its inputs from what the caller supplies, deriving its random outcomes from the caller's seed, returning its outputs instead of applying them to a [World state](../../design/foundation/engine-contract.md#player-actions-and-turns), choosing which of its outputs are recorded as the owning specification allows, and running it several times on one input, as a batch does.
-- **Mapped:** The [Specification map](specification-tracking.md#glossary) entry of the Developer tool's owning specification must name the shared implementation, so that a reader finds the one place that both callers use.
 
 # Agreement test
 
@@ -35,7 +34,6 @@ Some rules of the [Design specifications](../../design/about-design.md) are defi
 
 - **One implementation:** The Implementation repo must hold exactly one implementation of the rule that is read, e.g. one function that decides whether a Combatant meets the incapacitation condition, and both the rule that reads it and the rule that owns it must call it. E.g., the precondition of `deployAgents` and Combat start both call that function, with the Agent's values as a Combatant's.
 - **No second copy:** The rule that reads must not evaluate a copy, a re-implementation, or a simplified version of the rule it reads, e.g. a check of exhaustion alone that leaves out the skill clause.
-- **Mapped:** The Specification map entry of the reading rule's owning specification must name the shared implementation.
 - **Agreement test:** The Implementation repo must keep an automated test that gives both callers equal values and fails unless they decide alike. E.g., for the incapacitation condition, the test builds Agents on both sides of each clause, and checks that `deployAgents` rejects under precondition 9 exactly those that Combat start sets Incapacitated with the same values.
 
 # Edge cases and failure behavior

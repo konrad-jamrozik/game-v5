@@ -8,10 +8,6 @@ Some implementation tasks recur and are easy to get subtly wrong, e.g. publishin
 
 # Documents
 
-## Specification Updates
-
-[Specification Updates](specification-updates.md) answers _how does an implementation catch up with changed specifications?_ It steers implementers to apply only the difference since the recorded commit, reaching the affected files through the Specification map instead of rebuilding the implementation.
-
 ## GitHub Pages Deployment
 
 [GitHub Pages Deployment](github-pages-deployment.md) answers _how does an implementation get published once the Engine designer asks for it?_ It takes an implementation whose Game build a browser runs from static files to a public GitHub repository, whose CI workflows deploy every push to GitHub Pages and run every check once a day.

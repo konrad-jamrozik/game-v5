@@ -27,7 +27,7 @@ For every Campaign test, the following rules are complete:
 - **At most two Campaigns:** A Campaign test must play at most 2 Campaigns.
 - **At most 200 Turns:** A Campaign test must play each Campaign for at most 200 Turns.
 - **Only that play runs:** A Campaign test must check only that play does not fail, e.g. that no error is raised, that the Autopilot AI does not fail, and that every invariant of the World state holds. It must not check whether a Campaign is won or lost, its [Campaign ending](../../design/mechanics/domain-model.md#campaign-standing), the Turn it ends in, or any other measure of balance, e.g. a win rate, a final roster size, or the money left.
-- **No balancing runs:** The implementer must not play Campaigns to tune or judge balance, e.g. to compare the win rates of two sets of Tuning parameters, and must not record such results in the [Implementation Feedback](implementation-feedback.md). Balance is the Game designer's to judge, with tools of their own.
+- **No balancing runs:** The implementer must not play Campaigns to tune or judge balance, e.g. to compare the win rates of two sets of Tuning parameters, and must not record such results anywhere, e.g. in a commit message, a code comment, or a report. Balance is the Game designer's to judge, with tools of their own.
 
 # Edge cases and failure behavior
 

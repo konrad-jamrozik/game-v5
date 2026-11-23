@@ -4,7 +4,7 @@
 
 # What Design specifications are for
 
-Design specifications describe the game itself, and they are the only durable record of its design: every Implementation is derived from them and can be rebuilt from them. They state what a black-box test, a save, or a replay could observe, the GDRs the Game designer authors, and the vocabulary both need; everything else is left to the Implementer.
+Design specifications describe the game itself: they hold every design decision, each stated once, and the Implementation follows them. They state the decisions the Game designer made, the invariants that must hold, and the vocabulary and explanations both need; whatever they do not state is decided by the code.
 
 # Families
 

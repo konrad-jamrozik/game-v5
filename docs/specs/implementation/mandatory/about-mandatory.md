@@ -4,21 +4,13 @@
 
 # What this family is for
 
-The Development loop needs a few things from every Implementation, whatever its platform: that it lives where it can be found and rebuilt, that it writes down what it learned about the specifications, that it records which specifications it follows, that its developer tools run the same code as play, that its tests of whole Campaigns stay short and check only that play runs, that its tests take retunable values from the Game build instead of copying them, and that it is published on the same terms as the specifications. Mandatory specifications state those repository constraints. They are checked against the files of an Implementation rather than through the engine API.
+The Development loop needs a few things from the Implementation: that it lives where it can be found, that its copies of game data and assets match their originals, that its developer tools run the same code as play, that its tests of whole Campaigns stay short and check only that play runs, that its tests take retunable values from the Game build instead of copying them, and that it is published on the same terms as the specifications. Mandatory specifications state those repository constraints. They are checked against the files of an Implementation rather than through the engine API.
 
 # Documents
 
 ## Implementation Placement
 
 [Implementation Placement](implementation-placement.md) answers _where does an implementation live?_ It confines each implementation to its own Implementation repo beside the Spec repo, e.g. `game-v5-impl-a/`, which the implementation treats as its repository root.
-
-## Implementation Feedback
-
-[Implementation Feedback](implementation-feedback.md) answers _what must an implementer write down?_ It requires each implementation to keep feedback on the specifications: the problems it met in them and the decisions it made.
-
-## Specification Tracking
-
-[Specification Tracking](specification-tracking.md) answers _which specifications does an implementation follow, and where?_ It requires each implementation to name the commit of the specifications it conforms to and to map every specification to the files that implement it.
 
 ## Implementation License
 
@@ -38,7 +30,7 @@ The Development loop needs a few things from every Implementation, whatever its 
 
 # How they relate
 
-Implementation Feedback and Specification Tracking use Implementation Placement: their files are kept in its Implementation repo. Specification Tracking also uses Implementation Feedback, whose Specification problems are the only exceptions to conformance it allows. Implementation Placement uses GDRs from the Content family and Music and Visual Design from the UI family, whose files each implementation copies. Implementation License uses Implementation Placement for the Implementation repo whose files state the license. Rule Reuse uses Specification Tracking, whose Specification map names the shared code, and Developer Access and Combat from the Design families, which define the Developer tools it constrains. Campaign Tests uses Implementation Placement for the Implementation repo whose tests it limits, Implementation Feedback, where it forbids recording balance results, and Autopilot and the Basic Autopilot AI from the Design families, whose play its tests run. Test Values uses Implementation Placement for the Implementation repo whose tests it constrains, and GDRs from the Foundation family and the Tuning parameters of the Basic Autopilot AI, whose values its tests take from the Game build.
+Implementation Placement uses GDRs from the Content family and Music and Visual Design from the UI family, whose files the Implementation copies. Implementation License uses Implementation Placement for the Implementation repo whose files state the license. Rule Reuse uses Developer Access and Combat from the Design families, which define the Developer tools it constrains. Campaign Tests uses Implementation Placement for the Implementation repo whose tests it limits, and Autopilot and the Basic Autopilot AI from the Design families, whose play its tests run. Test Values uses Implementation Placement for the Implementation repo whose tests it constrains, and GDRs from the Foundation family and the Tuning parameters of the Basic Autopilot AI, whose values its tests take from the Game build.
 
 <!-- generated:family-diagram:start -->
 

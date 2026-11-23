@@ -63,16 +63,13 @@
     "docs/specs/implementation/guidance/test-focus.md",
     "docs/specs/implementation/mandatory/about-mandatory.md",
     "docs/specs/implementation/mandatory/campaign-tests.md",
-    "docs/specs/implementation/mandatory/implementation-feedback.md",
     "docs/specs/implementation/mandatory/implementation-license.md",
     "docs/specs/implementation/mandatory/implementation-placement.md",
     "docs/specs/implementation/mandatory/rule-reuse.md",
-    "docs/specs/implementation/mandatory/specification-tracking.md",
     "docs/specs/implementation/mandatory/test-values.md",
     "docs/specs/implementation/recipes/about-recipes.md",
     "docs/specs/implementation/recipes/github-pages-deployment.md",
-    "docs/specs/implementation/recipes/globe-integration.md",
-    "docs/specs/implementation/recipes/specification-updates.md"
+    "docs/specs/implementation/recipes/globe-integration.md"
   ],
   "budgets": {
     "docs/specs/README.md": 660,
@@ -153,15 +150,12 @@
     "docs/specs/implementation/guidance/test-focus.md": 560,
     "docs/specs/implementation/mandatory/about-mandatory.md": 790,
     "docs/specs/implementation/mandatory/campaign-tests.md": 470,
-    "docs/specs/implementation/mandatory/implementation-feedback.md": 1300,
     "docs/specs/implementation/mandatory/implementation-license.md": 440,
-    "docs/specs/implementation/mandatory/implementation-placement.md": 1150,
+    "docs/specs/implementation/mandatory/implementation-placement.md": 1250,
     "docs/specs/implementation/mandatory/rule-reuse.md": 1000,
-    "docs/specs/implementation/mandatory/specification-tracking.md": 910,
     "docs/specs/implementation/mandatory/test-values.md": 580,
     "docs/specs/implementation/recipes/about-recipes.md": 480,
     "docs/specs/implementation/recipes/github-pages-deployment.md": 2240,
-    "docs/specs/implementation/recipes/globe-integration.md": 2030,
-    "docs/specs/implementation/recipes/specification-updates.md": 1220
+    "docs/specs/implementation/recipes/globe-integration.md": 2030
   }
 }

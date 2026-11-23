@@ -10,7 +10,7 @@ The game is developed in rounds: the specifications change, an Implementation fo
 
 ## Development Loop
 
-[Development Loop](development-loop.md) answers _how is the game developed?_ It explains how the Game designer keeps design control while LLMs write the specifications and Implementations, and how feedback from each Implementation flows back into the specifications.
+[Development Loop](development-loop.md) answers _how is the game developed?_ It explains how the Game designer keeps design control while LLMs write the specifications and Implementations, and which artifact is the truth for which question.
 
 ## Specification Work Plan and Backlog
 

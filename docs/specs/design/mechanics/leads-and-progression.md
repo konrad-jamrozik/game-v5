@@ -178,6 +178,7 @@ The player never sees the `discovered_when` of a Lead or whether it or any part 
 
 # TODOs
 
+- TODO: Decide whether the Turn report holds the Faction that a Lead's completion made Eliminated, and the Campaign that a Lead's completion won, as it holds both for a Won Mission; today the player learns of them only from the Faction and from the [Campaign ending](domain-model.md#campaign-standing).
 - TODO (later): In [Lead availability](#lead-availability), Leads that expire and appear again while they are not investigated. The Game designer's notes are in [Lead repeatability](../../../design-notes/lead-repeatability.md).
 - TODO (later): Further Condition kinds that the `discovered_when` of a [Lead](#lead) may use, e.g. that the Agency holds an item.
 - TODO (later): Further [Effect kinds](../foundation/effect-lists.md#glossary) for the [Completion effect](#completion-effect), e.g. a Lead completion that gives information, money, funding, Agent improvement, or a Campaign objective directly.

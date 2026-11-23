@@ -30,9 +30,9 @@ These rules apply in this repository and in every Implementation repo:
 
 ## Implementing the game
 
-When implementing the game, follow every specification in `docs/specs/implementation/mandatory/`, e.g. [Implementation Placement](docs/specs/implementation/mandatory/implementation-placement.md) and [Implementation Feedback](docs/specs/implementation/mandatory/implementation-feedback.md). They apply whatever the task says about platform, language, or engine, e.g. equally to a browser implementation and to a dedicated game-engine implementation, and no other instruction waives them.
+When changing the Implementation, follow every specification in `docs/specs/implementation/mandatory/`, e.g. [Implementation Placement](docs/specs/implementation/mandatory/implementation-placement.md) and [Campaign Tests](docs/specs/implementation/mandatory/campaign-tests.md). No other instruction waives them.
 
-To build a new Implementation, use the `build-implementation` skill; to bring an existing one up to date with the specifications, use the `update-implementation` skill.
+To change the game, use the `apply` skill: it settles the change in the specifications when it is a design decision, changes the Implementation, and publishes both. Which artifact is the truth for which question is stated under [Sources of truth](docs/specs/governance/process/development-loop.md#sources-of-truth).
 
 ## Marking examples
 
@@ -47,8 +47,8 @@ In chat replies, mark these lines with an emoji at the start of the line or bull
 - ✅ A confirmation that a piece of work is complete, e.g. "✅ `npm run check` passes".
 - 🚀 A push to the Spec repo or an Implementation repo, on the line that gives the commit link.
 - 🔧 A fix that was not part of the plan, e.g. a resolved rebase conflict, a repaired failing check, or a reverted edit.
-- 🚧 Work left for later, e.g. Open Specification problems or a deferred feature.
-- 👟 The next step, every time it is mentioned, e.g. "👟 Next, run the `update-implementation` skill".
+- 🚧 Work left for later, e.g. a deferred feature or a TODO added to a specification.
+- 👟 The next step, every time it is mentioned, e.g. "👟 Next, run the `apply` skill".
 - 🔍 The heading of the decisions for the user to review, once for the whole section rather than on each decision, e.g. "🔍 Decisions to review".
 
 ## Linking to documents in chat
@@ -66,4 +66,4 @@ Exceptions: do not commit or push, and leave the whole change set uncommitted in
 
 In either case, tell the user the change set is uncommitted and why.
 
-The `absorb-implementation-feedback` and `apply-designer-feedback` skills never use this standing authorization. They change the Spec repo only as [Spec repo changes in a worktree](.claude/skills/spec-repo-worktree.md) directs: once the design is settled, they push to `main` from a worktree, resolve natural conflicts, report the decisions for the user to review, and escalate only a far-reaching change. `absorb-implementation-feedback` always has the user review the design first; `apply-designer-feedback` does so only when the user's feedback shows any uncertainty. Never run the `update-implementation` skill unless the user explicitly asks for it; invoking the `apply` skill, which runs `apply-designer-feedback` and then `update-implementation`, is such a request. The one exception is the `add-music` skill, which, after pushing new tracks, refreshes the Implementation's content by that skill's Content-only update only.
+The `apply` skill never uses this standing authorization for the Spec repo. It changes the Spec repo only as [Spec repo changes in a worktree](.claude/skills/spec-repo-worktree.md) directs: once the design is settled, it pushes to `main` from a worktree, resolves natural conflicts, reports the decisions for the user to review, and escalates only a far-reaching change. It has the user review the design first only when the user's request shows any uncertainty. Change the Implementation only when the user asks for a change to the game, e.g. by invoking the `apply` skill; a request to change or review specifications alone does not include it. The one exception is the `add-music` skill, which, after pushing new tracks, refreshes the Implementation's copies as its Phase 3 directs.

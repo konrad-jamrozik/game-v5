@@ -11,7 +11,7 @@ The Soundtrack is owned by the [Music](../../../docs/specs/design/ui/music.md#so
 
 The skill runs in three phases: [Draft](#phase-1-draft) the tracks and tell the designer how to generate them, wait while the designer generates and downloads them, then [Deploy](#phase-2-deploy) the files to the Spec repo and [Refresh the Implementation](#phase-3-refresh-the-implementation). When the skill starts, it finds where it stands from the working tree: draft records in `assets/music/yaml/` whose files are now in `assets/music/tracks/` resume at Phase 2; otherwise it starts at Phase 1.
 
-This skill adds Tracks only. It never changes a specification: whenever adding the tracks would need any change beyond new Track files, their track records, new README entries and naming codes, and the take letter an existing track gains under [Name the tracks](#phase-1-draft), it blocks and tells the designer, so that the change goes through the `apply-designer-feedback` skill instead.
+This skill adds Tracks only. It never changes a specification: whenever adding the tracks would need any change beyond new Track files, their track records, new README entries and naming codes, and the take letter an existing track gains under [Name the tracks](#phase-1-draft), it blocks and tells the designer, so that the change goes through the `apply` skill instead.
 
 ## Where it works
 
@@ -96,9 +96,9 @@ After a push, confirm with `git fetch origin` and `git merge-base --is-ancestor 
 
 The designer's request to add music is the explicit request to update the Implementation's content that this phase needs; it never makes any other change to the Implementation.
 
-1. Identify the Implementation repo, check that no other session is changing it, and fetch it, as steps 2 and 4 of the `update-implementation` skill direct. The target Specification revision is the commit pushed in Phase 2. Unlike that skill, uncommitted work of other sessions in the Spec repo does not stop this phase, since it reads only committed revisions.
-2. List the difference from the Specification baseline to the target, as step 5 of `update-implementation` directs. When it is not content-only, e.g. another session pushed a specification change the Implementation has not taken yet, change nothing in the Implementation: report that the new tracks are pushed but not yet in the Implementation, and that the `update-implementation` skill brings them in together with that change.
-3. Otherwise follow the Content-only update of `update-implementation`, then its step 8, which commits and pushes; the push redeploys the Implementation when its publishing setup deploys on push. When the Content-only update finds that the change is not content-only in effect, stop as in step 2 instead of continuing with its Workflow.
+1. The Implementation repo is `game-v5-impl-web`, the sibling of the Spec repo's main local clone. Run `git fetch` there. It must be on `main` with no uncommitted or untracked files; otherwise another session is working in it, so report that the new tracks are pushed but not yet in the Implementation, and stop. Then fast-forward its `main` to `origin/main`. Uncommitted work of other sessions in the Spec repo does not stop this phase, since it reads only committed files.
+2. Read the Spec repo commit the Implementation follows, from the `Spec:` trailer of its newest commit that has one. When `git diff --name-only <that commit>..<the commit pushed in Phase 2> -- docs/specs` in the Spec repo lists any file, another specification change is waiting for the Implementation: change nothing there, and report that the new tracks are pushed but not yet in the Implementation, and that the `apply` skill brings them in together with that change.
+3. Otherwise run `npm run sync:spec` in the Implementation repo, then `npm run fix` and `npm run check`. Update a test that pins the Track list to the new list. When any other check fails, undo the sync with `git checkout -- . && git clean -fd` there and stop as in step 2. Then commit with the trailer `Spec: <full hash of the commit pushed in Phase 2>`, run `git fetch`, rebase onto `origin/main`, and push; the push deploys the game. Never force-push.
 
 ## Report
 
@@ -113,6 +113,6 @@ After Phases 2 and 3, tell the designer:
 - each existing track that gained a take letter, with its old and new name, and each new naming code;
 - each file copied into the music backup, with its folder there;
 - the Spec repo commit link, in the form `https://github.com/konrad-jamrozik/game-v5/commit/<full-sha>`, or why the work was not committed or pushed;
-- the Implementation commit link and its old and new Specification baseline, or why the Implementation was not refreshed and the next step for it;
+- the Implementation commit link and the Spec repo commit it now follows, or why the Implementation was not refreshed and the next step for it;
 - every uncommitted or untracked path outside the skill's work that was observed and left untouched, grouped by directory, or that there was none;
 - on a block, every reason, each with what the designer should do, e.g. export the track as MP3 and drop it in again.

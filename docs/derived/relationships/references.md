@@ -69,17 +69,14 @@ A → B means A is referenced by B: the text of B links to A. Layer 1 is drawn a
 | 17 | TRVIEW Turn Report View | AGENT, CINST, COMBAT, CSTATE, DOM, ENG, GUI, TSUM |
 | 18 | CSCR Campaign Screen | AGENT, AUTO, CORE, CSTATE, DOM, ENDING, ENG, GUI, LIFE, MUSIC, SAVES, SITP, SOUNDS, TSUM, VIS |
 | 18 | PLACE Implementation Placement | CORE, MUSIC, SOUNDS, VIS |
+| 19 | APPERF Autopilot Performance | AGENT, BASICAI, COMBAT, COND, CORE, CSTATE, DOM, ECON, ENG, PLACE, SAVES |
 | 19 | CTEST Campaign Tests | CORE, DOM, ENG, PLACE |
-| 19 | FEEDBACK Implementation Feedback | PLACE |
 | 19 | GHPAGES GitHub Pages Deployment | CORE, ENG, PLACE |
 | 19 | GLOBE Globe Integration | CORE, ENG, GUI, PLACE, VIS |
 | 19 | LICENSE Implementation License | PLACE |
 | 19 | LOOP Development Loop | CORE, ENG, PLACE, VIS |
+| 19 | REUSE Rule Reuse | COMBAT, CORE, DOM, ENG, PLACE |
 | 19 | TESTVAL Test Values | CORE, PLACE |
-| 19 | TRACK Specification Tracking | PLACE |
-| 20 | APPERF Autopilot Performance | AGENT, BASICAI, COMBAT, COND, CORE, CSTATE, DOM, ECON, ENG, FEEDBACK, PLACE, SAVES |
-| 20 | REUSE Rule Reuse | COMBAT, CORE, DOM, ENG, PLACE, TRACK |
-| 20 | UPDATES Specification Updates | CORE, FEEDBACK, MUSIC, PLACE, SOUNDS, TESTVAL, TRACK, VIS |
 
 ## Governance specifications
 

@@ -12,14 +12,13 @@
 
 The [Game designer](../conventions/spec-conventions.md#participants) delegates as much of the game's development to LLMs as possible, but no more: LLMs write the specifications and the code, while the Game designer keeps every creative and design decision. That is how the game can be developed fast and still be tightly designed and fun to play, rather than generic.
 
-The split rests on one rule: every design decision lives in the specifications, and the [Implementation](../conventions/spec-conventions.md#artifacts) follows them. A change to a decision therefore enters as a change to the specifications and reaches the code through an Implementation update, while what the specifications do not state is decided by the code. Building and updating an Implementation teaches the [Implementer](../conventions/spec-conventions.md#participants) where the specifications fall short, which becomes Implementer feedback; playing it shows the Game designer what to change, which becomes Designer feedback. Both flow back into the specifications, and the loop repeats.
+The split rests on one rule: every design decision lives in the specifications, and the [Implementation](../conventions/spec-conventions.md#artifacts) follows them. A change to a decision therefore enters as a change to the specifications and reaches the code through an Implementation update, while what the specifications do not state is decided by the code. Playing the Implementation shows the Game designer what to change next, which becomes Designer feedback, and the loop repeats.
 
 # Glossary
 
 | Term | Definition |
 | --- | --- |
-| Development loop | The repeating cycle in which [specifications](../conventions/spec-conventions.md#specifications) are changed, an [Implementation](../conventions/spec-conventions.md#artifacts) is built or updated from them, and what that shows is fed back into them. |
-| Implementer feedback | What an [Implementer](../conventions/spec-conventions.md#participants) learns about the specifications while building or updating an Implementation: the defects it met and the choices it made in their gaps. |
+| Development loop | The repeating cycle in which the [Game designer](../conventions/spec-conventions.md#participants) says what should change, the [specifications](../conventions/spec-conventions.md#specifications) and the [Implementation](../conventions/spec-conventions.md#artifacts) are changed to match, and playing the result shows what to change next. |
 | Designer feedback | What the [Game designer](../conventions/spec-conventions.md#participants) finds wrong, or wants changed, after playing or reviewing an Implementation. |
 | LLM skill | A packaged set of instructions that an LLM agent loads to carry out one recurring task of the Development loop. |
 
@@ -53,25 +52,25 @@ These artifacts take part in the Development loop:
 | --- | --- | --- |
 | Governance specifications | How every specification is written, under [Specification Conventions](../conventions/spec-conventions.md), and how the Development loop runs | An LLM at the Game designer's request, or the Game designer |
 | [Design specifications](../conventions/spec-conventions.md#specifications) | The game: its concepts, rules, content, user interfaces, and [Autopilot AIs](../../design/foundation/engine-contract.md#principals-and-access) | An LLM at the Game designer's request, or the Game designer |
-| Implementation specifications | How an Implementer turns the specifications into an Implementation in the Game designer's environment | An LLM at the Game designer's request, or the Game designer |
-| Implementation | Code and tests that follow the specifications and decide what they do not state, together with its Implementer feedback and tracking files | The Implementer |
+| Implementation specifications | How the one Implementation is placed, tested, licensed, and published | An LLM at the Game designer's request, or the Game designer |
+| Implementation | Code and tests that follow the specifications and decide what they do not state, together with its copies of the game data and assets | An LLM at the Game designer's request |
 
-The Implementation specifications divide into Families by how binding they are, as described in [About Implementation specifications](../../implementation/about-implementation.md#families). Only the Mandatory [Family](../conventions/spec-conventions.md#specifications) binds every Implementation, and it requires exactly what the Development loop needs from one: where it lives, its Implementer feedback, and a record of which specifications it follows.
+The Implementation specifications divide into Families by how binding they are, as described in [About Implementation specifications](../../implementation/about-implementation.md#families).
 
 The specifications live in one repository and the Implementation in its own directory outside it. A change to a decision is made to the specifications first, and the Implementation follows. A change to what the specifications do not state is made in the code alone.
 
 # Rounds of the Development loop
 
-Development proceeds in rounds, each starting from the specifications and ending with feedback on them. Each round takes these steps, in this order:
+Development proceeds in rounds, each starting from something the Game designer wants and ending with the game changed. A round takes these steps, in this order:
 
-1. **Change the specifications:** the initial set, or an increment, e.g. a new feature, a fixed inconsistency, or the outcome of earlier feedback.
-2. **Build or update the Implementation:** the first round builds it from the specifications; every later round applies only the difference between the specifications it last followed and the current ones.
-3. **Gather feedback:** the Implementer records Implementer feedback while building or updating, and the Game designer forms Designer feedback by playing or reviewing the result.
-4. **Turn feedback into specification changes**, and start the next round at step 2.
+1. **Say what should change:** the Game designer names a new feature, a design change, or Designer feedback on the game as played.
+2. **Change the specifications**, when a decision changes or a new one is made; a change that touches no decision skips this step.
+3. **Change the Implementation:** its code and tests follow the changed decisions, and its commit names the commit of the [Spec repo](../../implementation/mandatory/implementation-placement.md#glossary) that it now follows.
+4. **Play and review:** the Game designer plays the Implementation, which forms the next Designer feedback.
 
-![The Development loop: the Game designer changes the specifications; the Implementer builds or updates the Implementation from them; Implementer feedback flows back into the specifications until none is open; the Game designer plays the Implementation and Turns Designer feedback into specification changes](../../../images/diagrams/development-loop.svg)
+![The Development loop: the Game designer says what should change; the apply skill changes the specifications when a design decision changes, and then the code and tests of the Implementation; the Game designer plays the Implementation, which forms the next Designer feedback](../../../images/diagrams/development-loop.svg)
 
-The loop reaches a fixed point when an update produces no new Implementer feedback and every earlier item of it is settled, either by a specification change or by the Game designer declining it. Designer feedback can restart the loop at any time.
+A gap that an [Implementer](../conventions/spec-conventions.md#participants) meets in the specifications while changing the code is closed in the code. It becomes a specification change only when the Game designer names it a decision, so the specifications grow by decisions and never by gaps.
 
 ## Designer feedback
 
@@ -81,7 +80,7 @@ Designer feedback is the Game designer's judgement of the game as played, and it
 - **The specifications say what the Implementation does:** the Implementation is right and the design is not what the Game designer wants. The Game designer changes the specifications, and an update follows.
 - **The specifications are silent,** so the code decided: the Game designer either makes it a decision, which is written into the specifications and an update follows, or has the code changed and leaves the specifications silent.
 
-One observation usually involves several Families of the Design specifications at once, e.g. a missing [Mission site](../../design/mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) involves the rule that creates it, the [GDR](../../design/foundation/core-concepts.md#game-build-and-content) that supplies it, and the screen that shows it. The case is therefore decided for each Family involved, and a specification change goes to the Family that falls short, not to the first one found. The Implementation is a conformance defect only when every Family involved already specifies what the Game designer expects, e.g. the rule and its GDR are both present and the Implementation still leaves the feature out. Otherwise this table decides what changes:
+One observation usually involves several Families of the Design specifications at once, e.g. a missing [Mission site](../../design/mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) involves the rule that creates it, the [GDR](../../design/foundation/core-concepts.md#game-build-and-content) that supplies it, and the screen that shows it. The case is therefore decided for each [Family](../conventions/spec-conventions.md#specifications) involved, and a specification change goes to the Family that falls short, not to the first one found. The Implementation is a conformance defect only when every Family involved already specifies what the Game designer expects, e.g. the rule and its GDR are both present and the Implementation still leaves the feature out. Otherwise this table decides what changes:
 
 | Where the specifications fall short | What changes |
 | --- | --- |
@@ -90,30 +89,19 @@ One observation usually involves several Families of the Design specifications a
 | What a user interface shows, how it arranges it, or how it looks, while the engine API already allows it | UI, including its visual design |
 | How an [Autopilot AI](../../design/foundation/engine-contract.md#principals-and-access) chooses its [Player actions](../../design/foundation/engine-contract.md#player-actions-and-turns) | Autopilot AIs |
 
-Whether a value is [Player](../conventions/spec-conventions.md#participants)-visible at all is a rule of Foundation or Mechanics, not of UI: a user interface presents the [Player-visible information](../../design/foundation/engine-contract.md#api-surfaces) and cannot reveal what the rules hide, though it can choose how prominently to show it. Implementer feedback is placed by the same table.
+Whether a value is [Player](../conventions/spec-conventions.md#participants)-visible at all is a rule of Foundation or Mechanics, not of UI: a user interface presents the [Player-visible information](../../design/foundation/engine-contract.md#api-surfaces) and cannot reveal what the rules hide, though it can choose how prominently to show it.
 
 # LLM skills and workflows
 
-Several tasks of the Development loop recur, and each needs the same few specifications and the same order of steps. An LLM skill captures one such task, so that an LLM agent does not have to rediscover what matters for it each time. LLM skills are kept in `.claude/skills/` of the [Spec repo](../../implementation/mandatory/implementation-placement.md#glossary), beside the specifications they serve. An LLM skill states no rule of its own: it points to the specifications that own the rules, and the specifications win when the two disagree.
-
-The following table of LLM skills is exhaustive.
+Several tasks of the Development loop recur, and each needs the same few specifications and the same order of steps. An LLM skill captures one such task, so that an LLM agent does not have to rediscover what matters for it each time. LLM skills are kept in `.claude/skills/` of the Spec repo, beside the specifications they serve. An LLM skill states no rule of its own: it points to the specifications that own the rules, and the specifications win when the two disagree.
 
 | LLM skill | Task |
 | --- | --- |
+| `apply` | Carries one change through a round: sorts it under [Designer feedback](#designer-feedback), changes the specifications when a decision changes, changes the Implementation, and publishes both. |
 | `spec-review` | Checks specifications against Specification Conventions and against each other. |
-| `build-implementation` | Builds a first Implementation from the specifications, keeping its tracking and feedback files from the start. |
-| `update-implementation` | Applies to an Implementation only the specification changes made since it last followed them. |
-| `absorb-implementation-feedback` | Turns open Implementer feedback into specification changes, with the Game designer deciding each one. |
-| `apply-designer-feedback` | Turns Designer feedback into specification changes or conformance fixes, under [Designer feedback](#designer-feedback). |
-| `apply` | Runs `apply-designer-feedback` and then `update-implementation`, completing the Designer feedback workflow in one request. |
-| `add-music` | Adds new music tracks from the Game designer's description and refreshes the Implementation's content with them. |
+| `add-music` | Adds new music tracks from the Game designer's description and refreshes the Implementation's copies with them. |
 
-LLM skills chain into workflows that cover whole rounds. The following workflows are complete:
-
-- **First build:** change the specifications, check them with `spec-review`, then run `build-implementation`.
-- **Specification change:** change the specifications, check them with `spec-review`, then run `update-implementation`.
-- **Implementer feedback to a fixed point:** run `absorb-implementation-feedback`, then `update-implementation`, and repeat while the update records new Implementer feedback.
-- **Designer feedback:** run `apply-designer-feedback`, then `update-implementation`, or run `apply`, which does both.
+A change to the game is one run of `apply`. A change to the specifications alone, e.g. a rewording that changes no decision, is checked with `spec-review` and needs no change to the Implementation; the next run of `apply` reads the commits the Implementation has not followed yet and carries over whatever they decided.
 
 # Appendix: Rationale
 
@@ -133,6 +121,6 @@ The answer lies between: delegate as much as possible, but keep the key creative
 
 **Why are there Specification Conventions?** Because the Game designer delegates writing the specifications too, and an LLM must be taught to write them well. The same conventions serve the readers: a predictable layout, one term for each concept, and explicit marks for what is left open make the specifications unambiguous to the LLMs that implement them, and let a command check part of them mechanically.
 
-**Why are there Implementation specifications?** Because the Design specifications are abstract on purpose and describe only the game, while an Implementation is built in a concrete environment, e.g. a directory on the Game designer's machine with a particular toolchain. These specifications bridge the two, and their Mandatory part makes every Implementation keep what the Development loop needs from it, i.e. its Implementer feedback and a record of which specifications it follows.
+**Why are there Implementation specifications?** Because the Design specifications are abstract on purpose and describe only the game, while an Implementation is built in a concrete environment, e.g. a directory on the Game designer's machine with a particular toolchain. These specifications bridge the two, and their Mandatory part states what the Implementation must always keep, e.g. where it lives and what its tests may do.
 
 **Why are there LLM skills?** Because the specifications are many and layered, while the recurring tasks are few and each needs only a known part of them. An LLM skill saves each run from rediscovering which part that is, which keeps the runs consistent and spends fewer tokens.
