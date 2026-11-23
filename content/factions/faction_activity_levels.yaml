@@ -1,7 +1,7 @@
 id: dormant
 type: FactionActivityLevel
 name: Dormant
-lasts_turns: [10, 20]
+lasts_turns: per_faction # each FactionArchetype starting here sets initial_lasts_turns
 operation_every_turns: null # no operations
 operation_level_weights: {}
 next: faint

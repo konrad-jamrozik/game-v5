@@ -766,6 +766,7 @@ A ruthless cult that trades in fear and silence. Follow its members up the chain
 | ------------------------ | ---------------- |
 | `name`                   | `Black Lotus`    |
 | `initial_activity_level` | `dormant`        |
+| `initial_lasts_turns`    | `[10,20]`        |
 
 ### Exalt
 
@@ -777,6 +778,7 @@ A secretive cult that hides behind charity and patronage while it buys influence
 | ------------------------ | ---------------- |
 | `name`                   | `Exalt`          |
 | `initial_activity_level` | `dormant`        |
+| `initial_lasts_turns`    | `[10,20]`        |
 
 ### Red Dawn
 
@@ -788,6 +790,7 @@ A violent cult that recruits in the shadows and grows bolder the longer it is le
 | ------------------------ | ---------------- |
 | `name`                   | `Red Dawn`       |
 | `initial_activity_level` | `faint`          |
+| `initial_lasts_turns`    | `null`           |
 
 ## Subject articles: Lead
 

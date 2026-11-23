@@ -37,6 +37,7 @@ A FactionArchetype is the [Archetype](../foundation/core-concepts.md#campaign-in
 | --- | --- | --- |
 | `name` | The Faction's display name. | [Player-visible information](#player-visible-information) |
 | `initial_activity_level` | A reference to the FactionActivityLevel a new Faction starts at. | [Initial Factions](#initial-factions) |
+| `initial_lasts_turns` | Either a pair `[lo, hi]` of whole numbers of Advance turns, the inclusive range of how long the new Faction stays at its initial level, or `null` when that level's own `lasts_turns` sets it. It is a pair exactly when the initial level's `lasts_turns` is `per_faction`, e.g. so that each Faction stays at `dormant` for a range of its own. | [Level duration](#level-duration) |
 
 ## FactionActivityLevel
 
@@ -45,7 +46,7 @@ A FactionActivityLevel describes one Faction activity level. It is shared by eve
 | Property | Meaning | Read by |
 | --- | --- | --- |
 | `name` | The level's display name. | [Player-visible information](#player-visible-information) |
-| `lasts_turns` | Either a pair `[lo, hi]` of whole numbers of Advance turns, the inclusive range of how long a Faction stays at this level, or `null` for a final level, at which a Faction stays for the rest of the [Campaign](../foundation/core-concepts.md#campaign-and-session). | [Level duration](#level-duration) |
+| `lasts_turns` | One of: a pair `[lo, hi]` of whole numbers of Advance turns, the inclusive range of how long a Faction stays at this level; `per_faction`, for a level that a Faction only starts at, whose range each FactionArchetype starting at it sets with its `initial_lasts_turns`; or `null` for a final level, at which a Faction stays for the rest of the [Campaign](../foundation/core-concepts.md#campaign-and-session). | [Level duration](#level-duration) |
 | `operation_every_turns` | Either a pair `[lo, hi]` of whole numbers of Advance turns, the inclusive range of the interval between two Faction operation occurrences of a Faction at this level, or `null` for a level without operations, at which a Faction has no Faction operation occurrence. | [Operation interval](#operation-interval) |
 | `operation_level_weights` | A map from the `level` of a FactionOperationLevel to a whole-number weight: how often a Faction operation occurrence of a Faction at this level has each Faction operation level, relative to the others. It is empty for a level without operations. | [Operation level](#operation-level) |
 | `next` | A reference to the FactionActivityLevel a Faction moves to when its time at this level ends, or `null` for a final level. | [Escalation](#escalation) |
@@ -67,12 +68,13 @@ The GDRs a Game build supplies must satisfy every rule below. The list is exhaus
 
 1. **Known properties:** Each FactionArchetype, FactionActivityLevel, and FactionOperationLevel has every property its table above lists and no property other than those, apart from `id` and `type`. Each `name` is non-empty text. The content of a FactionOperationLevel's `on_win` and `on_ignored_or_lost` is validated by [MissionSiteArchetype validation](missions.md#missionsitearchetype-validation) in Missions.
 2. **Initial level resolves:** Every FactionArchetype's `initial_activity_level` references a FactionActivityLevel the Game build supplies.
-3. **Ranges are valid:** Every FactionActivityLevel's `operation_every_turns` and `lasts_turns`, each when it is not `null`, is a pair `[lo, hi]` of whole numbers with `1 ≤ lo ≤ hi`.
+3. **Ranges are valid:** Every FactionActivityLevel's `operation_every_turns` when it is not `null`, its `lasts_turns` when it is neither `null` nor `per_faction`, and every FactionArchetype's `initial_lasts_turns` when it is not `null`, is a pair `[lo, hi]` of whole numbers with `1 ≤ lo ≤ hi`.
 4. **Final levels agree:** A FactionActivityLevel's `lasts_turns` is `null` exactly when its `next` is `null`.
-5. **Next resolves:** Every `next` that is not `null` references a FactionActivityLevel the Game build supplies.
-6. **The chain ends:** Following `next` from any FactionActivityLevel reaches a FactionActivityLevel whose `next` is `null` without visiting any FactionActivityLevel twice. A `next` chain with a cycle, including a level whose `next` is itself, is invalid.
-7. **Operation levels are distinct:** Every FactionOperationLevel's `level` is a whole number of at least 1, and no two FactionOperationLevels have the same `level`.
-8. **Weights are valid:** A FactionActivityLevel's `operation_level_weights` has at least one key when its `operation_every_turns` is not `null`, and no key when it is `null`. Each key equals the `level` of a FactionOperationLevel the Game build supplies, and each weight is a whole number of at least 1.
+5. **Per-Faction durations agree:** A FactionArchetype's `initial_lasts_turns` is not `null` exactly when the `lasts_turns` of the FactionActivityLevel its `initial_activity_level` references is `per_faction`. No `next` references a FactionActivityLevel whose `lasts_turns` is `per_faction`, so a Faction never enters such a level by escalation.
+6. **Next resolves:** Every `next` that is not `null` references a FactionActivityLevel the Game build supplies.
+7. **The chain ends:** Following `next` from any FactionActivityLevel reaches a FactionActivityLevel whose `next` is `null` without visiting any FactionActivityLevel twice. A `next` chain with a cycle, including a level whose `next` is itself, is invalid.
+8. **Operation levels are distinct:** Every FactionOperationLevel's `level` is a whole number of at least 1, and no two FactionOperationLevels have the same `level`.
+9. **Weights are valid:** A FactionActivityLevel's `operation_level_weights` has at least one key when its `operation_every_turns` is not `null`, and no key when it is `null`. Each key equals the `level` of a FactionOperationLevel the Game build supplies, and each weight is a whole number of at least 1.
 
 These rules guarantee that every uniform whole-number outcome below has a valid range and that every Faction operation occurrence has a Faction operation level. That a Response Mission site can be created for every Faction operation level a Faction can have is checked by [MissionSiteArchetype validation](missions.md#missionsitearchetype-validation). A FactionActivityLevel that no FactionArchetype's `initial_activity_level` and no `next` reaches is valid; it is never used.
 
@@ -103,7 +105,7 @@ The initial [Campaign state](../foundation/core-concepts.md#campaign-and-session
 | Archetype reference | The FactionArchetype. | The FactionArchetype GDR. |
 | Constants | Empty. | None. |
 | Faction activity level | The FactionActivityLevel that the FactionArchetype's `initial_activity_level` references. | `initial_activity_level` of the FactionArchetype. |
-| Turns until the next level | The Faction's initial [Level duration](#level-duration) outcome when that level's `lasts_turns` is not `null`; absent when it is `null`. | `lasts_turns` of the initial FactionActivityLevel. |
+| Turns until the next level | The Faction's initial [Level duration](#level-duration) outcome when that level's `lasts_turns` is not `null`; absent when it is `null`. | `lasts_turns` of the initial FactionActivityLevel, or the FactionArchetype's `initial_lasts_turns` when that `lasts_turns` is `per_faction`. |
 | Turns until the next operation | The Faction's initial [Operation interval](#operation-interval) outcome when that level's `operation_every_turns` is not `null`; absent when it is `null`. | `operation_every_turns` of the initial FactionActivityLevel. |
 | Eliminated | No. | This rule. |
 | Eliminated turn | Absent. | This rule. |
@@ -116,7 +118,7 @@ Every random outcome of a Faction is one of the three named random outcomes belo
 
 ## Level duration
 
-A Level duration outcome belongs to one Faction and one occasion on which that Faction enters a Faction activity level whose `lasts_turns` is not `null`: its creation under [Initial Factions](#initial-factions), or one move under [Escalation](#escalation). It is a uniform whole-number outcome over `lasts_turns` of the level entered, from `lo` to `hi`, under [Uniform whole-number outcomes](../foundation/numbers.md#uniform-whole-number-outcomes): each of the `hi − lo + 1` values has Probability `1 / (hi − lo + 1)`. It depends only on that level's `lasts_turns`. No Level duration outcome exists when the level entered has `lasts_turns` of `null`.
+A Level duration outcome belongs to one Faction and one occasion on which that Faction enters a Faction activity level whose `lasts_turns` is not `null`: its creation under [Initial Factions](#initial-factions), or one move under [Escalation](#escalation). It is a uniform whole-number outcome over a range `[lo, hi]`, from `lo` to `hi`, under [Uniform whole-number outcomes](../foundation/numbers.md#uniform-whole-number-outcomes): each of the `hi − lo + 1` values has Probability `1 / (hi − lo + 1)`. The range is the `lasts_turns` of the level entered, except at creation into a level whose `lasts_turns` is `per_faction`, where it is the `initial_lasts_turns` of the Faction's FactionArchetype; under [Faction GDR validation](#faction-gdr-validation), no move enters such a level. The outcome depends only on that range. No Level duration outcome exists when the level entered has `lasts_turns` of `null`.
 
 ## Operation interval
 
@@ -227,9 +229,10 @@ Each Faction value below is [Player-visible information](../foundation/engine-co
 
 | Value | Player-visible information |
 | --- | --- |
-| A Faction's Instance ID and its FactionArchetype, including the FactionArchetype's `name` | Yes |
+| A Faction's Instance ID and its FactionArchetype, with the FactionArchetype's `name` | Yes |
 | A Faction's Faction activity level, and that it has moved to a new one | No |
 | The FactionActivityLevels the Game build supplies, with their properties `name`, `lasts_turns`, `operation_every_turns`, `operation_level_weights`, and `next` | No |
+| Every FactionArchetype's `initial_activity_level` and `initial_lasts_turns` | No |
 | Every FactionOperationLevel's `level` and `name` | Yes |
 | A Faction's Eliminated and Eliminated turn | Yes |
 | A Faction's Turns until the next level | No |
@@ -246,6 +249,7 @@ Under [Information boundary](../foundation/player-api.md#information-boundary) i
 - **Both countdowns reach zero in the same Advance turn:** The Faction moves to its next level, and Turns until the next level takes the value of its Level duration outcome over the new level; its Faction operation occurrence uses the new level's `operation_level_weights`, and Turns until the next operation takes the value of its Operation interval outcome over the new level's `operation_every_turns` ([Faction activity](#faction-activity)).
 - **Move to a final level:** Turns until the next level becomes absent and no Level duration outcome exists for that move. Turns until the next operation is unchanged by the move when both levels have operations ([Escalation](#escalation)).
 - **Level without operations:** A Faction at a level whose `operation_every_turns` is `null` has no Turns until the next operation and no Faction operation occurrence; it still escalates. When it moves to a level with operations, Turns until the next operation takes the value of an Operation interval outcome and does not count down in that Advance turn ([Faction activity](#faction-activity)).
+- **Per-Faction initial level:** Factions that start at the same level whose `lasts_turns` is `per_faction` each stay there for a Level duration over their own FactionArchetype's `initial_lasts_turns`, e.g. one Faction stays at `dormant` for 5 to 10 Advance turns and another for 30 to 40, and then move to the same `next` ([Level duration](#level-duration)).
 - **Final level without operations:** A Faction that reaches a final level whose `operation_every_turns` is `null` never has another Faction operation occurrence. This is valid ([Faction GDR validation](#faction-gdr-validation)).
 - **At a final level:** The Faction never escalates again; when the level has operations, Faction operation occurrences continue for as long as the Faction is not Eliminated ([Escalation](#escalation)).
 - **Level duration or Operation interval at its lower bound:** An outcome value of `lo` is valid. Because `lo` is at least 1, the countdown is never set to zero, and an occurrence or move happens in the `lo`-th Advance turn after the one that set the countdown ([Faction GDR validation](#faction-gdr-validation), [Faction State](#faction-state)).

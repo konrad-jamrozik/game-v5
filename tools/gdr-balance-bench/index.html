@@ -764,10 +764,10 @@
         training_skill_gain: { price: 1000, increment: 0.5 },
         exhaustion_recovery: { price: 1000, increment: 1 },
         health_recovery: { price: 1000, increment: 1 },
-        red_dawn: { initial_activity_level: 'faint' },
-        exalt: { initial_activity_level: 'dormant' },
-        black_lotus: { initial_activity_level: 'dormant' },
-        dormant: lvl([15, 30], null),
+        red_dawn: { initial_activity_level: 'faint', initial_lasts_turns: null },
+        exalt: { initial_activity_level: 'dormant', initial_lasts_turns: [10, 20] },
+        black_lotus: { initial_activity_level: 'dormant', initial_lasts_turns: [10, 20] },
+        dormant: lvl('per_faction', null),
         faint: lvl([60, 90], [15, 25], [80, 20]),
         emerging: lvl([60, 90], [13, 23], [60, 30, 10]),
         active: lvl([60, 90], [11, 21], [40, 40, 15, 5]),
@@ -1172,7 +1172,7 @@
     `<div class="tw"><table><tr><th>Level</th><th colspan="2">lasts_turns</th><th colspan="2">operation_every_turns</th>${wcols.map((k) => `<th title="operation_level_weights.${k}">w${k}</th>`).join('')}<th class="d">Ops / 100 Turns</th><th class="d">Panic per ignored op</th><th class="d">Existential</th>${FA.map((x) => `<th class="d">${title(x)} from</th>`).join('')}</tr>${AL.map(
       (a) => {
         const L = BASE[a]
-        return `<tr><td class="name">${title(a)}</td>${L.lasts_turns ? `<td>${inp(a + '.lasts_turns.0', { min: 1 })}</td><td>${inp(a + '.lasts_turns.1', { min: 1 })}</td>` : `<td colspan="2" style="text-align:center;color:var(--muted)">final</td>`}${L.operation_every_turns ? `<td>${inp(a + '.operation_every_turns.0', { min: 1 })}</td><td>${inp(a + '.operation_every_turns.1', { min: 1 })}</td>${wcols.map((k) => `<td class="w">${inp(a + '.operation_level_weights.' + k)}</td>`).join('')}` : `<td colspan="${wcols.length + 2}" style="text-align:center;color:var(--muted)">no operations</td>`}<td class="d" id="ao_${a}"></td><td class="d" id="ap_${a}"></td><td class="d" id="ae_${a}"></td>${FA.map((x) => `<td class="d" id="at_${a}_${x}"></td>`).join('')}</tr>`
+        return `<tr><td class="name">${title(a)}</td>${L.lasts_turns === 'per_faction' ? `<td colspan="2" style="text-align:center;color:var(--muted)">per faction</td>` : L.lasts_turns ? `<td>${inp(a + '.lasts_turns.0', { min: 1 })}</td><td>${inp(a + '.lasts_turns.1', { min: 1 })}</td>` : `<td colspan="2" style="text-align:center;color:var(--muted)">final</td>`}${L.operation_every_turns ? `<td>${inp(a + '.operation_every_turns.0', { min: 1 })}</td><td>${inp(a + '.operation_every_turns.1', { min: 1 })}</td>${wcols.map((k) => `<td class="w">${inp(a + '.operation_level_weights.' + k)}</td>`).join('')}` : `<td colspan="${wcols.length + 2}" style="text-align:center;color:var(--muted)">no operations</td>`}<td class="d" id="ao_${a}"></td><td class="d" id="ap_${a}"></td><td class="d" id="ae_${a}"></td>${FA.map((x) => `<td class="d" id="at_${a}_${x}"></td>`).join('')}</tr>`
       },
     ).join(
       '',
@@ -1195,7 +1195,7 @@
         '',
       )}<tr><td class="name">${EXISTENTIAL}</td><td>${inp(OL[EXISTENTIAL - 1] + '.on_win.money')}</td><td>${inp(OL[EXISTENTIAL - 1] + '.on_win.funding')}</td><td colspan="2" style="text-align:center;color:var(--muted)">existential: loses the Campaign outright</td></tr></table></div>`,
   )}
-  ${panel('Starting levels and Panic limit', 'content/factions/faction_archetypes.yaml · panic-and-endings/ending_parameters.yaml', FA.map((x) => `<div class="kv"><span class="k"><code>${x}.initial_activity_level</code><small></small></span>${sel(x + '.initial_activity_level', AL)}</div>`).join('') + row('endings.defeat_at_panic_pct', 'Panic at which the Campaign is lost', { min: 1 }))}
+  ${panel('Starting levels and Panic limit', 'content/factions/faction_archetypes.yaml · panic-and-endings/ending_parameters.yaml', FA.map((x) => `<div class="kv"><span class="k"><code>${x}.initial_activity_level</code><small></small></span>${sel(x + '.initial_activity_level', AL)}</div>` + (Array.isArray(BASE[x].initial_lasts_turns) ? `<div class="kv"><span class="k"><code>${x}.initial_lasts_turns</code><small>Turns at its starting level when that level lasts per faction, from lo to hi</small></span><span class="inrow">${inp(x + '.initial_lasts_turns.0', { min: 1 })}${inp(x + '.initial_lasts_turns.1', { min: 1 })}</span></div>` : `<div class="kv"><span class="k"><code>${x}.initial_lasts_turns</code><small>null: its starting level sets how long it lasts</small></span></div>`)).join('') + row('endings.defeat_at_panic_pct', 'Panic at which the Campaign is lost', { min: 1 }))}
   </div><div class="col">
   ${panel(
     '',
@@ -1602,6 +1602,16 @@
           const r = await fetch('api/info', { cache: 'no-store' })
           if (!r.ok) throw new Error('the server answered ' + r.status)
           const j = await r.json()
+          /* A Faction's own Turns at its starting level take the shape on disk: a pair there gives the Faction two fields. */
+          FA.forEach((x) => {
+            const v = j.gdr[x] && j.gdr[x].initial_lasts_turns
+            if (BASE[x] && Array.isArray(v) !== Array.isArray(BASE[x].initial_lasts_turns)) {
+              BASE[x].initial_lasts_turns = Array.isArray(v) ? [...v] : null
+              for (let i = PATHS.length - 1; i >= 0; i--)
+                if (PATHS[i].startsWith(x + '.initial_lasts_turns.')) PATHS.splice(i, 1)
+              if (Array.isArray(v)) PATHS.push(x + '.initial_lasts_turns.0', x + '.initial_lasts_turns.1')
+            }
+          })
           PATHS.forEach((p) => {
             const v = get(j.gdr, p)
             if (v !== undefined && v !== null && typeof v === typeof get(BASE, p)) set(BASE, p, v)
@@ -1952,9 +1962,11 @@
             i = AL.indexOf(cur[x].initial_activity_level)
           while (i < AL.length) {
             m[AL[i]] = t
-            const L = cur[AL[i]]
-            if (!L.lasts_turns) break
-            t += mean(L.lasts_turns)
+            const L = cur[AL[i]],
+              /* A level that lasts per faction takes its range from the Faction's own initial_lasts_turns. */
+              lasts = L.lasts_turns === 'per_faction' ? cur[x].initial_lasts_turns : L.lasts_turns
+            if (!Array.isArray(lasts)) break
+            t += mean(lasts)
             i++
           }
           tl[x] = m

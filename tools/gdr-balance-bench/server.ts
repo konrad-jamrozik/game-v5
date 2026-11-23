@@ -112,7 +112,10 @@ function loadGdr(): Record<string, unknown> {
         out[d.id] = { ...numbers(d), weapon: d['weapon'], armor: d['armor'] }
         break
       case 'FactionArchetype':
-        out[d.id] = { initial_activity_level: d['initial_activity_level'] }
+        out[d.id] = {
+          initial_activity_level: d['initial_activity_level'],
+          initial_lasts_turns: d['initial_lasts_turns'] ?? null,
+        }
         break
       case 'FactionActivityLevel': {
         const weights = (d['operation_level_weights'] ?? {}) as Record<string, number>
