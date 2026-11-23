@@ -530,8 +530,8 @@
         background: var(--raised);
         border: 1px solid var(--border);
         padding: 4px 8px;
-        font: 12px var(--mono);
-        white-space: nowrap;
+        font: 12px/1.5 var(--mono);
+        white-space: pre;
         transform: translateX(-50%);
       }
       .chg-list {
@@ -1704,7 +1704,11 @@
           hv.querySelector('circle').setAttribute('cy', py)
           tip.hidden = false
           tip.textContent = o.fmt(best)
-          tip.style.left = Math.min(Math.max((px / W) * 100, 14), 86) + '%'
+          /* Center the tooltip on the point, but keep all of it inside the chart, however wide it is. */
+          const hw = host.clientWidth,
+            tw = tip.offsetWidth
+          tip.style.left = Math.max(0, Math.min((px / W) * hw - tw / 2, hw - tw)) + 'px'
+          tip.style.transform = 'none'
         }
         svg.onpointerleave = () => {
           hv.setAttribute('visibility', 'hidden')
@@ -2014,12 +2018,14 @@
         /* One point per bucket: at its middle, or for Panic, a level rather than a flow, at its last Turn. */
         const bpts = (g, at = (b) => b.mid) =>
             buckets.filter((b) => g(b) != null && at(b) <= xmax).map((b) => [at(b), g(b), b]),
-          bText = (p) =>
-            `Turns ${p[2].from}–${p[2].to} → ` +
-            '%s' +
-            ' · ops ' +
-            p[2].n.map((v, i) => `L${LEVELS[i]} ${f(v, 2)}`).join(' '),
-          tipOf = (p, what) => (p[2] ? bText(p).replace('%s', what) : `Turn ${p[0]} → ${what}`)
+          /* A bucket's tooltip, one fact per line: its Turns, what the chart shows, then its operations. */
+          opsLine = (b) =>
+            `Ops      ${f(
+              b.n.reduce((a, c) => a + c, 0),
+              2,
+            )}: ${b.n.map((v, i) => `L${LEVELS[i]} ${f(v, 2)}`).join(' · ')}`,
+          tipOf = (p, what) =>
+            p[2] ? [`Turns ${p[2].from}–${p[2].to}`, what, opsLine(p[2])].join('\n') : `Turn ${p[0]}\n${what}`
         const vl = [
             tEx && { x: tEx, label: 'existential ops begin' },
             tHalf && { x: tHalf, label: '50% lost outright' },
@@ -2070,8 +2076,7 @@
          * The Funding is never floored at 0, unlike the game's funding, so that a deficit stays visible.
          */
         const fund0 = cur.standard.starting_funding,
-          fundOn = (t) => fund0 + fp[Math.min(t, HOR)][1],
-          signed = (v) => (v >= 0 ? '+' : '−') + f(Math.abs(v), 1)
+          fundOn = (t) => fund0 + fp[Math.min(t, HOR)][1]
         let moneySum = 0,
           fundSum = 0
         buckets.forEach((b) => {
@@ -2124,7 +2129,10 @@
           fmt: (p) =>
             tipOf(
               p,
-              `money +${f(p[2].money, 0)} (Σ ${f(p[2].moneySum, 0)}) · Funding +${f(p[2].income, 0)} (Σ ${f(p[2].incomeSum, 0)}), ${f(fundOn(p[2].to), 1)} per Turn at the end after a change of ${signed(p[2].fund)}`,
+              [
+                `Funding  +${f(p[2].income, 0)} in these Turns · Σ ${f(p[2].incomeSum, 0)} · ${f(fundOn(p[2].to), 1)} per Turn at the end`,
+                `Money    +${f(p[2].money, 0)} in these Turns · Σ ${f(p[2].moneySum, 0)} · ${f(p[2].money / (p[2].to - p[2].from + 1), 1)} per Turn in these Turns`,
+              ].join('\n'),
             ),
         })
         $('o_panic').innerHTML = out([
