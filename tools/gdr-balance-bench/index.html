@@ -764,7 +764,8 @@
         training_skill_gain: { price: 1000, increment: 0.5 },
         exhaustion_recovery: { price: 1000, increment: 1 },
         health_recovery: { price: 1000, increment: 1 },
-        red_dawn: { initial_activity_level: 'faint', initial_lasts_turns: null },
+        /* initial_lasts_turns: [null, null] stands for the YAML null, so every Faction has its two fields. */
+        red_dawn: { initial_activity_level: 'faint', initial_lasts_turns: [null, null] },
         exalt: { initial_activity_level: 'dormant', initial_lasts_turns: [10, 20] },
         black_lotus: { initial_activity_level: 'dormant', initial_lasts_turns: [10, 20] },
         dormant: lvl('per_faction', null),
@@ -1038,6 +1039,44 @@
         return acc
       }
       const PATHS = leaves(BASE, '', [])
+      /* Both fields of every Faction's initial_lasts_turns are editable, also while they are empty, i.e. null. */
+      const OWN = /\.initial_lasts_turns\.[01]$/
+      FA.forEach((x) =>
+        [0, 1].forEach((i) => {
+          const p = x + '.initial_lasts_turns.' + i
+          if (!PATHS.includes(p)) PATHS.push(p)
+        }),
+      )
+      /* Every Faction duration input that breaks Faction GDR validation, in words; empty when all are valid. */
+      function factionInputProblems() {
+        const out = [],
+          pair = (r) => Array.isArray(r) && r[0] != null && r[1] != null,
+          check = (what, r, min) => {
+            if (r[0] < min) out.push(`${what}: lo is ${r[0]}, below ${min}`)
+            if (r[1] < r[0]) out.push(`${what}: hi ${r[1]} is below lo ${r[0]}`)
+          }
+        AL.forEach((a) => {
+          const L = cur[a]
+          if (pair(L.lasts_turns)) check(`${a}.lasts_turns`, L.lasts_turns, 0)
+          if (pair(L.operation_every_turns)) check(`${a}.operation_every_turns`, L.operation_every_turns, 1)
+        })
+        FA.forEach((x) => {
+          const r = cur[x].initial_lasts_turns,
+            start = cur[x].initial_activity_level,
+            lasts = cur[start].lasts_turns,
+            what = `${x}.initial_lasts_turns`
+          if ((r[0] == null) !== (r[1] == null)) out.push(`${what}: set both lo and hi, or leave both empty for null`)
+          else if (pair(r)) {
+            check(what, r, 1)
+            if (lasts === null) out.push(`${what}: ${start} is a final level, so it must be null`)
+          } else if (lasts === 'per_faction') out.push(`${what}: ${start} lasts per faction, so it needs lo and hi`)
+          else if (pair(lasts) && lasts[0] < 1)
+            out.push(
+              `${what}: null, so ${start}.lasts_turns sets it, but its lo of ${lasts[0]} would skip the starting level`,
+            )
+        })
+        return out
+      }
       const changes = () => PATHS.filter((p) => get(cur, p) !== get(BASE, p))
       function save() {
         try {
@@ -1092,7 +1131,7 @@
           b = get(BASE, p),
           /* An amount of money, e.g. an Upgrade's price, is wide enough for five digits and more. */
           cls = [/(money|funding|price)$/.test(p) ? 'wide' : '', v !== b ? 'chg' : ''].filter(Boolean).join(' ')
-        return `<input type="number" inputmode="decimal" id="${sid(p)}" data-p="${p}" value="${v}" step="${o.step || 1}" min="${o.min ?? 0}" title="${esc(p)} · GDR value ${b}" aria-label="${esc(p)}"${cls ? ` class="${cls}"` : ''}>`
+        return `<input type="number" inputmode="decimal" id="${sid(p)}" data-p="${p}" value="${v ?? ''}" step="${o.step || 1}" min="${o.min ?? 0}" title="${esc(p)} · GDR value ${b ?? 'null'}" aria-label="${esc(p)}"${o.ph ? ` placeholder="${esc(o.ph)}"` : ''}${cls ? ` class="${cls}"` : ''}>`
       }
       function sel(p, opts) {
         const v = get(cur, p)
@@ -1178,11 +1217,11 @@
     `<div class="tw"><table><tr><th>Level</th><th colspan="2">lasts_turns</th><th colspan="2">operation_every_turns</th>${wcols.map((k) => `<th title="operation_level_weights.${k}">w${k}</th>`).join('')}<th class="d">Ops / 100 Turns</th><th class="d">Panic per ignored op</th><th class="d">Existential</th>${FA.map((x) => `<th class="d">${title(x)} from</th>`).join('')}</tr>${AL.map(
       (a) => {
         const L = BASE[a]
-        return `<tr><td class="name">${title(a)}</td>${L.lasts_turns === 'per_faction' ? `<td colspan="2" style="text-align:center;color:var(--muted)">per faction</td>` : L.lasts_turns ? `<td>${inp(a + '.lasts_turns.0', { min: 1 })}</td><td>${inp(a + '.lasts_turns.1', { min: 1 })}</td>` : `<td colspan="2" style="text-align:center;color:var(--muted)">final</td>`}${L.operation_every_turns ? `<td>${inp(a + '.operation_every_turns.0', { min: 1 })}</td><td>${inp(a + '.operation_every_turns.1', { min: 1 })}</td>${wcols.map((k) => `<td class="w">${inp(a + '.operation_level_weights.' + k)}</td>`).join('')}` : `<td colspan="${wcols.length + 2}" style="text-align:center;color:var(--muted)">no operations</td>`}<td class="d" id="ao_${a}"></td><td class="d" id="ap_${a}"></td><td class="d" id="ae_${a}"></td>${FA.map((x) => `<td class="d" id="at_${a}_${x}"></td>`).join('')}</tr>`
+        return `<tr><td class="name">${title(a)}</td>${L.lasts_turns === 'per_faction' ? `<td colspan="2" style="text-align:center;color:var(--muted)">per faction</td>` : L.lasts_turns ? `<td>${inp(a + '.lasts_turns.0')}</td><td>${inp(a + '.lasts_turns.1')}</td>` : `<td colspan="2" style="text-align:center;color:var(--muted)">final</td>`}${L.operation_every_turns ? `<td>${inp(a + '.operation_every_turns.0', { min: 1 })}</td><td>${inp(a + '.operation_every_turns.1', { min: 1 })}</td>${wcols.map((k) => `<td class="w">${inp(a + '.operation_level_weights.' + k)}</td>`).join('')}` : `<td colspan="${wcols.length + 2}" style="text-align:center;color:var(--muted)">no operations</td>`}<td class="d" id="ao_${a}"></td><td class="d" id="ap_${a}"></td><td class="d" id="ae_${a}"></td>${FA.map((x) => `<td class="d" id="at_${a}_${x}"></td>`).join('')}</tr>`
       },
     ).join(
       '',
-    )}</table></div><div class="note">The last three columns give the Turn on which each Faction is expected to enter the level, taking every duration at its mean.</div>`,
+    )}</table></div><div class="note">The last three columns give the Turn on which each Faction is expected to enter the level, taking every duration at its mean. A lasts_turns lo of 0 lets a Faction skip the level, and 0 to 0 makes every Faction skip it; it then enters the next level on the same Turn.</div><div id="fac_err" style="margin-top:8px"></div>`,
   )}
   <div class="cols"><div class="col">
   ${panel('Initiative Mission rewards', 'content/missions/mission_site_archetypes.yaml · on_win', `<div class="tw"><table><tr><th>Mission site</th><th>money</th><th>funding</th><th>panic</th><th class="d">Σ money</th><th class="d">Σ funding</th></tr>${INIT.map((s) => `<tr><td class="name">${title(s)}</td><td>${inp(s + '.on_win.money')}</td><td>${inp(s + '.on_win.funding')}</td><td>${inp(s + '.on_win.panic', { step: 0.05, min: -100 })}</td><td class="d" id="rm_${s}"></td><td class="d" id="rf_${s}"></td></tr>`).join('')}</table></div><div class="note">The sums run down one Faction's chain, each site Won once.</div>`)}
@@ -1201,7 +1240,7 @@
         '',
       )}<tr><td class="name">${EXISTENTIAL}</td><td>${inp(OL[EXISTENTIAL - 1] + '.on_win.money')}</td><td>${inp(OL[EXISTENTIAL - 1] + '.on_win.funding')}</td><td colspan="2" style="text-align:center;color:var(--muted)">existential: loses the Campaign outright</td></tr></table></div>`,
   )}
-  ${panel('Starting levels and Panic limit', 'content/factions/faction_archetypes.yaml · panic-and-endings/ending_parameters.yaml', FA.map((x) => `<div class="kv"><span class="k"><code>${x}.initial_activity_level</code><small></small></span>${sel(x + '.initial_activity_level', AL)}</div>` + (Array.isArray(BASE[x].initial_lasts_turns) ? `<div class="kv"><span class="k"><code>${x}.initial_lasts_turns</code><small>Turns at its starting level when that level lasts per faction, from lo to hi</small></span><span class="inrow">${inp(x + '.initial_lasts_turns.0', { min: 1 })}${inp(x + '.initial_lasts_turns.1', { min: 1 })}</span></div>` : `<div class="kv"><span class="k"><code>${x}.initial_lasts_turns</code><small>null: its starting level sets how long it lasts</small></span></div>`)).join('') + row('endings.defeat_at_panic_pct', 'Panic at which the Campaign is lost', { min: 1 }))}
+  ${panel('Starting levels and Panic limit', 'content/factions/faction_archetypes.yaml · panic-and-endings/ending_parameters.yaml', FA.map((x) => `<div class="kv"><span class="k"><code>${x}.initial_activity_level</code><small></small></span>${sel(x + '.initial_activity_level', AL)}</div><div class="kv"><span class="k"><code>${x}.initial_lasts_turns</code><small>Turns at its starting level, lo to hi, at least 1; 1 to 1 moves on at the end of Turn 1. Both empty: null, the level's own lasts_turns</small></span><span class="inrow" style="display:flex;gap:4px;flex:none">${inp(x + '.initial_lasts_turns.0', { min: 1, ph: 'null' })}${inp(x + '.initial_lasts_turns.1', { min: 1, ph: 'null' })}</span></div>`).join('') + row('endings.defeat_at_panic_pct', 'Panic at which the Campaign is lost', { min: 1 }))}
   </div><div class="col">
   ${panel(
     '',
@@ -1608,15 +1647,10 @@
           const r = await fetch('api/info', { cache: 'no-store' })
           if (!r.ok) throw new Error('the server answered ' + r.status)
           const j = await r.json()
-          /* A Faction's own Turns at its starting level take the shape on disk: a pair there gives the Faction two fields. */
+          /* A Faction's own Turns at its starting level: a YAML null becomes [null, null], two empty fields. */
           FA.forEach((x) => {
             const v = j.gdr[x] && j.gdr[x].initial_lasts_turns
-            if (BASE[x] && Array.isArray(v) !== Array.isArray(BASE[x].initial_lasts_turns)) {
-              BASE[x].initial_lasts_turns = Array.isArray(v) ? [...v] : null
-              for (let i = PATHS.length - 1; i >= 0; i--)
-                if (PATHS[i].startsWith(x + '.initial_lasts_turns.')) PATHS.splice(i, 1)
-              if (Array.isArray(v)) PATHS.push(x + '.initial_lasts_turns.0', x + '.initial_lasts_turns.1')
-            }
+            if (BASE[x]) BASE[x].initial_lasts_turns = Array.isArray(v) ? [...v] : [null, null]
           })
           PATHS.forEach((p) => {
             const v = get(j.gdr, p)
@@ -1961,19 +1995,38 @@
           $('ap_' + x).textContent = o.rate ? f(o.ep, 3) : '–'
           $('ae_' + x).textContent = o.rate ? f(o.ex * 100, 1) + '%' : '–'
         })
+        /* Duration inputs that break Faction GDR validation: the readouts below cannot be computed from them. */
+        const bad = factionInputProblems()
+        $('fac_err').innerHTML = bad.length
+          ? `<div class="bad"><b>Cannot compute the Faction readouts: these inputs are invalid.</b><ul>${bad.map((s) => `<li>${esc(s)}</li>`).join('')}</ul></div>`
+          : ''
+        if (bad.length) {
+          FA.forEach((x) => AL.forEach((l) => ($('at_' + l + '_' + x).textContent = '–')))
+          ;['ch_panic', 'ch_cr', 'ch_econ'].forEach((id) => ($(id).innerHTML = ''))
+          $('o_panic').innerHTML =
+            `<div class="bad">Cannot compute: the Faction duration inputs are invalid; see the list above Faction activity levels.</div>`
+          renderChanges()
+          runSims()
+          save()
+          return
+        }
         const tl = {}
         FA.forEach((x) => {
           const m = {}
           let t = 1,
-            i = AL.indexOf(cur[x].initial_activity_level)
+            i = AL.indexOf(cur[x].initial_activity_level),
+            first = true
           while (i < AL.length) {
             m[AL[i]] = t
             const L = cur[AL[i]],
-              /* A level that lasts per faction takes its range from the Faction's own initial_lasts_turns. */
-              lasts = L.lasts_turns === 'per_faction' ? cur[x].initial_lasts_turns : L.lasts_turns
+              /* The starting level lasts the Faction's own initial_lasts_turns when it sets one. A level later in the
+               * chain may last 0 Turns, and a Faction then skips it: it starts the next level on the same Turn. */
+              own = first && cur[x].initial_lasts_turns[0] != null,
+              lasts = own ? cur[x].initial_lasts_turns : L.lasts_turns
             if (!Array.isArray(lasts)) break
             t += mean(lasts)
             i++
+            first = false
           }
           tl[x] = m
           AL.forEach((l) => ($('at_' + l + '_' + x).textContent = m[l] != null ? f(m[l], 0) : '–'))
@@ -2223,6 +2276,8 @@
             ),
           )
         })
+        if (ch.some((p) => OWN.test(p)))
+          L.push('', 'Note: an initial_lasts_turns whose lo and hi are both null is written initial_lasts_turns: null.')
         if (ch.some((p) => /operation_level_weights|on_win|on_ignored_or_lost/.test(p)))
           L.push('', 'Note: a weight or Effect that was absent in the YAML shows as 0.')
         return L.join('\n')
@@ -2258,7 +2313,13 @@
       function onEdit(el) {
         if (el.dataset.p) {
           const p = el.dataset.p,
-            v = el.tagName === 'SELECT' ? el.value : parseFloat(el.value)
+            /* An emptied initial_lasts_turns field is null; any other empty number field is ignored. */
+            v =
+              el.tagName === 'SELECT'
+                ? el.value
+                : OWN.test(p) && el.value.trim() === '' && el.validity.valid
+                  ? null
+                  : parseFloat(el.value)
           if (typeof v === 'number' && !Number.isFinite(v)) return
           set(cur, p, v)
           el.classList.toggle('chg', v !== get(BASE, p))
