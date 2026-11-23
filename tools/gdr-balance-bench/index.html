@@ -1017,8 +1017,9 @@
         team: true,
         inv_n: 4,
         inv_skill: 100,
-        win: 50,
-        turns: 500,
+        win: 70,
+        turns: 200,
+        base: false,
       }
       let T = clone(TEAM0)
       const get = (o, p) => p.split('.').reduce((a, k) => (a == null ? a : a[k]), o)
@@ -1053,6 +1054,11 @@
           Object.assign(T, s.T || {})
           /* An earlier page saved the share of operations ignored or lost, the complement of the share won. */
           if (s.T && s.T.ign != null && s.T.win == null) T.win = 100 - s.T.ign
+          /* A page saved before the starting-Funding checkbox takes that change's new defaults, once. */
+          if (s.T && s.T.base == null) {
+            T.win = TEAM0.win
+            T.turns = TEAM0.turns
+          }
           delete T.ex
           delete T.ign
         } catch (e) {}
@@ -1200,7 +1206,7 @@
   ${panel(
     '',
     '',
-    `<div class="sticky-head"><h3>Expected Response Missions by Turn</h3><div class="ctl">${tin('win', 'Response Missions won, %', { max: 100, step: 5 })}${tin('turns', 'Turns shown', { min: 10, max: 1500, step: 50 })}</div></div>` +
+    `<div class="sticky-head"><h3>Expected Response Missions by Turn</h3><div class="ctl">${tin('win', 'Response Missions won, %', { max: 100, step: 5 })}${tin('turns', 'Turns shown', { min: 10, max: 1500, step: 50 })}${tcheck('base', 'Include starting Funding')}</div></div>` +
       `<div class="op-legend"><span class="lbl">Expected operations per ${OP_BUCKET} Turns, right axis</span>${LEVELS.map((k, i) => `<span><i style="background:${OP_COLORS[i]};opacity:${OP_ALPHA}"></i>Level ${k}${k === EXISTENTIAL ? ', existential' : ''}</span>`).join('')}</div>` +
       fold(
         'econ',
@@ -1223,7 +1229,7 @@
         `Combat rating of Response Missions, mean of each ${OP_BUCKET} Turns`,
         `<div class="chart" id="ch_cr"></div>`,
       ) +
-      `<div id="o_panic"></div><div class="note">An expected-value estimate with no Faction Eliminated and no Panic reduction from won Initiative Missions: each level lasts its mean duration, operations arrive at the mean interval, each operation's Response Mission site is equally likely to be any of its level's, and every operation not won is ignored or lost. A Response Mission's Combat rating is its Enemies' at full health; the band marks the test team's Combat rating. Funding and money count every operation, including the ones after the Campaign may already have been lost. The Funding received counts the starting Funding too; the money counts only won Response Missions, not the starting money or any spending.</div>`,
+      `<div id="o_panic"></div><div class="note">An expected-value estimate with no Faction Eliminated and no Panic reduction from won Initiative Missions: each level lasts its mean duration, operations arrive at the mean interval, each operation's Response Mission site is equally likely to be any of its level's, and every operation not won is ignored or lost. A Response Mission's Combat rating is its Enemies' at full health; the band marks the test team's Combat rating. Funding and money count every operation, including the ones after the Campaign may already have been lost. The Funding received counts the starting Funding only when its checkbox is on; the money counts only won Response Missions, not the starting money or any spending.</div>`,
     'read',
   )}
   </div></div></section>`)
@@ -2103,10 +2109,10 @@
         })
         /*
          * What the Campaign receives in each bucket, and in all buckets so far: the money of its won Response Missions,
-         * and its Funding, the starting Funding plus every change so far, paid on each of the bucket's Turns.
-         * The Funding is never floored at 0, unlike the game's funding, so that a deficit stays visible.
+         * and its Funding, every change so far, plus the starting Funding when T.base asks for it, paid on each of the
+         * bucket's Turns. The Funding is never floored at 0, unlike the game's funding, so that a deficit stays visible.
          */
-        const fund0 = cur.standard.starting_funding,
+        const fund0 = T.base ? cur.standard.starting_funding : 0,
           fundOn = (t) => fund0 + fp[Math.min(t, HOR)][1]
         let moneySum = 0,
           fundSum = 0
@@ -2194,7 +2200,7 @@
             'Expected cumulative Funding change by Turn 200',
             (fp[200][1] >= 0 ? '+' : '−') + f(Math.abs(fp[200][1]), 1),
           ],
-          ['Expected Funding per Turn at the end of Turn 200', f(fund0 + fp[200][1], 1)],
+          ['Expected Funding per Turn at the end of Turn 200', f(fundOn(200), 1)],
           ['Expected money from won Response Missions, Turns 191 to 200', f(mp[200][1] * WINDOW, 1)],
         ])
         renderChanges()
