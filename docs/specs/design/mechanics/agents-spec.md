@@ -228,7 +228,7 @@ A Combatant's health is kept as what it has lost, so that raising the most it ca
 | Combatant | Effective max health |
 | --- | --- |
 | An Enemy | Its base health. |
-| A Serving Agent | Its base health plus what the Agency's [Upgrades](economy-and-upgrades.md#glossary) [add to max health](economy-and-upgrades.md#max-health-upgrade). |
+| A Serving Agent | Its base health plus what the Agency's [Upgrades](economy-and-upgrades.md#glossary) [add to max health](economy-and-upgrades.md#upgrade-effects). |
 | A Terminated Agent | Its Final max health. |
 
 Current health is what is left of it:
@@ -261,7 +261,7 @@ A Combatant's effective weapon damage is kept apart from its base weapon damage 
 | Combatant | Effective weapon damage |
 | --- | --- |
 | An Enemy | Its base weapon damage. |
-| A Serving Agent | Its base weapon damage plus what the Agency's Upgrades [add to weapon damage](economy-and-upgrades.md#weapon-damage-upgrade). |
+| A Serving Agent | Its base weapon damage plus what the Agency's Upgrades [add to weapon damage](economy-and-upgrades.md#upgrade-effects). |
 | A Terminated Agent | Its Final weapon damage. |
 
 ## Effective armor
@@ -271,7 +271,7 @@ A Combatant's armor absorbs the damage of hits before its current health does, a
 | Combatant | Effective armor |
 | --- | --- |
 | An Enemy | Its base armor. |
-| A Serving Agent | Its base armor plus what the Agency's Upgrades [add to armor](economy-and-upgrades.md#armor-upgrade). |
+| A Serving Agent | Its base armor plus what the Agency's Upgrades [add to armor](economy-and-upgrades.md#upgrade-effects). |
 | A Terminated Agent | Its Final armor. |
 
 ## Changes to attributes
