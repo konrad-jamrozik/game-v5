@@ -22,10 +22,10 @@ A → B means A is referenced by B: the text of B links to A. Layer 1 is drawn a
 | 3 | DEPDIR Gameplay Dependency Direction | CORE, ENG |
 | 3 | EFFECT Effect Lists | CORE, ENG |
 | 3 | HEADLESS Headless First | CORE, ENG |
+| 3 | NUMBERS Numbers | CORE, ENG |
 | 4 | DETERM Determinism and Randomness | CORE, CSTATE, ENG |
 | 4 | GDR Game Data Records | CORE, CSTATE, ENG |
 | 5 | CINST Campaign Instances | CORE, DETERM, ENG |
-| 5 | NUMBERS Numbers | CORE, DETERM, ENG |
 | 5 | SAVES Saves | CORE, CSTATE, DETERM, ENG |
 | 6 | AUTO Autopilot | CORE, DETERM, ENG, SAVES |
 | 6 | LIFE Campaign Lifecycle | CORE, ENG, SAVES |
