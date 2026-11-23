@@ -567,6 +567,7 @@ Power cells for the [laser pistol](#laser-pistol). Each attack an [Agent](#agent
 | ---------------------- | ---------------------- |
 | `name`                 | `Laser pistol battery` |
 | `price`                | `10`                   |
+| `shot`                 | `beam`                 |
 
 See also: [Equipment and Storage](#equipment-and-storage)
 
@@ -580,6 +581,7 @@ Power cells for the [laser rifle](#laser-rifle) and the [augmented laser rifle](
 | --------------------- | --------------------- |
 | `name`                | `Laser rifle battery` |
 | `price`               | `15`                  |
+| `shot`                | `beam`                |
 
 See also: [Equipment and Storage](#equipment-and-storage)
 
@@ -593,6 +595,7 @@ Belts of [rounds](#equipment-and-storage) for the [machine gun](#machine-gun). E
 | ------------------ | ------------------ |
 | `name`             | `Machine gun ammo` |
 | `price`            | `5`                |
+| `shot`             | `burst`            |
 
 See also: [Equipment and Storage](#equipment-and-storage)
 
@@ -606,6 +609,7 @@ Source: `content/compendium/compendium_articles/pistol_ammo_article.yaml`
 | ------------- | ------------- |
 | `name`        | `Pistol ammo` |
 | `price`       | `1`           |
+| `shot`        | `bullet`      |
 
 See also: [Equipment and Storage](#equipment-and-storage)
 
@@ -619,6 +623,7 @@ Source: `content/compendium/compendium_articles/rifle_ammo_article.yaml`
 | ------------ | ------------ |
 | `name`       | `Rifle ammo` |
 | `price`      | `3`          |
+| `shot`       | `bullet`     |
 
 See also: [Equipment and Storage](#equipment-and-storage)
 

@@ -114,6 +114,7 @@ Each kind of round a Weapon spends is one GDR of Type AmmoType.
 | --- | --- | --- |
 | `name` | The display name of the AmmoType. | [Player-visible information](#player-visible-information) |
 | `price` | The money one round costs: a whole number of at least 1. | [Equipment](equipment.md) |
+| `shot` | How firing one round looks to the Player, as Display content: `bullet` for a single projectile, `burst` for several in quick succession, or `beam` for a ray. | [Player-visible information](#player-visible-information) |
 
 ## CombatParameters
 

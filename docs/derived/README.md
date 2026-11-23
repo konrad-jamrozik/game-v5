@@ -17,7 +17,7 @@ These informative views are derived from the registered Markdown specifications.
 | Design             | Foundation    | 17             |
 | Design             | Mechanics     | 13             |
 | Design             | Content       | 1              |
-| Design             | UI            | 19             |
+| Design             | UI            | 20             |
 | Design             | Autopilot AIs | 1              |
 | Implementation     | Mandatory     | 5              |
 | Implementation     | Guidance      | 5              |
@@ -96,6 +96,7 @@ These informative views are derived from the registered Markdown specifications.
 | AVIEW | [Agents View](../specs/design/ui/screens/agents-view.md) | What the Agents View of the Campaign screen shows and how it hires, dismisses, assigns, and equips Agents. |
 | CLI | [Command-Line Interface](../specs/design/ui/cli.md) | Guidance on the command-line interface, the headless interface that makes the whole engine API playable from a terminal. |
 | COMPV | [Compendium View](../specs/design/ui/screens/compendium-view.md) | What the Compendium View of the Campaign screen shows of a Compendium article, the data sheet of each kind of subject, and how the Player finds an article and follows the links between articles. |
+| CRPLAY | [Combat Replay](../specs/design/ui/screens/combat-replay.md) | How the Combat replay of the Turn Report View opens, how it draws the Combatants and their attacks on the Battlefield, and how the Player steps and plays it. |
 | CSCR | [Campaign Screen](../specs/design/ui/screens/campaign-screen.md) | The regions of the Campaign screen of the graphical user interface, its Side panel, its Detail views and the View trail through them, its status bar values and controls, its Autopilot controls, and its keyboard shortcuts view. |
 | CVIEW | [Charts View](../specs/design/ui/screens/charts-view.md) | Which charts the Charts View of the Campaign screen shows, what each Agency chart and Faction chart counts, and in which order. |
 | GUI | [Graphical User Interface](../specs/design/ui/gui.md) | Which screens the graphical user interface has, the progress indicators that several of them show, the warnings it gives, and how it names an Enemy. |

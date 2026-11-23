@@ -64,19 +64,20 @@ A → B means A is referenced by B: the text of B links to A. Layer 1 is drawn a
 | 17 | MVIEW Missions View | AGENT, CINST, COMBAT, DOM, ECON, ENG, FACTION, GUI, MISSION, WHIST |
 | 17 | SITP Situation Panel | AGENT, CORE, DOM, ECON, ENG, GUI |
 | 18 | TSUM Turn Summary | AGENT, COMBAT, CSTATE, DOM, ENG, GUI, INVSTG, SITP |
+| 19 | CRPLAY Combat Replay | AGENT, CINST, COMBAT, DOM, GUI, TSUM |
 | 19 | SOUNDS Sounds | COMP, COMPV, CORE, ENG, GUI, TSUM |
 | 19 | TRVIEW Turn Report View | AGENT, CINST, COMBAT, CSTATE, DOM, ENG, EQUIP, GUI, TSUM |
-| 19 | VIS Visual Design | AGENT, COMBAT, CORE, DOM, ECON, ENG, GUI, INVSTG, LEAD, LIFE, TSUM |
 | 20 | CSCR Campaign Screen | AGENT, AUTO, CORE, CSTATE, DOM, ENDING, ENG, GUI, LIFE, SAVES, SITP, SOUNDS, TSUM |
-| 20 | GDRS GDRs | AGENT, COMBAT, COMP, CORE, DOM, ECON, EFFECT, ENG, EQUIP, FACTION, GDR, LEAD, MUSIC, VIS |
-| 20 | PLACE Implementation Placement | CORE, MUSIC, SOUNDS, VIS |
-| 21 | APPERF Autopilot Performance | AGENT, BASICAI, COMBAT, COND, CORE, CSTATE, DOM, ECON, ENG, PLACE, SAVES |
-| 21 | CTEST Campaign Tests | CORE, DOM, ENG, PLACE |
-| 21 | GLOBE Globe Integration | CORE, ENG, GUI, PLACE |
-| 21 | LICENSE Implementation License | PLACE |
-| 21 | LOOP Development Loop | CORE, ENG, PLACE, VIS |
-| 21 | REUSE Rule Reuse | COMBAT, CORE, DOM, ENG, PLACE |
-| 21 | TESTVAL Test Values | CORE, PLACE |
+| 20 | VIS Visual Design | AGENT, COMBAT, CORE, CRPLAY, DOM, ECON, ENG, GUI, INVSTG, LEAD, LIFE, TSUM |
+| 21 | GDRS GDRs | AGENT, COMBAT, COMP, CORE, DOM, ECON, EFFECT, ENG, EQUIP, FACTION, GDR, LEAD, MUSIC, VIS |
+| 21 | PLACE Implementation Placement | CORE, MUSIC, SOUNDS, VIS |
+| 22 | APPERF Autopilot Performance | AGENT, BASICAI, COMBAT, COND, CORE, CSTATE, DOM, ECON, ENG, PLACE, SAVES |
+| 22 | CTEST Campaign Tests | CORE, DOM, ENG, PLACE |
+| 22 | GLOBE Globe Integration | CORE, ENG, GUI, PLACE |
+| 22 | LICENSE Implementation License | PLACE |
+| 22 | LOOP Development Loop | CORE, ENG, PLACE, VIS |
+| 22 | REUSE Rule Reuse | COMBAT, CORE, DOM, ENG, PLACE |
+| 22 | TESTVAL Test Values | CORE, PLACE |
 
 ## Governance specifications
 

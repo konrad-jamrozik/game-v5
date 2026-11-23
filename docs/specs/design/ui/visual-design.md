@@ -67,6 +67,10 @@ Each colour has one role, so that the same colour always means the same thing ac
 | Autopilot | `#B4A0E5` | The outline and text of an [Autopilot](../foundation/engine-contract.md#autopilot) button, which acts on what an [Autopilot AI](../foundation/engine-contract.md#principals-and-access) did. |
 | Agent attack tint | `#B7C77A` at 7% opacity | The fill of a [Combat log](../mechanics/combat.md#combat-rounds-and-results) row [whose attacker is an Agent](screens/turn-report-view.md#combat-log-colours). |
 | Enemy attack tint | `#FF7F78` at 7% opacity | The fill of a Combat log row whose attacker is an [Enemy](../mechanics/domain-model.md#combat). |
+| Enemy amber | `#F2B34C` | The first of the three colours that tell the [figures](screens/combat-replay.md#figures) of Enemies of different EnemyArchetypes apart in the [Combat replay](screens/combat-replay.md#glossary). |
+| Enemy violet | `#B58CFF` | The third of those colours; the second is Danger. |
+| Tracer | `#FFE9A8` | The tracer of a `bullet` or `burst` [shot](screens/combat-replay.md#shots) of the Combat replay, and the sparks of its hit. |
+| Beam | `#7FD8F0` | The beam of a `beam` shot of the Combat replay, and the glow of its hit. |
 | Limit band | `#E5484D` at 12% opacity | The band that marks a losing limit on a chart. |
 | Scrim | `#0D0D0B` at 72% opacity | The layer that dims the screen behind a dialog. |
 | Control backdrop | `#0D0D0B` at 55% opacity | The fill behind a group of controls that stands over a Background artwork, with 10 px of inner padding and the control corner radius, so that the artwork interferes less with reading the controls, e.g. the Show agents group of the Agents View. |
