@@ -68,7 +68,7 @@ Classifications of a value, whether a GDR or Campaign state supplies it.
 
 # Campaign versus Session
 
-Campaign identifies a playthrough; Campaign state describes its data. A Session is the runtime context of one running game and selects at most one Campaign at a time. The two differ in kind: a Campaign is a playthrough with its own Campaign state, while a Session is runtime context. A Session is not part of any Campaign, and selecting a Campaign does not make it part of the Session. [Campaign Lifecycle](./campaign-lifecycle.md) owns when a Session starts and ends and how it selects a Campaign, and [Data ownership](./engine-contract.md#data-ownership) in Engine Contract owns what a Session holds and what is persisted. This distinction does not prescribe an internal class layout or save encoding.
+A Campaign and a Session differ in kind: a Session is not part of any Campaign, and selecting a Campaign does not make it part of the Session. [Campaign Lifecycle](./campaign-lifecycle.md) owns when a Session starts and ends and how it selects a Campaign, and [Data ownership](./engine-contract.md#data-ownership) in Engine Contract owns what a Session holds and what is persisted.
 
 # Authoritative and Derived values
 
@@ -86,4 +86,4 @@ The way a specification defines a value fixes its classification, so no separate
 
 # The GDR abbreviation
 
-Game Data Record has the approved abbreviation GDR. Introduce it as **Game Data Record (GDR)** or **Game Data Records (GDRs)** at the first relevant mention in a document, and use **GDR** or **GDRs** afterward, including headings, tables, and diagram labels. The Glossary keeps **Game Data Record (GDR)** as the term label. Every other term of the game is written in full, e.g. Campaign instance rather than "instance".
+Game Data Record has the approved abbreviation GDR. A document introduces it as **Game Data Record (GDR)** or **Game Data Records (GDRs)** at its first relevant mention, and uses **GDR** or **GDRs** afterward. Every other term of the game is written in full, e.g. Campaign instance rather than "instance".
