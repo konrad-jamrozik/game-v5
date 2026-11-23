@@ -1062,6 +1062,25 @@
       const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
       const sid = (p) => 'i_' + p.replace(/[^a-z0-9]/gi, '_')
       const f = (x, d = 1) => (Number.isFinite(x) ? (+x.toFixed(d)).toLocaleString('en-US') : '–')
+      /* Like f, but always with d decimals, e.g. 300.0, so numbers stacked in a tooltip line up digit by digit. */
+      const fx = (x, d = 1) =>
+        Number.isFinite(x) ? x.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d }) : '–'
+      /*
+       * Tooltip rows as monospace columns: a number, i.e. a cell starting with a digit or sign, is padded on the left so
+       * equal places line up; any other cell is padded on the right.
+       */
+      const tipTable = (rows) => {
+        const w = rows[0].map((_, i) => Math.max(...rows.map((r) => r[i].length))),
+          num = (c) => /^[+−-]?[0-9]/.test(c)
+        return rows
+          .map((r) =>
+            r
+              .map((c, i) => (num(c) ? c.padStart(w[i]) : c.padEnd(w[i])))
+              .join(' ')
+              .trimEnd(),
+          )
+          .join('\n')
+      }
       function inp(p, o = {}) {
         const v = get(cur, p),
           b = get(BASE, p),
@@ -2020,10 +2039,10 @@
             buckets.filter((b) => g(b) != null && at(b) <= xmax).map((b) => [at(b), g(b), b]),
           /* A bucket's tooltip, one fact per line: its Turns, what the chart shows, then its operations. */
           opsLine = (b) =>
-            `Ops      ${f(
+            `Ops      ${fx(
               b.n.reduce((a, c) => a + c, 0),
               2,
-            )}: ${b.n.map((v, i) => `L${LEVELS[i]} ${f(v, 2)}`).join(' · ')}`,
+            )}: ${b.n.map((v, i) => `L${LEVELS[i]} ${fx(v, 2)}`).join(' · ')}`,
           tipOf = (p, what) =>
             p[2] ? [`Turns ${p[2].from}–${p[2].to}`, what, opsLine(p[2])].join('\n') : `Turn ${p[0]}\n${what}`
         const vl = [
@@ -2129,10 +2148,26 @@
           fmt: (p) =>
             tipOf(
               p,
-              [
-                `Funding  +${f(p[2].income, 0)} in these Turns · Σ ${f(p[2].incomeSum, 0)} · ${f(fundOn(p[2].to), 1)} per Turn at the end`,
-                `Money    +${f(p[2].money, 0)} in these Turns · Σ ${f(p[2].moneySum, 0)} · ${f(p[2].money / (p[2].to - p[2].from + 1), 1)} per Turn in these Turns`,
-              ].join('\n'),
+              tipTable([
+                [
+                  'Funding'.padEnd(8),
+                  '+' + fx(p[2].income, 0),
+                  'in these Turns · Σ',
+                  fx(p[2].incomeSum, 0),
+                  '·',
+                  fx(fundOn(p[2].to), 1),
+                  'per Turn at the end',
+                ],
+                [
+                  'Money'.padEnd(8),
+                  '+' + fx(p[2].money, 0),
+                  'in these Turns · Σ',
+                  fx(p[2].moneySum, 0),
+                  '·',
+                  fx(p[2].money / (p[2].to - p[2].from + 1), 1),
+                  'per Turn in these Turns',
+                ],
+              ]),
             ),
         })
         $('o_panic').innerHTML = out([
