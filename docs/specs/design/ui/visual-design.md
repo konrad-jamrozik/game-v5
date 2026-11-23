@@ -168,6 +168,10 @@ A button is 36 px tall, 32 px inside a table row, and 44 to 46 px for the main a
 
 Inputs share one shape so that every editable value is recognisable. An input or a select is 40 px tall, has a Background fill, a Border outline, and Body text. Its label sits above it in the Label style, or to its left with a muted hint below the label when the input is one row of a settings list. A numeric input uses the Figure style and aligns its value to the right.
 
+## Steppers
+
+A stepper sets a count: a numeric input between a "−" and a "+" button, 24 px tall. Clicking a button changes the count by 1, by 10 while Shift is held, and by 100 while Ctrl is held, and never past the stepper's bounds, so that large counts take a few clicks rather than many.
+
 ## Checkboxes
 
 A checkbox shows at a glance whether the Player can change it, because a disabled checkbox among enabled ones, e.g. the row of an Agent In transit in the [Agents View](screens/agents-view.md), must not pass for one the Player can select. A checkbox is a 16 px square with the control corner radius, drawn in these states.

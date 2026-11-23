@@ -10,7 +10,7 @@
 
 # Overview
 
-The Storage View is where the Player sees at a glance what gear the agency owns, who wears it, and what it is worth, and sells what it does not need. It is the fourth of the Operations [Detail views](../gui.md#glossary) of the [Campaign Screen](campaign-screen.md). Every value it shows is a [Sale value](../../mechanics/equipment.md#glossary), what selling would bring, because that is what the gear is worth to the agency. Its header shows the agency's money.
+The Storage View is where the Player sees at a glance what gear the agency owns, who wears it, and what it is worth, and sells what it does not need. It is the last of the Operations [Detail views](../gui.md#glossary) of the [Campaign Screen](campaign-screen.md). Every value it shows is a [Sale value](../../mechanics/equipment.md#glossary), what selling would bring, because that is what the gear is worth to the agency. Its header shows the agency's money and what a value is, as the share of the price that [`sale_price_fraction`](../../mechanics/equipment.md#selling-items) gives, in words where it is a half and as a percentage otherwise, e.g. "Value is half the price" or "Value is 40% of the price".
 
 # Totals
 
@@ -24,16 +24,17 @@ The [Storage](../../mechanics/equipment.md#glossary) table lists the [Items](../
 | --- | --- |
 | Item | The `name` of the [Item](../../mechanics/equipment.md#glossary) or the [AmmoType](../../mechanics/combat.md#ammotype). |
 | Stats | For a Weapon, its `base_weapon_damage` with the sword icon and its AmmoType's `name`, e.g. "14 ⚔ Rifle ammo"; for an Armor, its `base_armor` with the shield icon, e.g. "20 🛡"; for an AmmoType, its count in Storage against the rounds [Ammo short](../../mechanics/equipment.md#ammo-short) asks for and the number of Agents whose Weapons use it, e.g. "95 / 130 needed (13 Agents)". While the AmmoType is [Ammo short](../../mechanics/equipment.md#glossary), its Stats are in Accent text with the warning icon in Warning, whose tooltip names the AmmoType, its rounds in Storage, and the rounds it falls short of, e.g. "Pistol ammo 69, below 70 for 7 Agents". |
-| Owned, Eq., Avail. | The Owned count, the Equipped count, or "–" for an AmmoType, and the count in Storage. |
+| Owned, Equip., Avail. | The Owned count, the Equipped count, or "–" for an AmmoType, and the count in Storage. |
 | Unit | The Sale value of one, [with two decimals](../gui.md#decimal-quantities-shown) when it is not whole, e.g. "0.50". |
-| Owned value, Avail. value | The Sale value of the Owned and of the Available count, with two decimals when not whole. |
-| Sell | A stepper with a number field, from 0 to the count in Storage, or to the Owned count while Allow selling equipped is checked, and a "max" button that sets it to that limit. |
+| Owned val., Avail. val. | The Sale value of the Owned and of the Available count, with two decimals when not whole. |
+| Sell | A [stepper](../visual-design.md#steppers), from 0 to the count in Storage, or to the Owned count while Allow selling equipped is checked, and a "max" button that sets it to that limit. |
+| Earns | The Sale value of the Sell count, with two decimals when not whole, so that the Player sees what each row adds to the sale; empty while the Sell count is 0. |
 
 # Selling
 
-A sell bar gathers the counts chosen in the Sell column into one sale, so that the Player can sell several kinds of Items and Ammo in one [Player action](../../foundation/engine-contract.md#player-actions-and-turns) and see what it brings before committing:
+A sell bar gathers the counts chosen in the Sell column into one sale, so that the Player can sell several kinds of Items and Ammo in one [Player action](../../foundation/engine-contract.md#player-actions-and-turns) and see what it brings before committing. Like the buy bar of the [Acquisitions View](acquisitions-view.md#buying), its parts start at its left edge:
 
-1. **What is sold:** each Item and AmmoType whose Sell count is above 0, by `name` and count, e.g. "Selling 2 Rifles · 1 Ballistic vest · 50 Pistol ammo".
+1. **What is sold:** each Item and AmmoType whose Sell count is above 0, one per line, by count and `name`, under the label "Selling", e.g. "2 Rifles", "1 Ballistic vest", and "50 Pistol ammo".
 2. **What it brings:** the [Sale value](../../mechanics/equipment.md#selling-items) of the whole sale, rounded down once as the action rounds it, and the money after it, e.g. "Earns +155 · Money after 4,365".
 3. **Allow selling equipped:** a checkbox, unchecked whenever the Storage View opens. While it is unchecked, no Sell count can exceed the count in Storage. While it is checked and the sale takes Items off Agents, the bar adds one line per such [Agent](../../mechanics/domain-model.md#agency-and-agents) in the order [Selling Items](../../mechanics/equipment.md#selling-items) takes them, e.g. "agent-12 loses Rifle → Knife".
 4. **Clear,** which sets every Sell count to 0, and **Sell,** labelled with the Sale value, which makes one [`sellItems`](../../mechanics/equipment.md#selling-items) with the chosen counts and the checkbox as `takeEquipped`, at once and without a confirmation, because Undo Action takes it back. Both are disabled while every Sell count is 0.

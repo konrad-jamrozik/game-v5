@@ -10,7 +10,7 @@
 
 # Overview
 
-The Acquisitions View is where the Player buys gear, and its mirror is the [Storage View](storage-view.md): the same groups and counts, with prices in place of Sale values and a buy bar in place of the sell bar. It is the fifth of the Operations [Detail views](../gui.md#glossary) of the [Campaign Screen](campaign-screen.md). Its header shows the agency's money.
+The Acquisitions View is where the Player buys gear, and its mirror is the [Storage View](storage-view.md): the same groups and counts, with prices in place of Sale values and a buy bar in place of the sell bar. It is the fourth of the Operations [Detail views](../gui.md#glossary) of the [Campaign Screen](campaign-screen.md). Its header shows the agency's money.
 
 Finding new gear is part of what the Player discovers, as finding new [Compendium](../../mechanics/compendium.md) articles is, so the Acquisitions View lists only what is [Unlocked](../../mechanics/equipment.md#unlocked-items): an Item that is not Unlocked is not shown at all, and nothing says which interrogation would unlock it.
 
@@ -23,16 +23,17 @@ The [Acquisitions](../../mechanics/economy-and-upgrades.md#glossary) table lists
 | Item | The `name` of the Item or AmmoType. |
 | Stats | As in the [Storage](../../mechanics/equipment.md#glossary) table, the warning icon of [Ammo short](../../mechanics/equipment.md#ammo-short) included, but without the number of Agents whose Weapons use an AmmoType. |
 | Price | Its `price`, for one Item or one round. |
-| Owned, Eq., Avail. | As in the Storage table, so that the Player sees what the agency already has before buying more. |
-| Buy | A stepper with a number field, from 0 up, and for an AmmoType also "+10" and "+100" buttons, because [Ammo](../../mechanics/combat.md#ammo) is bought in bulk. |
+| Owned, Equip., Avail. | As in the Storage table, so that the Player sees what the agency already has before buying more. |
+| Buy | A [stepper](../visual-design.md#steppers), from 0 up, and for an AmmoType also "+10" and "+100" buttons, because [Ammo](../../mechanics/combat.md#ammo) is bought in bulk. |
+| Cost | The `price` times the Buy count, so that the Player sees what each row adds to the purchase; empty while the Buy count is 0. |
 
 A group with no Unlocked Item says "Nothing to buy yet".
 
 # Buying
 
-A buy bar gathers the counts chosen in the Buy column into one purchase:
+A buy bar gathers the counts chosen in the Buy column into one purchase. Its parts start at its left edge, its buttons too, so that on a wide window they stay near the table:
 
-1. **What is bought:** each Item and AmmoType whose Buy count is above 0, by `name` and count, e.g. "Buying 2 Combat pistols · 100 Pistol ammo".
+1. **What is bought:** each Item and AmmoType whose Buy count is above 0, one per line, by count and `name`, under the label "Buying", e.g. "2 Combat pistols" above "100 Pistol ammo".
 2. **What it costs:** the [cost](../../mechanics/equipment.md#buying-items) of the whole purchase and the money after it, e.g. "Costs 120 · Money after 4,090". While the cost is above the money, the cost is in Danger and the bar says how much money is missing.
 3. **Clear,** which sets every Buy count to 0, and **Buy,** labelled with the cost, which makes one [`buyItems`](../../mechanics/equipment.md#buying-items) with the chosen counts, at once and without a confirmation, because Undo Action takes it back. Both are disabled while every Buy count is 0, and Buy also while the cost is above the money.
 
