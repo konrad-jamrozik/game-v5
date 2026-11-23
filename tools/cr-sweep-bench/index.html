@@ -575,7 +575,7 @@
         NUMBERS.forEach((id) => ($(id).value = c[id]))
         $('level').value = state.view.level ?? 95
         $('ignoreWorst').value = state.view.ignoreWorst ?? 0
-        $('feature').value = state.view.feature ?? 'countRatio'
+        $('feature').value = feature().id
       }
 
       const lookupSoon = later(refresh, 500)
@@ -857,7 +857,7 @@
           rows.join('')
       }
 
-      const feature = () => FEATURES.find((f) => f.id === state.view.feature) ?? FEATURES[2]
+      const feature = () => FEATURES.find((f) => f.id === state.view.feature) ?? FEATURES[0]
 
       /** The rows in four groups of equal size by the feature, lowest first; each row gets its group number. */
       function grouped() {
@@ -1251,9 +1251,9 @@
         { id: 'agent', label: 'Agent type', get: (r) => r.pairing.agent.name, text: true },
         { id: 'enemy', label: 'Enemy team', get: (r) => r.pairing.enemy.name, text: true },
         { id: 'enemies', label: 'Enemies', get: (r) => r.pairing.enemyStats.count, show: String },
-        { id: 'needed', label: 'Agents needed', get: (r) => r.pairing.needed, show: num },
         { id: 'ratio', label: 'Ratio needed', get: (r) => r.ratio, show: (v) => pct(v) },
         { id: 'over', label: 'Over-deployment', get: (r) => r.over, show: times },
+        { id: 'needed', label: 'Agents needed', get: (r) => r.pairing.needed, show: num },
         {
           id: 'safe',
           label: 'Agents asked for',

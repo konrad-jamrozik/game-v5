@@ -70,7 +70,7 @@ function report(): void {
   const level = Number(arg('level', '95')) / 100
   const ignoreWorst = Number(arg('ignore', '0')) / 100
   const rowCount = Number(arg('rows', '10'))
-  const feature = (FEATURES as Feature[]).find((f) => f.id === arg('feature', 'countRatio'))
+  const feature = (FEATURES as Feature[]).find((f) => f.id === arg('feature', 'skillRatio'))
   const planned = plan(state.config, gdr, engine)
   const records = planned.pairings.map((p) => results.get(p.key)).filter((r): r is SweepRecord => r !== undefined)
   const prepared = prepare(records, level) as { pairings: unknown[]; excluded: { reason: string }[] }

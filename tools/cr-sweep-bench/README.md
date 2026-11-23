@@ -79,7 +79,7 @@ The scores read only the swept win rates and the formula. A pairing's win rates 
 
 A perfect formula gives every pairing the same ratio needed and so an over-deployment of ×1 everywhere. What keeps a formula from it shows in three places:
 
-- **Rating ratio each pairing needs** plots every pairing's ratio needed against one feature of the pairing, e.g. the Agents needed per Enemy or the hits an Agent needs per Enemy. A slope means the formula misjudges that feature.
+- **Rating ratio each pairing needs** plots every pairing's ratio needed against one feature of the pairing, e.g. the Agent skill against the mean Enemy skill or the hits an Agent needs per Enemy. A slope means the formula misjudges that feature.
 - **Pairings in four groups** gives the median and highest ratio needed of the pairings in four groups of equal size by that feature. The points of the first chart are coloured by the same groups.
 - **Pairings** lists every pairing, sorted by any column; the ones that need the highest ratio set the safe ratio. Clicking one shows its win rate at each Agent count, with the Agents needed and the Agents the safe ratio asks for.
 

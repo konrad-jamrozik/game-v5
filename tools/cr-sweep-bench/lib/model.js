@@ -251,18 +251,21 @@ export function crossing(curve, p) {
 
 /* ---------- features of a pairing ---------- */
 
-/** What a pairing can be grouped and coloured by. `get` reads a prepared pairing. */
+/**
+ * What a pairing can be grouped and coloured by. `get` reads a prepared pairing. Each says what kind of fight the
+ * pairing is. The Agents needed is not among them: alone it says only how large the swept Enemy teams and how strong
+ * the swept Agent types happen to be.
+ */
 export const FEATURES = [
-  { id: 'enemyCount', label: 'Enemies', log: true, get: (p) => p.enemyStats.count },
-  { id: 'needed', label: 'Agents needed', log: true, get: (p) => p.needed },
-  { id: 'countRatio', label: 'Agents needed per Enemy', log: true, get: (p) => p.needed / p.enemyStats.count },
-  { id: 'agentSkill', label: 'Agent skill', log: true, get: (p) => p.agent.skill },
   {
     id: 'skillRatio',
     label: 'Agent skill ÷ mean Enemy skill',
     log: true,
     get: (p) => p.agent.skill / p.enemyStats.skill,
   },
+  { id: 'enemyCount', label: 'Enemies', log: true, get: (p) => p.enemyStats.count },
+  { id: 'countRatio', label: 'Agents needed per Enemy', log: true, get: (p) => p.needed / p.enemyStats.count },
+  { id: 'agentSkill', label: 'Agent skill', log: true, get: (p) => p.agent.skill },
   {
     id: 'agentHits',
     label: 'Hits an Agent needs per Enemy',
@@ -284,7 +287,6 @@ export const FEATURES = [
     log: true,
     get: (p) => Math.max(...p.enemy.groups.map((g) => g.skill)) / Math.min(...p.enemy.groups.map((g) => g.skill)),
   },
-  { id: 'fightSize', label: 'Combatants in the fight', log: true, get: (p) => p.needed + p.enemyStats.count },
 ]
 
 /* ---------- scoring ---------- */
