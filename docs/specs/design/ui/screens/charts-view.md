@@ -47,3 +47,5 @@ Each is titled with the Faction's name and "response sites", e.g. "Red Dawn · r
 The Charts View as the game draws it:
 
 ![Charts View Screenshot](../../../../images/screens/charts-view.png)
+
+_Captured on 2026-11-23._

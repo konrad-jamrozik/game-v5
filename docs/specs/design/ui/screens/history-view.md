@@ -86,3 +86,5 @@ A count of 1 takes the singular, e.g. "Hired 1 Agent". No line names the Agents 
 The History View as the game draws it:
 
 ![History View Screenshot](../../../../images/screens/history-view.png)
+
+_Captured on 2026-11-23._

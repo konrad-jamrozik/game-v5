@@ -40,3 +40,5 @@ A Mission site about to be lost and one just lost stand out from the rest of the
 The Situation Panel as the game draws it:
 
 ![Situation Screenshot](../../../../images/screens/situation-panel.png)
+
+_Captured on 2026-11-23._

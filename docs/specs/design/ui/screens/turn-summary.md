@@ -54,3 +54,5 @@ Each item of New Mission sites and of Expired Mission sites leads to its Mission
 The Turn Summary as the game draws it:
 
 ![Turn summary Screenshot](../../../../images/screens/turn-summary.png)
+
+_Captured on 2026-11-23._

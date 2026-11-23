@@ -72,4 +72,8 @@ The Missions View as the game draws it:
 
 ![Missions View Screenshot](../../../../images/screens/missions-view.png)
 
+_Captured on 2026-11-23._
+
 ![Missions View Screenshot with the Concluded toggle on](../../../../images/screens/missions-view-concluded.png)
+
+_Captured on 2026-11-23._

@@ -56,4 +56,8 @@ The Turn Report View as the game draws it:
 
 ![Turn Report View Screenshot](../../../../images/screens/turn-report-view.png)
 
+_Captured on 2026-11-23._
+
 ![Combat report Screenshot](../../../../images/screens/combat-report.png)
+
+_Captured on 2026-11-23._

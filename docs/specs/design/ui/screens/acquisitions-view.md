@@ -43,3 +43,5 @@ After a purchase every Buy count is 0 again, and what was bought is in Storage, 
 The Acquisitions View as the game draws it:
 
 ![Acquisitions View Screenshot](../../../../images/screens/acquisitions-view.png)
+
+_Captured on 2026-11-23._

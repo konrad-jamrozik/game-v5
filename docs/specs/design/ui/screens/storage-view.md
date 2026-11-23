@@ -45,3 +45,5 @@ After a sale every Sell count is 0 again.
 The Storage View as the game draws it:
 
 ![Storage View Screenshot](../../../../images/screens/storage-view.png)
+
+_Captured on 2026-11-23._

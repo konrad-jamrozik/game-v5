@@ -26,7 +26,11 @@ Every screen listed by the [Graphical User Interface](gui.md) is drawn with the 
 
 A Screenshot shows what a screen looks like in the game, so that a reader of a screen's specification sees the screen itself and the text does not have to describe it.
 
-Every Screenshot is generated. The capture script of the Implementation, run as `npm run screens:capture` where the Implementation's code is kept, plays one fixed scenario and writes the images to `docs/images/screens`. A Screenshot is never edited by hand. When a Screenshot and the Implementation differ, the Implementation is right and the Screenshot is generated again, and a change to how a screen looks generates the Screenshots again in the same change. The values a Screenshot shows, e.g. the names of Agents and the numbers, are those of the capture scenario and decide nothing.
+Every Screenshot is generated. The capture script of the Implementation, run as `npm run screens:capture` where the Implementation's code is kept, plays one fixed scenario and writes the images to `docs/images/screens`. A Screenshot is never edited by hand. When a Screenshot and the Implementation differ, the Implementation is right.
+
+A Screenshot may lag the game by up to a week, so a change to how a screen looks does not by itself generate the Screenshots again. Under each Screenshot its specification states the date it was captured, e.g. "Captured on 2026-11-23.", which the capture script writes for every image it captures. The Screenshots are generated again only when a change touches a screen whose Screenshot was captured more than a week earlier.
+
+The values a Screenshot shows, e.g. the names of Agents and the numbers, are those of the capture scenario and decide nothing.
 
 What a screen shows, in which order, and which operations it offers is stated by the [Graphical User Interface](gui.md) and by the specification of that screen or panel. How one screen arranges and sizes what it shows is decided by the Implementation and shown by the Screenshot. What several screens share, i.e. the Design tokens and the styling of components, is stated here.
 

@@ -30,3 +30,5 @@ The [Upgrades](../../mechanics/domain-model.md#agency-and-agents) are [cards](..
 The Upgrades View as the game draws it:
 
 ![Upgrades View Screenshot](../../../../images/screens/upgrades-view.png)
+
+_Captured on 2026-11-23._

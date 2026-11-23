@@ -42,3 +42,5 @@ The layout puts what the Player most often wants, the Campaign saves, in the wid
 The Main Menu as the game draws it:
 
 ![Main menu Screenshot](../../../../images/screens/main-menu.png)
+
+_Captured on 2026-11-23._
