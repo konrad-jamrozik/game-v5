@@ -1,14 +1,14 @@
 id: red_dawn
 type: FactionArchetype
 name: Red Dawn
-initial_lasts_turns: [1, 1]
+initial_lasts_turns: [0, 0]
 ---
 id: exalt
 type: FactionArchetype
 name: Exalt
-initial_lasts_turns: [10, 20]
+initial_lasts_turns: [5, 15]
 ---
 id: black_lotus
 type: FactionArchetype
 name: Black Lotus
-initial_lasts_turns: [20, 30]
+initial_lasts_turns: [10, 20]

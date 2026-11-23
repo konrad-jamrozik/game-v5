@@ -45,11 +45,11 @@ kind: initiative
 name: Raid logistics hub
 expires_in_turns: 3
 enemies:
-  initiate: 8
-  operative: 12
-  soldier: 10
+  initiate: 6
+  operative: 10
+  soldier: 6
   elite: 2
-  handler: 6
+  handler: 4
   lieutenant: 2
   commander: 1
 on_win:
@@ -63,10 +63,10 @@ kind: initiative
 name: Raid regional stronghold
 expires_in_turns: 3
 enemies:
-  soldier: 30
-  elite: 12
-  lieutenant: 6
-  commander: 3
+  soldier: 24
+  elite: 6
+  lieutenant: 4
+  commander: 2
   high_commander: 1
 on_win:
   - money: 30000
@@ -79,10 +79,10 @@ kind: initiative
 name: Raid HQ
 expires_in_turns: 3
 enemies:
-  soldier: 50
-  elite: 20
-  lieutenant: 10
-  commander: 6
+  soldier: 32
+  elite: 12
+  lieutenant: 6
+  commander: 4
   high_commander: 2
   cult_leader: 1
 on_win:
@@ -151,8 +151,8 @@ name: Defend against office raid
 operation_level: 2
 expires_in_turns: 1
 enemies:
-  initiate: 4
-  operative: 4
+  initiate: 3
+  operative: 3
   soldier: 4
   handler: 2
   lieutenant: 1

@@ -765,7 +765,7 @@ A ruthless cult that trades in fear and silence. Follow its members up the chain
 | `black_lotus`         | FactionArchetype |
 | --------------------- | ---------------- |
 | `name`                | `Black Lotus`    |
-| `initial_lasts_turns` | `[20,30]`        |
+| `initial_lasts_turns` | `[10,20]`        |
 
 ### Exalt
 
@@ -776,7 +776,7 @@ A secretive cult that hides behind charity and patronage while it buys influence
 | `exalt`               | FactionArchetype |
 | --------------------- | ---------------- |
 | `name`                | `Exalt`          |
-| `initial_lasts_turns` | `[10,20]`        |
+| `initial_lasts_turns` | `[5,15]`         |
 
 ### Red Dawn
 
@@ -787,7 +787,7 @@ A violent cult that recruits in the shadows and grows bolder the longer it is le
 | `red_dawn`            | FactionArchetype |
 | --------------------- | ---------------- |
 | `name`                | `Red Dawn`       |
-| `initial_lasts_turns` | `[1,1]`          |
+| `initial_lasts_turns` | `[0,0]`          |
 
 ## Subject articles: Lead
 
@@ -1510,7 +1510,7 @@ A cult is about to storm one of your field offices. Hold it.
 | `name`                       | `Defend against office raid`                                          |
 | `operation_level`            | `2`                                                                   |
 | `expires_in_turns`           | `1`                                                                   |
-| `enemies`                    | `{"initiate":4,"operative":4,"soldier":4,"handler":2,"lieutenant":1}` |
+| `enemies`                    | `{"initiate":3,"operative":3,"soldier":4,"handler":2,"lieutenant":1}` |
 
 ### Foil bioweapon release
 
@@ -1686,13 +1686,13 @@ Source: `content/compendium/compendium_articles/raid_hq_article.yaml`
 
 The final assault on the headquarters of a cult. Winning it puts the [Cult leader](#cult-leader) in your hands.
 
-| `raid_hq`          | MissionSiteArchetype                                                                         |
-| ------------------ | -------------------------------------------------------------------------------------------- |
-| `kind`             | `initiative`                                                                                 |
-| `name`             | `Raid HQ`                                                                                    |
-| `expires_in_turns` | `3`                                                                                          |
-| `enemies`          | `{"soldier":50,"elite":20,"lieutenant":10,"commander":6,"high_commander":2,"cult_leader":1}` |
-| `on_win`           | `[{"money":100000},{"funding":300},{"panic":-20}]`                                           |
+| `raid_hq`          | MissionSiteArchetype                                                                        |
+| ------------------ | ------------------------------------------------------------------------------------------- |
+| `kind`             | `initiative`                                                                                |
+| `name`             | `Raid HQ`                                                                                   |
+| `expires_in_turns` | `3`                                                                                         |
+| `enemies`          | `{"soldier":32,"elite":12,"lieutenant":6,"commander":4,"high_commander":2,"cult_leader":1}` |
+| `on_win`           | `[{"money":100000},{"funding":300},{"panic":-20}]`                                          |
 
 ### Raid logistics hub
 
@@ -1705,7 +1705,7 @@ The hub that keeps the cult supplied. Taking it will hurt the cult for a long ti
 | `kind` | `initiative` |
 | `name` | `Raid logistics hub` |
 | `expires_in_turns` | `3` |
-| `enemies` | `{"initiate":8,"operative":12,"soldier":10,"elite":2,"handler":6,"lieutenant":2,"commander":1}` |
+| `enemies` | `{"initiate":6,"operative":10,"soldier":6,"elite":2,"handler":4,"lieutenant":2,"commander":1}` |
 | `on_win` | `[{"money":10000},{"funding":60},{"panic":-5}]` |
 
 ### Raid outpost
@@ -1728,13 +1728,13 @@ Source: `content/compendium/compendium_articles/raid_regional_stronghold_article
 
 A fortress that a [high commander](#high-commander) rules like a small kingdom. Bring everything you have.
 
-| `raid_regional_stronghold` | MissionSiteArchetype                                                        |
-| -------------------------- | --------------------------------------------------------------------------- |
-| `kind`                     | `initiative`                                                                |
-| `name`                     | `Raid regional stronghold`                                                  |
-| `expires_in_turns`         | `3`                                                                         |
-| `enemies`                  | `{"soldier":30,"elite":12,"lieutenant":6,"commander":3,"high_commander":1}` |
-| `on_win`                   | `[{"money":30000},{"funding":150},{"panic":-10}]`                           |
+| `raid_regional_stronghold` | MissionSiteArchetype                                                       |
+| -------------------------- | -------------------------------------------------------------------------- |
+| `kind`                     | `initiative`                                                               |
+| `name`                     | `Raid regional stronghold`                                                 |
+| `expires_in_turns`         | `3`                                                                        |
+| `enemies`                  | `{"soldier":24,"elite":6,"lieutenant":4,"commander":2,"high_commander":1}` |
+| `on_win`                   | `[{"money":30000},{"funding":150},{"panic":-10}]`                          |
 
 ### Raid safehouse
 
