@@ -312,7 +312,7 @@ E.g., with a w of 9 and a `weapon_damage_range` of 0.3, `lo = round up(6.3) = 7`
 
 ## Effects of an attack
 
-An attack wears down both Combatants: it always adds exhaustion, and a hit takes armor and then health from the defender. One attack applies these effects, in this order, before the next Combat turn begins:
+An attack wears Combatants down: it always adds exhaustion to at least one of them, and a hit takes armor and then health from the defender. One attack applies these effects, in this order, before the next Combat turn begins:
 
 1. **Outcomes:** The hit chance is formed, and the attack has its [hit outcome](#hit-outcome) and, on a hit, its [damage outcome](#damage-outcome).
 2. **Armor and health:** On a hit, the defender's current armor falls by the armor removed, and its current health by the health removed. A miss changes neither.

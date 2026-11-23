@@ -102,7 +102,7 @@ A Combat is fought in [rounds](#equipment-and-storage). In each round every [Age
 | Order | Within a side, from the highest to the lowest effective skill at the start of its part of the round |
 | Enemy target | Any Agent able to fight, each equally likely |
 | Agent target | Any Enemy able to fight, with a weight of 100 minus one for each whole hundredth by which the chance to hit it lies above or below 0.8, times the share of the Agent's [weapon damage](#damage) that the Enemy's health and armor can still take, rounded up |
-| Each attack | +1 [exhaustion](#exhaustion) for the attacker and +1 for the defender, hit or miss |
+| Each attack | +1 [exhaustion](#exhaustion) for the attacker and +0 for the defender, hit or miss |
 | Incapacitated | Alive but unable to fight: effective skill at or below 0.1 × skill, or exhaustion of 100 or more |
 | End of the Combat | As soon as no Enemy or no Agent is able to fight, or after a round in which the team retreats |
 
@@ -191,7 +191,7 @@ Exhaustion measures how tired an [Agent](#agents) is. Work and fighting raise it
 | Each turn of [Training](#training) | +1 |
 | Each turn on an [Investigation](#investigations) | +1 |
 | Each attack made in a [Combat](#combat) | +1, hit or miss |
-| Each attack defended against | +1, hit or miss |
+| Each attack defended against | +0, hit or miss |
 | Each [Mission](#missions) survived | +5, and +1 for each 1% of the team that was killed, rounded up |
 | Each turn on Standby or Recovery | −5, plus [Upgrades](#upgrades), never below 0 |
 | [In transit](#transit) or deployed | No rest |
