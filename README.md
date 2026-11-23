@@ -56,7 +56,6 @@ When agents run in [T3 Code](https://github.com/pingdotgg/t3code), the skills th
 | `npm run docs:link-terms` | Link the first mention of every term to its definition |
 | `npm run docs:plain` | Print specifications with every link reduced to its label |
 | `npm run specs:budget` | Report, raise, or set the word budget of a specification |
-| `npm run artboards:export` | Export Artboard images from a local copy of the Design canvas |
 | `npm run balance:bench` | Serve the [GDR Balance Bench](tools/gdr-balance-bench/README.md), a local page for balancing GDR values |
 | `npm run autopilot:bench` | Serve the [Autopilot Bench](tools/autopilot-bench/README.md), a local page for tuning the Basic Autopilot AI |
 | `npm run rating:bench` | Serve the [Combat Rating Bench](tools/combat-rating-bench/README.md), a local page for finding a Combat rating formula that predicts who wins against each Mission site |
@@ -80,7 +79,7 @@ The [verification guide](docs/verification.md) explains which checks to run for 
 
 ## Derived specification views
 
-The [derived specification catalog](docs/derived/README.md) links an alphabetical glossary, specification relationship graphs, and a preview of the Compendium, i.e. of every in-game reference article with its values and links filled in. These informative Markdown files are generated from the registered specifications, and the Compendium preview from the game data under `content/`; the source specifications and game data remain authoritative. Each spec Family directory also has an `about-<family>.md` overview whose relationship diagrams the same command regenerates between marker comments. After changing a specification, run `npm run docs:generate`. The command also writes the diagrams of each family overview as SVG files in `docs/images/diagrams/`, e.g. `docs/images/diagrams/mechanics-family-within.svg`; do not edit them by hand. Hand-made diagrams also live in `docs/images/diagrams/`, and images of UI Artboards in `docs/images/artboards/`. Commit the resulting files. `npm run docs:check` reports missing, stale, or unexpected files without modifying them, and runs as part of commit and CI checks.
+The [derived specification catalog](docs/derived/README.md) links an alphabetical glossary, specification relationship graphs, and a preview of the Compendium, i.e. of every in-game reference article with its values and links filled in. These informative Markdown files are generated from the registered specifications, and the Compendium preview from the game data under `content/`; the source specifications and game data remain authoritative. Each spec Family directory also has an `about-<family>.md` overview whose relationship diagrams the same command regenerates between marker comments. After changing a specification, run `npm run docs:generate`. The command also writes the diagrams of each family overview as SVG files in `docs/images/diagrams/`, e.g. `docs/images/diagrams/mechanics-family-within.svg`; do not edit them by hand. Hand-made diagrams also live in `docs/images/diagrams/`, and the Screenshots of the game in `docs/images/screens/`. Commit the resulting files. `npm run docs:check` reports missing, stale, or unexpected files without modifying them, and runs as part of commit and CI checks.
 
 ## Strictness and tests
 

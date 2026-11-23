@@ -128,12 +128,12 @@ The Agent details list the Agent's [Participation history](../../mechanics/domai
 
 Each row leads to what it records, so that the Player can see how each Mission the Agent served in went. Pressing a Mission's row opens the Missions View with its Mission site selected, and pressing an Investigation's row opens the Leads View with its Lead selected, each as a Follow.
 
-# Artboard
+# Screenshots
 
-![Agents View panel Artboard](../../../../images/artboards/agents-view.png)
+The Agents View as the game draws it:
 
-![Agents View panel Artboard with the Memorial filter on](../../../../images/artboards/agents-memorial.png)
+![Agents View Screenshot](../../../../images/screens/agents-view.png)
 
-![Agent details panel Artboard](../../../../images/artboards/agent-details.png)
+![Agents View Screenshot with the Memorial filter on](../../../../images/screens/agents-memorial.png)
 
-The sample values of the [Artboards](../visual-design.md#glossary) [appear only there](../visual-design.md#reading-artboards), e.g. the Agent IDs and their values.
+![Agent details Screenshot](../../../../images/screens/agent-details.png)

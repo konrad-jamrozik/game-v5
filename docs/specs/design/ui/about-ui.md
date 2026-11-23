@@ -20,7 +20,7 @@ The guidance states what the Player is expected to be able to do comfortably and
 
 ## Visual Design
 
-[Visual Design](visual-design.md) answers _what does the graphical user interface look like?_ It owns the visual direction, the Design tokens, and the styling of components and charts, and the Design canvas every Artboard is exported from.
+[Visual Design](visual-design.md) answers _what does the graphical user interface look like?_ It owns the visual direction, the Design tokens, and the styling of components and charts, and the Screenshots that show each screen as the game draws it.
 
 ## Music
 
@@ -32,7 +32,7 @@ The guidance states what the Player is expected to be able to do comfortably and
 
 ## Screens
 
-The `screens/` directory groups one specification per screen, panel, or dialog of the graphical user interface, so that each answers _what does this part show by default, and how is it laid out?_ next to its Artboard. The [Main Menu](screens/main-menu.md) is where the GUI opens, and the [Campaign Screen](screens/campaign-screen.md) is where a Campaign is played. The parts of the Campaign screen that need more than a line have their own: the [Situation Panel](screens/situation-panel.md), the [Turn Summary](screens/turn-summary.md), and each Detail view, i.e. the [Missions View](screens/missions-view.md), [Leads View](screens/leads-view.md), [Agents View](screens/agents-view.md), [Storage View](screens/storage-view.md), [Acquisitions View](screens/acquisitions-view.md), and [Upgrades View](screens/upgrades-view.md), in which the Player acts, and the [Turn Report View](screens/turn-report-view.md), [History View](screens/history-view.md), [Charts View](screens/charts-view.md), and [Compendium View](screens/compendium-view.md), in which the Player reads what has happened and how the game works.
+The `screens/` directory groups one specification per screen, panel, or dialog of the graphical user interface, so that each answers _what does this part show by default, and which operations does it offer?_ next to its Screenshot. The [Main Menu](screens/main-menu.md) is where the GUI opens, and the [Campaign Screen](screens/campaign-screen.md) is where a Campaign is played. The parts of the Campaign screen that need more than a line have their own: the [Situation Panel](screens/situation-panel.md), the [Turn Summary](screens/turn-summary.md), and each Detail view, i.e. the [Missions View](screens/missions-view.md), [Leads View](screens/leads-view.md), [Agents View](screens/agents-view.md), [Storage View](screens/storage-view.md), [Acquisitions View](screens/acquisitions-view.md), and [Upgrades View](screens/upgrades-view.md), in which the Player acts, and the [Turn Report View](screens/turn-report-view.md), [History View](screens/history-view.md), [Charts View](screens/charts-view.md), and [Compendium View](screens/compendium-view.md), in which the Player reads what has happened and how the game works.
 
 # How they relate
 

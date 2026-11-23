@@ -25,8 +25,8 @@ The [Upgrades](../../mechanics/domain-model.md#agency-and-agents) are [cards](..
 - A primary Buy button labelled with its `price`, which makes one [`purchaseUpgrade`](../../mechanics/economy-and-upgrades.md#purchasing-upgrades) [Player action](../../foundation/engine-contract.md#player-actions-and-turns). While money is below the price, the button is disabled and the card says how much money is missing, in Danger, beside the button.
 - Below the Buy button, a [tally](../visual-design.md#tallies) of its Acquisitions.
 
-# Artboard
+# Screenshot
 
-![Upgrades View panel Artboard](../../../../images/artboards/upgrades-view.png)
+The Upgrades View as the game draws it:
 
-The sample values, e.g. the Upgrade names, prices, and caps, [appear only on the Artboard](../visual-design.md#reading-artboards).
+![Upgrades View Screenshot](../../../../images/screens/upgrades-view.png)

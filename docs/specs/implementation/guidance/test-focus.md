@@ -29,7 +29,7 @@ The following suggestions are complete:
 - **Beyond worked examples:** The worked examples of a specification cover the boundaries it states. Tests should also cover what its rules imply but no example shows, e.g. an order the rules make canonical whatever order the Player actions give, or which Autosaves count as ancestors after an Undo.
 - **One test per rule:** Each rule should be checked at one level. A test that repeats another at another level, e.g. a browser test of a sort order that a view-model test already checks, should be dropped.
 - **Interface tests for what only an interface shows:** An Interface test should check only what no lower-level test can, e.g. that settings survive a reload of the browser, or that the Graphical User Interface, the Command-Line Interface, and the engine API play the same Campaign to equal Campaign state. Each should keep to one subject, so that an unrelated change, e.g. a renamed label, does not fail it.
-- **Presentation by looking:** What an [Artboard](../../design/ui/visual-design.md#glossary) shows, e.g. sizes, colours, and wording, should be checked by comparing the screen with the Artboard, not by a test that reads a stylesheet or pins a label.
+- **Presentation by looking:** How a screen looks, e.g. sizes, colours, and wording, should be checked by looking at its [Screenshot](../../design/ui/visual-design.md#glossary) after it is generated again, not by a test that reads a stylesheet or pins a label.
 
 # Edge cases and failure behavior
 

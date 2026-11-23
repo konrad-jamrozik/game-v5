@@ -209,13 +209,13 @@ An Effect of a Data sheet is worded by its [Effect kind](../../foundation/effect
 
 The minus sign is "−" (U+2212). A gain for the Player, i.e. positive money or funding, a negative `panic` value, and `eliminate_faction`, is in Positive, and a loss is in Danger.
 
-# Artboard
+# Screenshots
 
-![Compendium View panel Artboard with a Mechanics article](../../../../images/artboards/compendium-view.png)
+The Compendium View as the game draws it:
 
-![Compendium View panel Artboard with a Subject article](../../../../images/artboards/compendium-view-subject.png)
+![Compendium View Screenshot with a Mechanics article](../../../../images/screens/compendium-view.png)
 
-The sample values, e.g. the article titles, texts, counts, and Data sheet values, appear only on the Artboards and [must not be implemented](../visual-design.md#reading-artboards).
+![Compendium View Screenshot with a Subject article](../../../../images/screens/compendium-view-subject.png)
 
 # TODOs
 

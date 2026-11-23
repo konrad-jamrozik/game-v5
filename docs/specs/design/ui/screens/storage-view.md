@@ -40,8 +40,8 @@ A sell bar along the bottom of the Storage View gathers the counts chosen in the
 
 After a sale every Sell count is 0 again.
 
-# Artboard
+# Screenshot
 
-![Storage View panel Artboard](../../../../images/artboards/storage-view.png)
+The Storage View as the game draws it:
 
-The sample values, e.g. the counts, values, and money, [appear only on the Artboard](../visual-design.md#reading-artboards).
+![Storage View Screenshot](../../../../images/screens/storage-view.png)

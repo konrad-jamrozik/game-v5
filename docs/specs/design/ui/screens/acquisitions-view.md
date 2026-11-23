@@ -38,8 +38,8 @@ A buy bar along the bottom of the Acquisitions View gathers the counts chosen in
 
 After a purchase every Buy count is 0 again, and what was bought is in Storage, ready to [equip](agents-view.md#equipment-picker).
 
-# Artboard
+# Screenshot
 
-![Acquisitions View panel Artboard](../../../../images/artboards/acquisitions-view.png)
+The Acquisitions View as the game draws it:
 
-The sample values, e.g. the Items, counts, prices, and money, [appear only on the Artboard](../visual-design.md#reading-artboards).
+![Acquisitions View Screenshot](../../../../images/screens/acquisitions-view.png)
