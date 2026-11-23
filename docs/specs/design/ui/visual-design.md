@@ -260,6 +260,8 @@ A column that shows a game quantity is wide enough for the widest value that qua
 | Experience gained, e.g. Mission experience | Three digits after its sign, e.g. "+123". |
 | Chance, e.g. a hit chance | Two digits and one decimal before the percent sign, e.g. "99.9%". |
 
+A column of effective skill is headed Eff., and one of [exhaustion](../mechanics/agents-spec.md#combatant-attributes) Exh., in every table that shows an Agent per row, so that the header is no wider than the values the column must hold.
+
 A column that shows a value at two moments joined by "→" holds the widest value on both sides, e.g. "1234 → 1234" for an effective skill, "123 → 123/123" for a health, and "123 → 123" for an armor. A column that shows several quantities in one value holds the widest value of each, e.g. "99.9% (1234 vs 1234)" for a hit chance with the effective skills it compares.
 
 A table whose rows each have a selection checkbox lets the Player select several rows at once, in these ways:
