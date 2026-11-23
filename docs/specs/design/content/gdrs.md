@@ -200,7 +200,7 @@ Type owner: [Factions](../mechanics/factions.md).
 
 | GDR | Type | GDR purpose | What it supplies |
 | --- | --- | --- | --- |
-| `red_dawn` | FactionArchetype | Archetype | The Faction Red Dawn: its name and how long it stays at `dormant`, `[0, 0]`, so it is never at `dormant` and starts at `faint`. |
+| `red_dawn` | FactionArchetype | Archetype | The Faction Red Dawn: its name and how long it stays at `dormant`. |
 | `exalt` | FactionArchetype | Archetype | The Faction Exalt: its name and how long it stays at `dormant`. |
 | `black_lotus` | FactionArchetype | Archetype | The Faction Black Lotus: its name and how long it stays at `dormant`. |
 | `dormant` | FactionActivityLevel | Calculation parameter | The first level, at which every Faction starts, without operations: the next level, `faint`; each FactionArchetype sets how long it lasts. |

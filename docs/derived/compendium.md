@@ -765,7 +765,7 @@ A ruthless cult that trades in fear and silence. Follow its members up the chain
 | `black_lotus`         | FactionArchetype |
 | --------------------- | ---------------- |
 | `name`                | `Black Lotus`    |
-| `initial_lasts_turns` | `[10,20]`        |
+| `initial_lasts_turns` | `[20,30]`        |
 
 ### Exalt
 
@@ -787,7 +787,7 @@ A violent cult that recruits in the shadows and grows bolder the longer it is le
 | `red_dawn`            | FactionArchetype |
 | --------------------- | ---------------- |
 | `name`                | `Red Dawn`       |
-| `initial_lasts_turns` | `[0,0]`          |
+| `initial_lasts_turns` | `[1,1]`          |
 
 ## Subject articles: Lead
 
