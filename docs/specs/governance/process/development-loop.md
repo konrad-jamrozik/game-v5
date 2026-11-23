@@ -41,7 +41,7 @@ When two artifacts disagree, the source of truth for the question stands and the
 | ------------------------------------------------------------ | --------------------------------------------------- |
 | A specification states something and the code does otherwise | The code                                            |
 | A specification repeats a value and `content/` holds another | The specification, which loses the copy             |
-| A Screenshot and the Implementation show different things    | The Screenshot, once it is more than a week old     |
+| A Screenshot and the Implementation show different things    | The Screenshot, once it is more than 72 hours old   |
 | The specifications are silent                                | Nothing: the code decides, and it may change freely |
 
 The answer to a question the specifications are silent on is added to them only when it is a decision, i.e. when the Game designer would object to the code doing it differently, e.g. a rule the Player plans around. It is then stated once, in the specification that owns its subject.

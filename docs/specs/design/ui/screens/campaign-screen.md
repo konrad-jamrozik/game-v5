@@ -140,20 +140,20 @@ The Campaign Screen as the game draws it:
 
 ![Campaign Screenshot](../../../../images/screens/campaign-screen.png)
 
-_Captured on 2026-11-23._
+_Captured on 2026-11-23 19:47 UTC._
 
 ![Campaign Screenshot with the Agents Detail view open](../../../../images/screens/campaign-screen-view.png)
 
-_Captured on 2026-11-23._
+_Captured on 2026-11-23 19:47 UTC._
 
 ![Settings Screenshot](../../../../images/screens/settings-panel.png)
 
-_Captured on 2026-11-23._
+_Captured on 2026-11-23 19:47 UTC._
 
 ![Side panel footer Screenshot with the Autopilot controls expanded](../../../../images/screens/autopilot-footer.png)
 
-_Captured on 2026-11-23._
+_Captured on 2026-11-23 19:47 UTC._
 
 ![Keyboard shortcuts Screenshot](../../../../images/screens/keyboard-shortcuts.png)
 
-_Captured on 2026-11-23._
+_Captured on 2026-11-23 19:47 UTC._

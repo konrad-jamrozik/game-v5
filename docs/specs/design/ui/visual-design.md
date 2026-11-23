@@ -28,7 +28,7 @@ A Screenshot shows what a screen looks like in the game, so that a reader of a s
 
 Every Screenshot is generated. The capture script of the Implementation, run as `npm run screens:capture` where the Implementation's code is kept, plays one fixed scenario and writes the images to `docs/images/screens`. A Screenshot is never edited by hand. When a Screenshot and the Implementation differ, the Implementation is right.
 
-A Screenshot may lag the game by up to a week, so a change to how a screen looks does not by itself generate the Screenshots again. Under each Screenshot its specification states the date it was captured, e.g. "Captured on 2026-11-23.", which the capture script writes for every image it captures. The Screenshots are generated again only when a change touches a screen whose Screenshot was captured more than a week earlier.
+A Screenshot may lag the game by up to 72 hours, so a change to how a screen looks does not by itself generate the Screenshots again. Under each Screenshot its specification states when it was captured, e.g. "Captured on 2026-11-23 19:47 UTC.". The Screenshots are generated again only when a change touches a screen whose Screenshot was captured more than 72 hours earlier, and then only the images whose content differs are replaced, each with its new capture time, which the capture script writes.
 
 The values a Screenshot shows, e.g. the names of Agents and the numbers, are those of the capture scenario and decide nothing.
 

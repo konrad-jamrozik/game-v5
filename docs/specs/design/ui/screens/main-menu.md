@@ -42,4 +42,4 @@ The Main Menu as the game draws it:
 
 ![Main menu Screenshot](../../../../images/screens/main-menu.png)
 
-_Captured on 2026-11-23._
+_Captured on 2026-11-23 19:47 UTC._

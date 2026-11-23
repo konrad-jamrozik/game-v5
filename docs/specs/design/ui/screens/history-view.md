@@ -87,4 +87,4 @@ The History View as the game draws it:
 
 ![History View Screenshot](../../../../images/screens/history-view.png)
 
-_Captured on 2026-11-23._
+_Captured on 2026-11-23 19:47 UTC._

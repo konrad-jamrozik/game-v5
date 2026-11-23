@@ -41,4 +41,4 @@ The Situation Panel as the game draws it:
 
 ![Situation Screenshot](../../../../images/screens/situation-panel.png)
 
-_Captured on 2026-11-23._
+_Captured on 2026-11-23 19:47 UTC._

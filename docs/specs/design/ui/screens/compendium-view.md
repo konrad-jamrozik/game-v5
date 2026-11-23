@@ -215,11 +215,11 @@ The Compendium View as the game draws it:
 
 ![Compendium View Screenshot with a Mechanics article](../../../../images/screens/compendium-view.png)
 
-_Captured on 2026-11-23._
+_Captured on 2026-11-23 19:47 UTC._
 
 ![Compendium View Screenshot with a Subject article](../../../../images/screens/compendium-view-subject.png)
 
-_Captured on 2026-11-23._
+_Captured on 2026-11-23 19:47 UTC._
 
 # TODOs
 

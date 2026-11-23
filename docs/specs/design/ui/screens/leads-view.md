@@ -48,4 +48,4 @@ The Leads View as the game draws it:
 
 ![Leads View Screenshot, reached from the Turn Report View](../../../../images/screens/leads-view.png)
 
-_Captured on 2026-11-23._
+_Captured on 2026-11-23 19:47 UTC._

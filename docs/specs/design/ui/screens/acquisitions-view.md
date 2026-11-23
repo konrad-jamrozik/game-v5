@@ -44,4 +44,4 @@ The Acquisitions View as the game draws it:
 
 ![Acquisitions View Screenshot](../../../../images/screens/acquisitions-view.png)
 
-_Captured on 2026-11-23._
+_Captured on 2026-11-23 19:47 UTC._
