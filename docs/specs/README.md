@@ -21,8 +21,6 @@ These documents give the context every specification assumes: what the game is m
 - [Specification Conventions](governance/conventions/spec-conventions.md): layout, ownership, wording, and how specifications change.
 - [Artifact Relationships](governance/conventions/artifact-relationships.md): how linking a term to its definition makes one specification reference another, and how the references form layers.
 - [Development Loop](governance/process/development-loop.md): which artifact is the truth for which question, and how a change reaches the game.
-- [Specification work plan and backlog](governance/process/work-plan.md): review Batches and their work states.
-- [Outstanding work items](governance/process/work-todos.md): known issues in the specifications awaiting scheduling.
 
 # Specification kind and Family overviews
 

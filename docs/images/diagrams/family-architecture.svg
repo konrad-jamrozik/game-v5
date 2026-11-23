@@ -25,7 +25,7 @@
   <rect class="bg" x="0" y="0" width="1000" height="696"/>
   <rect class="box" x="246" y="28" width="230" height="66" rx="10"/>
   <text class="title" x="361" y="56">Guidance</text>
-  <text class="count" x="361" y="77">6 specifications</text>
+  <text class="count" x="361" y="77">5 specifications</text>
   <rect class="box" x="524" y="28" width="230" height="66" rx="10"/>
   <text class="title" x="639" y="56">Recipes</text>
   <text class="count" x="639" y="77">2 specifications</text>

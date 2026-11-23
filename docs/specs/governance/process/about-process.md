@@ -4,7 +4,7 @@
 
 # What this family is for
 
-The game is developed in rounds: the Game designer says what should change, the specifications and the Implementation change to match, and playing the result shows what to change next. Process specifications own how those rounds run and how the work on the specifications is planned and tracked.
+The game is developed in rounds: the Game designer says what should change, the specifications and the Implementation change to match, and playing the result shows what to change next. The Process specification owns how those rounds run.
 
 # Documents
 
@@ -12,17 +12,9 @@ The game is developed in rounds: the Game designer says what should change, the 
 
 [Development Loop](development-loop.md) answers _how is the game developed?_ It explains how the Game designer keeps design control while LLMs write the specifications and the Implementation, and which artifact is the truth for which question.
 
-## Specification Work Plan and Backlog
-
-[Specification Work Plan and Backlog](work-plan.md) answers _in what order are specifications reviewed?_
-
-## Outstanding Work Items
-
-[Outstanding Work Items](work-todos.md) answers _what known issues are waiting to be scheduled?_
-
 # How they relate
 
-Outstanding Work Items uses the Specification Work Plan and Backlog for the batches it assigns each Work item to. The Development Loop stands apart from both: it describes the whole cycle, while the plan and the register track the work within it.
+The Development Loop is the one Process specification. It relies on the Design and Implementation specifications for what each artifact owns, and on the `apply` skill for the steps of a change.
 
 <!-- generated:family-diagram:start -->
 
@@ -30,7 +22,7 @@ _Generated from the links between the specifications by `npm run docs:generate`;
 
 ## Within the family
 
-No specification of this family links another specification of it.
+This family has a single specification, so there are no references within it.
 
 ## Across families
 
@@ -40,5 +32,4 @@ No specification of this family links another specification of it.
 
 # Why these boundaries
 
-- **Work plan versus work items:** the plan owns the schedule; the work-item register only records issues, so adding an issue never changes the schedule.
-- **Development Loop versus the plan:** the Development Loop says how the specifications and the Implementation change together, which holds however the work is scheduled.
+How a change reaches the game is one subject, so it has one specification. The steps an agent runs live in skills, which change more often than the principles they follow.

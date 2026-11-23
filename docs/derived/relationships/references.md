@@ -24,7 +24,6 @@ A → B means A is referenced by B: the text of B links to A. Layer 1 is drawn a
 | 3 | EFFECT Effect Lists | CORE, ENG |
 | 3 | HEADLESS Headless First | CORE, ENG |
 | 3 | NUMBERS Numbers | CORE, ENG |
-| 3 | STACK Tech Stack Suggestion | ENG |
 | 4 | DETERM Determinism and Randomness | CORE, CSTATE, ENG |
 | 4 | GDR Game Data Records | CORE, CSTATE, ENG |
 | 5 | AUTO Autopilot | CORE, DETERM, ENG |
@@ -44,7 +43,6 @@ A → B means A is referenced by B: the text of B links to A. Layer 1 is drawn a
 | 9 | PAPI Player API | CORE, CSTATE, DOM, ENG |
 | 10 | COMBAT Combat | AGENT, CINST, CORE, CSTATE, DETERM, DOM, ENG, NUMBERS, WHIST |
 | 10 | HVIEW History View | AGENT, CINST, CORE, CSTATE, DOM, ENG, WHIST |
-| 10 | PLAN Specification Work Plan and Backlog | AGENT, CINST, CORE, DOM, ENG |
 | 10 | RECOVER Agent Recovery | AGENT, CINST, CORE, CSTATE, DOM, ENG, NUMBERS, WHIST |
 | 11 | EQUIP Equipment | AGENT, CINST, COMBAT, COND, CORE, CSTATE, DOM, ENG, WHIST |
 | 12 | COMP Compendium | COMBAT, COND, CORE, DOM, ENG, EQUIP |
@@ -88,10 +86,8 @@ A → B means A is referenced by B: the text of B links to A. Layer 1 is drawn a
 | ----- | ---------------------------------------------- | ---------- |
 | 1     | CONV Specification Conventions                 |            |
 | 2     | LOOP Development Loop                          | CONV       |
-| 2     | PLAN Specification Work Plan and Backlog       | CONV       |
 | 2     | REL Artifact Relationships                     | CONV       |
 | 2     | TERM Terminology Conventions                   | CONV       |
-| 2     | TODOS Outstanding Work Items                   | CONV       |
 | 3     | DCONV Design Specification Conventions         | CONV, TERM |
 | 3     | GLOSS Glossary Conventions                     | CONV, TERM |
 | 3     | ICONV Implementation Specification Conventions | CONV, REL  |

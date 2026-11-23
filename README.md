@@ -8,7 +8,7 @@ Each implementation lives outside this repository, in its own directory beside t
 
 ## Design and continuation
 
-The [Game Design Brief](docs/game-design-brief.md) records gameplay intent. The [specification index](docs/specs/README.md) links the detailed contracts, and the [work plan](docs/specs/governance/process/work-plan.md) tracks review progress.
+The [Game Design Brief](docs/game-design-brief.md) records gameplay intent. The [specification index](docs/specs/README.md) links the detailed contracts.
 
 ## Getting started
 

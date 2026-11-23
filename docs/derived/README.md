@@ -13,14 +13,14 @@ These informative views are derived from the registered Markdown specifications.
 | Specification kind | Family        | Specifications |
 | ------------------ | ------------- | -------------- |
 | Governance         | Conventions   | 8              |
-| Governance         | Process       | 3              |
+| Governance         | Process       | 1              |
 | Design             | Foundation    | 17             |
 | Design             | Mechanics     | 13             |
 | Design             | Content       | 1              |
 | Design             | UI            | 19             |
 | Design             | Autopilot AIs | 1              |
 | Implementation     | Mandatory     | 5              |
-| Implementation     | Guidance      | 6              |
+| Implementation     | Guidance      | 5              |
 | Implementation     | Recipes       | 2              |
 
 ## Conventions
@@ -41,8 +41,6 @@ These informative views are derived from the registered Markdown specifications.
 | ID | Document | Owns |
 | --- | --- | --- |
 | LOOP | [Development Loop](../specs/governance/process/development-loop.md) | How the game is developed in a loop between the specifications and the Implementation, and the LLM skills that run it. |
-| PLAN | [Specification Work Plan and Backlog](../specs/governance/process/work-plan.md) | Specification authoring order, review checkpoints, and work tracking. |
-| TODOS | [Outstanding Work Items](../specs/governance/process/work-todos.md) | Known outstanding specification issues awaiting scheduling, with their affected batches. |
 
 ## Foundation
 
@@ -138,7 +136,6 @@ These informative views are derived from the registered Markdown specifications.
 | DEPDIR | [Gameplay Dependency Direction](../specs/implementation/guidance/gameplay-dependency-direction.md) | Non-behavioural guidance keeping gameplay code from reaching Campaign state beyond its necessary inputs. |
 | HEADLESS | [Headless First](../specs/implementation/guidance/headless-first.md) | Guidance that an Implementation becomes fully playable headlessly, through its Command-Line Interface, before work on its Graphical User Interface begins. |
 | SCHEMA | [Storage Schema](../specs/implementation/guidance/storage-schema.md) | Non-behavioural guidance on the physical layout of everything the game persists. |
-| STACK | [Tech Stack Suggestion](../specs/implementation/guidance/tech-stack-suggestion.md) | A suggested technology stack for a browser Implementation. |
 | TFOCUS | [Test Focus](../specs/implementation/guidance/test-focus.md) | Non-behavioural guidance on which properties of an Implementation its automated tests are best spent on. |
 
 ## Recipes

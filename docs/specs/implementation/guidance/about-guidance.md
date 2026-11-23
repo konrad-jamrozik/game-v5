@@ -8,10 +8,6 @@ The Design specifications leave technical matters open, e.g. how code is organiz
 
 # Documents
 
-## Tech Stack Suggestion
-
-[Tech Stack Suggestion](tech-stack-suggestion.md) answers _what should a change of technology keep?_ It gives the reasons behind the chosen stack and the pitfalls of its libraries.
-
 ## Gameplay Dependency Direction
 
 [Gameplay Dependency Direction](gameplay-dependency-direction.md) answers _what may gameplay code read?_
@@ -34,7 +30,7 @@ The Design specifications leave technical matters open, e.g. how code is organiz
 
 # How they relate
 
-The Guidance specifications build on the Design specifications, mostly on the Foundation family's engine API, saves, and Timeline; Autopilot Performance also records changes to Basic Autopilot AI and to Economy and Upgrades. Within the family, only Tech Stack Suggestion relies on another, Storage Schema, for why World states share their unchanged parts.
+The Guidance specifications build on the Design specifications, mostly on the Foundation family's engine API, saves, and Timeline; Autopilot Performance also records changes to Basic Autopilot AI and to Economy and Upgrades. No Guidance specification relies on another.
 
 <!-- generated:family-diagram:start -->
 
@@ -52,4 +48,4 @@ No specification of this family links another specification of it.
 
 # Why these boundaries
 
-Each Guidance specification answers one open technical question, so a change can follow one suggestion and set another aside, e.g. replace the stack without touching Gameplay Dependency Direction.
+Each Guidance specification answers one open technical question, so a change can follow one suggestion and set another aside, e.g. change the Storage Schema without touching Gameplay Dependency Direction.
