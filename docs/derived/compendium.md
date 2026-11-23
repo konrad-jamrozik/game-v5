@@ -861,27 +861,27 @@ Source: `content/compendium/compendium_articles/interrogate_black_lotus_commande
 
 A [commander](#commander) commands whole cells and knows where the cult's regional stronghold lies.
 
-| `interrogate_black_lotus_commander` | Lead |
-| --- | --- |
-| `name` | `Interrogate Black Lotus commander` |
-| `description` | `Learn what a Black Lotus commander knew, from the commander taken alive or from what was found on the body.` |
-| `faction` | `black_lotus` |
-| `required_progress` | `20` |
-| `discovered_when` | `{"mission_won_with_enemy":"commander"}` |
+| `interrogate_black_lotus_commander` | Lead                                                     |
+| ----------------------------------- | -------------------------------------------------------- |
+| `name`                              | `Interrogate Black Lotus commander`                      |
+| `description`                       | `Extract what the captured Black Lotus commander knows.` |
+| `faction`                           | `black_lotus`                                            |
+| `required_progress`                 | `20`                                                     |
+| `discovered_when`                   | `{"mission_won_with_enemy":"commander"}`                 |
 
 ### Interrogate Black Lotus cult leader
 
 Source: `content/compendium/compendium_articles/interrogate_black_lotus_cult_leader_article.yaml`
 
-The leader has fallen to the Agency, alive or dead. What the leader knew, or carried, is enough to bring the whole cult down.
+The leader is finally in your hands. What the leader knows is enough to bring the whole cult down.
 
-| `interrogate_black_lotus_cult_leader` | Lead |
-| --- | --- |
-| `name` | `Interrogate Black Lotus cult leader` |
-| `description` | `Learn what a Black Lotus cult leader knew, from the cult leader taken alive or from what was found on the body.` |
-| `faction` | `black_lotus` |
-| `required_progress` | `40` |
-| `discovered_when` | `{"mission_won_with_enemy":"cult_leader"}` |
+| `interrogate_black_lotus_cult_leader` | Lead                                                       |
+| ------------------------------------- | ---------------------------------------------------------- |
+| `name`                                | `Interrogate Black Lotus cult leader`                      |
+| `description`                         | `Extract what the captured Black Lotus cult leader knows.` |
+| `faction`                             | `black_lotus`                                              |
+| `required_progress`                   | `40`                                                       |
+| `discovered_when`                     | `{"mission_won_with_enemy":"cult_leader"}`                 |
 
 ### Interrogate Black Lotus handler
 
@@ -889,13 +889,13 @@ Source: `content/compendium/compendium_articles/interrogate_black_lotus_handler_
 
 [Handlers](#handler) run the members in the field. This one knows where the cult keeps its next base.
 
-| `interrogate_black_lotus_handler` | Lead |
-| --- | --- |
-| `name` | `Interrogate Black Lotus handler` |
-| `description` | `Learn what a Black Lotus handler knew, from the handler taken alive or from what was found on the body.` |
-| `faction` | `black_lotus` |
-| `required_progress` | `5` |
-| `discovered_when` | `{"mission_won_with_enemy":"handler"}` |
+| `interrogate_black_lotus_handler` | Lead                                                   |
+| --------------------------------- | ------------------------------------------------------ |
+| `name`                            | `Interrogate Black Lotus handler`                      |
+| `description`                     | `Extract what the captured Black Lotus handler knows.` |
+| `faction`                         | `black_lotus`                                          |
+| `required_progress`               | `5`                                                    |
+| `discovered_when`                 | `{"mission_won_with_enemy":"handler"}`                 |
 
 ### Interrogate Black Lotus high commander
 
@@ -903,27 +903,27 @@ Source: `content/compendium/compendium_articles/interrogate_black_lotus_high_com
 
 Only the [cult leader](#cult-leader) outranks a [high commander](#high-commander). This one knows where the leader hides.
 
-| `interrogate_black_lotus_high_commander` | Lead |
-| --- | --- |
-| `name` | `Interrogate Black Lotus high commander` |
-| `description` | `Learn what a Black Lotus high commander knew, from the high commander taken alive or from what was found on the body.` |
-| `faction` | `black_lotus` |
-| `required_progress` | `30` |
-| `discovered_when` | `{"mission_won_with_enemy":"high_commander"}` |
+| `interrogate_black_lotus_high_commander` | Lead                                                          |
+| ---------------------------------------- | ------------------------------------------------------------- |
+| `name`                                   | `Interrogate Black Lotus high commander`                      |
+| `description`                            | `Extract what the captured Black Lotus high commander knows.` |
+| `faction`                                | `black_lotus`                                                 |
+| `required_progress`                      | `30`                                                          |
+| `discovered_when`                        | `{"mission_won_with_enemy":"high_commander"}`                 |
 
 ### Interrogate Black Lotus lieutenant
 
 Source: `content/compendium/compendium_articles/interrogate_black_lotus_lieutenant_article.yaml`
 
-A [Lieutenant](#lieutenant) met in the field, taken alive or not. What the officer knew, or carried, points to where the cult moves its arms and [money](#money-and-funding).
+A [Lieutenant](#lieutenant) taken alive. This officer knows where the cult moves its arms and [money](#money-and-funding).
 
-| `interrogate_black_lotus_lieutenant` | Lead |
-| --- | --- |
-| `name` | `Interrogate Black Lotus lieutenant` |
-| `description` | `Learn what a Black Lotus lieutenant knew, from the officer taken alive or from the orders found on the body.` |
-| `faction` | `black_lotus` |
-| `required_progress` | `10` |
-| `discovered_when` | `{"mission_won_with_enemy":"lieutenant"}` |
+| `interrogate_black_lotus_lieutenant` | Lead                                                      |
+| ------------------------------------ | --------------------------------------------------------- |
+| `name`                               | `Interrogate Black Lotus lieutenant`                      |
+| `description`                        | `Extract what the captured Black Lotus lieutenant knows.` |
+| `faction`                            | `black_lotus`                                             |
+| `required_progress`                  | `10`                                                      |
+| `discovered_when`                    | `{"mission_won_with_enemy":"lieutenant"}`                 |
 
 ### Interrogate Black Lotus member
 
@@ -945,27 +945,27 @@ Source: `content/compendium/compendium_articles/interrogate_exalt_commander_arti
 
 A [commander](#commander) commands whole cells and knows where the cult's regional stronghold lies.
 
-| `interrogate_exalt_commander` | Lead |
-| --- | --- |
-| `name` | `Interrogate Exalt commander` |
-| `description` | `Learn what an Exalt commander knew, from the commander taken alive or from what was found on the body.` |
-| `faction` | `exalt` |
-| `required_progress` | `20` |
-| `discovered_when` | `{"mission_won_with_enemy":"commander"}` |
+| `interrogate_exalt_commander` | Lead                                               |
+| ----------------------------- | -------------------------------------------------- |
+| `name`                        | `Interrogate Exalt commander`                      |
+| `description`                 | `Extract what the captured Exalt commander knows.` |
+| `faction`                     | `exalt`                                            |
+| `required_progress`           | `20`                                               |
+| `discovered_when`             | `{"mission_won_with_enemy":"commander"}`           |
 
 ### Interrogate Exalt cult leader
 
 Source: `content/compendium/compendium_articles/interrogate_exalt_cult_leader_article.yaml`
 
-The leader has fallen to the Agency, alive or dead. What the leader knew, or carried, is enough to bring the whole cult down.
+The leader is finally in your hands. What the leader knows is enough to bring the whole cult down.
 
-| `interrogate_exalt_cult_leader` | Lead |
-| --- | --- |
-| `name` | `Interrogate Exalt cult leader` |
-| `description` | `Learn what an Exalt cult leader knew, from the cult leader taken alive or from what was found on the body.` |
-| `faction` | `exalt` |
-| `required_progress` | `40` |
-| `discovered_when` | `{"mission_won_with_enemy":"cult_leader"}` |
+| `interrogate_exalt_cult_leader` | Lead                                                 |
+| ------------------------------- | ---------------------------------------------------- |
+| `name`                          | `Interrogate Exalt cult leader`                      |
+| `description`                   | `Extract what the captured Exalt cult leader knows.` |
+| `faction`                       | `exalt`                                              |
+| `required_progress`             | `40`                                                 |
+| `discovered_when`               | `{"mission_won_with_enemy":"cult_leader"}`           |
 
 ### Interrogate Exalt handler
 
@@ -973,13 +973,13 @@ Source: `content/compendium/compendium_articles/interrogate_exalt_handler_articl
 
 [Handlers](#handler) run the members in the field. This one knows where the cult keeps its next base.
 
-| `interrogate_exalt_handler` | Lead |
-| --- | --- |
-| `name` | `Interrogate Exalt handler` |
-| `description` | `Learn what an Exalt handler knew, from the handler taken alive or from what was found on the body.` |
-| `faction` | `exalt` |
-| `required_progress` | `5` |
-| `discovered_when` | `{"mission_won_with_enemy":"handler"}` |
+| `interrogate_exalt_handler` | Lead                                             |
+| --------------------------- | ------------------------------------------------ |
+| `name`                      | `Interrogate Exalt handler`                      |
+| `description`               | `Extract what the captured Exalt handler knows.` |
+| `faction`                   | `exalt`                                          |
+| `required_progress`         | `5`                                              |
+| `discovered_when`           | `{"mission_won_with_enemy":"handler"}`           |
 
 ### Interrogate Exalt high commander
 
@@ -987,27 +987,27 @@ Source: `content/compendium/compendium_articles/interrogate_exalt_high_commander
 
 Only the [cult leader](#cult-leader) outranks a [high commander](#high-commander). This one knows where the leader hides.
 
-| `interrogate_exalt_high_commander` | Lead |
-| --- | --- |
-| `name` | `Interrogate Exalt high commander` |
-| `description` | `Learn what an Exalt high commander knew, from the high commander taken alive or from what was found on the body.` |
-| `faction` | `exalt` |
-| `required_progress` | `30` |
-| `discovered_when` | `{"mission_won_with_enemy":"high_commander"}` |
+| `interrogate_exalt_high_commander` | Lead                                                    |
+| ---------------------------------- | ------------------------------------------------------- |
+| `name`                             | `Interrogate Exalt high commander`                      |
+| `description`                      | `Extract what the captured Exalt high commander knows.` |
+| `faction`                          | `exalt`                                                 |
+| `required_progress`                | `30`                                                    |
+| `discovered_when`                  | `{"mission_won_with_enemy":"high_commander"}`           |
 
 ### Interrogate Exalt lieutenant
 
 Source: `content/compendium/compendium_articles/interrogate_exalt_lieutenant_article.yaml`
 
-A [Lieutenant](#lieutenant) met in the field, taken alive or not. What the officer knew, or carried, points to where the cult moves its arms and [money](#money-and-funding).
+A [Lieutenant](#lieutenant) taken alive. This officer knows where the cult moves its arms and [money](#money-and-funding).
 
-| `interrogate_exalt_lieutenant` | Lead |
-| --- | --- |
-| `name` | `Interrogate Exalt lieutenant` |
-| `description` | `Learn what an Exalt lieutenant knew, from the officer taken alive or from the orders found on the body.` |
-| `faction` | `exalt` |
-| `required_progress` | `10` |
-| `discovered_when` | `{"mission_won_with_enemy":"lieutenant"}` |
+| `interrogate_exalt_lieutenant` | Lead                                                |
+| ------------------------------ | --------------------------------------------------- |
+| `name`                         | `Interrogate Exalt lieutenant`                      |
+| `description`                  | `Extract what the captured Exalt lieutenant knows.` |
+| `faction`                      | `exalt`                                             |
+| `required_progress`            | `10`                                                |
+| `discovered_when`              | `{"mission_won_with_enemy":"lieutenant"}`           |
 
 ### Interrogate Exalt member
 
@@ -1029,27 +1029,27 @@ Source: `content/compendium/compendium_articles/interrogate_red_dawn_commander_a
 
 A [commander](#commander) commands whole cells and knows where the cult's regional stronghold lies.
 
-| `interrogate_red_dawn_commander` | Lead |
-| --- | --- |
-| `name` | `Interrogate Red Dawn commander` |
-| `description` | `Learn what a Red Dawn commander knew, from the commander taken alive or from what was found on the body.` |
-| `faction` | `red_dawn` |
-| `required_progress` | `20` |
-| `discovered_when` | `{"mission_won_with_enemy":"commander"}` |
+| `interrogate_red_dawn_commander` | Lead                                                  |
+| -------------------------------- | ----------------------------------------------------- |
+| `name`                           | `Interrogate Red Dawn commander`                      |
+| `description`                    | `Extract what the captured Red Dawn commander knows.` |
+| `faction`                        | `red_dawn`                                            |
+| `required_progress`              | `20`                                                  |
+| `discovered_when`                | `{"mission_won_with_enemy":"commander"}`              |
 
 ### Interrogate Red Dawn cult leader
 
 Source: `content/compendium/compendium_articles/interrogate_red_dawn_cult_leader_article.yaml`
 
-The leader has fallen to the Agency, alive or dead. What the leader knew, or carried, is enough to bring the whole cult down.
+The leader is finally in your hands. What the leader knows is enough to bring the whole cult down.
 
-| `interrogate_red_dawn_cult_leader` | Lead |
-| --- | --- |
-| `name` | `Interrogate Red Dawn cult leader` |
-| `description` | `Learn what a Red Dawn cult leader knew, from the cult leader taken alive or from what was found on the body.` |
-| `faction` | `red_dawn` |
-| `required_progress` | `40` |
-| `discovered_when` | `{"mission_won_with_enemy":"cult_leader"}` |
+| `interrogate_red_dawn_cult_leader` | Lead                                                    |
+| ---------------------------------- | ------------------------------------------------------- |
+| `name`                             | `Interrogate Red Dawn cult leader`                      |
+| `description`                      | `Extract what the captured Red Dawn cult leader knows.` |
+| `faction`                          | `red_dawn`                                              |
+| `required_progress`                | `40`                                                    |
+| `discovered_when`                  | `{"mission_won_with_enemy":"cult_leader"}`              |
 
 ### Interrogate Red Dawn handler
 
@@ -1057,13 +1057,13 @@ Source: `content/compendium/compendium_articles/interrogate_red_dawn_handler_art
 
 [Handlers](#handler) run the members in the field. This one knows where the cult keeps its next base.
 
-| `interrogate_red_dawn_handler` | Lead |
-| --- | --- |
-| `name` | `Interrogate Red Dawn handler` |
-| `description` | `Learn what a Red Dawn handler knew, from the handler taken alive or from what was found on the body.` |
-| `faction` | `red_dawn` |
-| `required_progress` | `5` |
-| `discovered_when` | `{"mission_won_with_enemy":"handler"}` |
+| `interrogate_red_dawn_handler` | Lead                                                |
+| ------------------------------ | --------------------------------------------------- |
+| `name`                         | `Interrogate Red Dawn handler`                      |
+| `description`                  | `Extract what the captured Red Dawn handler knows.` |
+| `faction`                      | `red_dawn`                                          |
+| `required_progress`            | `5`                                                 |
+| `discovered_when`              | `{"mission_won_with_enemy":"handler"}`              |
 
 ### Interrogate Red Dawn high commander
 
@@ -1071,27 +1071,27 @@ Source: `content/compendium/compendium_articles/interrogate_red_dawn_high_comman
 
 Only the [cult leader](#cult-leader) outranks a [high commander](#high-commander). This one knows where the leader hides.
 
-| `interrogate_red_dawn_high_commander` | Lead |
-| --- | --- |
-| `name` | `Interrogate Red Dawn high commander` |
-| `description` | `Learn what a Red Dawn high commander knew, from the high commander taken alive or from what was found on the body.` |
-| `faction` | `red_dawn` |
-| `required_progress` | `30` |
-| `discovered_when` | `{"mission_won_with_enemy":"high_commander"}` |
+| `interrogate_red_dawn_high_commander` | Lead                                                       |
+| ------------------------------------- | ---------------------------------------------------------- |
+| `name`                                | `Interrogate Red Dawn high commander`                      |
+| `description`                         | `Extract what the captured Red Dawn high commander knows.` |
+| `faction`                             | `red_dawn`                                                 |
+| `required_progress`                   | `30`                                                       |
+| `discovered_when`                     | `{"mission_won_with_enemy":"high_commander"}`              |
 
 ### Interrogate Red Dawn lieutenant
 
 Source: `content/compendium/compendium_articles/interrogate_red_dawn_lieutenant_article.yaml`
 
-A [Lieutenant](#lieutenant) met in the field, taken alive or not. What the officer knew, or carried, points to where the cult moves its arms and [money](#money-and-funding).
+A [Lieutenant](#lieutenant) taken alive. This officer knows where the cult moves its arms and [money](#money-and-funding).
 
-| `interrogate_red_dawn_lieutenant` | Lead |
-| --- | --- |
-| `name` | `Interrogate Red Dawn lieutenant` |
-| `description` | `Learn what a Red Dawn lieutenant knew, from the officer taken alive or from the orders found on the body.` |
-| `faction` | `red_dawn` |
-| `required_progress` | `10` |
-| `discovered_when` | `{"mission_won_with_enemy":"lieutenant"}` |
+| `interrogate_red_dawn_lieutenant` | Lead                                                   |
+| --------------------------------- | ------------------------------------------------------ |
+| `name`                            | `Interrogate Red Dawn lieutenant`                      |
+| `description`                     | `Extract what the captured Red Dawn lieutenant knows.` |
+| `faction`                         | `red_dawn`                                             |
+| `required_progress`               | `10`                                                   |
+| `discovered_when`                 | `{"mission_won_with_enemy":"lieutenant"}`              |
 
 ### Interrogate Red Dawn member
 

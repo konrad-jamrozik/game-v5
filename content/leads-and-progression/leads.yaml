@@ -57,7 +57,7 @@ on_completion:
 id: interrogate_red_dawn_handler
 type: Lead
 name: Interrogate Red Dawn handler
-description: Learn what a Red Dawn handler knew, from the handler taken alive or from what was found on the body.
+description: Extract what the captured Red Dawn handler knows.
 faction: red_dawn
 required_progress: 5
 discovered_when:
@@ -78,7 +78,7 @@ on_completion:
 id: interrogate_red_dawn_lieutenant
 type: Lead
 name: Interrogate Red Dawn lieutenant
-description: Learn what a Red Dawn lieutenant knew, from the officer taken alive or from the orders found on the body.
+description: Extract what the captured Red Dawn lieutenant knows.
 faction: red_dawn
 required_progress: 10
 discovered_when:
@@ -99,7 +99,7 @@ on_completion:
 id: interrogate_red_dawn_commander
 type: Lead
 name: Interrogate Red Dawn commander
-description: Learn what a Red Dawn commander knew, from the commander taken alive or from what was found on the body.
+description: Extract what the captured Red Dawn commander knows.
 faction: red_dawn
 required_progress: 20
 discovered_when:
@@ -120,7 +120,7 @@ on_completion:
 id: interrogate_red_dawn_high_commander
 type: Lead
 name: Interrogate Red Dawn high commander
-description: Learn what a Red Dawn high commander knew, from the high commander taken alive or from what was found on the body.
+description: Extract what the captured Red Dawn high commander knows.
 faction: red_dawn
 required_progress: 30
 discovered_when:
@@ -140,7 +140,7 @@ on_completion:
 id: interrogate_red_dawn_cult_leader
 type: Lead
 name: Interrogate Red Dawn cult leader
-description: Learn what a Red Dawn cult leader knew, from the cult leader taken alive or from what was found on the body.
+description: Extract what the captured Red Dawn cult leader knows.
 faction: red_dawn
 required_progress: 40
 discovered_when:
@@ -202,7 +202,7 @@ on_completion:
 id: interrogate_exalt_handler
 type: Lead
 name: Interrogate Exalt handler
-description: Learn what an Exalt handler knew, from the handler taken alive or from what was found on the body.
+description: Extract what the captured Exalt handler knows.
 faction: exalt
 required_progress: 5
 discovered_when:
@@ -223,7 +223,7 @@ on_completion:
 id: interrogate_exalt_lieutenant
 type: Lead
 name: Interrogate Exalt lieutenant
-description: Learn what an Exalt lieutenant knew, from the officer taken alive or from the orders found on the body.
+description: Extract what the captured Exalt lieutenant knows.
 faction: exalt
 required_progress: 10
 discovered_when:
@@ -244,7 +244,7 @@ on_completion:
 id: interrogate_exalt_commander
 type: Lead
 name: Interrogate Exalt commander
-description: Learn what an Exalt commander knew, from the commander taken alive or from what was found on the body.
+description: Extract what the captured Exalt commander knows.
 faction: exalt
 required_progress: 20
 discovered_when:
@@ -265,7 +265,7 @@ on_completion:
 id: interrogate_exalt_high_commander
 type: Lead
 name: Interrogate Exalt high commander
-description: Learn what an Exalt high commander knew, from the high commander taken alive or from what was found on the body.
+description: Extract what the captured Exalt high commander knows.
 faction: exalt
 required_progress: 30
 discovered_when:
@@ -285,7 +285,7 @@ on_completion:
 id: interrogate_exalt_cult_leader
 type: Lead
 name: Interrogate Exalt cult leader
-description: Learn what an Exalt cult leader knew, from the cult leader taken alive or from what was found on the body.
+description: Extract what the captured Exalt cult leader knows.
 faction: exalt
 required_progress: 40
 discovered_when:
@@ -347,7 +347,7 @@ on_completion:
 id: interrogate_black_lotus_handler
 type: Lead
 name: Interrogate Black Lotus handler
-description: Learn what a Black Lotus handler knew, from the handler taken alive or from what was found on the body.
+description: Extract what the captured Black Lotus handler knows.
 faction: black_lotus
 required_progress: 5
 discovered_when:
@@ -368,7 +368,7 @@ on_completion:
 id: interrogate_black_lotus_lieutenant
 type: Lead
 name: Interrogate Black Lotus lieutenant
-description: Learn what a Black Lotus lieutenant knew, from the officer taken alive or from the orders found on the body.
+description: Extract what the captured Black Lotus lieutenant knows.
 faction: black_lotus
 required_progress: 10
 discovered_when:
@@ -389,7 +389,7 @@ on_completion:
 id: interrogate_black_lotus_commander
 type: Lead
 name: Interrogate Black Lotus commander
-description: Learn what a Black Lotus commander knew, from the commander taken alive or from what was found on the body.
+description: Extract what the captured Black Lotus commander knows.
 faction: black_lotus
 required_progress: 20
 discovered_when:
@@ -410,7 +410,7 @@ on_completion:
 id: interrogate_black_lotus_high_commander
 type: Lead
 name: Interrogate Black Lotus high commander
-description: Learn what a Black Lotus high commander knew, from the high commander taken alive or from what was found on the body.
+description: Extract what the captured Black Lotus high commander knows.
 faction: black_lotus
 required_progress: 30
 discovered_when:
@@ -430,7 +430,7 @@ on_completion:
 id: interrogate_black_lotus_cult_leader
 type: Lead
 name: Interrogate Black Lotus cult leader
-description: Learn what a Black Lotus cult leader knew, from the cult leader taken alive or from what was found on the body.
+description: Extract what the captured Black Lotus cult leader knows.
 faction: black_lotus
 required_progress: 40
 discovered_when:
