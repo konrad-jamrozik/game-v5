@@ -649,8 +649,6 @@
         'agent_cap',
         'transport_cap',
         'training_cap',
-        'weapon_damage',
-        'armor',
         'training_skill_gain',
         'exhaustion_recovery',
         'health_recovery',
@@ -762,8 +760,6 @@
         agent_cap: { price: 2000, increment: 20 },
         transport_cap: { price: 1500, increment: 8 },
         training_cap: { price: 1000, increment: 10 },
-        weapon_damage: { price: 2000, increment: 2 },
-        armor: { price: 1000, increment: 5 },
         training_skill_gain: { price: 1000, increment: 0.5 },
         exhaustion_recovery: { price: 1000, increment: 1 },
         health_recovery: { price: 1000, increment: 1 },
@@ -1013,8 +1009,8 @@
       const TEAM0 = {
         n: 4,
         skill: 100,
-        wu: 0,
-        au: 0,
+        added_damage: 0,
+        added_armor: 0,
         target: 90,
         trials: 100,
         team: true,
@@ -1141,7 +1137,7 @@
         `<div class="kv"><span class="k"><code>${esc(p.split('.').slice(1).join('.'))}</code><small>${hint}</small></span>${inp(p, o)}</div>`
       const panel = (title, src, body, cls = '') =>
         `<div class="panel ${cls}">${title ? `<h3>${title}</h3>` : ''}${src ? `<div class="src">${src}</div>` : ''}${body}</div>`
-      /* A number field of the test team; `o.add` puts beside it what the value adds, e.g. the Upgrades' points. */
+      /* A number field of the test team; `o.add` puts beside it what the value comes to, e.g. the test Agent's weapon damage. */
       const tin = (k, label, o = {}) => {
         const field = `<input type="number" id="t_${k}" data-t="${k}" value="${T[k]}" step="${o.step || 1}" min="${o.min ?? 0}"${o.max ? ` max="${o.max}"` : ''}>`
         return `<label><span class="lbl">${label}</span>${o.add ? `<span class="inrow">${field}<span class="add" id="t_${k}_add"></span></span>` : field}</label>`
@@ -1168,9 +1164,9 @@
   ${panel('Armors', 'content/combat/armors.yaml', `<div class="tw"><table><tr><th>Armor</th><th>base_armor</th><th class="d">used by</th></tr>${AR.map((w) => `<tr><td class="name">${title(w)}</td><td>${inp(w + '.base_armor')}</td><td class="d" id="au_${w}" style="font-family:var(--body);white-space:normal"></td></tr>`).join('')}</table></div>`)}
   </div><div class="col">
   ${panel('Combat parameters', 'content/combat/combat_parameters.yaml', row(cp + '.weapon_damage_range', 'damage roll is base damage ± this fraction', { step: 0.05 }) + row(cp + '.retreat_below_agent_rating_fraction', 'Agents retreat below this fraction of their starting Combat rating…', { step: 0.05 }) + row(cp + '.retreat_at_enemy_to_agent_rating', "…while Enemies hold at least this ratio of the Agents' rating", { step: 0.05 }) + row(cp + '.incapacitation_skill_fraction', 'Incapacitated at this fraction of base skill or less', { step: 0.05 }) + row(cp + '.rating_base_health', 'effective max health at which the health term of the rating factor is 1') + row(cp + '.rating_base_armor', 'effective armor at which the armor term of the rating factor is 1') + row(cp + '.rating_base_weapon_damage', 'effective weapon damage at which the attack term of the rating factor is 1') + row(cp + '.rating_team_size_exponent', 'a side of n Combatants able to fight is rated n ^ (this − 1) times the sum of what each adds', { min: 1, step: 0.05 }) + extra(cp))}
-  ${panel('Field agent and Combat exhaustion', 'content/agents/agent_archetypes.yaml · agent_parameters.yaml', `<div class="kv"><span class="k"><code>field_agent.base_skill</code><small>a newly hired Agent</small></span>${inp('field_agent.base_skill')}</div><div class="kv"><span class="k"><code>field_agent.base_health</code><small></small></span>${inp('field_agent.base_health', { min: 1 })}</div><div class="kv"><span class="k"><code>field_agent.weapon</code><small></small></span>${sel('field_agent.weapon', WP)}</div><div class="kv"><span class="k"><code>field_agent.armor</code><small>the Armor Upgrades add to its base armor</small></span>${sel('field_agent.armor', AR)}</div>` + row(ap + '.exhaustion_per_attack', 'to the attacker, hit or miss') + row(ap + '.exhaustion_per_defense', 'to the defender, hit or miss') + row(ap + '.exhaustion_free_points', 'exhaustion up to this costs no skill') + row(ap + '.skill_penalty_pct_per_exhaustion', '% of skill lost per point above the free points', { step: 0.5 }) + row(ap + '.exhaustion_incapacitation', 'Incapacitated at this exhaustion'))}
+  ${panel('Field agent and Combat exhaustion', 'content/agents/agent_archetypes.yaml · agent_parameters.yaml', `<div class="kv"><span class="k"><code>field_agent.base_skill</code><small>a newly hired Agent</small></span>${inp('field_agent.base_skill')}</div><div class="kv"><span class="k"><code>field_agent.base_health</code><small></small></span>${inp('field_agent.base_health', { min: 1 })}</div><div class="kv"><span class="k"><code>field_agent.weapon</code><small></small></span>${sel('field_agent.weapon', WP)}</div><div class="kv"><span class="k"><code>field_agent.armor</code><small>the test team's added armor adds to its base armor</small></span>${sel('field_agent.armor', AR)}</div>` + row(ap + '.exhaustion_per_attack', 'to the attacker, hit or miss') + row(ap + '.exhaustion_per_defense', 'to the defender, hit or miss') + row(ap + '.exhaustion_free_points', 'exhaustion up to this costs no skill') + row(ap + '.skill_penalty_pct_per_exhaustion', '% of skill lost per point above the free points', { step: 0.5 }) + row(ap + '.exhaustion_incapacitation', 'Incapacitated at this exhaustion'))}
   </div></div>
-  ${panel('Test team', 'not a GDR: the team every Mission site below is fought with', `<div class="ctl">${tin('n', 'Agents', { min: 1, max: 300 })}${tin('skill', 'Base skill', { min: 1 })}${tin('wu', 'Weapon damage upgrades', { add: true })}${tin('au', 'Armor upgrades', { add: true })}${tin('target', 'Target win %', { min: 1, max: 100 })}${tin('trials', 'Combats per site', { min: 1, max: 10000 })}${tcheck('team', 'Find team for target')}</div><div class="teamcr" id="teamcr"></div><div class="note" id="teamnote"></div><div class="note" id="simstatus"></div>`, 'read')}
+  ${panel('Test team', 'not a GDR: the team every Mission site below is fought with', `<div class="ctl">${tin('n', 'Agents', { min: 1, max: 300 })}${tin('skill', 'Base skill', { min: 1 })}${tin('added_damage', 'Added weapon damage', { add: true })}${tin('added_armor', 'Added armor', { add: true })}${tin('target', 'Target win %', { min: 1, max: 100 })}${tin('trials', 'Combats per site', { min: 1, max: 10000 })}${tcheck('team', 'Find team for target')}</div><div class="teamcr" id="teamcr"></div><div class="note" id="teamnote"></div><div class="note" id="simstatus"></div>`, 'read')}
   ${panel(
     'Mission sites',
     'content/missions/mission_site_archetypes.yaml',
@@ -1336,10 +1332,12 @@
         'rating_team_size_exponent',
       ]
       const armorOf = (x) => cur[x].base_armor
-      /* The test Agent's equipped values: its Armor and weapon, raised by the test team's Upgrades. */
-      const testAgentArmor = () => Math.max(0, Math.round(armorOf(cur.field_agent.armor) + T.au * cur.armor.increment))
-      const testAgentWeapon = () =>
-        Math.max(1, Math.round(wdmg(cur.field_agent.weapon) + T.wu * cur.weapon_damage.increment))
+      /*
+       * The test Agent's equipped values: the Field agent's Armor and Weapon, raised by the test team's added armor and
+       * weapon damage, e.g. +4 weapon damage for a Weapon 4 better than the Field agent's.
+       */
+      const testAgentArmor = () => Math.max(0, Math.round(armorOf(cur.field_agent.armor) + T.added_armor))
+      const testAgentWeapon = () => Math.max(1, Math.round(wdmg(cur.field_agent.weapon) + T.added_damage))
       /*
        * COMBAT, Combat rating: the attack, health, and armor terms of the rating factor, each 1 at its rating base, and the
        * factor itself, half their sum.
@@ -1854,10 +1852,8 @@
           [tlo, thi] = dmgRange(tw)
         const tr = teamRatings(),
           pct = (x) => (x >= 0 ? '+' : '−') + f(Math.abs(x) * 100, 1) + '%'
-        const wAdd = tw - wdmg(fa.weapon),
-          aAdd = ta - armorOf(fa.armor)
-        $('t_wu_add').innerHTML = `${wAdd >= 0 ? '+' : '−'}${f(Math.abs(wAdd), 0)}${SWORD}`
-        $('t_au_add').innerHTML = `${aAdd >= 0 ? '+' : '−'}${f(Math.abs(aAdd), 0)}${SHIELD}`
+        $('t_added_damage_add').innerHTML = `= ${f(tw, 0)}${SWORD}`
+        $('t_added_armor_add').innerHTML = `= ${f(ta, 0)}${SHIELD}`
         $('teamcr').innerHTML =
           `<span><span class="k">Team Combat rating</span><span class="v eff">${f(tr.eff, 0)}</span></span>` +
           `<span><span class="k">Base, the sum of effective skills</span><span class="v">${f(tr.base, 0)}</span></span>` +

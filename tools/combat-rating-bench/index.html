@@ -306,7 +306,7 @@
         color: var(--text2);
       }
 
-      /* The grid: one row per Mission site; in it one block per CR target, of skill tiers by upgrade sets. */
+      /* The grid: one row per Mission site; in it one block per CR target, of skill tiers by gear sets. */
       .grid {
         display: flex;
         flex-direction: column;
@@ -632,7 +632,7 @@
         <p>
           Every Mission site's Enemies fight Agent teams sized by a candidate Combat rating formula to a set share of
           the site's rating, e.g. 100%, 120%, and 150%. A good formula gives all the teams sized to one share the same
-          win rate, whatever their skill and Upgrades and whatever that win rate is, e.g. 87% at 100%. Nothing is fought
+          win rate, whatever their skill and gear and whatever that win rate is, e.g. 87% at 100%. Nothing is fought
           until you press a <b>Run</b> button; results are kept in the browser, and a cell whose team the current
           formula sizes differently shows its earlier result greyed until it is run again.
         </p>
@@ -656,10 +656,10 @@
           <h2>Setup</h2>
           <p>
             Agent teams are Agents of the AgentArchetype's health, weapon damage, and armor, at full health and rested,
-            with the given base skill, plus the weapon damage and armor of an Upgrade set, e.g. 4/20 is +4 weapon damage
-            and +20 armor, i.e. 2 Weapon damage Upgrades of +2 and 4 Armor Upgrades of +5. Each team takes the Agent
-            count whose rating is closest to its share of the Mission site's rating. The Agent team is always the
-            Agents' side, as in a Mission.
+            with the given base skill, plus the weapon damage and armor of a gear set, i.e. what better Weapons and
+            Armor add, e.g. 4/20 is +4 weapon damage and +20 armor. Each team takes the Agent count whose rating is
+            closest to its share of the Mission site's rating. The Agent team is always the Agents' side, as in a
+            Mission.
           </p>
         </div>
         <div class="row">
@@ -668,7 +668,7 @@
           /></label>
           <label class="inline">Base skills <input class="wide" data-bind="setup.skills" data-type="str" /></label>
           <label class="inline"
-            >Upgrades, +weapon damage/+armor
+            >Gear sets, +weapon damage/+armor
             <input class="wide" style="width: 340px" data-bind="setup.upgrades" data-type="str"
           /></label>
           <label class="inline"
@@ -763,11 +763,11 @@
               Combatant variables: <code>skill</code> (effective skill), <code>base_skill</code>, <code>health</code>,
               <code>armor</code>, <code>damage</code>, <code>exhaustion</code>, and the derived
               <code>health_mult = 1 + (health − health_base) × cr_per_health</code>, likewise
-              <code>armor_mult</code> and <code>damage_mult</code>. An Agent's Weapon damage and Armor Upgrades count
-              only as the weapon damage and armor they add. Agents are rated by the Agent expression and Enemies by the
-              Enemy one; every preset sets both to the same expression. Team variables: <code>sum</code>,
-              <code>count</code> (Combatants able to fight), and <code>game</code> (the game's base Combat rating, Σ
-              effective skill). Every parameter, and every Combat value under Setup, is a variable of both.
+              <code>armor_mult</code> and <code>damage_mult</code>. An Agent's gear set counts only as the weapon damage
+              and armor it adds. Agents are rated by the Agent expression and Enemies by the Enemy one; every preset
+              sets both to the same expression. Team variables: <code>sum</code>, <code>count</code> (Combatants able to
+              fight), and <code>game</code> (the game's base Combat rating, Σ effective skill). Every parameter, and
+              every Combat value under Setup, is a variable of both.
             </p>
             <p class="note detail">
               <b>combatant_cr</b> is one Combatant's rating by the Agent or Enemy expression; <b>× skill</b> is that
@@ -789,11 +789,11 @@
             </p>
             <p class="note detail">
               E.g. with <code>skill * damage_mult</code> and <code>cr_per_damage</code> 0.02, a site of CR 1,200 has
-              been fought by 12 Agents of skill 100 without Upgrades, each rated 100, who won 50%, and by 10 Agents of
-              skill 100 with 10 Weapon damage Upgrades, each rated 120, who won 85%. Both teams rate 1,200, yet their
-              win rates differ by 35 points, so no curve fits both. Fit tries other values on the same two results: at
-              0.05 the second team rates 10 × 150 = 1,500, 1.25× the site, while the first team, without Upgrades, still
-              rates 1,200, and a curve through 50% at 1× and 85% at 1.25× fits both. Fit writes 0.05. The team that now
+              been fought by 12 Agents of skill 100 without added gear, each rated 100, who won 50%, and by 10 Agents of
+              skill 100 with +20 weapon damage, each rated 120, who won 85%. Both teams rate 1,200, yet their win rates
+              differ by 35 points, so no curve fits both. Fit tries other values on the same two results: at 0.05 the
+              second team rates 10 × 150 = 1,500, 1.25× the site, while the first team, without added gear, still rates
+              1,200, and a curve through 50% at 1× and 85% at 1.25× fits both. Fit writes 0.05. The team that now
               matches the site is 8 such Agents, not 10, so that cell turns grey until it is run again, and should then
               win about what the first team won.
             </p>
@@ -1365,7 +1365,7 @@
 
       function agentGroups(skill, up, count) {
         const a = info.gdr.agentArchetypes[0] ?? { health: 30, damage: 10, armor: 0 }
-        // An Upgrade set is the weapon damage and armor added to every Agent, e.g. 4/20 is +4 and +20.
+        // A gear set is the weapon damage and armor added to every Agent, e.g. 4/20 is +4 and +20.
         return [
           {
             count,
@@ -1468,7 +1468,7 @@
        * of it, so that a result can grow by more Combats.
        */
       function combatKey(site, groups, up, cv, trials) {
-        // The Upgrade counts enter the key once, after the groups, as they did before groups held them.
+        // The gear set enters the key once, after the groups, as they did before groups held them.
         const team = `${site.sig}|${JSON.stringify(groups.map(({ w, a, ...g }) => g))}|${up.w}/${up.a}`
         const key = hash(`${team}|${JSON.stringify([info.engine, cv])}`)
         // A result kept under the earlier key, which held the number of Combats, moves to the new one.
@@ -1611,10 +1611,6 @@
               gdrValues: model.cv,
               // A result keeps its seed, so that more Combats continue it.
               seed: store.seeds[cell.key] ?? cell.key,
-              ratingUpgrades: {
-                weaponDamage: Math.round(upgradesFor(cell.up.w, 'weapon_damage')),
-                armor: Math.round(upgradesFor(cell.up.a, 'armor')),
-              },
             },
           })
         }
@@ -1917,17 +1913,14 @@
         '<svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><g stroke="currentColor" stroke-linecap="round" fill="none"><line x1="13.5" y1="2.5" x2="6.5" y2="9.5" stroke-width="2.2"/><line x1="4" y1="8" x2="8" y2="12" stroke-width="1.6"/><line x1="5.5" y1="10.5" x2="2.5" y2="13.5" stroke-width="2"/></g></svg>'
       const SHIELD =
         '<svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5 14 3.5V8c0 3.5-3 5.8-6 6.8C5 13.8 2 11.5 2 8V3.5z" fill="currentColor"/></svg>'
-      /** An Upgrade set as what it adds, with a sword for weapon damage and a shield for armor, e.g. +4⚔ +20🛡; stacked, each on a line of its own, to fit a grid column. */
+      /** A gear set as what it adds, with a sword for weapon damage and a shield for armor, e.g. +4⚔ +20🛡; stacked, each on a line of its own, to fit a grid column. */
       const upHtml = (up, stacked = false) =>
         up.w === 0 && up.a === 0
           ? 'none'
           : [up.w ? `+${up.w}${SWORD}` : '', up.a ? `+${up.a}${SHIELD}` : '']
               .filter(Boolean)
               .join(stacked ? '<br>' : ' ')
-      /** How many Upgrades of each kind add an Upgrade set's points, e.g. +4 weapon damage is 2 Upgrades of +2. */
-      const upgradesFor = (points, upgrade) => points / (info?.gdr.upgradeIncrements?.[upgrade] || 1)
-      const upTitle = (up) =>
-        `+${up.w} weapon damage (${+upgradesFor(up.w, 'weapon_damage').toFixed(2)} Weapon damage Upgrades), +${up.a} armor (${+upgradesFor(up.a, 'armor').toFixed(2)} Armor Upgrades)`
+      const upTitle = (up) => `+${up.w} weapon damage, +${up.a} armor`
 
       function tint(w) {
         const d = Math.min(1, Math.abs(w - 0.5) * 2)
@@ -1976,7 +1969,7 @@
           }<button class="small" data-act="run-sec" data-site="${site.id}" data-t="${t}">Run</button></div>`
         }
         const block = (t, site) => {
-          // Every block has its own header of Upgrade sets, so that a column's Upgrades read beside its cells.
+          // Every block has its own header of gear sets, so that a column's gear reads beside its cells.
           let html = `<div class="block">${blockHead(t, site)}<span></span>${ups.map((u) => `<span class="uh" title="${upTitle(u)}"><span>${upHtml(u, true)}</span></span>`).join('')}`
           if (site !== null) {
             for (const skill of skills) {
@@ -1988,7 +1981,7 @@
           }
           return `${html}</div>`
         }
-        const head = `<div class="grow-row headrow"><div class="site note">Mission site<br>base skill ↓ · Upgrades →</div>${targets
+        const head = `<div class="grow-row headrow"><div class="site note">Mission site<br>base skill ↓ · gear →</div>${targets
           .map((t) => block(t, null))
           .join('')}</div>`
         const rows = sites
@@ -2047,7 +2040,7 @@
         }
       }
 
-      /** The combatant_cr of every EnemyArchetype, and of the Agents of each base skill without and with Upgrades. */
+      /** The combatant_cr of every EnemyArchetype, and of the Agents of each base skill without and with added gear. */
       function renderTypes() {
         const { cv, skills, ups } = model
         const rows = [...info.gdr.enemyArchetypes]
@@ -2061,7 +2054,7 @@
         for (const skill of skills) {
           for (const up of sets) {
             rows.push({
-              name: `Agent, ${up.label === 'none' ? 'no Upgrades' : up.label}`,
+              name: `Agent, ${up.label === 'none' ? 'no added gear' : up.label}`,
               side: 'agent',
               g: agentGroups(skill, up, 1)[0],
             })
@@ -2142,7 +2135,7 @@
         const sd = (wins) => summary(wins, trials)
         const heat = (s) => (s.n > 0 ? `background:${tint(s.mean)}` : '')
         $('#teams').innerHTML =
-          `<tr><th class="r">Skill</th><th>Upgrades</th>${targets.map((t) => `<th class="r">${t}%</th>`).join('')}</tr>` +
+          `<tr><th class="r">Skill</th><th>Gear</th>${targets.map((t) => `<th class="r">${t}%</th>`).join('')}</tr>` +
           skills
             .flatMap((skill) =>
               ups.map((up) => {

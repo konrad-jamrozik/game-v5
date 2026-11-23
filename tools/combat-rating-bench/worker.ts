@@ -134,8 +134,8 @@ async function fight(job: Job): Promise<JobResult> {
     agents: job.agents,
     enemies: job.enemies,
     gdrValues: job.gdrValues,
-    // The explicit values already hold what the Upgrades add. Only an engine from before the rating factor reads the
-    // counts, for its own Combat rating, which only the Retreated check reads.
+    // The explicit values already hold what the gear adds. Only an engine from before the rating factor reads these
+    // Upgrade counts, for its own Combat rating, which only the Retreated check reads; the game has no such Upgrades now.
     ratingUpgrades: job.ratingUpgrades ?? { weaponDamage: 0, armor: 0 },
     seed: job.seed,
   }

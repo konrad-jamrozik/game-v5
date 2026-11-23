@@ -101,12 +101,6 @@ function loadGdr() {
         .filter((d) => typeof d['level'] === 'number')
         .map((d) => [d['level'] as number, typeof d['name'] === 'string' ? d['name'] : d.id]),
     ),
-    // What one purchase of each Upgrade that the Agent teams take adds to every Agent.
-    upgradeIncrements: Object.fromEntries(
-      of('Upgrade')
-        .filter((d) => typeof d['increment'] === 'number')
-        .map((d) => [d.id, d['increment'] as number]),
-    ),
   }
 }
 
