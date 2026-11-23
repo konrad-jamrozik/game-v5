@@ -88,6 +88,6 @@ Borderline Work items concern content that belongs in a specification but is wor
 
 If the quoted wording of a Work item changes without resolving it, update the quotation. If an affected section is renamed or moved, update the link. If a Work item is found to be wrong, remove it and record the reasoning in the commit message.
 
-Recording a Work item does not authorize the change it suggests. When a Work item conflicts with a later decision, the decision prevails and the Work item is revised or removed.
+Recording a Work item does not authorize the change it suggests. When a Work item conflicts with a later decision, the decision takes precedence and the Work item is revised or removed.
 
 If the specifications affected by one Work item belong to several batches, the Work item may be resolved in the earliest batch, or split so that each part is resolved with its own batch.

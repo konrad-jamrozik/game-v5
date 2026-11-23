@@ -2042,6 +2042,7 @@
         /*
          * What the Campaign receives in each bucket, and in all buckets so far: the money of its won Response Missions,
          * and its Funding, the starting Funding plus every change so far, paid on each of the bucket's Turns.
+         * The Funding is never floored at 0, unlike the game's funding, so that a deficit stays visible.
          */
         const fund0 = cur.standard.starting_funding,
           fundOn = (t) => fund0 + fp[Math.min(t, HOR)][1],

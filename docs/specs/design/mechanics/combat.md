@@ -43,7 +43,7 @@ How a Combat is divided, and how it ends.
 | Health removed | The current health one attack takes from its defender: the smaller of the damage outcome less the armor removed and the defender's current health before the attack, or 0 on a miss. | Damage, as a noun on its own |
 | Damage dealt | The sum of the health removed by every attack one participant made in one Combat. |  |
 | Damage taken | The sum of the health removed by every attack on one participant in one Combat. It is equivalent to the participant's [health lost](agents-spec.md#combatant-attributes): the current health it lost in that Combat. |  |
-| Combat outcome | How a Combat ended for the [Agency](domain-model.md#agency-and-agents)'s team: Prevailed, when no Enemy can fight on; Wiped, when no Agent can fight on; or Retreated, when the team withdrew. | Battle outcome |
+| Combat outcome | How a Combat ended for the [Agency](domain-model.md#agency-and-agents)'s team: Won, when no Enemy can fight on; Wiped, when no Agent can fight on; or Retreated, when the team withdrew. | Battle outcome; "Prevailed" for the Combat outcome Won, which is named Won like the Mission it decides. |
 
 ## Combatant condition in a Combat
 
@@ -314,7 +314,7 @@ When a Combat begins, before any Combat round:
 
 1. Every Combatant of both sides gains Incapacitated, set to yes exactly when the Combatant meets the [Incapacitation condition](#incapacitation-condition) with its current values, and to no otherwise. An Enemy whose current health is already 0 is dead and is not Incapacitated. Every Combatant also gains current armor, set to its effective armor.
 2. The Combat report records each Combatant's starting values and the Combat rating of each side, under [Combat report](#combat-report). The Combat rating of the Agents' side at this moment is its starting Combat rating, which the Retreated check reads.
-3. If no Enemy is able to fight, the Combat ends with the Combat outcome Prevailed after 0 Combat rounds. Otherwise, if no Agent is able to fight, it ends with the Combat outcome Wiped after 0 Combat rounds. Otherwise the first Combat round begins.
+3. If no Enemy is able to fight, the Combat ends with the Combat outcome Won after 0 Combat rounds. Otherwise, if no Agent is able to fight, it ends with the Combat outcome Wiped after 0 Combat rounds. Otherwise the first Combat round begins.
 
 A Combat that ends at its start makes no attack and changes no value of any Combatant.
 
@@ -458,7 +458,7 @@ A Combat stops the moment one side can no longer fight, and that side has lost; 
 
 After every attack, these checks are made in this order, and the first that holds ends the Combat at once with its Combat outcome; no further Combat turn is taken, even in the middle of a phase:
 
-1. **Prevailed:** No Enemy is able to fight.
+1. **Won:** No Enemy is able to fight.
 2. **Wiped:** No Agent is able to fight.
 
 After the Enemies' phase of each Combat round, when the Combat has not ended, the Retreated check is made, and when it holds it ends the Combat with the Combat outcome Retreated:
@@ -472,7 +472,7 @@ After the Enemies' phase of each Combat round, when the Combat has not ended, th
 
    where `R_agents` and `R_enemies` are the Combat ratings of the Agents' side and the Enemies' side at the end of the Combat round, and `R_start` is the starting Combat rating of the Agents' side under [Combat start](#combat-start).
 
-When the Retreated check does not hold, the next Combat round begins. Only an attack changes whether a Combatant is able to fight, so a side is left with no Combatant able to fight only by an attack, and the checks after it end the Combat before any Combatant could find no target. E.g., an attack in the Agents' phase that kills the last Enemy able to fight ends the Combat as Prevailed at once: no later Agent of that phase attacks, and no Enemies' phase follows. When one attack leaves no Combatant of either side able to fight, e.g. it kills the last Enemy able to fight while the exhaustion it adds Incapacitates the last Agent able to fight, the outcome is Prevailed, because that check comes first.
+When the Retreated check does not hold, the next Combat round begins. Only an attack changes whether a Combatant is able to fight, so a side is left with no Combatant able to fight only by an attack, and the checks after it end the Combat before any Combatant could find no target. E.g., an attack in the Agents' phase that kills the last Enemy able to fight ends the Combat as Won at once: no later Agent of that phase attacks, and no Enemies' phase follows. When one attack leaves no Combatant of either side able to fight, e.g. it kills the last Enemy able to fight while the exhaustion it adds Incapacitates the last Agent able to fight, the outcome is Won, because that check comes first.
 
 The Combat round in which the Combat ends ends with it. The number of Combat rounds of the Combat is the number of that Combat round, or 0 when the Combat ended at its start.
 
@@ -482,7 +482,7 @@ A Combat ends with exactly one Combat outcome. The set is exhaustive:
 
 | Combat outcome | When |
 | --- | --- |
-| Prevailed | No Enemy is able to fight, at Combat start or after an attack. Checked first, so it holds even when no Agent is able to fight either. |
+| Won | No Enemy is able to fight, at Combat start or after an attack. Checked first, so it holds even when no Agent is able to fight either. |
 | Wiped | Some Enemy, but no Agent, is able to fight, at Combat start or after an attack. |
 | Retreated | After a Combat round, Agents and Enemies are both able to fight and the Retreated check of [Combat end checks](#combat-end-checks) holds. |
 
@@ -503,7 +503,7 @@ By 3 and 4 no Combat has more than `N × X` Combat rounds. A Combatant that is n
 
 Every Combat produces exactly one Combat report. It holds exactly the following facts, and this list is exhaustive:
 
-1. **Combat outcome:** Prevailed, Retreated, or Wiped.
+1. **Combat outcome:** Won, Retreated, or Wiped.
 2. **Number of Combat rounds:** a whole number of at least 0.
 3. **Participants:** the Agents' side and the Enemies' side, each as the list of Instance IDs in its fixed order.
 4. **Starting values:** for each participant, its base skill, current health, effective max health, exhaustion, effective weapon damage, effective armor, effective skill, and Incapacitated value when the Combat began, after [Combat start](#combat-start) step 1. Its effective armor is also its current armor at that moment.
@@ -541,15 +541,15 @@ The following rules are complete:
 
 A balancing tool asks the same question many times, e.g. how often four Agents of base skill 100 win at `raid_outpost`, and needs only how each Combat ended. Building a Combat report, with every attack in its Combat log, costs most of the time of a large Combat, so a batch fights many Detached Combats on one setup and keeps only their Combat summaries.
 
-`developer.tools.fightCombatBatch(setup, count, stop)` is a Developer tool, available as `fightCombat` is. `setup` is as for `fightCombat`; `count` is the number of Detached Combats to fight, a whole number from 1 to 10,000; and `stop`, which the caller may leave out, holds `prevailed`, `notPrevailed`, or both, each a whole number of at least 1. The following rules are complete:
+`developer.tools.fightCombatBatch(setup, count, stop)` is a Developer tool, available as `fightCombat` is. `setup` is as for `fightCombat`; `count` is the number of Detached Combats to fight, a whole number from 1 to 10,000; and `stop`, which the caller may leave out, holds `won`, `notWon`, or both, each a whole number of at least 1. The following rules are complete:
 
 - **Each Combat of the batch:** Combat number `i` of the batch, for each `i` from 1 to `count`, is the Detached Combat that `fightCombat` fights on `setup` with its Detached seed replaced by the text `<seed>#<i>`, where `<seed>` is the setup's Detached seed and `<i>` is `i` in decimal digits without leading zeros, e.g. `raid_outpost#7` for the seventh Combat of a batch with Detached seed `raid_outpost`. Its random outcomes therefore derive from that text alone, and its Combat summary equals the Combat summary of that `fightCombat` call.
-- **Stop:** Without `stop`, every Combat from 1 to `count` is fought. With `stop`, the Combats are fought in order of `i`, and the batch ends after the first Combat at which the number of Combats of the batch whose Combat outcome is Prevailed reaches `prevailed`, or the number whose Combat outcome is Retreated or Wiped reaches `notPrevailed`; the Combats after it are not fought. Which Combats are fought therefore depends only on `setup`, `count`, and `stop`, and the first `k` Combats fought are the same with or without `stop`.
-- **Valid batch:** The operation is rejected, and fights nothing, when `setup` would be rejected by `fightCombat` under Valid setup, when `count` is not a whole number from 1 to 10,000, when `stop` is given and holds anything other than `prevailed` and `notPrevailed` as whole numbers of at least 1, or when `<seed>#<count>` is not a permitted [Campaign seed](../foundation/determinism-and-randomness.md#glossary), e.g. because it is longer than a Campaign seed may be. The rejection names the first such fault.
+- **Stop:** Without `stop`, every Combat from 1 to `count` is fought. With `stop`, the Combats are fought in order of `i`, and the batch ends after the first Combat at which the number of Combats of the batch whose Combat outcome is Won reaches `won`, or the number whose Combat outcome is Retreated or Wiped reaches `notWon`; the Combats after it are not fought. Which Combats are fought therefore depends only on `setup`, `count`, and `stop`, and the first `k` Combats fought are the same with or without `stop`.
+- **Valid batch:** The operation is rejected, and fights nothing, when `setup` would be rejected by `fightCombat` under Valid setup, when `count` is not a whole number from 1 to 10,000, when `stop` is given and holds anything other than `won` and `notWon` as whole numbers of at least 1, or when `<seed>#<count>` is not a permitted [Campaign seed](../foundation/determinism-and-randomness.md#glossary), e.g. because it is longer than a Campaign seed may be. The rejection names the first such fault.
 - **Outputs:** It returns, in order of `i`, the Combat summary of each Combat of the batch that was fought, under Recording in [Fighting a Combat](#fighting-a-combat): its Combat outcome and the number of Agents that are dead when it ends. It also returns the totals over the Combats fought: their number, the number of Combats with each Combat outcome, and the sum of the Agents dead. It returns no Combat report and no final value of any Combatant.
 - **Changes nothing:** As for `fightCombat`. Each Combat of the batch starts from the values `setup` names, never from the values another Combat of the batch left, because a Detached Combat applies its outputs to nothing.
 
-E.g., a balancing tool calls `fightCombatBatch` once with four explicit Agents of base skill 100, the Enemies of `raid_outpost`, the Detached seed `raid_outpost|4`, and a `count` of 100, and reads the number of Combats Prevailed from the totals. To learn only whether at least 90 of the 100 would be Prevailed, it gives `stop` with `prevailed` 90 and `notPrevailed` 11, and the batch ends as soon as the answer is certain, e.g. after the eleventh Combat not Prevailed. Calling `fightCombat` with the Detached seed `raid_outpost|4#37` gives the Combat report of the batch's thirty-seventh Combat, e.g. to see why it was lost.
+E.g., a balancing tool calls `fightCombatBatch` once with four explicit Agents of base skill 100, the Enemies of `raid_outpost`, the Detached seed `raid_outpost|4`, and a `count` of 100, and reads the number of Combats Won from the totals. To learn only whether at least 90 of the 100 would be Won, it gives `stop` with `won` 90 and `notWon` 11, and the batch ends as soon as the answer is certain, e.g. after the eleventh Combat not Won. Calling `fightCombat` with the Detached seed `raid_outpost|4#37` gives the Combat report of the batch's thirty-seventh Combat, e.g. to see why it was lost.
 
 # Player-visible information
 
@@ -570,7 +570,7 @@ Incapacitated, current armor, and a Combat in progress never exist in a World st
 
 # Edge cases and failure behavior
 
-- **Empty Enemies' side:** No Enemy is able to fight at Combat start, so the Combat ends as Prevailed after 0 Combat rounds, with no attack and no change to any Agent ([Combat start](#combat-start)).
+- **Empty Enemies' side:** No Enemy is able to fight at Combat start, so the Combat ends as Won after 0 Combat rounds, with no attack and no change to any Agent ([Combat start](#combat-start)).
 - **No Agent able to fight at Combat start:** When every Agent meets the incapacitation condition at Combat start, e.g. because of high exhaustion, and some Enemy is able to fight, the Combat ends as Wiped after 0 Combat rounds; every Agent survives unchanged ([Combat start](#combat-start)).
 - **Single Combatant on a side:** A side of one Combatant is valid. Every attacker of the other side targets it while it is able to fight ([Target selection](#target-selection)).
 - **Agent with lost current health or with exhaustion at Combat start:** The Combat starts from the Agent's current health and exhaustion. Its effective skill and the starting Combat rating reflect them, and it is Incapacitated from the start if it meets the incapacitation condition ([Combat start](#combat-start), [Combat rating](#combat-rating)).
@@ -580,7 +580,7 @@ Incapacitated, current armor, and a Combat in progress never exist in a World st
 - **Combat rating of 0:** A rating factor is always above 0, but a side's Combat rating is rounded down, so a side whose Combatants able to fight add less than 1 in all, e.g. one Combatant of effective skill 1 with a rating factor below 1, has a Combat rating of 0 while a Combatant of it is able to fight, and a team whose starting Combat rating is 0 never retreats ([Combat rating](#combat-rating), [Combat end checks](#combat-end-checks)).
 - **Enemy already dead at Combat start:** An Enemy with current health 0 is dead, not able to fight, and not Incapacitated ([Combat start](#combat-start)).
 - **No attacker without a target:** The attack that leaves a side with no Combatant able to fight ends the Combat at once, so no Combatant ever takes a Combat turn with no opponent able to fight; the Combatants after it in the Phase order take no Combat turn and gain no exhaustion from one ([Combat end checks](#combat-end-checks)).
-- **Last Combatants fall in one attack:** When one attack leaves neither side with a Combatant able to fight, the outcome is Prevailed ([Combat end checks](#combat-end-checks)).
+- **Last Combatants fall in one attack:** When one attack leaves neither side with a Combatant able to fight, the outcome is Won ([Combat end checks](#combat-end-checks)).
 - **Combat experience of a Killed Agent:** The Combat report records it like any other Agent's, but it is never added to Experience or base skill ([Combat experience](#combat-experience)).
 - **Zero divisor:** The divisor of the hit chance's ratio is at least 2, because both effective skills are at least 1 ([Hit outcome](#hit-outcome)).
 - **Damage outcome above remaining current health:** Current health falls to 0, not below; the health removed is the defender's remaining current health ([Effects of an attack](#effects-of-an-attack)).
@@ -595,7 +595,7 @@ Incapacitated, current armor, and a Combat in progress never exist in a World st
 - **Every attack misses:** The Combat still ends, through Incapacitated or Retreated, within `N × exhaustion_incapacitation` Combat rounds ([Termination](#termination)).
 - **Invalid inputs:** An empty Agents' side, a duplicate Combatant, or an Agent that is not Serving is an internal invariant violation in a Mission resolution step ([Combat inputs and outputs](#combat-inputs-and-outputs)), and a rejection of `developer.tools.fightCombat(setup)` and `developer.tools.fightCombatBatch(setup, count, stop)` ([Detached Combat](#detached-combat), [Batch of Detached Combats](#batch-of-detached-combats)).
 - **A batch whose Detached seed is too long:** `fightCombatBatch` is rejected when `<seed>#<count>` is longer than a Campaign seed may be, even when the seed itself is permitted, because its last Combat would have no permitted Detached seed (Batch of Detached Combats).
-- **A batch that stops early:** With `stop`, the batch may fight fewer than `count` Combats, and its totals count only those; a `stop` that `count` cannot reach, e.g. `prevailed` above `count`, changes nothing, and every Combat is fought (Batch of Detached Combats).
+- **A batch that stops early:** With `stop`, the batch may fight fewer than `count` Combats, and its totals count only those; a `stop` that `count` cannot reach, e.g. `won` above `count`, changes nothing, and every Combat is fought (Batch of Detached Combats).
 - **A batch Combat looked at in full:** `fightCombat` with the Detached seed `<seed>#<i>` and the same setup gives the Combat report of Combat `i` of the batch, whose Combat outcome and dead Agents equal its Combat summary (Batch of Detached Combats).
 - **Detached Combat on Combatants of the Current campaign:** The Agents and Enemies it names keep their values; only the returned Combat report shows what the Combat did to them ([Detached Combat](#detached-combat)).
 - **Invalid GDRs:** A Game build that fails [Combat GDR validation](#combat-gdr-validation), e.g. with a Weapon `base_weapon_damage` of 0, a `weapon_damage_range` of 1.5, `exhaustion_per_attack` and `exhaustion_per_defense` both 0, or a `target_base_weight` of 50 with a `target_preferred_hit_chance` of 0.8, is defective and no Campaign is created from it.

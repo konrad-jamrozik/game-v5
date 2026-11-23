@@ -66,20 +66,20 @@ async function boot() {
   }
   return {
     /**
-     * One batch of Detached Combats, `developer.tools.fightCombatBatch(setup, count)`: how many Combats Prevailed and
+     * One batch of Detached Combats, `developer.tools.fightCombatBatch(setup, count)`: how many Combats Won and
      * how many Agents are dead over the batch. It builds no Combat report.
      */
     fightBatch(
       setup: unknown,
       count: number,
-      stop?: { prevailed: number; notPrevailed: number },
-    ): { error: string } | { fought: number; prevailed: number; agentsDead: number } {
+      stop?: { won: number; notWon: number },
+    ): { error: string } | { fought: number; won: number; agentsDead: number } {
       const result = engine.developer.tools.fightCombatBatch(setup, count, stop)
       if (!result.ok) {
         return { error: result.error.message }
       }
-      const { fought, prevailed, agentsDead } = result.value.totals
-      return { fought, prevailed, agentsDead }
+      const { fought, won, agentsDead } = result.value.totals
+      return { fought, won, agentsDead }
     },
     initiativeLevels: Object.fromEntries(
       levels.value.missionSiteArchetypes.map((item: { id: string; level: number | null }) => [item.id, item.level]),
@@ -118,7 +118,7 @@ async function fight(probe: Probe): Promise<ProbeResult> {
       seed: `${probe.id}|${probe.size}`,
     },
     probe.trials,
-    probe.full ? undefined : { prevailed: needWins, notPrevailed: probe.trials - needWins + 1 },
+    probe.full ? undefined : { won: needWins, notWon: probe.trials - needWins + 1 },
   )
   if ('error' in r) {
     return { ...head, error: r.error }
@@ -126,9 +126,9 @@ async function fight(probe: Probe): Promise<ProbeResult> {
   return {
     ...head,
     fought: r.fought,
-    win: (r.prevailed / r.fought) * 100,
+    win: (r.won / r.fought) * 100,
     killed: r.agentsDead / r.fought,
-    pass: r.prevailed >= needWins,
+    pass: r.won >= needWins,
   }
 }
 

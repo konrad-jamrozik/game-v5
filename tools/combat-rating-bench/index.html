@@ -1484,7 +1484,7 @@
         const r = store.results[cell.key]
         return r && r.fought >= cell.trials ? r : undefined
       }
-      const winOf = (r) => r.prevailed / r.fought
+      const winOf = (r) => r.won / r.fought
       /** What the Agents' rating by the current formula is measured with: a result's CR left is kept with it. */
       const crSig = () => JSON.stringify([state.formula.agent, state.formula.team, effectiveParams(state.formula)])
       /** The mean share of the Agents' starting rating left at the end, or NaN; stale under another formula. */
@@ -1528,8 +1528,8 @@
       /** A result with the Combats of a finished job added. */
       function merged(job, before, m, cell) {
         const keep = job.from > 0 && before?.fought === job.from
-        const r = keep ? { ...before } : { fought: 0, prevailed: 0, retreated: 0, wiped: 0, agentsDead: 0 }
-        for (const k of ['fought', 'prevailed', 'retreated', 'wiped', 'agentsDead']) {
+        const r = keep ? { ...before } : { fought: 0, won: 0, retreated: 0, wiped: 0, agentsDead: 0 }
+        for (const k of ['fought', 'won', 'retreated', 'wiped', 'agentsDead']) {
           r[k] += m[k]
         }
         if (m.finals && cell) {
@@ -2806,7 +2806,7 @@
         const shown = r ?? store.results[cell.key]
         if (shown) {
           lines.push(
-            `won ${shown.prevailed} of ${shown.fought}; Agents killed ${fmt(shown.agentsDead / shown.fought, 1)} per Combat${shown.retreated ? `; retreated ${shown.retreated}` : ''}${r ? '' : `; ${cell.trials} asked for`}`,
+            `won ${shown.won} of ${shown.fought}; Agents killed ${fmt(shown.agentsDead / shown.fought, 1)} per Combat${shown.retreated ? `; retreated ${shown.retreated}` : ''}${r ? '' : `; ${cell.trials} asked for`}`,
           )
           if (shown.dN > 0) {
             lines.push(
@@ -2814,7 +2814,7 @@
             )
           }
         } else if (old) {
-          lines.push(`earlier result, with another Agent count or values: won ${old.prevailed} of ${old.fought}`)
+          lines.push(`earlier result, with another Agent count or values: won ${old.won} of ${old.fought}`)
         } else {
           lines.push('not run')
         }

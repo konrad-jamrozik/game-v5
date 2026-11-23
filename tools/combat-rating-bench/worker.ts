@@ -53,7 +53,7 @@ export type JobResult =
       key: string
       side: 'a' | 'b'
       fought: number
-      prevailed: number
+      won: number
       retreated: number
       wiped: number
       agentsDead: number
@@ -85,7 +85,7 @@ interface Engine {
         | {
             ok: true
             value: {
-              totals: { fought: number; prevailed: number; retreated: number; wiped: number; agentsDead: number }
+              totals: { fought: number; won: number; retreated: number; wiped: number; agentsDead: number }
             }
           }
         | { ok: false; error: { message: string } }
@@ -155,7 +155,7 @@ async function fight(job: Job): Promise<JobResult> {
   }
   // Combat i of a batch is the Detached Combat on the seed `<seed>#<i>`, so fighting them one by one continues a batch
   // and shows each Combat's final values.
-  const totals = { fought: 0, prevailed: 0, retreated: 0, wiped: 0, agentsDead: 0 }
+  const totals = { fought: 0, won: 0, retreated: 0, wiped: 0, agentsDead: 0 }
   const finals: Finals[] = []
   for (let i = from + 1; i <= from + job.trials; i += 1) {
     const result = engine.developer.tools.fightCombat({ ...setup, seed: `${job.seed}#${i}` })
@@ -165,8 +165,8 @@ async function fight(job: Job): Promise<JobResult> {
     const { summary, participants } = result.value
     totals.fought += 1
     totals.agentsDead += summary.agentsDead
-    if (summary.outcome === 'Prevailed') {
-      totals.prevailed += 1
+    if (summary.outcome === 'Won') {
+      totals.won += 1
     } else if (summary.outcome === 'Retreated') {
       totals.retreated += 1
     } else {

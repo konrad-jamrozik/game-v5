@@ -50,7 +50,7 @@ export interface MissionRecord {
   readonly name: string
   readonly kind: string
   readonly result: 'Won' | 'Lost'
-  /** The Combat outcome for the Agents' side, e.g. Prevailed, Wiped, or Retreated. */
+  /** The Combat outcome for the Agents' side, e.g. Won, Wiped, or Retreated. */
   readonly outcome: string | null
   /** The Agents of the team sent. */
   readonly agents: number
