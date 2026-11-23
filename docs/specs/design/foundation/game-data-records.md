@@ -18,14 +18,14 @@ Because a GDR never changes, what sets one use of it apart from another is how t
 
 | Term | Definition |
 | --- | --- |
-| Campaign configuration preset | A [GDR](core-concepts.md#game-build-and-content) supplying a value for every [Campaign configuration](campaign-state.md#glossary) value, from which campaign creation obtains the initial Campaign configuration, under [Campaign configuration presets](configuration.md#campaign-configuration-presets). |
-| Cut content | The GDRs removed from the [Game build](core-concepts.md#game-build-and-content) but kept for reference and possible return, authored under `content/cut/`, under [Cut content](#cut-content). No Game build contains them. |
+| Campaign configuration preset | A [GDR](core-concepts.md#game-build-and-content) supplying a value for every [Campaign configuration](campaign-state.md#glossary) value, from which [campaign creation obtains](configuration.md#campaign-configuration-presets) the initial Campaign configuration. |
+| Cut content | The GDRs removed from the [Game build](core-concepts.md#game-build-and-content) but kept for reference and possible return, [authored under `content/cut/`](#cut-content). No Game build contains them. |
 
 # Purposes of GDRs
 
 A [GDR](core-concepts.md#game-build-and-content) never changes during play, but it can matter to a [Campaign](core-concepts.md#campaign-and-session) in different ways, e.g. by supplying an initial value, by being read in a calculation, or by being referenced from Campaign state.
 
-GDRs can serve the following seven purposes. The purposes can overlap; they do not define separate [Types](core-concepts.md#data-modeling) or required implementation interfaces. Each GDR purpose section below is a worked example of one purpose.
+GDRs can serve seven purposes. The purposes can overlap; they do not define separate [Types](core-concepts.md#data-modeling) or required implementation interfaces.
 
 | Purpose | How the engine uses the GDR | Example |
 | --- | --- | --- |
@@ -39,11 +39,9 @@ GDRs can serve the following seven purposes. The purposes can overlap; they do n
 
 # GDR authoring format
 
-GDRs are authored as YAML files that the [Game build](core-concepts.md#game-build-and-content) supplies. YAML is the authoring format only: how a Game build packages, loads, or represents GDRs while the game runs is the Implementer's choice.
+GDRs are authored as YAML files that the [Game build](core-concepts.md#game-build-and-content) supplies. YAML is the authoring format only, not the form in which a Game build packages, loads, or represents GDRs while the game runs. Each GDR states an identifier, a Type, and the values of that Type's properties, as the YAML of each worked example shows.
 
-Each of the following GDR purpose sections shows one GDR of its worked example as YAML. The snippets illustrate the format: each states an identifier, a Type, and the values of that Type's properties. Their property names and values are illustrative. The properties of a Type are decided where the Type is specified, and [TODOs](#todos) lists the parts of the format that are undecided.
-
-The key order of a mapping in a GDR file, as authored, is significant: it is preserved when the GDR is read, and a specification may rely on it. E.g., [Missions](../mechanics/missions.md) relies on the authored order of the `enemies` mapping of a MissionSiteArchetype for the fixed order of the Enemies of a [Combat](../mechanics/domain-model.md#combat). A decimal value in a GDR file is read as the exact decimal number it is written as, never as a binary floating-point approximation, under [Whole-number quantities](numbers.md#whole-number-quantities) in Numbers.
+The key order of a mapping in a GDR file, as authored, is significant: it is preserved when the GDR is read, and a specification may rely on it. E.g., [Missions](../mechanics/missions.md) relies on the authored order of the `enemies` mapping of a MissionSiteArchetype for the fixed order of the Enemies of a [Combat](../mechanics/domain-model.md#combat). A decimal value in a GDR file is read as the [exact decimal number it is written as](numbers.md#decimal-quantities), never as a binary floating-point approximation.
 
 ## GDR file layout
 
@@ -52,10 +50,8 @@ GDR files are authored under the `content/` directory at the repository root, ou
 - **One file per Type:** each file holds every GDR of one Type and no GDR of another Type, unless the Type has a directory of one file per GDR, as the last rule states. The order of the GDRs in a file, as authored, is significant: it is preserved when the file is read, and a specification may rely on it, e.g. to fix the order in which Campaign instances are created from them.
 - **Directory of the Type owner:** the file lies in the directory named after the file name of the specification that owns its Type, without the `.md` extension or a `-spec` suffix, e.g. `content/combat/` for Combat.
 - **File named after the Type:** the file name is the Type's name in lowercase words joined by underscores, in the plural, e.g. `faction_activity_levels.yaml` for FactionActivityLevel.
-- **One YAML document per GDR:** documents are separated by `---`, and each states its GDR as the snippets of the GDR purpose sections show, including its identifier and its Type.
+- **One YAML document per GDR:** documents are separated by `---`, and each states one GDR, including its identifier and its Type.
 - **Directory of one file per GDR:** a Type with many GDRs, or with GDRs too long to read together in one file, may have a directory in place of its file. The directory lies where the file would lie and is named as the file would be, without the `.yaml` extension, e.g. `content/compendium/compendium_articles/` for CompendiumArticle. It holds one file for each GDR of the Type and nothing else. Each file holds exactly one YAML document and is named after the identifier of its GDR, followed by `.yaml`, e.g. `mechanics_combat.yaml`, so that a GDR is found by its identifier. A Type has either a file or a directory, never both. The order of the GDRs of such a Type is the ascending order of their identifiers, compared character by character by Unicode code point; a specification whose rules need another order states it by a property instead.
-
-A GDR added later goes into the file of its Type, or into the directory of its Type as a file of its own, and a file or directory is added only for a new Type.
 
 ## Cut content
 
@@ -63,11 +59,17 @@ A GDR removed from the Game build, e.g. a MissionSiteArchetype the content no lo
 
 - **Mirrored layout:** the `content/cut/` directory mirrors the layout of `content/`: a cut GDR lies at the path its GDR file has under `content/`, with `content/` replaced by `content/cut/`, e.g. a cut MissionSiteArchetype in `content/cut/missions/mission_site_archetypes.yaml` and a cut CompendiumArticle in `content/cut/compendium/compendium_articles/`. A file or directory under `content/cut/` exists only while it holds at least one GDR.
 - **Moved unchanged:** cutting a GDR moves its YAML document from its file under `content/` to the mirrored file, unchanged; a GDR left in the Game build that named the cut GDR is changed so that it no longer does. Restoring a GDR moves it back.
-- **Outside the Game build:** no Game build contains Cut content, and no Implementation, repository check, or tool reads it as game data. GDR validation of every kind applies to the Game build alone, so a cut GDR may name a GDR that is itself cut or that no longer exists, and an identifier of Cut content may equal one in the Game build.
+- **Outside the Game build:** no Game build contains Cut content, and no Implementation, repository check, or tool reads it as game data. [GDR validation](#data-defects) of every kind applies to the Game build alone, so a cut GDR may name a GDR that is itself cut or that no longer exists, and an identifier of Cut content may equal one in the Game build.
+
+## Data defects
+
+A GDR is authored by hand and fixed before any Campaign exists, so a mistake in one must stop a Campaign from starting rather than quietly change how it plays.
+
+The specification that owns a Type states what the GDRs of that Type must satisfy, e.g. the range of a property's value, which properties go together, or that a reference names a GDR the Game build supplies. A Game build in which any GDR does not conform to its Type, or breaks any other rule that a specification states for GDRs, is defective: no Campaign is created from it, and the violation is [reported as a data defect](engine-contract.md#world-state-integrity), never repaired into different gameplay. E.g., a Game build whose ContractingRate GDR has the value -2, where the Type describes a nonnegative amount, creates no Campaign; the engine does not read the value as 0 or as 2.
 
 # GDR purpose: campaign instance initialization
 
-The engine exposes no way for the player to change a value this purpose supplies. That distinguishes it from the Campaign configuration preset purpose, described next.
+The engine exposes no way for the player to change a value this purpose supplies. That distinguishes it from the Campaign configuration preset purpose.
 
 ## Worked example: campaign instance initialization
 
@@ -108,8 +110,6 @@ If training later raises the Agent's base skill to 110, the engine reads 110 fro
 # GDR purpose: campaign configuration preset
 
 When serving the Campaign configuration preset purpose, a GDR supplies one value for every Campaign configuration value, and campaign creation takes those values as the initial Campaign configuration. The Game build can supply several such GDRs, and the player selects one of them. Unlike every other purpose, this one comes with a built-in engine capability: before the Campaign is created, the player may override individual values of the selected preset.
-
-A value belongs to Campaign configuration if and only if the preset GDRs supply it, apart from the display name every preset has. Whatever no preset can change is not Campaign configuration. It is either a GDR serving another purpose, e.g. the new-base-Agent-skill GDR, or part of the Game rules, e.g. a starting [Turn](engine-contract.md#player-actions-and-turns) that is the same for every Campaign.
 
 ## Worked example: campaign configuration preset
 
@@ -157,7 +157,7 @@ When serving the Calculation parameter purpose, the engine reads a GDR when comp
 
 ## Worked example: calculation parameter
 
-E.g., an illustrative contracting income calculation for one Agent. Its complete local setup is:
+E.g., an illustrative contracting income calculation for one Agent:
 
 | Element | Modeling role | Meaning in this example |
 | --- | --- | --- |
@@ -234,7 +234,7 @@ When serving the Referenced GDR purpose, a GDR is referenced by a Campaign insta
 
 ## Worked example: referenced GDR
 
-E.g., an illustrative Lead and an Investigation of that Lead. The complete comparison needed here is:
+E.g., an illustrative Lead and an Investigation of that Lead:
 
 | Example concept | Modeling role | Question it answers |
 | --- | --- | --- |
@@ -360,9 +360,9 @@ The [Combat](../mechanics/domain-model.md#combat) specification reads Thug's bas
 Display content follows these requirements:
 
 - **No gameplay dependence:** The Game rules never read a value that serves the Display content purpose. Changing Display content in a Game build changes only what the player sees; equal initial Campaign state and the same ordered committed [Player actions](engine-contract.md#player-actions-and-turns) still produce equal Campaign state.
-- **Visibility:** The engine exposes Display content only as Player-visible information. Display content describing something hidden from the player stays hidden until it becomes Player-visible. The value described states when it becomes Player-visible, under [Player-visible information](player-api.md#player-visible-information) in Player API.
-- **No inference:** Relationships and gameplay facts are never inferred from Display content, extending the rule under [References](campaign-instances.md#references). The Thug article identifies its subject through its reference to the Thug GDR, not through its identifier or its text.
-- **Media:** A reference to an image or other media is a value in the GDR; the referenced media is part of the Game build. Media formats and loading are left to the implementation.
+- **Visibility:** The engine exposes Display content only as Player-visible information. Display content describing something hidden from the player stays hidden until it becomes Player-visible. The specification that owns the value described [states when it becomes Player-visible](player-api.md#player-visible-information).
+- **No inference:** Relationships and gameplay facts are [never inferred](campaign-instances.md#references) from Display content. E.g., the Thug article identifies its subject through its reference to the Thug GDR, not through its identifier or its text.
+- **Media:** A reference to an image or other media is a value in the GDR; the referenced media is part of the Game build.
 
 ```mermaid
 flowchart LR
