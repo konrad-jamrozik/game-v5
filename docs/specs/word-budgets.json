@@ -1,7 +1,6 @@
 {
   "awaitingCut": [
     "docs/specs/README.md",
-    "docs/specs/design/ui/screens/main-menu.md",
     "docs/specs/design/ui/screens/situation-panel.md",
     "docs/specs/design/ui/screens/upgrades-view.md",
     "docs/specs/governance/about-governance.md",
@@ -81,7 +80,7 @@
     "docs/specs/design/ui/screens/compendium-view.md": 2790,
     "docs/specs/design/ui/screens/history-view.md": 1330,
     "docs/specs/design/ui/screens/leads-view.md": 850,
-    "docs/specs/design/ui/screens/main-menu.md": 950,
+    "docs/specs/design/ui/screens/main-menu.md": 820,
     "docs/specs/design/ui/screens/missions-view.md": 1680,
     "docs/specs/design/ui/screens/situation-panel.md": 810,
     "docs/specs/design/ui/screens/turn-report-view.md": 1340,
