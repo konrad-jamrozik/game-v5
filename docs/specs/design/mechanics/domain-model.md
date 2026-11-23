@@ -96,19 +96,19 @@ The stages of Advance turn. [Turn Advancement](turn-advancement.md) states every
 
 # Game concepts
 
-Each game concept has the following modeling role and multiplicity. This table is exhaustive.
+Each game concept has the following modeling role and multiplicity.
 
 | Concept | Modeling role | Multiplicity within one Campaign | Detailed in |
 | --- | --- | --- | --- |
-| Agency | [Campaign instance](../foundation/core-concepts.md#campaign-instances) [Type](../foundation/core-concepts.md#data-modeling) | Exactly one, under [Agency per Campaign](#agency-per-campaign) | [Economy and Upgrades](economy-and-upgrades.md) |
-| Agent | Campaign instance Type | Any number; the roster is limited under [Agency caps](economy-and-upgrades.md#agency-caps) | [Agents](agents-spec.md) |
-| Investigation | Campaign instance Type | Any number; at most one Active Investigation per Lead, under [One Active Investigation per Lead](investigations.md#one-active-investigation-per-lead) | [Investigations](investigations.md) |
-| Mission site | Campaign instance Type | Any number; none in the initial [Campaign state](../foundation/core-concepts.md#campaign-and-session), under [Initial Campaign state](#initial-campaign-state); exactly one Response Mission site per Faction operation occurrence, under [How concepts relate](#how-concepts-relate) | [Missions](missions.md) |
-| Mission | Campaign instance Type | Any number; at most one per Mission site, under [How concepts relate](#how-concepts-relate) | [Missions](missions.md) |
-| Enemy | Campaign instance Type | Any number, each belonging to exactly one Mission site, under [How concepts relate](#how-concepts-relate) | [Combat](combat.md) |
-| Faction | Campaign instance Type | Exactly one per FactionArchetype supplied by the [Game build](../foundation/core-concepts.md#game-build-and-content), under [Initial Campaign state](#initial-campaign-state) | [Factions](factions.md) |
+| Agency | [Campaign instance](../foundation/core-concepts.md#campaign-instances) [Type](../foundation/core-concepts.md#data-modeling) | [Exactly one](#agency-per-campaign) | [Economy and Upgrades](economy-and-upgrades.md) |
+| Agent | Campaign instance Type | Any number; the roster is [limited](economy-and-upgrades.md#agency-caps) | [Agents](agents-spec.md) |
+| Investigation | Campaign instance Type | Any number; [at most one Active Investigation per Lead](investigations.md#one-active-investigation-per-lead) | [Investigations](investigations.md) |
+| Mission site | Campaign instance Type | Any number; [none](#initial-campaign-state) in the initial [Campaign state](../foundation/core-concepts.md#campaign-and-session); [exactly one Response Mission site](#how-concepts-relate) per Faction operation occurrence | [Missions](missions.md) |
+| Mission | Campaign instance Type | Any number; [at most one](#how-concepts-relate) per Mission site | [Missions](missions.md) |
+| Enemy | Campaign instance Type | Any number, each [belonging to exactly one](#how-concepts-relate) Mission site | [Combat](combat.md) |
+| Faction | Campaign instance Type | [Exactly one](#initial-campaign-state) per FactionArchetype supplied by the [Game build](../foundation/core-concepts.md#game-build-and-content) | [Factions](factions.md) |
 | Combatant Role Type | [Role Type](../foundation/campaign-instances.md#glossary) adopted by Agent and Enemy; not a Campaign instance Type | No Campaign instances | [Combatant Role Type](agents-spec.md#combatant-role-type) in Agents |
-| Lead | GDR serving the Referenced [GDR](../foundation/core-concepts.md#game-build-and-content) and Key for campaign facts purposes | Not a Campaign instance | [Leads and Progression](leads-and-progression.md) |
+| Lead | GDR serving the Referenced [GDR](../foundation/core-concepts.md#game-build-and-content) and Key for campaign facts [purposes](../foundation/game-data-records.md#purposes-of-gdrs) | Not a Campaign instance | [Leads and Progression](leads-and-progression.md) |
 | Combat report | Part of the Turn report of the Advance turn in which its Combat was fought; not a Campaign instance and not part of any Mission | Exactly one per fought Combat, so at most one per Mission | [Combat report](combat.md#combat-report) in Combat |
 | Faction operation occurrence | Values in the [Constants](../foundation/core-concepts.md#campaign-instances) of the Response Mission site it creates, whose [Instance ID](../foundation/campaign-instances.md#glossary) identifies it; not a Campaign instance | Exactly one per Response Mission site | [Faction operation occurrence generation](factions.md#faction-operation-occurrence-generation) in Factions |
 | Weapon GDRs | GDRs | Not Campaign instances | [Weapon](combat.md#weapon) in Combat |
@@ -117,7 +117,7 @@ Each game concept has the following modeling role and multiplicity. This table i
 | CompendiumArticle GDRs | GDRs serving the Display content purpose | Not Campaign instances | [CompendiumArticle](compendium.md#compendiumarticle) in Compendium |
 | Archetypes of the seven Campaign instance Types | GDRs serving the [Archetype](../foundation/core-concepts.md#campaign-instances) purpose | Not Campaign instances; sharing an Archetype does not limit how many Campaign instances exist | The specification that details each Campaign instance Type |
 
-GDR purposes are defined under [Purposes of GDRs](../foundation/game-data-records.md#purposes-of-gdrs). Every Campaign instance of the seven Campaign instance Types has the four properties stated under [Campaign instance structure](../foundation/campaign-instances.md#campaign-instance-structure). A concept can include facts hidden from the player. Being a property of a concept does not determine whether a value is an [Authoritative value](../foundation/core-concepts.md#value-classification) or a [Derived value](../foundation/core-concepts.md#value-classification); e.g., an Agent's career statistics may be Derived values calculated from retained facts.
+Every Campaign instance of the seven Campaign instance Types has the [four properties of a Campaign instance](../foundation/campaign-instances.md#campaign-instance-structure). A concept can include facts hidden from the player. Being a property of a concept does not determine whether a value is an [Authoritative value](../foundation/core-concepts.md#value-classification) or a [Derived value](../foundation/core-concepts.md#value-classification); e.g., an Agent's career statistics may be Derived values calculated from retained facts.
 
 ```mermaid
 flowchart TD
@@ -165,7 +165,7 @@ A Mission site is either an Initiative Mission site or a Response Mission site, 
 
 Game data changes a Campaign through [Effect lists](../foundation/effect-lists.md#glossary), and each [Effect kind](../foundation/effect-lists.md#glossary) is defined once, by the Mechanics specification that details the concept it changes.
 
-The game has the following Effect kinds. This table is exhaustive.
+The game has the following Effect kinds.
 
 | Effect kind | What an Effect of it changes | Defined under |
 | --- | --- | --- |
@@ -178,7 +178,7 @@ The game has the following Effect kinds. This table is exhaustive.
 | `win_campaign` | Whether the Campaign is won in this Advance turn. | [Victory Effect kind](panic-and-endings.md#victory-effect-kind) in Panic and Endings |
 | `create_mission_site` | It creates one Initiative Mission site. | [Mission site Effect kind](missions.md#mission-site-effect-kind) in Missions |
 
-The following GDR properties hold an Effect list, and the specification named for each says when it is applied and which Effect kinds it may hold. This table is exhaustive.
+The following GDR properties hold an Effect list, and the specification named for each says when it is applied and which Effect kinds it may hold.
 
 | GDR property | Applied when | Stated under |
 | --- | --- | --- |
@@ -187,7 +187,7 @@ The following GDR properties hold an Effect list, and the specification named fo
 | `on_win` of a FactionOperationLevel | A Mission at a Response Mission site is Won. | [Consequences](missions.md#consequences) in Missions |
 | `on_ignored_or_lost` of a FactionOperationLevel | A Mission at a Response Mission site is Lost, or the Response Mission site is Expired. | [Consequences](missions.md#consequences) in Missions |
 
-Game data also asks questions about a Campaign through [Conditions](../foundation/conditions.md#glossary), and each [Condition kind](../foundation/conditions.md#glossary) is defined once in the same way. The game has the following Condition kinds. This table is exhaustive.
+Game data also asks questions about a Campaign through [Conditions](../foundation/conditions.md#glossary), and each [Condition kind](../foundation/conditions.md#glossary) is defined once in the same way. The game has the following Condition kinds.
 
 | Condition kind | What a Condition of it asks | Defined under |
 | --- | --- | --- |
@@ -195,7 +195,7 @@ Game data also asks questions about a Campaign through [Conditions](../foundatio
 | `mission_won_with_enemy` | Whether a Mission at a Mission site holding an Enemy of one kind, targeting one Faction, has been Won. | [Mission won with Enemy Condition kind](missions.md#mission-won-with-enemy-condition-kind) in Missions |
 | `lead_completed` | Whether an Investigation of one Lead has been Completed. | [Lead completed Condition kind](leads-and-progression.md#lead-completed-condition-kind) in Leads and Progression |
 
-The following GDR properties hold a [Condition](../foundation/conditions.md#glossary). This table is exhaustive.
+The following GDR properties hold a [Condition](../foundation/conditions.md#glossary).
 
 | GDR property | What the Condition decides | Stated under |
 | --- | --- | --- |
@@ -208,15 +208,15 @@ A Campaign contains one Agency, the current [Turn](../foundation/engine-contract
 
 ## Agency per Campaign
 
-Campaign state must contain exactly one Agency, because a Campaign has exactly one player under [Single-player scope](../foundation/engine-contract.md#single-player-scope) in Engine Contract. Trading between Campaigns is out of scope.
+Campaign state must contain exactly one Agency, because a Campaign has [exactly one player](../foundation/engine-contract.md#single-player-scope). Trading between Campaigns is out of scope.
 
 ## Initial Campaign state
 
 Everything a new Campaign starts with is either game data, supplied as GDRs by the Game build, or the [Game rules](../foundation/core-concepts.md#game-build-and-content), stated in specifications. Among GDRs, only those serving the [Campaign configuration preset](../foundation/configuration.md#glossary) purpose can be overridden by the player before creation; every other GDR is fixed, e.g. a Faction's Archetype.
 
-Which Campaign instances the initial Campaign state contains is the same for every new Campaign. No GDR serving the [Campaign configuration preset](../foundation/game-data-records.md#glossary) purpose, under [GDR purpose: campaign configuration preset](../foundation/game-data-records.md#gdr-purpose-campaign-configuration-preset), adds, removes, or selects an initial Campaign instance; e.g., no preset changes the initial roster of Agents, the initial Factions, or the absence of initial Mission sites. A [Campaign configuration](../foundation/campaign-state.md#glossary) value can still supply an initial value of an initial Campaign instance, e.g. starting money becomes the Agency's initial money, and can influence which Campaign instances come into existence during play, e.g. a multiplier of how often Mission sites appear.
+Which Campaign instances the initial Campaign state contains is the same for every new Campaign. No GDR serving the [Campaign configuration preset](../foundation/game-data-records.md#glossary) [purpose](../foundation/game-data-records.md#gdr-purpose-campaign-configuration-preset) adds, removes, or selects an initial Campaign instance; e.g., no preset changes the initial roster of Agents, the initial Factions, or the absence of initial Mission sites. A [Campaign configuration](../foundation/campaign-state.md#glossary) value can still supply an initial value of an initial Campaign instance, e.g. starting money becomes the Agency's initial money, and can influence which Campaign instances come into existence during play, e.g. a multiplier of how often Mission sites appear.
 
-The initial Campaign state contains exactly one Agency, under [Agency per Campaign](#agency-per-campaign), exactly one Faction for each FactionArchetype the Game build supplies, and no Mission sites, and therefore no Missions and no Enemies. For each Campaign instance Type, the rule determining the initial Campaign instances of that Type and the source of each of their initial values, under [Campaign instance creation](../foundation/campaign-instances.md#campaign-instance-creation), is in the Mechanics specification that details it; e.g., [Initial Factions](factions.md#initial-factions) gives which values each initial Faction takes from its FactionArchetype. The rule is one of the Game rules; the content it reads is supplied by GDRs that serve no Campaign configuration preset purpose, e.g. the FactionArchetypes and their values.
+The initial Campaign state contains [exactly one Agency](#agency-per-campaign), exactly one Faction for each FactionArchetype the Game build supplies, and no Mission sites, and therefore no Missions and no Enemies. For each Campaign instance Type, the rule determining the initial Campaign instances of that Type and [the source of each of their initial values](../foundation/campaign-instances.md#campaign-instance-creation) is in the Mechanics specification that details it; e.g., [Initial Factions](factions.md#initial-factions) gives which values each initial Faction takes from its FactionArchetype.
 
 ## Campaign instance identity scope
 
@@ -224,18 +224,6 @@ Agency, Agent, Investigation, Mission site, Mission, Enemy, and Faction share on
 
 # Current versus historical teams
 
-The Current team of an Investigation or Mission must agree with Assignments: an Agent whose Assignment references Investigation I belongs to the Current team of I, and an Agent whose Assignment references Mission M belongs to the Current team of M. An Agent cannot belong to more than one Current team. In every World state, the Agent-side and team-side views of Current team membership agree, and no Assignment references an Investigation that is no longer Active or a Mission that is Won or Lost.
+The Current team of an Investigation or Mission must agree with Assignments: an Agent whose Assignment references Investigation I belongs to the Current team of I, and an Agent whose Assignment references Mission M belongs to the Current team of M, whatever its Agent status, e.g. an Agent still In transit to an Investigation belongs to its Current team. An Agent cannot belong to more than one Current team. In every World state, the Agent-side and team-side views of Current team membership agree, and no Assignment references an Investigation that is no longer Active or a Mission that is Won or Lost.
 
 Participation history describes the same relationship for the past: an Agent's Participation history and the past participants of an Investigation or Mission are one relationship seen from opposite sides. Agents recorded in Participation history are not members of the Current team, and Participation history neither assigns nor reserves an Agent; e.g., a Won Mission retains an Agent's Participation history after that Agent is assigned elsewhere.
-
-# Edge cases and failure behavior
-
-| Case | Result and owner |
-| --- | --- |
-| An Agent is In transit to an Investigation | The Agent belongs to its Current team; arrival and progress timing belong to Agents and Investigations |
-| An Investigation concludes while members of its Current team are In transit | In the next World state no Assignment references it; the replacement Assignments belong to Agents and Investigations |
-| The player deploys Agents to a Mission site | A new Mission at that Mission site comes into existence, whose Current team is those Agents, and each of them has an Assignment that references the Mission, under [Current versus historical teams](#current-versus-historical-teams); preconditions, rejection, and transit belong to Missions and Agents |
-| A team is to be deployed to a Mission site that already has a Mission | Never valid: a Mission site has at most one Mission, under [How concepts relate](#how-concepts-relate); Missions owns the rejection |
-| A Mission retains an Agent in its Participation history after it is Won or Lost | The Agent's Assignment is not reserved, under [Current versus historical teams](#current-versus-historical-teams) |
-| The roster is empty, or no Mission sites or Investigations exist | Valid; [Panic and Endings](panic-and-endings.md) owns Defeat conditions |
-| A Faction is [Eliminated](factions.md#glossary) while Mission sites targeting it or Leads affiliated with it remain | References remain resolvable under [References](../foundation/campaign-instances.md#references); Factions, Leads and Progression, and Missions own the resulting availability and outcomes |
