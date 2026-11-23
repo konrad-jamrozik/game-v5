@@ -1,44 +1,59 @@
 id: standard_uniform
 type: Armor
 name: Standard uniform
-base_armor: 0 # the Agency issues it unrated; the armor Upgrade raises every Agent's effective armor
+base_armor: 0 # the Fallback Armor and the armor the Agency issues; never an Item
 ---
 id: basic_clothing
 type: Armor
 name: Basic clothing
-base_armor: 0
+base_armor: 0 # worn only by Enemies; never an Item
 ---
 id: padded_jacket
 type: Armor
 name: Padded jacket
 base_armor: 5
+price: 50
+unlocked_by: [interrogate_red_dawn_handler, interrogate_exalt_handler, interrogate_black_lotus_handler]
 ---
 id: ballistic_vest
 type: Armor
 name: Ballistic vest
 base_armor: 20
+price: 200
+unlocked_by: [interrogate_red_dawn_lieutenant, interrogate_exalt_lieutenant, interrogate_black_lotus_lieutenant]
 ---
 id: reinforced_ballistic_vest
 type: Armor
 name: Reinforced ballistic vest
 base_armor: 25
+price: 270
+unlocked_by: [interrogate_red_dawn_lieutenant, interrogate_exalt_lieutenant, interrogate_black_lotus_lieutenant]
 ---
 id: tactical_armor
 type: Armor
 name: Tactical armor
 base_armor: 40
+price: 500
+unlocked_by: [interrogate_red_dawn_commander, interrogate_exalt_commander, interrogate_black_lotus_commander]
 ---
 id: battle_suit
 type: Armor
 name: Battle suit
 base_armor: 50
+price: 1200
+unlocked_by: [interrogate_red_dawn_commander, interrogate_exalt_commander, interrogate_black_lotus_commander]
 ---
 id: reinforced_battle_suit
 type: Armor
 name: Reinforced battle suit
 base_armor: 60
+price: 2100
+unlocked_by:
+  [interrogate_red_dawn_high_commander, interrogate_exalt_high_commander, interrogate_black_lotus_high_commander]
 ---
 id: augmented_battle_suit
 type: Armor
 name: Augmented battle suit
 base_armor: 80
+price: 4000
+unlocked_by: [interrogate_red_dawn_cult_leader, interrogate_exalt_cult_leader, interrogate_black_lotus_cult_leader]

@@ -46,6 +46,10 @@ The specification that owns a Type says what each of its properties means, and t
 
 No [Upgrade](../mechanics/domain-model.md#agency-and-agents) of the GDRs is a [Max health Upgrade](../mechanics/economy-and-upgrades.md#glossary): Agents grow sturdier through armor, which costs them no [effective skill](../mechanics/agents-spec.md#combatant-attributes) when hit, rather than through more health.
 
+## Equipment GDRs
+
+The Agency's gear climbs the same ladder as its opponents: each [Item](../mechanics/equipment.md#glossary) is the Weapon or Armor of one rank of Enemy, and the interrogation of that rank's officer, of any Faction, [unlocks](../mechanics/equipment.md#unlocked-items) buying it, so better Armor is only ever bought, since it is never taken as spoils. The two pistols and their [Ammo](../mechanics/combat.md#ammo) are [Unlocked](../mechanics/equipment.md#glossary) from the start, and the Agency issues the combat pistol and the standard uniform to every [Agent](../mechanics/domain-model.md#agency-and-agents) it hires.
+
 ## Leads and Progression GDRs
 
 Every Lead but one lies on the Victory path. The exception is discovered from campaign creation and concerns no Faction, and its completion unlocks [Contracting](../mechanics/agents-spec.md#assignments).
@@ -70,7 +74,7 @@ Each [Faction operation level](../mechanics/factions.md#glossary), the existenti
 
 ## Compendium GDRs
 
-Every AgentArchetype, EnemyArchetype, Weapon, Armor, Upgrade, FactionArchetype, Lead, and MissionSiteArchetype of the GDRs has a [Subject article](../mechanics/compendium.md#glossary). Each mechanic the Player meets has one Mechanics article, with the formulas of that mechanic.
+Every AgentArchetype, EnemyArchetype, Weapon, Armor, AmmoType, Upgrade, FactionArchetype, Lead, and MissionSiteArchetype of the GDRs has a [Subject article](../mechanics/compendium.md#glossary). Each mechanic the Player meets has one Mechanics article, with the formulas of that mechanic.
 
 Only the Subject articles about a FactionArchetype and the Mechanics article about Contracting have `visible_when`: the article of a Faction waits until its profile Lead is completed, and the Contracting article until the Lead that unlocks Contracting is.
 
@@ -90,7 +94,8 @@ The GDRs are authored in YAML files under the `content/` directory at the reposi
 | `content/leads-and-progression/` | [Leads and Progression](../mechanics/leads-and-progression.md) | `leads.yaml` |
 | `content/investigations/` | [Investigations](../mechanics/investigations.md) | `investigation_archetypes.yaml`, `investigation_parameters.yaml` |
 | `content/missions/` | [Missions](../mechanics/missions.md) | `mission_site_archetypes.yaml`, `mission_archetypes.yaml` |
-| `content/combat/` | [Combat](../mechanics/combat.md) | `enemy_archetypes.yaml`, `weapons.yaml`, `armors.yaml`, `combat_parameters.yaml` |
+| `content/combat/` | [Combat](../mechanics/combat.md) | `enemy_archetypes.yaml`, `weapons.yaml`, `armors.yaml`, `ammo_types.yaml`, `combat_parameters.yaml` |
+| `content/equipment/` | [Equipment](../mechanics/equipment.md) | `equipment_parameters.yaml` |
 | `content/agent-recovery/` | [Agent Recovery](../mechanics/agent-recovery.md) | `recovery_parameters.yaml` |
 | `content/factions/` | [Factions](../mechanics/factions.md) | `faction_archetypes.yaml`, `faction_activity_levels.yaml`, `faction_operation_levels.yaml` |
 | `content/panic-and-endings/` | [Panic and Endings](../mechanics/panic-and-endings.md) | `ending_parameters.yaml` |
@@ -106,6 +111,7 @@ The [coverage of parameter GDRs](../mechanics/compendium.md#coverage-of-paramete
 | --- | --- | --- |
 | `configuration_parameters` | `default_preset` | It names the preset that campaign creation starts from, which the Player sees while creating a Campaign. |
 | `music` | `excluded_tracks` | It lists the music files left out of the [Soundtrack](../ui/music.md#glossary). |
+| `equipment` | `starting_ammo` | It is a mapping, which no Placeholder can show, and the Player sees the rounds it gives in [Storage](../mechanics/equipment.md#glossary) from the first Turn. |
 
 The repository check `npm run compendium:check` reads the exemptions from this table, so a property added to a parameter GDR fails the check until an article explains the property or the table exempts it.
 

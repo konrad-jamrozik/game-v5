@@ -16,4 +16,4 @@ formulas:
     text: 'Lowers effective skill in proportion: half the health, half the skill'
   - label: 'Healing'
     text: 'Only on Recovery, where every Agent that survives a Mission below max health is sent'
-see_also: [mechanics_recovery, mechanics_damage, mechanics_skill, armor_article]
+see_also: [mechanics_recovery, mechanics_damage, mechanics_skill, mechanics_equipment]

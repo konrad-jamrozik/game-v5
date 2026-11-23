@@ -237,6 +237,8 @@ The action applies at once, within the same Turn:
 
 Mission resolution settles every deployment and then closes the Mission sites that have lost their reason to exist. In the [Mission resolution](turn-advancement.md#turn-advancement-steps) step, every Mission that is Deployed when the step begins is resolved, and then [Cancellation](#cancellation) applies.
 
+The Missions are resolved one at a time, in the order in which they were deployed, i.e. in ascending order of the number of their [Instance IDs](../foundation/campaign-instances.md#glossary), because their Combats draw on one [Storage](equipment.md#glossary). The [Ammo](combat.md#ammo) of each Mission's Combat is the rounds of each [AmmoType](combat.md#ammotype) in the Agency's [Storage](equipment.md#storage) as the Missions resolved before it left them, and the rounds its Combat leaves become the count in Storage. E.g., with 300 rounds in Storage, a first Mission whose Agents spend 170 leaves 130 for the second, whose Agents attack with the [Fallback Weapon](combat.md#ammo) once those are spent.
+
 ## Resolving one Mission
 
 Resolving a Mission has its Combat fought and then settles what the Combat left: the outcome, the team, and the Consequences. For each Deployed Mission M, at Mission site S, the following parts apply in order:
@@ -244,9 +246,10 @@ Resolving a Mission has its Combat fought and then settles what the Combat left:
 1. **Combat:** A [Combat](combat.md#combat-inputs-and-outputs) is fought. Its Agents' side is M's Current team and its Enemies' side is S's Enemies, each in ascending order of the number of its [Instance IDs](../foundation/campaign-instances.md#glossary), which is the [fixed order](combat.md#fixed-order-of-each-side) of the side; e.g., a Current team of agent-12, agent-3, and agent-7 fights in the order agent-3, agent-7, agent-12.
 2. **Outcome:** M becomes Won when the Combat outcome is Won, and Lost when it is Retreated or Wiped. S becomes Concluded.
 3. **Survivors:** Every Agent of the Current team that the Combat did not leave [Killed](agents-spec.md#agent-statuses) is a survivor, and leaves the Current team. Its Assignment becomes [Recovery](agents-spec.md#assignments) when its [current health](agents-spec.md#combatant-attributes) is below its [effective max health](agents-spec.md#combatant-attributes), and [Standby](agents-spec.md#assignments) when the two are equal, and in both cases it starts [In transit](agents-spec.md#transit-rule).
-4. **Mission exhaustion:** Every survivor gains [Mission exhaustion](#mission-exhaustion).
-5. **Mission growth:** Every survivor gains [base skill](agents-spec.md#combatant-attributes) and [Experience](agents-spec.md#growth), by [Mission growth](agents-spec.md#mission-growth).
-6. **Consequences:** The [Consequences](#consequences) of M's new lifecycle state apply.
+4. **Equipment:** The [Items](equipment.md#glossary) of M's Team sent are settled by [Mission equipment losses](equipment.md#mission-equipment-losses), and a Won M brings its [Spoils of war](equipment.md#spoils-of-war).
+5. **Mission exhaustion:** Every survivor gains [Mission exhaustion](#mission-exhaustion).
+6. **Mission growth:** Every survivor gains [base skill](agents-spec.md#combatant-attributes) and [Experience](agents-spec.md#growth), by [Mission growth](agents-spec.md#mission-growth).
+7. **Consequences:** The [Consequences](#consequences) of M's new lifecycle state apply.
 
 ## Mission exhaustion
 

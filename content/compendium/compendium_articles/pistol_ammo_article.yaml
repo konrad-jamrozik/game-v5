@@ -1,0 +1,7 @@
+id: pistol_ammo_article
+type: CompendiumArticle
+category: subject
+subject: pistol_ammo
+terms: [Pistol ammo]
+body: Rounds for the basic pistol and the combat pistol. Each attack an Agent makes with such a weapon spends one.
+see_also: [mechanics_equipment]

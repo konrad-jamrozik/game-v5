@@ -28,6 +28,10 @@ Mechanics specifications own the player-facing game systems: their rules, transi
 
 [Economy and Upgrades](economy-and-upgrades.md) answers _where does the Agency's money come from and go?_
 
+## Equipment
+
+[Equipment](equipment.md) answers _what does each Agent carry into a Combat, and where does it come from?_
+
 ## Leads and Progression
 
 [Leads and Progression](leads-and-progression.md) answers _what becomes available, and when?_

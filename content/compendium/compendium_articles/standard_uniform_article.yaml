@@ -4,6 +4,6 @@ category: subject
 subject: standard_uniform
 terms: [Standard uniform, Standard uniforms]
 body: >-
-  The uniform the Agency issues to every Agent. It is issued with an armor of {subject.base_armor}, and every Upgrade to
-  armor raises the armor of every Agent. In a Combat, a hit wears down armor before it removes any health, and armor is
-  whole again for the next Combat.
+  The uniform the Agency issues to every Agent, with an armor of {subject.base_armor}. An Agent wears it whenever it
+  wears no other armor, and nobody can take it away. In a Combat, a hit wears down armor before it removes any health,
+  and armor is whole again for the next Combat.

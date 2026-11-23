@@ -68,6 +68,9 @@ Each line starts with the number of the Player action in the Turn, from 1, follo
 | `hireAgents` | "Hired N Agents". |
 | `dismissAgents` | "[Dismissed](../../mechanics/agents-spec.md#agent-statuses) N Agents". |
 | `purchaseUpgrade` | "Bought N" and the [Upgrade](../../mechanics/economy-and-upgrades.md#upgrade)'s `name` followed by "[Upgrades](../../mechanics/domain-model.md#agency-and-agents)", e.g. "Bought 3 Agent cap Upgrades". |
+| `equipAgent` | "Equipped" and the [Agent](../../mechanics/domain-model.md#agency-and-agents)'s [Instance ID](../../foundation/campaign-instances.md#glossary), then "with" and the `name` of the Weapon or Armor, e.g. "Equipped agent-7 with Rifle". |
+| `buyItems` | "Bought" and each entry's count and `name`, joined by ", ", e.g. "Bought 2 Rifles, 100 Pistol ammo". |
+| `sellItems` | "Sold" and each entry's count and `name`, joined by ", ", e.g. "Sold 1 Machine gun, 30 Rifle ammo". |
 | `assignAgents` | "Assigned N Agents to" and the [Assignment](../../mechanics/domain-model.md#agency-and-agents), e.g. "Assigned 5 Agents to Contracting". |
 | `startInvestigation` | "Started Investigation of" and the [Lead](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions)'s `name`, then "with N Agents", e.g. "Started Investigation of Locate Red Dawn courier with 2 Agents". |
 | `assignAgentsToInvestigation` | "Assigned N Agents to Investigation of" and its Lead's `name`. |

@@ -83,6 +83,7 @@ Each subject Type has a category name and a Data sheet heading. A Subject articl
 | EnemyArchetype | Enemies | Enemy |
 | Weapon | Weapons | Weapon |
 | Armor | Armor | Armor |
+| AmmoType | Ammo | Ammo |
 | Upgrade | Upgrades | Upgrade |
 | FactionArchetype | Factions | Faction |
 | Lead | Leads | Lead |
@@ -120,6 +121,8 @@ The Data sheet of a Weapon shows how hard it hits in the hands of a [Combatant](
 | Damage | `base_weapon_damage`. |
 | Damage of a hit | The range of the [damage outcome](../../mechanics/combat.md#damage-outcome) for an [effective weapon damage](../../mechanics/agents-spec.md#combatant-attributes) equal to `base_weapon_damage`, as its two bounds joined by an en dash, e.g. "5–15" for a `base_weapon_damage` of 10 and a `weapon_damage_range` of 0.5. |
 | Carried by | The Player-visible Subject articles whose subject is an AgentArchetype or an EnemyArchetype whose `weapon` references this Weapon. |
+| Ammo | The [AmmoType](../../mechanics/combat.md#ammotype) that `ammo_type` references, or "None" for a Weapon without one. |
+| Price | `price`, or "Not for sale" for a Weapon without one. |
 
 ## Armor data sheet
 
@@ -129,6 +132,16 @@ The Data sheet of an Armor shows how much of the damage of hits it [absorbs](../
 | --- | --- |
 | Armor | `base_armor`. |
 | Worn by | The Player-visible Subject articles whose subject is an AgentArchetype or an EnemyArchetype whose `armor` references this Armor. |
+| Price | `price`, or "Not for sale" for an Armor without one. |
+
+## Ammo data sheet
+
+The Data sheet of an AmmoType shows what a round costs and which Weapons spend it.
+
+| Label   | Value                                                                                                     |
+| ------- | --------------------------------------------------------------------------------------------------------- |
+| Price   | `price`, for one round.                                                                                   |
+| Used by | The Player-visible Subject articles whose subject is a Weapon whose `ammo_type` references this AmmoType. |
 
 ## Upgrade data sheet
 
@@ -144,9 +157,7 @@ The Data sheet of an Upgrade shows what one acquisition costs and [adds](../../m
 | `agent_cap` | "+20 to the [Agent cap](../../mechanics/domain-model.md#agency-and-agents)" |
 | `transport_cap` | "+8 to the [Transport cap](../../mechanics/economy-and-upgrades.md#glossary)" |
 | `training_cap` | "+10 to the [Training cap](../../mechanics/economy-and-upgrades.md#glossary)" |
-| `agent_weapon_damage` | "+1 weapon damage for every Agent" |
 | `agent_max_health` | "+1 max health for every Agent" |
-| `agent_armor` | "+1 armor for every Agent" |
 | `training_skill_gain` | "+0.50 skill for each turn of [Training](../../mechanics/agents-spec.md#assignments)" |
 | `exhaustion_recovery` | "+1.00 [exhaustion](../../mechanics/agents-spec.md#combatant-attributes) recovered each turn" |
 | `health_recovery` | "+1.00% of max health recovered each turn" |

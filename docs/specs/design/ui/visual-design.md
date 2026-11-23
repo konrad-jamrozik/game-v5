@@ -53,6 +53,8 @@ Each Artboard image comes from exactly one canvas artboard and is shown in exact
 | `agents-view.png` | Panel | `AgentsView.dc.html` | [Agents View](screens/agents-view.md) |
 | `agents-memorial.png` | Panel | `AgentsMemorial.dc.html` | [Agents View](screens/agents-view.md) |
 | `agent-details.png` | Panel | `AgentDetails.dc.html` | [Agents View](screens/agents-view.md) |
+| `storage-view.png` | Panel | `StorageView.dc.html` | [Storage View](screens/storage-view.md) |
+| `acquisitions-view.png` | Panel | `AcquisitionsView.dc.html` | [Acquisitions View](screens/acquisitions-view.md) |
 | `upgrades-view.png` | Panel | `UpgradesView.dc.html` | [Upgrades View](screens/upgrades-view.md) |
 | `turn-report-view.png` | Panel | `TurnReportView.dc.html` | [Turn Report View](screens/turn-report-view.md) |
 | `combat-report.png` | Panel | `CombatReport.dc.html` | [Turn Report View](screens/turn-report-view.md) |

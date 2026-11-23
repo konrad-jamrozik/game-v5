@@ -20,5 +20,5 @@ formulas:
   - label: 'Incapacitated Combatants'
     text: 'Add nothing to the Combat rating of their side'
   - label: 'Base Combat rating'
-    text: "An Agent's effective skill alone, shown beside its Combat rating so that you can see how much Upgrades add"
+    text: "An Agent's effective skill alone, shown beside its Combat rating so that you can see how much its equipment and Upgrades add"
 see_also: [mechanics_combat, mechanics_retreat, mechanics_damage, mechanics_skill, mechanics_missions]

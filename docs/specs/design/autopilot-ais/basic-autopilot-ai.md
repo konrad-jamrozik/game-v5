@@ -58,7 +58,7 @@ During each [Turn](../foundation/engine-contract.md#player-actions-and-turns) th
 2. **Refill the Agent reserve:** while the Agent reserve is below the Reserve quota, recall [the preferred Contractor](#choosing-agents) At assignment to Standby, one at a time.
 3. **Investigate:** while the Investigators are fewer than the Investigator quota and a Spare Agent remains, assign a Spare Agent to an Investigation of [a Lead worth investigating](#choosing-leads), adding it to an Active Investigation before starting an Investigation of another [Lead](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), so that effort is concentrated on few Leads rather than spread thin.
 4. **Contract and train:** assign remaining Spare Agents to Contracting while the Contracting cap has a place left. Then assign every Agent of the Agent reserve that is Fit to start work and At assignment on Standby to Training while the Training cap has a place left.
-5. **Buy:** make every [purchase that is due](#purchases).
+5. **Buy and equip:** make every [purchase that is due](#purchases), then [equip the Agents](#equipping).
 
 Deploying comes first because a Mission site expires, while every share can be restored on a later Turn. Refilling the Agent reserve comes before Investigations and Contracting, so that the next Mission site finds a team. Investigations come before Contracting because they are the smaller share and the one that brings new Mission sites.
 
@@ -99,14 +99,19 @@ When several choices are equally good, it breaks the tie in a fixed order derive
 
 The Basic Autopilot AI spends money in a fixed cycle: it fills the Agent cap, raises it, spends up to the price of that raise on Other Upgrades, and brings the Transport cap and the Training cap up to their share of the new Agent cap. Each purchase in step 5 is the first one that is due in the following list, read again after every purchase:
 
-1. **Other Upgrades:** while the money spent on Other Upgrades, i.e. the sum over the Other Upgrades of each one's `price` times its acquisitions, is below the Upgrade budget, buy the Other Upgrade chosen by the rotation among those whose `price` still fits within the Upgrade budget. The rotation buys the one with the fewest acquisitions per unit of its [Upgrade weight](#tuning-parameters), counting the acquisition it would make, and never one of weight 0.
-2. **Supporting caps:** while the Transport cap is below the Cap share of the Agent cap, buy a Transport cap Upgrade; then, while the Training cap is below the Cap share of the Agent cap, buy a Training cap Upgrade.
-3. **Hire:** while the Roster size is below the Agent cap, hire Agents, all in one `hireAgents`: as many as both fit below the Agent cap and keep money at or above the Savings floor, which counts the upkeep of every Agent it hires.
-4. **Agent cap:** when the Roster size has reached the Agent cap, buy an Agent cap Upgrade.
+1. **Ammo:** for each [AmmoType](../mechanics/combat.md#ammotype) that the Weapon of a Serving Agent uses and that holds fewer rounds in [Storage](../mechanics/equipment.md#glossary) than twice what [Ammo short](../mechanics/equipment.md#ammo-short) asks for, buy the rounds that bring it to twice that, all in one `buyItems`.
+2. **Other Upgrades:** while the money spent on Other Upgrades, i.e. the sum over the Other Upgrades of each one's `price` times its acquisitions, is below the Upgrade budget, buy the Other Upgrade chosen by the rotation among those whose `price` still fits within the Upgrade budget. The rotation buys the one with the fewest acquisitions per unit of its [Upgrade weight](#tuning-parameters), counting the acquisition it would make, and never one of weight 0.
+3. **Supporting caps:** while the Transport cap is below the Cap share of the Agent cap, buy a Transport cap Upgrade; then, while the Training cap is below the Cap share of the Agent cap, buy a Training cap Upgrade.
+4. **Hire:** while the Roster size is below the Agent cap, hire Agents, all in one `hireAgents`: as many as both fit below the Agent cap and keep money at or above the Savings floor, which counts the upkeep of every Agent it hires.
+5. **Agent cap:** when the Roster size has reached the Agent cap, buy an Agent cap Upgrade.
 
 A purchase is made only when money stays at or above the Savings floor after it, and a hire only when at least one Agent fits; when the first purchase due does not fit, the Basic Autopilot AI buys nothing more that Turn, rather than a later item of the list.
 
 E.g., with a Cap share of 25%, an Agency starts with an Agent cap of 12, a Transport cap of 3, and a Training cap of 6, both at least 25% of 12, and an Upgrade budget of 0. The Basic Autopilot AI therefore hires up to 12 Agents first, then buys an Agent cap Upgrade, here to 24 at a `price` of 900, then up to 900 of Other Upgrades, then a Transport cap Upgrade, because the Transport cap of 3 is below 25% of 24, i.e. 6, and no Training cap Upgrade, because the Training cap of 6 already reaches it, and then hires toward 24.
+
+## Equipping
+
+The Basic Autopilot AI puts the best gear on the strongest Agents and never sells an [Item](../mechanics/equipment.md#glossary). For Weapons and then for Armors, it takes every Item of that kind that a Serving Agent wears or Storage holds, from the highest `base_weapon_damage` or `base_armor` down, and gives them out in that order to the Serving Agents from the highest effective skill down, among equal effective skill the lower [Instance ID](../foundation/campaign-instances.md#glossary) first, with one [`equipAgent`](../mechanics/equipment.md#equipping-agents) for each Agent whose share differs from what it wears. Agents beyond the Items keep the [Fallback Weapon](../mechanics/combat.md#ammo) or the [Fallback Armor](../mechanics/equipment.md#glossary).
 
 # Information
 
@@ -142,4 +147,4 @@ The Game designer sets the following values of the Game build.
 | Loss margin step | 5 percentage points. |
 | Enemies per Agent | 2.5, e.g. a team of at least 4 Agents for 10 Enemies. |
 | Recovery lookahead | 2 Advance turns. |
-| Upgrade weights | 2 for `armor`, `training_skill_gain`, `exhaustion_recovery`, and `health_recovery`, and 1 for `weapon_damage`. |
+| Upgrade weights | 2 for `training_skill_gain`, `exhaustion_recovery`, and `health_recovery`. |

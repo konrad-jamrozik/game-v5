@@ -10,3 +10,4 @@ rating_base_health: 30 # the max health at which the health term of a Combatant'
 rating_base_armor: 20 # the armor at which the armor term of a Combatant's rating factor is 1
 rating_base_weapon_damage: 10 # the weapon damage at which the attack term of a Combatant's rating factor is 1
 rating_team_size_exponent: 1.2 # a side of n Combatants able to fight is rated n ^ 0.2 times the sum of what each adds
+fallback_weapon: knife # the Weapon an Agent fights with when it has no other or its rounds run out

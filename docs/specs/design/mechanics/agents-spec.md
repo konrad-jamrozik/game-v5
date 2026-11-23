@@ -38,9 +38,9 @@ What makes an [Agent](domain-model.md#agency-and-agents) or an [Enemy](domain-mo
 | Exhaustion | How worn down a Combatant is, as a whole number of at least zero with no upper bound; beyond a free amount it lowers effective skill. The specifications that raise or lower it own accumulation and recovery. An Agent's exhaustion is its Exact exhaustion rounded up. | Fatigue |
 | Exact exhaustion | The [stored value behind an Agent's exhaustion](#exhaustion-and-exact-exhaustion): a [Decimal quantity](../foundation/numbers.md#glossary) of at least zero, so that rest can lower it by less than one point. |  |
 | Base weapon damage | The typical current health a Combatant's hit removes, as a stored whole number, before any adjustment for the situation and before the random spread. | Weapon damage, naming the stored value |
-| Effective weapon damage | A Combatant's base weapon damage as adjusted for the situation; the value around which a Combat rolls the damage outcome. For a Serving Agent it adds what the Agency's [Upgrades](domain-model.md#agency-and-agents) add to weapon damage. |  |
+| Effective weapon damage | A Combatant's base weapon damage as adjusted for the situation; the value around which a Combat rolls the damage outcome. A Combat [can replace it](combat.md#ammo-in-a-combat) for an Agent whose rounds run out. |  |
 | Base armor | How much of the damage of hits a Combatant's armor absorbs in one Combat before its current health starts to fall, as a stored whole number of at least zero, before any adjustment for the situation. | Armor, naming the stored value |
-| Effective armor | A Combatant's base armor as adjusted for the situation; the current armor it starts every Combat with. For a Serving Agent it adds what the Agency's Upgrades add to armor. |  |
+| Effective armor | A Combatant's base armor as adjusted for the situation; the current armor it starts every Combat with. |  |
 | Current armor | How much more of the damage of hits a Combatant's armor can absorb in the current Combat, from zero up to its effective armor. It [exists only while a Combat lasts](combat.md#combat-only-properties), so every Combat starts with it full; losing it lowers neither current health nor effective skill. | Armor points |
 
 ## Assignments
@@ -140,7 +140,7 @@ An Agent is a [Campaign instance](../foundation/core-concepts.md#campaign-instan
 | Turn hired | Constants | The turn number of the [Turn](../foundation/engine-contract.md#player-actions-and-turns) in which the Agent was created. |
 | Base skill, Experience, health lost, and base health | [State](../foundation/core-concepts.md#campaign-instances) | The Agent's values of these names. |
 | Exact exhaustion | State | The value that holds the Agent's [exhaustion](#exhaustion-and-exact-exhaustion). |
-| Weapon and base weapon damage | State | A reference to the Weapon GDR the Agent is equipped with, and the Agent's base weapon damage. |
+| Weapon and base weapon damage | State | A reference to the Weapon GDR the Agent is [equipped](equipment.md#equipping-agents) with, and the Agent's base weapon damage. |
 | Armor and base armor | State | A reference to the Armor GDR the Agent is equipped with, and the Agent's base armor. |
 | Assignment | State | Present exactly when the Agent is Serving: its [Assignment](#assignment-and-agent-status). |
 | Agent status | State | The Agent's [Agent status](#agent-status). |
@@ -166,7 +166,7 @@ An Agent that leaves the Agency keeps a record of how its service ended and what
 | Final weapon damage | Present exactly when the Agent is Terminated: the effective weapon damage it had in that World state. |
 | Final armor | Present exactly when the Agent is Terminated: the effective armor it had in that World state. It is the armor the Agent was equipped with, not the current armor it had left when a Combat ended. |
 
-Enemies killed never falls, and every other value of the Service record never changes once it is set, so an Upgrade bought later does not change what the record shows. Becoming Terminated leaves health lost unchanged: a Killed Agent keeps current health 0, and a Dismissed Agent keeps the current health it had.
+Enemies killed never falls, and every other value of the Service record never changes once it is set, so neither an Upgrade bought later nor what [becomes of its Weapon and Armor](equipment.md#mission-equipment-losses) changes what the record shows. Becoming Terminated leaves health lost unchanged: a Killed Agent keeps current health 0, and a Dismissed Agent keeps the current health it had.
 
 # Agent status
 
@@ -261,24 +261,24 @@ A Combatant's effective weapon damage is kept apart from its base weapon damage 
 | Combatant | Effective weapon damage |
 | --- | --- |
 | An Enemy | Its base weapon damage. |
-| A Serving Agent | Its base weapon damage plus what the Agency's Upgrades [add to weapon damage](economy-and-upgrades.md#upgrade-effects). |
+| A Serving Agent | Its base weapon damage, except within a Combat in which its Weapon's `ammo_type` [has no round left](combat.md#ammo-in-a-combat). |
 | A Terminated Agent | Its Final weapon damage. |
 
 ## Effective armor
 
 A Combatant's armor absorbs the damage of hits before its current health does, and it is whole again for every Combat, so it protects an Agent without the lasting wounds that lower its effective skill. Effective armor is the current armor a Combatant [starts every Combat with](combat.md#combat-only-properties).
 
-| Combatant | Effective armor |
-| --- | --- |
-| An Enemy | Its base armor. |
-| A Serving Agent | Its base armor plus what the Agency's Upgrades [add to armor](economy-and-upgrades.md#upgrade-effects). |
+| Combatant          | Effective armor  |
+| ------------------ | ---------------- |
+| An Enemy           | Its base armor.  |
+| A Serving Agent    | Its base armor.  |
 | A Terminated Agent | Its Final armor. |
 
 ## Changes to attributes
 
 An Agent's attributes change only through a few named rules, so the cause of every change to them can be traced.
 
-Base skill only rises, through [Training growth](#training-growth) and [Mission growth](#mission-growth). Health lost rises only in a [Combat](combat.md#effects-of-an-attack) and falls only through [Health recovery](agent-recovery.md#health-recovery). Exhaustion rises in a Combat, through [Mission exhaustion](missions.md#mission-exhaustion), and through [Work exhaustion](#work-exhaustion), and falls only through [Exhaustion recovery](agent-recovery.md#exhaustion-recovery). No rule changes an Agent's base health, Weapon, base weapon damage, Armor, or base armor after its creation, and an Upgrade changes no stored value of an Agent.
+Base skill only rises, through [Training growth](#training-growth) and [Mission growth](#mission-growth). Health lost rises only in a [Combat](combat.md#effects-of-an-attack) and falls only through [Health recovery](agent-recovery.md#health-recovery). Exhaustion rises in a Combat, through [Mission exhaustion](missions.md#mission-exhaustion), and through [Work exhaustion](#work-exhaustion), and falls only through [Exhaustion recovery](agent-recovery.md#exhaustion-recovery). No rule changes an Agent's base health after its creation; its Weapon, base weapon damage, Armor, and base armor change only through [Equipment](equipment.md), e.g. by [equipping](equipment.md#equipping-agents) it. An Upgrade changes no stored value of an Agent.
 
 # Assignments and transit
 
@@ -409,7 +409,7 @@ A Forced return [moves the Agent to Standby](#assignment-changes), and an Agent 
 
 Every Agent is created by one rule, whichever rule causes the creation: the [Initial roster](#initial-roster), [hiring](economy-and-upgrades.md#hiring-agents), or [adding Agents](#adding-agents). Any cost, and the [Agent cap](economy-and-upgrades.md#glossary), belong to the rule that causes the creation.
 
-A new Agent has the AgentArchetype as its Archetype, which gives it its [starting values](#agentarchetype); its base weapon damage is the `base_weapon_damage` of its Weapon, and its base armor the `base_armor` of its Armor. Its Agency is the [Campaign](../foundation/core-concepts.md#campaign-and-session)'s Agency, and its Turn hired is the turn number of the current Turn. It starts on Standby, In transit, with Experience 0, health lost 0, Exact exhaustion 0, Enemies killed 0, and an empty Participation history.
+A new Agent has the AgentArchetype as its Archetype, which gives it its [starting values](#agentarchetype), its equipment included; its base weapon damage is the `base_weapon_damage` of its Weapon, and its base armor the `base_armor` of its Armor. Its Agency is the [Campaign](../foundation/core-concepts.md#campaign-and-session)'s Agency, and its Turn hired is the turn number of the current Turn. It starts on Standby, In transit, with Experience 0, health lost 0, Exact exhaustion 0, Enemies killed 0, and an empty Participation history.
 
 ## Initial roster
 

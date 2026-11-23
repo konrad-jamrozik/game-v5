@@ -24,7 +24,7 @@ The player-controlled organization, its Agents, what each Agent is doing, and wh
 
 | Term | Definition | Prohibited synonyms |
 | --- | --- | --- |
-| Agency | The organization the player controls in a [Campaign](../foundation/core-concepts.md#campaign-and-session). It holds the money, funding, and upgrades, and employs the Agents. |  |
+| Agency | The organization the player controls in a [Campaign](../foundation/core-concepts.md#campaign-and-session). It holds the money, funding, upgrades, and the Weapons, Armors, and rounds it [keeps in store](equipment.md#storage), and employs the Agents. |  |
 | Agent | An operative employed by the Agency, whom the player assigns to Investigations and Missions. |  |
 | Assignment | What an Agent is currently assigned to do, e.g. take part in a particular Investigation or Mission. | Current assignment |
 | Agent status | Where an Agent stands with respect to its Assignment and its employment, e.g. still travelling to its Assignment or no longer serving. [Agents](agents-spec.md) states the other Agent statuses. | Task phase; Agent lifecycle state |
@@ -113,6 +113,7 @@ Each game concept has the following modeling role and multiplicity.
 | Faction operation occurrence | Values in the [Constants](../foundation/core-concepts.md#campaign-instances) of the Response Mission site it creates, whose [Instance ID](../foundation/campaign-instances.md#glossary) identifies it; not a Campaign instance | Exactly one per Response Mission site | [Faction operation occurrence generation](factions.md#faction-operation-occurrence-generation) in Factions |
 | Weapon GDRs | GDRs | Not Campaign instances | [Weapon](combat.md#weapon) in Combat |
 | Armor GDRs | GDRs | Not Campaign instances | [Armor](combat.md#armor) in Combat |
+| AmmoType GDRs | GDRs | Not Campaign instances | [AmmoType](combat.md#ammotype) in Combat |
 | Upgrade GDRs | GDRs | Not Campaign instances | [Upgrades](economy-and-upgrades.md#upgrades) in Economy and Upgrades |
 | CompendiumArticle GDRs | GDRs serving the Display content purpose | Not Campaign instances | [CompendiumArticle](compendium.md#compendiumarticle) in Compendium |
 | Archetypes of the seven Campaign instance Types | GDRs serving the [Archetype](../foundation/core-concepts.md#campaign-instances) purpose | Not Campaign instances; sharing an Archetype does not limit how many Campaign instances exist | The specification that details each Campaign instance Type |

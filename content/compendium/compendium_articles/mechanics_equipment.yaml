@@ -1,0 +1,29 @@
+id: mechanics_equipment
+type: CompendiumArticle
+category: mechanics
+title: Equipment and Storage
+terms: [Storage, equipment, ammo, rounds, spoils of war]
+body: >-
+  The Agency keeps its weapons, armor, and rounds in Storage. Each Agent wears one weapon and one armor from it, and you
+  can swap them at any time. Every attack an Agent makes with a gun spends one round from Storage, and every Mission of
+  a turn draws on the same rounds, in the order you deployed them. An Agent whose rounds run out fights on with its
+  knife. A won Mission brings back the weapons of the Enemies and a few of their rounds; a lost one can cost your
+  Agents their gear.
+formulas:
+  - label: 'Selling'
+    text: 'Brings {equipment.sale_price_fraction} of the price, rounded down for the whole sale'
+  - label: 'Buying'
+    text: 'At the full price, once an interrogation has shown where to get it'
+  - label: 'Running out'
+    text: 'An Agent with no round left attacks with its {combat_parameters.fallback_weapon} until the Combat ends'
+  - label: 'No gear'
+    text: 'An Agent with no other weapon fights with its {combat_parameters.fallback_weapon}, and one with no other armor wears its {equipment.fallback_armor}'
+  - label: 'Low on rounds'
+    text: 'Fewer than {equipment.ammo_short_rounds_per_agent} rounds in Storage for each Agent whose weapon uses them'
+  - label: 'Spoils of war'
+    text: 'Every weapon of the Enemies of a won Mission, each with 0 to {equipment.spoils_ammo_max} rounds'
+  - label: 'Retreat'
+    text: 'The gear of the Agents killed is lost'
+  - label: 'Wiped'
+    text: 'The gear of the whole team is lost'
+see_also: [knife_article, standard_uniform_article, combat_pistol_article, mechanics_damage, mechanics_missions]

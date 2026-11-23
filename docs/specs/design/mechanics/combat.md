@@ -5,7 +5,7 @@
 | Spec ID | COMBAT |
 | Family | Mechanics |
 | Audience | Engine designer, Content designer, AI designer, Implementer |
-| Owns | Enemies and the Combat GDRs, how a Combat is fought in Combat rounds, attacks and their random outcomes, Incapacitated, Combat rating with base Combat rating, rating factor, and team size factor, Combat outcomes, and the Combat report. |
+| Owns | Enemies and the Combat GDRs, how a Combat is fought in Combat rounds, attacks and their random outcomes, Ammo spent in a Combat, Incapacitated, Combat rating with base Combat rating, rating factor, and team size factor, the Rested and Equipment Combat ratings, Combat outcomes, and the Combat report. |
 | Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
@@ -55,10 +55,21 @@ Whether a Combatant still takes part in a Combat, and how strong it and its side
 | Rating factor | How much a Combatant's [effective weapon damage](agents-spec.md#combatant-attributes), [effective max health](agents-spec.md#combatant-attributes), and [effective armor](agents-spec.md#combatant-attributes) raise or lower its Combat rating against its effective skill: [half the sum](#combat-rating) of how hard it hits, how much harm its max health can take, and how much harm its armor absorbs, each against its rating base, as a multiplier above 0 that is 1 for a Combatant at the rating bases, with no armor. |  |
 | Team size factor | How much the number of a side's Combatants able to fight raises its Combat rating above the sum of what each of them adds: that number [raised to `rating_team_size_exponent − 1`](#combat-rating). |  |
 | Combat rating | How strong a Combatant or a side is in a Combat: the sum, over the Combatants of the side able to fight, of the effective skill of each times its rating factor, times the team size factor of the side, and [rounded down](#combat-rating). | Combat strength; combat power; effective Combat rating |
+| Rested Combat rating | The Combat rating a [Serving](agents-spec.md#agent-statuses) Agent [would have fully rested and unhurt](#rested-and-equipment-combat-ratings). | Max Combat rating |
+| Equipment Combat rating | How much a Serving Agent's equipment [adds to its Combat rating](#rested-and-equipment-combat-ratings) above the issued kit; below 0 when it wears less. | Gear rating |
+
+## Ammo
+
+What an Agent's Weapon spends in a Combat.
+
+| Term | Definition | Prohibited synonyms |
+| --- | --- | --- |
+| Ammo | Rounds of one [AmmoType](#ammotype), counted in whole rounds; one Agent attack with a Weapon that has an `ammo_type` [spends one round](#ammo-in-a-combat) of it. | Ammunition, naming the counted rounds |
+| Fallback Weapon | The Weapon an Agent fights with when it has no other or its Ammo has run out in a Combat: `fallback_weapon` of CombatParameters, e.g. a knife. |  |
 
 # Combat GDRs
 
-Four [Game Data Record](../foundation/core-concepts.md#game-build-and-content) (GDR) [Types](../foundation/core-concepts.md#data-modeling) configure Enemies and Combats. The [exhaustion](agents-spec.md#combatant-attributes) and the [combat experience](agents-spec.md#growth) that an attack gives are properties of [AgentParameters](agents-spec.md#agentparameters).
+Five [Game Data Record](../foundation/core-concepts.md#game-build-and-content) (GDR) [Types](../foundation/core-concepts.md#data-modeling) configure Enemies and Combats. The [exhaustion](agents-spec.md#combatant-attributes) and the [combat experience](agents-spec.md#growth) that an attack gives are properties of [AgentParameters](agents-spec.md#agentparameters).
 
 ## EnemyArchetype
 
@@ -74,12 +85,15 @@ An EnemyArchetype is the [Archetype](../foundation/core-concepts.md#campaign-ins
 
 ## Weapon
 
-A Weapon GDR gives the [base weapon damage](agents-spec.md#combatant-attributes) of the Combatants equipped with it. Individual inventory items are out of scope.
+A Weapon GDR gives the [base weapon damage](agents-spec.md#combatant-attributes) of the Combatants equipped with it. [Equipment](equipment.md) says how the Agency keeps, equips, buys, and sells Weapons and Armors.
 
 | Property | Meaning | Read by |
 | --- | --- | --- |
 | `name` | The display name of the Weapon. | [Player-visible information](#player-visible-information) |
-| `base_weapon_damage` | The base weapon damage of a newly created Combatant equipped with this Weapon, in health points: a whole number of at least 1. | [Enemy creation](#enemy-creation); [Agent creation](agents-spec.md#agent-creation) |
+| `base_weapon_damage` | The base weapon damage of a Combatant equipped with this Weapon, in health points: a whole number of at least 1. | [Enemy creation](#enemy-creation); [Agent creation](agents-spec.md#agent-creation); [Equipping Agents](equipment.md#equipping-agents) |
+| `price` | Optional: the money one of it costs, a whole number of at least 1. Only a Weapon with a `price` can be [bought](equipment.md#buying-items), [sold](equipment.md#selling-items), and kept in store. | [Equipment](equipment.md) |
+| `ammo_type` | Present exactly when `price` is: a reference to the [AmmoType](#ammotype) one Agent attack with it spends. | [Ammo in a Combat](#ammo-in-a-combat) |
+| `unlocked_by` | Optional, only with `price`: one or more references to the [Leads](domain-model.md#leads-investigations-mission-sites-and-missions) of which any one, once completed, lets the Agency [buy it](equipment.md#unlocked-items). | [Equipment](equipment.md) |
 
 ## Armor
 
@@ -88,7 +102,18 @@ An Armor GDR gives the [base armor](agents-spec.md#combatant-attributes) of the 
 | Property | Meaning | Read by |
 | --- | --- | --- |
 | `name` | The display name of the Armor. | [Player-visible information](#player-visible-information) |
-| `base_armor` | The base armor of a newly created Combatant equipped with this Armor, in health points: a whole number of at least 0. | [Enemy creation](#enemy-creation); [Agent creation](agents-spec.md#agent-creation) |
+| `base_armor` | The base armor of a Combatant equipped with this Armor, in health points: a whole number of at least 0. | [Enemy creation](#enemy-creation); [Agent creation](agents-spec.md#agent-creation); [Equipping Agents](equipment.md#equipping-agents) |
+| `price` | Optional: as for a Weapon. | [Equipment](equipment.md) |
+| `unlocked_by` | Optional, only with `price`: the Leads of which any one, once completed, lets the Agency buy it. | [Equipment](equipment.md) |
+
+## AmmoType
+
+Each kind of round a Weapon spends is one GDR of Type AmmoType.
+
+| Property | Meaning | Read by |
+| --- | --- | --- |
+| `name` | The display name of the AmmoType. | [Player-visible information](#player-visible-information) |
+| `price` | The money one round costs: a whole number of at least 1. | [Equipment](equipment.md) |
 
 ## CombatParameters
 
@@ -106,6 +131,7 @@ CombatParameters bundles the numbers that tune a Combat: how far damage spreads,
 | `rating_base_armor` | The effective armor that makes the armor term of a Combatant's rating factor 1, a whole number of at least 1. | [Combat rating](#combat-rating) |
 | `rating_base_weapon_damage` | The effective weapon damage that makes the attack term of a Combatant's rating factor 1, a whole number of at least 1. | [Combat rating](#combat-rating) |
 | `rating_team_size_exponent` | The exponent of the number of Combatants able to fight in the Combat rating of a side: 1 rates a side as the sum of what its Combatants add, and above 1 rates a side of more Combatants higher than that sum. It is from 1 to 2, with at most two digits after the decimal point. | [Combat rating](#combat-rating) |
+| `fallback_weapon` | A reference to the Fallback Weapon: a Weapon with no `price` and no `ammo_type`. | [Ammo in a Combat](#ammo-in-a-combat); [Equipment](equipment.md) |
 
 # Enemies
 
@@ -134,12 +160,13 @@ What a Combat reads and what it produces are fixed, so that the same Combat foug
 1. **The Agents' side:** a list of one or more distinct [Serving](agents-spec.md#agent-statuses) Agents.
 2. **The Enemies' side:** a list of zero or more distinct Enemies.
 3. **Current values:** the base skill, current health, effective max health, exhaustion, effective weapon damage, and effective armor of every Combatant in the two lists, as they are when the Combat begins.
-4. **GDR values:** the properties of CombatParameters, and the properties of AgentParameters that [effective skill](agents-spec.md#effective-skill), the [Incapacitation condition](#incapacitation-condition), the [effects of an attack](#effects-of-an-attack), and [combat experience](#combat-experience) read.
-5. **Random outcomes:** the target outcome of each [target selection](#target-selection), and the [hit outcome](#hit-outcome) and [damage outcome](#damage-outcome) of each attack.
+4. **GDR values:** the properties of CombatParameters, the properties of AgentParameters that [effective skill](agents-spec.md#effective-skill), the [Incapacitation condition](#incapacitation-condition), the [effects of an attack](#effects-of-an-attack), and [combat experience](#combat-experience) read, and the Weapon of each Agent with its `ammo_type` and the `base_weapon_damage` of the Fallback Weapon.
+5. **Ammo:** for each AmmoType, the rounds at hand when the Combat begins, or no limit.
+6. **Random outcomes:** the target outcome of each [target selection](#target-selection), and the [hit outcome](#hit-outcome) and [damage outcome](#damage-outcome) of each attack.
 
 E.g., the turn number, the kind of the Mission site, and an Agent outside the Agents' side have no effect on a Combat.
 
-A Combat produces its [Combat report](#combat-report), the changed current health and exhaustion of its Combatants, and the [Agent status](domain-model.md#agency-and-agents) [Killed](agents-spec.md#agent-statuses) of every Agent whose current health reached 0.
+A Combat produces its [Combat report](#combat-report), the changed current health and exhaustion of its Combatants, the rounds of each AmmoType left, and the [Agent status](domain-model.md#agency-and-agents) [Killed](agents-spec.md#agent-statuses) of every Agent whose current health reached 0.
 
 ## Fighting a Combat
 
@@ -194,11 +221,20 @@ Combat rating of a side = round down( team size factor × Σ effective skill(c) 
 
 Each sum is over every Combatant `c` of the side that is [able to fight](#incapacitation-condition), and `n` is their number; a side with no such Combatant has a base Combat rating and a Combat rating of 0. The Combat rating is [evaluated exactly](../foundation/numbers.md#exact-evaluation) and [rounded](../foundation/numbers.md#rounding) once, for the side, so it can differ from the sum of the Combat ratings of its Combatants. Every input is the Combatant's value at the moment the Combat rating is read, and the armor term reads effective armor, never current armor.
 
-The base Combat rating and the Combat rating of one Combatant are those of a side holding that Combatant alone, except that its base Combat rating is its effective skill even when it is not able to fight. Agents and Enemies are rated alike: the Agency's [Upgrades](domain-model.md#agency-and-agents) count only through what they add to an Agent's effective max health, effective armor, and effective weapon damage. Every rule that weighs one side against another reads the Combat rating, never the base Combat rating, e.g. the [Retreated check](#combat-end-checks).
+The base Combat rating and the Combat rating of one Combatant are those of a side holding that Combatant alone, except that its base Combat rating is its effective skill even when it is not able to fight. Agents and Enemies are rated alike: an Agent's [Weapon and Armor](equipment.md#equipping-agents) and the Agency's [Upgrades](domain-model.md#agency-and-agents) count only through the effective max health, effective armor, and effective weapon damage they give it. Every rule that weighs one side against another reads the Combat rating, never the base Combat rating, e.g. the [Retreated check](#combat-end-checks).
 
 E.g., with a `rating_base_weapon_damage` of 8, a `rating_base_health` of 40, a `rating_base_armor` of 10, and a `rating_team_size_exponent` of 1.5, a Combatant of effective skill 60, effective weapon damage 12, effective max health 30, and effective armor 5 has an attack term of 12 / 8 = 1.5, a health term of 30 / 40 = 0.75, an armor term of 5 / 10 = 0.5, a rating factor of (1.5 + 0.75 + 0.5) / 2 = 1.375, and a Combat rating of `round down(60 × 1.375) = round down(82.5) = 82`. A side of four such Combatants has a team size factor of 4 ^ 0.5 = 2 and a Combat rating of `round down(2 × 4 × 82.5) = 660`, while their four Combat ratings sum to 328.
 
 **Informative rationale:** The three terms, their rating bases, and the team size exponent were chosen with the Combat Rating Bench in `tools/combat-rating-bench/`, so that teams sized to one share of a Mission site's Combat rating win at a consistent rate whatever their skill and Upgrades; weighing armor against a base of its own, rather than adding it point for point to max health, rated armored teams more consistently, and a rating factor that weighed each point of health, armor, and weapon damage by a bonus of its own rated single kinds of Upgrade less consistently. Halving the sum of the three terms keeps a Combatant at the rating bases, e.g. an Agent without Upgrades, at its effective skill. Agent teams with few Upgrades still lose more often than better-equipped teams of the same Combat rating.
+
+## Rested and Equipment Combat ratings
+
+Two further Combat ratings of one Serving Agent tell the Player what rest and equipment are worth to it. Neither is read by any rule of a Combat.
+
+- **Rested Combat rating:** the Combat rating the Agent would have with exhaustion 0 and health lost 0, with its own equipment, base skill, and effective max health.
+- **Equipment Combat rating:** the Agent's Combat rating minus the Combat rating it would have wearing the `weapon` and the `armor` of its [AgentArchetype](agents-spec.md#agentarchetype), the issued kit, with every other value its own. It is below 0 when the Agent wears less than the issued kit.
+
+Both read effective weapon damage outside a Combat, so neither depends on Ammo. E.g., with the rating bases 10 for weapon damage, 30 for health, and 20 for armor and an issued kit of weapon damage 10 and armor 0, an unhurt Agent of effective skill 100 and effective max health 30 has a Combat rating of 100 in the issued kit and an Equipment Combat rating of 0; with a Weapon of damage 14 and an Armor of armor 20 its Combat rating is `round down(100 × (1.4 + 1 + 1) / 2) = 170` and its Equipment Combat rating 70; with the Fallback Weapon of damage 5 and armor 0 they are 75 and −25.
 
 # Combat flow
 
@@ -283,9 +319,19 @@ An attack wears down both Combatants: it always adds exhaustion, and a hit takes
 3. **Exhaustion:** The attacker gains `exhaustion_per_attack` exhaustion and the defender gains `exhaustion_per_defense` exhaustion, hit or miss. The two amounts add up to at least 1, so that every attack tires someone.
 4. **Evaluation:** The defender and then the attacker are [evaluated](#killed-and-incapacitated), with their values after steps 2 and 3.
 
-An attack changes nothing else, e.g. no base skill, no [Experience](agents-spec.md#growth), and no other Combatant.
+An attack changes nothing else except the round an Agent's attack [spends](#ammo-in-a-combat), e.g. no base skill, no [Experience](agents-spec.md#growth), and no other Combatant.
 
 E.g., a defender with current health 30 and current armor 25 that is hit with the damage outcomes 10 and then 20 is left with current health 30 and current armor 15, and then with 25 and 0, because its current armor absorbs 15 of the 20 and the other 5 are health removed.
+
+## Ammo in a Combat
+
+Agents fight with the rounds the Agency has at hand, and an Agent whose rounds run out fights on with the Fallback Weapon. Enemies never run out.
+
+A Combat keeps, for each AmmoType, its rounds left, which start at the rounds at hand. An Agent's attack whose Weapon has an `ammo_type` with at least 1 round left spends one round of it, after its outcomes are formed at step 1 of the [effects of an attack](#effects-of-an-attack), so the attack that spends the last round still hits with the Weapon. An attack by an Agent whose Weapon has no `ammo_type`, an attack while its `ammo_type` has 0 rounds left, and every Enemy attack spend nothing; an AmmoType with no limit never runs out.
+
+Within a Combat, an Agent's Weapon whose `ammo_type` has 0 rounds left gives the Agent the [effective weapon damage](agents-spec.md#effective-weapon-damage) of the Fallback Weapon, which every rule that reads effective weapon damage then reads, e.g. the [damage outcome](#damage-outcome) and the [Combat rating](#combat-rating). No rule adds rounds while a Combat lasts, so an Agent that runs out stays on the Fallback Weapon until the Combat ends.
+
+E.g., two Agents with rifles and 3 rounds of their Ammo left: in the next Agents' phase the first spends 1, the second 1, and in the phase after the first spends the last round, so the second attacks with the Fallback Weapon, and so does the first from then on.
 
 ## Combat experience
 
@@ -353,8 +399,9 @@ A Combat report is the full account of one Combat, from which a player can follo
 5. **Final values:** for each participant, its current health, current armor, exhaustion, and effective skill when the Combat ended, and its final condition: able to fight, Incapacitated, or dead.
 6. **Damage dealt and damage taken:** for each participant, its damage dealt and its damage taken; and for each Agent, its [combat experience](#combat-experience).
 7. **Combat ratings:** the Combat rating of each side at Combat start and at the end of every Combat round.
-8. **Combat log:** every attack, each with its Combat round number, its attacker and defender by Instance ID, A and D, the hit chance, the hit outcome, the damage outcome when there is one, the armor removed, the health removed, the defender's current armor after the attack, the current health and exhaustion of the attacker and the defender after the attack, and whether the attack made the defender dead or the defender or the attacker Incapacitated.
-9. **Mission:** the Instance ID of the Mission whose Combat it records, which influences nothing in the Combat. The Combat report of a Detached Combat has no Mission, and identifies each participant [by its side and position](#detached-combat).
+8. **Ammo:** for each AmmoType that a Weapon of the Agents' side uses, its rounds at hand at Combat start and its rounds left at Combat end.
+9. **Combat log:** every attack, each with its Combat round number, its attacker and defender by Instance ID, A and D, the hit chance, the hit outcome, the damage outcome when there is one, the armor removed, the health removed, the defender's current armor after the attack, the current health and exhaustion of the attacker and the defender after the attack, and whether the attack made the defender dead or the defender or the attacker Incapacitated, and for an Agent's attack, the AmmoType of the round it spent, or that it was made with the Fallback Weapon because its Ammo had run out.
+10. **Mission:** the Instance ID of the Mission whose Combat it records, which influences nothing in the Combat. The Combat report of a Detached Combat has no Mission, and identifies each participant [by its side and position](#detached-combat).
 
 The health removed from an Agent, and the damage dealt and damage taken that sum it, are [Decimal quantities](../foundation/numbers.md#glossary), because an Agent's current health is one. E.g., a damage outcome of 10 against an Agent with current health 5.60 removes 5.60.
 
@@ -369,6 +416,7 @@ Balancing a Combat needs many Combats fought on chosen teams and chosen GDR valu
 | Agents' side | A list of one or more entries, in the fixed order of the side. Each entry is either an Agent of the [Current campaign](../foundation/core-concepts.md#campaign-and-session) by Instance ID, which contributes that Agent's values in the [Current world state](../foundation/engine-contract.md#player-actions-and-turns), or explicit values: base skill, current health, effective max health, exhaustion, effective weapon damage, and effective armor, which is 0 when the entry leaves it out. |
 | Enemies' side | A list of zero or more entries, in the fixed order of the side. Each entry is an Enemy of the Current campaign by Instance ID, an EnemyArchetype by identifier, which contributes the values of a [newly created Enemy](#enemy-creation) of it, or explicit values as for an Agent. Instead of a list, the caller may name a MissionSiteArchetype, which contributes one entry for each Enemy a new Mission site of it would have, in their [creation order](missions.md#enemy-creation). |
 | GDR values | Optionally, a value for any of the GDR values a Combat reads, e.g. a different `incapacitation_skill_fraction`. A value left out is the one the [Game build](../foundation/core-concepts.md#game-build-and-content) of the Current campaign supplies. |
+| Ammo | Optionally, the rounds at hand of any AmmoType. An AmmoType left out has no limit. An Agent of explicit values attacks with no `ammo_type`. |
 | Detached seed | Text that is a permitted [Campaign seed](../foundation/determinism-and-randomness.md#glossary). |
 
 Every random outcome of the Detached Combat derives from the Detached seed alone, with the distribution its rule states. The same `setup` therefore always gives the same outputs, and no [random outcome override](../foundation/developer-access.md#random-outcome-overrides) applies.
@@ -389,7 +437,7 @@ E.g., to learn only whether at least 90 of 100 Combats would be Won, a balancing
 
 # Player-visible information
 
-A player decides whom to deploy by weighing a team against the Enemies it will meet, so nothing about Enemies or Combats is hidden. Every property and every Derived value of an Enemy, the base Combat rating, rating factor, team size factor, and Combat rating of any Combatant or side, every fact of a Combat report, including every random outcome it records, and every property of the Combat GDRs are [Player-visible information](../foundation/engine-contract.md#api-surfaces) from the moment they exist.
+A player decides whom to deploy by weighing a team against the Enemies it will meet, so nothing about Enemies or Combats is hidden. Every property and every Derived value of an Enemy, the base Combat rating, rating factor, team size factor, and Combat rating of any Combatant or side, every fact of a Combat report, including every random outcome it records, and every property of the Combat GDRs except the `unlocked_by` of a Weapon or an Armor, which [stays hidden](equipment.md#player-visible-information), are [Player-visible information](../foundation/engine-contract.md#api-surfaces) from the moment they exist.
 
 # TODOs
 

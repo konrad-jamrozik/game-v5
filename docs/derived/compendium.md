@@ -20,7 +20,7 @@ See also: [Turns](#turns) · [Money and funding](#money-and-funding) · [Winning
 
 Source: `content/compendium/compendium_articles/guide_upgrades.yaml`
 
-[Upgrades](#upgrades) are permanent improvements bought with [money](#money-and-funding). Each purchase raises one cap of the Agency, the [weapon damage](#damage) or armor of every [Agent](#agents), or how fast every Agent trains, rests, or heals. An Upgrade can be bought again and again at the same price.
+[Upgrades](#upgrades) are permanent improvements bought with [money](#money-and-funding). Each purchase raises one cap of the Agency or how fast every [Agent](#agents) trains, rests, or heals. An Upgrade can be bought again and again at the same price.
 
 See also: [Upgrades](#upgrades) · [Money and funding](#money-and-funding)
 
@@ -94,7 +94,7 @@ See also: [Contracting](#contracting) · [Training](#training) · [Investigation
 
 Source: `content/compendium/compendium_articles/mechanics_combat.yaml`
 
-A Combat is fought in rounds. In each round every [Agent](#agents) attacks once, then every Enemy still able to fight attacks once, the most skilled of each side first. Enemies attack any Agent able to fight, at random. Agents choose at random too, but favour an Enemy they are likely but not certain to hit, and one with enough [health](#health) left to take a full hit. The Combat ends the moment one side can no longer fight, or after a round in which your team [retreats](#retreat).
+A Combat is fought in [rounds](#equipment-and-storage). In each round every [Agent](#agents) attacks once, then every Enemy still able to fight attacks once, the most skilled of each side first. Enemies attack any Agent able to fight, at random. Agents choose at random too, but favour an Enemy they are likely but not certain to hit, and one with enough [health](#health) left to take a full hit. The Combat ends the moment one side can no longer fight, or after a round in which your team [retreats](#retreat).
 
 | Formulas |  |
 | --- | --- |
@@ -121,7 +121,7 @@ A Combat rating measures how strong a side is in a [Combat](#combat), so that yo
 | One Combatant | Its effective skill × its rating factor, rounded down |
 | A side | The sum of effective skill × rating factor over its Combatants able to fight, × n ^ (1.2 − 1), where n is their number, rounded down once, so that a larger side counts for more than its sum |
 | Incapacitated Combatants | Add nothing to the Combat rating of their side |
-| Base Combat rating | An [Agent](#agents)'s effective skill alone, shown beside its Combat rating so that you can see how much [Upgrades](#upgrades) add |
+| Base Combat rating | An [Agent](#agents)'s effective skill alone, shown beside its Combat rating so that you can see how much its [equipment](#equipment-and-storage) and [Upgrades](#upgrades) add |
 
 See also: [Combat](#combat) · [Retreat](#retreat) · [Damage](#damage) · [Skill](#skill) · [Missions](#missions)
 
@@ -146,19 +146,38 @@ See also: [Money and funding](#money-and-funding) · [Exhaustion](#exhaustion) �
 
 Source: `content/compendium/compendium_articles/mechanics_damage.yaml`
 
-A hit deals damage to its target. How much depends on the weapon of the attacker, with some luck either way. The armor of the target absorbs the damage first, and only what armor does not absorb removes [health](#health). [Upgrades](#upgrades) make the [combat pistols](#combat-pistol) of your [Agents](#agents) hit harder and their [standard uniforms](#standard-uniform) absorb more; an Enemy always deals the damage of the weapon it carries.
+A hit deals damage to its target. How much depends on the weapon of the attacker, with some luck either way. The armor of the target absorbs the damage first, and only what armor does not absorb removes [health](#health). The weapon and the armor an [Agent](#agents) wears decide both, and an Agent whose [rounds](#equipment-and-storage) run out hits with its [knife](#knife).
 
 | Formulas |  |
 | --- | --- |
 | Damage of a hit | A whole number from weapon damage × (1 − 0.5), rounded up, to weapon damage × (1 + 0.5), rounded down; each is equally likely |
-| Weapon damage of an Agent | That of its combat pistol, plus Upgrades |
-| Armor of an Agent | That of its standard uniform, plus Upgrades |
+| Weapon damage of an Agent | That of the weapon it wears, or of its knife once its rounds run out |
+| Armor of an Agent | That of the armor it wears |
 | Armor of an Enemy | That of the armor it wears |
 | Armor in a hit | The damage first lowers armor, down to zero; only the rest removes health |
 | Lost armor | Costs no health and no [effective skill](#skill), and is whole again at the start of the next [Combat](#combat) |
 | A miss | No damage |
 
-See also: [Combat](#combat) · [Health](#health) · [Weapon damage](#weapon-damage) · [Armor](#armor) · [Combat pistol](#combat-pistol) · [Standard uniform](#standard-uniform) · [Basic pistol](#basic-pistol) · [Rifle](#rifle) · [Augmented rifle](#augmented-rifle) · [Machine gun](#machine-gun) · [Laser pistol](#laser-pistol) · [Laser rifle](#laser-rifle)
+See also: [Combat](#combat) · [Health](#health) · [Equipment and Storage](#equipment-and-storage) · [Knife](#knife) · [Combat pistol](#combat-pistol) · [Standard uniform](#standard-uniform) · [Basic pistol](#basic-pistol) · [Rifle](#rifle) · [Augmented rifle](#augmented-rifle) · [Machine gun](#machine-gun) · [Laser pistol](#laser-pistol) · [Laser rifle](#laser-rifle)
+
+### Equipment and Storage
+
+Source: `content/compendium/compendium_articles/mechanics_equipment.yaml`
+
+The Agency keeps its weapons, [armor](#damage), and rounds in Storage. Each [Agent](#agents) wears one weapon and one armor from it, and you can swap them at any time. Every attack an Agent makes with a gun spends one round from Storage, and every [Mission](#missions) of a [turn](#turns) draws on the same rounds, in the order you deployed them. An Agent whose rounds run out fights on with its [knife](#knife). A won Mission brings back the weapons of the Enemies and a few of their rounds; a lost one can cost your Agents their gear.
+
+| Formulas |  |
+| --- | --- |
+| Selling | Brings 0.5 of the price, rounded down for the whole sale |
+| Buying | At the full price, once an interrogation has shown where to get it |
+| Running out | An Agent with no round left attacks with its Knife until the [Combat](#combat) ends |
+| No gear | An Agent with no other weapon fights with its Knife, and one with no other armor wears its Standard uniform |
+| Low on rounds | Fewer than 10 rounds in Storage for each Agent whose weapon uses them |
+| Spoils of war | Every weapon of the Enemies of a won Mission, each with 0 to 4 rounds |
+| [Retreat](#retreat) | The gear of the Agents killed is lost |
+| Wiped | The gear of the whole team is lost |
+
+See also: [Knife](#knife) · [Standard uniform](#standard-uniform) · [Combat pistol](#combat-pistol) · [Damage](#damage) · [Missions](#missions)
 
 ### Exhaustion
 
@@ -251,7 +270,7 @@ Health is how much harm an [Agent](#agents) or an Enemy can still take. Hits in 
 | Lost health | Lowers [effective skill](#skill) in proportion: half the health, half the skill |
 | Healing | Only on [Recovery](#recovery), where every Agent that survives a [Mission](#missions) below max health is sent |
 
-See also: [Recovery](#recovery) · [Damage](#damage) · [Skill](#skill) · [Armor](#armor)
+See also: [Recovery](#recovery) · [Damage](#damage) · [Skill](#skill) · [Equipment and Storage](#equipment-and-storage)
 
 ### Hiring and upkeep
 
@@ -492,17 +511,17 @@ See also: [A turn at the Agency](#a-turn-at-the-agency) · [Winning and losing](
 
 Source: `content/compendium/compendium_articles/mechanics_upgrades.yaml`
 
-Upgrades are permanent improvements bought with [money](#money-and-funding). Each purchase adds a fixed amount to one thing: a cap of the Agency, the [weapon damage](#damage) or armor of every [Agent](#agents), or how fast every Agent trains, rests, or heals. An Upgrade can be bought any number of times.
+Upgrades are permanent improvements bought with [money](#money-and-funding). Each purchase adds a fixed amount to one thing: a cap of the Agency or how fast every [Agent](#agents) trains, rests, or heals. An Upgrade can be bought any number of times.
 
 | Formulas                                 |                                                                |
 | ---------------------------------------- | -------------------------------------------------------------- |
 | Price                                    | Fixed for each Upgrade; it never rises                         |
 | Buying again                             | Every purchase adds the same amount, without limit             |
-| Caps, weapon damage, and armor           | Raised at once                                                 |
+| Caps                                     | Raised at once                                                 |
 | [Training](#training), rest, and healing | Faster from the next [turn](#turns)                            |
 | Who benefits                             | Every Agent, including those [hired](#hiring-and-upkeep) later |
 
-See also: [Agent cap](#agent-cap) · [Transport cap](#transport-cap) · [Training cap](#training-cap) · [Weapon damage](#weapon-damage) · [Armor](#armor) · [Training skill gain](#training-skill-gain) · [Exhaustion recovery](#exhaustion-recovery) · [Health recovery](#health-recovery)
+See also: [Agent cap](#agent-cap) · [Transport cap](#transport-cap) · [Training cap](#training-cap) · [Training skill gain](#training-skill-gain) · [Exhaustion recovery](#exhaustion-recovery) · [Health recovery](#health-recovery)
 
 ### Winning and losing
 
@@ -536,6 +555,73 @@ The backbone of the Agency: a trained [operative](#operative) who can investigat
 | `weapon`      | `combat_pistol`    |
 | `armor`       | `standard_uniform` |
 
+## Subject articles: AmmoType
+
+### Laser pistol battery
+
+Source: `content/compendium/compendium_articles/laser_pistol_battery_article.yaml`
+
+Power cells for the [laser pistol](#laser-pistol). Each attack an [Agent](#agents) makes with such a weapon spends one.
+
+| `laser_pistol_battery` | AmmoType               |
+| ---------------------- | ---------------------- |
+| `name`                 | `Laser pistol battery` |
+| `price`                | `10`                   |
+
+See also: [Equipment and Storage](#equipment-and-storage)
+
+### Laser rifle battery
+
+Source: `content/compendium/compendium_articles/laser_rifle_battery_article.yaml`
+
+Power cells for the [laser rifle](#laser-rifle) and the [augmented laser rifle](#augmented-laser-rifle). Each attack an [Agent](#agents) makes with such a weapon spends one.
+
+| `laser_rifle_battery` | AmmoType              |
+| --------------------- | --------------------- |
+| `name`                | `Laser rifle battery` |
+| `price`               | `15`                  |
+
+See also: [Equipment and Storage](#equipment-and-storage)
+
+### Machine gun ammo
+
+Source: `content/compendium/compendium_articles/machine_gun_ammo_article.yaml`
+
+Belts of [rounds](#equipment-and-storage) for the [machine gun](#machine-gun). Each attack an [Agent](#agents) makes with such a weapon spends one.
+
+| `machine_gun_ammo` | AmmoType           |
+| ------------------ | ------------------ |
+| `name`             | `Machine gun ammo` |
+| `price`            | `5`                |
+
+See also: [Equipment and Storage](#equipment-and-storage)
+
+### Pistol ammo
+
+Source: `content/compendium/compendium_articles/pistol_ammo_article.yaml`
+
+[Rounds](#equipment-and-storage) for the [basic pistol](#basic-pistol) and the [combat pistol](#combat-pistol). Each attack an [Agent](#agents) makes with such a weapon spends one.
+
+| `pistol_ammo` | AmmoType      |
+| ------------- | ------------- |
+| `name`        | `Pistol ammo` |
+| `price`       | `1`           |
+
+See also: [Equipment and Storage](#equipment-and-storage)
+
+### Rifle ammo
+
+Source: `content/compendium/compendium_articles/rifle_ammo_article.yaml`
+
+[Rounds](#equipment-and-storage) for the [rifle](#rifle) and the [augmented rifle](#augmented-rifle). Each attack an [Agent](#agents) makes with such a weapon spends one.
+
+| `rifle_ammo` | AmmoType     |
+| ------------ | ------------ |
+| `name`       | `Rifle ammo` |
+| `price`      | `3`          |
+
+See also: [Equipment and Storage](#equipment-and-storage)
+
 ## Subject articles: Armor
 
 ### Augmented battle suit
@@ -544,21 +630,25 @@ Source: `content/compendium/compendium_articles/augmented_battle_suit_article.ya
 
 A powered [battle suit](#battle-suit) that shrugs off what would kill anyone else. Only a cult's leader is guarded this well.
 
-| `augmented_battle_suit` | Armor                   |
-| ----------------------- | ----------------------- |
-| `name`                  | `Augmented battle suit` |
-| `base_armor`            | `80`                    |
+| `augmented_battle_suit` | Armor |
+| --- | --- |
+| `name` | `Augmented battle suit` |
+| `base_armor` | `80` |
+| `price` | `4000` |
+| `unlocked_by` | `["interrogate_red_dawn_cult_leader","interrogate_exalt_cult_leader","interrogate_black_lotus_cult_leader"]` |
 
 ### Ballistic vest
 
 Source: `content/compendium/compendium_articles/ballistic_vest_article.yaml`
 
-Soft body [armor](#damage) that stops most handgun rounds, the standard protection of trained fighters.
+Soft body [armor](#damage) that stops most handgun [rounds](#equipment-and-storage), the standard protection of trained fighters.
 
-| `ballistic_vest` | Armor            |
-| ---------------- | ---------------- |
-| `name`           | `Ballistic vest` |
-| `base_armor`     | `20`             |
+| `ballistic_vest` | Armor |
+| --- | --- |
+| `name` | `Ballistic vest` |
+| `base_armor` | `20` |
+| `price` | `200` |
+| `unlocked_by` | `["interrogate_red_dawn_lieutenant","interrogate_exalt_lieutenant","interrogate_black_lotus_lieutenant"]` |
 
 ### Basic clothing
 
@@ -577,21 +667,25 @@ Source: `content/compendium/compendium_articles/battle_suit_article.yaml`
 
 Plates over most of the body, heavy enough that only those who command from the front bother with it.
 
-| `battle_suit` | Armor         |
-| ------------- | ------------- |
-| `name`        | `Battle suit` |
-| `base_armor`  | `50`          |
+| `battle_suit` | Armor |
+| --- | --- |
+| `name` | `Battle suit` |
+| `base_armor` | `50` |
+| `price` | `1200` |
+| `unlocked_by` | `["interrogate_red_dawn_commander","interrogate_exalt_commander","interrogate_black_lotus_commander"]` |
 
 ### Padded jacket
 
 Source: `content/compendium/compendium_articles/padded_jacket_article.yaml`
 
-A thick coat lined against knives and stray rounds, worn by those who direct a cult's first recruits.
+A thick coat lined against [knives](#knife) and stray [rounds](#equipment-and-storage), worn by those who direct a cult's first recruits.
 
-| `padded_jacket` | Armor           |
-| --------------- | --------------- |
-| `name`          | `Padded jacket` |
-| `base_armor`    | `5`             |
+| `padded_jacket` | Armor                                                                                            |
+| --------------- | ------------------------------------------------------------------------------------------------ |
+| `name`          | `Padded jacket`                                                                                  |
+| `base_armor`    | `5`                                                                                              |
+| `price`         | `50`                                                                                             |
+| `unlocked_by`   | `["interrogate_red_dawn_handler","interrogate_exalt_handler","interrogate_black_lotus_handler"]` |
 
 ### Reinforced ballistic vest
 
@@ -599,10 +693,12 @@ Source: `content/compendium/compendium_articles/reinforced_ballistic_vest_articl
 
 A [ballistic vest](#ballistic-vest) with hard plates added over the chest and back, worn by those who [lead](#leads) [soldiers](#soldier).
 
-| `reinforced_ballistic_vest` | Armor                       |
-| --------------------------- | --------------------------- |
-| `name`                      | `Reinforced ballistic vest` |
-| `base_armor`                | `25`                        |
+| `reinforced_ballistic_vest` | Armor |
+| --- | --- |
+| `name` | `Reinforced ballistic vest` |
+| `base_armor` | `25` |
+| `price` | `270` |
+| `unlocked_by` | `["interrogate_red_dawn_lieutenant","interrogate_exalt_lieutenant","interrogate_black_lotus_lieutenant"]` |
 
 ### Reinforced battle suit
 
@@ -610,16 +706,18 @@ Source: `content/compendium/compendium_articles/reinforced_battle_suit_article.y
 
 A [battle suit](#battle-suit) with extra plating, built to breach a defended position under fire.
 
-| `reinforced_battle_suit` | Armor                    |
-| ------------------------ | ------------------------ |
-| `name`                   | `Reinforced battle suit` |
-| `base_armor`             | `60`                     |
+| `reinforced_battle_suit` | Armor |
+| --- | --- |
+| `name` | `Reinforced battle suit` |
+| `base_armor` | `60` |
+| `price` | `2100` |
+| `unlocked_by` | `["interrogate_red_dawn_high_commander","interrogate_exalt_high_commander","interrogate_black_lotus_high_commander"]` |
 
 ### Standard uniform
 
 Source: `content/compendium/compendium_articles/standard_uniform_article.yaml`
 
-The uniform the Agency issues to every [Agent](#agents). It is issued with an [armor](#damage) of 0, and every [Upgrade](#upgrades) to armor raises the armor of every Agent. In a [Combat](#combat), a hit wears down armor before it removes any [health](#health), and armor is whole again for the next Combat.
+The uniform the Agency issues to every [Agent](#agents), with an [armor](#damage) of 0. An Agent wears it whenever it wears no other armor, and nobody can take it away. In a [Combat](#combat), a hit wears down armor before it removes any [health](#health), and armor is whole again for the next Combat.
 
 | `standard_uniform` | Armor              |
 | ------------------ | ------------------ |
@@ -632,10 +730,12 @@ Source: `content/compendium/compendium_articles/tactical_armor_article.yaml`
 
 Plates, a helmet, and guards for the limbs, made for fighters who expect to be shot at.
 
-| `tactical_armor` | Armor            |
-| ---------------- | ---------------- |
-| `name`           | `Tactical armor` |
-| `base_armor`     | `40`             |
+| `tactical_armor` | Armor |
+| --- | --- |
+| `name` | `Tactical armor` |
+| `base_armor` | `40` |
+| `price` | `500` |
+| `unlocked_by` | `["interrogate_red_dawn_commander","interrogate_exalt_commander","interrogate_black_lotus_commander"]` |
 
 ## Subject articles: EnemyArchetype
 
@@ -1776,19 +1876,6 @@ Expands the barracks so that the Agency can employ more [Agents](#agents) at onc
 | `effect`    | `agent_cap` |
 | `increment` | `20`        |
 
-### Armor
-
-Source: `content/compendium/compendium_articles/armor_article.yaml`
-
-Better plates and padding for the [standard uniform](#standard-uniform) of every [Agent](#agents), so that it absorbs more of the hits an Agent takes in each [Combat](#combat) before any [health](#health) is lost.
-
-| `armor`     | Upgrade       |
-| ----------- | ------------- |
-| `name`      | `Armor`       |
-| `price`     | `1000`        |
-| `effect`    | `agent_armor` |
-| `increment` | `5`           |
-
 ### Exhaustion recovery
 
 Source: `content/compendium/compendium_articles/exhaustion_recovery_article.yaml`
@@ -1854,19 +1941,6 @@ Adds vehicles so that more [Agents](#agents) can be [deployed](#missions) to [Mi
 | `effect`        | `transport_cap` |
 | `increment`     | `8`             |
 
-### Weapon damage
-
-Source: `content/compendium/compendium_articles/weapon_damage_article.yaml`
-
-Better ammunition and gunsmithing make the [combat pistol](#combat-pistol) of every [Agent](#agents) hit harder.
-
-| `weapon_damage` | Upgrade               |
-| --------------- | --------------------- |
-| `name`          | `Weapon damage`       |
-| `price`         | `2000`                |
-| `effect`        | `agent_weapon_damage` |
-| `increment`     | `2`                   |
-
 ## Subject articles: Weapon
 
 ### Augmented laser rifle
@@ -1875,21 +1949,27 @@ Source: `content/compendium/compendium_articles/augmented_laser_rifle_article.ya
 
 A [laser rifle](#laser-rifle) tuned past every safe limit, carried by the one person a cult trusts above all.
 
-| `augmented_laser_rifle` | Weapon                  |
-| ----------------------- | ----------------------- |
-| `name`                  | `Augmented laser rifle` |
-| `base_weapon_damage`    | `32`                    |
+| `augmented_laser_rifle` | Weapon |
+| --- | --- |
+| `name` | `Augmented laser rifle` |
+| `base_weapon_damage` | `32` |
+| `price` | `1000` |
+| `ammo_type` | `laser_rifle_battery` |
+| `unlocked_by` | `["interrogate_red_dawn_cult_leader","interrogate_exalt_cult_leader","interrogate_black_lotus_cult_leader"]` |
 
 ### Augmented rifle
 
 Source: `content/compendium/compendium_articles/augmented_rifle_article.yaml`
 
-A [rifle](#rifle) refitted with better sights, a heavier barrel, and stronger rounds, carried by officers in the field.
+A [rifle](#rifle) refitted with better sights, a heavier barrel, and stronger [rounds](#equipment-and-storage), carried by officers in the field.
 
-| `augmented_rifle`    | Weapon            |
-| -------------------- | ----------------- |
-| `name`               | `Augmented rifle` |
-| `base_weapon_damage` | `16`              |
+| `augmented_rifle` | Weapon |
+| --- | --- |
+| `name` | `Augmented rifle` |
+| `base_weapon_damage` | `16` |
+| `price` | `80` |
+| `ammo_type` | `rifle_ammo` |
+| `unlocked_by` | `["interrogate_red_dawn_lieutenant","interrogate_exalt_lieutenant","interrogate_black_lotus_lieutenant"]` |
 
 ### Basic pistol
 
@@ -1901,17 +1981,34 @@ A cheap handgun handed to the newest recruits.
 | -------------------- | -------------- |
 | `name`               | `Basic pistol` |
 | `base_weapon_damage` | `8`            |
+| `price`              | `6`            |
+| `ammo_type`          | `pistol_ammo`  |
 
 ### Combat pistol
 
 Source: `content/compendium/compendium_articles/combat_pistol_article.yaml`
 
-A full-size handgun built for a fight, with a larger magazine than a [basic pistol](#basic-pistol) and still easy to carry unseen. The Agency issues one to every [Agent](#agents), and every [Upgrade](#upgrades) to [weapon damage](#damage) makes it hit harder in the hands of every Agent.
+A full-size handgun built for a fight, with a larger magazine than a [basic pistol](#basic-pistol) and still easy to carry unseen. The Agency issues one to every [Agent](#agents) it [hires](#hiring-and-upkeep).
 
 | `combat_pistol`      | Weapon          |
 | -------------------- | --------------- |
 | `name`               | `Combat pistol` |
 | `base_weapon_damage` | `10`            |
+| `price`              | `10`            |
+| `ammo_type`          | `pistol_ammo`   |
+
+### Knife
+
+Source: `content/compendium/compendium_articles/knife_article.yaml`
+
+Every [Agent](#agents) carries one, and nobody can take it away. An Agent with no other weapon fights with it, and so does an Agent whose [rounds](#equipment-and-storage) run out in the middle of a [Combat](#combat).
+
+| `knife`              | Weapon  |
+| -------------------- | ------- |
+| `name`               | `Knife` |
+| `base_weapon_damage` | `5`     |
+
+See also: [Equipment and Storage](#equipment-and-storage)
 
 ### Laser pistol
 
@@ -1919,10 +2016,13 @@ Source: `content/compendium/compendium_articles/laser_pistol_article.yaml`
 
 A handgun that fires a beam instead of a bullet, reserved for those a cult trusts most.
 
-| `laser_pistol`       | Weapon         |
-| -------------------- | -------------- |
-| `name`               | `Laser pistol` |
-| `base_weapon_damage` | `22`           |
+| `laser_pistol` | Weapon |
+| --- | --- |
+| `name` | `Laser pistol` |
+| `base_weapon_damage` | `22` |
+| `price` | `300` |
+| `ammo_type` | `laser_pistol_battery` |
+| `unlocked_by` | `["interrogate_red_dawn_commander","interrogate_exalt_commander","interrogate_black_lotus_commander"]` |
 
 ### Laser rifle
 
@@ -1930,10 +2030,13 @@ Source: `content/compendium/compendium_articles/laser_rifle_article.yaml`
 
 A long-barrelled laser weapon, rare and devastating.
 
-| `laser_rifle`        | Weapon        |
-| -------------------- | ------------- |
-| `name`               | `Laser rifle` |
-| `base_weapon_damage` | `28`          |
+| `laser_rifle` | Weapon |
+| --- | --- |
+| `name` | `Laser rifle` |
+| `base_weapon_damage` | `28` |
+| `price` | `800` |
+| `ammo_type` | `laser_rifle_battery` |
+| `unlocked_by` | `["interrogate_red_dawn_high_commander","interrogate_exalt_high_commander","interrogate_black_lotus_high_commander"]` |
 
 ### Machine gun
 
@@ -1941,10 +2044,13 @@ Source: `content/compendium/compendium_articles/machine_gun_article.yaml`
 
 A fast-firing automatic weapon issued to the best fighters of a cult.
 
-| `machine_gun`        | Weapon        |
-| -------------------- | ------------- |
-| `name`               | `Machine gun` |
-| `base_weapon_damage` | `20`          |
+| `machine_gun` | Weapon |
+| --- | --- |
+| `name` | `Machine gun` |
+| `base_weapon_damage` | `20` |
+| `price` | `140` |
+| `ammo_type` | `machine_gun_ammo` |
+| `unlocked_by` | `["interrogate_red_dawn_commander","interrogate_exalt_commander","interrogate_black_lotus_commander"]` |
 
 ### Rifle
 
@@ -1952,7 +2058,10 @@ Source: `content/compendium/compendium_articles/rifle_article.yaml`
 
 A reliable long gun for trained fighters.
 
-| `rifle`              | Weapon  |
-| -------------------- | ------- |
-| `name`               | `Rifle` |
-| `base_weapon_damage` | `14`    |
+| `rifle` | Weapon |
+| --- | --- |
+| `name` | `Rifle` |
+| `base_weapon_damage` | `14` |
+| `price` | `30` |
+| `ammo_type` | `rifle_ammo` |
+| `unlocked_by` | `["interrogate_red_dawn_lieutenant","interrogate_exalt_lieutenant","interrogate_black_lotus_lieutenant"]` |

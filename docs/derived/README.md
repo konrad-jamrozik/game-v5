@@ -15,9 +15,9 @@ These informative views are derived from the registered Markdown specifications.
 | Governance         | Conventions   | 8              |
 | Governance         | Process       | 3              |
 | Design             | Foundation    | 17             |
-| Design             | Mechanics     | 12             |
+| Design             | Mechanics     | 13             |
 | Design             | Content       | 1              |
-| Design             | UI            | 17             |
+| Design             | UI            | 19             |
 | Design             | Autopilot AIs | 1              |
 | Implementation     | Mandatory     | 5              |
 | Implementation     | Guidance      | 6              |
@@ -71,11 +71,12 @@ These informative views are derived from the registered Markdown specifications.
 | ID | Document | Owns |
 | --- | --- | --- |
 | AGENT | [Agents](../specs/design/mechanics/agents-spec.md) | What an Agent has, the Combatant Role Type, Agent status, Assignments and the transit rule, effective skill, Training, Mission growth and Experience, work exhaustion, the start-work gate and Forced return, Agent creation and the initial roster, and the assignAgents and addAgents actions. |
-| COMBAT | [Combat](../specs/design/mechanics/combat.md) | Enemies and the Combat GDRs, how a Combat is fought in Combat rounds, attacks and their random outcomes, Incapacitated, Combat rating with base Combat rating, rating factor, and team size factor, Combat outcomes, and the Combat report. |
-| COMP | [Compendium](../specs/design/mechanics/compendium.md) | The CompendiumArticle GDR, how the Placeholders and Article links of a Compendium article are resolved, when a Compendium article is Player-visible, including which EnemyArchetypes, Weapons, and Armors are Met subjects, what Player API reports of it, and the Revealed Compendium. |
+| COMBAT | [Combat](../specs/design/mechanics/combat.md) | Enemies and the Combat GDRs, how a Combat is fought in Combat rounds, attacks and their random outcomes, Ammo spent in a Combat, Incapacitated, Combat rating with base Combat rating, rating factor, and team size factor, the Rested and Equipment Combat ratings, Combat outcomes, and the Combat report. |
+| COMP | [Compendium](../specs/design/mechanics/compendium.md) | The CompendiumArticle GDR, how the Placeholders and Article links of a Compendium article are resolved, when a Compendium article is Player-visible, including which EnemyArchetypes, Weapons, Armors, and AmmoTypes are Met subjects, what Player API reports of it, and the Revealed Compendium. |
 | DOM | [Domain Model](../specs/design/mechanics/domain-model.md) | Game concepts, how they relate, and the structural invariants that span several concepts. |
 | ECON | [Economy and Upgrades](../specs/design/mechanics/economy-and-upgrades.md) | The Agency's money, funding, and Upgrade Acquisitions, Agency income and upkeep, the Agent cap, Transport cap, Training cap, and Contracting cap, the unlock_contracting Effect kind, Upgrade effects, the money change in each Action record, and the hireAgents, dismissAgents, purchaseUpgrade, and addMoney actions. |
 | ENDING | [Panic and Endings](../specs/design/mechanics/panic-and-endings.md) | Panic and how this Turn's changes to it are applied, the conditions that end a Campaign in Victory or Defeat, and what remains possible after a Campaign ending. |
+| EQUIP | [Equipment](../specs/design/mechanics/equipment.md) | Items, the Storage of the Agency, which Items are Unlocked, equipping Agents, buying and selling Items, Ammo short, Mission equipment losses and Spoils of war, the EquipmentParameters GDR, and the equipAgent, buyItems, and sellItems actions. |
 | FACTION | [Factions](../specs/design/mechanics/factions.md) | What a Faction has, its creation, its escalation through Faction activity levels, Faction operation occurrence generation, and elimination. |
 | INVSTG | [Investigations](../specs/design/mechanics/investigations.md) | What an Investigation has, the InvestigationArchetype and InvestigationParameters GDRs, the Investigation lifecycle, the startInvestigation and assignAgentsToInvestigation actions, leaving, Progress loss, and abandonment, Investigation progress, Assessment, completion, and the Team progress estimate query. |
 | LEAD | [Leads and Progression](../specs/design/mechanics/leads-and-progression.md) | What a Lead GDR describes, Lead discovery, Lead availability, Lead status, the effect of completing a Lead, the Initiative operation level, and the Initiative levels won that raise the Contracting cap. |
@@ -93,7 +94,8 @@ These informative views are derived from the registered Markdown specifications.
 
 | ID | Document | Owns |
 | --- | --- | --- |
-| AVIEW | [Agents View](../specs/design/ui/screens/agents-view.md) | What the Agents View of the Campaign screen shows and how it hires, dismisses, and assigns Agents. |
+| ACQVIEW | [Acquisitions View](../specs/design/ui/screens/acquisitions-view.md) | What the Acquisitions View of the Campaign screen shows of the Items and Ammo the agency can buy, and how it buys them. |
+| AVIEW | [Agents View](../specs/design/ui/screens/agents-view.md) | What the Agents View of the Campaign screen shows and how it hires, dismisses, assigns, and equips Agents. |
 | CLI | [Command-Line Interface](../specs/design/ui/cli.md) | Guidance on the command-line interface, the headless interface that makes the whole engine API playable from a terminal. |
 | COMPV | [Compendium View](../specs/design/ui/screens/compendium-view.md) | What the Compendium View of the Campaign screen shows of a Compendium article, the data sheet of each kind of subject, and how the Player finds an article and follows the links between articles. |
 | CSCR | [Campaign Screen](../specs/design/ui/screens/campaign-screen.md) | The regions of the Campaign screen of the graphical user interface, its Side panel, its Detail views and the View trail through them, its status bar values and controls, its Autopilot controls, and its keyboard shortcuts view. |
@@ -106,6 +108,7 @@ These informative views are derived from the registered Markdown specifications.
 | MVIEW | [Missions View](../specs/design/ui/screens/missions-view.md) | What the Missions View of the Campaign screen shows, how its panes are arranged, and how it deploys Agents. |
 | SITP | [Situation Panel](../specs/design/ui/screens/situation-panel.md) | What the Situation panel of the Campaign screen shows. |
 | SOUNDS | [Sounds](../specs/design/ui/sounds.md) | The short sounds the graphical user interface plays in answer to the Player: the Sound set, when each Sound plays, and its settings. |
+| STVIEW | [Storage View](../specs/design/ui/screens/storage-view.md) | What the Storage View of the Campaign screen shows of the Agency's Items and Ammo, and how it sells them. |
 | TRVIEW | [Turn Report View](../specs/design/ui/screens/turn-report-view.md) | What the Turn Report View of the Campaign screen shows of the most recent Turn report, and how it opens a Combat report or reopens the Turn summary. |
 | TSUM | [Turn Summary](../specs/design/ui/screens/turn-summary.md) | When the Turn summary dialog of the Campaign screen appears and what it shows. |
 | UVIEW | [Upgrades View](../specs/design/ui/screens/upgrades-view.md) | What the Upgrades View of the Campaign screen shows and how it purchases Upgrades. |

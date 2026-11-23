@@ -37,7 +37,7 @@
   <text class="count" x="639" y="213">5 specifications</text>
   <rect class="box" x="246" y="300" width="230" height="66" rx="10"/>
   <text class="title" x="361" y="328">UI</text>
-  <text class="count" x="361" y="349">17 specifications</text>
+  <text class="count" x="361" y="349">19 specifications</text>
   <rect class="box" x="524" y="300" width="230" height="66" rx="10"/>
   <text class="title" x="639" y="328">Autopilot AIs</text>
   <text class="count" x="639" y="349">1 specification</text>
@@ -45,7 +45,7 @@
   <text class="engine-title" x="500" y="463">Game engine</text>
   <rect class="band-mech" x="234" y="476" width="532" height="52" rx="8"/>
   <text class="band-name ink-mech" x="500" y="498">Mechanics</text>
-  <text class="band-count ink-mech" x="500" y="516">12 specifications</text>
+  <text class="band-count ink-mech" x="500" y="516">13 specifications</text>
   <rect class="band-found" x="194" y="536" width="612" height="52" rx="8"/>
   <text class="band-name ink-found" x="500" y="558">Foundation</text>
   <text class="band-count ink-found" x="500" y="576">17 specifications</text>

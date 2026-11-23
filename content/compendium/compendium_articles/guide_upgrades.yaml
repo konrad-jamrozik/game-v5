@@ -3,7 +3,6 @@ type: CompendiumArticle
 category: guide
 title: Buying Upgrades
 body: >-
-  Upgrades are permanent improvements bought with money. Each purchase raises one cap of the Agency, the weapon damage
-  or armor of every Agent, or how fast every Agent trains, rests, or heals. An Upgrade can be bought again and
+  Upgrades are permanent improvements bought with money. Each purchase raises one cap of the Agency or how fast every Agent trains, rests, or heals. An Upgrade can be bought again and
   again at the same price.
 see_also: [mechanics_upgrades, mechanics_money_and_funding]

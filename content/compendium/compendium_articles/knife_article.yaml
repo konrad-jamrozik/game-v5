@@ -1,0 +1,9 @@
+id: knife_article
+type: CompendiumArticle
+category: subject
+subject: knife
+terms: [Knife, Knives]
+body: >-
+  Every Agent carries one, and nobody can take it away. An Agent with no other weapon fights with it, and so does an
+  Agent whose rounds run out in the middle of a Combat.
+see_also: [mechanics_equipment]

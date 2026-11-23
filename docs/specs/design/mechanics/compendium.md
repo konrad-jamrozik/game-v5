@@ -5,7 +5,7 @@
 | Spec ID | COMP |
 | Family | Mechanics |
 | Audience | Engine designer, Content designer, UI designer, Implementer |
-| Owns | The CompendiumArticle GDR, how the Placeholders and Article links of a Compendium article are resolved, when a Compendium article is Player-visible, including which EnemyArchetypes, Weapons, and Armors are Met subjects, what Player API reports of it, and the Revealed Compendium. |
+| Owns | The CompendiumArticle GDR, how the Placeholders and Article links of a Compendium article are resolved, when a Compendium article is Player-visible, including which EnemyArchetypes, Weapons, Armors, and AmmoTypes are Met subjects, what Player API reports of it, and the Revealed Compendium. |
 | Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
@@ -115,24 +115,26 @@ Every Placeholder of a Game build names a property that a GDR of the Game build 
 
 A Placeholder may show only what the Player may know wherever the article is shown, so it may name only GDR properties that are Player-visible in every World state in which the article is. A Placeholder of any form may name the properties of a Type whose Forms cell is Any; the properties of the other Types may be named only by `{subject.…}` in a Subject article whose subject is the GDR.
 
-| Type                    | Properties a Placeholder may name | Forms              |
-| ----------------------- | --------------------------------- | ------------------ |
-| AgentArchetype          | Every property                    | Any                |
-| AgentParameters         | Every property                    | Any                |
-| RecoveryParameters      | Every property                    | Any                |
-| EnemyArchetype          | Every property                    | Any                |
-| Weapon                  | Every property                    | Any                |
-| Armor                   | Every property                    | Any                |
-| CombatParameters        | Every property                    | Any                |
-| EconomyParameters       | Every property                    | Any                |
-| Upgrade                 | Every property                    | Any                |
-| InvestigationParameters | Every property                    | Any                |
-| EndingParameters        | Every property                    | Any                |
-| FactionArchetype        | `name`                            | `{subject.…}` only |
-| Lead                    | `name`, `description`             | `{subject.…}` only |
-| MissionSiteArchetype    | `name`, `expires_in_turns`        | `{subject.…}` only |
+| Type                    | Properties a Placeholder may name                  | Forms              |
+| ----------------------- | -------------------------------------------------- | ------------------ |
+| AgentArchetype          | Every property                                     | Any                |
+| AgentParameters         | Every property                                     | Any                |
+| RecoveryParameters      | Every property                                     | Any                |
+| EnemyArchetype          | Every property                                     | Any                |
+| Weapon                  | `name`, `base_weapon_damage`, `price`, `ammo_type` | Any                |
+| Armor                   | `name`, `base_armor`, `price`                      | Any                |
+| AmmoType                | Every property                                     | Any                |
+| EquipmentParameters     | Every property                                     | Any                |
+| CombatParameters        | Every property                                     | Any                |
+| EconomyParameters       | Every property                                     | Any                |
+| Upgrade                 | Every property                                     | Any                |
+| InvestigationParameters | Every property                                     | Any                |
+| EndingParameters        | Every property                                     | Any                |
+| FactionArchetype        | `name`                                             | `{subject.…}` only |
+| Lead                    | `name`, `description`                              | `{subject.…}` only |
+| MissionSiteArchetype    | `name`, `expires_in_turns`                         | `{subject.…}` only |
 
-The properties of the last three Types are Player-visible only while the GDR itself is, i.e. while a Subject article about it is, which is why only that article may name them. A property that its owner reveals later than the GDR itself is in no row, e.g. the `required_progress` of a Lead.
+The properties of the last three Types are Player-visible only while the GDR itself is, i.e. while a Subject article about it is, which is why only that article may name them. A property that its owner reveals later than the GDR itself is in no row, e.g. the `required_progress` of a Lead, and neither is one that its owner never reveals, e.g. the [`unlocked_by`](equipment.md#player-visible-information) of a Weapon.
 
 ### Value formatting
 
@@ -155,19 +157,20 @@ Which articles the Player can read depends on what the Player has learned so far
 In each [World state](../foundation/engine-contract.md#player-actions-and-turns), a Compendium article is Player-visible exactly when its `visible_when`, if it has one, [holds](../foundation/conditions.md#evaluating-a-condition) in that World state, and one of the following holds:
 
 1. It is a Guide article or a Mechanics article.
-2. It is a Subject article and its subject is Player-visible in that World state: the specification that owns the subject's Type declares, as [Player-visible information](../foundation/engine-contract.md#api-surfaces) in that World state, a value that includes the subject GDR, e.g. a [Lead](domain-model.md#leads-investigations-mission-sites-and-missions) from the World state in which it is [discovered](leads-and-progression.md#player-visible-information). When the subject is an EnemyArchetype, a Weapon, or an Armor, it must also be a [Met subject](#met-subjects) in that World state.
+2. It is a Subject article and its subject is Player-visible in that World state: the specification that owns the subject's Type declares, as [Player-visible information](../foundation/engine-contract.md#api-surfaces) in that World state, a value that includes the subject GDR, e.g. a [Lead](domain-model.md#leads-investigations-mission-sites-and-missions) from the World state in which it is [discovered](leads-and-progression.md#player-visible-information). When the subject is an EnemyArchetype, a Weapon, an Armor, or an [AmmoType](combat.md#ammotype), it must also be a [Met subject](#met-subjects) in that World state.
 
 Whether an article is Player-visible is a [Derived value](../foundation/core-concepts.md#value-classification) of the World state in which it is read; it is never stored.
 
 ## Met subjects
 
-Every EnemyArchetype, Weapon, and Armor is [Player-visible in every World state](combat.md#player-visible-information), so that a [Mission site](domain-model.md#leads-investigations-mission-sites-and-missions) or a [Combat report](domain-model.md#combat) can always name the Enemies in it. An article about each of them from the first [Turn](../foundation/engine-contract.md#player-actions-and-turns) would still tell the Player more than the Player may know, e.g. which Enemy, with which Weapon and Armor, waits at the end of the Campaign.
+Every EnemyArchetype, Weapon, Armor, and AmmoType is [Player-visible in every World state](combat.md#player-visible-information), so that a [Mission site](domain-model.md#leads-investigations-mission-sites-and-missions) or a [Combat report](domain-model.md#combat) can always name the Enemies in it. An article about each of them from the first [Turn](../foundation/engine-contract.md#player-actions-and-turns) would still tell the Player more than the Player may know, e.g. which Enemy, with which Weapon and Armor, waits at the end of the Campaign.
 
 The article about one therefore waits until the Player meets its subject, i.e. until a Mission site the Player knows of, or can foresee, brings it into play. In a World state:
 
 - **EnemyArchetype:** an EnemyArchetype is a Met subject when the `enemies` of a MissionSiteArchetype that is [Player-visible in that World state](missions.md#player-visible-information) include it.
-- **Weapon:** a Weapon is a Met subject when it is the `weapon` of an AgentArchetype, or of an EnemyArchetype that is a Met subject in that World state.
-- **Armor:** an Armor is a Met subject when it is the `armor` of an AgentArchetype, or of an EnemyArchetype that is a Met subject in that World state.
+- **Weapon:** a Weapon is a Met subject when it is the `weapon` of an AgentArchetype or of an EnemyArchetype that is a Met subject in that World state, the [Fallback Weapon](combat.md#ammo), or an [Item](equipment.md#glossary) that is [Unlocked](equipment.md#unlocked-items) or has an [Owned count](equipment.md#glossary) of at least 1 in that World state.
+- **Armor:** an Armor is a Met subject when it is the `armor` of an AgentArchetype or of an EnemyArchetype that is a Met subject in that World state, the [Fallback Armor](equipment.md#glossary), or an Item that is [Unlocked](equipment.md#glossary) or has an Owned count of at least 1 in that World state.
+- **AmmoType:** an AmmoType is a Met subject when it is the `ammo_type` of a Weapon that is a Met subject in that World state.
 
 Whether a GDR is a Met subject is a Derived value of the World state, never stored. E.g., discovering a [Lead](domain-model.md#leads-investigations-mission-sites-and-missions) that creates a Mission site makes the articles about that Mission site's [Enemies](domain-model.md#combat), their Weapons, and their Armors Player-visible, while the article about a Weapon that every Agent carries is Player-visible from the start.
 
