@@ -88,6 +88,14 @@ The Player sets the pace: one attack at a time to study a Combat, or all of it a
 
 Beside the Battlefield, the Combat replay names the attack being played, i.e. its Combat round and phase, attacker, defender, [Hit chance](../../mechanics/combat.md#combat-rounds-and-results), and result, and at the end the [Combat outcome](../../mechanics/combat.md#combat-rounds-and-results). A bar compares the [Combat ratings](../../mechanics/combat.md#combatant-condition-in-a-combat) of the two sides as of the last Combat round completed. The pointer resting on a figure shows the values of its Combatant.
 
+# Screenshot
+
+The Combat replay as the game draws it:
+
+![Combat replay Screenshot](../../../../images/screens/combat-replay.png)
+
+_Captured on 2026-11-23 22:09 UTC._
+
 # TODOs
 
 - TODO (later): Let the Player change a Combat from the Combat replay, e.g. choose whom a Combatant attacks, and have the Advance turn apply the changed result.
