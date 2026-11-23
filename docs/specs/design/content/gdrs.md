@@ -297,7 +297,7 @@ Every property, other than `id` and `type`, of every parameter GDR of the GDRs, 
 | `configuration_parameters` | `default_preset` | It names the preset that campaign creation starts from, which the Player sees while creating a Campaign. |
 | `music` | `excluded_tracks` | It lists the music files left out of the [Soundtrack](../ui/music.md#glossary). |
 
-The repository check `npm run compendium:check` enforces this rule, together with [Compendium article GDR validation](../mechanics/compendium.md#compendium-article-gdr-validation), and reads the exemptions from the table above. Adding a property to a parameter GDR therefore fails the check until an article explains the property or the table exempts it.
+The repository check `npm run compendium:check` enforces this rule, together with [Compendium article GDR validation](../mechanics/compendium.md#compendiumarticle), and reads the exemptions from the table above. Adding a property to a parameter GDR therefore fails the check until an article explains the property or the table exempts it.
 
 # Victory path
 
