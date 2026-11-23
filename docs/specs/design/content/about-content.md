@@ -10,13 +10,13 @@ Content is the game's versioned data: Game Data Records (GDRs), e.g. named param
 
 ## GDRs
 
-[GDRs](gdrs.md) answers _which GDRs must a Game build supply for a complete Campaign?_ It names the required GDRs, what each is for, and how the Leads and Mission sites among them form the Victory path; the values themselves are recorded in the GDRs, not restated in a document. [Game Data Records](../foundation/game-data-records.md) states what a GDR can be used for, and each Mechanics specification states the meaning of the values it needs.
+[GDRs](gdrs.md) answers _what must the GDRs of a Game build offer for a complete Campaign?_ It states the intent that shapes each group of GDRs, where they are authored, and how the Leads and Mission sites among them form the Victory path; the GDRs themselves and their values are recorded in the files under `content/`, not restated in a document. [Game Data Records](../foundation/game-data-records.md) states what a GDR can be used for, and each Mechanics specification states the meaning of the values it needs.
 
 A Content specification is added only for content that needs rules of its own, e.g. a second campaign with a different scope.
 
 # How they relate
 
-GDRs uses Game Data Records and Configuration from the Foundation family and Domain Model from the Mechanics family, and Storage Schema in the Guidance family uses it.
+GDRs uses Game Data Records from the Foundation family for how GDRs are authored, and Domain Model and the specifications that own its Types, most of them in the Mechanics family, for what the content must supply. Storage Schema in the Guidance family uses it.
 
 <!-- generated:family-diagram:start -->
 
