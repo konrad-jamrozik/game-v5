@@ -202,17 +202,17 @@ The Condition kind `mission_won` is defined as follows, under [Condition kinds](
 
 The Condition concerns exactly the MissionSiteArchetype it names and exactly the supplied Faction: a Won Mission at a Mission site of another MissionSiteArchetype, or targeting another Faction, does not make it hold. It reads no Investigation and not which Lead, if any, created the Mission site, so a Won Response Mission makes it hold as a Won Initiative Mission does.
 
-## Initiative won with Enemy Condition kind
+## Mission won with Enemy Condition kind
 
-Game data asks whether the Agency has won a Mission it sought out against a Faction where one kind of Enemy stood, so that what follows from facing that Enemy, e.g. questioning what it knew, opens wherever along the Faction's Leads the Agency faced it.
+Game data asks whether the Agency has won a Mission against a Faction where one kind of Enemy stood, so that what follows from facing that Enemy, e.g. questioning what it knew, opens wherever the Agency faced it, whether at a Mission site it sought out or at one a Faction operation brought.
 
-The Condition kind `initiative_won_with_enemy` is defined as follows, under [Condition kinds](../foundation/conditions.md#condition-kinds) in Conditions:
+The Condition kind `mission_won_with_enemy` is defined as follows, under [Condition kinds](../foundation/conditions.md#condition-kinds) in Conditions:
 
 - **Value:** the identifier of an EnemyArchetype the Game build supplies. The identifier of no EnemyArchetype is invalid.
 - **Supplied inputs:** a Faction, which the rule that evaluates the Condition supplies.
-- **When it holds:** exactly when, in the World state in which the Condition is evaluated, at least one [Initiative Mission](domain-model.md#leads-investigations-mission-sites-and-missions) is Won whose Mission site has the supplied Faction as its target Faction and has, in its Enemies list, at least one Enemy whose Archetype is that EnemyArchetype. Once it holds it holds for the rest of the Campaign, because a Won Mission stays Won and its Mission site keeps its Enemies list, under [Mission site properties](#mission-site-properties).
+- **When it holds:** exactly when, in the World state in which the Condition is evaluated, at least one Mission is Won whose Mission site has the supplied Faction as its target Faction and has, in its Enemies list, at least one Enemy whose Archetype is that EnemyArchetype. Once it holds it holds for the rest of the Campaign, because a Won Mission stays Won and its Mission site keeps its Enemies list, under [Mission site properties](#mission-site-properties).
 
-The Condition reads the Enemies list, which no rule changes after creation, so what became of the Enemy in the Combat plays no part: a Won Mission whose Enemy of that EnemyArchetype was killed, Incapacitated, or never hit makes it hold alike. Unlike `mission_won`, a Won Response Mission never makes it hold, so a Condition of it can never be met before an Initiative Mission is Won, and a Won Mission targeting another Faction does not make it hold either. It reads no Investigation and not which Lead created the Mission site.
+The Condition reads the Enemies list, which no rule changes after creation, so what became of the Enemy in the Combat plays no part: a Won Mission whose Enemy of that EnemyArchetype was killed, Incapacitated, or never hit makes it hold alike. Like `mission_won`, it reads no Investigation and not which Lead, if any, created the Mission site, so a Won Response Mission makes it hold as a Won Initiative Mission does, e.g. winning a Response Mission whose Mission site holds a `high_commander` Enemy makes `mission_won_with_enemy: high_commander` hold before any Initiative Mission against that Faction is Won. A Won Mission targeting another Faction does not make it hold.
 
 # Mission site lifecycle
 
