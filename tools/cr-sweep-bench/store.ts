@@ -120,14 +120,22 @@ export function loadGdr(): Gdr {
 }
 
 /**
- * What identifies the engine in a measurement's key: the git tree of `src/engine`, so that a commit that leaves the
- * engine alone keeps every result, with a mark when the engine has uncommitted changes.
+ * What identifies the engine in a measurement's key: the git objects of the source a Combat of explicit Combatants
+ * runs, so that a commit that leaves it alone keeps every result, with a mark when it has uncommitted changes.
  */
+const COMBAT_SOURCE = [
+  'src/engine/mechanics/combat',
+  'src/engine/mechanics/agents',
+  'src/engine/random.ts',
+  'src/kernel',
+]
+
 export function engineKey(): string {
   try {
     const git = (...args: string[]) => execFileSync('git', ['-C', IMPL, ...args], { encoding: 'utf8' }).trim()
-    const dirty = git('status', '--porcelain', '--', 'src/engine') === '' ? '' : ', with uncommitted changes'
-    return `engine tree ${git('rev-parse', 'HEAD:src/engine')}${dirty}`
+    const dirty = git('status', '--porcelain', '--', ...COMBAT_SOURCE) === '' ? '' : ', with uncommitted changes'
+    const objects = git('rev-parse', ...COMBAT_SOURCE.map((p) => `HEAD:${p}`)).split(/\s+/)
+    return `combat source ${objects.map((id) => id.slice(0, 10)).join(' ')}${dirty}`
   } catch {
     return 'unknown engine'
   }

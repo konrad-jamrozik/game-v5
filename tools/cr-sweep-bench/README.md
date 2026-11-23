@@ -92,7 +92,7 @@ Both are written by the server and by `cli.ts`, so that the page, the command li
 - **`state.json`** holds what the page shows: the configuration, the current formula, and the pinned formulas. Without it the defaults apply.
 - **`results.ndjson`** holds one line per sweep: its two sides, the GDR values it was fought with, and the Combats won, retreated from, and lost at each swept count. A later line of the same key replaces an earlier one.
 
-A sweep's key hashes its two sides, the GDR values, and the git tree of the engine's source, `src/engine` of the Implementation clone. Results fought under other rules or by another engine are therefore kept apart, and a commit that leaves the engine alone keeps every result. An engine with uncommitted changes has one key for all such changes: delete `results.ndjson` after changing the engine without committing.
+A sweep's key hashes its two sides, the GDR values, and the git objects of the source a Combat runs in the Implementation clone: `src/engine/mechanics/combat`, `src/engine/mechanics/agents`, `src/engine/random.ts`, and `src/kernel`. Results fought under other rules or by other Combat code are therefore kept apart, and a commit that leaves that source alone keeps every result; one that changes it, however slightly, asks for every sweep again. Source with uncommitted changes has one key for all such changes: delete `results.ndjson` after changing it without committing.
 
 ## Files
 
