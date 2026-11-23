@@ -1168,10 +1168,10 @@
     '',
     `<div class="sticky-head"><h3>Expected Response Missions by Turn</h3><div class="ctl">${tin('win', 'Response Missions won, %', { max: 100, step: 5 })}${tin('turns', 'Turns shown', { min: 10, max: 1500, step: 50 })}</div></div>` +
       `<div class="op-legend"><span class="lbl">Expected operations per ${OP_BUCKET} Turns, right axis</span>${LEVELS.map((k, i) => `<span><i style="background:${OP_COLORS[i]};opacity:${OP_ALPHA}"></i>Level ${k}${k === EXISTENTIAL ? ', existential' : ''}</span>`).join('')}</div>` +
-      `<div class="lbl chart-title">Panic</div><div class="chart" id="ch_panic"></div>` +
-      `<div class="lbl chart-title">Combat rating of Response Missions, mean of the last 10 Turns</div><div class="chart" id="ch_cr"></div>` +
-      `<div class="lbl chart-title">Cumulative Funding change</div><div class="chart" id="ch_fund"></div>` +
-      `<div class="lbl chart-title">Money from won Response Missions per Turn, over the last 10 Turns</div><div class="chart" id="ch_money"></div>` +
+      `<div class="lbl chart-title">Panic at the end of each ${OP_BUCKET} Turns</div><div class="chart" id="ch_panic"></div>` +
+      `<div class="lbl chart-title">Combat rating of Response Missions, mean of each ${OP_BUCKET} Turns</div><div class="chart" id="ch_cr"></div>` +
+      `<div class="lbl chart-title">Funding change from each ${OP_BUCKET} Turns of Response Missions</div><div class="chart" id="ch_fund"></div>` +
+      `<div class="lbl chart-title">Money from won Response Missions per Turn, in each ${OP_BUCKET} Turns</div><div class="chart" id="ch_money"></div>` +
       `<div id="o_panic"></div><div class="note">An expected-value estimate with no Faction Eliminated and no Panic reduction from won Initiative Missions: each level lasts its mean duration, operations arrive at the mean interval, each operation's Response Mission site is equally likely to be any of its level's, and every operation not won is ignored or lost. A Response Mission's Combat rating is its Enemies' at full health; the band marks the test team's Combat rating. Funding and money count every operation, including the ones after the Campaign may already have been lost.</div>`,
     'read',
   )}
@@ -1629,6 +1629,14 @@
         }
         const clampY = (y) => Math.max(ymin, Math.min(y, o.ymax))
         s += `<polyline fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" points="${o.pts.map((p) => X(p[0]).toFixed(1) + ',' + Y(clampY(p[1])).toFixed(1)).join(' ')}"/>`
+        /* A dot on each point, e.g. one per bucket of Turns, so a reader sees where the line has data. */
+        if (o.dots)
+          s += o.pts
+            .map(
+              (p) =>
+                `<circle cx="${X(p[0]).toFixed(1)}" cy="${Y(clampY(p[1])).toFixed(1)}" r="2.5" fill="var(--accent)"/>`,
+            )
+            .join('')
         s += `<g class="hv" visibility="hidden"><line y1="${m.t}" y2="${H - m.b}" stroke="var(--text2)" stroke-width="1"/><circle r="4.5" fill="var(--accent)" stroke="var(--surface)" stroke-width="2"/></g></svg><div class="tip" hidden></div>`
         host.innerHTML = s
         const svg = host.querySelector('svg'),
@@ -1902,7 +1910,6 @@
             win * ol(k).on_win.funding + (k < EXISTENTIAL ? ign * ol(k).on_ignored_or_lost.funding : 0),
           moneyOf = (k) => win * ol(k).on_win.money
         const pp = [[0, 0]],
-          crp = [],
           fp = [[0, 0]],
           mp = [[0, 0]],
           ops = [LEVELS.map(() => 0)]
@@ -1924,17 +1931,10 @@
           }
           ops.push(n)
           fund += LEVELS.reduce((s, k, i) => s + n[i] * fundOf(k), 0)
-          /* The last WINDOW Turns, or every Turn so far while fewer have passed. */
-          let cnt = 0,
-            crSum = 0,
-            money = 0
+          /* The money per Turn of the last WINDOW Turns, or of every Turn so far while fewer have passed. */
+          let money = 0
           for (let u = Math.max(1, t - WINDOW + 1); u <= t; u++)
-            LEVELS.forEach((k, i) => {
-              cnt += ops[u][i]
-              crSum += ops[u][i] * crOf[k]
-              money += ops[u][i] * moneyOf(k)
-            })
-          if (cnt > 0) crp.push([t, crSum / cnt])
+            LEVELS.forEach((k, i) => (money += ops[u][i] * moneyOf(k)))
           mp.push([t, money / Math.min(t, WINDOW)])
           panic = Math.min(100, panic)
           pp.push([t, panic])
@@ -1944,21 +1944,35 @@
         }
         /* The charts show the first T.turns Turns; the readouts below still look as far as HOR. */
         const xmax = Math.max(10, Math.min(HOR, Math.round(T.turns) || 500)),
-          upTo = (a) => a.filter((p) => p[0] <= xmax),
           /* The expected operations of each OP_BUCKET Turns, summed per level. */
           buckets = [],
-          bucketOf = (t) => buckets[Math.floor((t - 1) / OP_BUCKET)],
-          bars = { buckets, size: OP_BUCKET, colors: OP_COLORS },
-          opsText = (t) => {
-            const b = t >= 1 && bucketOf(t)
-            return b ? ` · Turns ${b.from}–${b.to} ops ` + b.n.map((v, i) => `L${LEVELS[i]} ${f(v, 2)}`).join(' ') : ''
-          }
+          bars = { buckets, size: OP_BUCKET, colors: OP_COLORS }
         for (let from = 1; from <= xmax; from += OP_BUCKET) {
           const to = Math.min(from + OP_BUCKET - 1, HOR),
             n = LEVELS.map(() => 0)
           for (let t = from; t <= to; t++) ops[t].forEach((v, i) => (n[i] += v))
-          buckets.push({ from, to, n })
+          /* What the bucket's operations bring: their mean Combat rating, Funding change, and money per Turn. */
+          const cnt = n.reduce((a, b) => a + b, 0),
+            sum = (g) => LEVELS.reduce((s, k, i) => s + n[i] * g(k), 0)
+          buckets.push({
+            from,
+            to,
+            n,
+            mid: from - 1 + (to - from + 1) / 2,
+            cr: cnt > 0 ? sum((k) => crOf[k]) / cnt : null,
+            fund: sum(fundOf),
+            money: sum(moneyOf) / (to - from + 1),
+          })
         }
+        /* One point per bucket: at its middle, or for Panic, a level rather than a flow, at its last Turn. */
+        const bpts = (g, at = (b) => b.mid) =>
+            buckets.filter((b) => g(b) != null && at(b) <= xmax).map((b) => [at(b), g(b), b]),
+          bText = (p) =>
+            `Turns ${p[2].from}–${p[2].to} → ` +
+            '%s' +
+            ' · ops ' +
+            p[2].n.map((v, i) => `L${LEVELS[i]} ${f(v, 2)}`).join(' '),
+          tipOf = (p, what) => (p[2] ? bText(p).replace('%s', what) : `Turn ${p[0]} → ${what}`)
         const vl = [
             tEx && { x: tEx, label: 'existential ops begin' },
             tHalf && { x: tHalf, label: '50% lost outright' },
@@ -1967,53 +1981,67 @@
             const ys = a.map((p) => p[1])
             return [Math.min(0, ...ys), Math.max(1, ...ys)]
           }
+        const panicPts = [
+          [0, 0],
+          ...bpts(
+            (b) => pp[Math.min(b.to, HOR)][1],
+            (b) => b.to,
+          ),
+        ]
         lineChart($('ch_panic'), {
-          pts: upTo(pp),
+          pts: panicPts,
           xmax,
           ymax: Math.max(10, Math.min(100, lim * 1.1)),
           xl: 'Turn',
-          label: 'Expected Panic by Turn',
+          label: 'Expected Panic at the end of each 10 Turns',
           band: lim,
           bandLabel: 'Panic limit ' + lim,
           vl,
           bars,
-          fmt: (p) => `Turn ${p[0]} → Panic ${f(p[1], 2)}${opsText(p[0])}`,
+          dots: true,
+          fmt: (p) => tipOf(p, `Panic ${f(p[1], 2)} at the end`),
         })
-        const teamCr = teamRatings().eff,
-          crMax = Math.max(teamCr, ...upTo(crp).map((p) => p[1]))
+        const crPts = bpts((b) => b.cr),
+          teamCr = teamRatings().eff,
+          crMax = Math.max(teamCr, ...crPts.map((p) => p[1]))
         lineChart($('ch_cr'), {
-          pts: upTo(crp).length ? upTo(crp) : [[0, 0]],
+          pts: crPts.length ? crPts : [[0, 0]],
           xmax,
           ymax: Math.max(10, crMax * 1.1),
           xl: 'Turn',
-          label: 'Expected Combat rating of Response Missions, mean of the last 10 Turns',
+          label: 'Expected mean Combat rating of the Response Missions of each 10 Turns',
           band: teamCr,
           bandLabel: 'Test team Combat rating ' + f(teamCr, 0),
           vl,
           bars,
-          fmt: (p) => `Turn ${p[0]} → Combat rating ${f(p[1], 0)}${opsText(p[0])}`,
+          dots: true,
+          fmt: (p) => tipOf(p, `Combat rating ${f(p[1], 0)}`),
         })
-        const [f0, f1] = span(upTo(fp))
+        const fundPts = bpts((b) => b.fund),
+          [f0, f1] = span(fundPts)
         lineChart($('ch_fund'), {
-          pts: upTo(fp),
+          pts: fundPts,
           xmax,
           ymin: f0 < 0 ? f0 * 1.1 : 0,
           ymax: f1 * 1.1,
           xl: 'Turn',
-          label: 'Expected cumulative Funding change',
+          label: 'Expected Funding change from the Response Missions of each 10 Turns',
           vl,
           bars,
-          fmt: (p) => `Turn ${p[0]} → Funding ${p[1] >= 0 ? '+' : '−'}${f(Math.abs(p[1]), 1)}${opsText(p[0])}`,
+          dots: true,
+          fmt: (p) => tipOf(p, `Funding ${p[1] >= 0 ? '+' : '−'}${f(Math.abs(p[1]), 1)}`),
         })
+        const moneyPts = bpts((b) => b.money)
         lineChart($('ch_money'), {
-          pts: upTo(mp),
+          pts: moneyPts,
           xmax,
-          ymax: span(upTo(mp))[1] * 1.1,
+          ymax: span(moneyPts)[1] * 1.1,
           xl: 'Turn',
-          label: 'Expected money from won Response Missions per Turn, over the last 10 Turns',
+          label: 'Expected money per Turn from the won Response Missions of each 10 Turns',
           vl,
           bars,
-          fmt: (p) => `Turn ${p[0]} → ${f(p[1], 1)} money per Turn${opsText(p[0])}`,
+          dots: true,
+          fmt: (p) => tipOf(p, `${f(p[1], 1)} money per Turn`),
         })
         $('o_panic').innerHTML = out([
           ['Expected Panic reaches the limit on Turn', tLim ? f(tLim, 0) : `not within ${HOR}`],
