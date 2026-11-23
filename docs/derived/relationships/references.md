@@ -29,7 +29,7 @@ A → B means A is referenced by B: the text of B links to A. Layer 1 is drawn a
 | 5 | SAVES Saves | CORE, CSTATE, DETERM, ENG |
 | 6 | AUTO Autopilot | CORE, DETERM, ENG, SAVES |
 | 6 | LIFE Campaign Lifecycle | CORE, ENG, SAVES |
-| 6 | TIMELINE Timeline | CINST, CORE, CSTATE, ENG, SAVES |
+| 6 | TIMELINE Timeline | CORE, CSTATE, ENG, SAVES |
 | 6 | TODOS Outstanding Work Items | CINST, CORE, CSTATE, DETERM, ENG |
 | 7 | DEV Developer Access | CINST, CORE, DETERM, ENG, SAVES, TIMELINE |
 | 7 | WHIST History and Turn Report | CINST, CORE, CSTATE, ENG, TIMELINE |
