@@ -43,6 +43,7 @@ A → B means A is referenced by B: the text of B links to A. Layer 1 is drawn a
 | 9 | PAPI Player API | CORE, CSTATE, DOM, ENG |
 | 10 | COMBAT Combat | AGENT, CINST, CORE, CSTATE, DETERM, DOM, ENG, NUMBERS, WHIST |
 | 10 | ECON Economy and Upgrades | AGENT, CORE, CSTATE, DOM, EFFECT, ENG, GDR, NUMBERS, WHIST |
+| 10 | HVIEW History View | AGENT, CORE, CSTATE, DOM, ENG, WHIST |
 | 10 | PLAN Specification Work Plan and Backlog | AGENT, CINST, CORE, DOM, ENG, WHIST |
 | 10 | RECOVER Agent Recovery | AGENT, CINST, CORE, CSTATE, DOM, ENG, NUMBERS, WHIST |
 | 11 | MISSION Missions | AGENT, CINST, COMBAT, COND, CORE, CSTATE, DOM, ECON, EFFECT, ENG, FACTION, NUMBERS, WHIST |
@@ -54,7 +55,6 @@ A → B means A is referenced by B: the text of B links to A. Layer 1 is drawn a
 | 14 | TURN Turn Advancement | AGENT, CORE, DOM, ECON, ENDING, ENG, FACTION, INVSTG, WHIST |
 | 15 | COMPV Compendium View | AGENT, COMP, CORE, DOM, ECON, EFFECT, ENG, GUI, INVSTG, LEAD |
 | 15 | CVIEW Charts View | AGENT, COMBAT, CORE, DOM, ECON, ENDING, ENG, GUI, MISSION, WHIST |
-| 15 | HVIEW History View | AGENT, COMBAT, CORE, CSTATE, DOM, ENG, GUI, WHIST |
 | 15 | LVIEW Leads View | AGENT, CINST, DOM, ECON, EFFECT, ENG, GUI, INVSTG, LEAD |
 | 15 | MUSIC Music | CORE, ENG, GUI |
 | 15 | SITP Situation Panel | AGENT, CORE, DOM, ECON, ENG, GUI |
