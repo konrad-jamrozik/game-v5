@@ -19,14 +19,15 @@ One test decides what belongs: would the Game designer object if the code did th
 A [Design specification](spec-conventions.md#specifications) holds the decisions about the game and what is needed to state them; the code of the [Implementation](spec-conventions.md#artifacts) holds everything else. A statement belongs in a Design specification only when it is one of these:
 
 1. **A decision:** a rule, a behaviour, or the meaning of a piece of game data that the [Game designer](spec-conventions.md#participants) chose. The test is whether the Game designer would object if the code did it differently; e.g., a threshold a player plans around passes the test, and the order of two effects that no player can tell apart fails it.
-2. **Vocabulary:** a term, a concept, or a structure needed to state decisions.
-3. **An explanation:** a diagram or an example that shows what a decision or a concept means.
+2. **An invariant:** something the Game designer requires to hold however the rules that produce it are arranged, e.g. that an Order placed in one pass over the Orders is not also shipped in that pass. It is stated once, by the [specification](spec-conventions.md#specifications) that owns the arrangement, even while the present arrangement already implies it, because it is the check that a rearrangement must still pass.
+3. **Vocabulary:** a term, a concept, or a structure needed to state decisions.
+4. **An explanation:** a diagram or an example that shows what a decision or a concept means.
 
 That a test could observe a behaviour does not make it a decision. Where the Design specifications are silent, the code and its tests decide, and they may change without a [specification](spec-conventions.md#specifications) changing. A Design specification therefore never states any of the following:
 
 - **What the code does on its own account**, e.g. internal ordering, code structure, storage layout, and how a malformed call or malformed game data is rejected.
 - **A proof.** A specification states rules and does not argue that they hold: it does not show that a value stays within a range, that a process ends, or that a state cannot be reached, and it does not describe a case that its rules make impossible.
-- **A consequence of another rule.** What follows from a rule is not written down, neither in the specification that owns the rule nor in one that relies on it.
+- **A consequence of another rule.** What follows from a rule is not written down, neither in the specification that owns the rule nor in one that relies on it. An invariant is the exception, and it is stated in one place only: a specification that relies on it links it and does not repeat it.
 - **A value of game data.** A specification says what a property means; its value lives only in the game data files.
 
 A rule about game data that expresses meaning, e.g. that one property is allowed only together with another, is a decision and is stated with the property. Steering for implementers, e.g. architecture or code-quality advice, belongs only in an [Implementation specification](implementation-spec-conventions.md#what-belongs-in-an-implementation-specification).
@@ -49,7 +50,7 @@ When specifying a game concept, state its applicable modeling role and mutabilit
 
 A decision is stated exactly, so that nobody has to guess what was decided, and once, so that it cannot come to disagree with itself.
 
-A rule states its trigger, its inputs, and its outcome. It states the thresholds, inclusivity, caps, floors, and tie-breaks that were decided, in the topic section of the rule they bound. Use a transition table or pseudocode where prose would conceal ordering. A rule names the point at which it applies and nothing more about timing: the one specification that owns the order in which rules apply states that order and what follows from it.
+A rule states its trigger, its inputs, and its outcome. It states the thresholds, inclusivity, caps, floors, and tie-breaks that were decided, in the topic section of the rule they bound. Use a transition table or pseudocode where prose would conceal ordering. A rule names the point at which it applies and nothing more about timing: the one specification that owns the order in which rules apply states that order and the invariants every order must keep.
 
 ## Formula and state machine notations
 
