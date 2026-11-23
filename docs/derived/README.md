@@ -87,7 +87,7 @@ These informative views are derived from the registered Markdown specifications.
 
 | ID | Document | Owns |
 | --- | --- | --- |
-| GDRS | [GDRs](../specs/design/content/gdrs.md) | Which Game Data Records (GDRs) a Game build supplies so that a complete Campaign can be played from creation to an ending, and how those GDRs form the Victory path. |
+| GDRS | [GDRs](../specs/design/content/gdrs.md) | The intent that shapes the Game Data Records (GDRs) a Game build supplies for a complete Campaign, the files they are authored in, the properties exempt from Compendium coverage, and how those GDRs form the Victory path. |
 
 ## UI
 

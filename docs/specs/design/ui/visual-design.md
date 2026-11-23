@@ -305,7 +305,7 @@ The [Side panel](gui.md#glossary) is the console beside the globe, so it reads a
 
 Background artwork lets the Player enjoy a picture of the agency at work while reading a Detail view, without the picture ever competing with what the Player reads: it is drawn so faintly that it reads as part of the dark field, not as an image laid over it. It is decoration only: it shows no game state and the Player cannot act on it.
 
-Each image is a file in the `assets/images/` directory at the repository root. Which Detail view shows which image, and how faintly, is content rather than design, so it comes from the BackgroundArtwork GDRs: the Content designer changes an image or its opacity in a [GDR](../foundation/core-concepts.md#game-build-and-content) file without changing this specification. A Detail view that no BackgroundArtwork GDR names shows no Background artwork. The GDRs list each one under [Visual Design GDRs](../content/gdrs.md#visual-design-gdrs).
+Each image is a file in the `assets/images/` directory at the repository root. Which Detail view shows which image, and how faintly, is content rather than design, so it comes from the BackgroundArtwork GDRs: the Content designer changes an image or its opacity in a [GDR](../foundation/core-concepts.md#game-build-and-content) file without changing this specification. A Detail view that no BackgroundArtwork GDR names shows no Background artwork. The GDRs list each one under [Visual Design GDRs](../content/gdrs.md#gdr-files).
 
 A BackgroundArtwork GDR serves the Display content purpose and has these properties; the list is exhaustive:
 
