@@ -67,7 +67,7 @@ A → B means A is referenced by B: the text of B links to A. Layer 1 is drawn a
 | 16 | TSUM Turn Summary | AGENT, COMBAT, CSTATE, DOM, ENG, GUI, INVSTG, SITP, VIS |
 | 17 | SOUNDS Sounds | COMP, COMPV, CORE, ENG, GUI, TSUM |
 | 17 | TRVIEW Turn Report View | AGENT, CINST, COMBAT, CSTATE, DOM, ENG, GUI, TSUM |
-| 18 | CSCR Campaign Screen | AGENT, AUTO, CORE, CSTATE, DOM, ENDING, ENG, GUI, LIFE, MUSIC, SAVES, SITP, SOUNDS, TSUM, VIS |
+| 18 | CSCR Campaign Screen | AGENT, AUTO, CORE, CSTATE, DOM, ENDING, ENG, GUI, LIFE, SAVES, SITP, SOUNDS, TSUM, VIS |
 | 18 | PLACE Implementation Placement | CORE, MUSIC, SOUNDS, VIS |
 | 19 | APPERF Autopilot Performance | AGENT, BASICAI, COMBAT, COND, CORE, CSTATE, DOM, ECON, ENG, PLACE, SAVES |
 | 19 | CTEST Campaign Tests | CORE, DOM, ENG, PLACE |

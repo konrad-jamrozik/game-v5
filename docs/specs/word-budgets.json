@@ -2,7 +2,6 @@
   "awaitingCut": [
     "docs/specs/README.md",
     "docs/specs/design/ui/screens/agents-view.md",
-    "docs/specs/design/ui/screens/campaign-screen.md",
     "docs/specs/design/ui/screens/charts-view.md",
     "docs/specs/design/ui/screens/compendium-view.md",
     "docs/specs/design/ui/screens/history-view.md",
@@ -85,7 +84,7 @@
     "docs/specs/design/ui/gui.md": 2420,
     "docs/specs/design/ui/music.md": 1840,
     "docs/specs/design/ui/screens/agents-view.md": 3210,
-    "docs/specs/design/ui/screens/campaign-screen.md": 4210,
+    "docs/specs/design/ui/screens/campaign-screen.md": 3350,
     "docs/specs/design/ui/screens/charts-view.md": 1610,
     "docs/specs/design/ui/screens/compendium-view.md": 3170,
     "docs/specs/design/ui/screens/history-view.md": 1700,
