@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="996" viewBox="0 0 1000 996" role="img" aria-label="Specification layers from top to bottom. Mechanics, from its top layer to its bottom layer: Turn Advancement; Investigations; Leads and Progression; Missions, Panic and Endings; Agent Recovery, Combat, Economy and Upgrades, Factions; Agents, Compendium; Domain Model. Foundation, from its top layer to its bottom layer: Configuration; Developer Access, History and Turn Report; Autopilot, Campaign Lifecycle, Timeline; Campaign Instances, Numbers, Saves; Determinism and Randomness, Game Data Records, Player API; Campaign State, Conditions, Effect Lists; Engine Contract; Core Concepts.">
-  <title>Specification layers from top to bottom. Mechanics, from its top layer to its bottom layer: Turn Advancement; Investigations; Leads and Progression; Missions, Panic and Endings; Agent Recovery, Combat, Economy and Upgrades, Factions; Agents, Compendium; Domain Model. Foundation, from its top layer to its bottom layer: Configuration; Developer Access, History and Turn Report; Autopilot, Campaign Lifecycle, Timeline; Campaign Instances, Numbers, Saves; Determinism and Randomness, Game Data Records, Player API; Campaign State, Conditions, Effect Lists; Engine Contract; Core Concepts.</title>
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="996" viewBox="0 0 1000 996" role="img" aria-label="Specification layers from top to bottom. Mechanics, from its top layer to its bottom layer: Turn Advancement; Investigations; Leads and Progression; Missions; Agent Recovery, Combat, Economy and Upgrades, Panic and Endings; Agents, Compendium, Factions; Domain Model. Foundation, from its top layer to its bottom layer: Configuration; Developer Access, History and Turn Report; Autopilot, Campaign Lifecycle, Timeline; Campaign Instances, Numbers, Saves; Determinism and Randomness, Game Data Records, Player API; Campaign State, Conditions, Effect Lists; Engine Contract; Core Concepts.">
+  <title>Specification layers from top to bottom. Mechanics, from its top layer to its bottom layer: Turn Advancement; Investigations; Leads and Progression; Missions; Agent Recovery, Combat, Economy and Upgrades, Panic and Endings; Agents, Compendium, Factions; Domain Model. Foundation, from its top layer to its bottom layer: Configuration; Developer Access, History and Turn Report; Autopilot, Campaign Lifecycle, Timeline; Campaign Instances, Numbers, Saves; Determinism and Randomness, Game Data Records, Player API; Campaign State, Conditions, Effect Lists; Engine Contract; Core Concepts.</title>
   <style>
     :root { --bg: #ffffff; --muted: #5b6676; --frame: #c3c9d4; --frame-fill: #f8f9fb;
       --r0-bg: #e9ebef; --r0-fg: #3d4452;
@@ -78,26 +78,26 @@
   <text class="chip-text ink-r12" x="500" y="213">Leads and Progression</text>
   <rect class="fill-r11" x="106.6" y="235" width="786.7" height="42" rx="7"/>
   <text class="row-label ink-r11" x="116.6" y="260">LAYER 4</text>
-  <rect class="chip stroke-r11" x="375" y="242" width="86.8" height="28" rx="14"/>
-  <text class="chip-text ink-r11" x="418.4" y="261">Missions</text>
-  <rect class="chip stroke-r11" x="469.8" y="242" width="155.2" height="28" rx="14"/>
-  <text class="chip-text ink-r11" x="547.4" y="261">Panic and Endings</text>
+  <rect class="chip stroke-r11" x="456.6" y="242" width="86.8" height="28" rx="14"/>
+  <text class="chip-text ink-r11" x="500" y="261">Missions</text>
   <rect class="fill-r10" x="106.6" y="283" width="786.7" height="42" rx="7"/>
   <text class="row-label ink-r10" x="116.6" y="308">LAYER 3</text>
-  <rect class="chip stroke-r10" x="253.6" y="290" width="132.4" height="28" rx="14"/>
-  <text class="chip-text ink-r10" x="319.8" y="309">Agent Recovery</text>
-  <rect class="chip stroke-r10" x="394" y="290" width="71.6" height="28" rx="14"/>
-  <text class="chip-text ink-r10" x="429.8" y="309">Combat</text>
-  <rect class="chip stroke-r10" x="473.6" y="290" width="178" height="28" rx="14"/>
-  <text class="chip-text ink-r10" x="562.6" y="309">Economy and Upgrades</text>
-  <rect class="chip stroke-r10" x="659.6" y="290" width="86.8" height="28" rx="14"/>
-  <text class="chip-text ink-r10" x="703" y="309">Factions</text>
+  <rect class="chip stroke-r10" x="219.4" y="290" width="132.4" height="28" rx="14"/>
+  <text class="chip-text ink-r10" x="285.6" y="309">Agent Recovery</text>
+  <rect class="chip stroke-r10" x="359.8" y="290" width="71.6" height="28" rx="14"/>
+  <text class="chip-text ink-r10" x="395.6" y="309">Combat</text>
+  <rect class="chip stroke-r10" x="439.4" y="290" width="178" height="28" rx="14"/>
+  <text class="chip-text ink-r10" x="528.4" y="309">Economy and Upgrades</text>
+  <rect class="chip stroke-r10" x="625.4" y="290" width="155.2" height="28" rx="14"/>
+  <text class="chip-text ink-r10" x="703" y="309">Panic and Endings</text>
   <rect class="fill-r9" x="106.6" y="331" width="786.7" height="42" rx="7"/>
   <text class="row-label ink-r9" x="116.6" y="356">LAYER 2</text>
-  <rect class="chip stroke-r9" x="409.2" y="338" width="71.6" height="28" rx="14"/>
-  <text class="chip-text ink-r9" x="445" y="357">Agents</text>
-  <rect class="chip stroke-r9" x="488.8" y="338" width="102" height="28" rx="14"/>
-  <text class="chip-text ink-r9" x="539.8" y="357">Compendium</text>
+  <rect class="chip stroke-r9" x="361.8" y="338" width="71.6" height="28" rx="14"/>
+  <text class="chip-text ink-r9" x="397.6" y="357">Agents</text>
+  <rect class="chip stroke-r9" x="441.4" y="338" width="102" height="28" rx="14"/>
+  <text class="chip-text ink-r9" x="492.4" y="357">Compendium</text>
+  <rect class="chip stroke-r9" x="551.4" y="338" width="86.8" height="28" rx="14"/>
+  <text class="chip-text ink-r9" x="594.8" y="357">Factions</text>
   <rect class="fill-r8" x="106.6" y="379" width="786.7" height="42" rx="7"/>
   <text class="row-label ink-r8" x="116.6" y="404">LAYER 1</text>
   <rect class="chip stroke-r8" x="441.4" y="386" width="117.2" height="28" rx="14"/>
