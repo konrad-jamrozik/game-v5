@@ -1029,7 +1029,10 @@
         /** The setup's settings the designer edited; every other one follows its default. */
         setupEdited: {},
         combat: {},
-        /** Each dimension of the Sampler: fixed at its value, or sampled from, to, by step along an axis. */
+        /**
+         * Each dimension of the Sampler: fixed at its value, or sampled along an axis, over its list of values, e.g.
+         * `10, 25, 60`, or, while the list is empty, from, to, by step.
+         */
         sampler: {
           showRatio: true,
           showCrLeft: true,
@@ -1041,13 +1044,13 @@
           /** Draws the CR ratio line, contour lines of the rating ratio, over any colouring. */
           showLine: false,
           showDiff: false,
-          count: { mode: 'x', value: 20, from: 10, to: 100, step: 10 },
-          skill: { mode: 'fixed', value: 250, from: 100, to: 500, step: 50 },
-          damage: { mode: 'y', value: 0, from: 0, to: 8, step: 2 },
-          armor: { mode: 'fixed', value: 0, from: 0, to: 40, step: 10 },
+          count: { mode: 'x', value: 20, from: 10, to: 100, step: 10, list: '' },
+          skill: { mode: 'fixed', value: 250, from: 100, to: 500, step: 50, list: '' },
+          damage: { mode: 'y', value: 0, from: 0, to: 8, step: 2, list: '' },
+          armor: { mode: 'fixed', value: 0, from: 0, to: 40, step: 10, list: '' },
           // An empty site is the first site under Mission sites.
           site: { mode: 'fixed', value: '' },
-          trials: { mode: 'fixed', value: 100, from: 50, to: 500, step: 50 },
+          trials: { mode: 'fixed', value: 100, from: 50, to: 500, step: 50, list: '' },
         },
       })
 
@@ -2288,7 +2291,12 @@
       const samplerLabel = (name) => SAMPLER_DIMS.find(([n]) => n === name)[1]
       /** The samples of the current formula, or null when the Sampler's dimensions are broken. */
       let sampler = null
-      /** The values of one numeric dimension: its fixed value, or from, to, by step; whole numbers, at most 60. */
+      /** Whether a numeric dimension of the Sampler is sampled over its list of values rather than by step. */
+      const hasList = (d) => typeof d.list === 'string' && d.list.trim() !== ''
+      /**
+       * The values of one numeric dimension: its fixed value, its list of values in the order given, or from, to, by
+       * step; whole numbers, at most 60.
+       */
       function dimValues(name) {
         const d = state.sampler[name]
         const label = samplerLabel(name)
@@ -2299,6 +2307,21 @@
             throw new Error(`${label}: the fixed value is not a number`)
           }
           return [whole(d.value)]
+        }
+        if (hasList(d)) {
+          const items = d.list
+            .split(',')
+            .map((s) => s.trim())
+            .filter((s) => s !== '')
+          const bad = items.find((s) => !Number.isFinite(Number(s)))
+          if (bad !== undefined) {
+            throw new Error(`${label}: "${bad}" in Values is not a number`)
+          }
+          const out = [...new Set(items.map((s) => whole(Number(s))))]
+          if (out.length > 60) {
+            throw new Error(`${label}: more than 60 values`)
+          }
+          return out
         }
         const step = Math.abs(d.step)
         if (!(step > 0) || !Number.isFinite(d.from) || !Number.isFinite(d.to)) {
@@ -2561,8 +2584,10 @@
             .join('')}</select>`
         const num = (name, key) =>
           `<input type="number" step="1" style="width: 90px" data-bind="sampler.${name}.${key}" data-type="num" value="${state.sampler[name][key]}" aria-label="${samplerLabel(name)} ${key}">`
+        const listIn = (name) =>
+          `<input type="text" style="width: 160px" placeholder="e.g. 10, 25, 60" title="Values separated by commas, sampled in the order given in place of From, To, and Step; empty to step" data-bind="sampler.${name}.list" data-type="str" value="${esc(state.sampler[name].list ?? '')}" aria-label="${samplerLabel(name)} values">`
         $('#samplerDims').innerHTML =
-          `<tr><th>Dimension</th><th>Mode</th><th>Fixed value</th><th>From</th><th>To</th><th>Step</th></tr>` +
+          `<tr><th>Dimension</th><th>Mode</th><th>Fixed value</th><th>From</th><th>To</th><th>Step</th><th>Values</th></tr>` +
           SAMPLER_DIMS.map(([name, label]) => {
             const d = state.sampler[name]
             const fixed = d.mode === 'fixed'
@@ -2575,16 +2600,24 @@
                 )
                 .join('')}</select>`
               return `<tr><td>${label}</td><td>${modeSel(name)}</td><td class="${on(fixed)}">${sel}</td>
-                <td colspan="3" class="note" style="opacity: ${fixed ? 0.35 : 1}">every site shown under Mission sites</td></tr>`
+                <td colspan="4" class="note" style="opacity: ${fixed ? 0.35 : 1}">every site shown under Mission sites</td></tr>`
             }
-            return `<tr><td>${label}</td><td>${modeSel(name)}</td><td class="${on(fixed)}">${num(name, 'value')}</td>${[
+            return `<tr data-dim="${name}"><td>${label}</td><td>${modeSel(name)}</td><td class="${on(fixed)}">${num(name, 'value')}</td>${[
               'from',
               'to',
               'step',
             ]
-              .map((k) => `<td class="${on(!fixed)}">${num(name, k)}</td>`)
-              .join('')}</tr>`
+              .map((k) => `<td class="${on(!fixed && !hasList(d))}" data-range>${num(name, k)}</td>`)
+              .join('')}<td class="${on(!fixed)}" data-list>${listIn(name)}</td></tr>`
           }).join('')
+      }
+      /** Greys From, To, and Step while a dimension's list of values is used, without drawing the inputs anew. */
+      function markSamplerList(name) {
+        const d = state.sampler[name]
+        const row = document.querySelector(`#samplerDims tr[data-dim="${name}"]`)
+        for (const td of row?.querySelectorAll('td[data-range]') ?? []) {
+          td.classList.toggle('dim-off', d.mode === 'fixed' || hasList(d))
+        }
       }
       function renderSampler() {
         const out = $('#samplerOut')
@@ -2723,6 +2756,9 @@
         }
         if (path.startsWith('sampler.') && path.endsWith('.mode')) {
           renderSamplerDims()
+        }
+        if (path.startsWith('sampler.') && path.endsWith('.list')) {
+          markSamplerList(path.split('.')[1])
         }
         changed()
       }
