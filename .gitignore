@@ -8,3 +8,4 @@ coverage/
 !.env.example
 .claude/worktrees/
 lib/globe/assets-full/
+tools/cr-sweep-bench/data/

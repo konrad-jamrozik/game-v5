@@ -16,7 +16,8 @@
     "lib/globe",
     "tools/gdr-balance-bench",
     "tools/autopilot-bench",
-    "tools/combat-rating-bench"
+    "tools/combat-rating-bench",
+    "tools/cr-sweep-bench"
   ],
   "rules": {
     "import/no-unassigned-import": ["error", { "allow": ["**/*.css"] }],
