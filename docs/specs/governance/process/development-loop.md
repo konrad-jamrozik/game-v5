@@ -84,6 +84,7 @@ The following table of LLM skills is exhaustive.
 | `absorb-implementation-feedback` | Turns open Implementer feedback into specification changes, with the Game designer deciding each one. |
 | `apply-designer-feedback` | Turns Designer feedback into specification changes or conformance fixes, under [Designer feedback](#designer-feedback). |
 | `apply` | Runs `apply-designer-feedback` and then `update-implementation`, completing the Designer feedback workflow in one request. |
+| `add-music` | Adds new music tracks from the Game designer's description and refreshes the Implementation's content with them. |
 
 LLM skills chain into workflows that cover whole rounds. The following workflows are complete:
 
