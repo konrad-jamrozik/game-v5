@@ -1170,8 +1170,8 @@
       `<div class="op-legend"><span class="lbl">Expected operations per ${OP_BUCKET} Turns, right axis</span>${LEVELS.map((k, i) => `<span><i style="background:${OP_COLORS[i]};opacity:${OP_ALPHA}"></i>Level ${k}${k === EXISTENTIAL ? ', existential' : ''}</span>`).join('')}</div>` +
       `<div class="lbl chart-title">Panic at the end of each ${OP_BUCKET} Turns</div><div class="chart" id="ch_panic"></div>` +
       `<div class="lbl chart-title">Combat rating of Response Missions, mean of each ${OP_BUCKET} Turns</div><div class="chart" id="ch_cr"></div>` +
-      `<div class="lbl chart-title">Funding change from each ${OP_BUCKET} Turns of Response Missions</div><div class="chart" id="ch_fund"></div>` +
-      `<div class="lbl chart-title">Money from won Response Missions per Turn, in each ${OP_BUCKET} Turns</div><div class="chart" id="ch_money"></div>` +
+      `<div class="lbl chart-title">Funding change from each ${OP_BUCKET} Turns of Response Missions <span style="color:var(--accent)">●</span>, and Funding per Turn at their end <span style="color:var(--notice)">●</span></div><div class="chart" id="ch_fund"></div>` +
+      `<div class="lbl chart-title">Money from won Response Missions in each ${OP_BUCKET} Turns</div><div class="chart" id="ch_money"></div>` +
       `<div id="o_panic"></div><div class="note">An expected-value estimate with no Faction Eliminated and no Panic reduction from won Initiative Missions: each level lasts its mean duration, operations arrive at the mean interval, each operation's Response Mission site is equally likely to be any of its level's, and every operation not won is ignored or lost. A Response Mission's Combat rating is its Enemies' at full health; the band marks the test team's Combat rating. Funding and money count every operation, including the ones after the Campaign may already have been lost.</div>`,
     'read',
   )}
@@ -1628,6 +1628,17 @@
           s += `<text x="${W - 4}" y="${H - 5}" text-anchor="end" font-size="10.5" fill="var(--axis)" font-family="var(--body)">ops / ${o.bars.size} Turns</text>`
         }
         const clampY = (y) => Math.max(ymin, Math.min(y, o.ymax))
+        /* A second series on the same axes, e.g. the Funding per Turn beside the Funding change that builds it. */
+        if (o.line2) {
+          const l2 = o.line2.pts.filter((p) => p[0] <= o.xmax)
+          s += `<polyline fill="none" stroke="${o.line2.color}" stroke-width="2" stroke-linejoin="round" points="${l2.map((p) => X(p[0]).toFixed(1) + ',' + Y(clampY(p[1])).toFixed(1)).join(' ')}"/>`
+          s += l2
+            .map(
+              (p) =>
+                `<circle cx="${X(p[0]).toFixed(1)}" cy="${Y(clampY(p[1])).toFixed(1)}" r="2.5" fill="${o.line2.color}"/>`,
+            )
+            .join('')
+        }
         s += `<polyline fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" points="${o.pts.map((p) => X(p[0]).toFixed(1) + ',' + Y(clampY(p[1])).toFixed(1)).join(' ')}"/>`
         /* A dot on each point, e.g. one per bucket of Turns, so a reader sees where the line has data. */
         if (o.dots)
@@ -1961,7 +1972,7 @@
             mid: from - 1 + (to - from + 1) / 2,
             cr: cnt > 0 ? sum((k) => crOf[k]) / cnt : null,
             fund: sum(fundOf),
-            money: sum(moneyOf) / (to - from + 1),
+            money: sum(moneyOf),
           })
         }
         /* One point per bucket: at its middle, or for Panic, a level rather than a flow, at its last Turn. */
@@ -2017,19 +2028,26 @@
           dots: true,
           fmt: (p) => tipOf(p, `Combat rating ${f(p[1], 0)}`),
         })
-        const fundPts = bpts((b) => b.fund),
-          [f0, f1] = span(fundPts)
+        /* The Funding a Campaign has at the end of each bucket: the starting Funding plus every change so far. */
+        const fund0 = cur.standard.starting_funding,
+          fundAt = (b) => fund0 + fp[Math.min(b.to, HOR)][1],
+          fundPts = bpts((b) => b.fund),
+          fundLevel = [[0, fund0], ...bpts(fundAt, (b) => b.to)],
+          [f0, f1] = span([...fundPts, ...fundLevel]),
+          signed = (v) => (v >= 0 ? '+' : '−') + f(Math.abs(v), 1)
         lineChart($('ch_fund'), {
           pts: fundPts,
+          line2: { pts: fundLevel, color: 'var(--notice)' },
           xmax,
           ymin: f0 < 0 ? f0 * 1.1 : 0,
           ymax: f1 * 1.1,
           xl: 'Turn',
-          label: 'Expected Funding change from the Response Missions of each 10 Turns',
+          label: 'Expected Funding change from the Response Missions of each 10 Turns, and Funding per Turn',
           vl,
           bars,
           dots: true,
-          fmt: (p) => tipOf(p, `Funding ${p[1] >= 0 ? '+' : '−'}${f(Math.abs(p[1]), 1)}`),
+          fmt: (p) =>
+            tipOf(p, `Funding ${signed(p[1])}` + (p[2] ? `, Funding per Turn ${f(fundAt(p[2]), 1)} at the end` : '')),
         })
         const moneyPts = bpts((b) => b.money)
         lineChart($('ch_money'), {
@@ -2037,11 +2055,11 @@
           xmax,
           ymax: span(moneyPts)[1] * 1.1,
           xl: 'Turn',
-          label: 'Expected money per Turn from the won Response Missions of each 10 Turns',
+          label: 'Expected money from the won Response Missions of each 10 Turns',
           vl,
           bars,
           dots: true,
-          fmt: (p) => tipOf(p, `${f(p[1], 1)} money per Turn`),
+          fmt: (p) => tipOf(p, `money +${f(p[1], 1)}`),
         })
         $('o_panic').innerHTML = out([
           ['Expected Panic reaches the limit on Turn', tLim ? f(tLim, 0) : `not within ${HOR}`],
@@ -2055,7 +2073,8 @@
             'Expected cumulative Funding change by Turn 200',
             (fp[200][1] >= 0 ? '+' : '−') + f(Math.abs(fp[200][1]), 1),
           ],
-          ['Expected money per Turn from won Response Missions, Turns 191 to 200', f(mp[200][1], 1)],
+          ['Expected Funding per Turn at the end of Turn 200', f(fund0 + fp[200][1], 1)],
+          ['Expected money from won Response Missions, Turns 191 to 200', f(mp[200][1] * WINDOW, 1)],
         ])
         renderChanges()
         runSims()
