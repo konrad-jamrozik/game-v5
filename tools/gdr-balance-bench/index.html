@@ -1025,6 +1025,9 @@
         bl_skill: 100,
         bl_teams: 3,
         initcr: false,
+        /* Whether the money and Funding charts draw their cumulative lines. */
+        econ_cum: true,
+        init_cum: true,
       }
       /* The color of the Initiative Mission site Combat rating line, wherever it is drawn. */
       const INIT_CR_COLOR = '#c9a2ff'
@@ -1235,31 +1238,31 @@
       fold(
         'econ',
         'Money and Funding received',
-        `<div class="op-legend">${[
+        `<div class="ctl">${tcheck('econ_cum', 'Show cumulative lines')}</div><div class="op-legend">${[
           [MONEY_COLOR, 3, `Money from won Response Missions, per ${OP_BUCKET} Turns`],
-          [MONEY_COLOR, 1.25, 'Money, cumulative'],
+          [MONEY_COLOR, 1.25, 'Money, cumulative', 'econ'],
           [FUNDING_COLOR, 3, `Funding, per ${OP_BUCKET} Turns`],
-          [FUNDING_COLOR, 1.25, 'Funding, cumulative'],
+          [FUNDING_COLOR, 1.25, 'Funding, cumulative', 'econ'],
         ]
           .map(
-            ([c, w, t]) =>
-              `<span><i style="background:${c};height:${w}px;width:16px;vertical-align:middle"></i>${t}</span>`,
+            ([c, w, t, cum]) =>
+              `<span${cum ? ` data-cum="${cum}"` : ''}><i style="background:${c};height:${w}px;width:16px;vertical-align:middle"></i>${t}</span>`,
           )
           .join('')}</div><div class="chart" id="ch_econ"></div>`,
       ) +
       fold(
         'init',
         'Money and Funding from Initiative Missions, Investigation teams beelining',
-        `<div class="ctl">${tin('bl_n', 'Agents per team', { min: 1 })}${tin('bl_skill', 'Effective skill each', { min: 1 })}${tin('bl_teams', 'Teams at once, 1 per Faction', { min: 1, max: 3 })}</div><div class="op-legend">${[
+        `<div class="ctl">${tin('bl_n', 'Agents per team', { min: 1 })}${tin('bl_skill', 'Effective skill each', { min: 1 })}${tin('bl_teams', 'Teams at once, 1 per Faction', { min: 1, max: 3 })}${tcheck('init_cum', 'Show cumulative lines')}</div><div class="op-legend">${[
           [MONEY_COLOR, 3, `Money from won Initiative Missions, per ${OP_BUCKET} Turns`],
-          [MONEY_COLOR, 1.25, 'Money, cumulative'],
+          [MONEY_COLOR, 1.25, 'Money, cumulative', 'init'],
           [FUNDING_COLOR, 3, `Funding, per ${OP_BUCKET} Turns`],
-          [FUNDING_COLOR, 1.25, 'Funding, cumulative'],
+          [FUNDING_COLOR, 1.25, 'Funding, cumulative', 'init'],
           [INIT_CR_COLOR, 2, 'Highest Initiative Mission Combat rating so far'],
         ]
           .map(
-            ([c, w, t]) =>
-              `<span><i style="background:${c};height:${w}px;width:16px;vertical-align:middle"></i>${t}</span>`,
+            ([c, w, t, cum]) =>
+              `<span${cum ? ` data-cum="${cum}"` : ''}><i style="background:${c};height:${w}px;width:16px;vertical-align:middle"></i>${t}</span>`,
           )
           .join('')}</div><div class="chart" id="ch_init"></div>`,
       ) +
@@ -2293,6 +2296,7 @@
               color: MONEY_COLOR,
               width: 1.25,
               dots: true,
+              cum: true,
             },
             {
               pts: [
@@ -2305,11 +2309,15 @@
               color: FUNDING_COLOR,
               width: 1.25,
               dots: true,
+              cum: true,
             },
             { pts: bpts((b) => b.income), color: FUNDING_COLOR, width: 2.5, dots: true },
             { pts: moneyPts, color: MONEY_COLOR, width: 2.5, dots: true },
-          ],
+          ].filter((l) => !l.cum || T.econ_cum !== false),
           econMax = Math.max(1, ...econ.flatMap((l) => l.pts.filter((p) => p[0] <= xmax).map((p) => p[1])))
+        document
+          .querySelectorAll('[data-cum]')
+          .forEach((el) => (el.style.display = T[el.dataset.cum + '_cum'] === false ? 'none' : ''))
         lineChart($('ch_econ'), {
           pts: moneyPts,
           series: econ,
@@ -2358,6 +2366,7 @@
               color: MONEY_COLOR,
               width: 1.25,
               dots: true,
+              cum: true,
             },
             {
               pts: [
@@ -2370,11 +2379,12 @@
               color: FUNDING_COLOR,
               width: 1.25,
               dots: true,
+              cum: true,
             },
             { pts: bpts((b) => b.initIncome), color: FUNDING_COLOR, width: 2.5, dots: true },
             ...(initCrPts.length ? [{ pts: initCrPts, color: INIT_CR_COLOR, width: 2, dots: true }] : []),
             { pts: initMoneyPts, color: MONEY_COLOR, width: 2.5, dots: true },
-          ],
+          ].filter((l) => !l.cum || T.init_cum !== false),
           initMax = Math.max(1, ...initSeries.flatMap((l) => l.pts.filter((p) => p[0] <= xmax).map((p) => p[1]))),
           /* A vertical line where each Faction's Victory path ends, i.e. its last Initiative Mission is Won. */
           initVl = FA.map((x) => {
