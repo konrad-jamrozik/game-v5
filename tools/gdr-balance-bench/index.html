@@ -1251,7 +1251,7 @@
           [MONEY_COLOR, 3, `Money from won Response Missions, per ${OP_BUCKET} Turns`],
           [MONEY_COLOR, 1.25, 'Money, cumulative', 'econ'],
           [FUNDING_COLOR, 3, `Funding change, per ${OP_BUCKET} Turns`],
-          [FUNDING_COLOR, 1.25, 'Funding per Turn: the changes so far, cumulative', 'econ'],
+          [FUNDING_COLOR, 1.25, 'Funding received, cumulative', 'econ'],
         ]
           .map(
             ([c, w, t, cum]) =>
@@ -1266,7 +1266,7 @@
           [MONEY_COLOR, 3, `Money from won Initiative Missions, per ${OP_BUCKET} Turns`],
           [MONEY_COLOR, 1.25, 'Money, cumulative', 'init'],
           [FUNDING_COLOR, 3, `Funding change, per ${OP_BUCKET} Turns`],
-          [FUNDING_COLOR, 1.25, 'Funding per Turn the wins added, cumulative', 'init'],
+          [FUNDING_COLOR, 1.25, 'Funding received, cumulative', 'init'],
           [INIT_CR_COLOR, 2, 'Highest Initiative Mission Combat rating so far'],
         ]
           .map(
@@ -1281,7 +1281,7 @@
         `Combat rating of Response Missions, P50, P70, and P90 of each ${OP_BUCKET} Turns`,
         `<div class="ctl">${tcheck('initcr', 'Show the highest Initiative Mission Combat rating so far')}</div><div class="op-legend">${CR_PCTS.map(([q, c]) => `<span><i style="background:${c};height:2px;width:16px;vertical-align:middle"></i>P${q}</span>`).join('')}<span><i style="background:var(--danger);height:3px;width:16px;vertical-align:middle"></i>Strongest possible site, more opaque the likelier</span></div><div class="chart" id="ch_cr"></div>`,
       ) +
-      `<div id="o_panic"></div><div class="note">An expected-value estimate with no Faction Eliminated and no Panic reduction from won Initiative Missions: each level lasts its mean duration, operations arrive at the mean interval, each operation's Response Mission site is equally likely to be any of its level's, and every operation not won is ignored or lost. A Response Mission's Combat rating is its Enemies' at full health; the P50, P70, and P90 lines give the Combat rating that half, 70%, and 90% of a 10 Turns' Response Missions are expected not to exceed, each site weighted by its expected count; the band marks the test team's Combat rating. Each red mark gives the Combat rating of the strongest Response Mission site its 10 Turns can bring, and its saturation the chance that site comes at least once in them, taking the operations as a Poisson process. Funding and money count every operation, including the ones after the Campaign may already have been lost. The Initiative Missions chart assumes the set number of Investigation teams, each beelining one Faction's Victory path at a time, the Factions in turn: one team first investigates Criminal organizations, then each Lead takes its mean Turns for that team, and each Initiative Mission site a Lead creates is Won in the last Turn before it expires, which discovers the next Lead. Its Funding change per 10 Turns is the Funding change of the Initiative Missions won in them, and its cumulative Funding the sum of those changes so far, i.e. the Funding per Turn they have added; its Combat rating line is the highest Combat rating of the Initiative Mission sites created so far, so it never falls. Response operations go on as above, with no Faction Eliminated. The Response chart's Funding change per 10 Turns is the change its operations make to the Funding per Turn, Won ones adding and lost ones taking away, not the Funding paid out in those Turns; its cumulative Funding is the Funding per Turn reached, starting from the starting Funding only when its checkbox is on; the money counts only won Response Missions, not the starting money or any spending.</div>`,
+      `<div id="o_panic"></div><div class="note">An expected-value estimate with no Faction Eliminated and no Panic reduction from won Initiative Missions: each level lasts its mean duration, operations arrive at the mean interval, each operation's Response Mission site is equally likely to be any of its level's, and every operation not won is ignored or lost. A Response Mission's Combat rating is its Enemies' at full health; the P50, P70, and P90 lines give the Combat rating that half, 70%, and 90% of a 10 Turns' Response Missions are expected not to exceed, each site weighted by its expected count; the band marks the test team's Combat rating. Each red mark gives the Combat rating of the strongest Response Mission site its 10 Turns can bring, and its saturation the chance that site comes at least once in them, taking the operations as a Poisson process. Funding and money count every operation, including the ones after the Campaign may already have been lost. The Initiative Missions chart assumes the set number of Investigation teams, each beelining one Faction's Victory path at a time, the Factions in turn: one team first investigates Criminal organizations, then each Lead takes its mean Turns for that team, and each Initiative Mission site a Lead creates is Won in the last Turn before it expires, which discovers the next Lead. Its Funding change per 10 Turns is the Funding change of the Initiative Missions won in them, and its cumulative Funding all the Funding those wins have paid out so far, each from the Turn it is won in; its Combat rating line is the highest Combat rating of the Initiative Mission sites created so far, so it never falls. Response operations go on as above, with no Faction Eliminated. The Response chart's Funding change per 10 Turns is the change its operations make to the Funding per Turn, Won ones adding and lost ones taking away, not the Funding paid out in those Turns; its cumulative Funding is all the Funding received so far, counting the starting Funding only when its checkbox is on; the money counts only won Response Missions, not the starting money or any spending.</div>`,
     'read',
   )}
   </div></div></section>`)
@@ -2334,12 +2334,12 @@
               dots: true,
               cum: true,
             },
-            /* Cumulative Funding: the sum of the changes so far, i.e. the Funding per Turn at the end of the bucket. */
+            /* Cumulative Funding: all the Funding received so far, each Turn paying out the Funding per Turn it has. */
             {
               pts: [
-                [0, fundOn(0)],
+                [0, 0],
                 ...bpts(
-                  (b) => fundOn(b.to),
+                  (b) => b.incomeSum,
                   (b) => b.to,
                 ),
               ],
@@ -2379,7 +2379,7 @@
                   fx(fundOn(p[2].to), 1),
                   'per Turn at the end ·',
                   fx(p[2].incomeSum, 0),
-                  'received so far',
+                  'cumulative',
                 ],
                 [
                   'Money'.padEnd(8),
@@ -2388,7 +2388,7 @@
                   fx(p[2].money / (p[2].to - p[2].from + 1), 1),
                   'per Turn in these Turns ·',
                   fx(p[2].moneySum, 0),
-                  'so far',
+                  'cumulative',
                 ],
               ]),
             ),
@@ -2413,7 +2413,7 @@
               pts: [
                 [0, 0],
                 ...bpts(
-                  (b) => b.initGainSum,
+                  (b) => b.initIncomeSum,
                   (b) => b.to,
                 ),
               ],
@@ -2452,7 +2452,7 @@
                   fx(p[2].initGainSum, 1),
                   'per Turn at the end ·',
                   fx(p[2].initIncomeSum, 0),
-                  'received so far',
+                  'cumulative',
                 ],
                 [
                   'Money'.padEnd(8),
@@ -2461,7 +2461,7 @@
                   fx(p[2].initMoney / (p[2].to - p[2].from + 1), 1),
                   'per Turn in these Turns ·',
                   fx(p[2].initMoneySum, 0),
-                  'so far',
+                  'cumulative',
                 ],
               ]) + (p[2].initBest ? '\n' + initBestLine(p[2].initBest) : ''),
             ),
