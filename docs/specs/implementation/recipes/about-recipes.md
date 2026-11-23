@@ -4,21 +4,21 @@
 
 # What this family is for
 
-Some implementation tasks recur and are easy to get subtly wrong, e.g. publishing an Implementation or bringing it up to date with changed specifications. Recipes specifications suggest the steps for carrying out one such task. Like Guidance, they bind no Implementation.
+Some implementation tasks recur and are easy to get subtly wrong, e.g. publishing a change or updating the globe. Recipes specifications suggest the steps for such a task and the reasons behind its setup that the code cannot show. Like Guidance, they bind no Implementation.
 
 # Documents
 
 ## GitHub Pages Deployment
 
-[GitHub Pages Deployment](github-pages-deployment.md) answers _how does an implementation get published once the Engine designer asks for it?_ It takes an implementation whose Game build a browser runs from static files to a public GitHub repository, whose CI workflows deploy every push to GitHub Pages and run every check once a day.
+[GitHub Pages Deployment](github-pages-deployment.md) answers _how does a change to the Implementation reach players?_
 
 ## Globe Integration
 
-[Globe Integration](globe-integration.md) answers _how does an implementation show the rotating Earth that the Spec repo keeps?_ It has the implementer copy the reference globe's maps and scene into the Implementation repo and mount them as a decoration that reads no game state and costs nothing until the Player opens it.
+[Globe Integration](globe-integration.md) answers _how does an implementation show the rotating Earth that the Spec repo keeps?_ It keeps the Implementation's globe an unchanged copy of the reference globe, shown as a decoration that reads no game state.
 
 # How they relate
 
-Every Recipes specification carries out a task on files that the Mandatory family constrains. GitHub Pages Deployment uses Implementation Placement, because the published repository is the Implementation repo; it also points to Tech Stack Suggestion of the Guidance family, for a toolchain that keeps the checks fast. Specification Updates uses all three Mandatory specifications, because an update reads the tracking files and settles feedback entries. Globe Integration uses Implementation Placement and Specification Tracking, because the globe is copied into the Implementation repo and its files are recorded there; it also uses the other two Recipes specifications, for keeping the copy current and for serving the maps once published.
+Both Recipes specifications work on files that Implementation Placement of the Mandatory family constrains: GitHub Pages Deployment publishes the Implementation repo, and Globe Integration copies the globe into it and keeps the copy current.
 
 <!-- generated:family-diagram:start -->
 
@@ -36,4 +36,4 @@ No specification of this family links another specification of it.
 
 # Why these boundaries
 
-Specification Tracking and Specification Updates are split for the same reason that Mandatory and Recipes are: the files an implementation keeps can be checked in its files, so they are Mandatory, while the way an implementer uses them to catch up is advice that an implementation can ignore and still be correct.
+Recipes are split from Mandatory for the same reason Guidance is: the files an implementation keeps can be checked in its files, so they are Mandatory, while the way an implementer carries out a task on them is advice that an Implementation can ignore and still be correct.

@@ -24,25 +24,21 @@ Each Implementation must reside in its own Implementation repo, a sibling of the
 
 # Implementation repo
 
-Every Implementation must reside entirely in its Implementation repo, never inside the Spec repo. E.g., when the Spec repo is `repos/game-v5/`, an Implementation resides in `repos/game-v5-impl-a/`.
+Every Implementation must reside entirely in its Implementation repo, never inside the Spec repo. Every file that the Implementation consists of, or that is needed to install, develop, build, test, or run it, must be inside its Implementation repo; e.g., its dependency declarations, lint and format configuration, and Git ignore rules.
 
-Every file that the Implementation consists of, or that is needed to install, develop, build, test, or run it, must be inside its Implementation repo; e.g., its dependency declarations, build and project configuration, lint and format configuration, scripts, tests, and Git ignore rules.
-
-The Implementation name must consist of lowercase letters, digits, and single hyphens, must start with a letter, and must differ from the name of every other directory in the parent directory of the Spec repo. The Implementation name should start with the name of the root directory of the Spec repo followed by `-impl-`, e.g. `game-v5-impl-a`. Which name an Implementation uses within these constraints is the Implementer's choice.
+The Implementation name must consist of lowercase letters, digits, and single hyphens, must start with a letter, and must differ from the name of every other directory in the parent directory of the Spec repo. The Implementation name should start with the name of the root directory of the Spec repo followed by `-impl-`, e.g. `game-v5-impl-a`.
 
 ## Creating the Implementation repo
 
-The Implementer creates the Implementation repo as a new local directory and initializes it at once as a local Git repository with `main` as its default branch, so that the Implementation has a Git history from the start; e.g., the Implementer may commit each completed step to review or revert it later.
+The Implementation repo is a Git repository whose default branch is `main`, and it must be ready to become a standalone repository, e.g. by holding its own Git ignore rules. The Implementer must not add a Git remote to it, push from it, or publish it in any other way until the Engine designer has decided whether it gets a remote repository and where that repository is hosted.
 
-The Implementer must not add a Git remote to the Implementation repo, push from it, or publish it in any other way; whether the Implementation gets a remote repository, e.g. on GitHub, and where that repository is hosted, is decided by the Engine designer after the Implementation is reviewed. The Implementation repo must be ready to become a standalone repository, e.g. by holding its own Git ignore rules.
+The Implementation repo must hold a `.gitattributes` file that stores every text file with LF line endings and checks it out with LF, e.g. `* text=auto eol=lf`. Without it, a checkout on Windows with `core.autocrlf` enabled shows files as modified whose content is unchanged.
 
-The Implementation repo must hold a `.gitattributes` file that stores every text file with LF line endings and checks it out with LF, e.g. `* text=auto eol=lf`. Without it, a checkout on Windows with `core.autocrlf` enabled shows files as modified whose content is unchanged, e.g. after the formatter rewrites them.
-
-The Implementation repo must hold an `AGENTS.md` file at its root that tells every agent not to start a session in the Implementation repo, and to start it in the Spec repo instead and work on the Implementation repo from there. The agent instructions, skills, and conventions that govern work on an Implementation, e.g. the `apply` skill and the rules for editing files and running commands, reside in the Spec repo, and a session started in the Implementation repo does not load them. The file must name the Spec repo by its location relative to the Implementation repo, e.g. `../game-v5`, and must hold no other agent instruction, so that no instruction applies only to a session that starts there.
+The Implementation repo must hold an `AGENTS.md` file at its root that tells every agent not to start a session in the Implementation repo, and to start it in the Spec repo instead and work on the Implementation repo from there. The agent instructions, skills, and conventions that govern work on an Implementation reside in the Spec repo, and a session started in the Implementation repo does not load them. The file must name the Spec repo by its location relative to the Implementation repo, e.g. `../game-v5`, and must hold no other agent instruction, so that no instruction applies only to a session that starts there.
 
 # Repository root of an Implementation
 
-An Implementation must treat the root directory of its Implementation repo as its repository root and must behave as if nothing outside it existed:
+An Implementation must treat the root directory of its Implementation repo as its repository root and must behave as if nothing outside it existed. What it needs from outside, e.g. a CI job, it provides inside its Implementation repo:
 
 - It must not add, change, or delete any file outside its Implementation repo; e.g., it must not add files to the Spec repo.
 - It must not read, import, extend, or execute any file outside its Implementation repo; e.g., it must not import from another Implementation, extend the build or project configuration of the Spec repo, run its scripts, or use the dependencies installed for it.
@@ -54,20 +50,16 @@ The [GDRs](../../design/content/gdrs.md) are authored under the `content/` direc
 
 ## Music in an Implementation
 
-The [Soundtrack](../../design/ui/music.md#glossary) is authored under the `assets/music/tracks/` directory of the Spec repo. An Implementation that plays it must hold its own copy of every [Track](../../design/ui/music.md#glossary) file inside its Implementation repo, unchanged, and its Game build must serve that copy rather than the `assets/music/tracks/` directory of the Spec repo; e.g., a web Implementation built with Vite copies the files to `public/music/`.
+The [Soundtrack](../../design/ui/music.md#glossary) is authored under the `assets/music/tracks/` directory of the Spec repo. An Implementation that plays it must hold its own copy of every [Track](../../design/ui/music.md#glossary) file inside its Implementation repo, unchanged, and its Game build must serve that copy rather than the `assets/music/tracks/` directory of the Spec repo.
 
 ## Sounds in an Implementation
 
-The [Sound set](../../design/ui/sounds.md#glossary) is authored under the `assets/sounds/` directory of the Spec repo. An Implementation that plays it must hold its own copy of every [Sound](../../design/ui/sounds.md#glossary) file inside its Implementation repo, unchanged, and its Game build must serve that copy rather than the `assets/sounds/` directory of the Spec repo; e.g., a web Implementation built with Vite copies the files to `public/sounds/`.
+The [Sound set](../../design/ui/sounds.md#glossary) is authored under the `assets/sounds/` directory of the Spec repo. An Implementation that plays it must hold its own copy of every [Sound](../../design/ui/sounds.md#glossary) file inside its Implementation repo, unchanged, and its Game build must serve that copy rather than the `assets/sounds/` directory of the Spec repo.
 
 ## Artwork in an Implementation
 
-The [Background artwork](../../design/ui/visual-design.md#glossary) is authored under the `assets/images/` directory of the Spec repo. An Implementation that shows it must hold its own copy of every image file it shows inside its Implementation repo, unchanged, and its Game build must serve that copy rather than the `assets/images/` directory of the Spec repo; e.g., a web Implementation built with Vite copies the files to `public/images/`. The image path in a BackgroundArtwork [GDR](../../design/foundation/core-concepts.md#game-build-and-content) names a file of the Spec repo; the Game build shows the Implementation's copy of that file, e.g. the path `assets/images/chatgpt-agents-i2.png` is served as `public/images/chatgpt-agents-i2.png`.
+The [Background artwork](../../design/ui/visual-design.md#glossary) is authored under the `assets/images/` directory of the Spec repo. An Implementation that shows it must hold its own copy of every image file it shows inside its Implementation repo, unchanged, and its Game build must serve that copy rather than the `assets/images/` directory of the Spec repo. The image path in a BackgroundArtwork [GDR](../../design/foundation/core-concepts.md#game-build-and-content) names a file of the Spec repo, and the Game build shows the Implementation's copy of that file.
 
 ## Keeping the copies current
 
 A copy that drifts from its original makes the game differ from its design without anyone deciding so, so no copy is edited by hand. The Implementation repo holds one script, run as `npm run sync:spec`, that mirrors every copied file from a commit of the Spec repo: it adds, replaces, and deletes files until each copy equals its original, and with `--check` it only reports the differences. Each commit of the Implementation that follows the specifications names the commit of the Spec repo it follows in a `Spec:` trailer of its message.
-
-# Edge cases and failure behavior
-
-An Implementation that needs a change outside its Implementation repo, e.g. a new CI job in the Spec repo, cannot obtain it under these constraints; it provides the equivalent inside its Implementation repo instead, e.g. a script of its own that runs its checks.

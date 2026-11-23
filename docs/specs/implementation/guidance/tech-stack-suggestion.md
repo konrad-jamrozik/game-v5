@@ -10,31 +10,17 @@
 
 # Overview
 
-A browser Implementation needs many technology choices before its first gameplay code, and a coherent starting set saves that effort. If an Implementation uses a browser as its GUI, the Implementer may consider the suggested stack, though an Implementation may choose any other.
-
-The stack centers on one toolchain, React for the user interface, and Redux Toolkit for state with undo and redo. Its technologies may be obsolete by the time an Implementation starts, so the Implementer is expected to use their judgement and prefer newer technologies, or newer versions, where they serve the Implementation better.
+The browser Implementation has chosen its stack, and its dependency declarations list it. A few of the choices carry a reason that a later change of technology is suggested to keep, and some libraries fail in ways that are slow to diagnose.
 
 # Suggested stack
 
-The stack covers the toolchain, the user interface, and the data the game keeps, with each technology's companion libraries listed with it.
+The reasons below are suggested to outlive any particular library.
 
-- TypeScript 7 or later, with its native compiler `tsc`.
-- [Vite+](https://viteplus.dev/), a unified toolchain that bundles Vite, Vitest, and the [Oxc](https://oxc.rs/) tools behind one command line, with:
-  - `@vitejs/plugin-react` and the React Compiler in Vite.
-  - Testing Library, jsdom, and `@vitest/coverage-v8` in Vitest.
-  - Oxlint for linting and Oxfmt for formatting.
-- React.
-- Redux Toolkit (RTK), with React Redux and `redux-undo` for undo and redo.
-- MUI, with Emotion, MUI Icons, and MUI X Charts, Data Grid, and Tree View.
-- Dexie, with `dexie-react-hooks`, for IndexedDB persistence.
-- dependency-cruiser for enforcing module dependency rules.
+- **A fast quick check:** the toolchain is [Vite+](https://viteplus.dev/), whose native [Oxc](https://oxc.rs/) linter and formatter, with the native TypeScript compiler, keep formatting, linting, and type checking to seconds, because the quick check runs far more often than anything else.
+- **[World states](../../design/foundation/engine-contract.md#player-actions-and-turns) that share their unchanged parts:** Immer produces each World state as an immutable value that shares what did not change with the one before it, as [Storage Schema](storage-schema.md) suggests for undo and redo.
 
 # Known pitfalls
 
-Some libraries in or near the stack fail in ways that are slow to diagnose, and each pitfall below names the symptom and the remedy.
+Each pitfall below names the symptom and the remedy.
 
 - **Unstable table data:** A headless table library that derives its rows from the data it is given, e.g. TanStack Table's `useReactTable`, can re-render without end, and freeze the page, when it receives a new data array on every render. Pass it an array whose reference changes only when its content does, e.g. one built with `useMemo`.
-
-# References
-
-The stack was originally adapted from the stack of the `web` directory of [game-ts](https://github.com/konrad-jamrozik/game-ts/).

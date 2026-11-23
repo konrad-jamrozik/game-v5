@@ -10,9 +10,7 @@
 
 # Overview
 
-The Game designer retunes the game often, e.g. by changing the hire cost of an Agent in a [GDR](../../design/foundation/core-concepts.md#game-build-and-content) or a Game designer value of a [Tuning parameter](../../design/autopilot-ais/basic-autopilot-ai.md#glossary). A test that copies such a value into what it expects, e.g. an expected cost of 150 read off a GDR file, breaks at every retune without any defect in the Implementation. Updating it to whatever the code now produces then becomes routine, and the same routine would hide a real defect.
-
-Every Implementation therefore takes each retunable value a test depends on from the Game build under test, or sets it in the test itself, and derives what the test expects from the rule it checks, so that a retune changes no test.
+The Game designer retunes the game often, e.g. by changing the hire cost of an Agent in a [GDR](../../design/foundation/core-concepts.md#game-build-and-content) or a Game designer value of a [Tuning parameter](../../design/autopilot-ais/basic-autopilot-ai.md#glossary). A test that copies such a value into what it expects breaks at every retune without any defect in the Implementation. Updating it to whatever the code now produces then becomes routine, and the same routine would hide a real defect. Every Implementation therefore keeps its tests such that a retune changes none of them.
 
 # Glossary
 
@@ -23,14 +21,9 @@ Every Implementation therefore takes each retunable value a test depends on from
 
 # Expected values
 
-For every automated test of the [Implementation repo](implementation-placement.md#glossary), the following rules are complete:
+The following rules bind every automated test of the [Implementation repo](implementation-placement.md#glossary). A number written in the text of a rule, e.g. a boundary or a limit that the rule itself gives, is not a Retunable value, and a test may write it as a literal.
 
-- **Retunable values from the Game build:** A test must take each Retunable value that what it expects depends on from where the Game build under test holds it, e.g. by reading the GDR, or set it as a Fixture value. It must not write a Retunable value of the Game build as a literal, e.g. an expected cost of 150 copied from a GDR file, and a change to the Implementation must not replace a value a test reads from the Game build with such a literal.
+- **Retunable values from the Game build:** A test must take each Retunable value that what it expects depends on from where the Game build under test holds it, e.g. by reading the GDR, or set it as a Fixture value. It must not write a Retunable value of the Game build as a literal, e.g. an expected cost of 150 copied from a GDR file, and a change to the Implementation must not replace a value a test reads from the Game build with such a literal, also not to repair a test that a retune broke.
 - **Expected values from the rule:** A test must derive each value it expects from the rule it checks, e.g. by applying the formula of the specification that owns the rule to the values above, and must not copy it from the output of the code under test.
 - **Content checked by structure:** A test that checks the content of the Game build must check its structure, e.g. that every Lead chain reaches its Terminate Lead, and must not check a count of it, e.g. how many GDRs or Compendium articles it holds.
 - **Worked examples from their own inputs:** A test that checks a worked example of a specification must set the example's inputs as Fixture values, so that the example's result follows from the example rather than from the content of the day.
-
-# Edge cases and failure behavior
-
-- **A number a specification states:** A number written in the text of a rule, e.g. a boundary or a limit that the rule itself gives, is not a Retunable value, and a test may write it as a literal.
-- **A test that breaks at a retune:** A test that fails only because a Retunable value changed breaks this specification. It is fixed by taking the value from the Game build or setting it as a Fixture value, never by writing the new value in place of the old.
