@@ -1,7 +1,8 @@
 /**
  * Worker thread of server.ts. It loads the engine straight from the TypeScript source of the game-v5-impl-web clone,
  * so it runs the engine as it is on disk when the thread starts, and fights the jobs server.ts hands it: each one batch
- * of Detached Combats, `developer.tools.fightCombatBatch`, between two teams of explicit Combatants.
+ * of Detached Combats between two teams of explicit Combatants, fought one by one with `developer.tools.fightCombat`
+ * so that each Combat's report gives the Agents' attacks.
  */
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
@@ -57,6 +58,9 @@ export type JobResult =
       retreated: number
       wiped: number
       agentsDead: number
+      /** The attacks the Agents made, summed over the Combats, and the most one Agent made in one Combat. */
+      agentAttacks: number
+      agentAttacksMax: number
       /** With `detail`, one entry per Combat, in order. */
       finals?: Finals[]
     }
@@ -69,23 +73,13 @@ interface Engine {
             ok: true
             value: {
               summary: { outcome: string; agentsDead: number }
+              combatReport: { agents: string[]; log: { attacker: string }[] }
               participants: {
                 side: string
                 dead: boolean
                 finalCurrentHealthHundredths: number
                 finalExhaustion: number
               }[]
-            }
-          }
-        | { ok: false; error: { message: string } }
-      fightCombatBatch(
-        setup: unknown,
-        count: number,
-      ):
-        | {
-            ok: true
-            value: {
-              totals: { fought: number; won: number; retreated: number; wiped: number; agentsDead: number }
             }
           }
         | { ok: false; error: { message: string } }
@@ -146,25 +140,28 @@ async function fight(job: Job): Promise<JobResult> {
     seed: job.seed,
   }
   const from = job.from ?? 0
-  if (from === 0 && !job.detail) {
-    const result = engine.developer.tools.fightCombatBatch(setup, job.trials)
-    if (!result.ok) {
-      return { ...head, error: result.error.message }
-    }
-    return { ...head, ...result.value.totals }
-  }
-  // Combat i of a batch is the Detached Combat on the seed `<seed>#<i>`, so fighting them one by one continues a batch
-  // and shows each Combat's final values.
-  const totals = { fought: 0, won: 0, retreated: 0, wiped: 0, agentsDead: 0 }
+  // Combat i of a batch is the Detached Combat on the seed `<seed>#<i>`, so fighting them one by one fights the same
+  // Combats as `fightCombatBatch`, continues a batch, and gives each Combat's report, from which the Agents' attacks
+  // are counted, and its final values.
+  const totals = { fought: 0, won: 0, retreated: 0, wiped: 0, agentsDead: 0, agentAttacks: 0, agentAttacksMax: 0 }
   const finals: Finals[] = []
   for (let i = from + 1; i <= from + job.trials; i += 1) {
     const result = engine.developer.tools.fightCombat({ ...setup, seed: `${job.seed}#${i}` })
     if (!result.ok) {
       return { ...head, error: result.error.message }
     }
-    const { summary, participants } = result.value
+    const { summary, participants, combatReport } = result.value
     totals.fought += 1
     totals.agentsDead += summary.agentsDead
+    const attacks = new Map<string, number>(combatReport.agents.map((id) => [id, 0]))
+    for (const record of combatReport.log) {
+      const n = attacks.get(record.attacker)
+      if (n !== undefined) {
+        attacks.set(record.attacker, n + 1)
+        totals.agentAttacks += 1
+      }
+    }
+    totals.agentAttacksMax = Math.max(totals.agentAttacksMax, ...attacks.values())
     if (summary.outcome === 'Won') {
       totals.won += 1
     } else if (summary.outcome === 'Retreated') {

@@ -1532,6 +1532,15 @@
         for (const k of ['fought', 'won', 'retreated', 'wiped', 'agentsDead']) {
           r[k] += m[k]
         }
+        // The Agents' attacks, which a result fought before they were counted lacks: aN is the Combats they cover.
+        if (!keep) {
+          Object.assign(r, { agentAttacks: 0, agentAttacksMax: 0, aN: 0 })
+        }
+        if (m.agentAttacks !== undefined) {
+          r.agentAttacks = (r.agentAttacks ?? 0) + m.agentAttacks
+          r.agentAttacksMax = Math.max(r.agentAttacksMax ?? 0, m.agentAttacksMax)
+          r.aN = (r.aN ?? 0) + m.fought
+        }
         if (m.finals && cell) {
           const d = finalsOf(cell, m.finals)
           if (!(keep && r.dN === job.from && r.crSig === d.crSig)) {
@@ -2807,6 +2816,12 @@
         if (shown) {
           lines.push(
             `won ${shown.won} of ${shown.fought}; Agents killed ${fmt(shown.agentsDead / shown.fought, 1)} per Combat${shown.retreated ? `; retreated ${shown.retreated}` : ''}${r ? '' : `; ${cell.trials} asked for`}`,
+          )
+          const agents = cell.groups.reduce((sum, g) => sum + g.count, 0)
+          lines.push(
+            shown.fought > 0 && shown.aN === shown.fought
+              ? `Agent attacks ${fmt(shown.agentAttacks / (shown.fought * agents), 1)} per Agent per Combat on average, at most ${shown.agentAttacksMax} by one Agent in one Combat`
+              : 'Agent attacks not counted: fought before they were; run it again',
           )
           if (shown.dN > 0) {
             lines.push(
