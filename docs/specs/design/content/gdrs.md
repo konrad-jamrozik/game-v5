@@ -126,7 +126,7 @@ Type owner: [Investigations](../mechanics/investigations.md).
 | `standard_investigation` | InvestigationArchetype | Archetype | The [Archetype](../foundation/core-concepts.md#campaign-instances) of every Investigation. |
 | `investigation_parameters` | InvestigationParameters | Calculation parameter | The team efficiency exponent 0.8, the greatest [Actual required progress](../mechanics/investigations.md#glossary) of 150% of a Lead's [Required progress](../mechanics/leads-and-progression.md#glossary), and the assessment threshold of 25%. |
 
-An Investigation reads the `required_progress` of its Lead, under [Lead properties this document reads](../mechanics/investigations.md#lead-properties-this-document-reads).
+An Investigation reads the `required_progress` of its Lead, under [Lead properties this document reads](../mechanics/investigations.md#required-progress-range-and-outcome).
 
 ## Missions GDRs
 
