@@ -25,9 +25,9 @@ A → B means A is referenced by B: the text of B links to A. Layer 1 is drawn a
 | 3 | NUMBERS Numbers | CORE, ENG |
 | 4 | DETERM Determinism and Randomness | CORE, CSTATE, ENG |
 | 4 | GDR Game Data Records | CORE, CSTATE, ENG |
+| 5 | AUTO Autopilot | CORE, DETERM, ENG |
 | 5 | CINST Campaign Instances | CORE, DETERM, ENG |
 | 5 | SAVES Saves | CORE, CSTATE, DETERM, ENG |
-| 6 | AUTO Autopilot | CORE, DETERM, ENG, SAVES |
 | 6 | LIFE Campaign Lifecycle | CORE, ENG, SAVES |
 | 6 | TIMELINE Timeline | CORE, CSTATE, ENG, SAVES |
 | 6 | TODOS Outstanding Work Items | CINST, CORE, CSTATE, DETERM, ENG |
