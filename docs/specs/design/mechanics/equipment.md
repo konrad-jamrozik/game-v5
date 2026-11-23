@@ -26,6 +26,7 @@ Equipment builds on [Combat](combat.md), which owns the Weapon, Armor, and AmmoT
 | Unlocked | Whether the Agency may buy an Item or an AmmoType. |  |
 | Sale value | The money selling Items brings: [a share of their `price`](#selling-items). |  |
 | Ammo short | Whether Storage holds fewer rounds of an AmmoType than the Serving Agents whose Weapons use it should have at hand. |  |
+| Recovered Item | An Item worn by an Agent [Killed](agents-spec.md#agent-statuses) in a Won [Mission](domain-model.md#leads-investigations-mission-sites-and-missions), which goes back into Storage. Spoils of war are never Recovered Items. | Returned item |
 | Spoils of war | The Weapons and [Ammo](combat.md#ammo) a Won [Mission](domain-model.md#leads-investigations-mission-sites-and-missions) adds to Storage. | Loot |
 
 # Equipment GDRs
@@ -126,7 +127,7 @@ What becomes of the Items worn by the Agents of a Mission's Team sent depends on
 
 | Combat outcome | Agents Killed in the Combat | Survivors |
 | --- | --- | --- |
-| Won | Their Items go into Storage. | Keep their Items. |
+| Won | Their Items go into Storage as Recovered Items. | Keep their Items. |
 | Retreated | Their Items are lost. | Keep their Items. |
 | Wiped | Their Items are lost. | Their Items are lost, and each then wears the Fallback Weapon and the Fallback Armor. |
 
@@ -145,7 +146,7 @@ E.g., with a `spoils_ammo_max` of 4, a Won Mission against four Enemies with rif
 
 # Turn report
 
-The [Turn report](../foundation/campaign-state.md#glossary) of an Advance turn holds, for each Mission resolved in it, the Items lost, the Items that went into Storage, and the spoils of war, each as counts per Item or AmmoType, and, for each [Combat report](combat.md#combat-report), the rounds of each AmmoType its Combat spent. It also holds the Items and AmmoTypes that became Unlocked in it. The [History entry](../foundation/world-history.md#glossary) of the Turn the Advance turn ends holds all of these.
+The [Turn report](../foundation/campaign-state.md#glossary) of an Advance turn holds, for each Mission resolved in it, the Items lost, the Recovered Items, and the Spoils of war, each as counts per Item or AmmoType, and, for each [Combat report](combat.md#combat-report), the rounds of each AmmoType its Combat spent. It also holds the Items and AmmoTypes that became Unlocked in it. The [History entry](../foundation/world-history.md#glossary) of the Turn the Advance turn ends holds all of these.
 
 # Player-visible information
 
