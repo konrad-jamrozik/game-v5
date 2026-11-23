@@ -1031,6 +1031,15 @@
       }
       /* The color of the Initiative Mission site Combat rating line, wherever it is drawn. */
       const INIT_CR_COLOR = '#c9a2ff'
+      /*
+       * The percentiles of the Response Mission Combat rating chart and their colors, the higher the more dangerous, in
+       * the order of the Agent health scale: Warning, Accent, Danger.
+       */
+      const CR_PCTS = [
+        [50, 'var(--warning)'],
+        [70, 'var(--accent)'],
+        [90, 'var(--danger)'],
+      ]
       let T = clone(TEAM0)
       const get = (o, p) => p.split('.').reduce((a, k) => (a == null ? a : a[k]), o)
       const set = (o, p, v) => {
@@ -1269,10 +1278,10 @@
       fold('panic', `Panic at the end of each ${OP_BUCKET} Turns`, `<div class="chart" id="ch_panic"></div>`) +
       fold(
         'cr',
-        `Combat rating of Response Missions, mean of each ${OP_BUCKET} Turns`,
-        `<div class="ctl">${tcheck('initcr', 'Show the highest Initiative Mission Combat rating so far')}</div><div class="chart" id="ch_cr"></div>`,
+        `Combat rating of Response Missions, P50, P70, and P90 of each ${OP_BUCKET} Turns`,
+        `<div class="ctl">${tcheck('initcr', 'Show the highest Initiative Mission Combat rating so far')}</div><div class="op-legend">${CR_PCTS.map(([q, c]) => `<span><i style="background:${c};height:2px;width:16px;vertical-align:middle"></i>P${q}</span>`).join('')}<span><i style="background:var(--danger);height:3px;width:16px;vertical-align:middle"></i>Strongest possible site, more opaque the likelier</span></div><div class="chart" id="ch_cr"></div>`,
       ) +
-      `<div id="o_panic"></div><div class="note">An expected-value estimate with no Faction Eliminated and no Panic reduction from won Initiative Missions: each level lasts its mean duration, operations arrive at the mean interval, each operation's Response Mission site is equally likely to be any of its level's, and every operation not won is ignored or lost. A Response Mission's Combat rating is its Enemies' at full health; the band marks the test team's Combat rating. Each red mark gives the Combat rating of the strongest Response Mission site its 10 Turns can bring, and its saturation the chance that site comes at least once in them, taking the operations as a Poisson process. Funding and money count every operation, including the ones after the Campaign may already have been lost. The Initiative Missions chart assumes the set number of Investigation teams, each beelining one Faction's Victory path at a time, the Factions in turn: one team first investigates Criminal organizations, then each Lead takes its mean Turns for that team, and each Initiative Mission site a Lead creates is Won in the last Turn before it expires, which discovers the next Lead. Its Funding change per 10 Turns is the Funding change of the Initiative Missions won in them, and its cumulative Funding the sum of those changes so far, i.e. the Funding per Turn they have added; its Combat rating line is the highest Combat rating of the Initiative Mission sites created so far, so it never falls. Response operations go on as above, with no Faction Eliminated. The Response chart's Funding change per 10 Turns is the change its operations make to the Funding per Turn, Won ones adding and lost ones taking away, not the Funding paid out in those Turns; its cumulative Funding is the Funding per Turn reached, starting from the starting Funding only when its checkbox is on; the money counts only won Response Missions, not the starting money or any spending.</div>`,
+      `<div id="o_panic"></div><div class="note">An expected-value estimate with no Faction Eliminated and no Panic reduction from won Initiative Missions: each level lasts its mean duration, operations arrive at the mean interval, each operation's Response Mission site is equally likely to be any of its level's, and every operation not won is ignored or lost. A Response Mission's Combat rating is its Enemies' at full health; the P50, P70, and P90 lines give the Combat rating that half, 70%, and 90% of a 10 Turns' Response Missions are expected not to exceed, each site weighted by its expected count; the band marks the test team's Combat rating. Each red mark gives the Combat rating of the strongest Response Mission site its 10 Turns can bring, and its saturation the chance that site comes at least once in them, taking the operations as a Poisson process. Funding and money count every operation, including the ones after the Campaign may already have been lost. The Initiative Missions chart assumes the set number of Investigation teams, each beelining one Faction's Victory path at a time, the Factions in turn: one team first investigates Criminal organizations, then each Lead takes its mean Turns for that team, and each Initiative Mission site a Lead creates is Won in the last Turn before it expires, which discovers the next Lead. Its Funding change per 10 Turns is the Funding change of the Initiative Missions won in them, and its cumulative Funding the sum of those changes so far, i.e. the Funding per Turn they have added; its Combat rating line is the highest Combat rating of the Initiative Mission sites created so far, so it never falls. Response operations go on as above, with no Faction Eliminated. The Response chart's Funding change per 10 Turns is the change its operations make to the Funding per Turn, Won ones adding and lost ones taking away, not the Funding paid out in those Turns; its cumulative Funding is the Funding per Turn reached, starting from the starting Funding only when its checkbox is on; the money counts only won Response Missions, not the starting money or any spending.</div>`,
     'read',
   )}
   </div></div></section>`)
@@ -1736,7 +1745,7 @@
         const clampY = (y) => Math.max(ymin, Math.min(y, o.ymax))
         /*
          * Horizontal marks, each across its bucket's Turns, in Danger, more saturated the higher its `alpha`, e.g. a
-         * chance from 0 to 1. The opacity runs from 0.15 to 1, so that an unlikely mark stays visible.
+         * chance from 0 to 1. The opacity runs from 0.4 to 1, so that an unlikely mark stays visible.
          */
         ;(o.marks || [])
           .filter((k) => k.from <= o.xmax)
@@ -1744,7 +1753,7 @@
             const x0 = X(k.from - 1),
               x1 = Math.max(x0 + 0.5, X(Math.min(k.to, o.xmax)) - 1),
               y = Y(clampY(k.y)).toFixed(1)
-            s += `<line x1="${x0.toFixed(1)}" x2="${x1.toFixed(1)}" y1="${y}" y2="${y}" stroke="var(--danger)" stroke-width="3" stroke-opacity="${(0.15 + 0.85 * Math.max(0, Math.min(1, k.alpha))).toFixed(3)}"/>`
+            s += `<line x1="${x0.toFixed(1)}" x2="${x1.toFixed(1)}" y1="${y}" y2="${y}" stroke="var(--danger)" stroke-width="3" stroke-opacity="${(0.4 + 0.6 * Math.max(0, Math.min(1, k.alpha))).toFixed(3)}"/>`
           })
         /*
          * The lines, each with its color, width, and dots, e.g. a flow and its running total on the same axes. Without
@@ -2058,15 +2067,10 @@
             for (const l of AL) if (tl[x][l] != null && tl[x][l] <= t) r = l
             return r
           }
-        /* Per operation level: the mean Combat rating of its Response Mission sites, each equally likely, and its Effects. */
-        const crOf = {},
-          siteCount = {},
+        /* Per operation level: how many Response Mission sites it has, each equally likely, and its Effects. */
+        const siteCount = {},
           ol = (k) => cur['operation_level_' + k]
-        LEVELS.forEach((k) => {
-          const rs = RESP.filter((s) => cur[s].level === k).map((s) => siteRating(s).rating)
-          crOf[k] = rs.length ? rs.reduce((a, b) => a + b, 0) / rs.length : 0
-          siteCount[k] = rs.length
-        })
+        LEVELS.forEach((k) => (siteCount[k] = RESP.filter((s) => cur[s].level === k).length))
         const fundOf = (k) =>
             win * ol(k).on_win.funding + (k < EXISTENTIAL ? ign * ol(k).on_ignored_or_lost.funding : 0),
           moneyOf = (k) => win * ol(k).on_win.money
@@ -2112,7 +2116,7 @@
           const to = Math.min(from + OP_BUCKET - 1, HOR),
             n = LEVELS.map(() => 0)
           for (let t = from; t <= to; t++) ops[t].forEach((v, i) => (n[i] += v))
-          /* What the bucket's operations bring: their mean Combat rating, Funding change, and money per Turn. */
+          /* What the bucket's operations bring: their Combat rating percentiles, Funding change, and money per Turn. */
           const cnt = n.reduce((a, b) => a + b, 0),
             sum = (g) => LEVELS.reduce((s, k, i) => s + n[i] * g(k), 0)
           /*
@@ -2122,19 +2126,33 @@
            * operations as a Poisson process.
            */
           let top = null
+          const dist = []
           RESP.forEach((s) => {
             const k = cur[s].level,
               lambda = (n[k - 1] || 0) / (siteCount[k] || 1),
               r = siteRating(s).rating
             if (lambda > 0 && (!top || r > top.cr)) top = { site: s, cr: r, p: 1 - Math.exp(-lambda) }
+            if (lambda > 0) dist.push([r, lambda])
           })
+          /*
+           * The percentiles of the Combat rating of one Response Mission of the bucket: each site weighted by its expected
+           * count, and the percentile q the lowest Combat rating whose sites, with every weaker one, make up q of them.
+           */
+          dist.sort((a, b) => a[0] - b[0])
+          const W = dist.reduce((a, d) => a + d[1], 0),
+            pct = (q) => {
+              if (!(W > 0)) return null
+              let acc = 0
+              for (const [r, w] of dist) if ((acc += w) >= q * W - 1e-9) return r
+              return dist[dist.length - 1][0]
+            }
           buckets.push({
             top,
+            q: Object.fromEntries(CR_PCTS.map(([q]) => [q, pct(q / 100)])),
             from,
             to,
             n,
             mid: from - 1 + (to - from + 1) / 2,
-            cr: cnt > 0 ? sum((k) => crOf[k]) / cnt : null,
             fund: sum(fundOf),
             money: sum(moneyOf),
           })
@@ -2239,25 +2257,32 @@
           (b) => (b.initBest ? b.initBest.cr : null),
           (b) => b.to,
         )
-        const crPts = bpts((b) => b.cr),
+        /* One line per percentile, the P50 first so that the hover follows it. */
+        const qPts = CR_PCTS.map(([q]) => bpts((b) => b.q[q])),
+          crPts = qPts[0],
           teamCr = teamRatings().eff,
           tops = buckets.filter((b) => b.top && b.from <= xmax),
           crMax = Math.max(
             teamCr,
-            ...crPts.map((p) => p[1]),
+            ...qPts.flat().map((p) => p[1]),
             ...tops.map((b) => b.top.cr),
             ...(T.initcr ? initCrPts.map((p) => p[1]) : []),
           )
         lineChart($('ch_cr'), {
           pts: crPts.length ? crPts : [[0, 0]],
           series: [
-            { pts: crPts.length ? crPts : [[0, 0]], color: 'var(--accent)', width: 2, dots: true },
+            ...CR_PCTS.map(([, color], i) => ({
+              pts: qPts[i].length ? qPts[i] : [[0, 0]],
+              color,
+              width: 2,
+              dots: true,
+            })),
             ...(T.initcr && initCrPts.length ? [{ pts: initCrPts, color: INIT_CR_COLOR, width: 2, dots: true }] : []),
           ],
           xmax,
           ymax: Math.max(10, crMax * 1.1),
           xl: 'Turn',
-          label: 'Expected mean Combat rating of the Response Missions of each 10 Turns',
+          label: 'Expected P50, P70, and P90 Combat rating of the Response Missions of each 10 Turns',
           band: teamCr,
           bandLabel: 'Test team Combat rating ' + f(teamCr, 0),
           vl,
@@ -2268,7 +2293,9 @@
           fmt: (p) =>
             tipOf(
               p,
-              `Combat rating ${f(p[1], 0)}` +
+              (p[2]
+                ? 'Combat rating ' + CR_PCTS.map(([q]) => `P${q} ${f(p[2].q[q], 0)}`).join(' · ')
+                : `Combat rating ${f(p[1], 0)}`) +
                 (p[2] && p[2].top
                   ? `\nStrongest ${f(p[2].top.cr, 0)}: ${title(p[2].top.site)}, ${f(p[2].top.p * 100, 0)}% at least once`
                   : '') +
