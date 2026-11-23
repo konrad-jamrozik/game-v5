@@ -36,7 +36,7 @@ A → B means A is referenced by B: the text of B links to A. Layer 1 is drawn a
 | 8 | CONFIG Configuration | CORE, CSTATE, ENG, GDR, SAVES, TIMELINE, WHIST |
 | 8 | DOM Domain Model | CINST, COND, CORE, CSTATE, EFFECT, ENG, GDR, WHIST |
 | 8 | SCHEMA Storage Schema | CORE, CSTATE, ENG, SAVES, TIMELINE, WHIST |
-| 9 | AGENT Agents | CINST, CORE, CSTATE, DOM, ENG, NUMBERS, TIMELINE, WHIST |
+| 9 | AGENT Agents | CINST, CORE, CSTATE, DOM, ENG, NUMBERS, WHIST |
 | 9 | COMP Compendium | COND, CORE, DOM, ENG |
 | 9 | PAPI Player API | CORE, CSTATE, DOM, ENG |
 | 10 | COMBAT Combat | AGENT, CINST, CORE, CSTATE, DETERM, DOM, ENG, NUMBERS, WHIST |
