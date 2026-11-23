@@ -1,7 +1,6 @@
 {
   "awaitingCut": [
     "docs/specs/README.md",
-    "docs/specs/design/ui/screens/charts-view.md",
     "docs/specs/design/ui/screens/leads-view.md",
     "docs/specs/design/ui/screens/main-menu.md",
     "docs/specs/design/ui/screens/situation-panel.md",
@@ -80,7 +79,7 @@
     "docs/specs/design/ui/music.md": 1840,
     "docs/specs/design/ui/screens/agents-view.md": 2010,
     "docs/specs/design/ui/screens/campaign-screen.md": 3350,
-    "docs/specs/design/ui/screens/charts-view.md": 1610,
+    "docs/specs/design/ui/screens/charts-view.md": 1330,
     "docs/specs/design/ui/screens/compendium-view.md": 2790,
     "docs/specs/design/ui/screens/history-view.md": 1330,
     "docs/specs/design/ui/screens/leads-view.md": 1110,
