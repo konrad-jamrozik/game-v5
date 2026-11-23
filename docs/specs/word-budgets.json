@@ -1,7 +1,6 @@
 {
   "awaitingCut": [
     "docs/specs/README.md",
-    "docs/specs/design/ui/screens/upgrades-view.md",
     "docs/specs/governance/about-governance.md",
     "docs/specs/governance/conventions/about-conventions.md",
     "docs/specs/governance/conventions/artifact-relationships.md",
@@ -84,7 +83,7 @@
     "docs/specs/design/ui/screens/situation-panel.md": 620,
     "docs/specs/design/ui/screens/turn-report-view.md": 1340,
     "docs/specs/design/ui/screens/turn-summary.md": 1010,
-    "docs/specs/design/ui/screens/upgrades-view.md": 620,
+    "docs/specs/design/ui/screens/upgrades-view.md": 420,
     "docs/specs/design/ui/sounds.md": 2060,
     "docs/specs/design/ui/visual-design.md": 8400,
     "docs/specs/governance/about-governance.md": 200,

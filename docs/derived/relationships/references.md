@@ -47,7 +47,7 @@ A → B means A is referenced by B: the text of B links to A. Layer 1 is drawn a
 | 10 | PLAN Specification Work Plan and Backlog | AGENT, CINST, CORE, DOM, ENG, WHIST |
 | 10 | RECOVER Agent Recovery | AGENT, CINST, CORE, CSTATE, DOM, ENG, NUMBERS, WHIST |
 | 11 | MISSION Missions | AGENT, CINST, COMBAT, COND, CORE, CSTATE, DOM, ECON, EFFECT, ENG, FACTION, NUMBERS, WHIST |
-| 11 | UVIEW Upgrades View | AGENT, CORE, DOM, ECON, ENG, NUMBERS |
+| 11 | UVIEW Upgrades View | AGENT, CORE, DOM, ECON, ENG |
 | 12 | LEAD Leads and Progression | AGENT, COND, CORE, CSTATE, DOM, ECON, EFFECT, ENG, MISSION, WHIST |
 | 13 | BASICAI Basic Autopilot AI | AGENT, COMBAT, CORE, DOM, ECON, ENG, LEAD, MISSION |
 | 13 | INVSTG Investigations | AGENT, CINST, CORE, CSTATE, DOM, ENG, LEAD, NUMBERS, WHIST |
