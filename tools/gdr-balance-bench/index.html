@@ -990,6 +990,7 @@
         inv_n: 4,
         inv_skill: 100,
         win: 50,
+        turns: 500,
       }
       let T = clone(TEAM0)
       const get = (o, p) => p.split('.').reduce((a, k) => (a == null ? a : a[k]), o)
@@ -1149,7 +1150,7 @@
   ${panel(
     'Expected Response Missions by Turn',
     '',
-    `<div class="ctl">${tin('win', 'Response Missions won, %', { max: 100, step: 5 })}</div>` +
+    `<div class="ctl">${tin('win', 'Response Missions won, %', { max: 100, step: 5 })}${tin('turns', 'Turns shown', { min: 10, max: 1500, step: 50 })}</div>` +
       `<div class="op-legend"><span class="lbl">Expected operations per Turn, right axis</span>${LEVELS.map((k, i) => `<span><i style="background:${OP_COLORS[i]};opacity:${OP_ALPHA}"></i>Level ${k}${k === EXISTENTIAL ? ', existential' : ''}</span>`).join('')}</div>` +
       `<div class="lbl chart-title">Panic</div><div class="chart" id="ch_panic"></div>` +
       `<div class="lbl chart-title">Combat rating of Response Missions, mean of the last 10 Turns</div><div class="chart" id="ch_cr"></div>` +
@@ -1923,8 +1924,8 @@
           if (tLim == null && panic >= lim) tLim = t
           if (tHalf == null && surv <= 0.5) tHalf = t
         }
-        /* The charts show the first 500 Turns; the readouts below still look as far as HOR. */
-        const xmax = 500,
+        /* The charts show the first T.turns Turns; the readouts below still look as far as HOR. */
+        const xmax = Math.max(10, Math.min(HOR, Math.round(T.turns) || 500)),
           upTo = (a) => a.filter((p) => p[0] <= xmax),
           bars = { data: ops, colors: OP_COLORS },
           opsText = (t) => (ops[t] ? ' · ops ' + ops[t].map((v, i) => `L${LEVELS[i]} ${f(v, 2)}`).join(' ') : ''),
