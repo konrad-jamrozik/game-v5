@@ -76,7 +76,7 @@ Something that happens in one step of an Advance turn can change what another st
 - **Funding changes affect income from the next Advance turn:** A [funding change](economy-and-upgrades.md#funding-changes) made in an Advance turn first affects Agency income in the next Advance turn.
 - **Panic changes once:** Every Panic increase and Panic reduction of an Advance turn joins its [Pending panic change](panic-and-endings.md#glossary), Panic changes once, by their sum, and the Ending check judges Panic after that change.
 - **Money is judged once:** The Ending check judges the money that the whole Advance turn leaves, so money that falls below 0 during an Advance turn causes no Defeat when a later change of the same Advance turn, e.g. the reward of a Won Mission, raises it to 0 or more.
-- **Turn close after a Campaign ending:** When an Advance turn gives the Campaign its Campaign ending, Turn close still applies: both Turn series of money are recorded and the turn number rises, so the [Ending turn](panic-and-endings.md#recording-the-ending) is one less than the turn number of the World state after that Advance turn.
+- **Turn close after a Campaign ending:** When an Advance turn gives the Campaign its Campaign ending, Turn close still applies: both Turn series of money are recorded and the turn number rises, so the [Ending turn](panic-and-endings.md#panic-and-campaign-ending-state) is one less than the turn number of the World state after that Advance turn.
 
 # Values a step uses
 

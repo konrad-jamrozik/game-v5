@@ -10,7 +10,7 @@
 
 # Overview
 
-The [Agency](domain-model.md#agency-and-agents) wins by completing the [Lead](domain-model.md#leads-investigations-mission-sites-and-missions) that game data makes the objective of the Campaign, and it loses when the public's alarm or its own debts get out of hand. [Panic](#glossary) measures that alarm: one [Campaign](../foundation/core-concepts.md#campaign-and-session)-wide value from 0% to 100% that belongs directly to [Campaign state](../foundation/core-concepts.md#campaign-and-session), under [Campaign and Agency](domain-model.md#campaign-and-agency). It can rise, e.g. when a [Response Mission site](domain-model.md#leads-investigations-mission-sites-and-missions) is ignored, and fall, e.g. after a Won [Initiative Mission](domain-model.md#leads-investigations-mission-sites-and-missions).
+The [Agency](domain-model.md#agency-and-agents) wins by completing the [Lead](domain-model.md#leads-investigations-mission-sites-and-missions) that game data makes the objective of the Campaign, and it loses when the public's alarm or its own debts get out of hand. [Panic](#glossary) measures that alarm: one [Campaign](../foundation/core-concepts.md#campaign-and-session)-wide value from 0% to 100% that [belongs directly](domain-model.md#campaign-and-agency) to [Campaign state](../foundation/core-concepts.md#campaign-and-session). It can rise, e.g. when a [Response Mission site](domain-model.md#leads-investigations-mission-sites-and-missions) is ignored, and fall, e.g. after a Won [Initiative Mission](domain-model.md#leads-investigations-mission-sites-and-missions).
 
 Within an Advance turn, [Panic](domain-model.md#campaign-standing) does not move with each event. Every Panic increase and Panic reduction joins the Pending panic change, and the Panic step applies their sum once, clamped to the range 0 to 100, so the order of events never changes the result. Right after it, the Ending check step decides whether the Campaign has a [Campaign ending](domain-model.md#campaign-standing): Victory when a `win_campaign` Effect was applied in the Advance turn, and otherwise Defeat when Panic reaches the Panic limit, the Agency's money is below zero, or an existential Faction operation was not stopped. A Campaign ending is final: every [Player action](../foundation/engine-contract.md#player-actions-and-turns) is then rejected, while every query keeps answering.
 
@@ -20,265 +20,133 @@ Within an Advance turn, [Panic](domain-model.md#campaign-standing) does not move
 | --- | --- |
 | Panic limit | The [Panic](domain-model.md#campaign-standing) at which the [Campaign](../foundation/core-concepts.md#campaign-and-session) is lost: the value of `defeat_at_panic_pct` in the EndingParameters [Game Data Record](../foundation/core-concepts.md#game-build-and-content) (GDR). |
 | Pending panic change | The sum of every Panic increase minus every Panic reduction that the rules of the earlier [Turn advancement steps](turn-advancement.md#turn-advancement-steps) of one Advance turn have added so far, which the [Turn advancement step](domain-model.md#turn-advancement-steps) Panic then applies. |
-| Ending reason | A condition that held when a [Campaign ending](domain-model.md#campaign-standing) was recorded and caused it: Campaign objective achieved, Panic at the limit, Money below zero, or Existential operation not stopped. Each is defined under [Ending reasons](#ending-reasons). |
+| Ending reason | A [condition](#ending-reasons) that held when a [Campaign ending](domain-model.md#campaign-standing) was recorded and caused it: Campaign objective achieved, Panic at the limit, Money below zero, or Existential operation not stopped. |
 | Pending victory | Whether a `win_campaign` [Effect](../foundation/effect-lists.md#glossary) has been applied so far in one Advance turn, which the Ending check step then reads. |
-| Pending defeat | Whether a `defeat` [Effect](../foundation/effect-lists.md#glossary) has been applied so far in one Advance turn, which the Ending check step then reads. |
+| Pending defeat | Whether a `defeat` [Effect](../foundation/effect-lists.md#glossary) has been applied so far in one Advance turn; the Ending check step then reads it. |
 
 # Panic and Campaign ending state
 
-Panic and the Campaign ending are Campaign-wide values. They are not the [State](../foundation/core-concepts.md#campaign-instances) of the [Agency](domain-model.md#agency-and-agents), of a [Faction](domain-model.md#factions), or of any other [Campaign instance](../foundation/core-concepts.md#campaign-instances), and they are not [Constants](../foundation/core-concepts.md#campaign-instances): they belong directly to [Campaign state](../foundation/core-concepts.md#campaign-and-session), in the [Live world state](../foundation/campaign-state.md#glossary) of every [World state](../foundation/engine-contract.md#player-actions-and-turns), under [Campaign and Agency](domain-model.md#campaign-and-agency) in Domain Model. They are not Campaign instances, so they have no [Instance ID](../foundation/campaign-instances.md#glossary), [Archetype](../foundation/core-concepts.md#campaign-instances), or Constants. Panic is not a value of the Agency because the public's alarm is a property of the world the Agency acts in, not of the organization. The following table is the complete set of these Campaign-wide values. Every one is an [Authoritative value](../foundation/core-concepts.md#value-classification), and each number among them is a whole number, under [Whole-number quantities](../foundation/numbers.md#whole-number-quantities) in Numbers, except Panic, which is a [Decimal quantity](../foundation/numbers.md#glossary), under [Decimal quantities](../foundation/numbers.md#decimal-quantities) in Numbers, so that one event can change it by less than one percentage point.
+Panic and the Campaign ending describe the Campaign as a whole. They [belong directly to Campaign state](domain-model.md#campaign-and-agency) and not to the [Agency](domain-model.md#agency-and-agents), because the public's alarm is a property of the world the Agency acts in, not of the organization. Each of the following values is an [Authoritative value](../foundation/core-concepts.md#value-classification).
 
-| Value | Meaning | Range and classification |
-| --- | --- | --- |
-| Panic | The current Panic, a [Percent value](../foundation/numbers.md#glossary). | A Decimal quantity from 0 to 100, both included. Changes only in the [Panic step](#panic-step). |
-| Campaign ending | Absent while the Campaign is being played; Victory or Defeat once the Campaign has finished. | Absent, Victory, or Defeat. Changes only in the [Ending check step](#ending-check-step), and only from absent. |
-| Ending reasons | The set of Ending reasons that held when the Campaign ending was recorded, under [Ending reasons](#ending-reasons). | Empty exactly when the Campaign ending is absent. Otherwise as [Ending reasons](#ending-reasons) states. |
-| Ending turn | The turn number of the [Turn](../foundation/engine-contract.md#player-actions-and-turns) whose Advance turn recorded the Campaign ending. | A whole number of at least 1. Absent exactly when the Campaign ending is absent. |
-
-A Campaign has exactly one Panic, one Campaign ending value, one set of Ending reasons, and one Ending turn. Panic has no [Turn series](../foundation/world-history.md#turn-series), under [Turn series](../foundation/world-history.md#turn-series) in History and Turn Report.
+| Value | Meaning |
+| --- | --- |
+| Panic | The current Panic, a [Percent value](../foundation/numbers.md#glossary) from 0 to 100. It is a [Decimal quantity](../foundation/numbers.md#glossary), so that one event can change it by less than one percentage point, and it changes only in the [Panic step](#panic-step). |
+| Campaign ending | Absent while the Campaign is being played; Victory or Defeat once the Campaign has finished. |
+| Ending reasons | The set of [Ending reasons](#ending-reasons) that held when the Campaign ending was recorded; empty while the Campaign ending is absent. |
+| Ending turn | The turn number of the [Turn](../foundation/engine-contract.md#player-actions-and-turns) whose Advance turn recorded the Campaign ending; absent while the Campaign ending is absent. |
 
 ## Initial values
 
-Campaign creation sets the Campaign-wide values as follows, under [Campaign instance creation](../foundation/campaign-instances.md#campaign-instance-creation) in Campaign Instances. No Game Data Record (GDR) and no [Campaign configuration](../foundation/campaign-state.md#glossary) value supplies or changes any of them. This table is exhaustive.
-
-| Value           | Initial value | Source     |
-| --------------- | ------------- | ---------- |
-| Panic           | 0             | This rule. |
-| Campaign ending | Absent        | This rule. |
-| Ending reasons  | Empty         | This rule. |
-| Ending turn     | Absent        | This rule. |
-
-## State invariants
-
-In every [World state](../foundation/engine-contract.md#player-actions-and-turns), all of the following hold. A World state that violates one is an internal invariant violation, reported under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract. The list is exhaustive.
-
-1. Panic is a Decimal quantity from 0 to 100, both included.
-2. The Campaign ending, the Ending reasons, and the Ending turn are all absent or empty, or all present.
-3. A Campaign ending of Victory has exactly one Ending reason, Campaign objective achieved.
-4. A Campaign ending of Defeat has one, two, or three Ending reasons, each of them Panic at the limit, Money below zero, or Existential operation not stopped.
+A new Campaign starts with Panic 0 and without a Campaign ending. No GDR and no [Campaign configuration](../foundation/campaign-state.md#glossary) value supplies or changes either.
 
 ## Campaign ending lifecycle
 
-The Campaign ending is in exactly one of the states No Campaign ending, Victory, and Defeat. The following table lists every transition; every transition not listed, e.g. from Victory to Defeat or from Defeat to No Campaign ending, is impossible. Victory and Defeat are final within a [Timeline](../foundation/engine-contract.md#persisted-data): no rule, [Player action](../foundation/engine-contract.md#player-actions-and-turns), or query clears or changes either, and the Campaign ending is never recorded a second time. Only restoring a World state from before the ending, under [Timeline](../foundation/timeline.md) and [Saves](../foundation/saves.md), makes the Campaign again a Campaign without a Campaign ending.
+The Campaign ending is in exactly one of the states No Campaign ending, Victory, and Defeat. It leaves No Campaign ending only in the [Ending check step](#ending-check-step), and Victory and Defeat are final within a [Timeline](../foundation/engine-contract.md#persisted-data): nothing clears or changes either.
 
-| Source state | Target state | Trigger | Condition |
-| --- | --- | --- | --- |
-| No Campaign ending | Victory | The [Ending check step](#ending-check-step) | [Victory](#victory) holds. |
-| No Campaign ending | Defeat | The [Ending check step](#ending-check-step) | [Victory](#victory) does not hold and [Defeat](#defeat) holds. |
+Only [returning to a World state](../foundation/timeline.md#returning-to-a-world-state) from before the Advance turn that recorded the Campaign ending makes the Campaign one without a Campaign ending again, e.g. loading the [Turn-end Autosave](../foundation/saves.md#autosave-kinds) of the Turn that Advance turn ended. Play from there is ordinary play.
 
-# Ending GDRs
+# EndingParameters
 
-The GDRs a [Game build](../foundation/core-concepts.md#game-build-and-content) supplies, and their values, are listed by [GDRs](../content/gdrs.md) and the YAML files it names.
-
-## EndingParameters
-
-EndingParameters bundles the scalar values that the ending rules read. It serves the Calculation parameter purpose under [GDR purpose: calculation parameter](../foundation/game-data-records.md#gdr-purpose-calculation-parameter) in Game Data Records. The table below is exhaustive apart from the `id` and `type` that every GDR has.
+EndingParameters holds the one value that the ending rules read from game data.
 
 | Property | Meaning | Read by |
 | --- | --- | --- |
-| `defeat_at_panic_pct` | A Percent value: the Panic limit, the Panic at or above which the Campaign is lost. | [Defeat](#defeat), [Player-visible information](#player-visible-information) |
-
-## Ending GDR validation
-
-The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for EndingParameters. A Game build whose GDRs violate one of these rules is defective: no Campaign is created from it, and the violation is reported as a data defect, never repaired into different gameplay, under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract.
-
-1. **One EndingParameters:** The Game build supplies exactly one EndingParameters GDR.
-2. **Exact properties:** The EndingParameters GDR has exactly the properties its table above lists, apart from `id` and `type`: no listed property is missing and no other property is present.
-3. **The Panic limit is reachable:** `defeat_at_panic_pct` is a whole number from 1 to 100, both included. A value below 1 would lose every Campaign in its first Advance turn, and a value above 100 could never be reached because Panic never exceeds 100 under [Panic step](#panic-step).
-
-The Game build is not required to supply any FactionArchetype; the consequence is stated under [Victory](#victory).
+| `defeat_at_panic_pct` | A Percent value: the Panic limit. It is a whole number from 1 to 100, because below 1 every Campaign would be lost in its first Advance turn and above 100 Panic could never reach it. | [Ending reasons](#ending-reasons) |
 
 # Pending panic change
 
-Pending panic change is the interface through which every other rule changes Panic. It exists only inside one Advance turn, and the following rules are complete:
+The Pending panic change is how every other rule changes Panic, so that the order of the events of one Advance turn never changes the Panic they leave.
 
-- **Not Campaign state:** The Pending panic change is 0 when an Advance turn begins and is a [Derived value](../foundation/core-concepts.md#value-classification) of that Advance turn's contributions. It is not part of Campaign state: no World state contains it, because no World state lies inside an Advance turn, under [Player actions](../foundation/engine-contract.md#player-actions) in Engine Contract. It is discarded when the [Panic step](#panic-step) has applied it, and it never carries over to another Advance turn.
-- **Contributions:** A rule that raises Panic adds a Panic increase to the Pending panic change, and a rule that lowers Panic adds a Panic reduction. Each Panic increase and each Panic reduction is a Decimal quantity of at least 0 of Panic percentage points, added to or subtracted from the Pending panic change as such; it is never a percentage of the current Panic, so a Panic increase of 0.30 raises Panic by 0.30 points whatever Panic is, e.g. from 40 to 40.30, not by 0.30 percent of 40. A contribution of 0 changes nothing. The rule that adds a contribution, e.g. a rule of [Missions](missions.md), states its amount and any rounding of that amount under [Rounding](../foundation/numbers.md#rounding) in Numbers.
-- **When contributions are added:** Only rules of Turn advancement steps before the Panic step add to the Pending panic change, i.e. every Turn advancement step before the Panic step, under [Turn advancement steps](turn-advancement.md#turn-advancement-steps) in Turn Advancement. No rule of the Panic step, of the Ending check step, or of the Turn close step adds to it, and no Player action other than Advance turn changes Panic.
-- **Several contributions:** Contributions add up, and the order in which they are added does not change the result: the Pending panic change is the sum of all Panic increases of the Advance turn minus the sum of all Panic reductions of the Advance turn. This is the combined result for the Panic step that [Values a step uses](turn-advancement.md#values-a-step-uses) in Turn Advancement requires. It is a Decimal quantity and is negative when reductions exceed increases.
-- **No intermediate clamp:** Panic itself does not change while contributions are added. Nothing is clamped until the Panic step, so a contribution that would take Panic above 100 or below 0 on its own is added in full.
+A rule that raises Panic adds a Panic increase to the Pending panic change, and a rule that lowers Panic adds a Panic reduction. Each is a Decimal quantity of at least 0 in Panic percentage points, never a percentage of the current Panic; e.g., a Panic increase of 0.30 raises a Panic of 40 to 40.30. Only rules of Turn advancement steps before the Panic step add one.
+
+Panic itself does not change while contributions are added, and nothing is clamped before the [Panic step](#panic-step): a contribution that on its own would take Panic above 100 or below 0 counts in full.
 
 ## Panic Effect kind
 
 Game data changes Panic through one [Effect kind](../foundation/effect-lists.md#glossary), whose sign says whether Panic rises or falls.
 
-The Effect kind `panic` is defined as follows, under [Effect kinds](../foundation/effect-lists.md#effect-kinds) in Effect Lists:
+The [definition of the Effect kind](../foundation/effect-lists.md#effect-kinds) `panic` is:
 
-- **Value:** a number of Panic percentage points with at most two decimal places, i.e. a Decimal quantity: positive, zero, or negative. It is never a percentage of the current Panic.
-- **Change:** applying one [Effect](../foundation/effect-lists.md#glossary) adds one contribution to the Pending panic change, under the rules above: a positive value `v` adds a Panic increase of `v`, a negative value `−v` adds a Panic reduction of `v`, and 0 adds nothing. It never changes Panic directly.
-- **Supplied inputs:** none, because a Campaign has exactly one Panic.
-- **Combined result:** the contributions add up as **Several contributions** above states, and the Panic step applies their sum once.
-
-A rule may apply a `panic` Effect only in a Turn advancement step before the Panic step, under **When contributions are added** above.
+- **Value:** a number of Panic percentage points, as a Decimal quantity: positive, zero, or negative.
+- **Change:** applying one [Effect](../foundation/effect-lists.md#glossary) with a positive value `v` adds a Panic increase of `v` to the Pending panic change, one with a negative value `−v` adds a Panic reduction of `v`, and one with the value 0 adds nothing. It never changes Panic directly.
+- **Supplied inputs:** none.
+- **Combined result:** the contributions of several Effects add up in the Pending panic change.
 
 # Panic step
 
-In the Turn advancement step Panic, Panic changes by the Pending panic change and is then clamped to the range 0 to 100. This is a formula, with the following parts:
+In the Turn advancement step Panic, Panic changes by the whole Pending panic change at once and is then kept within its range.
 
-- **Inputs:** `P0` is Panic as it is when the step begins, a Decimal quantity from 0 to 100, which is the [Step-start value](domain-model.md#turn-advancement-steps) of this step. `C` is the Pending panic change of this Advance turn, a Decimal quantity that may be negative.
-- **Expression:** the new Panic is `max(0, min(100, P0 + C))`.
-- **Rounding:** no rounding occurs, because every input is a Decimal quantity or a whole number and the expression uses only addition, a minimum, and a maximum, each of which gives a whole multiple of 0.01, under [Decimal quantities](../foundation/numbers.md#decimal-quantities) in Numbers.
-- **Range:** the new Panic is a Decimal quantity from 0 to 100, both included.
+```text
+Panic after = max( 0, min( 100, Panic before + Pending panic change ) )
+```
 
-The clamp is applied once, to the sum. It never reads the Panic limit: Panic is clamped to 100 whatever `defeat_at_panic_pct` is. A change that the clamp discards is not remembered; e.g., Panic that would have reached 103 is 100, and a later reduction of 3 takes it to 97, not to 100. The step applies even when `C` is 0, in which case Panic is unchanged. After the step, the Pending panic change is discarded.
+The clamp is applied once, to the sum, and it never reads the Panic limit: Panic is clamped to 100 whatever `defeat_at_panic_pct` is. A change that the clamp discards is not remembered.
 
-# Pending victory
+E.g., with a Panic of 97, Panic increases of 4 and 2.50, and a Panic reduction of 0.50, the Pending panic change is 6 and Panic becomes 100. A Panic reduction of 3 in the next Advance turn then takes Panic to 97, not to 100.
 
-Pending victory is the interface through which game data wins the Campaign. It is yes or no, it exists only inside one Advance turn, and the following rules are complete:
+# Victory Effect kind
 
-- **Not Campaign state:** The Pending victory is no when an Advance turn begins. It is not part of Campaign state: no World state contains it, because no World state lies inside an Advance turn, under [Player actions](../foundation/engine-contract.md#player-actions) in Engine Contract. It never carries over to another Advance turn.
-- **Set by an Effect:** Applying a `win_campaign` Effect, under [Victory Effect kind](#victory-effect-kind), makes the Pending victory yes. Nothing makes it no again within the same Advance turn.
-- **Read once:** Only [Victory](#victory), in the Ending check step, reads the Pending victory.
+Game data wins the Campaign through one Effect kind, so that completing a [Lead](domain-model.md#leads-investigations-mission-sites-and-missions) can be the objective of the Campaign.
 
-## Victory Effect kind
+The [definition of the Effect kind](../foundation/effect-lists.md#effect-kinds) `win_campaign` is:
 
-The Effect kind `win_campaign` is defined as follows, under [Effect kinds](../foundation/effect-lists.md#effect-kinds) in Effect Lists:
-
-- **Value:** `true`. Any other value is invalid.
-- **Change:** applying one [Effect](../foundation/effect-lists.md#glossary) makes the Pending victory yes. It changes no other value.
+- **Value:** `true`.
+- **Change:** applying one Effect makes the Pending victory yes for the rest of the Advance turn. It changes no other value.
 - **Supplied inputs:** none.
 - **Combined result:** several `win_campaign` Effects applied in one Advance turn have the result of one.
 
-A rule may apply a `win_campaign` Effect only in a Turn advancement step before the Ending check step. In scope only the [Completion effect](leads-and-progression.md#completion-effect) of a [Lead](domain-model.md#leads-investigations-mission-sites-and-missions) applies one.
-
-# Pending defeat
+# Defeat Effect kind
 
 Some losses end the Campaign outright, whatever Panic is, e.g. a Faction operation that destroys the Agency's headquarters. Such a loss does not move Panic: the Campaign ends with the Panic it had.
 
-Pending defeat is the interface through which game data ends the Campaign in Defeat. It is yes or no, it exists only inside one Advance turn, and the following rules are complete:
+The [definition of the Effect kind](../foundation/effect-lists.md#effect-kinds) `defeat` is:
 
-- **Not Campaign state:** The Pending defeat is no when an Advance turn begins. It is not part of Campaign state: no World state contains it, because no World state lies inside an Advance turn, under [Player actions](../foundation/engine-contract.md#player-actions) in Engine Contract. It never carries over to another Advance turn.
-- **Set by an Effect:** Applying a `defeat` Effect, under [Defeat Effect kind](#defeat-effect-kind), makes the Pending defeat yes. Nothing makes it no again within the same Advance turn, so the order in which Effects are applied does not change the result.
-- **Read once:** Only [Defeat](#defeat), in the Ending check step, reads the Pending defeat.
-- **Panic unchanged:** The Pending defeat adds nothing to the [Pending panic change](#pending-panic-change) and never changes Panic.
-
-## Defeat Effect kind
-
-The Effect kind `defeat` is defined as follows, under [Effect kinds](../foundation/effect-lists.md#effect-kinds) in Effect Lists:
-
-- **Value:** `true`. Any other value is invalid.
-- **Change:** applying one [Effect](../foundation/effect-lists.md#glossary) makes the Pending defeat yes. It changes no other value; in particular it never changes Panic.
+- **Value:** `true`.
+- **Change:** applying one Effect makes the Pending defeat yes for the rest of the Advance turn. It changes no other value, and it adds nothing to the Pending panic change.
 - **Supplied inputs:** none.
-- **Combined result:** several `defeat` Effects applied in one Advance turn have the result of one.
-
-A rule may apply a `defeat` Effect only in a Turn advancement step before the Ending check step.
+- **Combined result:** the Pending defeat is yes however many `defeat` Effects one Advance turn applies.
 
 # Ending check step
 
-In the Turn advancement step Ending check, which follows the Panic step, the engine decides whether the Campaign ends, using the values as they are after every earlier step of the same Advance turn, including the Panic step, under [Values a step uses](turn-advancement.md#values-a-step-uses) in Turn Advancement. This step runs only in an Advance turn, so a Campaign ending is never recorded by any other Player action, by a query, or by campaign creation; e.g., a purchase the Agency cannot afford is rejected by [Economy and Upgrades](economy-and-upgrades.md) and cannot take money below zero, so it cannot end the Campaign. The predicates are tried in the following order, and the first that holds decides the Campaign ending:
-
-1. [Victory](#victory).
-2. Otherwise, [Defeat](#defeat).
-3. Otherwise, nothing changes and the Campaign continues.
-
-## Victory
-
-Victory holds exactly when the [Pending victory](#pending-victory) of this Advance turn is yes, i.e. a `win_campaign` Effect was applied in it. Nothing else wins the Campaign; in particular, every Faction being [Eliminated](domain-model.md#factions) does not by itself.
-
-A Game build is not required to supply a Lead whose `on_completion` holds a `win_campaign` Effect. a Campaign of a Game build that supplies none never has Victory and can end only in Defeat.
-
-When Victory holds, the Campaign ending becomes Victory, the Ending reasons become the one Ending reason Campaign objective achieved, and no Defeat condition is evaluated or recorded, whatever Panic and money are.
-
-## Defeat
-
-Defeat is tried only when Victory does not hold. It holds when at least one of its three conditions holds:
-
-- **Panic at the limit:** Panic, as it is after the [Panic step](#panic-step), is greater than or equal to the Panic limit, i.e. to `defeat_at_panic_pct` of EndingParameters. Equality counts: Panic equal to the Panic limit is Defeat.
-- **Money below zero:** the Agency's money, as it is when the step begins, is less than 0. Money of exactly 0 is not Defeat. Money may be negative, under [Economy and Upgrades](economy-and-upgrades.md).
-- **Existential operation not stopped:** the [Pending defeat](#pending-defeat) of this Advance turn is yes, i.e. a `defeat` Effect was applied in it. In scope only a Lost [Response Mission](domain-model.md#leads-investigations-mission-sites-and-missions) or an Expired [Response Mission site](domain-model.md#leads-investigations-mission-sites-and-missions) of a [Faction operation level](factions.md#glossary) whose `on_ignored_or_lost` holds a `defeat` Effect applies one, under [Consequences](missions.md#consequences) in Missions. Panic plays no part in this condition and is not changed by it.
-
-When Defeat holds, the Campaign ending becomes Defeat and the Ending reasons become every Ending reason whose condition holds: Panic at the limit when the first condition holds, Money below zero when the second does, Existential operation not stopped when the third does, and several when several hold. All three conditions are always evaluated; holding one does not skip another.
+In the Turn advancement step Ending check, the Campaign receives its Campaign ending when an Ending reason holds. [Victory](#victory) is tried first and [Defeat](#defeat) only when Victory does not hold; when neither holds, the Campaign continues. A rule may apply a `win_campaign` Effect or a `defeat` Effect only in a Turn advancement step before this one.
 
 ## Ending reasons
 
-An Ending reason records why a Campaign ended, which matters for Defeat, whose three conditions can hold separately or together.
-
-The following table is the exhaustive set of Ending reasons.
+An Ending reason records why a Campaign ended, which matters for Defeat, whose three Ending reasons can hold separately or together.
 
 | Ending reason | Recorded with | Holds when |
 | --- | --- | --- |
-| Campaign objective achieved | Victory | A `win_campaign` Effect was applied in the Advance turn, under [Victory](#victory). |
-| Panic at the limit | Defeat | Panic is greater than or equal to the Panic limit, under [Defeat](#defeat). |
-| Money below zero | Defeat | The Agency's money is less than 0, under [Defeat](#defeat). |
-| Existential operation not stopped | Defeat | A `defeat` Effect was applied in the Advance turn, under [Defeat](#defeat). |
+| Campaign objective achieved | Victory | The Pending victory is yes. |
+| Panic at the limit | Defeat | Panic is greater than or equal to the Panic limit; e.g., against a Panic limit of 80, a Panic of 80 is Defeat and a Panic of 79.99 is not. |
+| Money below zero | Defeat | The Agency's money is less than 0; money of exactly 0 is not Defeat. |
+| Existential operation not stopped | Defeat | The Pending defeat is yes. |
 
-## Recording the ending
+## Victory
 
-When the Ending check step decides a Campaign ending, it records the Campaign ending, the Ending reasons, and the Ending turn in the World state that Advance turn produces. The Ending turn is the turn number of the Turn that this Advance turn ends, i.e. the turn number before the Turn close step raises it, the same convention as the Eliminated turn of a Faction under [Faction State](factions.md#faction-state). The following pseudocode states the complete step, where `L` is the Panic limit:
+Victory holds exactly when Campaign objective achieved holds. The Campaign ending then becomes Victory with that one Ending reason, and no Ending reason of Defeat is recorded, whatever Panic and money are.
 
-```text
-if Pending victory:
-    Campaign ending = Victory
-    Ending reasons  = { Campaign objective achieved }
-else:
-    reasons = { }
-    if Panic >= L:        add Panic at the limit to reasons
-    if money < 0:         add Money below zero to reasons
-    if Pending defeat:    add Existential operation not stopped to reasons
-    if reasons is not empty:
-        Campaign ending = Defeat
-        Ending reasons  = reasons
-if a Campaign ending was recorded:
-    Ending turn = the turn number of the Turn this Advance turn ends
-```
+Nothing else wins the Campaign; e.g., every Faction being [Eliminated](domain-model.md#factions) does not. Game data need not hold a `win_campaign` Effect, and a Campaign without one can end only in Defeat.
 
-The Turn close step of [Turn Advancement](turn-advancement.md) still applies in the Advance turn that records a Campaign ending. The Ending turn is therefore one less than the turn number the World state after that Advance turn shows.
+## Defeat
+
+Defeat holds when Victory does not hold and at least one of Panic at the limit, Money below zero, and Existential operation not stopped holds. The Campaign ending then becomes Defeat, and its Ending reasons are every one of the three that holds.
 
 # After a Campaign ending
 
-Once the Campaign has a Campaign ending, the following rules hold in every later World state of the same Timeline, and the list is complete:
+A Campaign ending stops play and leaves everything readable.
 
-- **Every Player action is rejected:** Every state-changing action of [Player API](../foundation/engine-contract.md#api-surfaces) and of [Developer API](../foundation/engine-contract.md#api-surfaces), including `advanceTurn()` and including a [Player cheat action](../foundation/engine-contract.md#player-actions-and-turns), is rejected. The Campaign having no Campaign ending is a precondition of each of them, in addition to the other preconditions of that action, e.g. those in [Agents](agents-spec.md). A rejected action changes nothing, under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract, and the error identifies that the Campaign has a Campaign ending, whether or not another precondition also failed.
-- **Queries keep answering:** Every query of Player API and of Developer API returns exactly as at any other World state, subject to [Player-visible information](#player-visible-information) and the visibility rules of each value. The Campaign ending itself and every other query, including `getTurnReport()` and `getHistory()`, keep answering.
-- **No [World state](../foundation/engine-contract.md#player-actions-and-turns) changes:** Because no Player action can commit, Panic, money, and every other value of the [World state](../foundation/engine-contract.md#player-actions-and-turns) stay as the Advance turn that recorded the Campaign ending left them. The Campaign ending is not cleared by any rule.
-- **Other operations are not restricted:** The operations of [Session API](../foundation/engine-contract.md#api-surfaces), e.g. saving, Timeline navigation, changing Campaign configuration, and closing the [Current campaign](../foundation/core-concepts.md#campaign-and-session), are not Player actions, so a Campaign ending does not reject them. Their availability follows their own rules, e.g. in [Timeline](../foundation/timeline.md) and [Saves](../foundation/saves.md). An [Autopilot engagement](../foundation/engine-contract.md#autopilot) that is active when a Campaign ending is recorded ends with the disengagement reason campaign ended, under [Autopilot lifecycle and concurrency](../foundation/autopilot.md#autopilot-lifecycle-and-concurrency) in [Autopilot](../foundation/engine-contract.md#autopilot).
+Every state-changing action of [Player API](../foundation/engine-contract.md#api-surfaces) and of [Developer API](../foundation/engine-contract.md#api-surfaces) is rejected, including Advance turn and every [Player cheat action](../foundation/engine-contract.md#player-actions-and-turns): that the Campaign has no Campaign ending is a precondition of each. Every query answers as it does at any other [World state](../foundation/engine-contract.md#player-actions-and-turns), e.g. `getTurnReport()` and `getHistory()`.
 
-**Returning to an earlier state:** Undo and redo cannot clear the Campaign ending, because the Advance turn that recorded it is not a [Timeline entry](../foundation/timeline.md#glossary) and a Campaign with a Campaign ending commits no Player action. Going back across Turns to a World state from before the Advance turn, e.g. by [Autosave](../foundation/saves.md#autosave-kinds) navigation to the [Turn-end Autosave](../foundation/saves.md#autosave-kinds) of the Turn that ended it, makes current a World state in which the Campaign ending is absent, under [Returning to a World state](../foundation/timeline.md#returning-to-a-world-state) in Timeline. Play from there is ordinary play.
+The operations of [Session API](../foundation/engine-contract.md#api-surfaces) are not [Player actions](../foundation/engine-contract.md#player-actions-and-turns), and a Campaign ending rejects none of them, e.g. saving, Timeline navigation, and closing the [Current campaign](../foundation/core-concepts.md#campaign-and-session).
 
 # Turn report
 
-The [Turn report](../foundation/campaign-state.md#glossary) of an Advance turn holds Panic in the [Turn-end state](../foundation/engine-contract.md#player-actions-and-turns) and after the Advance turn, and the Campaign ending it recorded with its Ending reasons, or none, under [Recording the ending](#recording-the-ending). The [History entry](../foundation/world-history.md#glossary) of the Turn the Advance turn ends holds Panic after the Advance turn and the Campaign ending it recorded, without its Ending reasons, or none, and holds Panic in the [Turn-start state](../foundation/engine-contract.md#player-actions-and-turns) and in the Turn-end state of that Turn. All are [Player-visible information](../foundation/engine-contract.md#api-surfaces), under [Turn report and history](../foundation/world-history.md#turn-report-and-history) in History and Turn Report.
+The [Turn report](../foundation/campaign-state.md#glossary) of an Advance turn holds Panic in the [Turn-end state](../foundation/engine-contract.md#player-actions-and-turns) and after the Advance turn, and the Campaign ending it recorded with its Ending reasons, or none. The [History entry](../foundation/world-history.md#glossary) of the Turn the Advance turn ends holds Panic after the Advance turn and the Campaign ending it recorded, without its Ending reasons, or none, and holds Panic in the [Turn-start state](../foundation/engine-contract.md#player-actions-and-turns) and in the Turn-end state of that Turn.
 
 # Player-visible information
 
-Every value marked Yes below is [Player-visible information](../foundation/engine-contract.md#api-surfaces) under [Player-visible information](../foundation/player-api.md#player-visible-information) in Player API from campaign creation, without a reveal condition. The table is exhaustive.
-
-| Value                                                           | Player-visible information |
-| --------------------------------------------------------------- | -------------------------- |
-| Panic                                                           | Yes                        |
-| The Panic limit, i.e. `defeat_at_panic_pct` of EndingParameters | Yes                        |
-| The Campaign ending                                             | Yes                        |
-| The Ending reasons                                              | Yes                        |
-| The Ending turn                                                 | Yes                        |
-| The Pending panic change                                        | No                         |
-| The Pending defeat                                              | No                         |
-| The Pending victory                                             | No                         |
-
-**Absent versus zero:** Player API reports a Campaign ending of No Campaign ending as the absence of a Campaign ending, with an empty set of Ending reasons and an absent Ending turn. It never reports absence as Victory, as Defeat, or as a value that looks like Panic of 0. Panic of 0 is reported as 0. The player thereby tells a Campaign being played at Panic 0 apart from a Campaign that has a Campaign ending.
-
-**The Pending panic change:** It is not part of any World state, so no query returns it. Whether a single Panic increase or Panic reduction is visible is stated with the rule that adds it, e.g. in [Missions](missions.md). Under [Information boundary](../foundation/player-api.md#information-boundary) in Player API, the error for an action rejected because the Campaign has a Campaign ending reveals only values that this table makes Player-visible.
-
-# Edge cases and failure behavior
-
-- **Panic exactly at the Panic limit:** Defeat, not a continuing Campaign ([Defeat](#defeat)).
-- **Panic one hundredth below the Panic limit:** No Defeat from Panic, e.g. Panic of 99.99 against a Panic limit of 100 ([Defeat](#defeat)).
-- **Panic already 100 and a further increase:** The sum is clamped to 100 in the same way; Panic never exceeds 100 and the excess is not remembered ([Panic step](#panic-step)).
-- **Panic already 0 and a further reduction:** The sum is clamped to 0 ([Panic step](#panic-step)).
-- **Increases and reductions that cancel:** A Pending panic change of 0 leaves Panic unchanged, even when an increase and a reduction would each have been clamped on their own ([Pending panic change](#pending-panic-change)).
-- **Money exactly zero:** No Defeat from money. Money of -1 is Defeat ([Defeat](#defeat)).
-- **Victory and Defeat conditions both hold:** The Campaign ending is Victory with the one Ending reason Campaign objective achieved; the Defeat conditions are not recorded ([Victory](#victory)).
-- **Several Defeat conditions hold:** The Campaign ending is Defeat with every Ending reason whose condition holds ([Defeat](#defeat)).
-- **Existential operation not stopped at low Panic:** The Campaign ending is Defeat with the Ending reason Existential operation not stopped, and Panic stays as the Panic step left it, e.g. 35 ([Pending defeat](#pending-defeat)).
-- **A `defeat` Effect and Victory in the same Advance turn:** The Campaign ending is Victory; the Pending defeat is not recorded ([Victory](#victory)).
-- **No Lead that wins the Campaign:** The Campaign never has Victory and ends only in Defeat ([Victory](#victory)).
-- **Every Faction Eliminated:** Not an ending. The Campaign continues until a `win_campaign` Effect is applied or a Defeat condition holds ([Victory](#victory)).
-- **Winning Lead completed in the same Advance turn as a Defeat condition:** The [Investigation progress](domain-model.md#leads-investigations-mission-sites-and-missions) step applies the `win_campaign` Effect before the Ending check step, which tries Victory first, so the Campaign ending is Victory ([Victory](#victory)).
-- **Empty roster, no [Mission sites](domain-model.md#leads-investigations-mission-sites-and-missions), no Investigations:** Not an ending and not an Ending reason. Only Panic at the limit, Money below zero, and Existential operation not stopped cause Defeat ([Defeat](#defeat)).
-- **A Player action between Advance turns:** It never records a Campaign ending; the Campaign ending is decided only in the Ending check step, e.g. an unaffordable purchase is rejected by [Economy and Upgrades](economy-and-upgrades.md) rather than ending the Campaign ([Ending check step](#ending-check-step)).
-- **Advance turn after a Campaign ending:** Rejected; the Panic step, the Ending check step, and every other step are not applied, so no Campaign ending is recorded twice ([After a Campaign ending](#after-a-campaign-ending)).
-- **Invalid Panic limit, an extra property, or a second EndingParameters:** A Game build containing any of them fails [Ending GDR validation](#ending-gdr-validation), and no Campaign is created from it.
-- **A World state violating a state invariant,** e.g. Panic of 101 or a Victory with the Ending reason Money below zero, is an internal invariant violation ([State invariants](#state-invariants)).
+A player plans around how close the Campaign is to Defeat, so nothing a World state holds about Panic or the Campaign ending is hidden. Panic, the Panic limit, the Campaign ending, the Ending reasons, and the Ending turn are [Player-visible information](../foundation/engine-contract.md#api-surfaces) from campaign creation. The Pending panic change, the Pending victory, and the Pending defeat are not.
 
 # TODOs
 
-- TODO (later): Effects of Panic other than Defeat, e.g. an effect on funding, under [Panic and Campaign ending state](#panic-and-campaign-ending-state).
+- TODO (later): Effects of Panic other than Defeat, e.g. an effect on funding, in [Panic and Campaign ending state](#panic-and-campaign-ending-state).
