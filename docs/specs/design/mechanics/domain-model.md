@@ -194,6 +194,7 @@ Game data also asks questions about a Campaign through [Conditions](../foundatio
 | Condition kind | What a Condition of it asks | Defined under |
 | --- | --- | --- |
 | `mission_won` | Whether a Mission at a Mission site of one kind, targeting one Faction, has been Won. | [Mission won Condition kind](missions.md#mission-won-condition-kind) in Missions |
+| `initiative_won_with_enemy` | Whether an Initiative Mission at a Mission site holding an Enemy of one kind, targeting one Faction, has been Won. | [Initiative won with Enemy Condition kind](missions.md#initiative-won-with-enemy-condition-kind) in Missions |
 | `lead_completed` | Whether an Investigation of one Lead has been Completed. | [Lead completed Condition kind](leads-and-progression.md#lead-completed-condition-kind) in Leads and Progression |
 
 The following GDR properties hold a [Condition](../foundation/conditions.md#glossary). This table is exhaustive.

@@ -6,15 +6,15 @@ terms: [damage, weapon damage, armor]
 body: >-
   A hit deals damage to its target. How much depends on the weapon of the attacker, with some luck either way. The
   armor of the target absorbs the damage first, and only what armor does not absorb removes health. Upgrades make the
-  Service weapons of your Agents hit harder and their Service armor absorb more; an Enemy always deals the damage of the
-  weapon it carries.
+  combat pistols of your Agents hit harder and their standard uniforms absorb more; an Enemy always deals the damage of
+  the weapon it carries.
 formulas:
   - label: 'Damage of a hit'
     text: 'A whole number from weapon damage × (1 − {combat_parameters.weapon_damage_range}), rounded up, to weapon damage × (1 + {combat_parameters.weapon_damage_range}), rounded down; each is equally likely'
   - label: 'Weapon damage of an Agent'
-    text: 'That of its Service weapon, plus Upgrades'
+    text: 'That of its combat pistol, plus Upgrades'
   - label: 'Armor of an Agent'
-    text: 'That of its Service armor, plus Upgrades'
+    text: 'That of its standard uniform, plus Upgrades'
   - label: 'Armor of an Enemy'
     text: 'That of the armor it wears'
   - label: 'Armor in a hit'
@@ -29,13 +29,12 @@ see_also:
     mechanics_health,
     weapon_damage_article,
     armor_article,
-    service_weapon_article,
-    service_armor_article,
-    basic_pistol_article,
     combat_pistol_article,
+    standard_uniform_article,
+    basic_pistol_article,
     rifle_article,
-    battle_rifle_article,
-    assault_rifle_article,
-    heavy_rifle_article,
+    augmented_rifle_article,
     machine_gun_article,
+    laser_pistol_article,
+    laser_rifle_article,
   ]

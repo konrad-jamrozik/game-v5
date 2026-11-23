@@ -75,14 +75,14 @@ investigate_again: always
 on_completion:
   - create_mission_site: raid_outpost
 ---
-id: interrogate_red_dawn_soldier
+id: interrogate_red_dawn_lieutenant
 type: Lead
-name: Interrogate Red Dawn soldier
-description: Extract what the captured Red Dawn soldier knows.
+name: Interrogate Red Dawn lieutenant
+description: Learn what a Red Dawn lieutenant knew, from the officer taken alive or from the orders found on the body.
 faction: red_dawn
 required_progress: 10
 discovered_when:
-  mission_won: raid_outpost
+  initiative_won_with_enemy: lieutenant
 ---
 id: locate_red_dawn_logistics_hub
 type: Lead
@@ -91,7 +91,7 @@ description: Find the hub through which Red Dawn moves arms and money.
 faction: red_dawn
 required_progress: 30
 discovered_when:
-  lead_completed: interrogate_red_dawn_soldier
+  lead_completed: interrogate_red_dawn_lieutenant
 investigate_again: always
 on_completion:
   - create_mission_site: raid_logistics_hub
@@ -220,14 +220,14 @@ investigate_again: always
 on_completion:
   - create_mission_site: raid_outpost
 ---
-id: interrogate_exalt_soldier
+id: interrogate_exalt_lieutenant
 type: Lead
-name: Interrogate Exalt soldier
-description: Extract what the captured Exalt soldier knows.
+name: Interrogate Exalt lieutenant
+description: Learn what an Exalt lieutenant knew, from the officer taken alive or from the orders found on the body.
 faction: exalt
 required_progress: 10
 discovered_when:
-  mission_won: raid_outpost
+  initiative_won_with_enemy: lieutenant
 ---
 id: locate_exalt_logistics_hub
 type: Lead
@@ -236,7 +236,7 @@ description: Find the hub through which Exalt moves arms and money.
 faction: exalt
 required_progress: 30
 discovered_when:
-  lead_completed: interrogate_exalt_soldier
+  lead_completed: interrogate_exalt_lieutenant
 investigate_again: always
 on_completion:
   - create_mission_site: raid_logistics_hub
@@ -365,14 +365,14 @@ investigate_again: always
 on_completion:
   - create_mission_site: raid_outpost
 ---
-id: interrogate_black_lotus_soldier
+id: interrogate_black_lotus_lieutenant
 type: Lead
-name: Interrogate Black Lotus soldier
-description: Extract what the captured Black Lotus soldier knows.
+name: Interrogate Black Lotus lieutenant
+description: Learn what a Black Lotus lieutenant knew, from the officer taken alive or from the orders found on the body.
 faction: black_lotus
 required_progress: 10
 discovered_when:
-  mission_won: raid_outpost
+  initiative_won_with_enemy: lieutenant
 ---
 id: locate_black_lotus_logistics_hub
 type: Lead
@@ -381,7 +381,7 @@ description: Find the hub through which Black Lotus moves arms and money.
 faction: black_lotus
 required_progress: 30
 discovered_when:
-  lead_completed: interrogate_black_lotus_soldier
+  lead_completed: interrogate_black_lotus_lieutenant
 investigate_again: always
 on_completion:
   - create_mission_site: raid_logistics_hub

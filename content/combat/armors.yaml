@@ -1,11 +1,11 @@
-id: service_armor
+id: standard_uniform
 type: Armor
-name: Service armor
+name: Standard uniform
 base_armor: 0 # the Agency issues it unrated; the armor Upgrade raises every Agent's effective armor
 ---
-id: no_armor
+id: basic_clothing
 type: Armor
-name: None
+name: Basic clothing
 base_armor: 0
 ---
 id: padded_jacket
@@ -18,9 +18,9 @@ type: Armor
 name: Ballistic vest
 base_armor: 20
 ---
-id: plate_carrier
+id: reinforced_ballistic_vest
 type: Armor
-name: Plate carrier
+name: Reinforced ballistic vest
 base_armor: 25
 ---
 id: tactical_armor
@@ -28,17 +28,17 @@ type: Armor
 name: Tactical armor
 base_armor: 40
 ---
-id: heavy_armor
+id: battle_suit
 type: Armor
-name: Heavy armor
+name: Battle suit
 base_armor: 50
 ---
-id: assault_armor
+id: reinforced_battle_suit
 type: Armor
-name: Assault armor
+name: Reinforced battle suit
 base_armor: 60
 ---
-id: juggernaut_suit
+id: augmented_battle_suit
 type: Armor
-name: Juggernaut suit
+name: Augmented battle suit
 base_armor: 80

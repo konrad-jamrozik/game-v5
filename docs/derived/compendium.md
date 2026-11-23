@@ -64,12 +64,12 @@ Source: `content/compendium/compendium_articles/mechanics_agents.yaml`
 
 Agents are the people of your Agency. Each one has [skill](#skill), [health](#health), and [exhaustion](#exhaustion), carries a weapon, and has one [Assignment](#assignments) at a time. You start with a small team and [hire](#hiring-and-upkeep) more as your [money](#money-and-funding) allows.
 
-| Formulas            |                                                                  |
-| ------------------- | ---------------------------------------------------------------- |
-| Starting team       | 8 Agents, ready for orders on the first [turn](#turns)           |
-| A new Agent         | Skill 100, health 30, no exhaustion, armed with a Service weapon |
-| A hired Agent       | Starts on Standby and arrives next turn                          |
-| Killed or dismissed | The Agent is gone for good, and its skill with it                |
+| Formulas            |                                                                 |
+| ------------------- | --------------------------------------------------------------- |
+| Starting team       | 8 Agents, ready for orders on the first [turn](#turns)          |
+| A new Agent         | Skill 100, health 30, no exhaustion, armed with a Combat pistol |
+| A hired Agent       | Starts on Standby and arrives next turn                         |
+| Killed or dismissed | The Agent is gone for good, and its skill with it               |
 
 See also: [Skill](#skill) · [Health](#health) · [Exhaustion](#exhaustion) · [Assignments](#assignments) · [Hiring and upkeep](#hiring-and-upkeep) · [Field agent](#field-agent)
 
@@ -146,19 +146,19 @@ See also: [Money and funding](#money-and-funding) · [Exhaustion](#exhaustion) �
 
 Source: `content/compendium/compendium_articles/mechanics_damage.yaml`
 
-A hit deals damage to its target. How much depends on the weapon of the attacker, with some luck either way. The armor of the target absorbs the damage first, and only what armor does not absorb removes [health](#health). [Upgrades](#upgrades) make the [Service weapons](#service-weapon) of your [Agents](#agents) hit harder and their [Service armor](#service-armor) absorb more; an Enemy always deals the damage of the weapon it carries.
+A hit deals damage to its target. How much depends on the weapon of the attacker, with some luck either way. The armor of the target absorbs the damage first, and only what armor does not absorb removes [health](#health). [Upgrades](#upgrades) make the [combat pistols](#combat-pistol) of your [Agents](#agents) hit harder and their [standard uniforms](#standard-uniform) absorb more; an Enemy always deals the damage of the weapon it carries.
 
 | Formulas |  |
 | --- | --- |
 | Damage of a hit | A whole number from weapon damage × (1 − 0.5), rounded up, to weapon damage × (1 + 0.5), rounded down; each is equally likely |
-| Weapon damage of an Agent | That of its Service weapon, plus Upgrades |
-| Armor of an Agent | That of its Service armor, plus Upgrades |
+| Weapon damage of an Agent | That of its combat pistol, plus Upgrades |
+| Armor of an Agent | That of its standard uniform, plus Upgrades |
 | Armor of an Enemy | That of the armor it wears |
 | Armor in a hit | The damage first lowers armor, down to zero; only the rest removes health |
 | Lost armor | Costs no health and no [effective skill](#skill), and is whole again at the start of the next [Combat](#combat) |
 | A miss | No damage |
 
-See also: [Combat](#combat) · [Health](#health) · [Weapon damage](#weapon-damage) · [Armor](#armor) · [Service weapon](#service-weapon) · [Service armor](#service-armor) · [Basic pistol](#basic-pistol) · [Combat pistol](#combat-pistol) · [Rifle](#rifle) · [Battle rifle](#battle-rifle) · [Assault rifle](#assault-rifle) · [Heavy rifle](#heavy-rifle) · [Machine gun](#machine-gun)
+See also: [Combat](#combat) · [Health](#health) · [Weapon damage](#weapon-damage) · [Armor](#armor) · [Combat pistol](#combat-pistol) · [Standard uniform](#standard-uniform) · [Basic pistol](#basic-pistol) · [Rifle](#rifle) · [Augmented rifle](#augmented-rifle) · [Machine gun](#machine-gun) · [Laser pistol](#laser-pistol) · [Laser rifle](#laser-rifle)
 
 ### Exhaustion
 
@@ -528,26 +528,26 @@ Source: `content/compendium/compendium_articles/field_agent_article.yaml`
 
 The backbone of the Agency: a trained [operative](#operative) who can investigate, earn [money](#money-and-funding) on contract, train, or fight. Every [Agent](#agents) you [hire](#hiring-and-upkeep) starts as a Field agent and grows through [Training](#training) and the [Missions](#missions) it survives.
 
-| `field_agent` | AgentArchetype   |
-| ------------- | ---------------- |
-| `name`        | `Field agent`    |
-| `base_skill`  | `100`            |
-| `base_health` | `30`             |
-| `weapon`      | `service_weapon` |
-| `armor`       | `service_armor`  |
+| `field_agent` | AgentArchetype     |
+| ------------- | ------------------ |
+| `name`        | `Field agent`      |
+| `base_skill`  | `100`              |
+| `base_health` | `30`               |
+| `weapon`      | `combat_pistol`    |
+| `armor`       | `standard_uniform` |
 
 ## Subject articles: Armor
 
-### Assault armor
+### Augmented battle suit
 
-Source: `content/compendium/compendium_articles/assault_armor_article.yaml`
+Source: `content/compendium/compendium_articles/augmented_battle_suit_article.yaml`
 
-Full-body [armor](#damage) built to breach a defended position under fire.
+A powered [battle suit](#battle-suit) that shrugs off what would kill anyone else. Only a cult's leader is guarded this well.
 
-| `assault_armor` | Armor           |
-| --------------- | --------------- |
-| `name`          | `Assault armor` |
-| `base_armor`    | `60`            |
+| `augmented_battle_suit` | Armor                   |
+| ----------------------- | ----------------------- |
+| `name`                  | `Augmented battle suit` |
+| `base_armor`            | `80`                    |
 
 ### Ballistic vest
 
@@ -560,27 +560,27 @@ Soft body [armor](#damage) that stops most handgun rounds, the standard protecti
 | `name`           | `Ballistic vest` |
 | `base_armor`     | `20`             |
 
-### Heavy armor
+### Basic clothing
 
-Source: `content/compendium/compendium_articles/heavy_armor_article.yaml`
+Source: `content/compendium/compendium_articles/basic_clothing_article.yaml`
 
-Thick plates over most of the body, heavy enough that only those who command from the front bother with it.
+Everyday clothes that stop nothing, worn by the lowest ranks of a cult.
 
-| `heavy_armor` | Armor         |
+| `basic_clothing` | Armor            |
+| ---------------- | ---------------- |
+| `name`           | `Basic clothing` |
+| `base_armor`     | `0`              |
+
+### Battle suit
+
+Source: `content/compendium/compendium_articles/battle_suit_article.yaml`
+
+Plates over most of the body, heavy enough that only those who command from the front bother with it.
+
+| `battle_suit` | Armor         |
 | ------------- | ------------- |
-| `name`        | `Heavy armor` |
+| `name`        | `Battle suit` |
 | `base_armor`  | `50`          |
-
-### Juggernaut suit
-
-Source: `content/compendium/compendium_articles/juggernaut_suit_article.yaml`
-
-A suit of layered plates that shrugs off what would kill anyone else. Only a cult's leader is guarded this well.
-
-| `juggernaut_suit` | Armor             |
-| ----------------- | ----------------- |
-| `name`            | `Juggernaut suit` |
-| `base_armor`      | `80`              |
 
 ### Padded jacket
 
@@ -593,27 +593,38 @@ A thick coat lined against knives and stray rounds, worn by those who direct a c
 | `name`          | `Padded jacket` |
 | `base_armor`    | `5`             |
 
-### Plate carrier
+### Reinforced ballistic vest
 
-Source: `content/compendium/compendium_articles/plate_carrier_article.yaml`
+Source: `content/compendium/compendium_articles/reinforced_ballistic_vest_article.yaml`
 
-A vest holding hard plates over the chest and back, worn by those who [lead](#leads) [soldiers](#soldier).
+A [ballistic vest](#ballistic-vest) with hard plates added over the chest and back, worn by those who [lead](#leads) [soldiers](#soldier).
 
-| `plate_carrier` | Armor           |
-| --------------- | --------------- |
-| `name`          | `Plate carrier` |
-| `base_armor`    | `25`            |
+| `reinforced_ballistic_vest` | Armor                       |
+| --------------------------- | --------------------------- |
+| `name`                      | `Reinforced ballistic vest` |
+| `base_armor`                | `25`                        |
 
-### Service armor
+### Reinforced battle suit
 
-Source: `content/compendium/compendium_articles/service_armor_article.yaml`
+Source: `content/compendium/compendium_articles/reinforced_battle_suit_article.yaml`
 
-The protective gear the Agency issues to every [Agent](#agents). It is issued with an [armor](#damage) of 0, and every [Upgrade](#upgrades) to armor raises the armor of every Agent. In a [Combat](#combat), a hit wears down armor before it removes any [health](#health), and armor is whole again for the next Combat.
+A [battle suit](#battle-suit) with extra plating, built to breach a defended position under fire.
 
-| `service_armor` | Armor           |
-| --------------- | --------------- |
-| `name`          | `Service armor` |
-| `base_armor`    | `0`             |
+| `reinforced_battle_suit` | Armor                    |
+| ------------------------ | ------------------------ |
+| `name`                   | `Reinforced battle suit` |
+| `base_armor`             | `60`                     |
+
+### Standard uniform
+
+Source: `content/compendium/compendium_articles/standard_uniform_article.yaml`
+
+The uniform the Agency issues to every [Agent](#agents). It is issued with an [armor](#damage) of 0, and every [Upgrade](#upgrades) to armor raises the armor of every Agent. In a [Combat](#combat), a hit wears down armor before it removes any [health](#health), and armor is whole again for the next Combat.
+
+| `standard_uniform` | Armor              |
+| ------------------ | ------------------ |
+| `name`             | `Standard uniform` |
+| `base_armor`       | `0`                |
 
 ### Tactical armor
 
@@ -639,8 +650,8 @@ A senior officer who directs the larger [operations](#faction-operations) of a c
 | `name`        | `Commander`    |
 | `base_skill`  | `300`          |
 | `base_health` | `40`           |
-| `weapon`      | `heavy_rifle`  |
-| `armor`       | `heavy_armor`  |
+| `weapon`      | `laser_pistol` |
+| `armor`       | `battle_suit`  |
 
 ### Cult leader
 
@@ -648,13 +659,13 @@ Source: `content/compendium/compendium_articles/cult_leader_article.yaml`
 
 The heart of a cult, guarded in its headquarters. Only a strong, rested team should face the Cult leader, who must be captured and interrogated before the cult can be ended.
 
-| `cult_leader` | EnemyArchetype        |
-| ------------- | --------------------- |
-| `name`        | `Cult leader`         |
-| `base_skill`  | `800`                 |
-| `base_health` | `80`                  |
-| `weapon`      | `anti_materiel_rifle` |
-| `armor`       | `juggernaut_suit`     |
+| `cult_leader` | EnemyArchetype          |
+| ------------- | ----------------------- |
+| `name`        | `Cult leader`           |
+| `base_skill`  | `800`                   |
+| `base_health` | `80`                    |
+| `weapon`      | `augmented_laser_rifle` |
+| `armor`       | `augmented_battle_suit` |
 
 ### Elite
 
@@ -667,7 +678,7 @@ A hand-picked veteran, far more dangerous than a [Soldier](#soldier). Only well-
 | `name`        | `Elite`          |
 | `base_skill`  | `250`            |
 | `base_health` | `40`             |
-| `weapon`      | `assault_rifle`  |
+| `weapon`      | `machine_gun`    |
 | `armor`       | `tactical_armor` |
 
 ### Handler
@@ -690,13 +701,13 @@ Source: `content/compendium/compendium_articles/high_commander_article.yaml`
 
 One of the few who answer only to the [Cult leader](#cult-leader). A High commander is a match for a whole team of new [Agents](#agents).
 
-| `high_commander` | EnemyArchetype   |
-| ---------------- | ---------------- |
-| `name`           | `High commander` |
-| `base_skill`     | `500`            |
-| `base_health`    | `50`             |
-| `weapon`         | `machine_gun`    |
-| `armor`          | `assault_armor`  |
+| `high_commander` | EnemyArchetype           |
+| ---------------- | ------------------------ |
+| `name`           | `High commander`         |
+| `base_skill`     | `500`                    |
+| `base_health`    | `50`                     |
+| `weapon`         | `laser_rifle`            |
+| `armor`          | `reinforced_battle_suit` |
 
 ### Initiate
 
@@ -704,13 +715,13 @@ Source: `content/compendium/compendium_articles/initiate_article.yaml`
 
 A new recruit of a hostile cult, with more zeal than [skill](#skill). Initiates are dangerous mainly in numbers.
 
-| `initiate`    | EnemyArchetype |
-| ------------- | -------------- |
-| `name`        | `Initiate`     |
-| `base_skill`  | `40`           |
-| `base_health` | `20`           |
-| `weapon`      | `basic_pistol` |
-| `armor`       | `no_armor`     |
+| `initiate`    | EnemyArchetype   |
+| ------------- | ---------------- |
+| `name`        | `Initiate`       |
+| `base_skill`  | `40`             |
+| `base_health` | `20`             |
+| `weapon`      | `basic_pistol`   |
+| `armor`       | `basic_clothing` |
 
 ### Lieutenant
 
@@ -718,13 +729,13 @@ Source: `content/compendium/compendium_articles/lieutenant_article.yaml`
 
 An officer who [leads](#leads) [Soldiers](#soldier) in the field, and fights a little better than those under command.
 
-| `lieutenant`  | EnemyArchetype  |
-| ------------- | --------------- |
-| `name`        | `Lieutenant`    |
-| `base_skill`  | `140`           |
-| `base_health` | `30`            |
-| `weapon`      | `battle_rifle`  |
-| `armor`       | `plate_carrier` |
+| `lieutenant`  | EnemyArchetype              |
+| ------------- | --------------------------- |
+| `name`        | `Lieutenant`                |
+| `base_skill`  | `140`                       |
+| `base_health` | `30`                        |
+| `weapon`      | `augmented_rifle`           |
+| `armor`       | `reinforced_ballistic_vest` |
 
 ### Operative
 
@@ -732,13 +743,13 @@ Source: `content/compendium/compendium_articles/operative_article.yaml`
 
 A cult member trusted with real work. Operatives shoot straighter than [Initiates](#initiate) and stand beside them in most fights.
 
-| `operative`   | EnemyArchetype  |
-| ------------- | --------------- |
-| `name`        | `Operative`     |
-| `base_skill`  | `60`            |
-| `base_health` | `25`            |
-| `weapon`      | `combat_pistol` |
-| `armor`       | `no_armor`      |
+| `operative`   | EnemyArchetype   |
+| ------------- | ---------------- |
+| `name`        | `Operative`      |
+| `base_skill`  | `60`             |
+| `base_health` | `25`             |
+| `weapon`      | `combat_pistol`  |
+| `armor`       | `basic_clothing` |
 
 ### Soldier
 
@@ -900,6 +911,20 @@ Only the [cult leader](#cult-leader) outranks a [high commander](#high-commander
 | `required_progress`                      | `30`                                                          |
 | `discovered_when`                        | `{"mission_won":"raid_regional_stronghold"}`                  |
 
+### Interrogate Black Lotus lieutenant
+
+Source: `content/compendium/compendium_articles/interrogate_black_lotus_lieutenant_article.yaml`
+
+A [Lieutenant](#lieutenant) met in the field, taken alive or not. What the officer knew, or carried, points to where the cult moves its arms and [money](#money-and-funding).
+
+| `interrogate_black_lotus_lieutenant` | Lead |
+| --- | --- |
+| `name` | `Interrogate Black Lotus lieutenant` |
+| `description` | `Learn what a Black Lotus lieutenant knew, from the officer taken alive or from the orders found on the body.` |
+| `faction` | `black_lotus` |
+| `required_progress` | `10` |
+| `discovered_when` | `{"initiative_won_with_enemy":"lieutenant"}` |
+
 ### Interrogate Black Lotus member
 
 Source: `content/compendium/compendium_articles/interrogate_black_lotus_member_article.yaml`
@@ -913,20 +938,6 @@ The captured member is in custody and frightened. Patient questioning may reveal
 | `faction`                        | `black_lotus`                                         |
 | `required_progress`              | `3`                                                   |
 | `discovered_when`                | `{"mission_won":"apprehend_member"}`                  |
-
-### Interrogate Black Lotus soldier
-
-Source: `content/compendium/compendium_articles/interrogate_black_lotus_soldier_article.yaml`
-
-A hardened fighter taken alive at the outpost. Getting him to talk will take time.
-
-| `interrogate_black_lotus_soldier` | Lead                                                   |
-| --------------------------------- | ------------------------------------------------------ |
-| `name`                            | `Interrogate Black Lotus soldier`                      |
-| `description`                     | `Extract what the captured Black Lotus soldier knows.` |
-| `faction`                         | `black_lotus`                                          |
-| `required_progress`               | `10`                                                   |
-| `discovered_when`                 | `{"mission_won":"raid_outpost"}`                       |
 
 ### Interrogate Exalt commander
 
@@ -984,6 +995,20 @@ Only the [cult leader](#cult-leader) outranks a [high commander](#high-commander
 | `required_progress`                | `30`                                                    |
 | `discovered_when`                  | `{"mission_won":"raid_regional_stronghold"}`            |
 
+### Interrogate Exalt lieutenant
+
+Source: `content/compendium/compendium_articles/interrogate_exalt_lieutenant_article.yaml`
+
+A [Lieutenant](#lieutenant) met in the field, taken alive or not. What the officer knew, or carried, points to where the cult moves its arms and [money](#money-and-funding).
+
+| `interrogate_exalt_lieutenant` | Lead |
+| --- | --- |
+| `name` | `Interrogate Exalt lieutenant` |
+| `description` | `Learn what an Exalt lieutenant knew, from the officer taken alive or from the orders found on the body.` |
+| `faction` | `exalt` |
+| `required_progress` | `10` |
+| `discovered_when` | `{"initiative_won_with_enemy":"lieutenant"}` |
+
 ### Interrogate Exalt member
 
 Source: `content/compendium/compendium_articles/interrogate_exalt_member_article.yaml`
@@ -997,20 +1022,6 @@ The captured member is in custody and frightened. Patient questioning may reveal
 | `faction`                  | `exalt`                                         |
 | `required_progress`        | `3`                                             |
 | `discovered_when`          | `{"mission_won":"apprehend_member"}`            |
-
-### Interrogate Exalt soldier
-
-Source: `content/compendium/compendium_articles/interrogate_exalt_soldier_article.yaml`
-
-A hardened fighter taken alive at the outpost. Getting him to talk will take time.
-
-| `interrogate_exalt_soldier` | Lead                                             |
-| --------------------------- | ------------------------------------------------ |
-| `name`                      | `Interrogate Exalt soldier`                      |
-| `description`               | `Extract what the captured Exalt soldier knows.` |
-| `faction`                   | `exalt`                                          |
-| `required_progress`         | `10`                                             |
-| `discovered_when`           | `{"mission_won":"raid_outpost"}`                 |
 
 ### Interrogate Red Dawn commander
 
@@ -1068,6 +1079,20 @@ Only the [cult leader](#cult-leader) outranks a [high commander](#high-commander
 | `required_progress`                   | `30`                                                       |
 | `discovered_when`                     | `{"mission_won":"raid_regional_stronghold"}`               |
 
+### Interrogate Red Dawn lieutenant
+
+Source: `content/compendium/compendium_articles/interrogate_red_dawn_lieutenant_article.yaml`
+
+A [Lieutenant](#lieutenant) met in the field, taken alive or not. What the officer knew, or carried, points to where the cult moves its arms and [money](#money-and-funding).
+
+| `interrogate_red_dawn_lieutenant` | Lead |
+| --- | --- |
+| `name` | `Interrogate Red Dawn lieutenant` |
+| `description` | `Learn what a Red Dawn lieutenant knew, from the officer taken alive or from the orders found on the body.` |
+| `faction` | `red_dawn` |
+| `required_progress` | `10` |
+| `discovered_when` | `{"initiative_won_with_enemy":"lieutenant"}` |
+
 ### Interrogate Red Dawn member
 
 Source: `content/compendium/compendium_articles/interrogate_red_dawn_member_article.yaml`
@@ -1081,20 +1106,6 @@ The captured member is in custody and frightened. Patient questioning may reveal
 | `faction`                     | `red_dawn`                                         |
 | `required_progress`           | `3`                                                |
 | `discovered_when`             | `{"mission_won":"apprehend_member"}`               |
-
-### Interrogate Red Dawn soldier
-
-Source: `content/compendium/compendium_articles/interrogate_red_dawn_soldier_article.yaml`
-
-A hardened fighter taken alive at the outpost. Getting him to talk will take time.
-
-| `interrogate_red_dawn_soldier` | Lead                                                |
-| ------------------------------ | --------------------------------------------------- |
-| `name`                         | `Interrogate Red Dawn soldier`                      |
-| `description`                  | `Extract what the captured Red Dawn soldier knows.` |
-| `faction`                      | `red_dawn`                                          |
-| `required_progress`            | `10`                                                |
-| `discovered_when`              | `{"mission_won":"raid_outpost"}`                    |
 
 ### Locate Black Lotus HQ
 
@@ -1123,7 +1134,7 @@ Arms, [money](#money-and-funding) and people all pass through one hub. Cut it an
 | `description`                      | `Find the hub through which Black Lotus moves arms and money.` |
 | `faction`                          | `black_lotus`                                                  |
 | `required_progress`                | `30`                                                           |
-| `discovered_when`                  | `{"lead_completed":"interrogate_black_lotus_soldier"}`         |
+| `discovered_when`                  | `{"lead_completed":"interrogate_black_lotus_lieutenant"}`      |
 | `investigate_again`                | `always`                                                       |
 | `on_completion`                    | `[{"create_mission_site":"raid_logistics_hub"}]`               |
 
@@ -1218,7 +1229,7 @@ Arms, [money](#money-and-funding) and people all pass through one hub. Cut it an
 | `description`                | `Find the hub through which Exalt moves arms and money.` |
 | `faction`                    | `exalt`                                                  |
 | `required_progress`          | `30`                                                     |
-| `discovered_when`            | `{"lead_completed":"interrogate_exalt_soldier"}`         |
+| `discovered_when`            | `{"lead_completed":"interrogate_exalt_lieutenant"}`      |
 | `investigate_again`          | `always`                                                 |
 | `on_completion`              | `[{"create_mission_site":"raid_logistics_hub"}]`         |
 
@@ -1313,7 +1324,7 @@ Arms, [money](#money-and-funding) and people all pass through one hub. Cut it an
 | `description`                   | `Find the hub through which Red Dawn moves arms and money.` |
 | `faction`                       | `red_dawn`                                                  |
 | `required_progress`             | `30`                                                        |
-| `discovered_when`               | `{"lead_completed":"interrogate_red_dawn_soldier"}`         |
+| `discovered_when`               | `{"lead_completed":"interrogate_red_dawn_lieutenant"}`      |
 | `investigate_again`             | `always`                                                    |
 | `on_completion`                 | `[{"create_mission_site":"raid_logistics_hub"}]`            |
 
@@ -1769,7 +1780,7 @@ Expands the barracks so that the Agency can employ more [Agents](#agents) at onc
 
 Source: `content/compendium/compendium_articles/armor_article.yaml`
 
-Better plates and padding for the [Service armor](#service-armor) of every [Agent](#agents), so that it absorbs more of the hits an Agent takes in each [Combat](#combat) before any [health](#health) is lost.
+Better plates and padding for the [standard uniform](#standard-uniform) of every [Agent](#agents), so that it absorbs more of the hits an Agent takes in each [Combat](#combat) before any [health](#health) is lost.
 
 | `armor`     | Upgrade       |
 | ----------- | ------------- |
@@ -1847,7 +1858,7 @@ Adds vehicles so that more [Agents](#agents) can be [deployed](#missions) to [Mi
 
 Source: `content/compendium/compendium_articles/weapon_damage_article.yaml`
 
-Better ammunition and gunsmithing make the [Service weapon](#service-weapon) of every [Agent](#agents) hit harder.
+Better ammunition and gunsmithing make the [combat pistol](#combat-pistol) of every [Agent](#agents) hit harder.
 
 | `weapon_damage` | Upgrade               |
 | --------------- | --------------------- |
@@ -1858,27 +1869,27 @@ Better ammunition and gunsmithing make the [Service weapon](#service-weapon) of 
 
 ## Subject articles: Weapon
 
-### Anti-materiel rifle
+### Augmented laser rifle
 
-Source: `content/compendium/compendium_articles/anti_materiel_rifle_article.yaml`
+Source: `content/compendium/compendium_articles/augmented_laser_rifle_article.yaml`
 
-A [rifle](#rifle) built to destroy vehicles and fortifications, carried by the one person a cult trusts above all.
+A [laser rifle](#laser-rifle) tuned past every safe limit, carried by the one person a cult trusts above all.
 
-| `anti_materiel_rifle` | Weapon                |
-| --------------------- | --------------------- |
-| `name`                | `Anti-materiel rifle` |
-| `base_weapon_damage`  | `32`                  |
+| `augmented_laser_rifle` | Weapon                  |
+| ----------------------- | ----------------------- |
+| `name`                  | `Augmented laser rifle` |
+| `base_weapon_damage`    | `32`                    |
 
-### Assault rifle
+### Augmented rifle
 
-Source: `content/compendium/compendium_articles/assault_rifle_article.yaml`
+Source: `content/compendium/compendium_articles/augmented_rifle_article.yaml`
 
-A fast-firing long gun issued to the best fighters of a cult.
+A [rifle](#rifle) refitted with better sights, a heavier barrel, and stronger rounds, carried by officers in the field.
 
-| `assault_rifle`      | Weapon          |
-| -------------------- | --------------- |
-| `name`               | `Assault rifle` |
-| `base_weapon_damage` | `20`            |
+| `augmented_rifle`    | Weapon            |
+| -------------------- | ----------------- |
+| `name`               | `Augmented rifle` |
+| `base_weapon_damage` | `16`              |
 
 ### Basic pistol
 
@@ -1891,49 +1902,49 @@ A cheap handgun handed to the newest recruits.
 | `name`               | `Basic pistol` |
 | `base_weapon_damage` | `8`            |
 
-### Battle rifle
-
-Source: `content/compendium/compendium_articles/battle_rifle_article.yaml`
-
-A full-power long gun carried by officers in the field.
-
-| `battle_rifle`       | Weapon         |
-| -------------------- | -------------- |
-| `name`               | `Battle rifle` |
-| `base_weapon_damage` | `16`           |
-
 ### Combat pistol
 
 Source: `content/compendium/compendium_articles/combat_pistol_article.yaml`
 
-A full-size handgun built for a fight, with a larger magazine than a [basic pistol](#basic-pistol) and still easy to carry unseen.
+A full-size handgun built for a fight, with a larger magazine than a [basic pistol](#basic-pistol) and still easy to carry unseen. The Agency issues one to every [Agent](#agents), and every [Upgrade](#upgrades) to [weapon damage](#damage) makes it hit harder in the hands of every Agent.
 
 | `combat_pistol`      | Weapon          |
 | -------------------- | --------------- |
 | `name`               | `Combat pistol` |
 | `base_weapon_damage` | `10`            |
 
-### Heavy rifle
+### Laser pistol
 
-Source: `content/compendium/compendium_articles/heavy_rifle_article.yaml`
+Source: `content/compendium/compendium_articles/laser_pistol_article.yaml`
 
-A powerful weapon reserved for those a cult trusts most.
+A handgun that fires a beam instead of a bullet, reserved for those a cult trusts most.
 
-| `heavy_rifle`        | Weapon        |
+| `laser_pistol`       | Weapon         |
+| -------------------- | -------------- |
+| `name`               | `Laser pistol` |
+| `base_weapon_damage` | `22`           |
+
+### Laser rifle
+
+Source: `content/compendium/compendium_articles/laser_rifle_article.yaml`
+
+A long-barrelled laser weapon, rare and devastating.
+
+| `laser_rifle`        | Weapon        |
 | -------------------- | ------------- |
-| `name`               | `Heavy rifle` |
-| `base_weapon_damage` | `22`          |
+| `name`               | `Laser rifle` |
+| `base_weapon_damage` | `28`          |
 
 ### Machine gun
 
 Source: `content/compendium/compendium_articles/machine_gun_article.yaml`
 
-A heavy automatic weapon, rare and devastating.
+A fast-firing automatic weapon issued to the best fighters of a cult.
 
 | `machine_gun`        | Weapon        |
 | -------------------- | ------------- |
 | `name`               | `Machine gun` |
-| `base_weapon_damage` | `28`          |
+| `base_weapon_damage` | `20`          |
 
 ### Rifle
 
@@ -1945,14 +1956,3 @@ A reliable long gun for trained fighters.
 | -------------------- | ------- |
 | `name`               | `Rifle` |
 | `base_weapon_damage` | `14`    |
-
-### Service weapon
-
-Source: `content/compendium/compendium_articles/service_weapon_article.yaml`
-
-The handgun the Agency issues to every [Agent](#agents). It starts as good as a [combat pistol](#combat-pistol), and every [Upgrade](#upgrades) to [weapon damage](#damage) makes it hit harder in the hands of every Agent.
-
-| `service_weapon`     | Weapon           |
-| -------------------- | ---------------- |
-| `name`               | `Service weapon` |
-| `base_weapon_damage` | `10`             |

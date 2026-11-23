@@ -4,7 +4,7 @@ name: Initiate
 base_skill: 40
 base_health: 20
 weapon: basic_pistol
-armor: no_armor
+armor: basic_clothing
 ---
 id: operative
 type: EnemyArchetype
@@ -12,7 +12,7 @@ name: Operative
 base_skill: 60
 base_health: 25
 weapon: combat_pistol
-armor: no_armor
+armor: basic_clothing
 ---
 id: handler
 type: EnemyArchetype
@@ -35,15 +35,15 @@ type: EnemyArchetype
 name: Lieutenant
 base_skill: 140
 base_health: 30
-weapon: battle_rifle
-armor: plate_carrier
+weapon: augmented_rifle
+armor: reinforced_ballistic_vest
 ---
 id: elite
 type: EnemyArchetype
 name: Elite
 base_skill: 250
 base_health: 40
-weapon: assault_rifle
+weapon: machine_gun
 armor: tactical_armor
 ---
 id: commander
@@ -51,21 +51,21 @@ type: EnemyArchetype
 name: Commander
 base_skill: 300
 base_health: 40
-weapon: heavy_rifle
-armor: heavy_armor
+weapon: laser_pistol
+armor: battle_suit
 ---
 id: high_commander
 type: EnemyArchetype
 name: High commander
 base_skill: 500
 base_health: 50
-weapon: machine_gun
-armor: assault_armor
+weapon: laser_rifle
+armor: reinforced_battle_suit
 ---
 id: cult_leader
 type: EnemyArchetype
 name: Cult leader
 base_skill: 800
 base_health: 80
-weapon: anti_materiel_rifle
-armor: juggernaut_suit
+weapon: augmented_laser_rifle
+armor: augmented_battle_suit

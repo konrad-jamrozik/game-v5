@@ -112,8 +112,8 @@
   <rect class="node" x="24" y="628" width="340" height="56" rx="6"/>
   <rect class="bar-lead" x="24" y="628" width="4" height="56" rx="2"/>
   <text class="tag" x="40" y="645">LEAD · TIER 3 FOLLOW-UP</text>
-  <text class="name" x="40" y="663">Interrogate Red Dawn soldier</text>
-  <text class="id" x="40" y="678">interrogate_red_dawn_soldier</text>
+  <text class="name" x="40" y="663">Interrogate Red Dawn lieutenant</text>
+  <text class="id" x="40" y="678">interrogate_red_dawn_lieutenant</text>
   <path class="arc" d="M194 684 V716" marker-end="url(#head)"/>
   <text class="lbl" x="204" y="706">completion discovers</text>
   <rect class="node" x="24" y="720" width="340" height="56" rx="6"/>

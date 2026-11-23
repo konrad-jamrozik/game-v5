@@ -101,8 +101,8 @@ The Data sheet of an AgentArchetype shows what a newly hired Agent starts with, 
 | --- | --- |
 | Skill | `base_skill`. |
 | Health | `base_health`. |
-| Weapon | The Weapon that `weapon` references, followed by "· damage" and its `base_weapon_damage`, e.g. "Service weapon · damage 10". |
-| Armor | The Armor that `armor` references, followed by "· armor" and its `base_armor`, e.g. "Service armor · armor 0". |
+| Weapon | The Weapon that `weapon` references, followed by "· damage" and its `base_weapon_damage`, e.g. "Combat pistol · damage 10". |
+| Armor | The Armor that `armor` references, followed by "· armor" and its `base_armor`, e.g. "Standard uniform · armor 0". |
 
 ## Enemy data sheet
 

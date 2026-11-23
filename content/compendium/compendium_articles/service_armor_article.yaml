@@ -1,9 +1,0 @@
-id: service_armor_article
-type: CompendiumArticle
-category: subject
-subject: service_armor
-terms: [Service armor]
-body: >-
-  The protective gear the Agency issues to every Agent. It is issued with an armor of {subject.base_armor}, and every
-  Upgrade to armor raises the armor of every Agent. In a Combat, a hit wears down armor before it removes any health,
-  and armor is whole again for the next Combat.
