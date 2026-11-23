@@ -63,7 +63,7 @@ A FactionOperationLevel describes one Faction operation level. This property tab
 
 The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for the Faction GDRs. A Game build whose GDRs violate one of these rules is defective: no [Campaign](../foundation/core-concepts.md#campaign-and-session) is created from it, and the violation is reported as a data defect, never repaired into different gameplay, under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract.
 
-1. **Known properties:** Each FactionArchetype, FactionActivityLevel, and FactionOperationLevel has every property its table above lists and no property other than those, apart from `id` and `type`. Each `name` is non-empty text. The content of a FactionOperationLevel's `on_win` and `on_ignored_or_lost` is validated by [MissionSiteArchetype validation](missions.md#missionsitearchetype-validation) in Missions.
+1. **Known properties:** Each FactionArchetype, FactionActivityLevel, and FactionOperationLevel has every property its table above lists and no property other than those, apart from `id` and `type`. Each `name` is non-empty text. The content of a FactionOperationLevel's `on_win` and `on_ignored_or_lost` is validated by [MissionSiteArchetype validation](missions.md#missionsitearchetype) in Missions.
 2. **One first level:** Exactly one FactionActivityLevel, the first level, has `lasts_turns` of `per_faction`, and no `next` references it, so a Faction never enters it by escalation.
 3. **Ranges are valid:** Every FactionActivityLevel's `operation_every_turns` when it is not `null` is a pair `[lo, hi]` of whole numbers with `1 ≤ lo ≤ hi`. Every FactionActivityLevel's `lasts_turns` when it is neither `null` nor `per_faction`, and every FactionArchetype's `initial_lasts_turns`, is a pair `[lo, hi]` of whole numbers with `0 ≤ lo ≤ hi`.
 4. **Final levels agree:** A FactionActivityLevel's `lasts_turns` is `null` exactly when its `next` is `null`.
@@ -72,7 +72,7 @@ The GDRs a Game build supplies must satisfy every rule below. The list is exhaus
 7. **Operation levels are distinct:** Every FactionOperationLevel's `level` is a whole number of at least 1, and no two FactionOperationLevels have the same `level`.
 8. **Weights are valid:** A FactionActivityLevel's `operation_level_weights` has at least one key when its `operation_every_turns` is not `null`, and no key when it is `null`. Each key equals the `level` of a FactionOperationLevel the Game build supplies, and each weight is a whole number of at least 1.
 
-These rules guarantee that every uniform whole-number outcome below has a valid range and that every Faction operation occurrence has a Faction operation level. That a Response Mission site can be created for every Faction operation level a Faction can have is checked by [MissionSiteArchetype validation](missions.md#missionsitearchetype-validation). A FactionActivityLevel other than the first level that no `next` references is valid; it is never used.
+These rules guarantee that every uniform whole-number outcome below has a valid range and that every Faction operation occurrence has a Faction operation level. That a Response Mission site can be created for every Faction operation level a Faction can have is checked by [MissionSiteArchetype validation](missions.md#missionsitearchetype). A FactionActivityLevel other than the first level that no `next` references is valid; it is never used.
 
 # Faction State
 

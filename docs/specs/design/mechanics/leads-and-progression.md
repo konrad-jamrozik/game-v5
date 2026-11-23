@@ -51,7 +51,7 @@ A Lead names its Faction, a MissionSiteArchetype it creates, and every GDR its C
 
 ## Lead GDR validation
 
-The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for the Lead [Type](../foundation/core-concepts.md#data-modeling), and it adds to [MissionSiteArchetype validation](missions.md#missionsitearchetype-validation) in Missions and [Faction GDR validation](factions.md#faction-gdr-validation) in Factions. A Game build whose GDRs violate one of these rules is defective: no Campaign is created from it, and the violation is reported as a data defect, never repaired into different gameplay, under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract.
+The GDRs a Game build supplies must satisfy every rule below. The list is exhaustive for the Lead [Type](../foundation/core-concepts.md#data-modeling), and it adds to [MissionSiteArchetype validation](missions.md#missionsitearchetype) in Missions and [Faction GDR validation](factions.md#faction-gdr-validation) in Factions. A Game build whose GDRs violate one of these rules is defective: no Campaign is created from it, and the violation is reported as a data defect, never repaired into different gameplay, under [World state integrity](../foundation/engine-contract.md#world-state-integrity) in Engine Contract.
 
 1. **Known properties:** Each Lead has `name`, `description`, and `required_progress`, may have `faction`, `discovered_when`, `investigate_again`, and `on_completion`, and has no other property, apart from `id` and `type`. Its `name` and `description` are non-empty text.
 2. **Faction resolves:** `faction`, when present, is the identifier of a FactionArchetype the Game build supplies.

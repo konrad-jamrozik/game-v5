@@ -329,8 +329,8 @@ For each Campaign instance Type, the following table names the section that stat
 | Agent | [Initial roster](../mechanics/agents-spec.md#initial-roster) in Agents |
 | Faction | [Initial Factions](../mechanics/factions.md#initial-factions) in Factions |
 | Investigation | [Investigation creation](../mechanics/investigations.md#investigation-creation) in Investigations |
-| Mission site | [Initial Mission sites](../mechanics/missions.md#initial-mission-sites) in Missions |
-| Mission | [Initial Mission sites](../mechanics/missions.md#initial-mission-sites) in Missions, which states that no Mission exists initially |
+| Mission site | [Initial Mission sites](../mechanics/missions.md#mission-site-creation) in Missions |
+| Mission | [Initial Mission sites](../mechanics/missions.md#mission-site-creation) in Missions, which states that no Mission exists initially |
 | Enemy | [Enemy creation](../mechanics/combat.md#enemy-creation) in Combat, applied by [Enemy creation](../mechanics/missions.md#enemy-creation) in Missions |
 
 The Turn and Panic start from values that no GDR supplies: the Turn under [Turn number](../mechanics/turn-advancement.md#turn-number), and Panic under [Initial values](../mechanics/panic-and-endings.md#initial-values).
