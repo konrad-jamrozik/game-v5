@@ -479,6 +479,15 @@
       .chart-title {
         margin: 18px 0 2px;
       }
+      .fold > summary {
+        cursor: pointer;
+      }
+      .fold > summary:hover {
+        color: var(--text2);
+      }
+      .fold > .op-legend {
+        margin-top: 8px;
+      }
       /* A panel's title and controls that stay in view, under the page's sticky bar, while its charts scroll by. The
        * negative margins only let its background reach the panel's edges; its content stays where it was. */
       .sticky-head {
@@ -1073,6 +1082,9 @@
         const field = `<input type="number" id="t_${k}" data-t="${k}" value="${T[k]}" step="${o.step || 1}" min="${o.min ?? 0}"${o.max ? ` max="${o.max}"` : ''}>`
         return `<label><span class="lbl">${label}</span>${o.add ? `<span class="inrow">${field}<span class="add" id="t_${k}_add"></span></span>` : field}</label>`
       }
+      /* A chart the reader can collapse, e.g. to keep only the one that a reward being edited moves; T.fold remembers it. */
+      const fold = (k, title, body) =>
+        `<details class="fold" data-fold="${k}"${T.fold && T.fold[k] === false ? '' : ' open'}><summary class="lbl chart-title">${title}</summary>${body}</details>`
       /* A checkbox of the test team, e.g. whether to search each site for the team that reaches the target. */
       const tcheck = (k, label) =>
         `<label class="chk"><input type="checkbox" id="t_${k}" data-t="${k}"${T[k] !== false ? ' checked' : ''}><span class="lbl">${label}</span></label>`
@@ -1171,20 +1183,27 @@
     '',
     `<div class="sticky-head"><h3>Expected Response Missions by Turn</h3><div class="ctl">${tin('win', 'Response Missions won, %', { max: 100, step: 5 })}${tin('turns', 'Turns shown', { min: 10, max: 1500, step: 50 })}</div></div>` +
       `<div class="op-legend"><span class="lbl">Expected operations per ${OP_BUCKET} Turns, right axis</span>${LEVELS.map((k, i) => `<span><i style="background:${OP_COLORS[i]};opacity:${OP_ALPHA}"></i>Level ${k}${k === EXISTENTIAL ? ', existential' : ''}</span>`).join('')}</div>` +
-      `<div class="lbl chart-title">Panic at the end of each ${OP_BUCKET} Turns</div><div class="chart" id="ch_panic"></div>` +
-      `<div class="lbl chart-title">Combat rating of Response Missions, mean of each ${OP_BUCKET} Turns</div><div class="chart" id="ch_cr"></div>` +
-      `<div class="lbl chart-title">Money and Funding received</div>` +
-      `<div class="op-legend">${[
-        [MONEY_COLOR, 3, `Money from won Response Missions, per ${OP_BUCKET} Turns`],
-        [MONEY_COLOR, 1.25, 'Money, cumulative'],
-        [FUNDING_COLOR, 3, `Funding, per ${OP_BUCKET} Turns`],
-        [FUNDING_COLOR, 1.25, 'Funding, cumulative'],
-      ]
-        .map(
-          ([c, w, t]) =>
-            `<span><i style="background:${c};height:${w}px;width:16px;vertical-align:middle"></i>${t}</span>`,
-        )
-        .join('')}</div><div class="chart" id="ch_econ"></div>` +
+      fold(
+        'econ',
+        'Money and Funding received',
+        `<div class="op-legend">${[
+          [MONEY_COLOR, 3, `Money from won Response Missions, per ${OP_BUCKET} Turns`],
+          [MONEY_COLOR, 1.25, 'Money, cumulative'],
+          [FUNDING_COLOR, 3, `Funding, per ${OP_BUCKET} Turns`],
+          [FUNDING_COLOR, 1.25, 'Funding, cumulative'],
+        ]
+          .map(
+            ([c, w, t]) =>
+              `<span><i style="background:${c};height:${w}px;width:16px;vertical-align:middle"></i>${t}</span>`,
+          )
+          .join('')}</div><div class="chart" id="ch_econ"></div>`,
+      ) +
+      fold('panic', `Panic at the end of each ${OP_BUCKET} Turns`, `<div class="chart" id="ch_panic"></div>`) +
+      fold(
+        'cr',
+        `Combat rating of Response Missions, mean of each ${OP_BUCKET} Turns`,
+        `<div class="chart" id="ch_cr"></div>`,
+      ) +
       `<div id="o_panic"></div><div class="note">An expected-value estimate with no Faction Eliminated and no Panic reduction from won Initiative Missions: each level lasts its mean duration, operations arrive at the mean interval, each operation's Response Mission site is equally likely to be any of its level's, and every operation not won is ignored or lost. A Response Mission's Combat rating is its Enemies' at full health; the band marks the test team's Combat rating. Funding and money count every operation, including the ones after the Campaign may already have been lost. The Funding received counts the starting Funding too; the money counts only won Response Missions, not the starting money or any spending.</div>`,
     'read',
   )}
@@ -1194,6 +1213,12 @@
           `<section id="changes"><div class="shead"><h2>Changes</h2><p>Every value that differs from the GDRs, grouped by the YAML file that records it.</p></div>${panel('Changed values', '', `<div class="chg-list" id="chglist"></div><textarea id="chgtext" readonly aria-label="Changes as text"></textarea>`)}</section>`,
         )
         document.getElementById('app').innerHTML = h.join('')
+        document.querySelectorAll('details[data-fold]').forEach((d) =>
+          d.addEventListener('toggle', () => {
+            T.fold = { ...T.fold, [d.dataset.fold]: d.open }
+            save()
+          }),
+        )
         paintLevels()
         paintStatus()
       }
