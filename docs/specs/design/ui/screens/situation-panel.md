@@ -35,8 +35,8 @@ A Mission site about to be lost and one just lost stand out from the rest of the
 - **Expires next:** an Active Mission site whose [Turns](../../foundation/engine-contract.md#player-actions-and-turns) until expiration is 1 is in [Warning](../visual-design.md#colours), with the warning-triangle icon of [Agent condition](../visual-design.md#agent-condition) before its Turns until expiration, e.g. "Foil sabotage ⚠ 1 T left".
 - **Just lost:** a Mission site that became Expired or Cancelled in the most recent Advance turn is in Danger deep and struck through, name and lifecycle state alike, with a prohibition icon outlined in Danger in place of the warning triangle, e.g. "~~Foil sabotage~~ 🚫 ~~Expired~~".
 
-# Artboard
+# Screenshot
 
-![Situation panel Artboard](../../../../images/artboards/situation-panel.png)
+The Situation Panel as the game draws it:
 
-The sample values, e.g. the Mission site and Lead names and the numbers of Agents, [appear only on the Artboard](../visual-design.md#reading-artboards).
+![Situation Screenshot](../../../../images/screens/situation-panel.png)

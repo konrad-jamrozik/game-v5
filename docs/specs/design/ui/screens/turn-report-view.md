@@ -48,10 +48,10 @@ The colours of the Combat log tell the Player whose attack each row is and whom 
 - **Outcome:** the attack's outcome, i.e. its hit outcome, the armor removed, the defender's current armor after it, the [health removed](../../mechanics/combat.md#combat-rounds-and-results), the defender's current health after it, and whether it made a participant dead or Incapacitated, is in Positive when an Agent hit, in Danger when an Enemy hit, and in Text muted when the attack missed, whichever side made it. The other values of the row are in Text.
 - **Decisive attack:** the word that names a participant made dead or Incapacitated is bold, e.g. "hit for 14, health 0, **dead**".
 
-# Artboard
+# Screenshots
 
-![Turn Report View panel Artboard](../../../../images/artboards/turn-report-view.png)
+The Turn Report View as the game draws it:
 
-![Combat report panel Artboard](../../../../images/artboards/combat-report.png)
+![Turn Report View Screenshot](../../../../images/screens/turn-report-view.png)
 
-The sample values, e.g. the Mission site names, the Lead names, the Instance IDs, the Enemy labels, and the numbers, appear only on the Artboards and [must not be implemented](../visual-design.md#reading-artboards).
+![Combat report Screenshot](../../../../images/screens/combat-report.png)

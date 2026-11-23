@@ -42,8 +42,8 @@ One chart for each [Faction](../../mechanics/domain-model.md#factions) shows how
 
 Each is titled with the Faction's name and "response sites", e.g. "Red Dawn · response sites", and its series is, for each Turn, the number of [Response Mission sites](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) whose target Faction is that Faction and whose [Turn created](../../mechanics/missions.md#mission-site-properties) is less than that Turn, i.e. the total the Faction has produced by the start of that Turn. Its current value is that total in the current Turn. Every [Response Mission site](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) counts, whatever its lifecycle state, and a Faction that is [Eliminated](../../mechanics/domain-model.md#factions) keeps its chart.
 
-# Artboard
+# Screenshot
 
-![Charts View panel Artboard](../../../../images/artboards/charts-view.png)
+The Charts View as the game draws it:
 
-The sample values, e.g. the Turn numbers and the values of each series, appear only on the Artboard and [must not be implemented](../visual-design.md#reading-artboards).
+![Charts View Screenshot](../../../../images/screens/charts-view.png)

@@ -42,8 +42,8 @@ The right pane staffs the selected Lead's Investigation. It is left out for an I
 - **Team progress estimate:** while at least one Agent is checked, the [Team progress estimate](../../mechanics/investigations.md#team-progress-estimate) of the team the primary button would make, in [progress points](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), e.g. "Est. +3.62 / turn": for Start, of the checked Agents; for Assign, of the Current team together with the checked Agents.
 - **Primary button:** for a Lead to investigate, Start makes one [`startInvestigation`](../../mechanics/investigations.md#starting-an-investigation) [Player action](../../foundation/engine-contract.md#player-actions-and-turns) with the checked Agents; for an Active Investigation, Assign makes one [`assignAgentsToInvestigation`](../../mechanics/investigations.md#assigning-agents-to-an-investigation). Either is disabled while no Agent is checked.
 
-# Artboard
+# Screenshot
 
-![Leads View panel Artboard, reached from the Turn Report View](../../../../images/artboards/leads-view.png)
+The Leads View as the game draws it:
 
-The sample values, e.g. the Lead names, their descriptions, and the Agent IDs, [appear only on the Artboard](../visual-design.md#reading-artboards).
+![Leads View Screenshot, reached from the Turn Report View](../../../../images/screens/leads-view.png)

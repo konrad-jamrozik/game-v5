@@ -78,8 +78,8 @@ Each line starts with the number of the Player action in the Turn, from 1, follo
 
 A count of 1 takes the singular, e.g. "Hired 1 Agent". No line names the Agents an action concerned; a line names only the Lead or Mission site it concerned.
 
-# Artboard
+# Screenshot
 
-![History View panel Artboard](../../../../images/artboards/history-view.png)
+The History View as the game draws it:
 
-The sample values, e.g. the Turn numbers, the events of each Turn, and the Player actions, appear only on the Artboard and [must not be implemented](../visual-design.md#reading-artboards).
+![History View Screenshot](../../../../images/screens/history-view.png)

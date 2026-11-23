@@ -49,11 +49,8 @@ The Combat report button, a neutral button at the end of the card, opens the Tur
 
 Each item of New Mission sites and of Expired Mission sites leads to its Mission site, so that the Player who reads of a new Mission site can deploy to it at once. Selecting the item opens the [Missions View](missions-view.md) with [that Mission site selected](missions-view.md#mission-site-list). The item keeps its colours, and the pointer resting on it underlines its name and shows that it can be pressed.
 
-# Artboard
+# Screenshot
 
-![Turn summary panel Artboard](../../../../images/artboards/turn-summary.png)
+The Turn Summary as the game draws it:
 
-The following appear only on the [Artboard](../visual-design.md#glossary) of the Turn summary and [must not be implemented](../visual-design.md#reading-artboards):
-
-- The layout inside each Mission card below its first line, and the labels of the buttons, e.g. "Continue", "Open Turn report", and "Combat report".
-- The sample values, e.g. the Mission site names and the numbers.
+![Turn summary Screenshot](../../../../images/screens/turn-summary.png)

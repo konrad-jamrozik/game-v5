@@ -136,20 +136,16 @@ The keyboard shortcuts view, opened from the [Settings panel](../gui.md#settings
 
 It lists every keyboard shortcut of the Campaign screen, those the specifications give, e.g. the N key for Advance turn, and those the Implementation adds, one row each: its keys, where keys that share one description are separated by "/", e.g. "U / R", and what the keys do. A description too long for one line wraps onto further lines and is never cut short, unlike a value in a row of a [table](../visual-design.md#tables).
 
-# Artboards
+# Screenshots
 
-![Campaign screen Artboard](../../../../images/artboards/campaign-screen.png)
+The Campaign Screen as the game draws it:
 
-![Campaign screen Artboard with the Agents Detail view open](../../../../images/artboards/campaign-screen-view.png)
+![Campaign Screenshot](../../../../images/screens/campaign-screen.png)
 
-![Settings panel Artboard](../../../../images/artboards/settings-panel.png)
+![Campaign Screenshot with the Agents Detail view open](../../../../images/screens/campaign-screen-view.png)
 
-![Side panel footer Artboard with the Autopilot controls expanded](../../../../images/artboards/autopilot-footer.png)
+![Settings Screenshot](../../../../images/screens/settings-panel.png)
 
-![Keyboard shortcuts Artboard](../../../../images/artboards/keyboard-shortcuts.png)
+![Side panel footer Screenshot with the Autopilot controls expanded](../../../../images/screens/autopilot-footer.png)
 
-The Situation panel and the Agents Detail view on the [Artboards](../visual-design.md#glossary) are sample content of their regions. The following appear only on the Artboards and [must not be implemented](../visual-design.md#reading-artboards):
-
-- The sample values, e.g. Turn 16, the Track title GEO-4, and the two changed settings of the Settings panel Artboard.
-- The rows of the Keyboard shortcuts Artboard other than those of the N, U, R, Escape, Q, W, and V keys and of the S key in the Compendium, which stand for the keyboard shortcuts the Implementation adds, and the wording of every description.
-- The drawing of the globe, which stands in for the real one.
+![Keyboard shortcuts Screenshot](../../../../images/screens/keyboard-shortcuts.png)

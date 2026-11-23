@@ -31,7 +31,7 @@ Each question about the game has one source of truth, and no other artifact answ
 | What is the game meant to be, and how is it meant to work? | The specifications: design decisions, terms, concepts, and diagrams, each stated once |
 | What is a value, e.g. a cost or a rate? | The game data under `content/`; a specification says what a property means and never repeats its value |
 | What happens where the specifications say nothing? | The code and tests of the Implementation |
-| How does a screen look? | Its [Artboard](../../design/ui/visual-design.md#glossary); how it behaves is stated by its specification |
+| How does a screen look? | The Implementation; a [Screenshot](../../design/ui/visual-design.md#glossary) generated from it shows the screen in its specification |
 | What does a generated view say, e.g. the derived glossary or the Compendium preview? | Whatever it is generated from; a file under `docs/derived/` is never edited and never cited |
 | What was the intent behind the design? | The [game design brief](../../../game-design-brief.md), which decides no rule |
 
@@ -41,7 +41,7 @@ When two artifacts disagree, the source of truth for the question stands and the
 | ------------------------------------------------------------ | --------------------------------------------------- |
 | A specification states something and the code does otherwise | The code                                            |
 | A specification repeats a value and `content/` holds another | The specification, which loses the copy             |
-| A specification and an Artboard show different things        | The Artboard, which is redrawn in the same change   |
+| A Screenshot and the Implementation show different things    | The Screenshot, which is generated again            |
 | The specifications are silent                                | Nothing: the code decides, and it may change freely |
 
 The answer to a question the specifications are silent on is added to them only when it is a decision, i.e. when the Game designer would object to the code doing it differently, e.g. a rule the Player plans around. It is then stated once, in the specification that owns its subject.

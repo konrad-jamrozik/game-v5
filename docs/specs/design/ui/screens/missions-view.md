@@ -66,10 +66,10 @@ The Deploy button is the pane's primary button. It [deploys](../../mechanics/mis
 
 The Player decides whom to send by comparing the Combat ratings of sides, so each Combat rating of a side stands out from the figures around it in one shared style: the Label "Combat rating" followed by the value in the Figure style and Accent text, e.g. "COMBAT RATING 120". None is ever a [base Combat rating](../../mechanics/combat.md#combatant-condition-in-a-combat), which only the [Agent details](agents-view.md#agent-details) show, so that the Player weighs exactly the values the Combat weighs when its team considers retreating.
 
-# Artboard
+# Screenshots
 
-![Missions View panel Artboard](../../../../images/artboards/missions-view.png)
+The Missions View as the game draws it:
 
-![Missions View panel Artboard with the Concluded toggle on](../../../../images/artboards/missions-view-concluded.png)
+![Missions View Screenshot](../../../../images/screens/missions-view.png)
 
-The sample values of the [Artboards](../visual-design.md#glossary) [appear only there](../visual-design.md#reading-artboards), e.g. the Mission site names, the Enemies, and the numbers.
+![Missions View Screenshot with the Concluded toggle on](../../../../images/screens/missions-view-concluded.png)

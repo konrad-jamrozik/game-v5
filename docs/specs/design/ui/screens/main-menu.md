@@ -37,10 +37,8 @@ The layout puts what the Player most often wants, the Campaign saves, in the wid
 - The New Campaign and [Settings panels](../gui.md#glossary) are stacked in the right column.
 - The [Settings panel](../gui.md#settings-panel) opens with the [Music control](../music.md#music-control), labelled Music, above its rows, so that the music can be silenced or turned down before a Campaign is chosen.
 
-# Artboard
+# Screenshot
 
-![Main menu screen Artboard](../../../../images/artboards/main-menu.png)
+The Main Menu as the game draws it:
 
-The following appear only on the [Artboard](../visual-design.md#glossary) of the Main menu and [must not be implemented](../visual-design.md#reading-artboards):
-
-- The sample values, e.g. the Campaign IDs, T16 A3, the Track title GEO-4, the Music volume 50, the Autosave limit 5, the Autopilot Autosave limit 5, the preset Standard, and its values 500 and 20.
+![Main menu Screenshot](../../../../images/screens/main-menu.png)
