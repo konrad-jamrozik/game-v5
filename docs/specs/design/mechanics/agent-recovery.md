@@ -32,7 +32,7 @@ RecoveryParameters bundles the two recovery rates. Each property is the starting
 | Property | Meaning | Read by |
 | --- | --- | --- |
 | `health_recovery_pct_per_turn` | A [Percent value](../foundation/numbers.md#glossary): the percent of an Agent's effective max health that its current health rises by in one Advance turn, before any [Upgrade](domain-model.md#agency-and-agents). It is a Decimal quantity greater than 0, because at 0 an Agent would never leave Recovery. | [Health recovery](#health-recovery) |
-| `exhaustion_recovery_per_turn` | The [Exact exhaustion](agents-spec.md#combatant-attributes) an Agent loses in one Advance turn, before any Upgrade. It is at least 0, and at 0 [exhaustion](agents-spec.md#combatant-attributes) never falls. | [Exhaustion recovery](#exhaustion-recovery) |
+| `exhaustion_recovery_per_turn` | The [Exact exhaustion](agents-spec.md#combatant-attributes) an Agent loses in one Advance turn, before any Upgrade. It is a Decimal quantity of at least 0, and at 0 [exhaustion](agents-spec.md#combatant-attributes) never falls. | [Exhaustion recovery](#exhaustion-recovery) |
 
 # Which Agents recover
 
