@@ -16,7 +16,7 @@ It shows one row for each [History entry](../../foundation/world-history.md#glos
 
 # Turn by Turn table
 
-The [Turn](../../foundation/engine-contract.md#player-actions-and-turns) by Turn [table](../visual-design.md#tables) lists one row per ended Turn and one row for the current Turn, newest first, so the current Turn's row is at the top. Once the [Campaign](../../foundation/core-concepts.md#campaign-and-session) has a [Campaign ending](../../mechanics/domain-model.md#campaign-standing), the table has no row for the current Turn. Its columns follow in this order.
+The [Turn](../../foundation/engine-contract.md#player-actions-and-turns) by Turn [table](../visual-design.md#tables) lists one row per ended Turn and one row for the current Turn, newest first. Once the [Campaign](../../foundation/core-concepts.md#campaign-and-session) has a [Campaign ending](../../mechanics/domain-model.md#campaign-standing), the table has no row for the current Turn.
 
 | Column | What it shows for Turn t | Form |
 | --- | --- | --- |
@@ -29,7 +29,7 @@ The [Turn](../../foundation/engine-contract.md#player-actions-and-turns) by Turn
 | Panic | [Panic](../../mechanics/domain-model.md#campaign-standing) after that Advance turn. | A percentage with two decimals. |
 | Agents | The number of [Serving](../../mechanics/agents-spec.md#agent-statuses) [Agents](../../mechanics/domain-model.md#agency-and-agents) in the [Turn-end state](../../foundation/engine-contract.md#player-actions-and-turns) of Turn t. | A number. |
 | Player actions | The number of items in the [Action record](../../foundation/world-history.md#glossary) of Turn t, which opens the [Player actions list](#player-actions-list). | A number after "▸", or "▾" while its list is open; "0" in Text muted, with no marker. |
-| Events | The [Events](#events) of the Advance turn ending Turn t. | Short labels side by side. |
+| Events | The [Events](#events) of the Advance turn ending Turn t. | Short labels. |
 
 The current Turn's row shows each column as if the Advance turn ending it were committed at the [Current world state](../../foundation/engine-contract.md#player-actions-and-turns), as far as that is known before it is committed:
 
@@ -59,7 +59,7 @@ The Player who sees that a Mission was won or lost wants to see how, so each Mis
 
 # Player actions list
 
-Pressing the Player actions cell of a Turn whose Action record is not empty opens, directly under that Turn's row, a list of what the player did in that Turn, and pressing it again closes the list; the Player can open the lists of several Turns at once. Every list is closed when the View opens. The current Turn's list stays open while its Action record changes, and closes when an undo empties it; the list of a Turn stays open when Advance turn ends that Turn. The list shows one line for each item of the Action record, in its order.
+Pressing the Player actions cell of a Turn whose Action record is not empty opens a list of what the player did in that Turn, and pressing it again closes the list; the Player can open the lists of several Turns at once. Every list is closed when the View opens. The current Turn's list stays open while its Action record changes, and closes when an undo empties it; the list of a Turn stays open when Advance turn ends that Turn. The list shows one line for each item of the Action record, in its order.
 
 Each line starts with the number of the Player action in the Turn, from 1, followed by what that Player action did, and ends with its money change, "−" and the amount in Danger or "+" and the amount in Positive, or nothing when it is 0. Consecutive items that name the same operation with the same arguments are one line, and so are consecutive `hireAgents` items whatever their `count`; the line is numbered with the first and last of their numbers, e.g. "1–4", and its count and money change are their totals. E.g., four `hireAgents` of 1 Agent each followed by three `purchaseUpgrade` of the Agent cap Upgrade are the two lines "1–4 Hired 4 Agents" and "5–7 Bought 3 Agent cap Upgrades", and one `hireAgents` of 12 Agents is the line "1 Hired 12 Agents".
 

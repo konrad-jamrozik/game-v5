@@ -23,13 +23,13 @@ It reads like a small reference work. The Player narrows from a category to an a
 
 # Panes
 
-The three panes narrow the Compendium from a category to one article, left to right:
+The three panes narrow the Compendium from a category to one article:
 
 1. **Categories:** Guide first, for the [Guide articles](../../mechanics/compendium.md#glossary), then Mechanics, for the [Mechanics articles](../../mechanics/compendium.md#glossary), then one category for each [Type](../../foundation/core-concepts.md#data-modeling) of the subjects of the Player-visible Subject articles, named as [Subject data sheets](#subject-data-sheets) names it and sorted by that name, e.g. Enemies before Leads. Each category shows the number of its Player-visible articles, and a category with none is left out.
 2. **Articles:** the [displayed title](../../mechanics/compendium.md#displayed-title) of each Player-visible article of the selected category, sorted by displayed title ignoring case.
 3. **Article:** the selected article, in the parts of the [Article pane](#article-pane).
 
-When the Compendium View opens, the Guide category and its first article are selected. A search field above the panes filters the articles of every category to those whose displayed title contains the search text, ignoring case; while it holds text, the categories show the numbers of matching articles, and a category with none is left out. An article that a new [World state](../../foundation/engine-contract.md#player-actions-and-turns) makes Player-visible appears without reopening the Compendium View.
+When the Compendium View opens, the Guide category and its first article are selected. A search field filters the articles of every category to those whose displayed title contains the search text, ignoring case; while it holds text, the categories show the numbers of matching articles, and a category with none is left out. An article that a new [World state](../../foundation/engine-contract.md#player-actions-and-turns) makes Player-visible appears without reopening the Compendium View.
 
 While [Reveal hidden content](../gui.md#reveal-hidden-content) is on, the Compendium View shows the [Revealed Compendium](../../mechanics/compendium.md#revealed-compendium), in which every article counts as Player-visible.
 
@@ -37,13 +37,13 @@ The Player finds an article without the mouse by pressing S, typing part of its 
 
 # Article pane
 
-The Article pane shows one article from top to bottom in a fixed order, so that every article of a category reads alike. A part an article does not have is left out with its heading.
+The Article pane shows the parts of one article in a fixed order, so that every article of a category reads alike. A part an article does not have is left out with its heading.
 
 1. **Title row:** the displayed title and the two buttons of the [Article history](#following-links).
 2. **Body:** the resolved `body`, as one paragraph.
-3. **Formulas,** for a Mechanics article: the heading "Formulas" and a table of two columns without a header row, one row for each resolved formula row in order, its `label` in the first column and its `text` in the second. The first column is as wide as its longest label, and the second wraps.
+3. **Formulas,** for a Mechanics article: the heading "Formulas" and one row for each resolved formula row in order, its `label` beside its `text`.
 4. **Data sheet,** for a Subject article: the [Data sheet](#subject-data-sheets) of its subject.
-5. **See also:** the heading "See also" and the [See also entries](../../mechanics/compendium.md#see-also) of the article in order, on one wrapping line, separated by "·".
+5. **See also:** the heading "See also" and the [See also entries](../../mechanics/compendium.md#see-also) of the article in order, separated by "·".
 
 Every resolved text is shown segment by segment: plain text and inserted values as they are, with nothing that sets an inserted value apart, and each [Article link](../../mechanics/compendium.md#glossary) as a link the Player [follows](#following-links).
 
@@ -51,7 +51,7 @@ Every resolved text is shown segment by segment: plain text and inserted values 
 
 Reading about one thing raises a question about the next, so every mention the engine has linked is one click from its article, and the way back is as short.
 
-An Article link, whether in a resolved text, in a See also entry, or in a Data sheet, is drawn as the text around it with an underline. Selecting it shows the article it links to: the Compendium View selects that article's category in the Categories pane and the article in the Articles pane, and clears the search field when the article would not be listed under its text. Following an Article link selects an item within the same place, so it is not a [Follow](campaign-screen.md#view-trail) and adds nothing to the [View trail](../gui.md#glossary).
+Selecting an Article link, whether in a resolved text, in a See also entry, or in a Data sheet, shows the article it links to: the Compendium View selects that article's category in the Categories pane and the article in the Articles pane, and clears the search field when the article would not be listed under its text. Following an Article link selects an item within the same place, so it is not a [Follow](campaign-screen.md#view-trail) and adds nothing to the [View trail](../gui.md#glossary).
 
 The Article history remembers the articles shown, so that the Player can go back to the article they came from and forward again. One of its articles is current, the article shown. It changes as follows:
 
@@ -67,7 +67,7 @@ The two buttons of the Article history have the accessible names "Previous artic
 
 A Subject article describes its subject in words, and every value of the subject comes from the subject [GDR](../../foundation/core-concepts.md#game-build-and-content) itself, so that the Compendium never repeats a number that could go stale. The Data sheet shows those values, chosen and worded for each kind of subject instead of listed as raw properties.
 
-A Data sheet has a heading and a table of two columns without a header row: a label and a value. The following rules hold for every Data sheet:
+A Data sheet has a heading and rows of a label and a value. The following rules hold for every Data sheet:
 
 - **Rows:** the rows are those of the table for the subject's Type below, in that order. A row whose value is absent or empty is left out, and a Data sheet without a row is left out with its heading.
 - **Labels:** a label is an Article link to the article that the [Article term lookup](../../mechanics/compendium.md#player-visible-information) reports for the label's text, and plain text when it reports none, e.g. "Skill" links to the article that has the Article term "skill".

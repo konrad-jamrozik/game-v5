@@ -16,29 +16,25 @@ The Campaign screen is one of the screens that the [Graphical User Interface](..
 
 # Regions
 
-The regions keep the agency's vital values and the work waiting for the Player in view, while leaving most of the screen to the globe.
-
-- The [status bar](../visual-design.md#status-bar) spans the top of the screen.
-- The [Side panel](../gui.md#glossary) runs along the right edge of the screen below the status bar, unless the Player [has hidden it](#hiding-the-side-panel).
-- The [Globe stage](../gui.md#glossary) fills the rest of the screen, to the left of the Side panel. The globe sits centred in the Globe stage, and so left of the centre of the screen.
+The regions keep the agency's vital values and the work waiting for the Player in view, while leaving most of the screen to the globe. They are the [status bar](../visual-design.md#status-bar), the [Side panel](../gui.md#glossary), unless the Player [has hidden it](#hiding-the-side-panel), and the [Globe stage](../gui.md#glossary).
 
 The globe is a decoration: it shows a rotating Earth that the Player can turn and zoom, reads no game state, and offers no [Player action](../../foundation/engine-contract.md#player-actions-and-turns). The globe and its own controls are those of [Globe Integration](../../../implementation/recipes/globe-integration.md). The screen is complete without the globe; when no globe can be shown, the Globe stage is left empty.
 
 # Side panel
 
-The Side panel is the Player's way into every [Detail view](../gui.md#glossary) and the place where the state of the [Campaign](../../foundation/core-concepts.md#campaign-and-session) is read at a glance. It holds, from top to bottom:
+The Side panel is the Player's way into every [Detail view](../gui.md#glossary) and the place where the state of the [Campaign](../../foundation/core-concepts.md#campaign-and-session) is read at a glance. It holds:
 
-1. **Navigation:** one button for each Detail view, in the two groups and the order of the [Detail views](#detail-views), each group under its name. A button shows a count where that section gives one. Selecting the button of a Detail view opens it, and selecting the button of the open Detail view closes it.
-2. **[Situation panel](situation-panel.md):** it fills the height that the navigation and the footer leave, and scrolls inside when its content is taller.
-3. **Footer:** while [Autopilot](../../foundation/engine-contract.md#autopilot) controls shown is on, the [Autopilot controls](#autopilot-controls), and, in the bottom row, the [Music control](../music.md#music-control), followed by the Settings button, with the accessible name "Settings", which opens the [Settings panel](../gui.md#settings-panel).
+1. **Navigation:** one button for each Detail view, in the groups of the [Detail views](#detail-views). A button shows a count where that section gives one, and no count while it is 0. Selecting the button of a Detail view opens it, and selecting the button of the open Detail view closes it.
+2. **[Situation panel](situation-panel.md):** it scrolls inside when its content is taller than the room it has.
+3. **Footer:** while [Autopilot](../../foundation/engine-contract.md#autopilot) controls shown is on, the [Autopilot controls](#autopilot-controls), and always the [Music control](../music.md#music-control) and the Settings button, with the accessible name "Settings", which opens the [Settings panel](../gui.md#settings-panel).
 
 ## Hiding the Side panel
 
-The Player who reads a wide chart or a long table wants the whole width of the screen, so the Side panel can be put away and brought back at a keystroke. A button holding "»", with the accessible name "Hide the Side panel", sits on the line of the Operations group name of the navigation. Pressing it, or the V key, hides the Side panel: a narrow strip along the right edge of the screen takes its place, holding the same button, which now holds "«" and has the accessible name "Show the Side panel", and the Globe stage and the open Detail view take the rest of the width. Pressing that button, or the V key again, shows the Side panel as it was. The V key does so wherever the Player is on the Campaign screen, except while typing in a field. Whether the Side panel is hidden belongs to the GUI alone: it is shown whenever a [Session](../../foundation/core-concepts.md#campaign-and-session) starts and stays as the Player last left it for the rest of the Session, whatever Campaign is loaded.
+The Player who reads a wide chart or a long table wants the whole width of the screen, so the Side panel can be put away and brought back at a keystroke. Pressing the button "»", with the accessible name "Hide the Side panel", or the V key, hides the Side panel: a narrow strip takes its place, holding the button "«", with the accessible name "Show the Side panel", and the Globe stage and the open Detail view take the rest of the width. Pressing that button, or the V key again, shows the Side panel as it was. The V key does so wherever the Player is on the Campaign screen, except while typing in a field. Whether the Side panel is hidden belongs to the GUI alone: it is shown whenever a [Session](../../foundation/core-concepts.md#campaign-and-session) starts and stays as the Player last left it for the rest of the Session, whatever Campaign is loaded.
 
 # Detail views
 
-A Detail view opens over the Globe stage and covers it, while the status bar and the Side panel stay in view, so that the Player keeps the [Situation panel](situation-panel.md#glossary) in sight while acting in a Detail view. One Detail view is open at a time: opening another replaces it. The Detail views are in these groups and this order:
+A Detail view opens over the Globe stage and covers it, while the status bar and the Side panel stay in view, so that the Player keeps the [Situation panel](situation-panel.md#glossary) in sight while acting in a Detail view. One Detail view is open at a time: opening another replaces it. The Detail views are in these groups:
 
 - **Operations,** the Detail views in which the Player acts:
   1. [Missions](missions-view.md), for the [Mission sites](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) and the deployment of Agents to them, with the number of Active Mission sites.
@@ -72,37 +68,37 @@ E.g., the Player opens the Turn Report View from the Side panel and selects its 
 
 # Status bar values
 
-The status bar keeps in view the values that decide whether the Campaign is going well, and leaves every [Faction](../../mechanics/domain-model.md#factions)'s details to the Detail views. Its values are, in this order:
+The status bar keeps in view the values that decide whether the Campaign is going well, and leaves every [Faction](../../mechanics/domain-model.md#factions)'s details to the Detail views. Its values are:
 
 1. **Turn:** the current [Turn](../../foundation/engine-contract.md#player-actions-and-turns) number.
-2. **Money:** the [Agency](../../mechanics/domain-model.md#agency-and-agents)'s money, followed by its [projected income](../../mechanics/economy-and-upgrades.md#projected-income-and-upkeep) in Positive and its projected upkeep in Danger.
+2. **Money:** the [Agency](../../mechanics/domain-model.md#agency-and-agents)'s money, with its [projected income](../../mechanics/economy-and-upgrades.md#projected-income-and-upkeep) and its projected upkeep.
 3. **Funding:** the Agency's funding.
 4. **Agents:** the number of [Serving](../../mechanics/agents-spec.md#agent-statuses) Agents and the [Agent cap](../../mechanics/economy-and-upgrades.md#glossary), e.g. "10/20".
 5. **Panic:** [Panic](../../mechanics/domain-model.md#campaign-standing) as a [meter](../visual-design.md#meters) against the [Panic limit](../../mechanics/panic-and-endings.md#glossary).
-6. **Turns since last enemy activity:** the number of Turns since a [Response Mission site](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) last appeared, so that the Player senses how long the [Factions](../../mechanics/domain-model.md#factions) have been quiet without the status bar naming any of them. It is the current Turn number minus 1 minus the greatest [Turn created](../../mechanics/missions.md#mission-site-properties) of any Response Mission site, whatever its lifecycle state, and the current Turn number minus 1 before any Response Mission site exists. Its label may wrap onto two lines, so that the status bar keeps its controls in one row at a window 1280 px wide.
+6. **Turns since last enemy activity:** the number of Turns since a [Response Mission site](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) last appeared, so that the Player senses how long the [Factions](../../mechanics/domain-model.md#factions) have been quiet without the status bar naming any of them. It is the current Turn number minus 1 minus the greatest [Turn created](../../mechanics/missions.md#mission-site-properties) of any Response Mission site, whatever its lifecycle state, and the current Turn number minus 1 before any Response Mission site exists.
 
 # Status bar controls
 
-The status bar's controls follow its values in this order, so that the main action is last:
+The status bar's controls are:
 
 1. **Undo** and **Redo,** the buttons of [Undo and redo](#undo-and-redo).
-2. **Save,** a neutral button that [writes a Campaign save](../../foundation/saves.md#saving) of the [Current campaign](../../foundation/core-concepts.md#campaign-and-session).
-3. **[Main menu](../../foundation/campaign-lifecycle.md#glossary),** a neutral button that [closes the Current campaign](../../foundation/campaign-lifecycle.md#campaign-selection) and shows the Main menu.
+2. **Save,** which [writes a Campaign save](../../foundation/saves.md#saving) of the [Current campaign](../../foundation/core-concepts.md#campaign-and-session).
+3. **[Main menu](../../foundation/campaign-lifecycle.md#glossary),** which [closes the Current campaign](../../foundation/campaign-lifecycle.md#campaign-selection) and shows the Main menu.
 4. **Advance turn,** the primary button, which makes the Advance turn Player action. The N key presses it. While the engine reports Advance turn unavailable, the button is disabled and its tooltip gives the reason the engine reports.
 
 While an [Autopilot engagement](../../foundation/engine-contract.md#autopilot) is active, every status bar control is disabled, because the [Session controller](../../foundation/engine-contract.md#principals-and-access) [cannot use their operations](../../foundation/autopilot.md#autopilot-lifecycle-and-concurrency) until disengagement completes.
 
 # Autopilot controls
 
-The Autopilot controls in the footer of the Side panel let the Player hand play to an [Autopilot AI](../../foundation/engine-contract.md#principals-and-access) for a bounded stretch and take it back at any moment, through the operations of [Autopilot](../../foundation/autopilot.md). Collapsed, they are one row, which holds a toggle labelled Autopilot that expands them. Expanded, the footer grows upward and the Situation panel above it shrinks, and the controls are, from top to bottom:
+The Autopilot controls in the footer of the Side panel let the Player hand play to an [Autopilot AI](../../foundation/engine-contract.md#principals-and-access) for a bounded stretch and take it back at any moment, through the operations of [Autopilot](../../foundation/autopilot.md). Collapsed, they hold a toggle labelled Autopilot that expands them; expanded, they are:
 
 1. The toggle, which collapses them again.
 2. **Autopilot AI:** a selector of the [available Autopilot AIs](../../foundation/autopilot.md#available-autopilot-ais), by name.
-3. **One action** and **This [Turn](../../foundation/engine-contract.md#player-actions-and-turns)'s actions:** neutral buttons that engage the chosen Autopilot AI with the [Autopilot limit](../../foundation/autopilot.md#glossary) `singleAction` or `turnActions`.
-4. **Turns:** a field for a whole number of Turns, which shows [Autopilot Turns](#autopilot-settings), and a neutral Turns button that engages with the Autopilot limit `turnAdvancements` and that number as `count`.
+3. **One action** and **This [Turn](../../foundation/engine-contract.md#player-actions-and-turns)'s actions:** buttons that engage the chosen Autopilot AI with the [Autopilot limit](../../foundation/autopilot.md#glossary) `singleAction` or `turnActions`.
+4. **Turns:** a field for a whole number of Turns, which shows [Autopilot Turns](#autopilot-settings), and a Turns button that engages with the Autopilot limit `turnAdvancements` and that number as `count`.
 5. A line saying that the Autopilot AI plays for the Player through the same Player actions the Player has.
 
-The selector and the engaging buttons are disabled, each with the reason as its tooltip, while an Autopilot engagement is active, after the Campaign has ended, and when no Autopilot AI is available. While an Autopilot engagement is active, its [Autopilot progress](../../foundation/autopilot.md#glossary), in Player actions and Turns advanced, and a neutral Stop button that disengages Autopilot stand in the collapsed row and in place of the line in the expanded controls. When the Autopilot engagement ends, a line takes the place of the progress and the Stop button and tells the Player in plain words its disengagement reason and Autopilot progress, e.g. "Autopilot disengaged because its limit was reached: 14 Player actions, 3 Turns advanced". It stays until Autopilot is engaged again or the [Current world state](../../foundation/engine-contract.md#player-actions-and-turns) changes. For the disengagement reason Advance turn withheld, the line says that the Autopilot AI has left Advance turn to the Player, and, when no Player action was committed, that it has nothing more to do this Turn; e.g., "Autopilot finished this Turn's actions: 6 Player actions. Advancing the Turn is up to you." or "Autopilot has nothing more to do this Turn."
+The selector and the engaging buttons are disabled, each with the reason as its tooltip, while an Autopilot engagement is active, after the Campaign has ended, and when no Autopilot AI is available. While an Autopilot engagement is active, its [Autopilot progress](../../foundation/autopilot.md#glossary), in Player actions and Turns advanced, and a Stop button that disengages Autopilot stand in the collapsed controls and in place of the line in the expanded controls. When the Autopilot engagement ends, a line takes the place of the progress and the Stop button and tells the Player in plain words its disengagement reason and Autopilot progress, e.g. "Autopilot disengaged because its limit was reached: 14 Player actions, 3 Turns advanced". It stays until Autopilot is engaged again or the [Current world state](../../foundation/engine-contract.md#player-actions-and-turns) changes. For the disengagement reason Advance turn withheld, the line says that the Autopilot AI has left Advance turn to the Player, and, when no Player action was committed, that it has nothing more to do this Turn; e.g., "Autopilot finished this Turn's actions: 6 Player actions. Advancing the Turn is up to you." or "Autopilot has nothing more to do this Turn."
 
 The Player sets up Autopilot once per [Session](../../foundation/core-concepts.md#campaign-and-session) rather than once per Campaign: the GUI keeps whether the Autopilot controls are expanded and the chosen Autopilot AI as the Player last left them for the rest of the Session, whatever Campaign is created or loaded, and never persists them, so a new Session starts with the controls collapsed. When the kept Autopilot AI is no longer available, the selector shows the first available one.
 
@@ -134,7 +130,7 @@ The operations are those of [Action navigation](../../foundation/timeline.md#act
 
 # Keyboard shortcuts
 
-The keyboard shortcuts view, opened from the [Settings panel](../gui.md#settings-panel), lets the Player learn every key of the Campaign screen at one glance, so it shows each one whole, without scrolling sideways or cutting a word. It is a [dialog](../visual-design.md#dialogs) titled Keyboard shortcuts, with its close control and no buttons at its bottom.
+The keyboard shortcuts view, opened from the [Settings panel](../gui.md#settings-panel), lets the Player learn every key of the Campaign screen at one glance. It is a [dialog](../visual-design.md#dialogs).
 
 It lists every keyboard shortcut of the Campaign screen, those the specifications give, e.g. the N key for Advance turn, and those the Implementation adds, one row each: its keys, where keys that share one description are separated by "/", e.g. "U / R", and what the keys do. A description too long for one line wraps onto further lines and is never cut short, unlike a value in a row of a [table](../visual-design.md#tables).
 

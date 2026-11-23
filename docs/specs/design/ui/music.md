@@ -108,7 +108,7 @@ The Music control holds, in one row, from left to right:
 
 1. **Music toggle:** a neutral button showing a speaker, struck through while Music on is `false`. Selecting it sets Music on to the opposite value. Its accessible name is "Music on" or "Music off", after the state it shows.
 2. **Skip button:** a neutral button showing "⏭", with the accessible name "Next Track". Selecting it [skips the Current Track](#playback). It is disabled while Music on is `false` and before the first Track starts.
-3. **Track title:** the Track title of the Current Track, after a music note, e.g. "♪ GEO-4", in the Caption style. While Music on is `false` it reads "Music off" in Text muted instead, and before the first Track starts it reads nothing. A title too long for the space ends in an ellipsis, and the whole title shows on hover.
+3. **Track title:** the Track title of the Current Track, after a music note, e.g. "♪ GEO-4", in 13 px Body and Text secondary. While Music on is `false` it reads "Music off" in Text muted instead, and before the first Track starts it reads nothing. A title too long for the space ends in an ellipsis, and the whole title shows on hover.
 
 # Music volume slider
 

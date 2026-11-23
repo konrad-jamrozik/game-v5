@@ -10,7 +10,7 @@
 
 # Overview
 
-The Situation panel keeps the work under way and the work waiting for the Player in view, so that nothing needs searching for. It is compact by design: each item takes one line that says what the item is and the one thing the Player must know about it now, and every other detail is in the Detail view that the item opens. It sits in the [Side panel](../gui.md#glossary) of the [Campaign Screen](campaign-screen.md), below the navigation, and is styled as a [panel that lists groups](../visual-design.md#panels-and-cards).
+The Situation panel keeps the work under way and the work waiting for the Player in view, so that nothing needs searching for. It is compact by design: each item takes one line that says what the item is and the one thing the Player must know about it now, and every other detail is in the Detail view that the item opens. It sits in the [Side panel](../gui.md#glossary) of the [Campaign Screen](campaign-screen.md) and is styled as a [panel that lists groups](../visual-design.md#panels-and-cards).
 
 # Glossary
 
@@ -20,7 +20,7 @@ The Situation panel keeps the work under way and the work waiting for the Player
 
 # Groups
 
-The Situation panel shows the following groups in this order, each with the number of its items. A group with nothing to show is left out, and when every group is left out the panel says that nothing needs attention. Each item is one line; a name too long for the line is shortened with an ellipsis.
+The Situation panel shows the following groups, each with the number of its items. A group with nothing to show is left out, and when every group is left out the panel says that nothing needs attention. Each item is one line; a name too long for the line is shortened with an ellipsis.
 
 1. **Agents:** one line with the number of [Serving](../../mechanics/agents-spec.md#agent-statuses) Agents whose [Assignment](../../mechanics/domain-model.md#agency-and-agents) is [Standby](../../mechanics/agents-spec.md#assignments), and the number of free [Training](../../mechanics/agents-spec.md#assignments) places, i.e. the [Training cap](../../mechanics/economy-and-upgrades.md#glossary) minus the Agents counted against it, e.g. "4 on Standby · 2 Training places free". Each of the two parts is left out when its number is 0, and the group is left out when both are; the count of the group is the number of Serving Agents.
 2. **[Mission sites](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions):** first each [Active](../../mechanics/missions.md#mission-site-lifecycle) Mission site, soonest to expire first, with its [MissionSiteArchetype](../../mechanics/missions.md#missionsitearchetype)'s `name` and its [Turns until expiration](../../mechanics/missions.md#mission-site-properties), e.g. "Foil sabotage 3 T left"; then each Mission site that [became Expired or Cancelled](../../mechanics/missions.md#turn-report) in the most recent Advance turn, with its MissionSiteArchetype's `name` and the lifecycle state it reached, e.g. "Foil sabotage Expired". The count of the group is the number of Active Mission sites, because only they wait for a decision. The items are coloured by their [urgency](#mission-site-urgency).
