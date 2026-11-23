@@ -4,16 +4,16 @@ category: mechanics
 title: Exhaustion
 terms: [exhaustion, exhausted, tired]
 body: >-
-  Exhaustion measures how tired an Agent is. Contracting, Training, and fighting raise it, and only rest on Standby or
-  Recovery lowers it. A tired Agent works and fights worse, one that is too tired cannot start new work, and one that
-  works on regardless is sent back to rest.
+  Exhaustion measures how tired an Agent is. Work and fighting raise it, and only rest on Standby or Recovery lowers
+  it. A tired Agent works and fights worse, one that is too tired cannot start new work, and one that works on
+  regardless is sent back to rest.
 formulas:
   - label: 'Each turn of Contracting'
     text: '+{agent_parameters.exhaustion_per_contracting_turn}'
   - label: 'Each turn of Training'
     text: '+{agent_parameters.exhaustion_per_training_turn}'
   - label: 'Each turn on an Investigation'
-    text: 'No change'
+    text: '+{agent_parameters.exhaustion_per_investigation_turn}'
   - label: 'Each attack made in a Combat'
     text: '+{agent_parameters.exhaustion_per_attack}, hit or miss'
   - label: 'Each attack defended against'
@@ -28,7 +28,7 @@ formulas:
     text: '−{agent_parameters.skill_penalty_pct_per_exhaustion}% of skill for each point above {agent_parameters.exhaustion_free_points}'
   - label: 'New work can start at most at'
     text: '{agent_parameters.exhaustion_work_start_max}; deploying to a Mission site needs only that the Agent could still fight'
-  - label: 'Contracting and Training end at'
+  - label: 'Work ends at'
     text: "{agent_parameters.exhaustion_work_limit} or more: after that turn's work the Agent is sent to Standby"
   - label: 'Unable to fight at'
     text: '{agent_parameters.exhaustion_incapacitation} or more'

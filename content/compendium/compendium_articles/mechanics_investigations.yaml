@@ -23,7 +23,7 @@ formulas:
   - label: 'Completion'
     text: 'The effect of the Lead takes place, e.g. a Mission site appears, and the team goes to Standby, in transit'
   - label: 'Exhaustion'
-    text: 'None: an Investigation never tires an Agent'
+    text: '+{agent_parameters.exhaustion_per_investigation_turn} for each Agent each turn of work'
   - label: 'Joining'
     text: 'Agents are in transit for a turn before they add progress'
 see_also: [mechanics_leads, mechanics_mission_sites, mechanics_exhaustion, guide_investigations]

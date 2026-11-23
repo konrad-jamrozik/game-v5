@@ -2,12 +2,13 @@ id: mechanics_contracting
 type: CompendiumArticle
 category: mechanics
 title: Contracting
+visible_when:
+  lead_completed: contracting_opportunities
 terms: [Contracting, Contracting cap]
 body: >-
   Contracting sends an Agent out to work for money. It is your steady income beside funding, and it pays a little more
   for a skilled Agent and a little less for a tired one. An Agent on Contracting is away from base, so getting it back
-  for a Mission takes a turn. No Agent can contract until a Lead has found you the work, and only as many at once as
-  the Contracting cap allows.
+  for a Mission takes a turn. Only as many Agents can contract at once as the Contracting cap allows.
 formulas:
   - label: 'Income of one Agent each turn'
     text: '{economy.contracting_income_per_agent} × (1 + (effective skill − 100) ÷ {economy.contracting_skill_scale})'

@@ -129,14 +129,14 @@ See also: [Combat](#combat) · [Retreat](#retreat) · [Damage](#damage) · [Skil
 
 Source: `content/compendium/compendium_articles/mechanics_contracting.yaml`
 
-Contracting sends an [Agent](#agents) out to work for [money](#money-and-funding). It is your steady income beside funding, and it pays a little more for a skilled Agent and a little less for a [tired](#exhaustion) one. An Agent on Contracting is away from base, so getting it back for a [Mission](#missions) takes a [turn](#turns). No Agent can contract until a [Lead](#leads) has found you the work, and only as many at once as the Contracting cap allows.
+Contracting sends an [Agent](#agents) out to work for [money](#money-and-funding). It is your steady income beside funding, and it pays a little more for a skilled Agent and a little less for a [tired](#exhaustion) one. An Agent on Contracting is away from base, so getting it back for a [Mission](#missions) takes a [turn](#turns). Only as many Agents can contract at once as the Contracting cap allows.
 
 | Formulas |  |
 | --- | --- |
 | Income of one Agent each turn | 30 × (1 + ([effective skill](#skill) − 100) ÷ 200) |
 | Total | The income of every Agent on Contracting is added up, then rounded down |
 | Exhaustion | +1 each turn, after the income is paid |
-| Contracting cap | 0 until a Lead unlocks Contracting; then 4 Agents |
+| Contracting cap | 0 until a [Lead](#leads) unlocks Contracting; then 4 Agents |
 | Raising the Contracting cap | +4 the first time you win a Mission at an Initiative [Mission site](#mission-sites) of each [operation](#faction-operations) level, against any [Faction](#factions) |
 | Getting there and back | One turn [in transit](#transit) each way, with no income |
 
@@ -164,13 +164,13 @@ See also: [Combat](#combat) · [Health](#health) · [Weapon damage](#weapon-dama
 
 Source: `content/compendium/compendium_articles/mechanics_exhaustion.yaml`
 
-Exhaustion measures how tired an [Agent](#agents) is. [Contracting](#contracting), [Training](#training), and fighting raise it, and only rest on [Standby](#assignments) or [Recovery](#recovery) lowers it. A tired Agent works and fights worse, one that is too tired cannot start new work, and one that works on regardless is sent back to rest.
+Exhaustion measures how tired an [Agent](#agents) is. Work and fighting raise it, and only rest on [Standby](#assignments) or [Recovery](#recovery) lowers it. A tired Agent works and fights worse, one that is too tired cannot start new work, and one that works on regardless is sent back to rest.
 
 | Formulas |  |
 | --- | --- |
-| Each [turn](#turns) of Contracting | +1 |
-| Each turn of Training | +1 |
-| Each turn on an [Investigation](#investigations) | No change |
+| Each [turn](#turns) of [Contracting](#contracting) | +1 |
+| Each turn of [Training](#training) | +1 |
+| Each turn on an [Investigation](#investigations) | +1 |
 | Each attack made in a [Combat](#combat) | +1, hit or miss |
 | Each attack defended against | +1, hit or miss |
 | Each [Mission](#missions) survived | +5, and +1 for each 1% of the team that was killed, rounded up |
@@ -178,7 +178,7 @@ Exhaustion measures how tired an [Agent](#agents) is. [Contracting](#contracting
 | [In transit](#transit) or deployed | No rest |
 | [Skill](#skill) penalty | −1% of skill for each point above 30 |
 | New work can start at most at | 30; deploying to a [Mission site](#mission-sites) needs only that the Agent could still fight |
-| Contracting and Training end at | 70 or more: after that turn's work the Agent is sent to Standby |
+| Work ends at | 70 or more: after that turn's work the Agent is sent to Standby |
 | Unable to fight at | 100 or more |
 
 See also: [Recovery](#recovery) · [Skill](#skill) · [Assignments](#assignments) · [Exhaustion recovery](#exhaustion-recovery)
@@ -284,7 +284,7 @@ An Investigation is a team of [Agents](#agents) following a [Lead](#leads). Each
 | Removing Agents | Progress × (effective skill that stays ÷ effective skill before), rounded down |
 | Removing every Agent | The Investigation is abandoned; a new one starts from zero |
 | Completion | The effect of the Lead takes place, e.g. a Mission site appears, and the team goes to [Standby](#assignments), [in transit](#transit) |
-| [Exhaustion](#exhaustion) | None: an Investigation never tires an Agent |
+| [Exhaustion](#exhaustion) | +1 for each Agent each turn of work |
 | Joining | Agents are in transit for a turn before they add progress |
 
 See also: [Leads](#leads) · [Mission sites](#mission-sites) · [Exhaustion](#exhaustion) · [Following Leads](#following-leads)
