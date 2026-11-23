@@ -1099,12 +1099,11 @@
   ${panel('What these values cause', '', `<div id="o_agents"></div>`, 'read')}
   </div></div></section>`)
         /* Economy */
-        h.push(`<section id="economy"><div class="shead"><h2>Economy</h2><p>What an Agent earns and costs, what Upgrades cost in Turns of work, and what Missions pay.</p></div><div class="cols"><div class="col">
+        h.push(`<section id="economy"><div class="shead"><h2>Economy</h2><p>What an Agent earns and costs, and what Upgrades cost in Turns of work.</p></div><div class="cols"><div class="col">
   ${panel('Starting money and economy', 'content/configuration/campaign_configurations.yaml · economy-and-upgrades/economy_parameters.yaml', `<div class="kv"><span class="k"><code>standard.starting_money</code><small></small></span>${inp('standard.starting_money')}</div><div class="kv"><span class="k"><code>standard.starting_funding</code><small>income every Turn</small></span>${inp('standard.starting_funding')}</div>` + row('economy.hire_cost', '') + row('economy.upkeep_per_agent', 'every Serving Agent, every Turn') + row('economy.contracting_income_per_agent', 'at effective skill 100') + row('economy.contracting_skill_scale', 'effective skill above 100 that adds one more contracting income', { min: 100 }) + row('economy.base_agent_cap', '') + row('economy.base_transport_cap', 'Agents that can be Deployed at once') + row('economy.base_training_cap', '') + extra('economy'))}
   ${panel('Upgrades', 'content/economy-and-upgrades/upgrades.yaml', `<div class="tw"><table><tr><th>Upgrade</th><th>price</th><th>increment</th><th class="d">Contractor-Turns</th></tr>${UP.map((u) => `<tr><td class="name">${title(u)}</td><td>${inp(u + '.price')}</td><td>${inp(u + '.increment', { step: 0.1 })}</td><td class="d" id="ut_${u}"></td></tr>`).join('')}</table></div><div class="note">Contractor-Turns is the price divided by what one skill-100 Agent on Contracting earns after its own upkeep.</div>`)}
   </div><div class="col">
   ${panel('What these values cause', '', `<div id="o_econ"></div>`, 'read')}
-  ${panel('Initiative Mission rewards', 'content/missions/mission_site_archetypes.yaml · on_win', `<div class="tw"><table><tr><th>Mission site</th><th>money</th><th>funding</th><th>panic</th><th class="d">Σ money</th><th class="d">Σ funding</th></tr>${INIT.map((s) => `<tr><td class="name">${title(s)}</td><td>${inp(s + '.on_win.money')}</td><td>${inp(s + '.on_win.funding')}</td><td>${inp(s + '.on_win.panic', { step: 0.05, min: -100 })}</td><td class="d" id="rm_${s}"></td><td class="d" id="rf_${s}"></td></tr>`).join('')}</table></div><div class="note">The sums run down one Faction's chain, each site Won once.</div>`)}
   </div></div></section>`)
         /* Leads */
         h.push(`<section id="leads"><div class="shead"><h2>Leads and Investigations</h2><p>How many Turns of investigating stand between the Agency and each step of the Victory path.</p></div><div class="cols"><div class="col">
@@ -1116,7 +1115,7 @@
   </div></div></section>`)
         /* Factions */
         const wcols = LEVELS
-        h.push(`<section id="factions"><div class="shead"><h2>Factions and Panic</h2><p>How fast the Factions escalate, how often they strike, and how long the Agency can afford to look away.</p></div>
+        h.push(`<section id="factions"><div class="shead"><h2>Factions and Panic</h2><p>How fast the Factions escalate, how often they strike, what Initiative and Response Missions pay, and how long the Agency can afford to look away.</p></div>
   ${panel(
     'Faction activity levels',
     'content/factions/faction_activity_levels.yaml',
@@ -1130,6 +1129,7 @@
     )}</table></div><div class="note">The last three columns give the Turn on which each Faction is expected to enter the level, taking every duration at its mean.</div>`,
   )}
   <div class="cols"><div class="col">
+  ${panel('Initiative Mission rewards', 'content/missions/mission_site_archetypes.yaml · on_win', `<div class="tw"><table><tr><th>Mission site</th><th>money</th><th>funding</th><th>panic</th><th class="d">Σ money</th><th class="d">Σ funding</th></tr>${INIT.map((s) => `<tr><td class="name">${title(s)}</td><td>${inp(s + '.on_win.money')}</td><td>${inp(s + '.on_win.funding')}</td><td>${inp(s + '.on_win.panic', { step: 0.05, min: -100 })}</td><td class="d" id="rm_${s}"></td><td class="d" id="rf_${s}"></td></tr>`).join('')}</table></div><div class="note">The sums run down one Faction's chain, each site Won once.</div>`)}
   ${panel(
     'Faction operation levels',
     'content/factions/faction_operation_levels.yaml',
