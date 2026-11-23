@@ -157,7 +157,7 @@ Undo never continues into the previous Turn. At the Turn-start state, `undoActio
 
 Action navigation and Autosave navigation are [Session API](engine-contract.md#api-surfaces) operations. They are unavailable to an Autopilot AI and unavailable while an Autopilot engagement is active, under [Autopilot lifecycle and concurrency](autopilot.md#autopilot-lifecycle-and-concurrency).
 
-Autosave navigation fails for the reasons listed under [Edge cases and failure behavior](saves.md#edge-cases-and-failure-behavior) in Saves, with these complete consequences:
+Autosave navigation fails for the reasons listed under [Edge cases and failure behavior](saves.md#loading) in Saves, with these complete consequences:
 
 - **A Furthest progress Autosave that cannot be written:** `undoToAutosave()` fails with the Save reason and changes nothing.
 - **A target that cannot be loaded:** `undoToAutosave()` or `redoToAutosave()` fails with the Load reason and leaves the entire prior [Session](core-concepts.md#campaign-and-session) unchanged. A Furthest progress Autosave written by that call stays.
