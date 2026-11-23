@@ -72,7 +72,7 @@ An AgencyArchetype is the [Archetype](../foundation/core-concepts.md#campaign-in
 
 # Campaign configuration values
 
-What the Agency starts with is chosen with the [Campaign configuration preset](../foundation/game-data-records.md#glossary), so that it can differ between [Campaigns](../foundation/core-concepts.md#campaign-and-session). Both [Campaign configuration](../foundation/campaign-state.md#glossary) values are [fixed after creation](../foundation/configuration.md#changing-campaign-configuration-during-play).
+What the Agency starts with is chosen with the [Campaign configuration preset](../foundation/game-data-records.md#glossary), so that it can differ between [Campaigns](../foundation/core-concepts.md#campaign-and-session). Both of these [Campaign configuration](../foundation/campaign-state.md#glossary) values are [fixed after creation](../foundation/configuration.md#changing-campaign-configuration-during-play).
 
 | Campaign configuration value | Preset property | Type and permitted values | How campaign creation uses it |
 | --- | --- | --- | --- |

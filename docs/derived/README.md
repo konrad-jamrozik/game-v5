@@ -82,7 +82,7 @@ These informative views are derived from the registered Markdown specifications.
 | LEAD | [Leads and Progression](../specs/design/mechanics/leads-and-progression.md) | What a Lead GDR describes, Lead discovery, Lead availability, Lead status, the effect of completing a Lead, the Initiative operation level, and the Initiative levels won that raise the Contracting cap. |
 | MISSION | [Missions](../specs/design/mechanics/missions.md) | What a Mission site and a Mission have, Mission site creation, the Mission site and Mission lifecycles, the deployAgents action, Mission resolution, expiration, and the Consequences for the Campaign. |
 | RECOVER | [Agent Recovery](../specs/design/mechanics/agent-recovery.md) | Health recovery and exhaustion recovery of Agents, and the RecoveryParameters GDR. |
-| TURN | [Turn Advancement](../specs/design/mechanics/turn-advancement.md) | The canonical order of Turn advancement steps and which values each step uses. |
+| TURN | [Turn Advancement](../specs/design/mechanics/turn-advancement.md) | The canonical order of Turn advancement steps, which values each step uses, and the Prologue. |
 
 ## Content
 

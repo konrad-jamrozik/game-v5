@@ -5,7 +5,7 @@
 | Spec ID | TURN |
 | Family | Mechanics |
 | Audience | Engine designer, AI designer, Implementer |
-| Owns | The canonical order of Turn advancement steps and which values each step uses. |
+| Owns | The canonical order of Turn advancement steps, which values each step uses, and the Prologue. |
 | Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
@@ -105,3 +105,16 @@ The specification that owns a value states how several changes to it combine, e.
 A Campaign instance created partway through an Advance turn meets steps written for the instances that existed when it began, so whether it takes part in them is decided rather than left to the order.
 
 Mission sites and their Enemies are the only Campaign instances created during Advance turn; a Mission is created only by a [Player action](../foundation/engine-contract.md#player-actions-and-turns), during a Turn. A Campaign instance created during a step takes part in a later step of the same Advance turn only where a [Same-turn interaction](#same-turn-interactions) states so, which is the cancellation of a Mission site that cannot exist.
+
+# Prologue
+
+A Campaign can begin already under way, so that every screen has something to show from the first moment, e.g. for pictures of the game. The [Campaign configuration](../foundation/campaign-state.md#glossary) value Prologue, preset property `prologue`, is 0 or 1 and is fixed after creation. When it is 0, the player receives the initial Campaign state.
+
+When it is 1, campaign creation continues from the initial Campaign state: the engine takes Player actions and advances Turns, each as a player could, and the player receives the Campaign at the start of the Turn this Prologue reached. The [History](../foundation/campaign-state.md#glossary) holds the Turns of the Prologue like any other Turns. The Prologue may fix Random outcomes to reach what it must; which Player actions it takes and how many Turns it advances is not decided here.
+
+Whatever the [Campaign seed](../foundation/determinism-and-randomness.md#glossary), a Campaign that the player receives after a Prologue has no Campaign ending and holds at least:
+
+- one Killed Agent, one Recovering Agent, one Agent in Training, and one Agent on an Active Investigation;
+- one Completed Investigation;
+- one Active Mission site and one Won Mission;
+- one [Upgrade](domain-model.md#agency-and-agents) the Agency has bought.
