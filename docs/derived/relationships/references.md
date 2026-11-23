@@ -33,15 +33,13 @@ A → B means A is referenced by B: the text of B links to A. Layer 1 is drawn a
 | 6 | TIMELINE Timeline | CORE, CSTATE, ENG, SAVES |
 | 7 | DEV Developer Access | CINST, CORE, DETERM, ENG, SAVES, TIMELINE |
 | 7 | WHIST History and Turn Report | CINST, CORE, CSTATE, ENG, TIMELINE |
-| 8 | CONFIG Configuration | CORE, CSTATE, ENG, GDR, SAVES, TIMELINE, WHIST |
 | 8 | DOM Domain Model | CINST, COND, CORE, CSTATE, EFFECT, ENG, GDR, WHIST |
 | 8 | SCHEMA Storage Schema | CORE, CSTATE, ENG, SAVES, TIMELINE, WHIST |
 | 9 | AGENT Agents | CINST, CORE, CSTATE, DOM, ENG, NUMBERS, WHIST |
 | 9 | ENDING Panic and Endings | CORE, CSTATE, DOM, EFFECT, ENG, NUMBERS, WHIST |
 | 9 | FACTION Factions | CINST, CORE, CSTATE, DOM, EFFECT, ENG, NUMBERS, WHIST |
-| 9 | MENU Main Menu | CONFIG, CORE, CSTATE, DETERM, ENG, GDR, LIFE, SAVES |
 | 9 | PAPI Player API | CORE, CSTATE, DOM, ENG |
-| 10 | COMBAT Combat | AGENT, CINST, CORE, CSTATE, DETERM, DOM, ENG, NUMBERS, WHIST |
+| 10 | COMBAT Combat | AGENT, CINST, CORE, CSTATE, DETERM, DOM, ENG, FACTION, LIFE, NUMBERS, WHIST |
 | 10 | HVIEW History View | AGENT, CINST, CORE, CSTATE, DOM, ENG, WHIST |
 | 10 | RECOVER Agent Recovery | AGENT, CINST, CORE, CSTATE, DOM, ENG, NUMBERS, WHIST |
 | 11 | EQUIP Equipment | AGENT, CINST, COMBAT, COND, CORE, CSTATE, DOM, ENG, WHIST |
@@ -68,7 +66,9 @@ A → B means A is referenced by B: the text of B links to A. Layer 1 is drawn a
 | 19 | SOUNDS Sounds | COMP, COMPV, CORE, ENG, GUI, TSUM |
 | 19 | TRVIEW Turn Report View | AGENT, CINST, COMBAT, CSTATE, DOM, ENG, EQUIP, GUI, TSUM |
 | 20 | CSCR Campaign Screen | AGENT, AUTO, CORE, CSTATE, DOM, ENDING, ENG, GUI, LIFE, SAVES, SITP, SOUNDS, TSUM |
+| 20 | CSIM Combat Simulator | AGENT, COMBAT, CORE, CRPLAY, DOM, ENG, GUI, LIFE |
 | 20 | VIS Visual Design | AGENT, COMBAT, CORE, CRPLAY, DOM, ECON, ENG, GUI, INVSTG, LEAD, LIFE, TSUM |
+| 21 | CONFIG Configuration | CORE, CSIM, CSTATE, ENG, GDR, SAVES, TIMELINE, WHIST |
 | 21 | GDRS GDRs | AGENT, COMBAT, COMP, CORE, DOM, ECON, EFFECT, ENG, EQUIP, FACTION, GDR, LEAD, MUSIC, VIS |
 | 21 | PLACE Implementation Placement | CORE, MUSIC, SOUNDS, VIS |
 | 22 | APPERF Autopilot Performance | AGENT, BASICAI, COMBAT, COND, CORE, CSTATE, DOM, ECON, ENG, PLACE, SAVES |
@@ -76,6 +76,7 @@ A → B means A is referenced by B: the text of B links to A. Layer 1 is drawn a
 | 22 | GLOBE Globe Integration | CORE, ENG, GUI, PLACE |
 | 22 | LICENSE Implementation License | PLACE |
 | 22 | LOOP Development Loop | CORE, ENG, PLACE, VIS |
+| 22 | MENU Main Menu | CONFIG, CORE, CSIM, CSTATE, DETERM, ENG, GDR, LIFE, SAVES |
 | 22 | REUSE Rule Reuse | COMBAT, CORE, DOM, ENG, PLACE |
 | 22 | TESTVAL Test Values | CORE, PLACE |
 

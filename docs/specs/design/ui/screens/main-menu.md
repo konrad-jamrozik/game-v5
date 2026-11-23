@@ -35,6 +35,7 @@ The layout puts what the Player most often wants, the Campaign saves, in the wid
 - Each Campaign save [listed](../../foundation/saves.md#listing-campaign-saves) for the Campaign is one row of the card: its name, its Turn and its number of [Player actions](../../foundation/engine-contract.md#player-actions-and-turns) in that Turn, e.g. T13 A5, and Load and Delete.
 - The rows of a card are ordered by Turn, earliest first, and rows of one Turn by their number of Player actions, fewest first, so that the card reads in the order play reached each Campaign save. Rows equal in both are ordered by the time each was last written, earliest first, except that the Current Autosave comes after every other [Autosave](../../foundation/saves.md#autosave-kinds) equal to it in both, because it stands for where play is now, e.g. after a [Disengagement Autosave](../../foundation/saves.md#autosave-kinds) of that World state.
 - The [Settings panel](../gui.md#settings-panel) opens with the [Music control](../music.md#music-control), labelled Music, so that the music can be silenced or turned down before a Campaign is chosen.
+- While the [Combat simulator](combat-simulator.md#glossary) shown setting is on, a neutral Combat simulator button stands in the Main menu's header and [opens the Combat simulator](combat-simulator.md#opening-the-combat-simulator).
 
 # Screenshot
 

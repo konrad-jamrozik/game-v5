@@ -114,6 +114,7 @@ Each game concept has the following modeling role and multiplicity.
 | Weapon GDRs | GDRs | Not Campaign instances | [Weapon](combat.md#weapon) in Combat |
 | Armor GDRs | GDRs | Not Campaign instances | [Armor](combat.md#armor) in Combat |
 | AmmoType GDRs | GDRs | Not Campaign instances | [AmmoType](combat.md#ammotype) in Combat |
+| DetachedCombatTeam GDRs | GDRs serving the Display content purpose | Not Campaign instances | [DetachedCombatTeam](combat.md#detachedcombatteam) in Combat |
 | Upgrade GDRs | GDRs | Not Campaign instances | [Upgrades](economy-and-upgrades.md#upgrades) in Economy and Upgrades |
 | CompendiumArticle GDRs | GDRs serving the Display content purpose | Not Campaign instances | [CompendiumArticle](compendium.md#compendiumarticle) in Compendium |
 | Archetypes of the seven Campaign instance Types | GDRs serving the [Archetype](../foundation/core-concepts.md#campaign-instances) purpose | Not Campaign instances; sharing an Archetype does not limit how many Campaign instances exist | The specification that details each Campaign instance Type |

@@ -396,7 +396,7 @@ A Combat report is the full account of one Combat, from which a player can follo
 1. **Combat outcome:** Won, Retreated, or Wiped.
 2. **Number of Combat rounds:** a whole number of at least 0.
 3. **Participants:** the Agents' side and the Enemies' side, each as the list of [Instance IDs](../foundation/campaign-instances.md#glossary) in its fixed order.
-4. **Starting values:** for each participant, its base skill, current health, effective max health, exhaustion, effective weapon damage, effective armor, effective skill, and Incapacitated value when the Combat began, after step 1 of [Combat start](#combat-start).
+4. **Starting values:** for each participant, its base skill, current health, effective max health, exhaustion, effective weapon damage, effective armor, effective skill, Combat rating, and Incapacitated value when the Combat began, after step 1 of [Combat start](#combat-start).
 5. **Final values:** for each participant, its current health, current armor, exhaustion, and effective skill when the Combat ended, and its final condition: able to fight, Incapacitated, or dead.
 6. **Damage dealt and damage taken:** for each participant, its damage dealt and its damage taken; and for each Agent, its [combat experience](#combat-experience).
 7. **Combat ratings:** the Combat rating of each side at Combat start and at the end of every Combat round.
@@ -435,6 +435,33 @@ A balancing tool asks the same question many times, e.g. how often one team wins
 - **Outputs:** It returns, in order of `i`, the Combat summary of each Combat that was fought, and the totals over them: their number, the number of Combats with each Combat outcome, and the sum of the Agents dead. It returns no Combat report and no final value of any Combatant.
 
 E.g., to learn only whether at least 90 of 100 Combats would be Won, a balancing tool calls `fightCombatBatch` with the Detached seed `outpost|4`, a `count` of 100, and a `stop` whose `won` is 90 and whose `notWon` is 11, and the batch ends as soon as the answer is certain. Calling `fightCombat` with the same setup and the Detached seed `outpost|4#37` then gives the Combat report of the batch's thirty-seventh Combat, e.g. to see why it was lost.
+
+## Detached Combat without a Current campaign
+
+A Detached Combat on explicit values and on GDRs reads no Campaign, and a user interface may offer such Combats at the [Main menu](../foundation/campaign-lifecycle.md#glossary), where there is none, e.g. to try teams against each other. Two [Session API](../foundation/engine-contract.md#api-surfaces) operations therefore serve it, available to the [Session controller](../foundation/engine-contract.md#principals-and-access) whether or not the [Session](../foundation/core-concepts.md#campaign-and-session) has a Current campaign and whatever the [Dev mode](../foundation/engine-contract.md#principals-and-access) setting is, because they read only the Game build and change nothing:
+
+- **`session.combatSimulator.fightCombat(setup)`** fights the Detached Combat that `developer.tools.fightCombat(setup)` fights on the same `setup`, and returns the same outputs. It reads no Campaign, so it rejects a setup with an entry that names an Agent or an Enemy by Instance ID, and every GDR value the setup leaves out is the one the Game build supplies.
+- **`session.combatSimulator.getContent()`** returns what a setup is built from: the Player-visible properties of every Weapon, Armor, AmmoType, and EnemyArchetype and of the AgentArchetype, every MissionSiteArchetype with the EnemyArchetype of each Enemy a new Mission site of it would have, in their [creation order](missions.md#enemy-creation), and every [DetachedCombatTeam](#detachedcombatteam).
+
+### DetachedCombatTeam
+
+Which teams of Agents are worth having ready for such a Combat is content rather than design, so each is one GDR of Type DetachedCombatTeam, which serves the Display content purpose: no rule reads it, and `getContent()` returns them in their authored order. The Content designer keeps one that suits the Mission sites of each [Faction operation level](factions.md#glossary), and one that suits the hardest Mission site of the Game build.
+
+| Property | Meaning                                                                               |
+| -------- | ------------------------------------------------------------------------------------- |
+| `name`   | The display name of the team, e.g. "Level 1 team".                                    |
+| `agents` | A list of one or more groups of equal Agents, in the fixed order of the Agents' side. |
+
+Each group of `agents` has these properties:
+
+| Property     | Meaning                                                                                             |
+| ------------ | --------------------------------------------------------------------------------------------------- |
+| `count`      | The number of Agents of the group, a whole number of at least 1.                                    |
+| `base_skill` | The base skill of each, a whole number of at least 0.                                               |
+| `max_health` | The effective max health of each, a whole number of at least 1. Each starts at full current health. |
+| `exhaustion` | The exhaustion of each, a whole number of at least 0. It is 0 when the group leaves it out.         |
+| `weapon`     | The Weapon of each, by identifier. Its `base_weapon_damage` is the effective weapon damage of each. |
+| `armor`      | The Armor of each, by identifier. Its `base_armor` is the effective armor of each.                  |
 
 # Player-visible information
 

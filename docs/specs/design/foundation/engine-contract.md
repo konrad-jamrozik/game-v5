@@ -131,11 +131,14 @@ Engine API
 │   ├── developer
 │   │   ├── enable()
 │   │   └── disable()
-│   └── autopilot
-│       ├── listAutopilotAis()
-│       ├── engage(autopilotAiId, limit)
-│       ├── getStatus(engagementId)
-│       └── disengage(engagementId)
+│   ├── autopilot
+│   │   ├── listAutopilotAis()
+│   │   ├── engage(autopilotAiId, limit)
+│   │   ├── getStatus(engagementId)
+│   │   └── disengage(engagementId)
+│   └── combatSimulator
+│       ├── getContent()
+│       └── fightCombat(setup)
 ├── player
 │   ├── queries
 │   │   ├── getCurrentLiveWorldState()
@@ -174,6 +177,7 @@ The following table holds the namespace placement rules. For each namespace it n
 | `session.timeline` | Timeline status, undo and redo of Player actions within the current Turn, and undo and redo across Turns. | [Action navigation](timeline.md#action-navigation) and [Autosave navigation](timeline.md#autosave-navigation) in Timeline |
 | `session.developer` | Enabling and disabling Dev mode. | [Dev mode](developer-access.md#dev-mode) in Developer Access |
 | `session.autopilot` | Listing the Autopilot AIs available for engagement, engaging Autopilot, reporting an Autopilot engagement's status, and disengaging it. | [Available Autopilot AIs](autopilot.md#available-autopilot-ais) and [Autopilot lifecycle and concurrency](autopilot.md#autopilot-lifecycle-and-concurrency) in Autopilot |
+| `session.combatSimulator` | Running one part of the Game rules on inputs the caller supplies, as a Developer tool does, but with or without a Current campaign and whatever the Dev mode setting is, because its operations read only the Game build and change nothing. | The Mechanics specification owning that part of the Game rules |
 | `player.queries` | Read-only Player-visible information and ordinary action discovery: the Current world state, both what is in play and what has left play, the Campaign's settings, what happened in past Turns, the available actions, and whether a given gameplay action would succeed. | [Player-visible information](player-api.md#player-visible-information) and [Action preview](player-api.md#action-preview) in Player API, [Current world state, Turn report, and history](world-history.md#current-world-state-turn-report-and-history) in History and Turn Report, and the specification owning each value |
 | `player.actions` | Normal gameplay mutations, including Advance turn. | [Gameplay actions](player-api.md#gameplay-actions) in Player API, and the Mechanics specification owning each action; [Turn Advancement](../mechanics/turn-advancement.md) for Advance turn |
 | `developer.queries` | Read-only inspection of full Campaign state and of values derived from the Game build that are not Player-visible. Its `getCampaignState()` returns Campaign state in full; every other operation is owned by the Mechanics specification that defines the values it returns, e.g. `getInitiativeOperationLevels()`. | [Inspection contract](developer-access.md#inspection-contract) in Developer Access, and the Mechanics specification owning each value |

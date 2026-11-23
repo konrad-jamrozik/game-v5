@@ -1,0 +1,84 @@
+id: level_1_team
+type: DetachedCombatTeam
+name: Level 1 team
+agents:
+  - count: 4
+    base_skill: 100
+    max_health: 30
+    weapon: combat_pistol
+    armor: standard_uniform
+---
+id: level_2_team
+type: DetachedCombatTeam
+name: Level 2 team
+agents:
+  - count: 2
+    base_skill: 130
+    max_health: 30
+    weapon: rifle
+    armor: padded_jacket
+  - count: 4
+    base_skill: 110
+    max_health: 30
+    weapon: combat_pistol
+    armor: padded_jacket
+---
+id: level_3_team
+type: DetachedCombatTeam
+name: Level 3 team
+agents:
+  - count: 4
+    base_skill: 180
+    max_health: 30
+    weapon: augmented_rifle
+    armor: reinforced_ballistic_vest
+  - count: 8
+    base_skill: 140
+    max_health: 30
+    weapon: rifle
+    armor: ballistic_vest
+---
+id: level_4_team
+type: DetachedCombatTeam
+name: Level 4 team
+agents:
+  - count: 6
+    base_skill: 260
+    max_health: 30
+    weapon: machine_gun
+    armor: tactical_armor
+  - count: 12
+    base_skill: 190
+    max_health: 30
+    weapon: augmented_rifle
+    armor: reinforced_ballistic_vest
+---
+id: level_5_team
+type: DetachedCombatTeam
+name: Level 5 team
+agents:
+  - count: 8
+    base_skill: 350
+    max_health: 30
+    weapon: laser_rifle
+    armor: battle_suit
+  - count: 16
+    base_skill: 260
+    max_health: 30
+    weapon: machine_gun
+    armor: tactical_armor
+---
+id: hq_team
+type: DetachedCombatTeam
+name: HQ team
+agents:
+  - count: 10
+    base_skill: 500
+    max_health: 30
+    weapon: augmented_laser_rifle
+    armor: reinforced_battle_suit
+  - count: 20
+    base_skill: 350
+    max_health: 30
+    weapon: laser_rifle
+    armor: battle_suit

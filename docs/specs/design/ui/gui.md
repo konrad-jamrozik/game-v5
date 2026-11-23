@@ -31,10 +31,11 @@ Its screens follow the life of a [Session](../foundation/core-concepts.md#campai
 
 # Screens
 
-The GUI has two screens, and each has its own specification in the `screens/` directory, which owns what the screen shows, how it is laid out, and how it is illustrated:
+The GUI has three screens, and each has its own specification in the `screens/` directory, which owns what the screen shows, how it is laid out, and how it is illustrated:
 
 - [Main Menu](screens/main-menu.md): the screen the GUI opens at, where no [Campaign](../foundation/core-concepts.md#campaign-and-session) is current yet.
 - [Campaign Screen](screens/campaign-screen.md): the screen for playing the current Campaign. Its parts with a specification of their own are the [Situation Panel](screens/situation-panel.md), the [Turn Summary](screens/turn-summary.md) dialog, and one specification for each Detail view: the [Missions View](screens/missions-view.md), [Leads View](screens/leads-view.md), [Agents View](screens/agents-view.md), [Storage View](screens/storage-view.md), [Acquisitions View](screens/acquisitions-view.md), [Upgrades View](screens/upgrades-view.md), [Turn Report View](screens/turn-report-view.md), [History View](screens/history-view.md), [Charts View](screens/charts-view.md), and [Compendium View](screens/compendium-view.md), and the [Combat Replay](screens/combat-replay.md) of the Turn Report View.
+- [Combat Simulator](screens/combat-simulator.md): the screen, hidden until the Game designer asks for it, on which two teams of the Game designer's choosing fight a [Combat](../mechanics/domain-model.md#combat) that the Combat Replay shows.
 
 # Settings panel
 
