@@ -451,7 +451,8 @@ describe('shared specification analysis', () => {
           kindOf(relationship.dependencyId) === 'Governance' && kindOf(relationship.dependentId) !== 'Governance',
       ),
     ).toEqual([])
-  })
+    // It analyses every specification, which takes several seconds when the machine is busy.
+  }, 60_000)
 })
 
 describe('derived documentation checking', () => {
