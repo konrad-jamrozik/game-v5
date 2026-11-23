@@ -21,12 +21,12 @@ Campaign state is organized by what changes it. Each Player action of the curren
 | Live world state | The part of a [World state](engine-contract.md#player-actions-and-turns) other than its Retired world state: every [Campaign instance](core-concepts.md#campaign-instances) still in play, and every other value of the world, e.g. the turn number. | Active world state |
 | Retired world state | The part of a World state holding what can no longer change: every Campaign instance that has left play, e.g. a Killed Agent or an Expired Mission site, each with every property at its final value, and every fact that a specification records once and for the rest of the Campaign, e.g. that something was discovered. | Archived; archival; became historical; deconstructed; destroyed. Legitimate destruction mechanics remain valid, and leaving play does not replace named lifecycle states, e.g. Killed and Completed. |
 | History | The component of [Campaign state](core-concepts.md#campaign-and-session) that keeps the ended [Turns](engine-contract.md#player-actions-and-turns) of the [Campaign](core-concepts.md#campaign-and-session), from its start: a record of each ended Turn and the past values that charts show. | World history. Participation history and Git history remain valid. |
-| Campaign configuration | The component of Campaign state containing the campaign-specific parameters that campaign creation sets and that the [Game rules](core-concepts.md#game-build-and-content) read to select or adjust how the game plays. Each parameter is either adjustable during play, under [Changing Campaign configuration during play](configuration.md#changing-campaign-configuration-during-play) in Configuration, or fixed after creation. | Scenario, naming campaign setup; scenario GDR; scenario setup. Unrelated uses of "configuration" remain valid. |
+| Campaign configuration | The component of Campaign state containing the campaign-specific parameters that campaign creation sets and that the [Game rules](core-concepts.md#game-build-and-content) read to select or adjust how the game plays. Each parameter is either [adjustable during play](configuration.md#changing-campaign-configuration-during-play) or fixed after creation. | Scenario, naming campaign setup; scenario GDR; scenario setup. Unrelated uses of "configuration" remain valid. |
 | Turn report | The component of Campaign state describing what the most recent committed Advance turn did, i.e. the Turn advancement from the previous Turn to the current one, e.g. each Combat it fought and how that Combat went. The first Turn of a Campaign has no Turn report. |  |
 
 # Campaign state composition
 
-Campaign state is one part of the data the engine keeps, under [Data ownership](engine-contract.md#data-ownership) in Engine Contract, and a [Campaign save](engine-contract.md#persisted-data) holds exactly the Campaign state, under [Campaign save contents](saves.md#campaign-save-contents) in Saves. Campaign state has the following complete conceptual hierarchy.
+Campaign state is [one part of the data the engine keeps](engine-contract.md#data-ownership), and it has the following conceptual hierarchy.
 
 ```text
 Campaign state
@@ -48,7 +48,7 @@ World state
 └── Retired world state
 ```
 
-The following table states where each component is specified. It is complete.
+The following table states where each component is specified.
 
 | Component | Specified in |
 | --- | --- |
@@ -61,18 +61,18 @@ Every Campaign instance is part of a World state, never of the History or of Cam
 
 # What the Game rules read
 
-Every outcome of the Game rules, i.e. whether a [Player action](engine-contract.md#player-actions-and-turns) is permitted, what it changes, and what Advance turn does, depends only on the [Current world state](engine-contract.md#player-actions-and-turns), the History, the Campaign configuration, and the [GDRs](core-concepts.md#game-build-and-content) of the [Game build](core-concepts.md#game-build-and-content). The Game rules read no other World state the Timeline holds, and neither the Timeline pointer nor the Turn report affects an outcome. Queries read the same data, and also report the Turn report and what the Timeline holds of the current Turn, under [Current world state, Turn report, and history](world-history.md#current-world-state-turn-report-and-history) in History and Turn Report.
+Every outcome of the Game rules, i.e. whether a [Player action](engine-contract.md#player-actions-and-turns) is permitted, what it changes, and what Advance turn does, depends only on the [Current world state](engine-contract.md#player-actions-and-turns), the History, the Campaign configuration, and the [GDRs](core-concepts.md#game-build-and-content) of the [Game build](core-concepts.md#game-build-and-content). The Game rules read no other World state the Timeline holds, and neither the Timeline pointer nor the Turn report affects an outcome. [Queries](world-history.md#current-world-state-turn-report-and-history) read the same data, and also report the Turn report and what the Timeline holds of the current Turn.
 
 # World state and History
 
-A World state and the History divide the Campaign's world by when it can change. The following rules are complete:
+A World state and the History divide the Campaign's world by when it can change:
 
 - **Leaving play:** A Campaign instance that leaves play moves from the Live world state to the Retired world state of the World state that its Player action or Advance turn produces, and it stays in the Retired world state of every later World state. It never moves into the History. Undo therefore brings back a Campaign instance that a Player action of the current Turn took out of play, e.g. a Dismissed Agent, because the World state before that Player action still holds it in the Live world state. The specification owning each Campaign instance [Type](core-concepts.md#data-modeling) states when its Campaign instances leave play.
 - **Facts that change during a Turn:** A value that the Game rules read and that can change during a Turn is part of the World state, not of the History, so that undo returns it to its earlier value; e.g., an Agent's Participation history, which grows when the player recalls the Agent from an Investigation.
-- **The History changes only at the end of a Turn:** The History holds only what the end of a Turn writes. Only Advance turn changes it, under [Turn report and history](world-history.md#turn-report-and-history) in History and Turn Report, so undo and redo within a Turn never reach it, and the History needs no pointer of its own.
+- **The History changes only at the end of a Turn:** The History holds only what the end of a Turn writes. Only [Advance turn changes it](world-history.md#turn-report-and-history), so undo and redo within a Turn never reach it, and the History needs no pointer of its own.
 
 # Campaign initialization
 
-Every [Campaign](core-concepts.md#campaign-and-session) starts from data the [Game build](core-concepts.md#game-build-and-content) supplies and choices made before creation, and nothing else. Campaign initialization receives setup inputs and immutable Game Data Records ([GDRs](core-concepts.md#game-build-and-content)) supplied by the Game build, and produces the initial Campaign state from them as the specifications owning campaign creation describe. GDRs supply data; specifications describe calculations and permitted behavior, including which Campaign instances the initial World state contains, under [Campaign instance creation](campaign-instances.md#campaign-instance-creation) in Campaign Instances. A [GDR](core-concepts.md#game-build-and-content) is data, not Game rules. The engine performs every operation: it reads GDRs and carries out the specified Game rules, and a GDR performs no operation.
+Every [Campaign](core-concepts.md#campaign-and-session) starts from data the [Game build](core-concepts.md#game-build-and-content) supplies and choices made before creation, and nothing else. Campaign initialization receives setup inputs and the Game Data Records ([GDRs](core-concepts.md#game-build-and-content)) supplied by the Game build, and produces the initial Campaign state from them as the specifications owning campaign creation describe, including [which Campaign instances the initial World state contains](campaign-instances.md#campaign-instance-creation). A [GDR](core-concepts.md#game-build-and-content) is data, not Game rules: the engine performs every operation, reading GDRs and carrying out the specified Game rules.
 
 The initial Campaign state has a Timeline holding only the [Turn-start state](engine-contract.md#player-actions-and-turns) of the first Turn, with the Timeline pointer on it, an empty History, the Campaign configuration that campaign creation resolved, and no Turn report.
