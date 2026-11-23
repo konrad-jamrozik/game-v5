@@ -14,7 +14,7 @@ First choose the mode from how the user phrased the feedback:
 - **Go:** the user states the feedback as an instruction, e.g. "apply feedback: this UI renders wrong due to alignment". Design the change yourself, make every judgement call with the option you would recommend, and carry it through to `main` without waiting for approval; the user reviews your decisions afterwards, from the report.
 - **Discuss:** the feedback shows any hint of uncertainty, e.g. it asks a question ("should Missions be harder?"), hedges ("maybe", "I'm not sure", "what do you think"), weighs options, or asks to discuss. Hold a design discussion first: give your analysis and a recommendation with its alternatives, and wait. Make no specification change until the user settles the design; then continue as in Go mode.
 
-When unsure which mode applies, use Discuss. In either mode, escalate only as [Spec repo changes in a worktree](../spec-repo-worktree.md) directs, i.e. for a far-reaching change or a conflict with no natural resolution, and never run the `update-implementation` skill unless the user explicitly asks for it.
+When unsure which mode applies, use Discuss. In either mode, escalate only as [Spec repo changes in a worktree](../spec-repo-worktree.md) directs, i.e. for a far-reaching change or a conflict with no natural resolution, and never run the `update-implementation` skill unless the user explicitly asks for it, e.g. by invoking the `apply` skill, which runs it after this one.
 
 ## Workflow
 

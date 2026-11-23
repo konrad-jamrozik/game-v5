@@ -83,13 +83,14 @@ The following table of LLM skills is exhaustive.
 | `update-implementation` | Applies to an Implementation only the specification changes made since it last followed them. |
 | `absorb-implementation-feedback` | Turns open Implementer feedback into specification changes, with the Game designer deciding each one. |
 | `apply-designer-feedback` | Turns Designer feedback into specification changes or conformance fixes, under [Designer feedback](#designer-feedback). |
+| `apply` | Runs `apply-designer-feedback` and then `update-implementation`, completing the Designer feedback workflow in one request. |
 
 LLM skills chain into workflows that cover whole rounds. The following workflows are complete:
 
 - **First build:** change the specifications, check them with `spec-review`, then run `build-implementation`.
 - **Specification change:** change the specifications, check them with `spec-review`, then run `update-implementation`.
 - **Implementer feedback to a fixed point:** run `absorb-implementation-feedback`, then `update-implementation`, and repeat while the update records new Implementer feedback.
-- **Designer feedback:** run `apply-designer-feedback`, then `update-implementation`.
+- **Designer feedback:** run `apply-designer-feedback`, then `update-implementation`, or run `apply`, which does both.
 
 # Appendix: Rationale
 
