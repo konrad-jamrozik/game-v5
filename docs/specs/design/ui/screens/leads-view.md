@@ -21,7 +21,7 @@ The left pane lists the [Discovered Leads](../../mechanics/leads-and-progression
 3. **Inactive:** each Discovered Lead whose [Lead status](../../mechanics/leads-and-progression.md#glossary) is Inactive, with the [Mission site](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) it created that is not yet finished, when it has one.
 4. **Archived:** each Discovered Lead whose Lead status is Archived, collapsed to its name and count until the Player expands it.
 
-When the Leads View opens, the first item is selected, unless the Player opened it from an item of the [Situation Panel](situation-panel.md) or of the [Turn Report View](turn-report-view.md), or from an Investigation of an [Agent](../../mechanics/domain-model.md#agency-and-agents)'s [Participation history](agents-view.md#participation-history), which selects that item's Lead.
+When the Leads View opens, the first item is selected, unless the Player opened it from an item of the [Situation Panel](situation-panel.md) or of the [Turn Report View](turn-report-view.md), or from an Investigation of an [Agent](../../mechanics/domain-model.md#agency-and-agents)'s [Participation history](agents-view.md#participation-history) or [Assignment](agents-view.md#agent-table), which selects that item's Lead.
 
 # Selected Lead
 
