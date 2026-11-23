@@ -6,7 +6,7 @@
 
 The Autopilot AIs family describes the Autopilot AIs that a Game build offers: for each one, what it tries to achieve when it plays a Campaign and how it prioritizes those aims. [Autopilot](../foundation/autopilot.md) in the Foundation family defines Autopilot as a game feature, i.e. how an Autopilot engagement is bounded, what any Autopilot AI receives, and how it ends. It deliberately leaves out how an Autopilot AI decides what to do. This family fills that gap, one specification per Autopilot AI, so that the Implementer knows what to build behind each `autopilotAiId`.
 
-A specification in this family describes an Autopilot AI at the level of goals and priorities, e.g. that it never deploys a team that is likely to lose. It leaves exact thresholds and algorithms to the Implementer. It adds no engine API operation and none of the Game rules: an Autopilot AI plays only through Player API, and every game value it reads is owned by its Mechanics specification.
+A specification in this family states the goals of an Autopilot AI, the order in which it pursues them, the rules by which it chooses each Player action, and the thresholds those rules use, e.g. by what margin a team must outrate the Enemies before it is deployed. Where it is silent, e.g. on how the Autopilot AI reads the Campaign, the code decides. It adds no engine API operation and none of the Game rules: an Autopilot AI plays only through Player API, and every game value it reads is owned by its Mechanics specification.
 
 # Documents
 
