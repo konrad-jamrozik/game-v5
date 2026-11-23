@@ -2,4 +2,4 @@ id: standard
 type: CampaignConfiguration
 name: Standard
 starting_money: 500 # fixed after creation
-starting_funding: 20 # the Agency's initial recurring funding
+starting_funding: 100 # the Agency's initial recurring funding
