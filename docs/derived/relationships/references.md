@@ -59,7 +59,7 @@ A → B means A is referenced by B: the text of B links to A. Layer 1 is drawn a
 | 15 | MUSIC Music | CORE, ENG, GUI |
 | 15 | SITP Situation Panel | AGENT, CORE, DOM, ECON, ENG, GUI |
 | 15 | VIS Visual Design | AGENT, COMBAT, CORE, DOM, ECON, ENG, GUI, INVSTG, LEAD, LIFE |
-| 16 | AVIEW Agents View | AGENT, CINST, COMBAT, CORE, DOM, ECON, ENG, GUI, VIS, WHIST |
+| 16 | AVIEW Agents View | AGENT, CINST, COMBAT, CORE, DOM, ECON, ENG, GUI, VIS |
 | 16 | GDRS GDRs | AGENT, COMP, CORE, DOM, ECON, EFFECT, ENG, FACTION, GDR, LEAD, MUSIC, VIS |
 | 16 | MENU Main Menu | CONFIG, CORE, CSTATE, DETERM, ENG, GDR, GUI, LIFE, SAVES, VIS |
 | 16 | MVIEW Missions View | AGENT, CINST, COMBAT, DOM, ECON, ENG, FACTION, GUI, MISSION, VIS, WHIST |
