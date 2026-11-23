@@ -479,6 +479,20 @@
       .chart-title {
         margin: 18px 0 2px;
       }
+      /* A panel's title and controls that stay in view, under the page's sticky bar, while its charts scroll by. The
+       * negative margins only let its background reach the panel's edges; its content stays where it was. */
+      .sticky-head {
+        position: sticky;
+        top: var(--bar-h, 0px);
+        z-index: 4;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin: -14px -14px 0;
+        padding: 14px 14px 10px;
+        background: var(--surface);
+        border-bottom: 1px solid var(--divider);
+      }
       .op-legend {
         display: flex;
         flex-wrap: wrap;
@@ -643,6 +657,8 @@
        * Accent line stays the figure, and Danger for the existential level. */
       const OP_COLORS = ['#2f4d63', '#3f7aa6', '#72aed8', '#c6e2f5', '#ff7f78']
       const OP_ALPHA = 0.5
+      /* The bars sum the expected operations of this many Turns each. */
+      const OP_BUCKET = 10
       const site = (kind, lv, exp, en, win) => {
         const e = {}
         EN.forEach((k) => (e[k] = en[k] || 0))
@@ -1048,7 +1064,7 @@
       const row = (p, hint, o) =>
         `<div class="kv"><span class="k"><code>${esc(p.split('.').slice(1).join('.'))}</code><small>${hint}</small></span>${inp(p, o)}</div>`
       const panel = (title, src, body, cls = '') =>
-        `<div class="panel ${cls}"><h3>${title}</h3>${src ? `<div class="src">${src}</div>` : ''}${body}</div>`
+        `<div class="panel ${cls}">${title ? `<h3>${title}</h3>` : ''}${src ? `<div class="src">${src}</div>` : ''}${body}</div>`
       /* A number field of the test team; `o.add` puts beside it what the value adds, e.g. the Upgrades' points. */
       const tin = (k, label, o = {}) => {
         const field = `<input type="number" id="t_${k}" data-t="${k}" value="${T[k]}" step="${o.step || 1}" min="${o.min ?? 0}"${o.max ? ` max="${o.max}"` : ''}>`
@@ -1148,10 +1164,10 @@
   ${panel('Starting levels and Panic limit', 'content/factions/faction_archetypes.yaml · panic-and-endings/ending_parameters.yaml', FA.map((x) => `<div class="kv"><span class="k"><code>${x}.initial_activity_level</code><small></small></span>${sel(x + '.initial_activity_level', AL)}</div>`).join('') + row('endings.defeat_at_panic_pct', 'Panic at which the Campaign is lost', { min: 1 }))}
   </div><div class="col">
   ${panel(
-    'Expected Response Missions by Turn',
     '',
-    `<div class="ctl">${tin('win', 'Response Missions won, %', { max: 100, step: 5 })}${tin('turns', 'Turns shown', { min: 10, max: 1500, step: 50 })}</div>` +
-      `<div class="op-legend"><span class="lbl">Expected operations per Turn, right axis</span>${LEVELS.map((k, i) => `<span><i style="background:${OP_COLORS[i]};opacity:${OP_ALPHA}"></i>Level ${k}${k === EXISTENTIAL ? ', existential' : ''}</span>`).join('')}</div>` +
+    '',
+    `<div class="sticky-head"><h3>Expected Response Missions by Turn</h3><div class="ctl">${tin('win', 'Response Missions won, %', { max: 100, step: 5 })}${tin('turns', 'Turns shown', { min: 10, max: 1500, step: 50 })}</div></div>` +
+      `<div class="op-legend"><span class="lbl">Expected operations per ${OP_BUCKET} Turns, right axis</span>${LEVELS.map((k, i) => `<span><i style="background:${OP_COLORS[i]};opacity:${OP_ALPHA}"></i>Level ${k}${k === EXISTENTIAL ? ', existential' : ''}</span>`).join('')}</div>` +
       `<div class="lbl chart-title">Panic</div><div class="chart" id="ch_panic"></div>` +
       `<div class="lbl chart-title">Combat rating of Response Missions, mean of the last 10 Turns</div><div class="chart" id="ch_cr"></div>` +
       `<div class="lbl chart-title">Cumulative Funding change</div><div class="chart" id="ch_fund"></div>` +
@@ -1587,27 +1603,29 @@
           })
         /* Stacked bars on their own scale, read on the right axis, e.g. the expected operations per Turn by level. */
         if (o.bars) {
-          const d = o.bars.data,
-            top = Math.max(1e-9, ...d.slice(1, o.xmax + 1).map((n) => n.reduce((a, b) => a + b, 0))),
+          /* One bar per bucket of Turns `from` to `to`, its levels stacked, spanning those Turns on the x axis. */
+          const d = o.bars.buckets.filter((b) => b.from <= o.xmax),
+            top = Math.max(1e-9, ...d.map((b) => b.n.reduce((a, c) => a + c, 0))),
             bs = niceStep(top, 4),
             bmax = Math.ceil(top / bs - 1e-9) * bs,
             y0 = H - m.b,
-            BY = (v) => (v / bmax) * (H - m.t - m.b),
-            bw = (W - m.l - m.r) / o.xmax
+            BY = (v) => (v / bmax) * (H - m.t - m.b)
           s += `<g opacity="${OP_ALPHA}">`
-          for (let t = 1; t <= o.xmax && t < d.length; t++) {
+          d.forEach((b) => {
+            const x0 = X(b.from - 1),
+              bw = Math.max(0.5, X(Math.min(b.to, o.xmax)) - x0 - 1)
             let acc = 0
-            d[t].forEach((v, i) => {
+            b.n.forEach((v, i) => {
               if (v <= 0) return
               const h = BY(v)
-              s += `<rect x="${(X(t) - bw).toFixed(2)}" y="${(y0 - BY(acc) - h).toFixed(2)}" width="${bw.toFixed(2)}" height="${h.toFixed(2)}" fill="${o.bars.colors[i]}"/>`
+              s += `<rect x="${x0.toFixed(2)}" y="${(y0 - BY(acc) - h).toFixed(2)}" width="${bw.toFixed(2)}" height="${h.toFixed(2)}" fill="${o.bars.colors[i]}"/>`
               acc += v
             })
-          }
+          })
           s += `</g>`
           for (let v = 0; v <= bmax + 1e-9; v += bs)
             s += `<text x="${W - m.r + 6}" y="${y0 - BY(v) + 4}" font-size="11" fill="var(--axis)" font-family="var(--mono)">${f(v, 2)}</text>`
-          s += `<text x="${W - 4}" y="${H - 5}" text-anchor="end" font-size="10.5" fill="var(--axis)" font-family="var(--body)">ops / Turn</text>`
+          s += `<text x="${W - 4}" y="${H - 5}" text-anchor="end" font-size="10.5" fill="var(--axis)" font-family="var(--body)">ops / ${o.bars.size} Turns</text>`
         }
         const clampY = (y) => Math.max(ymin, Math.min(y, o.ymax))
         s += `<polyline fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" points="${o.pts.map((p) => X(p[0]).toFixed(1) + ',' + Y(clampY(p[1])).toFixed(1)).join(' ')}"/>`
@@ -1927,9 +1945,21 @@
         /* The charts show the first T.turns Turns; the readouts below still look as far as HOR. */
         const xmax = Math.max(10, Math.min(HOR, Math.round(T.turns) || 500)),
           upTo = (a) => a.filter((p) => p[0] <= xmax),
-          bars = { data: ops, colors: OP_COLORS },
-          opsText = (t) => (ops[t] ? ' · ops ' + ops[t].map((v, i) => `L${LEVELS[i]} ${f(v, 2)}`).join(' ') : ''),
-          vl = [
+          /* The expected operations of each OP_BUCKET Turns, summed per level. */
+          buckets = [],
+          bucketOf = (t) => buckets[Math.floor((t - 1) / OP_BUCKET)],
+          bars = { buckets, size: OP_BUCKET, colors: OP_COLORS },
+          opsText = (t) => {
+            const b = t >= 1 && bucketOf(t)
+            return b ? ` · Turns ${b.from}–${b.to} ops ` + b.n.map((v, i) => `L${LEVELS[i]} ${f(v, 2)}`).join(' ') : ''
+          }
+        for (let from = 1; from <= xmax; from += OP_BUCKET) {
+          const to = Math.min(from + OP_BUCKET - 1, HOR),
+            n = LEVELS.map(() => 0)
+          for (let t = from; t <= to; t++) ops[t].forEach((v, i) => (n[i] += v))
+          buckets.push({ from, to, n })
+        }
+        const vl = [
             tEx && { x: tEx, label: 'existential ops begin' },
             tHalf && { x: tHalf, label: '50% lost outright' },
           ].filter(Boolean),
@@ -2040,6 +2070,12 @@
       }
 
       /* ---------- events ---------- */
+      /* A sticky panel head sits just under the page's sticky bar, whose height changes as it wraps. */
+      const barEl = document.querySelector('.bar')
+      if (barEl)
+        new ResizeObserver(() =>
+          document.documentElement.style.setProperty('--bar-h', barEl.getBoundingClientRect().height + 'px'),
+        ).observe(barEl)
       let timer
       const later = () => {
         clearTimeout(timer)
