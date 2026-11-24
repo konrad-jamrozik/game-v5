@@ -57,6 +57,10 @@ Each side is filled as a whole from a preset, which replaces all its rows:
 
 The Combat simulator opens with the first DetachedCombatTeam against the first MissionSiteArchetype.
 
+## Combat ratings of the teams
+
+How even a Combat is should be seen before it is fought, so that the Game designer can tune a team against a Mission site by its numbers. Above the two sides, the Teams pane shows the [Combat rating](../../mechanics/combat.md#combatant-condition-in-a-combat) of the Agents' side, that of the Enemies' side, and the first as a percentage of the second, rounded to a whole percent, e.g. "236%". The values are those `session.combatSimulator.rateSides(setup)` returns for the rows as they are, so they follow every edit at once and need no Fight. When the Combat rating of the Enemies' side is 0, a dash stands in place of the percentage, and while the setup is rejected a line says so in place of all three.
+
 # Fighting the Combat
 
 The Fight controls stand at the top of the Teams pane:
