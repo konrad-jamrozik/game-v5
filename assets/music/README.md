@@ -197,3 +197,4 @@ The Game designer has proposed the renames below. Each proposed name is a custom
 | File                                     | Proposed name       |
 | ---------------------------------------- | ------------------- |
 | `S6 XCOM+Var+NoMIDI+AllowHeroAggr A.mp3` | Alien fleet arrives |
+| `Deep Space Contact A.mp3`               | Signal Intelligence |
