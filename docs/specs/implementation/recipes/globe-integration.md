@@ -37,8 +37,8 @@ The maps in `lib/globe/assets/` are compressed, because a side-by-side compariso
 The globe is decoration, so it should never displace game information or reach into the game. The Implementation's part is one small component, the only code it writes for the globe:
 
 - **Where the GUI puts it.** One element that fills the [Globe stage](../../design/ui/gui.md#glossary) of the Campaign Screen, and nowhere else. It is a backdrop: the [Side panel](../../design/ui/gui.md#glossary) and every [Detail view](../../design/ui/gui.md#glossary) are drawn over it, and the screen is usable before it has loaded.
-- **Shown only when seen.** The component hides the globe while a Detail view covers the Globe stage, so that it stops drawing, and disposes it when the element is removed.
-- **Nothing from the game.** The component imports nothing from the engine, calls no function of the engine API, and writes nothing to [Game storage](../../design/foundation/engine-contract.md#persisted-data). What the globe shows, e.g. where the camera points, is not part of a Campaign and is forgotten when the globe is removed.
+- **Shown only when seen.** The component hides the globe while a Detail view covers the Globe stage or the Campaign Screen is left, e.g. for the Main menu, so that it stops drawing. It keeps the globe for the rest of the [Session](../../design/foundation/core-concepts.md#campaign-and-session) rather than disposing it with the Campaign Screen, because a new globe decodes its maps and loads them into graphics memory again, which takes seconds each time the Player comes back.
+- **Nothing from the game.** The component imports nothing from the engine, calls no function of the engine API, and writes nothing to [Game storage](../../design/foundation/engine-contract.md#persisted-data). What the globe shows, e.g. where the camera points, is not part of a Campaign and is forgotten when the Session ends.
 
 # Loading and running cost
 
