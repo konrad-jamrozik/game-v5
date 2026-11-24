@@ -10,7 +10,7 @@
 
 # Overview
 
-The Acquisitions View is where the Player buys gear, and its mirror is the [Storage View](storage-view.md): the same groups and counts, with prices in place of Sale values and a buy bar in place of the sell bar. It is the fourth of the Operations [Detail views](../gui.md#glossary) of the [Campaign Screen](campaign-screen.md). Its header shows the agency's money.
+The Acquisitions View is where the Player buys gear, and its mirror is the [Storage View](storage-view.md): the same groups and counts, with prices in place of Sale values and a buy bar in place of the sell bar. It is the last of the Base [Detail views](../gui.md#glossary) of the [Campaign Screen](campaign-screen.md). Its header shows the agency's money.
 
 Finding new gear is part of what the Player discovers, as finding new [Compendium](../../mechanics/compendium.md) articles is, so the Acquisitions View lists only what is [Unlocked](../../mechanics/equipment.md#unlocked-items): an Item that is not Unlocked is not shown at all, and nothing says which interrogation would unlock it.
 
@@ -37,7 +37,7 @@ A buy bar gathers the counts chosen in the Buy column into one purchase. Its par
 2. **What it costs:** the [cost](../../mechanics/equipment.md#buying-items) of the whole purchase and the money after it, e.g. "Costs 120 · Money after 4,090". While the cost is above the money, the cost is in Danger and the bar says how much money is missing.
 3. **Clear,** which sets every Buy count to 0, and **Buy,** labelled with the cost, which makes one [`buyItems`](../../mechanics/equipment.md#buying-items) with the chosen counts, at once and without a confirmation, because Undo Action takes it back. Both are disabled while every Buy count is 0, and Buy also while the cost is above the money.
 
-After a purchase every Buy count is 0 again, and what was bought is in Storage, ready to [equip](agents-view.md#equipment-picker).
+After a purchase every Buy count is 0 again, and what was bought is in Storage, ready to [equip](armory-view.md#equipment-picker).
 
 # Screenshot
 

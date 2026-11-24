@@ -10,7 +10,7 @@
 
 # Overview
 
-The Storage View is where the Player sees at a glance what gear the agency owns, who wears it, and what it is worth, and sells what it does not need. It is the last of the Operations [Detail views](../gui.md#glossary) of the [Campaign Screen](campaign-screen.md). Every value it shows is a [Sale value](../../mechanics/equipment.md#glossary), what selling would bring, because that is what the gear is worth to the agency. Its header shows the agency's money and what a value is, as the share of the price that [`sale_price_fraction`](../../mechanics/equipment.md#selling-items) gives, in words where it is a half and as a percentage otherwise, e.g. "Value is half the price" or "Value is 40% of the price".
+The Storage View is where the Player sees at a glance what gear the agency owns, who wears it, and what it is worth, and sells what it does not need. It is the first of the Base [Detail views](../gui.md#glossary) of the [Campaign Screen](campaign-screen.md). Every value it shows is a [Sale value](../../mechanics/equipment.md#glossary), what selling would bring, because that is what the gear is worth to the agency. Its header shows the agency's money and what a value is, as the share of the price that [`sale_price_fraction`](../../mechanics/equipment.md#selling-items) gives, in words where it is a half and as a percentage otherwise, e.g. "Value is half the price" or "Value is 40% of the price".
 
 # Totals
 

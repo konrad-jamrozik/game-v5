@@ -49,6 +49,7 @@ A Detail view opens over the Globe stage and covers it, while the status bar and
   1. [Missions](missions-view.md), for the [Mission sites](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) and the deployment of Agents to them, with the number of Active Mission sites.
   2. [Leads](leads-view.md), for the [Leads](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) and their [Investigations](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), with the number of Active Investigations and of the Leads of the [Leads group](situation-panel.md#groups).
   3. [Agents](agents-view.md), for hiring, dismissing, and assigning [Agents](../../mechanics/domain-model.md#agency-and-agents), with the number of [Serving](../../mechanics/agents-spec.md#agent-statuses) Agents.
+  4. [Armory](armory-view.md), for what the Agents wear.
 - **Base,** the Detail views of what the agency owns:
   1. [Storage](storage-view.md), for the [Items and Ammo](../../mechanics/equipment.md#storage) the agency holds, and selling them.
   2. [Upgrades](upgrades-view.md), for the [Upgrades](../../mechanics/domain-model.md#agency-and-agents) of the agency.

@@ -5,12 +5,12 @@
 | Spec ID | AVIEW |
 | Family | UI |
 | Audience | UI designer, Implementer |
-| Owns | What the Agents View of the Campaign screen shows and how it hires, dismisses, assigns, and equips Agents. |
+| Owns | What the Agents View of the Campaign screen shows and how it hires, dismisses, and assigns Agents. |
 | Conventions | [Specification Conventions](../../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 
-The Agents View is where the Player manages the roster: who serves, what each [Agent](../../mechanics/domain-model.md#agency-and-agents) is doing, and how fit each is for the next task. It is the third of the Operations [Detail views](../gui.md#glossary) of the [Campaign Screen](campaign-screen.md). Unlike the [Missions View](missions-view.md) and the [Leads View](leads-view.md), it is one table, because the Player compares Agents with one another and acts on several at once.
+The Agents View is where the Player manages the roster: who serves, what each [Agent](../../mechanics/domain-model.md#agency-and-agents) is doing, and how fit each is for the next task. It is the third of the Operations [Detail views](../gui.md#glossary) of the [Campaign Screen](campaign-screen.md). Unlike the [Missions View](missions-view.md) and the [Leads View](leads-view.md), it is one table, because the Player compares Agents with one another and acts on several at once. What each Agent wears is the [Armory View](armory-view.md)'s to show and change.
 
 # Glossary
 
@@ -65,13 +65,11 @@ At most one Assignment filter is on at a time: turning one on turns off the one 
 
 While an Assignment filter is on, the table keeps showing every Agent its row filter shows, but an Agent can be selected only when the filter's button would succeed with that Agent alone selected, as Action preview reports it; e.g., with the Standby Assignment filter on, an Agent on Contracting can be selected and an Agent In transit cannot. While no Assignment filter is on, every shown Serving Agent can be selected.
 
-Whenever the Assignment filter, the row filter, a checkbox of the [row filters](#row-filters), or the [Current world state](../../foundation/engine-contract.md#player-actions-and-turns) changes, every selected Agent that can no longer be selected, or is no longer shown, is no longer selected. A row does not leave the table because its Agent was just assigned: e.g., after assigning the selected Agents to Contracting with the Contracting Assignment filter on, their rows stay, muted, with "In transit" as their Blocked by.
+Whenever the Assignment filter, the row filter, a checkbox of the [row filters](#row-filters), or the [Current world state](../../foundation/engine-contract.md#player-actions-and-turns) changes, every selected Agent that can no longer be selected, or is no longer shown, is no longer selected. A row does not leave the table because its Agent was just assigned: e.g., after assigning the selected Agents to Contracting with the Contracting Assignment filter on, their rows stay, muted, with "In transit" as [the reason they cannot be selected](#agent-table).
 
 # Agent table
 
-The table lists one row per Serving [Agent](../../mechanics/domain-model.md#agency-and-agents) that the row filter shows and its checkboxes do not hide, with a selection checkbox and these columns: [Instance ID](../../foundation/campaign-instances.md#glossary), [Combat rating](../../mechanics/combat.md#combatant-condition-in-a-combat) headed CR, [effective skill](../../mechanics/agents-spec.md#combatant-attributes), [base skill](../../mechanics/agents-spec.md#combatant-attributes), [Experience](../../mechanics/agents-spec.md#growth) headed Exp., [current health](../../mechanics/agents-spec.md#combatant-attributes) against [effective max health](../../mechanics/agents-spec.md#combatant-attributes), exhaustion, Weapon, Armor, Assignment with its [Agent status](../../mechanics/agents-spec.md#agent-statuses), and Blocked by. The table's default order is by Instance ID, and its column headers [sort it](../visual-design.md#tables). Current health and exhaustion take the colours of their [Agent condition](../visual-design.md#agent-condition).
-
-The CR cell shows the Agent's Combat rating followed by its [Equipment Combat rating](../../mechanics/combat.md#rested-and-equipment-combat-ratings) in parentheses, with its sign, e.g. "136 (+56)", "100 (0)", or "75 (−25)": in Positive when it is above 0, in Danger when it is below 0, and in Text muted at 0. The column sorts by the Combat rating.
+The table lists one row per Serving [Agent](../../mechanics/domain-model.md#agency-and-agents) that the row filter shows and its checkboxes do not hide, with a selection checkbox and these columns: [Instance ID](../../foundation/campaign-instances.md#glossary), [effective skill](../../mechanics/agents-spec.md#combatant-attributes), [base skill](../../mechanics/agents-spec.md#combatant-attributes), [Experience](../../mechanics/agents-spec.md#growth) headed Exp., [current health](../../mechanics/agents-spec.md#combatant-attributes) against [effective max health](../../mechanics/agents-spec.md#combatant-attributes), exhaustion, and Assignment with its [Agent status](../../mechanics/agents-spec.md#agent-statuses). The table's default order is by Instance ID, and its column headers [sort it](../visual-design.md#tables). Current health and exhaustion take the colours of their [Agent condition](../visual-design.md#agent-condition).
 
 The Assignment cell reads:
 
@@ -82,9 +80,9 @@ The Assignment cell reads:
 
 An Agent In transit says so, e.g. "Contracting · In transit". The cell is in Accent text for Recovery, in Text muted for Standby or In transit, and in Positive otherwise. The Assignment column never [cuts its value short](../visual-design.md#tables) with "…". Pressing the Lead's or the Mission site's name opens the [Leads View](leads-view.md) with that Lead selected or the [Missions View](missions-view.md) with that Mission site selected, as a [Follow](campaign-screen.md#view-trail), so that the Player can go from an Agent to the work it is on.
 
-While an Assignment filter is on, the Blocked by column is a [locked](../visual-design.md#tables) first sort tier, ascending, so that the Agents that can be selected, whose Blocked by is empty, come first, and the tiers the Player chooses order the Agents within each group of Blocked by. When the Assignment filter is turned off, the Blocked by tier is dropped, and the tiers the Player chose stay.
+While an Assignment filter is on, a [locked](../visual-design.md#tables) first sort tier puts the Agents that can be selected first, and the tiers the Player chooses order the Agents within each of the two groups. When the Assignment filter is turned off, that tier is dropped, and the tiers the Player chose stay.
 
-A row whose Agent cannot be selected has its checkbox disabled and its text in Text muted, except the colours of current health and exhaustion. Its Blocked by says why, as the first of these that applies, and the Blocked by of a row that can be selected is empty:
+A row whose Agent cannot be selected has its checkbox disabled and its text in Text muted, except the colours of current health and exhaustion. The tooltip of its checkbox says why, as the first of these that applies:
 
 1. **Deployed:** its Assignment is [Deployed](../../mechanics/agents-spec.md#assignments).
 2. **Recovering:** its Assignment is Recovery, whether it is Recovering or In transit.
@@ -96,34 +94,21 @@ A row whose Agent cannot be selected has its checkbox disabled and its text in T
 8. **Contracting full:** the Contracting Assignment filter is on and the Contracting cap has no place left.
 9. **Otherwise:** the message of the rejection that Action preview reports.
 
-## Weapon and Armor cells
-
-The Weapon cell shows the `name` of the Agent's Weapon and its `base_weapon_damage` with the sword icon, e.g. "Combat pistol 10 ⚔", and the Armor cell the `name` of its Armor and its `base_armor` with the shield icon, e.g. "Ballistic vest 20 🛡"; each column sorts by the number. While the [AmmoType](../../mechanics/combat.md#ammotype) of the Agent's Weapon is [Ammo short](../../mechanics/equipment.md#ammo-short), the Weapon cell shows the warning icon in Warning, with the tooltip "[Ammo short](../../mechanics/equipment.md#glossary)".
-
-Pressing a Weapon or Armor cell of a Serving Agent opens the [Equipment picker](#equipment-picker) for it. Pressing it does not select the row.
-
-## Equipment picker
-
-The Equipment picker is a dropdown that lists what the Agent can wear in place of what it wears: the Weapon or Armor it wears, marked as worn, then every [Item](../../mechanics/equipment.md#glossary) of that kind whose count in [Storage](../../mechanics/equipment.md#storage) is at least 1, from the highest `base_weapon_damage` or `base_armor` down, and last the [Fallback Weapon](../../mechanics/combat.md#ammo) or the [Fallback Armor](../../mechanics/equipment.md#glossary) unless the Agent wears it. Each row shows the `name` and the number with its icon, and a stored Item's row how many [Storage](../../mechanics/equipment.md#glossary) holds; a Weapon's row also shows its AmmoType's `name` and its rounds in Storage, or "no ammo" for a Weapon without an AmmoType, with the warning icon while that AmmoType is [Ammo short](../../mechanics/equipment.md#glossary). Choosing a row other than the worn one [equips the Agent](../../mechanics/equipment.md#equipping-agents) with it in one [Player action](../../foundation/engine-contract.md#player-actions-and-turns), at once and without a confirmation, and closes the picker.
-
 # Memorial
 
 The Memorial remembers the Agents who have left the [Agency](../../mechanics/domain-model.md#agency-and-agents) and how their service ended. While the Memorial filter is on, the table lists one row per Terminated Agent, by default newest [Turn](../../foundation/engine-contract.md#player-actions-and-turns) terminated first and then by Instance ID, and its column headers sort it. Its rows have no selection checkbox, and the buttons and Assignment filters of Assign to and Dismiss are disabled. Its columns are:
 
-- **Instance ID,** **base skill,** **Experience,** headed Exp., and **effective max health.**
-- **Turn terminated.**
-- **Cause:** the [Agent status](../../mechanics/domain-model.md#agency-and-agents), [Killed](../../mechanics/agents-spec.md#agent-statuses) in Danger text or [Dismissed](../../mechanics/agents-spec.md#agent-statuses) in Text muted.
+- **Instance ID,** **base skill,** and **Experience,** headed Exp.
+- **Turn terminated,** headed Ended.
+- **Cause:** for a [Dismissed](../../mechanics/agents-spec.md#agent-statuses) Agent, "Dismissed" in Text muted; for a [Killed](../../mechanics/agents-spec.md#agent-statuses) one, "Killed by" and the [Enemy](../../mechanics/domain-model.md#combat) that its Killed by references, by its [Enemy label](../gui.md#glossary), in Danger text, e.g. "Killed by initiate-2".
 - **Missions:** the number of Missions in its [Participation history](../../mechanics/domain-model.md#agency-and-agents).
 - **Turns with the Agency,** headed Turns: its Turn terminated minus its Turn hired.
 - **Enemies killed,** headed Kills: the Enemies killed of its [Service record](../../mechanics/agents-spec.md#service-record).
-- **Killed by:** the [Enemy](../../mechanics/domain-model.md#combat) that its Killed by references, by its [Enemy label](../gui.md#glossary), e.g. "initiate-2".
-- **Where:** the Mission site that its Killed by references, by its [Archetype](../../foundation/core-concepts.md#campaign-instances)'s `name` followed by "#" and the number that ends its Instance ID, e.g. "Apprehend member #5" for mission-site-5.
-
-A Dismissed Agent's Killed by and Where cells are empty. Neither column ever [cuts its value short](../visual-design.md#tables) with "…".
+- **Where:** the Mission site that its Killed by references, by its [Archetype](../../foundation/core-concepts.md#campaign-instances)'s `name` followed by "#" and the number that ends its Instance ID, e.g. "Apprehend member #5" for mission-site-5; empty for a Dismissed Agent.
 
 # Agent details
 
-Selecting an Agent's Instance ID, in the table of Serving Agents or in the Memorial, opens its details one step away, in place of the table, as a [Follow](campaign-screen.md#view-trail). They show its AgentArchetype's `name`, its [Turn](../../foundation/engine-contract.md#player-actions-and-turns) hired, its Weapon and its Armor as their [cells](#weapon-and-armor-cells) show them, its base skill, its current health against its effective max health, its exhaustion, its Assignment as the [Assignment cell](#agent-table) reads it, its Combat ratings, and its [Participation history](#participation-history). The Weapon and the Armor of a Serving Agent each open the [Equipment picker](#equipment-picker) when pressed. The Combat ratings line shows its Combat rating, its [Rested Combat rating](../../mechanics/combat.md#rested-and-equipment-combat-ratings) labelled max, its [Equipment Combat rating](../../mechanics/combat.md#rested-and-equipment-combat-ratings) with its sign labelled equipment, and its effective skill, which is its [base Combat rating](../../mechanics/combat.md#combatant-condition-in-a-combat), e.g. "COMBAT RATING 136 · max 149 · equipment +56 · effective skill 80". Its base skill, current health, and exhaustion are shown [with two decimals](../gui.md#decimal-quantities-shown).
+Selecting an Agent's Instance ID, in the table of Serving Agents or in the Memorial, opens its details one step away, in place of the table, as a [Follow](campaign-screen.md#view-trail). They show its AgentArchetype's `name`, its [Turn](../../foundation/engine-contract.md#player-actions-and-turns) hired, its Weapon and its Armor as their [cells](armory-view.md#weapon-and-armor-cells) show them, its base skill, its current health against its effective max health, its exhaustion, its Assignment as the [Assignment cell](#agent-table) reads it, its Combat ratings, and its [Participation history](#participation-history). The Weapon and the Armor of a Serving Agent each open the [Equipment picker](armory-view.md#equipment-picker) when pressed. The Combat ratings line shows its Combat rating, its [Rested Combat rating](../../mechanics/combat.md#rested-and-equipment-combat-ratings) labelled max, its [Equipment Combat rating](../../mechanics/combat.md#rested-and-equipment-combat-ratings) with its sign labelled equipment, and its effective skill, which is its [base Combat rating](../../mechanics/combat.md#combatant-condition-in-a-combat), e.g. "COMBAT RATING 136 · max 149 · equipment +56 · effective skill 80". Its base skill, current health, and exhaustion are shown [with two decimals](../gui.md#decimal-quantities-shown).
 
 The Agent details are the one place that shows the [Rested Combat rating](../../mechanics/combat.md#combatant-condition-in-a-combat) beside the Combat rating, so that the Player can see what rest and equipment are worth for this Agent. A Terminated Agent's details show its Weapon with its [Final](../../mechanics/agents-spec.md#service-record) weapon damage and its Armor with its Final armor, e.g. "Ballistic vest · armor 20", and its Final max health in place of its current health against its effective max health; they show no exhaustion and no Combat rating, and its Weapon and Armor open no picker.
 
