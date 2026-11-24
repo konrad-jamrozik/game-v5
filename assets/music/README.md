@@ -202,3 +202,4 @@ The Game designer has proposed the renames below. Each proposed name is a custom
 | `V3A-S5 SCNP.mp3`                        | On the Trail of the Unknown |
 | `S6 SCNP+7Instr A.mp3`                   | Solemn aftermath            |
 | `EL-M2.5 XCOM+Var B.opus`                | Approaching megastructure   |
+| `S6 SCNP+Dark+Cello&DBass A.mp3`         | The human toll              |
