@@ -24,18 +24,15 @@ The globe is a decoration: it shows a rotating Earth that the Player can turn an
 
 The Side panel is the Player's way into every [Detail view](../gui.md#glossary) and the place where the state of the [Campaign](../../foundation/core-concepts.md#campaign-and-session) is read at a glance. It holds:
 
-1. **[Navigation](#navigation):** its tabs and buttons.
+1. **[Navigation](#navigation):** a button for every Detail view.
 2. **[Situation panel](situation-panel.md):** it scrolls inside when its content is taller than the room it has.
 3. **Footer:** while [Autopilot](../../foundation/engine-contract.md#autopilot) controls shown is on, the [Autopilot controls](#autopilot-controls), and always the [Music control](../music.md#music-control).
 
 ## Navigation
 
-The game keeps gaining Detail views, and a button for each, all in view at once, would push the [Situation panel](situation-panel.md#glossary) off the screen. The navigation therefore has two tiers, and stays as tall as its largest group however many groups there are:
+The Player reaches every Detail view in one press, so the navigation keeps a button for each of them in view at all times and folds none away, e.g. behind a tab. The buttons stand under the names of their groups, in the order of [Detail views](#detail-views). The navigation is as tall as its buttons need, and the [Situation panel](situation-panel.md#glossary) takes the height that is left, so a Detail view added later costs the Situation panel room and never a press.
 
-1. **Tabs:** one tab for each group of the [Detail views](#detail-views), in one row. Selecting a tab chooses its group and opens nothing. A tab shows no count.
-2. **Buttons:** one button for each Detail view of the chosen group. A button shows a count where that section gives one, and no count while it is 0. Selecting the button of a Detail view opens it, and selecting the button of the open Detail view closes it.
-
-Opening a Detail view in any other way, e.g. from an item of the Situation panel or with a key, chooses the tab of its group, so that the tab in view always holds the button of the open Detail view. The chosen tab belongs to the GUI alone: it is Operations whenever a [Session](../../foundation/core-concepts.md#campaign-and-session) starts and stays as the Player last left it for the rest of the Session.
+A button shows a count where that section gives one, and no count while it is 0. Selecting the button of a Detail view opens it, and selecting the button of the open Detail view closes it.
 
 ## Hiding the Side panel
 

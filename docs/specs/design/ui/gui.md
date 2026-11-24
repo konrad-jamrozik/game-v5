@@ -46,7 +46,7 @@ The Settings panel is titled Settings and holds these rows from top to bottom, e
 
 1. **Music volume:** the [Music volume slider](music.md#music-volume-slider).
 2. **Sounds:** the [Sounds toggle and the Sounds volume slider](sounds.md#sound-settings).
-3. **Other settings:** one row for each other Global configuration setting, e.g. the [Autosave limit](../foundation/saves.md#glossary), with its input, except Music on, which the [Music control](music.md#music-control) sets, and the [Autopilot settings](screens/campaign-screen.md#autopilot-settings), which the Player sets where they are used.
+3. **Other settings:** one row for each other Global configuration setting, e.g. the [Autosave limit](../foundation/saves.md#glossary) or the [Screen limit](visual-design.md#screen-limit), with its input, except Music on, which the [Music control](music.md#music-control) sets, and the [Autopilot settings](screens/campaign-screen.md#autopilot-settings), which the Player sets where they are used.
 4. **Changed settings:** what the Player has [changed](#changed-settings).
 5. **Tools,** on the Campaign Screen only: a neutral button for the [keyboard shortcuts](screens/campaign-screen.md#keyboard-shortcuts), and one for the developer tools. Each closes the Settings panel and opens what it names.
 

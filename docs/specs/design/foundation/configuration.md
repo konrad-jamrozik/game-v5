@@ -46,6 +46,7 @@ A Game build has the following Global configuration settings. The specification 
 | Sounds on, Sounds volume | [Sound settings](../ui/sounds.md#sound-settings) in Sounds |
 | Autopilot controls shown, [Autopilot](engine-contract.md#autopilot) [Turns](engine-contract.md#player-actions-and-turns) | [Autopilot settings](../ui/screens/campaign-screen.md#autopilot-settings) in Campaign Screen |
 | [Combat simulator](../ui/screens/combat-simulator.md#glossary) shown | [Opening the Combat simulator](../ui/screens/combat-simulator.md#opening-the-combat-simulator) in Combat Simulator |
+| [Screen limit](../ui/visual-design.md#glossary) | [Screen limit](../ui/visual-design.md#screen-limit) in Visual Design |
 
 Global configuration stores only values the player has set. A setting the player has not set follows the current Game build default, so a changed Game build default in a later Game build reaches it. Resetting a setting removes its stored value.
 
