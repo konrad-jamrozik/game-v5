@@ -63,7 +63,7 @@ A → B means A is referenced by B: the text of B links to A. Layer 1 is drawn a
 | 17 | MVIEW Missions View | AGENT, CINST, COMBAT, DOM, ECON, ENG, FACTION, GUI, MISSION, WHIST |
 | 17 | SITP Situation Panel | AGENT, CORE, DOM, ECON, ENG, GUI |
 | 18 | TSUM Turn Summary | AGENT, COMBAT, CSTATE, DOM, ENG, EQUIP, GUI, INVSTG, SITP |
-| 19 | CRPLAY Combat Replay | AGENT, CINST, COMBAT, DOM, GUI, TSUM |
+| 19 | CRPLAY Combat Replay | AGENT, CINST, COMBAT, CORE, DOM, GUI, TSUM |
 | 19 | SOUNDS Sounds | COMP, COMPV, CORE, ENG, GUI, TSUM |
 | 19 | TRVIEW Turn Report View | AGENT, CINST, COMBAT, CSTATE, DOM, ENG, EQUIP, GUI, TSUM |
 | 20 | CSCR Campaign Screen | AGENT, AUTO, CORE, CSTATE, DOM, ENDING, ENG, GUI, LIFE, SAVES, SITP, SOUNDS, TSUM |

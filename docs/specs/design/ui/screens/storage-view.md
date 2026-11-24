@@ -14,11 +14,11 @@ The Storage View is where the Player sees at a glance what gear the agency owns,
 
 # Totals
 
-A table of totals has one row per category, Weapons, Armor, and [Ammo](../../mechanics/combat.md#ammo), and a Total row, with the columns Owned, Equipped, Available, Owned value, and Available value. Owned is the [Owned count](../../mechanics/equipment.md#glossary), Equipped the [Equipped count](../../mechanics/equipment.md#glossary), and Available the count in [Storage](../../mechanics/equipment.md#storage), each summed over the category; Ammo has no Equipped count and shows "–". Owned value and Available value are the [Sale value](../../mechanics/equipment.md#glossary) of the Owned and of the Available count of the category. The Total row sums only the values.
+The header ends with what all the gear is worth, so that the totals cost the table below no height: the [Sale value](../../mechanics/equipment.md#glossary) of everything the agency owns, and of what is in [Storage](../../mechanics/equipment.md#storage), i.e. what selling all of it without taking anything off an [Agent](../../mechanics/domain-model.md#agency-and-agents) would bring, e.g. "Owned worth 157.50 · Available worth 102.50", each with two decimals when it is not whole.
 
 # Storage table
 
-The [Storage](../../mechanics/equipment.md#glossary) table lists the [Items](../../mechanics/equipment.md#glossary) and Ammo in three groups, Weapons, Armor, and Ammo, each under a group row that repeats its category's totals. Within a group, the rows are in the order the [Game build](../../foundation/core-concepts.md#game-build-and-content) supplies them, and a row whose Owned count is 0 is left out; a group with no row says "Nothing in Storage". The columns are:
+The [Storage](../../mechanics/equipment.md#glossary) table lists the [Items](../../mechanics/equipment.md#glossary) and [Ammo](../../mechanics/combat.md#ammo) in three groups, Weapons, Armor, and Ammo, each under a group row that sums its category's counts: the [Owned count](../../mechanics/equipment.md#glossary), the [Equipped count](../../mechanics/equipment.md#glossary), and the count in Storage. Within a group, the rows are in the order the [Game build](../../foundation/core-concepts.md#game-build-and-content) supplies them, and a row whose Owned count is 0 is left out; a group with no row says "Nothing in Storage". The columns are:
 
 | Column | What it shows |
 | --- | --- |
@@ -26,7 +26,6 @@ The [Storage](../../mechanics/equipment.md#glossary) table lists the [Items](../
 | Stats | For a Weapon, its `base_weapon_damage` with the sword icon and its AmmoType's `name`, e.g. "14 ⚔ Rifle ammo"; for an Armor, its `base_armor` with the shield icon, e.g. "20 🛡"; for an AmmoType, its count in Storage against the rounds [Ammo short](../../mechanics/equipment.md#ammo-short) asks for and the number of Agents whose Weapons use it, e.g. "95 / 130 recommended (13 Agents)". While the AmmoType is [Ammo short](../../mechanics/equipment.md#glossary), its Stats are in Accent text with the warning icon in Warning, whose tooltip names the AmmoType, its rounds in Storage, and the rounds it falls short of, e.g. "Pistol ammo 69, below 70 for 7 Agents". |
 | Owned, Equip., Avail. | The Owned count, the Equipped count, or "–" for an AmmoType, and the count in Storage. |
 | Unit | The Sale value of one, [with two decimals](../gui.md#decimal-quantities-shown) when it is not whole, e.g. "0.50". |
-| Owned val., Avail. val. | The Sale value of the Owned and of the Available count, with two decimals when not whole. |
 | Sell | A [stepper](../visual-design.md#steppers), from 0 to the count in Storage, or to the Owned count while Allow selling equipped is checked, and a "max" button that sets it to that limit. |
 | Earns | The Sale value of the Sell count, with two decimals when not whole, so that the Player sees what each row adds to the sale; empty while the Sell count is 0. |
 
