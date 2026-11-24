@@ -205,3 +205,4 @@ The Game designer has proposed the renames below. Each proposed name is a custom
 | `S6 SCNP+Dark+Cello&DBass A.mp3`             | The human toll              |
 | `S6 XCOM+AllowEpic+NoSynth+Slow+Space B.mp3` | Countering the threat       |
 | `V3A-S5 SCNP+Dark.mp3`                       | Reports of The Strange      |
+| `S6 XCOM+Var+NoMIDI+AllowHeroAggr B.mp3`     | Their Weapons in Our Hands  |
