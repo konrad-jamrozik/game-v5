@@ -31,3 +31,11 @@ Pressing a Weapon or Armor cell opens the [Equipment picker](#equipment-picker) 
 ## Equipment picker
 
 The Equipment picker is a dropdown that lists what the Agent can wear in place of what it wears: the Weapon or Armor it wears, marked as worn, then every [Item](../../mechanics/equipment.md#glossary) of that kind whose count in [Storage](../../mechanics/equipment.md#storage) is at least 1, from the highest `base_weapon_damage` or `base_armor` down, and last the [Fallback Weapon](../../mechanics/combat.md#ammo) or the [Fallback Armor](../../mechanics/equipment.md#glossary) unless the Agent wears it. Each row shows the `name` and the number with its icon, and a stored Item's row how many [Storage](../../mechanics/equipment.md#glossary) holds; a Weapon's row also shows its AmmoType's `name` and its rounds in Storage, or "no ammo" for a Weapon without an AmmoType, with the warning icon while that AmmoType is [Ammo short](../../mechanics/equipment.md#glossary). Choosing a row other than the worn one [equips the Agent](../../mechanics/equipment.md#equipping-agents) with it in one [Player action](../../foundation/engine-contract.md#player-actions-and-turns), at once and without a confirmation, and closes the picker.
+
+# Screenshot
+
+The Armory View as the game draws it:
+
+![Armory View Screenshot](../../../../images/screens/armory-view.png)
+
+_Captured on 2026-11-24 10:21 UTC._
