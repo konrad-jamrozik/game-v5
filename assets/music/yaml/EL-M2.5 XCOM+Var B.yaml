@@ -1,6 +1,9 @@
 file: 'EL-M2.5 XCOM+Var B.opus'
 source: ElevenLabs Music
 original_title: 'Silent Contact'
+serial_id: 11
+prompt_code: 'ElevenLabs Music v2.5 - X-COM - Variety'
+variant: 'B'
 model: 'Music v2.5'
 created: '2026-11-16 23:47:30'
 tags: [electronic, ambient]

@@ -1,6 +1,9 @@
 file: 'EL-M2.5 XCOM+TFTD+NoPulse B.opus'
 source: ElevenLabs Music
 original_title: 'Abyssal Tactical Drift'
+serial_id: 7
+prompt_code: 'ElevenLabs Music v2.5 - X-COM - Terror from the Deep - No Pulse'
+variant: 'B'
 model: 'Music v2.5'
 created: '2026-11-16 23:42:43'
 tags: [electronic, ambient]

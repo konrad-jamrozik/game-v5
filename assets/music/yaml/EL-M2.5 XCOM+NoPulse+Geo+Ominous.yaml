@@ -1,6 +1,9 @@
 file: 'EL-M2.5 XCOM+NoPulse+Geo+Ominous.opus'
 source: ElevenLabs Music
 original_title: 'Black Orbit Watch'
+serial_id: 8
+prompt_code: 'ElevenLabs Music v2.5 - X-COM - No Pulse - Geoscape - Ominous'
+variant: 'One only'
 model: 'Music v2.5'
 created: '2026-11-16 23:43:05'
 tags: [electronic, ambient, soundtrack]

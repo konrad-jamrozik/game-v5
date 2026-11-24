@@ -2,56 +2,56 @@
 
 The music tracks the game plays, as the [Music](../../docs/specs/design/ui/music.md#soundtrack) specification describes. Each `.opus` or `.mp3` file in [`tracks/`](tracks/) is one track, and its title is its file name without the extension, e.g. `tracks/EL-M2.5 XCOM+Var+Bare+Slow B.opus` is the track titled "EL-M2.5 XCOM+Var+Bare+Slow B". The record of how each track was made is in [`yaml/`](yaml/), as [Track records](#track-records) describes.
 
-The Game designer chooses each track's name. It may be any name valid as a file name, as [Custom names](#custom-names) describes, e.g. `tracks/Unknown Contact A.mp3`, or, optionally, a name under the [Naming scheme](#naming-scheme), so that the name tells how the track was made, e.g. `tracks/S6 SCNP A.mp3`. A track not named otherwise takes its original title as its name, e.g. `tracks/Restricted Orbit.mp3`. The table lists each track with its original title, the title its source gave it, which finds the song in the source; its source; and whether it is excluded from the Soundtrack.
+The Game designer chooses each track's name. It may be any name valid as a file name, as [Custom names](#custom-names) describes, e.g. `tracks/Unknown Contact A.mp3`, or, optionally, a name under the [Naming scheme](#naming-scheme), so that the name tells how the track was made, e.g. `tracks/S6 SCNP A.mp3`. A track not named otherwise takes its original title as its name, e.g. `tracks/Restricted Orbit.mp3`. The table lists each track with its record's `serial_id`, code, and `variant`, which keep when it was made, how it was made, and which take it is, whatever its name, as [Track records](#track-records) describes; its original title, the title its source gave it, which finds the song in the source; its source; and whether it is excluded from the Soundtrack.
 
 The `excluded_tracks` of the GDR `music` in [`content/music/music_parameters.yaml`](../../content/music/music_parameters.yaml) decides which tracks are excluded, and the Excluded column mirrors it; an excluded track named under the scheme ends in its `X` number, as [Naming scheme](#naming-scheme) describes. An excluded track's audio file is not kept in this repository but in the Game designer's personal backup, outside it; its row in the table, and its track record, stay here.
 
-| File | Original title | Source | Excluded |
-| --- | --- | --- | --- |
-| `Deep Space Contact A.mp3` | Deep Space Contact A | Suno v6 |  |
-| `Deep Space Contact B.mp3` | Deep Space Contact B | Suno v6 |  |
-| `EL-M2 XCOM.opus` | Silent Contact Protocol | ElevenLabs |  |
-| `EL-M2 XCOM+TFTD X1.opus` | Subsurface Directive | ElevenLabs | Yes |
-| `EL-M2 XCOM+TFTD.opus` | Abyss Protocol | ElevenLabs |  |
-| `EL-M2.5 XCOM X1.opus` | Unseen Sector | ElevenLabs | Yes |
-| `EL-M2.5 XCOM X2.opus` | Unseen Threat Protocol | ElevenLabs | Yes |
-| `EL-M2.5 XCOM+NoPulse+Geo+Ominous.opus` | Black Orbit Watch | ElevenLabs |  |
-| `EL-M2.5 XCOM+TFTD+NoPulse A.opus` | Depth Signal | ElevenLabs |  |
-| `EL-M2.5 XCOM+TFTD+NoPulse B.opus` | Abyssal Tactical Drift | ElevenLabs |  |
-| `EL-M2.5 XCOM+Var A.opus` | Unknown Contact | ElevenLabs |  |
-| `EL-M2.5 XCOM+Var B.opus` | Silent Contact | ElevenLabs |  |
-| `EL-M2.5 XCOM+Var X1.opus` | Beneath the Grid | ElevenLabs | Yes |
-| `EL-M2.5 XCOM+Var+Bare+Slow A.opus` | Silent Hostile Sector | ElevenLabs |  |
-| `EL-M2.5 XCOM+Var+Bare+Slow B.opus` | Silent Threat Protocol | ElevenLabs |  |
-| `Restricted Orbit.mp3` | Restricted Orbit | Suno v6 |  |
-| `S6 SCNP A.mp3` | Signal Intercept var1 | Suno v6 |  |
-| `S6 SCNP B.mp3` | Signal Intercept var2 | Suno v6 |  |
-| `S6 SCNP+7Instr A.mp3` | S6 SCNP+7Instr A | Suno v6 |  |
-| `S6 SCNP+7Instr B.mp3` | S6 SCNP+7Instr B | Suno v6 |  |
-| `S6 SCNP+Dark+BClar&Trombone A.mp3` | Bass clarinet + muted trombone var1 | Suno v6 |  |
-| `S6 SCNP+Dark+BClar&Trombone B.mp3` | Bass clarinet + muted trombone var2 | Suno v6 |  |
-| `S6 SCNP+Dark+Cello&DBass A.mp3` | S6 SCNP+Dark+Cello&DBass A | Suno v6 |  |
-| `S6 SCNP+Dark+Cello&DBass B.mp3` | S6 SCNP+Dark+Cello&DBass B | Suno v6 |  |
-| `S6 SCNP+Dark+DBass&BowedCymbals A.mp3` | S6 SCNP+Dark+DBass&BowedCymbals A | Suno v6 |  |
-| `S6 SCNP+Dark+DBass&BowedCymbals B.mp3` | S6 SCNP+Dark+DBass&BowedCymbals B | Suno v6 |  |
-| `S6 SCNP+Dark+Piano&Cello A.mp3` | Unseen Approach var1 | Suno v6 |  |
-| `S6 SCNP+Dark+Piano&Cello B.mp3` | Unseen Approach var2 | Suno v6 |  |
-| `S6 XCOM+AllowEpic+NoSynth+Slow+Space A.mp3` | S6 XCOM+AllowEpic+NoSynth+Slow+Space A | Suno v6 |  |
-| `S6 XCOM+AllowEpic+NoSynth+Slow+Space B.mp3` | S6 XCOM+AllowEpic+NoSynth+Slow+Space B | Suno v6 |  |
-| `S6 XCOM+Var+NoMIDI+AllowHeroAggr A.mp3` | S6 XCOM+Var+NoMIDI+AllowHeroAggr A | Suno v6 |  |
-| `S6 XCOM+Var+NoMIDI+AllowHeroAggr B.mp3` | S6 XCOM+Var+NoMIDI+AllowHeroAggr B | Suno v6 |  |
-| `Unknown Contact A.mp3` | Unknown Contact A | Suno v6 |  |
-| `Unknown Contact B.mp3` | Unknown Contact B | Suno v6 |  |
-| `V3A-S5 SCNP.mp3` | v03AI UFO 3 - Scanning Protocol | Suno v5 via v03ai |  |
-| `V3A-S5 SCNP+Dark.mp3` | v03AI UFO 4 - Scanning Protocol - Dark | Suno v5 via v03ai |  |
-| `V3A-S5 SCNP+Dark+Cello&BClar.mp3` | v03AI UFO 6 - Scanning Protocol - Cello + Bass Clarinet | Suno v5 via v03ai |  |
-| `V3A-S5 SCNP+Dark+Violin.mp3` | v03AI UFO 5 - Scanning Protocol - Dark Violin | Suno v5 via v03ai |  |
-| `V3A-S5 XCOM+Sections+Loop X1.mp3` | v03AI UFO 2 | Suno v5 via v03ai | Yes |
-| `V3A-S5 XCOM+Var X1.mp3` | v03AI UFO 1 | Suno v5 via v03ai | Yes |
+| File | Serial ID | Code | Variant | Original title | Source | Excluded |
+| --- | --: | --- | --- | --- | --- | --- |
+| `Deep Space Contact A.mp3` | 39 | `S6 GeoElec+82BPMSeq+Piano&DampedCymbal+FMLead+SonarMix` | A | Deep Space Contact A | Suno v6 |  |
+| `Deep Space Contact B.mp3` | 40 | `S6 GeoElec+82BPMSeq+Piano&DampedCymbal+FMLead+SonarMix` | B | Deep Space Contact B | Suno v6 |  |
+| `EL-M2 XCOM.opus` | 1 | `EL-M2 XCOM` | One only | Silent Contact Protocol | ElevenLabs |  |
+| `EL-M2 XCOM+TFTD X1.opus` | 2 | `EL-M2 XCOM+TFTD` | B | Subsurface Directive | ElevenLabs | Yes |
+| `EL-M2 XCOM+TFTD.opus` | 3 | `EL-M2 XCOM+TFTD` | A | Abyss Protocol | ElevenLabs |  |
+| `EL-M2.5 XCOM X1.opus` | 4 | `EL-M2.5 XCOM` | A | Unseen Sector | ElevenLabs | Yes |
+| `EL-M2.5 XCOM X2.opus` | 5 | `EL-M2.5 XCOM` | B | Unseen Threat Protocol | ElevenLabs | Yes |
+| `EL-M2.5 XCOM+NoPulse+Geo+Ominous.opus` | 8 | `EL-M2.5 XCOM+NoPulse+Geo+Ominous` | One only | Black Orbit Watch | ElevenLabs |  |
+| `EL-M2.5 XCOM+TFTD+NoPulse A.opus` | 6 | `EL-M2.5 XCOM+TFTD+NoPulse` | A | Depth Signal | ElevenLabs |  |
+| `EL-M2.5 XCOM+TFTD+NoPulse B.opus` | 7 | `EL-M2.5 XCOM+TFTD+NoPulse` | B | Abyssal Tactical Drift | ElevenLabs |  |
+| `EL-M2.5 XCOM+Var A.opus` | 9 | `EL-M2.5 XCOM+Var` | A | Unknown Contact | ElevenLabs |  |
+| `EL-M2.5 XCOM+Var B.opus` | 11 | `EL-M2.5 XCOM+Var` | B | Silent Contact | ElevenLabs |  |
+| `EL-M2.5 XCOM+Var X1.opus` | 10 | `EL-M2.5 XCOM+Var` | C | Beneath the Grid | ElevenLabs | Yes |
+| `EL-M2.5 XCOM+Var+Bare+Slow A.opus` | 12 | `EL-M2.5 XCOM+Var+Bare+Slow` | A | Silent Hostile Sector | ElevenLabs |  |
+| `EL-M2.5 XCOM+Var+Bare+Slow B.opus` | 13 | `EL-M2.5 XCOM+Var+Bare+Slow` | B | Silent Threat Protocol | ElevenLabs |  |
+| `Restricted Orbit.mp3` | 36 | `S6 XCOM+AllowEpic+NoSynth+Slow+Space` | C | Restricted Orbit | Suno v6 |  |
+| `S6 SCNP A.mp3` | 20 | `S6 SCNP` | A | Signal Intercept var1 | Suno v6 |  |
+| `S6 SCNP B.mp3` | 21 | `S6 SCNP` | B | Signal Intercept var2 | Suno v6 |  |
+| `S6 SCNP+7Instr A.mp3` | 30 | `S6 SCNP+7Instr` | A | S6 SCNP+7Instr A | Suno v6 |  |
+| `S6 SCNP+7Instr B.mp3` | 31 | `S6 SCNP+7Instr` | B | S6 SCNP+7Instr B | Suno v6 |  |
+| `S6 SCNP+Dark+BClar&Trombone A.mp3` | 24 | `S6 SCNP+Dark+BClar&Trombone` | A | Bass clarinet + muted trombone var1 | Suno v6 |  |
+| `S6 SCNP+Dark+BClar&Trombone B.mp3` | 25 | `S6 SCNP+Dark+BClar&Trombone` | B | Bass clarinet + muted trombone var2 | Suno v6 |  |
+| `S6 SCNP+Dark+Cello&DBass A.mp3` | 26 | `S6 SCNP+Dark+Cello&DBass` | A | S6 SCNP+Dark+Cello&DBass A | Suno v6 |  |
+| `S6 SCNP+Dark+Cello&DBass B.mp3` | 27 | `S6 SCNP+Dark+Cello&DBass` | B | S6 SCNP+Dark+Cello&DBass B | Suno v6 |  |
+| `S6 SCNP+Dark+DBass&BowedCymbals A.mp3` | 28 | `S6 SCNP+Dark+DBass&BowedCymbals` | A | S6 SCNP+Dark+DBass&BowedCymbals A | Suno v6 |  |
+| `S6 SCNP+Dark+DBass&BowedCymbals B.mp3` | 29 | `S6 SCNP+Dark+DBass&BowedCymbals` | B | S6 SCNP+Dark+DBass&BowedCymbals B | Suno v6 |  |
+| `S6 SCNP+Dark+Piano&Cello A.mp3` | 22 | `S6 SCNP+Dark+Piano&Cello` | A | Unseen Approach var1 | Suno v6 |  |
+| `S6 SCNP+Dark+Piano&Cello B.mp3` | 23 | `S6 SCNP+Dark+Piano&Cello` | B | Unseen Approach var2 | Suno v6 |  |
+| `S6 XCOM+AllowEpic+NoSynth+Slow+Space A.mp3` | 34 | `S6 XCOM+AllowEpic+NoSynth+Slow+Space` | A | S6 XCOM+AllowEpic+NoSynth+Slow+Space A | Suno v6 |  |
+| `S6 XCOM+AllowEpic+NoSynth+Slow+Space B.mp3` | 35 | `S6 XCOM+AllowEpic+NoSynth+Slow+Space` | B | S6 XCOM+AllowEpic+NoSynth+Slow+Space B | Suno v6 |  |
+| `S6 XCOM+Var+NoMIDI+AllowHeroAggr A.mp3` | 32 | `S6 XCOM+Var+NoMIDI+AllowHeroAggr` | A | S6 XCOM+Var+NoMIDI+AllowHeroAggr A | Suno v6 |  |
+| `S6 XCOM+Var+NoMIDI+AllowHeroAggr B.mp3` | 33 | `S6 XCOM+Var+NoMIDI+AllowHeroAggr` | B | S6 XCOM+Var+NoMIDI+AllowHeroAggr B | Suno v6 |  |
+| `Unknown Contact A.mp3` | 37 | `S6 Clandestine+ToGeo+DissFM+FaintViola&BFlute+76BPM` | A | Unknown Contact A | Suno v6 |  |
+| `Unknown Contact B.mp3` | 38 | `S6 Clandestine+ToGeo+DissFM+FaintViola&BFlute+76BPM` | B | Unknown Contact B | Suno v6 |  |
+| `V3A-S5 SCNP.mp3` | 16 | `V3A-S5 SCNP` | One only | v03AI UFO 3 - Scanning Protocol | Suno v5 via v03ai |  |
+| `V3A-S5 SCNP+Dark.mp3` | 17 | `V3A-S5 SCNP+Dark` | One only | v03AI UFO 4 - Scanning Protocol - Dark | Suno v5 via v03ai |  |
+| `V3A-S5 SCNP+Dark+Cello&BClar.mp3` | 19 | `V3A-S5 SCNP+Dark+Cello&BClar` | One only | v03AI UFO 6 - Scanning Protocol - Cello + Bass Clarinet | Suno v5 via v03ai |  |
+| `V3A-S5 SCNP+Dark+Violin.mp3` | 18 | `V3A-S5 SCNP+Dark+Violin` | One only | v03AI UFO 5 - Scanning Protocol - Dark Violin | Suno v5 via v03ai |  |
+| `V3A-S5 XCOM+Sections+Loop X1.mp3` | 15 | `V3A-S5 XCOM+Sections+Loop` | One only | v03AI UFO 2 | Suno v5 via v03ai | Yes |
+| `V3A-S5 XCOM+Var X1.mp3` | 14 | `V3A-S5 XCOM+Var` | One only | v03AI UFO 1 | Suno v5 via v03ai | Yes |
 
 ## Custom names
 
-A track with a custom name, i.e. any name not built under the [Naming scheme](#naming-scheme), e.g. `Unknown Contact A` or `Restricted Orbit`, is outside the scheme: its name has no codes, take, or `X` number, does not change when the track is excluded, and gives the track no part in the take letters of the scheme's names, while its record's `meta_prompt_taxonomy` still records how it was made. A custom name may still end in a letter that tells apart the songs of one generation, e.g. `Unknown Contact A` and `Unknown Contact B`, as the Game designer chooses. It follows only the Windows rules of the scheme: it is a valid Windows file name, with none of `\ / : * ? " < > |` and no trailing space or period.
+A track with a custom name, i.e. any name not built under the [Naming scheme](#naming-scheme), e.g. `Unknown Contact A` or `Restricted Orbit`, is outside the scheme: its name has no codes, take, or `X` number, does not change when the track is excluded, and gives the track no part in the take letters of the scheme's names, while its record's `meta_prompt_taxonomy` still records how it was made, and so gives it a code and a `prompt_code`, e.g. `Restricted Orbit` has the code `S6 XCOM+AllowEpic+NoSynth+Slow+Space`. A custom name may still end in a letter that tells apart the songs of one generation, e.g. `Unknown Contact A` and `Unknown Contact B`, as the Game designer chooses. It follows only the Windows rules of the scheme: it is a valid Windows file name, with none of `\ / : * ? " < > |` and no trailing space or period.
 
 ## Naming scheme
 
@@ -65,62 +65,30 @@ e.g. `EL-M2.5 XCOM+TFTD+NoPulse B` is the second track that ElevenLabs Music v2.
 
 - **Source and model:** where the song was generated and, joined by a hyphen, the model, from `source` and `model`. A source with no recorded model is its code alone, e.g. `EL`.
 - **Stem:** the code of `meta_prompt_taxonomy.stem`.
-- **Adjustments:** the code of each entry of `meta_prompt_taxonomy.adjustments` that has one, in order, each joined by `+`. An adjustment that only limits the prompt's length, e.g. "kept short" or "fit within v03ai's 1,000 characters", has no code, since it says nothing about the music; neither has a source setting, e.g. Suno's sliders or Exclude styles, since it is not a request to the chatbot, unless the Game designer names it as an adjustment, e.g. `AllowHeroAggr` for styles taken out of the Exclude styles. Instruments asked for together form one adjustment, joined by `&`, e.g. `Piano&Cello`; when they are too many to join readably, the code is their count instead, e.g. `7Instr`. A code appears once even when two adjustments share it.
-- **Take:** tells apart the tracks that would otherwise get the same name, e.g. the two variations of one generation, or two generations of the same prompt with different lengths, in the order of `created`. The tracks kept in the Soundtrack are lettered `A`, `B`, `C` and on, so the Player only ever sees an unbroken run of letters; a kept track that no other kept track shares its name with gets no letter. The excluded tracks are numbered apart, `X1`, `X2`, `X3` and on, even when alone, e.g. `EL-M2.5 XCOM+Var X1`.
-- **Renaming on exclusion:** excluding a track renames it and re-letters the kept tracks of its name. E.g., of tracks `A` to `F`, excluding `C` and `E` makes them `X1` and `X2`, and `D` and `F` become `C` and `D`. Nothing keeps an old name, so every mention of a renamed track changes with it: its file and record, its record's `file`, the notes of every record, the GDR `music`, and this README.
+- **Adjustments:** the code of each entry of `meta_prompt_taxonomy.adjustments` that has one, in order, each joined by `+`, e.g. an adjustment that only limits the prompt's length has none.
+- **Take:** tells apart the tracks that would otherwise get the same name, e.g. the two variations of one generation, or two generations of the same prompt with different lengths. A kept track's take is the letter of its record's `variant`, given when the track is named, e.g. `S6 SCNP B`; a kept track that is the only one of its name when it is named gets no letter, e.g. `EL-M2 XCOM+TFTD`. A take never changes: renaming or excluding another track of the same name re-letters nothing, so the letters of the kept tracks may have gaps, e.g. `S6 SCNP+7Instr B` keeps its letter after `S6 SCNP+7Instr A` is given a custom name. The excluded tracks are numbered apart, `X1`, `X2`, `X3` and on, even when alone, e.g. `EL-M2.5 XCOM+Var X1`.
+- **Renaming on exclusion:** excluding a track renames it with the next `X` number of its name, e.g. excluding `S6 SCNP B` makes it `S6 SCNP X1`, while the kept tracks of its name keep their takes. Nothing keeps an old name, so every mention of a renamed track changes with it: its file and record, its record's `file`, the notes of every record, the GDR `music`, and this README.
+
+The name without its take is the record's code, which every record has, whatever its name, as [Prompt codes](music-taxonomy.md#prompt-codes) describes.
 
 A name under the scheme, with its take but without the extension, is at most 40 characters, and a name without a take at most 38, so that a take letter added later still fits. A name is a file name, so it must be valid on Windows: no code may contain any of `\ / : * ? " < > |`, and a name must not end in a space or a period. The codes use only letters, digits, and `-`, `.`, `&`, with `+` and spaces between them, e.g. a model is `M2.5`, never `M2:5`.
 
-The codes are these lists; a new source, model, stem, or adjustment adds its code here, short and in CamelCase or capitals like the rest:
-
-| Source and model | Meaning |
-| --- | --- |
-| `EL-M2` | ElevenLabs, Music v2 |
-| `EL-M2.5` | ElevenLabs, Music v2.5 |
-| `V3A-S5` | v03ai, running Suno v5 |
-| `S6` | suno.com, running Suno v6; a bare model code means the song was made directly on the model's own site |
-
-| Stem | `meta_prompt_taxonomy.stem` |
-| --- | --- |
-| `XCOM` | Dark 1990s sci-fi tactical strategy soundtrack in the style of the original X-COM: UFO Defense (1994), retro MIDI and Amiga synths |
-| `SCNP` | Replicate "Scanning Protocol" (Chris D'Ambrosio, XCOM Legacy OST) |
-
-| Adjustment | `meta_prompt_taxonomy.adjustments` entry |
-| --- | --- |
-| `Var` | more variety, less monotonous |
-| `TFTD` | a tint of Cthulhu and X-COM: Terror from the Deep |
-| `NoPulse` | no repeated "bum bum bum" pulse; more variety and flair |
-| `Geo` | Geoscape: a global defense command screen |
-| `Ominous` | more serious, ominous, dangerous; not relaxing, cozy, or lo-fi |
-| `Bare` | simplified to a bare-bones prompt |
-| `Slow` | slower (55–65 BPM), darker, less intense; never cheery |
-| `Sections` | song-structure tags: [Intro], [Verse], [Bridge], [Outro] |
-| `Loop` | steady, seamlessly loopable pacing; no builds or climaxes |
-| `Dark` | darker and bassier; less electronic and spacey |
-| `Violin` | instruments: violins, keeping the prompt length |
-| `Cello&BClar` | instruments: cello + bass clarinet |
-| `Piano&Cello` | instruments: felt piano + cello |
-| `BClar&Trombone` | instruments: bass clarinet + muted trombone |
-| `Cello&DBass` | instruments: cello + double bass |
-| `DBass&BowedCymbals` | instruments: double bass + bowed cymbals |
-| `7Instr` | instruments: felt piano + violins + cello + double bass + bass clarinet + muted trombone + bowed cymbals |
-| `NoMIDI` | no retro MIDI or Amiga-era synth sound |
-| `AllowHeroAggr` | allow heroic and aggressive styles: synthwave, epic orchestral, aggressive drums, and heroic brass taken out of Exclude styles |
-| `AllowEpic` | allow epic styles: choir, synthwave, epic orchestral, aggressive drums, and heroic brass taken out of Exclude styles |
-| `NoSynth` | no synth sounds or drones |
-| `Space` | a modern, cold space and high-tech atmosphere instead of military |
+The codes, the `meta_prompt_taxonomy` entry each stands for, and the segment each gives a `prompt_code` are listed in [Prompt codes](music-taxonomy.md#prompt-codes); a new source, model, stem, or adjustment adds its code there.
 
 ## Track records
 
 A `.yaml` file in `yaml/` with the same name as a track, e.g. `yaml/EL-M2.5 XCOM+Var+Bare+Slow B.yaml`, records how the track was made, so that it can be told apart from the others and made again: its source and model, when it was made, the key decisions behind its prompt, the prompt and settings submitted to the source, the prompt as the source stored it, and what the source reports about it, e.g. tags and length. Every track has one, including each excluded track, whose record stays here after its audio is removed. A draft record, whose first line is `# DRAFT: TODO values are filled in from the source after generation.`, records a track that is planned but not yet added: its `file` is not yet in `tracks/`, no row of the table lists it, and each value only the source can give is `TODO`.
 
-The following table lists every key a record may hold; the list is exhaustive. A record holds only the keys it has values for, except the required ones, which every record holds. Keys nested in another key are written with a dot, e.g. `suno.prompt` is the `prompt` key inside `suno`.
+The following table lists every key a record may hold; the list is exhaustive. A record holds only the keys it has values for, except the required ones, which every record holds. Keys nested in another key are written with a dot, e.g. `suno.prompt` is the `prompt` key inside `suno`. Once written, `serial_id`, `prompt_code`, and `variant` never change, also when the track is renamed or excluded.
 
 | Key | Required | Value |
 | --- | --- | --- |
 | `file` | Yes | The track's file name in `tracks/`. |
 | `source` | Yes | Where the track was made, as in the table, e.g. `ElevenLabs Music`, `Suno v5 via v03ai`, or `Suno v6`. |
 | `original_title` | Yes | The track's title before any renaming: its title in its source, or the name the Game designer gave its download. |
+| `serial_id` | Yes | The order in which the Game designer made the track among all tracks, kept and excluded, from `1`, by `created`; songs made at the same time take the order of their takes, e.g. `S6 SCNP A` is `20` and `S6 SCNP B` is `21`. A draft holds `TODO` and gets the next free number when it is completed. |
+| `prompt_code` | Yes | The record's code with each code spelled out, as [Prompt codes](music-taxonomy.md#prompt-codes) describes, e.g. `V03AI - Suno v5 - Scanning Protocol - Dark - Cello and Bass Clarinet`. |
+| `variant` | Yes | Which take of its `prompt_code` the track is: a letter, `A`, `B`, `C` and on, or `One only` when no other record has the same `prompt_code`. A track whose name ends in a take letter has that letter, e.g. `S6 SCNP B` or `Unknown Contact B`. Every other record takes the next letter its `prompt_code` has not yet given, kept tracks before excluded ones and each in the order of `created`, e.g. `EL-M2.5 XCOM+Var X1` is `C` after `EL-M2.5 XCOM+Var A` and `B`; a record written later for a `prompt_code` whose record is `One only` takes `B`. No two records have the same `prompt_code` and `variant`. |
 | `song_url` |  | The song's page in its source, e.g. `https://suno.com/song/<id>`. |
 | `model` |  | The source's model that made the song, as the source labels it, e.g. `Music v2.5` for ElevenLabs, from the label beside the song in the ElevenLabs Music history, or `v6 (chirp-hawk)` for Suno: the version Suno shows, then its internal model name. |
 | `created` | Yes | When the song was made, as a date, or a date and time in Pacific time: the time the source keeps, e.g. the exact Added time of an ElevenLabs song in the Assets page, to the second, which orders songs made in the same minute; or, where the source shows none, e.g. for most v03ai songs, the time its download was saved. |
@@ -194,16 +162,16 @@ Other tools that may serve the same purpose have not been tested yet: [Google AI
 
 The Game designer has proposed the renames below. Each proposed name is a custom name, as [Custom names](#custom-names) describes, and no rename is applied until the Game designer accepts it.
 
-| File                                         | Proposed name               |
-| -------------------------------------------- | --------------------------- |
-| `S6 XCOM+Var+NoMIDI+AllowHeroAggr A.mp3`     | Alien fleet arrives         |
-| `Deep Space Contact A.mp3`                   | Signal Intelligence         |
-| `S6 SCNP+Dark+BClar&Trombone B.mp3`          | Shady deals                 |
-| `V3A-S5 SCNP.mp3`                            | On the Trail of the Unknown |
-| `S6 SCNP+7Instr A.mp3`                       | Solemn aftermath            |
-| `EL-M2.5 XCOM+Var B.opus`                    | Approaching megastructure   |
-| `S6 SCNP+Dark+Cello&DBass A.mp3`             | The human toll              |
-| `S6 XCOM+AllowEpic+NoSynth+Slow+Space B.mp3` | Countering the threat       |
-| `V3A-S5 SCNP+Dark.mp3`                       | Reports of The Strange      |
-| `S6 XCOM+Var+NoMIDI+AllowHeroAggr B.mp3`     | Their Weapons in Our Hands  |
-| `EL-M2.5 XCOM+Var+Bare+Slow A.opus`          | Sacrifice for Earth         |
+| File                                         | Proposed name                 |
+| -------------------------------------------- | ----------------------------- |
+| `S6 XCOM+Var+NoMIDI+AllowHeroAggr A.mp3`     | The Alien Fleet Arrives       |
+| `Deep Space Contact A.mp3`                   | Signal Intelligence           |
+| `S6 SCNP+Dark+BClar&Trombone B.mp3`          | Shady Deals                   |
+| `V3A-S5 SCNP.mp3`                            | On the Trail of the Unknown   |
+| `S6 SCNP+7Instr A.mp3`                       | Solemn Aftermath              |
+| `EL-M2.5 XCOM+Var B.opus`                    | Approaching the Megastructure |
+| `S6 SCNP+Dark+Cello&DBass A.mp3`             | The Human Toll                |
+| `S6 XCOM+AllowEpic+NoSynth+Slow+Space B.mp3` | Countering the Threat         |
+| `V3A-S5 SCNP+Dark.mp3`                       | Reports of the Strange        |
+| `S6 XCOM+Var+NoMIDI+AllowHeroAggr B.mp3`     | Their Weapons in Our Hands    |
+| `EL-M2.5 XCOM+Var+Bare+Slow A.opus`          | Sacrifice for Earth           |

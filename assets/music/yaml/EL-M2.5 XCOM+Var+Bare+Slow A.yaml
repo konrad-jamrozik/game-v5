@@ -1,6 +1,9 @@
 file: 'EL-M2.5 XCOM+Var+Bare+Slow A.opus'
 source: ElevenLabs Music
 original_title: 'Silent Hostile Sector'
+serial_id: 12
+prompt_code: 'ElevenLabs Music v2.5 - X-COM - Variety - Bare-bones - Slow'
+variant: 'A'
 model: 'Music v2.5'
 created: '2026-11-17 00:00:51'
 tags: [electronic, ambient]

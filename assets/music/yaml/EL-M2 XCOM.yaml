@@ -1,6 +1,9 @@
 file: 'EL-M2 XCOM.opus'
 source: ElevenLabs Music
 original_title: 'Silent Contact Protocol'
+serial_id: 1
+prompt_code: 'ElevenLabs Music v2 - X-COM'
+variant: 'One only'
 model: 'Music v2'
 created: '2026-11-16 16:19:04'
 tags: [electronic, ambient]

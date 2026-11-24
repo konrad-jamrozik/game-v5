@@ -1,6 +1,9 @@
 file: 'S6 SCNP+Dark+Piano&Cello B.mp3'
 source: Suno v6
 original_title: 'Unseen Approach var2'
+serial_id: 23
+prompt_code: 'Suno v6 - Scanning Protocol - Dark - Felt Piano and Cello'
+variant: 'B'
 song_url: https://suno.com/song/3afb7b9b-ff21-4b88-9c8c-d9aa646f3299
 model: 'v6 (chirp-hawk)'
 created: '2026-11-17 19:35'

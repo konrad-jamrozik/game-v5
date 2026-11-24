@@ -1,6 +1,9 @@
 file: 'S6 SCNP+Dark+BClar&Trombone A.mp3'
 source: Suno v6
 original_title: 'Bass clarinet + muted trombone var1'
+serial_id: 24
+prompt_code: 'Suno v6 - Scanning Protocol - Dark - Bass Clarinet and Muted Trombone'
+variant: 'A'
 song_url: https://suno.com/song/b6fca565-f6e6-47c9-b03a-3a04ce1f264e
 model: 'v6 (chirp-hawk)'
 created: '2026-11-17 20:45'

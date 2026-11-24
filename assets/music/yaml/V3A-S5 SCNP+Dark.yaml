@@ -1,6 +1,9 @@
 file: 'V3A-S5 SCNP+Dark.mp3'
 source: Suno v5 via v03ai
 original_title: 'v03AI UFO 4 - Scanning Protocol - Dark'
+serial_id: 17
+prompt_code: 'V03AI - Suno v5 - Scanning Protocol - Dark'
+variant: 'One only'
 created: '2026-11-17 14:03'
 meta_prompt_taxonomy:
   stem: 'Replicate "Scanning Protocol" (Chris D''Ambrosio, XCOM Legacy OST)'

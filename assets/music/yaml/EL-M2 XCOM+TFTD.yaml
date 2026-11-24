@@ -1,6 +1,9 @@
 file: 'EL-M2 XCOM+TFTD.opus'
 source: ElevenLabs Music
 original_title: 'Abyss Protocol'
+serial_id: 3
+prompt_code: 'ElevenLabs Music v2 - X-COM - Terror from the Deep'
+variant: 'A'
 model: 'Music v2'
 created: '2026-11-16 23:42:03'
 tags: [electronic, ambient]

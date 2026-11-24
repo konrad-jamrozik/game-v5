@@ -2,6 +2,9 @@
 file: 'S6 XCOM+NoMIDI+NoDrones+AllowEpic.mp3'
 source: Suno v6
 original_title: 'S6 XCOM+NoMIDI+NoDrones+AllowEpic'
+serial_id: TODO
+prompt_code: 'Suno v6 - X-COM - No MIDI - No Drones - Allow Epic'
+variant: 'One only'
 song_url: TODO
 model: TODO
 created: TODO

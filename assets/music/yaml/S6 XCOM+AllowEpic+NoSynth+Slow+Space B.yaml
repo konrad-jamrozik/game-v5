@@ -1,6 +1,9 @@
 file: 'S6 XCOM+AllowEpic+NoSynth+Slow+Space B.mp3'
 source: Suno v6
 original_title: 'S6 XCOM+AllowEpic+NoSynth+Slow+Space B'
+serial_id: 35
+prompt_code: 'Suno v6 - X-COM - Allow Epic - No Synth - Slow - Space'
+variant: 'B'
 song_url: https://suno.com/song/d08a8576-3b68-456a-8547-2e775decb863
 model: 'v6 (chirp-hawk)'
 created: '2026-11-19 00:48:51'

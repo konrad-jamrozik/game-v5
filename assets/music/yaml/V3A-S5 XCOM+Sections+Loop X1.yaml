@@ -1,6 +1,9 @@
 file: 'V3A-S5 XCOM+Sections+Loop X1.mp3'
 source: Suno v5 via v03ai
 original_title: 'v03AI UFO 2'
+serial_id: 15
+prompt_code: 'V03AI - Suno v5 - X-COM - Song Sections - Loopable'
+variant: 'One only'
 created: '2026-11-17 00:57'
 meta_prompt_taxonomy:
   stem: 'Dark 1990s sci-fi tactical strategy soundtrack in the style of the original X-COM: UFO Defense (1994), retro MIDI and Amiga synths'

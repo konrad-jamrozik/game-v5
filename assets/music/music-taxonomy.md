@@ -1,15 +1,86 @@
 # Game-v5 music prompt taxonomy
 
+Every track record in [`yaml/`](yaml/) describes its prompt by `meta_prompt_taxonomy`, as the [music README](README.md#track-records) describes. [Prompt codes](#prompt-codes) maps each source, stem, and adjustment of it to a short code and to a spelled-out segment, from which each record's code and `prompt_code` are built. [Analysis as of 2026-11-23](#analysis-as-of-2026-11-23) reviews the prompts as they stood on that date.
+
+## Prompt codes
+
+A record's **code** is its source-and-model code, then the code of its `meta_prompt_taxonomy.stem`, then the code of each entry of `meta_prompt_taxonomy.adjustments` in their order, the stem and the adjustments joined by `+`, e.g. `S6 SCNP+Dark+Cello&DBass`. An adjustment with no code adds nothing, and a code appears once even when two adjustments share it. A track named under the [Naming scheme](README.md#naming-scheme) is named by its code and take; a track with a custom name has a code all the same, e.g. `Restricted Orbit` has the code `S6 XCOM+AllowEpic+NoSynth+Slow+Space`.
+
+A record's **`prompt_code`** is its code with each code replaced by its segment and the parts joined by `-` with a space on each side, e.g. the code `V3A-S5 SCNP+Dark+Cello&BClar` gives the prompt code `V03AI - Suno v5 - Scanning Protocol - Dark - Cello and Bass Clarinet`. A prompt code has no length limit, so a segment never abbreviates.
+
+Each entry below is word for word as the records hold it, and every entry of every record appears in exactly one row. A new source, model, stem, or adjustment adds its row here, with a code short and in CamelCase or capitals like the rest, and a segment in Title Case.
+
+### Sources and models
+
+| Code | Source and model | Segment |
+| --- | --- | --- |
+| `EL-M2` | ElevenLabs, Music v2 | ElevenLabs Music v2 |
+| `EL-M2.5` | ElevenLabs, Music v2.5 | ElevenLabs Music v2.5 |
+| `V3A-S5` | v03ai, running Suno v5 | V03AI - Suno v5 |
+| `S6` | suno.com, running Suno v6; a bare model code means the song was made directly on the model's own site | Suno v6 |
+
+### Stems
+
+| Code | `meta_prompt_taxonomy.stem` | Segment |
+| --- | --- | --- |
+| `XCOM` | Dark 1990s sci-fi tactical strategy soundtrack in the style of the original X-COM: UFO Defense (1994), retro MIDI and Amiga synths | X-COM |
+| `SCNP` | Replicate "Scanning Protocol" (Chris D'Ambrosio, XCOM Legacy OST) | Scanning Protocol |
+| `Clandestine` | Dark, grounded soundtrack for a modern clandestine strategy game | Clandestine Strategy |
+| `GeoElec` | Cold, ominous electronic strategy-game soundtrack inspired by the original X-COM Geoscape | X-COM Geoscape Electronics |
+
+### Adjustments
+
+| Code | `meta_prompt_taxonomy.adjustments` entry | Segment |
+| --- | --- | --- |
+| `Var` | more variety, less monotonous | Variety |
+| `TFTD` | a tint of Cthulhu and X-COM: Terror from the Deep | Terror from the Deep |
+| `NoPulse` | no repeated "bum bum bum" pulse; more variety and flair | No Pulse |
+| `Geo` | Geoscape: a global defense command screen | Geoscape |
+| `Ominous` | more serious, ominous, dangerous; not relaxing, cozy, or lo-fi | Ominous |
+| `Bare` | simplified to a bare-bones prompt | Bare-bones |
+| `Slow` | slower (55–65 BPM), darker, less intense; never cheery | Slow |
+| `Sections` | song-structure tags: [Intro], [Verse], [Bridge], [Outro] | Song Sections |
+| `Loop` | steady, seamlessly loopable pacing; no builds or climaxes | Loopable |
+| `Dark` | darker and bassier; less electronic and spacey | Dark |
+| `Violin` | instruments: violins, keeping the prompt length | Violin |
+| `Cello&BClar` | instruments: cello + bass clarinet | Cello and Bass Clarinet |
+| `Piano&Cello` | instruments: felt piano + cello | Felt Piano and Cello |
+| `BClar&Trombone` | instruments: bass clarinet + muted trombone | Bass Clarinet and Muted Trombone |
+| `Cello&DBass` | instruments: cello + double bass | Cello and Double Bass |
+| `DBass&BowedCymbals` | instruments: double bass + bowed cymbals | Double Bass and Bowed Cymbals |
+| `7Instr` | instruments: felt piano + violins + cello + double bass + bass clarinet + muted trombone + bowed cymbals | Felt Piano, Violins, Cello, Double Bass, Bass Clarinet, Muted Trombone and Bowed Cymbals |
+| `NoMIDI` | no retro MIDI or Amiga-era synth sound | No MIDI |
+| `AllowHeroAggr` | allow heroic and aggressive styles: synthwave, epic orchestral, aggressive drums, and heroic brass taken out of Exclude styles | Allow Heroic and Aggressive |
+| `AllowEpic` | allow epic styles: choir, synthwave, epic orchestral, aggressive drums, and heroic brass taken out of Exclude styles | Allow Epic |
+| `NoSynth` | no synth sounds or drones | No Synth |
+| `Space` | a modern, cold space and high-tech atmosphere instead of military | Space |
+| `ModMil` | modern military; no 1990s aesthetic | Modern Military |
+| `NoDrones` | no ambient drones or eerie high electronic tones | No Drones |
+| `ToGeo` | shift toward cold, ominous X-COM Geoscape electronics | Toward X-COM Geoscape |
+| `DissFM` | lead with dissonant FM synth motifs, alien electronic grain, and irregular sequencer accents | Dissonant FM Motifs |
+| `FaintViola&BFlute` | reduce pizzicato viola and bass flute to occasional background accents | Faint Pizzicato Viola and Bass Flute |
+| `76BPM` | quiet forward motion at around 76 BPM | 76 BPM |
+| `82BPMSeq` | quiet forward motion at around 82 BPM with irregular sequencer phrases | Irregular Sequencer at 82 BPM |
+| `Piano&DampedCymbal` | instruments: close-miked felt piano + lightly tapped, immediately damped cymbal | Felt Piano and Damped Cymbal |
+| `FMLead` | rounded FM lead over a faint, intermittent synth bed | Rounded FM Lead |
+| `SonarMix` | clean, spacious deep-space mix with sonar pings, detuned signals, and deliberate silence | Deep-Space Mix with Sonar Pings |
+
+An adjustment that only limits the prompt's length says nothing about the music, so it has no code and adds nothing to a code or a prompt code: `kept short`, `shortened for Suno v5 via v03ai`, and `fit within v03ai's 1,000 characters`. A source setting, e.g. Suno's sliders or Exclude styles, has no code either, since it is not a request to the chatbot, unless the Game designer names it as an adjustment, e.g. `AllowHeroAggr` for styles taken out of the Exclude styles. Instruments asked for together form one adjustment, joined by `&`, e.g. `Piano&Cello`; when they are too many to join readably, the code is their count instead, e.g. `7Instr`, while the segment still names each of them.
+
+## Analysis as of 2026-11-23
+
+The analysis below reviews the records as they stood on 2026-11-23 and is not kept up to date; it predates, e.g., `Unknown Contact` and `Deep Space Contact`, and names records by their file names of that date.
+
 Reviewed all **39 YAML records**, including **3 drafts**, under `assets/music/yaml` in the local game-v5 clone. There are **22 distinct recorded input prompt texts** after normalizing whitespace, plus **9 recorded Suno rewrites**. The counts below use YAML records unless stated otherwise. A/B takes can share an input and differ in generation settings, stored text or outcome.
 
-## Prompt stems
+### Prompt stems
 
 | Stem recorded in YAML | Records | Branches |
 | --- | --: | --- |
 | Original X-COM: UFO Defense (1994) | 22 | Retro MIDI/Amiga electronic soundtrack, deep-ocean cosmic horror, Geoscape, pulse and repetition experiments, modern military, and cold orbital ambience |
 | “Scanning Protocol” by Chris D’Ambrosio, XCOM Legacy OST | 17 | Electronic surveillance ambience, darker/bassier versions, acoustic pairings, and a seven-instrument hybrid |
 
-## Taxonomy
+### Taxonomy
 
 | Dimension | What appears in the prompts |
 | --- | --- |
@@ -28,7 +99,7 @@ Reviewed all **39 YAML records**, including **3 drafts**, under `assets/music/ya
 
 **“Minimal” has three concrete meanings here.** Minimalist or sparse describes the number of layers and how much silence they leave. Minimal percussion describes rhythmic density. Consistent low intensity describes the size of dynamic changes. Tempo, pulse, density and intensity each have their own controls in the taxonomy.
 
-## Instruments and sound sources
+### Instruments and sound sources
 
 | Family | Named instruments, treatments and roles |
 | --- | --- |
@@ -53,7 +124,7 @@ The **seven deliberate instrument additions** in `meta_prompt_taxonomy.adjustmen
 | Cello + bass clarinet                                                                       |       1 |
 | Violin(s)                                                                                   |       1 |
 
-## What the adjustment names bundle together
+### What the adjustment names bundle together
 
 | Adjustment | What changed in this corpus |
 | --- | --- |
@@ -64,7 +135,7 @@ The **seven deliberate instrument additions** in `meta_prompt_taxonomy.adjustmen
 | **TFTD / Geo / ModMil / Space** | Four add Terror from the Deep and Lovecraftian color. Geo uses a global command perspective. ModMil uses staccato strings, snare and taiko. Space trades close military percussion for weightless strings, sonar/static, distant snare and a wide mix. |
 | **AllowEpic / AllowHeroAggr** | Five records remove choir, synthwave, epic orchestral, aggressive drums and heroic brass from Exclude Styles. Two use the corresponding heroic/aggressive adjustment and keep choir excluded. These are permissions in the form, while the prose frequently still prioritizes psychological tension. |
 
-## Other metadata that affects interpretation
+### Other metadata that affects interpretation
 
 - **Input versus stored prompt.** The nine Suno rewrites include the seven-instrument half-time and pulse-free variants, two very slow felt piano/cello rewrites, two orbital A/B rewrites, the Restricted Orbit rewrite and two NoMIDI rewrites. Those last two add analog synth pulses/uneven ostinato or free-time drones/tape hiss. The orbital B rewrite was reused verbatim as Restricted Orbit’s input. Restricted Orbit also used orbital B audio inspiration at 25% influence, per its notes.
 - **Exclude Styles.** All 18 populated Suno lists exclude vocals, singing, EDM, upbeat, trailer music, rock, pop and bright melodies. Branch additions include choir, synthwave, epic orchestral, aggressive drums, heroic brass, jazz swing, big band, cymbal crashes, drum kit, industrial beats, risers, impacts, synthesizer, electronic, chiptune, 8-bit, retro, lo-fi, military march and fast tempo.
@@ -73,7 +144,7 @@ The **seven deliberate instrument additions** in `meta_prompt_taxonomy.adjustmen
 - **Generation provenance and controls.** Thirteen ElevenLabs Music v2/v2.5, twenty Suno v6 and six Suno v5 via v03ai records. Recorded Suno controls span Weirdness 30–50%, Style Influence 50% or 70%, Variety 0–3, and where supplied, Max Mode off, Personalize off and Duration Auto. The variety-3 record is a draft. File/title, song URL, date, model, duration and notes establish provenance. Three ElevenLabs records share an input that ends mid-sentence. The v03ai notes report truncation in all six records, including four where the YAML preserves the full draft text.
 - **Human assessments.** Six records explicitly mark rejection. Three cite monotonous pulsing, one of those also cites excessive speed. One cites a loud, long synth-pad drone. Two cite irritating MIDI sounds. The orbital A notes report earlier modern military attempts sounding too fast and too generic military. These are observations from the metadata.
 
-## Index of all input prompts
+### Index of all input prompts
 
 Identical recorded prompt text is grouped even when the track, settings, exclusions, or stored rewrite differ.
 

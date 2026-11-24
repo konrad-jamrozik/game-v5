@@ -1,6 +1,9 @@
 file: 'EL-M2.5 XCOM+Var+Bare+Slow B.opus'
 source: ElevenLabs Music
 original_title: 'Silent Threat Protocol'
+serial_id: 13
+prompt_code: 'ElevenLabs Music v2.5 - X-COM - Variety - Bare-bones - Slow'
+variant: 'B'
 model: 'Music v2.5'
 created: '2026-11-17 00:00:55'
 tags: [electronic, ambient, soundtrack]

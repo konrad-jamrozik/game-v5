@@ -1,6 +1,9 @@
 file: 'EL-M2.5 XCOM+Var X1.opus'
 source: ElevenLabs Music
 original_title: 'Beneath the Grid'
+serial_id: 10
+prompt_code: 'ElevenLabs Music v2.5 - X-COM - Variety'
+variant: 'C'
 model: 'Music v2.5'
 created: '2026-11-16 23:47:27'
 tags: [electronic, ambient]

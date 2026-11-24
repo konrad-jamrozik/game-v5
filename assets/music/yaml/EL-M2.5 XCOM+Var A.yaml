@@ -1,6 +1,9 @@
 file: 'EL-M2.5 XCOM+Var A.opus'
 source: ElevenLabs Music
 original_title: 'Unknown Contact'
+serial_id: 9
+prompt_code: 'ElevenLabs Music v2.5 - X-COM - Variety'
+variant: 'A'
 model: 'Music v2.5'
 created: '2026-11-16 23:45:04'
 tags: [electronic, ambient]

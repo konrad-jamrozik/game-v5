@@ -1,6 +1,9 @@
 file: 'V3A-S5 SCNP+Dark+Violin.mp3'
 source: Suno v5 via v03ai
 original_title: 'v03AI UFO 5 - Scanning Protocol - Dark Violin'
+serial_id: 18
+prompt_code: 'V03AI - Suno v5 - Scanning Protocol - Dark - Violin'
+variant: 'One only'
 created: '2026-11-17 14:06'
 meta_prompt_taxonomy:
   stem: 'Replicate "Scanning Protocol" (Chris D''Ambrosio, XCOM Legacy OST)'

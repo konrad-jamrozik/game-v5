@@ -1,6 +1,9 @@
 file: 'EL-M2.5 XCOM+TFTD+NoPulse A.opus'
 source: ElevenLabs Music
 original_title: 'Depth Signal'
+serial_id: 6
+prompt_code: 'ElevenLabs Music v2.5 - X-COM - Terror from the Deep - No Pulse'
+variant: 'A'
 model: 'Music v2.5'
 created: '2026-11-16 23:42:39'
 tags: [electronic, ambient]
