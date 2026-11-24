@@ -2,7 +2,7 @@
 
 The music tracks the game plays, as the [Music](../../docs/specs/design/ui/music.md#soundtrack) specification describes. Each `.opus` or `.mp3` file in [`tracks/`](tracks/) is one track, and its title is its file name without the extension, e.g. `tracks/EL-M2.5 XCOM+Var+Bare+Slow B.opus` is the track titled "EL-M2.5 XCOM+Var+Bare+Slow B". The record of how each track was made is in [`yaml/`](yaml/), as [Track records](#track-records) describes.
 
-A track is named under the [Naming scheme](#naming-scheme), so that its name tells how it was made, or, when the Game designer chooses, keeps its original title as its name, e.g. `tracks/Restricted Orbit.mp3`. The table lists each track with its original title, the title its source gave it, which finds the song in the source; its source; and whether it is excluded from the Soundtrack.
+The Game designer chooses each track's name. It may be any name valid as a file name, as [Custom names](#custom-names) describes, e.g. `tracks/Unknown Contact A.mp3`, or, optionally, a name under the [Naming scheme](#naming-scheme), so that the name tells how the track was made, e.g. `tracks/S6 SCNP A.mp3`. A track not named otherwise takes its original title as its name, e.g. `tracks/Restricted Orbit.mp3`. The table lists each track with its original title, the title its source gave it, which finds the song in the source; its source; and whether it is excluded from the Soundtrack.
 
 The `excluded_tracks` of the GDR `music` in [`content/music/music_parameters.yaml`](../../content/music/music_parameters.yaml) decides which tracks are excluded, and the Excluded column mirrors it; an excluded track named under the scheme ends in its `X` number, as [Naming scheme](#naming-scheme) describes. An excluded track's audio file is not kept in this repository but in the Game designer's personal backup, outside it; its row in the table, and its track record, stay here.
 
@@ -38,6 +38,8 @@ The `excluded_tracks` of the GDR `music` in [`content/music/music_parameters.yam
 | `S6 XCOM+AllowEpic+NoSynth+Slow+Space B.mp3` | S6 XCOM+AllowEpic+NoSynth+Slow+Space B | Suno v6 |  |
 | `S6 XCOM+Var+NoMIDI+AllowHeroAggr A.mp3` | S6 XCOM+Var+NoMIDI+AllowHeroAggr A | Suno v6 |  |
 | `S6 XCOM+Var+NoMIDI+AllowHeroAggr B.mp3` | S6 XCOM+Var+NoMIDI+AllowHeroAggr B | Suno v6 |  |
+| `Unknown Contact A.mp3` | Unknown Contact A | Suno v6 |  |
+| `Unknown Contact B.mp3` | Unknown Contact B | Suno v6 |  |
 | `V3A-S5 SCNP.mp3` | v03AI UFO 3 - Scanning Protocol | Suno v5 via v03ai |  |
 | `V3A-S5 SCNP+Dark.mp3` | v03AI UFO 4 - Scanning Protocol - Dark | Suno v5 via v03ai |  |
 | `V3A-S5 SCNP+Dark+Cello&BClar.mp3` | v03AI UFO 6 - Scanning Protocol - Cello + Bass Clarinet | Suno v5 via v03ai |  |
@@ -45,9 +47,13 @@ The `excluded_tracks` of the GDR `music` in [`content/music/music_parameters.yam
 | `V3A-S5 XCOM+Sections+Loop X1.mp3` | v03AI UFO 2 | Suno v5 via v03ai | Yes |
 | `V3A-S5 XCOM+Var X1.mp3` | v03AI UFO 1 | Suno v5 via v03ai | Yes |
 
+## Custom names
+
+A track with a custom name, i.e. any name not built under the [Naming scheme](#naming-scheme), e.g. `Unknown Contact A` or `Restricted Orbit`, is outside the scheme: its name has no codes, take, or `X` number, does not change when the track is excluded, and gives the track no part in the take letters of the scheme's names, while its record's `meta_prompt_taxonomy` still records how it was made. A custom name may still end in a letter that tells apart the songs of one generation, e.g. `Unknown Contact A` and `Unknown Contact B`, as the Game designer chooses. It follows only the Windows rules of the scheme: it is a valid Windows file name, with none of `\ / : * ? " < > |` and no trailing space or period.
+
 ## Naming scheme
 
-A track's name tells, at a glance, how it came to be: where and with which model it was generated, which prompt stem it grew from, and each adjustment the Game designer asked for on the way to its prompt. It is built from the track's record:
+The naming scheme is optional: the Game designer uses it when a track's name should tell how the track was made. A name under the scheme tells, at a glance, how it came to be: where and with which model it was generated, which prompt stem it grew from, and each adjustment the Game designer asked for on the way to its prompt. It is built from the track's record:
 
 ```text
 Source[-Model] Stem[+Adjustment…] [Take]
@@ -61,9 +67,7 @@ e.g. `EL-M2.5 XCOM+TFTD+NoPulse B` is the second track that ElevenLabs Music v2.
 - **Take:** tells apart the tracks that would otherwise get the same name, e.g. the two variations of one generation, or two generations of the same prompt with different lengths, in the order of `created`. The tracks kept in the Soundtrack are lettered `A`, `B`, `C` and on, so the Player only ever sees an unbroken run of letters; a kept track that no other kept track shares its name with gets no letter. The excluded tracks are numbered apart, `X1`, `X2`, `X3` and on, even when alone, e.g. `EL-M2.5 XCOM+Var X1`.
 - **Renaming on exclusion:** excluding a track renames it and re-letters the kept tracks of its name. E.g., of tracks `A` to `F`, excluding `C` and `E` makes them `X1` and `X2`, and `D` and `F` become `C` and `D`. Nothing keeps an old name, so every mention of a renamed track changes with it: its file and record, its record's `file`, the notes of every record, the GDR `music`, and this README.
 
-A track that keeps its original title as its name is outside the scheme: its name has no codes, take, or `X` number, does not change when the track is excluded, and gives the track no part in the take letters of the scheme's names, while its record's `meta_prompt_taxonomy` still records how it was made. Its name follows only the Windows rules below.
-
-A name, with its take but without the extension, is at most 40 characters, and a name without a take at most 38, so that a take letter added later still fits. A name is a file name, so it must be valid on Windows: no code may contain any of `\ / : * ? " < > |`, and a name must not end in a space or a period. The codes use only letters, digits, and `-`, `.`, `&`, with `+` and spaces between them, e.g. a model is `M2.5`, never `M2:5`.
+A name under the scheme, with its take but without the extension, is at most 40 characters, and a name without a take at most 38, so that a take letter added later still fits. A name is a file name, so it must be valid on Windows: no code may contain any of `\ / : * ? " < > |`, and a name must not end in a space or a period. The codes use only letters, digits, and `-`, `.`, `&`, with `+` and spaces between them, e.g. a model is `M2.5`, never `M2:5`.
 
 The codes are these lists; a new source, model, stem, or adjustment adds its code here, short and in CamelCase or capitals like the rest:
 
@@ -121,7 +125,7 @@ The following table lists every key a record may hold; the list is exhaustive. A
 | `tags` | Yes, except from v03ai | The source's tags for the song, as a list. v03ai reports none; the "Style:" line given to it is `v03ai.style`. |
 | `length` |  | The song's length as the source reports it, as `m:ss`. |
 | `instrumental` |  | `true` when the song was generated as an instrumental, with no lyrics, e.g. Suno's Instrumental switch. |
-| `meta_prompt_taxonomy` | Yes | The key decisions behind the prompt, at a glance, from which the track's name is built under [Naming scheme](#naming-scheme). It lists only what is in effect in the prompt, e.g. not an instrument that a later adjustment replaced, nor a tint added and dropped again. |
+| `meta_prompt_taxonomy` | Yes | The key decisions behind the prompt, at a glance, from which a name under the [Naming scheme](#naming-scheme) is built. It lists only what is in effect in the prompt, e.g. not an instrument that a later adjustment replaced, nor a tint added and dropped again. |
 | `meta_prompt_taxonomy.stem` | Yes | The idea the prompt grew from, which every track of one line of prompts shares, e.g. `Replicate "Scanning Protocol" (Chris D'Ambrosio, XCOM Legacy OST)`. |
 | `meta_prompt_taxonomy.adjustments` | Yes | The adjustments that shaped the prompt from the stem, in the order the Game designer asked for them, each in a few words, as a list; `[]` when the prompt is the stem itself. A source setting is not an adjustment, since the source's key below holds it, unless the Game designer names it as one, e.g. `AllowHeroAggr`. |
 | `elevenlabs`, `suno`, or `v03ai` | Yes | Everything submitted to the source to generate the song, word for word: the key of the record's source, `elevenlabs` for `ElevenLabs Music`, `suno` for `Suno v6`, and `v03ai` for `Suno v5 via v03ai`. |
@@ -150,19 +154,21 @@ The files named `V3A-S5 …` are from Suno v5, made via [v03ai](https://v03ai.co
 
 ## Tracks from Suno v6
 
-The files named `S6 …`, and `Restricted Orbit.mp3`, which keeps its original title, are from Suno v6, made directly on [suno.com](https://suno.com/), which cannot export Ogg Opus. A record's `original_title` is the song's title in Suno, e.g. "Signal Intercept var1" for `S6 SCNP A.mp3`, and its `song_url` is the song's page; a Suno song that no record names, e.g. a "(Remastered)" copy, is not a track. Their track records hold the song data Suno keeps for each song: its page, model, creation time, tags, length, Styles text, Exclude styles text, and sliders. Suno caps the Styles text at 1,000 characters, so every prompt written for Suno v6 fits within it.
+The files named `S6 …`, and the custom-named `Restricted Orbit.mp3`, `Unknown Contact A.mp3`, and `Unknown Contact B.mp3`, are from Suno v6, made directly on [suno.com](https://suno.com/), which cannot export Ogg Opus. A record's `original_title` is the song's title in Suno, e.g. "Signal Intercept var1" for `S6 SCNP A.mp3`, and its `song_url` is the song's page; a Suno song that no record names, e.g. a "(Remastered)" copy, is not a track. Their track records hold the song data Suno keeps for each song: its page, model, creation time, tags, length, Styles text, Exclude styles text, and sliders. Suno caps the Styles text at 1,000 characters, so every prompt written for Suno v6 fits within it.
 
 ### Reading Suno song data
 
-A Suno song page, e.g. `https://suno.com/song/<id>`, renders its data in the browser, so a web fetch of the page shows none of it. Its data is instead the clip's JSON from `https://studio-api.prod.suno.com/api/clip/<id>`, which needs no sign-in, e.g. `curl -s -o clip.json "https://studio-api.prod.suno.com/api/clip/<id>"`. A record takes from it:
+A song's `<id>` is in its song link, e.g. `https://suno.com/song/<id>`. When the Game designer sends no link, the MP3 Suno downloads holds it: its ID3 tags hold the link, as the `WOAS` frame, and a comment `made with suno; created=<UTC time>; id=<id>`, which a look at the file's printable text in its first few kilobytes shows, e.g. `head -c 6000 <file> | tr -c '[:print:]' '\n' | grep suno`.
+
+A Suno song page renders its data in the browser, so a web fetch of the page shows none of it. Its data is instead the clip's JSON from `https://studio-api.prod.suno.com/api/clip/<id>`, which needs no sign-in, e.g. `curl -s -o clip.json "https://studio-api.prod.suno.com/api/clip/<id>"`. A record takes from it:
 
 | Clip JSON field | Record key |
 | --- | --- |
 | `title` | `original_title`, which must match the take's name |
 | `major_model_version` and `model_name`, e.g. `v6` and `chirp-hawk` | `model`, e.g. `v6 (chirp-hawk)` |
 | `created_at`, in UTC | `created`, converted to Pacific time |
-| `display_tags`, comma-separated | `tags`, as a list |
-| `metadata.duration`, in seconds | `length`, as `m:ss` |
+| `display_tags`, comma-separated | `tags`, as a list; `[]` when Suno gives none |
+| `metadata.duration`, in seconds | `length`, as `m:ss`, rounded down to the whole second, e.g. `188.8` is `3:08` |
 | `metadata.tags` | `final_prompt_from_gen_tool`: the final Styles text, as Suno stored it, when it differs from `suno.prompt` |
 | `metadata.negative_tags` | `suno.exclude_styles`, without its leading spaces |
 | `metadata.make_instrumental` | `instrumental` |

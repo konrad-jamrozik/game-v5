@@ -1,0 +1,32 @@
+file: 'Unknown Contact A.mp3'
+source: Suno v6
+original_title: 'Unknown Contact A'
+song_url: https://suno.com/song/c864e73b-5123-45e6-bc3f-81e805d38922
+model: 'v6 (chirp-hawk)'
+created: '2026-11-23 22:57:36'
+tags: []
+length: '3:08'
+instrumental: true
+meta_prompt_taxonomy:
+  stem: 'Dark, grounded soundtrack for a modern clandestine strategy game'
+  adjustments:
+    - 'shift toward cold, ominous X-COM Geoscape electronics'
+    - 'lead with dissonant FM synth motifs, alien electronic grain, and irregular sequencer accents'
+    - 'reduce pizzicato viola and bass flute to occasional background accents'
+    - 'quiet forward motion at around 76 BPM'
+suno:
+  prompt: |-
+    Ominous electronic strategy-game soundtrack for a clandestine signals room tracking an unknown contact. Cold FM synths carry sparse, dissonant motifs over a low, grainy electronic bed. Around 76 BPM, with quiet forward motion from irregular sequencer accents that change pattern and drop out. Faint radio interference, detuned signal fragments, and hollow metallic resonances emerge in the gaps. An occasional dry pizzicato viola note blends into the electronic texture. Bass flute appears only as a brief, filtered breath deep in the mix. Instrumental, restrained, and seamlessly loopable, with an unresolved sense of threat.
+  exclude_styles: |-
+    Vocals, choir, fantasy soundtrack, pastoral woodwinds, flute solos, playful pizzicato, chamber classical, bright melodies, synthwave, EDM, trailer music, aggressive drums, repetitive bass ostinatos
+  weirdness: 0.5
+  style_influence: 0.5
+  variety: 1
+  max_mode: false
+  personalize: true
+  duration: auto
+final_prompt_from_gen_tool: |-
+  Electronic strategy-game soundtrack, seamlessly loopable; around 76 BPM with quiet forward motion from irregular sequencer accents that shift pattern and drop out. Cold FM synths play sparse dissonant motifs over a low grainy electronic bed; faint radio interference, detuned signal fragments, and hollow metallic resonances emerge in the gaps. Occasional dry pizzicato viola; a brief filtered bass-flute breath sits deep in the mix. Instrumental.
+human_assessment: 'Good result.'
+notes: |-
+  The Game designer generated this song without a draft record and gave it a name of their own choosing rather than one under the naming scheme; the prompt and settings are the Game designer's. It is the first song of its generation (`batch_index` 0). Suno's clip data holds no display tags for this song, so `tags` is empty. `final_prompt_from_gen_tool` is the Styles text Suno stored, which Suno's Variety at Normal rewrote from `suno.prompt`. `created`, `length`, `model`, and Variety come from Suno's clip data; `created` is its UTC creation time converted to Pacific time. `suno.weirdness` and `suno.style_influence` are the values the Game designer set, which Suno's clip data omits at their default of 50%; Max Mode, Personalize, and Duration are the Game designer's settings, which the clip data does not hold.
