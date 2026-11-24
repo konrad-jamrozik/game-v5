@@ -266,7 +266,7 @@ Wherever a table shows an [Agent](../mechanics/domain-model.md#agency-and-agents
 
 ## Consequences
 
-Wherever a screen lists the [Consequences](../mechanics/missions.md#consequences) that applied, e.g. on a Mission card of the [Turn summary](screens/turn-summary.md), each Consequence is coloured by whether it is good or bad for the Player, so that a costly outcome stands out among the gains. A Consequence that gains money or funding, reduces [Panic](../mechanics/domain-model.md#campaign-standing), or makes a [Faction](../mechanics/domain-model.md#factions) [Eliminated](../mechanics/domain-model.md#factions) is in Positive; one that loses funding or increases Panic is in Danger. The label before them and the separators between them stay in Text muted, e.g. in "Consequences: Panic +3, funding −2" only "Panic +3" and "funding −2" are in Danger.
+Wherever a screen lists the [Consequences](../mechanics/missions.md#consequences) that applied, e.g. in the Benefits and Setbacks of the [Turn summary](screens/turn-summary.md), each Consequence is coloured by whether it is good or bad for the Player, so that a costly outcome stands out among the gains. A Consequence that gains money or funding, reduces [Panic](../mechanics/domain-model.md#campaign-standing), or makes a [Faction](../mechanics/domain-model.md#factions) [Eliminated](../mechanics/domain-model.md#factions) is in Positive; one that loses funding or increases Panic is in Danger. The label before them and the separators between them stay in Text muted, e.g. in "Consequences: Panic +3, funding −2" only "Panic +3" and "funding −2" are in Danger.
 
 ## Detail views and navigation
 

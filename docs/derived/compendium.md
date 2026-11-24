@@ -1582,6 +1582,7 @@ A cult member has been found, lightly guarded. Bring the member in before the tr
 | ------------------ | ------------------------------ |
 | `kind`             | `initiative`                   |
 | `name`             | `Apprehend member`             |
+| `first_win_phrase` | `first apprehension`           |
 | `expires_in_turns` | `3`                            |
 | `enemies`          | `{"initiate":2,"operative":1}` |
 | `on_win`           | `[{"money":50}]`               |
@@ -1806,6 +1807,7 @@ The final assault on the headquarters of a cult. Winning it puts the [Cult leade
 | ------------------ | ------------------------------------------------------------------------------------------- |
 | `kind`             | `initiative`                                                                                |
 | `name`             | `Raid HQ`                                                                                   |
+| `first_win_phrase` | `first successful HQ raid`                                                                  |
 | `expires_in_turns` | `3`                                                                                         |
 | `enemies`          | `{"soldier":32,"elite":12,"lieutenant":6,"commander":4,"high_commander":2,"cult_leader":1}` |
 | `on_win`           | `[{"money":100000},{"funding":300},{"panic":-20}]`                                          |
@@ -1820,6 +1822,7 @@ The hub that keeps the cult supplied. Taking it will hurt the cult for a long ti
 | --- | --- |
 | `kind` | `initiative` |
 | `name` | `Raid logistics hub` |
+| `first_win_phrase` | `first successful logistics hub raid` |
 | `expires_in_turns` | `3` |
 | `enemies` | `{"initiate":6,"operative":10,"soldier":6,"elite":2,"handler":4,"lieutenant":2,"commander":1}` |
 | `on_win` | `[{"money":10000},{"funding":60},{"panic":-5}]` |
@@ -1834,6 +1837,7 @@ A fortified outpost where the cult gathers its people. Expect a determined defen
 | ------------------ | --------------------------------------------------------------------- |
 | `kind`             | `initiative`                                                          |
 | `name`             | `Raid outpost`                                                        |
+| `first_win_phrase` | `first successful outpost raid`                                       |
 | `expires_in_turns` | `3`                                                                   |
 | `enemies`          | `{"initiate":4,"operative":8,"soldier":2,"handler":3,"lieutenant":1}` |
 | `on_win`           | `[{"money":4000},{"funding":30},{"panic":-2}]`                        |
@@ -1848,6 +1852,7 @@ A fortress that a [high commander](#high-commander) rules like a small kingdom. 
 | -------------------------- | -------------------------------------------------------------------------- |
 | `kind`                     | `initiative`                                                               |
 | `name`                     | `Raid regional stronghold`                                                 |
+| `first_win_phrase`         | `first successful regional stronghold raid`                                |
 | `expires_in_turns`         | `3`                                                                        |
 | `enemies`                  | `{"soldier":24,"elite":6,"lieutenant":4,"commander":2,"high_commander":1}` |
 | `on_win`                   | `[{"money":30000},{"funding":150},{"panic":-10}]`                          |
@@ -1862,6 +1867,7 @@ Storm the safehouse of a cult before it is moved. Expect it to be well guarded.
 | ------------------ | --------------------------------------------- |
 | `kind`             | `initiative`                                  |
 | `name`             | `Raid safehouse`                              |
+| `first_win_phrase` | `first successful safehouse raid`             |
 | `expires_in_turns` | `3`                                           |
 | `enemies`          | `{"initiate":4,"operative":4,"handler":1}`    |
 | `on_win`           | `[{"money":500},{"funding":10},{"panic":-1}]` |

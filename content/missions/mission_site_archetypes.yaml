@@ -2,6 +2,7 @@ id: apprehend_member
 type: MissionSiteArchetype
 kind: initiative
 name: Apprehend member
+first_win_phrase: first apprehension
 expires_in_turns: 3
 enemies:
   initiate: 2
@@ -13,6 +14,7 @@ id: raid_safehouse
 type: MissionSiteArchetype
 kind: initiative
 name: Raid safehouse
+first_win_phrase: first successful safehouse raid
 expires_in_turns: 3
 enemies:
   initiate: 4
@@ -27,6 +29,7 @@ id: raid_outpost
 type: MissionSiteArchetype
 kind: initiative
 name: Raid outpost
+first_win_phrase: first successful outpost raid
 expires_in_turns: 3
 enemies:
   initiate: 4
@@ -43,6 +46,7 @@ id: raid_logistics_hub
 type: MissionSiteArchetype
 kind: initiative
 name: Raid logistics hub
+first_win_phrase: first successful logistics hub raid
 expires_in_turns: 3
 enemies:
   initiate: 6
@@ -61,6 +65,7 @@ id: raid_regional_stronghold
 type: MissionSiteArchetype
 kind: initiative
 name: Raid regional stronghold
+first_win_phrase: first successful regional stronghold raid
 expires_in_turns: 3
 enemies:
   soldier: 24
@@ -77,6 +82,7 @@ id: raid_hq
 type: MissionSiteArchetype
 kind: initiative
 name: Raid HQ
+first_win_phrase: first successful HQ raid
 expires_in_turns: 3
 enemies:
   soldier: 32
