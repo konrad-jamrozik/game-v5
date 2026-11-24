@@ -198,7 +198,7 @@ The player sees what the next Advance turn will earn and cost before committing 
 
 The Player action `player.actions.hireAgents(count)` hires `count` Agents at once, a whole number of at least 1, so that filling the roster takes one Player action rather than one for each Agent.
 
-It costs `count` times `hire_cost`. It requires that the Agency's money is at least that cost and that the number of Serving Agents plus `count` is at most the Agent cap; when either fails, it hires nobody, even when some of the Agents would fit. Each hired Agent is created by [Agent creation](agents-spec.md#agent-creation).
+It costs `count` times `hire_cost`. It requires that the Agency's money is at least that cost and that the number of Serving Agents plus `count` is at most the Agent cap; when either fails, it hires nobody, even when some of the Agents would fit. Each hired Agent is created by [Agent creation](agents-spec.md#agent-creation) and [brings rounds](equipment.md#equipment-of-new-and-departing-agents) into [Storage](equipment.md#glossary).
 
 # Dismissing Agents
 

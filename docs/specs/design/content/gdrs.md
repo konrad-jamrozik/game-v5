@@ -112,6 +112,7 @@ The [coverage of parameter GDRs](../mechanics/compendium.md#coverage-of-paramete
 | `configuration_parameters` | `default_preset` | It names the preset that campaign creation starts from, which the Player sees while creating a Campaign. |
 | `music` | `excluded_tracks` | It lists the music files left out of the [Soundtrack](../ui/music.md#glossary). |
 | `equipment` | `starting_ammo` | It is a mapping, which no Placeholder can show, and the Player sees the rounds it gives in [Storage](../mechanics/equipment.md#glossary) from the first Turn. |
+| `equipment` | `hire_ammo` | It is a mapping, which no Placeholder can show, and the Player sees the rounds it gives in [Storage](../mechanics/equipment.md#glossary) after each hire. |
 
 The repository check `npm run compendium:check` reads the exemptions from this table, so a property added to a parameter GDR fails the check until an article explains the property or the table exempts it.
 

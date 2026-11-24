@@ -3,6 +3,8 @@ type: EquipmentParameters
 fallback_armor: standard_uniform
 starting_ammo:
   pistol_ammo: 80 # 10 rounds for each of the 8 Agents of the initial roster
+hire_ammo:
+  pistol_ammo: 10 # rounds that each hired Agent brings into Storage
 sale_price_fraction: 0.5
 spoils_ammo_max: 4 # rounds that each Weapon of the spoils of war brings, from 0
 ammo_short_rounds_per_agent: 10

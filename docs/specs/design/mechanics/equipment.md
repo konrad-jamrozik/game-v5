@@ -41,6 +41,7 @@ EquipmentParameters bundles the values the rules of Equipment read.
 | --- | --- | --- |
 | `fallback_armor` | A reference to the Fallback Armor: an Armor with no `price`. | [Equipping Agents](#equipping-agents) |
 | `starting_ammo` | For each AmmoType it lists, the rounds of it in the Storage of a new [Campaign](../foundation/core-concepts.md#campaign-and-session), a whole number of at least 1. An AmmoType it does not list starts at 0. | [Storage](#storage) |
+| `hire_ammo` | For each AmmoType it lists, the rounds of it that each hired Agent brings into Storage, a whole number of at least 1. An AmmoType it does not list gains none. | [Equipment of new and departing Agents](#equipment-of-new-and-departing-agents) |
 | `sale_price_fraction` | The share of `price` that selling brings: a decimal number greater than 0 and at most 1. | [Selling Items](#selling-items) |
 | `spoils_ammo_max` | The most rounds that one Weapon of the spoils of war brings with it: a whole number of at least 0. | [Spoils of war](#spoils-of-war) |
 | `ammo_short_rounds_per_agent` | How many rounds Storage should hold for each Serving Agent whose Weapon uses an AmmoType: a whole number of at least 0. | [Ammo short](#ammo-short) |
@@ -77,7 +78,7 @@ E.g., an Agent wearing a pistol is equipped with a rifle while Storage holds 2 r
 
 ## Equipment of new and departing Agents
 
-A new Agent wears the `weapon` and the `armor` of its [AgentArchetype](agents-spec.md#agentarchetype), whichever rule [creates](agents-spec.md#agent-creation) it; they come with its hire, from no Storage. When an Agent is [Dismissed](agents-spec.md#agent-status), every Item it wears goes into Storage. What becomes of the Items of an Agent [Killed](agents-spec.md#agent-statuses) in a [Combat](domain-model.md#combat) is decided by [Mission equipment losses](#mission-equipment-losses).
+A new Agent wears the `weapon` and the `armor` of its [AgentArchetype](agents-spec.md#agentarchetype), whichever rule [creates](agents-spec.md#agent-creation) it; they come with its hire, from no Storage. Each Agent that [`hireAgents`](economy-and-upgrades.md#hiring-agents) hires also puts the rounds `hire_ammo` lists into Storage, so that it does not join with an empty magazine; an Agent that another rule creates, e.g. one of the Initial roster, brings none. E.g., with a `hire_ammo` of 10 pistol rounds, hiring 3 Agents adds 30 pistol rounds to Storage. When an Agent is [Dismissed](agents-spec.md#agent-status), every Item it wears goes into Storage. What becomes of the Items of an Agent [Killed](agents-spec.md#agent-statuses) in a [Combat](domain-model.md#combat) is decided by [Mission equipment losses](#mission-equipment-losses).
 
 # Buying Items
 
