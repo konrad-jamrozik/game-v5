@@ -69,6 +69,14 @@ When the setup is rejected, e.g. because the Agents' side is empty or a field ho
 
 The [Combat replay](combat-replay.md#battlefield-layout) derives where its figures stand from the Detached seed, and names an Agent by its place in its side, e.g. "agent-3".
 
+# Screenshot
+
+The Combat simulator as the game draws it:
+
+![Combat simulator Screenshot](../../../../images/screens/combat-simulator.png)
+
+_Captured on 2026-11-24 00:10 UTC._
+
 # TODOs
 
 - TODO (later): Limited [Ammo](../../mechanics/combat.md#ammo) in the Combat simulator.

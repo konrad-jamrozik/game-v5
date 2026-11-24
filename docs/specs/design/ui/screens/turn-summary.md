@@ -55,4 +55,4 @@ The Turn Summary as the game draws it:
 
 ![Turn summary Screenshot](../../../../images/screens/turn-summary.png)
 
-_Captured on 2026-11-23 19:47 UTC._
+_Captured on 2026-11-24 00:10 UTC._

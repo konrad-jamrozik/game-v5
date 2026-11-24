@@ -60,4 +60,4 @@ _Captured on 2026-11-23 19:47 UTC._
 
 ![Combat report Screenshot](../../../../images/screens/combat-report.png)
 
-_Captured on 2026-11-23 19:47 UTC._
+_Captured on 2026-11-24 00:10 UTC._
