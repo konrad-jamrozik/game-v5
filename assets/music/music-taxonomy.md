@@ -1,6 +1,6 @@
 # Game-v5 music prompt taxonomy
 
-Every track record in [`yaml/`](yaml/), including the rejected and draft records in its `rejected/` and `drafts/` subfolders, describes its prompt by `meta_prompt_taxonomy`, as the [music README](README.md#track-records) describes. [Prompt codes](#prompt-codes) maps each source, stem, and adjustment of it to a short code and to a spelled-out segment, from which each record's code and `prompt_code` are built. [Analysis as of 2026-11-23](#analysis-as-of-2026-11-23) reviews the prompts as they stood on that date.
+Every track record in [`yaml/`](yaml/), including the excluded and draft records in its `excluded/` and `drafts/` subfolders, describes its prompt by `meta_prompt_taxonomy`, as the [music README](README.md#track-records) describes. [Prompt codes](#prompt-codes) maps each source, stem, and adjustment of it to a short code and to a spelled-out segment, from which each record's code and `prompt_code` are built. [Analysis as of 2026-11-23](#analysis-as-of-2026-11-23) reviews the prompts as they stood on that date.
 
 ## Prompt codes
 
