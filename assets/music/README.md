@@ -200,3 +200,4 @@ The Game designer has proposed the renames below. Each proposed name is a custom
 | `Deep Space Contact A.mp3`               | Signal Intelligence         |
 | `S6 SCNP+Dark+BClar&Trombone B.mp3`      | Shady deals                 |
 | `V3A-S5 SCNP.mp3`                        | On the Trail of the Unknown |
+| `S6 SCNP+7Instr A.mp3`                   | Solemn aftermath            |
