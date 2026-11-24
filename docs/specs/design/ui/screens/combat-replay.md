@@ -36,7 +36,7 @@ Each side stands several columns deep, and how near the other side a figure stan
 
 A figure shows what the Player must know about its Combatant without a table: whose side it is on, what kind it is, how much health and armor it has left, and how skilled it is.
 
-- **Name:** each figure is named beside it, an [Agent](../../mechanics/domain-model.md#agency-and-agents) by its [Instance ID](../../foundation/campaign-instances.md#glossary) and an [Enemy](../../mechanics/domain-model.md#combat) by its [Enemy label](../gui.md#glossary).
+- **Name:** each figure is named beside it, an [Agent](../../mechanics/domain-model.md#agency-and-agents) by its [Instance ID](../../foundation/campaign-instances.md#glossary) and an [Enemy](../../mechanics/domain-model.md#combat) by its [Enemy label](../gui.md#glossary). A side with more Combatants than the Battlefield has rows shows no names, because they would lie over one another; the pointer resting on a figure still names it.
 - **Agent:** a circle in Positive.
 - **Enemy:** a shape and a colour that say its EnemyArchetype, by the place of that EnemyArchetype in the EnemyArchetype order. The first three EnemyArchetypes are triangles, the next three squares, the next three pentagons, and the three after them hexagons. Within a shape, the first is in Enemy amber, the second in Danger, and the third in Enemy violet.
 - **Health:** the figure is filled with its colour from the bottom, as far as its [current health](../../mechanics/agents-spec.md#combatant-attributes) is of its [effective max health](../../mechanics/agents-spec.md#combatant-attributes), so that it empties from the top as it is hit.
