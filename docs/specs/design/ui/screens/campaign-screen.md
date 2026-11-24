@@ -24,9 +24,18 @@ The globe is a decoration: it shows a rotating Earth that the Player can turn an
 
 The Side panel is the Player's way into every [Detail view](../gui.md#glossary) and the place where the state of the [Campaign](../../foundation/core-concepts.md#campaign-and-session) is read at a glance. It holds:
 
-1. **Navigation:** one button for each Detail view, in the groups of the [Detail views](#detail-views). A button shows a count where that section gives one, and no count while it is 0. Selecting the button of a Detail view opens it, and selecting the button of the open Detail view closes it.
+1. **[Navigation](#navigation):** its tabs and buttons.
 2. **[Situation panel](situation-panel.md):** it scrolls inside when its content is taller than the room it has.
-3. **Footer:** while [Autopilot](../../foundation/engine-contract.md#autopilot) controls shown is on, the [Autopilot controls](#autopilot-controls), and always the [Music control](../music.md#music-control) and the Settings button, with the accessible name "Settings", which opens the [Settings panel](../gui.md#settings-panel).
+3. **Footer:** while [Autopilot](../../foundation/engine-contract.md#autopilot) controls shown is on, the [Autopilot controls](#autopilot-controls), and always the [Music control](../music.md#music-control).
+
+## Navigation
+
+The game keeps gaining Detail views, and a button for each, all in view at once, would push the [Situation panel](situation-panel.md#glossary) off the screen. The navigation therefore has two tiers, and stays as tall as its largest group however many groups there are:
+
+1. **Tabs:** one tab for each group of the [Detail views](#detail-views), in one row. Selecting a tab chooses its group and opens nothing. A tab shows no count.
+2. **Buttons:** one button for each Detail view of the chosen group. A button shows a count where that section gives one, and no count while it is 0. Selecting the button of a Detail view opens it, and selecting the button of the open Detail view closes it.
+
+Opening a Detail view in any other way, e.g. from an item of the Situation panel or with a key, chooses the tab of its group, so that the tab in view always holds the button of the open Detail view. The chosen tab belongs to the GUI alone: it is Operations whenever a [Session](../../foundation/core-concepts.md#campaign-and-session) starts and stays as the Player last left it for the rest of the Session.
 
 ## Hiding the Side panel
 
@@ -36,13 +45,14 @@ The Player who reads a wide chart or a long table wants the whole width of the s
 
 A Detail view opens over the Globe stage and covers it, while the status bar and the Side panel stay in view, so that the Player keeps the [Situation panel](situation-panel.md#glossary) in sight while acting in a Detail view. One Detail view is open at a time: opening another replaces it. The Detail views are in these groups:
 
-- **Operations,** the Detail views in which the Player acts:
+- **Operations,** the Detail views of the work the Player sends Agents to:
   1. [Missions](missions-view.md), for the [Mission sites](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) and the deployment of Agents to them, with the number of Active Mission sites.
   2. [Leads](leads-view.md), for the [Leads](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) and their [Investigations](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), with the number of Active Investigations and of the Leads of the [Leads group](situation-panel.md#groups).
   3. [Agents](agents-view.md), for hiring, dismissing, and assigning [Agents](../../mechanics/domain-model.md#agency-and-agents), with the number of [Serving](../../mechanics/agents-spec.md#agent-statuses) Agents.
-  4. [Storage](storage-view.md), for the [Items and Ammo](../../mechanics/equipment.md#storage) the agency holds, and selling them.
-  5. [Upgrades](upgrades-view.md), for the [Upgrades](../../mechanics/domain-model.md#agency-and-agents) of the agency.
-  6. [Acquisitions](acquisitions-view.md), for buying [Items and Ammo](../../mechanics/equipment.md#buying-items).
+- **Base,** the Detail views of what the agency owns:
+  1. [Storage](storage-view.md), for the [Items and Ammo](../../mechanics/equipment.md#storage) the agency holds, and selling them.
+  2. [Upgrades](upgrades-view.md), for the [Upgrades](../../mechanics/domain-model.md#agency-and-agents) of the agency.
+  3. [Acquisitions](acquisitions-view.md), for buying [Items and Ammo](../../mechanics/equipment.md#buying-items).
 - **Records,** the Detail views in which the Player reads what has happened and how the game works:
   1. [Turn report](turn-report-view.md), for the most recent [Turn report](../../foundation/campaign-state.md#glossary) in full.
   2. [History](history-view.md).
@@ -75,7 +85,7 @@ The status bar keeps in view the values that decide whether the Campaign is goin
 3. **Funding:** the Agency's funding.
 4. **Agents:** the number of [Serving](../../mechanics/agents-spec.md#agent-statuses) Agents and the [Agent cap](../../mechanics/economy-and-upgrades.md#glossary), e.g. "10/20".
 5. **Panic:** [Panic](../../mechanics/domain-model.md#campaign-standing) as a [meter](../visual-design.md#meters) against the [Panic limit](../../mechanics/panic-and-endings.md#glossary).
-6. **Turns since last enemy activity:** the number of Turns since a [Response Mission site](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) last appeared, so that the Player senses how long the [Factions](../../mechanics/domain-model.md#factions) have been quiet without the status bar naming any of them. It is the current Turn number minus 1 minus the greatest [Turn created](../../mechanics/missions.md#mission-site-properties) of any Response Mission site, whatever its lifecycle state, and the current Turn number minus 1 before any Response Mission site exists.
+6. **Enemy quiet:** the number of Turns since a [Response Mission site](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) last appeared, written with "T", e.g. "4 T", so that the Player senses how long the [Factions](../../mechanics/domain-model.md#factions) have been quiet without the status bar naming any of them. Its tooltip names it in full: "Turns since last enemy activity". It is the current Turn number minus 1 minus the greatest [Turn created](../../mechanics/missions.md#mission-site-properties) of any Response Mission site, whatever its lifecycle state, and the current Turn number minus 1 before any Response Mission site exists.
 
 # Status bar controls
 
@@ -84,9 +94,10 @@ The status bar's controls are:
 1. **Undo** and **Redo,** the buttons of [Undo and redo](#undo-and-redo).
 2. **Save,** which [writes a Campaign save](../../foundation/saves.md#saving) of the [Current campaign](../../foundation/core-concepts.md#campaign-and-session).
 3. **[Main menu](../../foundation/campaign-lifecycle.md#glossary),** which [closes the Current campaign](../../foundation/campaign-lifecycle.md#campaign-selection) and shows the Main menu.
-4. **Advance turn,** the primary button, which makes the Advance turn Player action. The N key presses it. While the engine reports Advance turn unavailable, the button is disabled and its tooltip gives the reason the engine reports.
+4. **Settings,** a square button showing a cogwheel, with the accessible name "Settings", which opens the [Settings panel](../gui.md#settings-panel).
+5. **Advance turn,** the primary button, which makes the Advance turn Player action. The N key presses it. While the engine reports Advance turn unavailable, the button is disabled and its tooltip gives the reason the engine reports.
 
-While an [Autopilot engagement](../../foundation/engine-contract.md#autopilot) is active, every status bar control is disabled, because the [Session controller](../../foundation/engine-contract.md#principals-and-access) [cannot use their operations](../../foundation/autopilot.md#autopilot-lifecycle-and-concurrency) until disengagement completes.
+While an [Autopilot engagement](../../foundation/engine-contract.md#autopilot) is active, every status bar control but Settings is disabled, because the [Session controller](../../foundation/engine-contract.md#principals-and-access) [cannot use their operations](../../foundation/autopilot.md#autopilot-lifecycle-and-concurrency) until disengagement completes.
 
 # Autopilot controls
 

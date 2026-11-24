@@ -40,7 +40,7 @@ The GUI has three screens, and each has its own specification in the `screens/` 
 
 # Settings panel
 
-The Player changes [Global configuration](../foundation/engine-contract.md#persisted-data) in one place, the Settings panel, so that a setting is found the same way on both screens, and the settings the Player rarely changes stay one click away rather than in view. On the [Main Menu](screens/main-menu.md) the Settings panel is always in view, with no close control. On the [Campaign Screen](screens/campaign-screen.md) it opens from the Settings button in the footer of the Side panel, drawn as a [dialog](visual-design.md#dialogs), except that it has no buttons at its bottom: the Player closes it with its [close control](visual-design.md#close-controls) or the Escape key. Opening it neither pauses nor changes the Campaign.
+The Player changes [Global configuration](../foundation/engine-contract.md#persisted-data) in one place, the Settings panel, so that a setting is found the same way on both screens, and the settings the Player rarely changes stay one click away rather than in view. On the [Main Menu](screens/main-menu.md) the Settings panel is always in view, with no close control. On the [Campaign Screen](screens/campaign-screen.md) it opens from the [Settings button of the status bar](screens/campaign-screen.md#status-bar-controls), drawn as a [dialog](visual-design.md#dialogs), except that it has no buttons at its bottom: the Player closes it with its [close control](visual-design.md#close-controls) or the Escape key. Opening it neither pauses nor changes the Campaign.
 
 The Settings panel is titled Settings and holds these rows from top to bottom, each a [row of a settings list](visual-design.md#inputs):
 
