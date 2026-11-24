@@ -189,3 +189,11 @@ A song cropped in Suno's editor is a new clip with `metadata.type` `edit_crop`: 
 To analyze what a track contains, e.g. its instruments, structure, or mood, the [NVIDIA Music Flamingo demo](https://nvidia-music-flamingo.hf.space/) is a good tool: it takes an audio file and answers questions about it.
 
 Other tools that may serve the same purpose have not been tested yet: [Google AI Studio](https://aistudio.google.com/) and the [instrument detection from audio](https://unveilmusic.app/instrument-detection-from-audio) of Unveil Music.
+
+## Proposed renames
+
+The Game designer has proposed the renames below. Each proposed name is a custom name, as [Custom names](#custom-names) describes, and no rename is applied until the Game designer accepts it.
+
+| File                                     | Proposed name       |
+| ---------------------------------------- | ------------------- |
+| `S6 XCOM+Var+NoMIDI+AllowHeroAggr A.mp3` | Alien fleet arrives |
