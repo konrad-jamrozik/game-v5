@@ -44,16 +44,17 @@ The Agents View has two kinds of filter: one decides which Agents the table show
 
 ## Row filters
 
-A group labelled "Show agents" holds four filters, each with its count, of which exactly one is on at a time. All is on whenever the Agents View opens.
+A group labelled "Show agents" holds five filters, each with its count, of which exactly one is on at a time. All is on whenever the Agents View opens.
 
 - **All:** every Serving [Agent](../../mechanics/domain-model.md#agency-and-agents).
+- **[Fit to start work](../../mechanics/agents-spec.md#assignments):** every Agent that [can take orders](../../mechanics/agents-spec.md#agents-that-can-take-orders) and is not too exhausted to start work, i.e. whose [exhaustion](../../mechanics/agents-spec.md#combatant-attributes) is at most N, where N is `exhaustion_free_points` of [AgentParameters](../../mechanics/agents-spec.md#agentparameters), above which exhaustion lowers its [effective skill](../../mechanics/agents-spec.md#effective-skill).
 - **[In base](../../mechanics/agents-spec.md#agent-statuses):** every Agent In base.
 - **[Away](../../mechanics/agents-spec.md#agent-statuses):** every Agent Away.
 - **Memorial:** every [Terminated](../../mechanics/agents-spec.md#agent-statuses) Agent, in the [Memorial](#memorial).
 
-Two checkboxes hide more Agents from the table that All, In base, or Away shows, so that the Player can keep in view only the Agents ready for work:
+Two checkboxes hide more Agents from the table that All, Fit to start work, In base, or Away shows, so that the Player can keep in view only the Agents ready for work:
 
-- **Hide with [exhaustion](../../mechanics/agents-spec.md#combatant-attributes) > N,** where N is `exhaustion_free_points` of [AgentParameters](../../mechanics/agents-spec.md#agentparameters), e.g. "Hide with exhaustion > 30": hides every Agent whose exhaustion is above N.
+- **Hide too exhausted to start work:** hides every Agent whose exhaustion is above N.
 - **Hide recovering:** hides every Agent whose Assignment is [Recovery](../../mechanics/agents-spec.md#assignments), whether it is [Recovering](../../mechanics/agents-spec.md#agent-statuses) or [In transit](../../mechanics/domain-model.md#agency-and-agents).
 
 Both are unchecked whenever the Agents View opens. They change no count of the row filters. While Memorial is on, both are disabled and keep their check.
