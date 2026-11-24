@@ -1,0 +1,31 @@
+file: 'Deep Space Contact B.mp3'
+source: Suno v6
+original_title: 'Deep Space Contact B'
+song_url: https://suno.com/song/251bc2cd-853c-4c56-92b5-a02ed9035dee
+model: 'v6 (chirp-hawk)'
+created: '2026-11-23 23:24:49'
+tags: []
+length: '1:23'
+instrumental: true
+meta_prompt_taxonomy:
+  stem: 'Cold, ominous electronic strategy-game soundtrack inspired by the original X-COM Geoscape'
+  adjustments:
+    - 'quiet forward motion at around 82 BPM with irregular sequencer phrases'
+    - 'instruments: close-miked felt piano + lightly tapped, immediately damped cymbal'
+    - 'rounded FM lead over a faint, intermittent synth bed'
+    - 'clean, spacious deep-space mix with sonar pings, detuned signals, and deliberate silence'
+suno:
+  prompt: |-
+    Cold, ominous electronic strategy-game soundtrack with the suspense of the original X-COM Geoscape. Around 82 BPM, with quiet momentum from short, irregular sequencer phrases. Rounded FM tones carry the main motif over a faint synth bed that fades between phrases. A close-miked felt piano answers with occasional two- or three-note fragments in the lower register. A cymbal is lightly tapped and immediately damped, leaving a short metallic tick. Distant sonar pings and detuned signal fragments suggest an unknown contact in deep space. Keep the mix clean and spacious, with silence between sounds and restrained dynamics. Instrumental, seamlessly loopable, and quietly menacing.
+  exclude_styles: |-
+    Vocals, choir, fantasy soundtrack, pastoral woodwinds, flute solos, playful pizzicato, chamber classical, bright melodies, synthwave, EDM, trailer music, aggressive drums, repetitive bass ostinatos, sentimental piano, cymbal crashes, cymbal washes, drum fills
+  weirdness: 0.5
+  style_influence: 0.7
+  variety: 1
+  max_mode: false
+  personalize: false
+  duration: auto
+final_prompt_from_gen_tool: |-
+  Electronic strategy-game soundtrack, instrumental; short, irregular sequencer phrases move rounded FM tones through an original X-COM Geoscape-inspired motif, with a faint synth bed fading between phrases. Close-miked felt piano answers in lower-register two- or three-note fragments; lightly tapped cymbal leaves immediate metallic ticks. Distant sonar pings and detuned signal fragments fill the gaps. Clean and spacious mix, silence between sounds, seamless loop and restrained dynamics; around 82 BPM, with quiet momentum and cold, ominous suspense, quietly menacing.
+notes: |-
+  A crop, made in Suno's editor, of the first song of the generation that also made Deep Space Contact A; Suno's clip data marks it `metadata.type` `edit_crop` and hides the song it was cropped from. The crop keeps only the Styles text, so `suno` is the generation's, as for Deep Space Contact A: the Exclude styles, Instrumental switch, and sliders the Game designer set, which the crop's clip data does not hold. Suno's Audio influence slider was at 25%, but no reference audio was loaded, so it had no effect and the record leaves it out. `final_prompt_from_gen_tool` is the Styles text Suno stored, which Suno's Variety at Normal rewrote from `suno.prompt`, differently from Deep Space Contact A. `created` is the crop's UTC creation time converted to Pacific time, and `length` is the crop's; Suno's clip data holds no display tags for the crop, so `tags` is empty.

@@ -8,6 +8,8 @@ The `excluded_tracks` of the GDR `music` in [`content/music/music_parameters.yam
 
 | File | Original title | Source | Excluded |
 | --- | --- | --- | --- |
+| `Deep Space Contact A.mp3` | Deep Space Contact A | Suno v6 |  |
+| `Deep Space Contact B.mp3` | Deep Space Contact B | Suno v6 |  |
 | `EL-M2 XCOM.opus` | Silent Contact Protocol | ElevenLabs |  |
 | `EL-M2 XCOM+TFTD X1.opus` | Subsurface Directive | ElevenLabs | Yes |
 | `EL-M2 XCOM+TFTD.opus` | Abyss Protocol | ElevenLabs |  |
@@ -154,7 +156,7 @@ The files named `V3A-S5 …` are from Suno v5, made via [v03ai](https://v03ai.co
 
 ## Tracks from Suno v6
 
-The files named `S6 …`, and the custom-named `Restricted Orbit.mp3`, `Unknown Contact A.mp3`, and `Unknown Contact B.mp3`, are from Suno v6, made directly on [suno.com](https://suno.com/), which cannot export Ogg Opus. A record's `original_title` is the song's title in Suno, e.g. "Signal Intercept var1" for `S6 SCNP A.mp3`, and its `song_url` is the song's page; a Suno song that no record names, e.g. a "(Remastered)" copy, is not a track. Their track records hold the song data Suno keeps for each song: its page, model, creation time, tags, length, Styles text, Exclude styles text, and sliders. Suno caps the Styles text at 1,000 characters, so every prompt written for Suno v6 fits within it.
+The files named `S6 …`, and the custom-named `Restricted Orbit.mp3`, `Unknown Contact A.mp3`, `Unknown Contact B.mp3`, `Deep Space Contact A.mp3`, and `Deep Space Contact B.mp3`, are from Suno v6, made directly on [suno.com](https://suno.com/), which cannot export Ogg Opus. A record's `original_title` is the song's title in Suno, e.g. "Signal Intercept var1" for `S6 SCNP A.mp3`, and its `song_url` is the song's page; a Suno song that no record names, e.g. a "(Remastered)" copy, is not a track. Their track records hold the song data Suno keeps for each song: its page, model, creation time, tags, length, Styles text, Exclude styles text, and sliders. Suno caps the Styles text at 1,000 characters, so every prompt written for Suno v6 fits within it.
 
 ### Reading Suno song data
 
@@ -178,7 +180,9 @@ A Suno song page renders its data in the browser, so a web fetch of the page sho
 
 `batch_index` gives each song's place in its generation, `0` for the first, which takes the earlier letter.
 
-A song generated with audio inspiration, i.e. a song dragged into Suno's Audio panel as Inspo, has `metadata.task` `playlist_condition`; the clip data holds neither the inspiring song nor the Audio influence slider, so a record gives both in `notes`, as the Game designer reports them.
+A song generated with audio inspiration, i.e. a song dragged into Suno's Audio panel as Inspo, has `metadata.task` `playlist_condition`; the clip data holds neither the inspiring song nor the Audio influence slider, so a record gives both in `notes`, as the Game designer reports them. An Audio influence slider set without any song in the Audio panel has no effect, and the clip shows a plain generation; a record leaves the slider out and says so in `notes`.
+
+A song cropped in Suno's editor is a new clip with `metadata.type` `edit_crop`: it has its own `<id>`, title, creation time, and duration, and keeps the Styles text of the song it was cropped from in `metadata.tags`, but holds no display tags, Exclude styles, Instrumental switch, or sliders, and hides the song it was cropped from. A record of a crop takes those settings from its generation, as the Game designer gave them, and says in `notes` that it is a crop and of which song.
 
 ## Analyzing track contents
 
