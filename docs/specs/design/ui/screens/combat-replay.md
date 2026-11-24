@@ -28,13 +28,11 @@ The Player reaches the Combat replay from wherever a [Combat](../../mechanics/do
 
 # Battlefield layout
 
-The Battlefield places the two sides apart so that every shot reads as crossing from one to the other. It is a grid of 30 by 30 cells: the Agents stand spread from top to bottom down its left side and the Enemies down its right side. A figure never leaves its cell, except to lunge with a blade, and the same Combat always shows every figure in the same cell. The Battlefield is centred in the width it is given.
+The Battlefield places the two sides apart so that every shot reads as crossing from one to the other. It is a grid of 30 by 30 cells: the Agents stand on its left side and the Enemies on its right side. A figure never leaves its cell, except to lunge with a blade, and the same Combat always shows every figure in the same cell. The Battlefield is centred in the width it is given.
 
-Each side stands several columns deep, and how near the other side a figure stands follows how strong its Combatant is, so that a side reads as a front line of its weakest with its elite behind them. Among the Combatants of its side, the lower a Combatant's [Combat rating](../../mechanics/combat.md#combatant-condition-in-a-combat) at Combat start, the nearer the other side its figure tends to stand, and the higher, the nearer its own edge of the Battlefield. A side stands seven columns deep, or up to nine when it has more Combatants than seven columns hold.
+Each side stands several columns deep, and how near the other side a figure stands follows how strong its Combatant is, so that a side reads as a front line of its weakest with its elite behind them. Among the Combatants of its side, the lower a Combatant's [Combat rating](../../mechanics/combat.md#combatant-condition-in-a-combat) at Combat start, the nearer the other side its figure tends to stand, and the higher, the nearer its own edge of the Battlefield. A side stands seven columns deep, or up to nine when it has more Combatants than seven columns hold. Chance moves a figure a little from the column its Combat rating alone gives it, so that a side of equal Combatants still stands spread over its columns.
 
-The elite also stand in the middle of their side rather than at one end of it: the higher a Combatant's Combat rating at Combat start, the nearer the middle row of the Battlefield its figure tends to stand, with the weakest of the side above and below.
-
-Chance moves a figure a little from the column and the row its Combat rating alone gives it, so that a side of equal Combatants still stands spread over its columns.
+A column says how strong its Combatants are, and where in the column a figure stands says nothing. The figures of one column therefore stand evenly spaced around the middle row of the Battlefield, in the fixed order of their side from top to bottom: at most four rows apart, so that a column of few figures gathers at the middle, and closer when the column holds more than that fits, down to one figure in every row. Columns whose figures stand four rows apart are staggered, each one row below the column before it, so that the names beside the figures have room.
 
 # Figures
 
