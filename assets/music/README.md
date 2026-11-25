@@ -181,3 +181,7 @@ The Game designer has proposed the renames below. Each proposed name is a custom
 | `EL-M2.5 XCOM+Var+Bare+Slow A.opus`          | Sacrifice for Earth           |
 | `EL-M2.5 XCOM+Var A.opus`                    | Inside the Megastructure      |
 | `EL-M2.5 XCOM+Var+Bare+Slow B.opus`          | Descent to Earth              |
+| `Deep Space Contact B.mp3`                   | Cybernetic Elites             |
+| `Restricted Orbit.mp3`                       | UFO Salvage Operation         |
+| `Unknown Contact A.mp3`                      | In Pursuit of Shapeshifters   |
+| `Unknown Contact B.mp3`                      | Artifact Experiments          |
