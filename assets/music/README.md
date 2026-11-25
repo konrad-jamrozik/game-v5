@@ -185,3 +185,7 @@ The Game designer has proposed the renames below. Each proposed name is a custom
 | `Restricted Orbit.mp3`                       | UFO Salvage Operation         |
 | `Unknown Contact A.mp3`                      | In Pursuit of Shapeshifters   |
 | `Unknown Contact B.mp3`                      | Artifact Experiments          |
+| `S6 SCNP+Dark+BClar&Trombone A.mp3`          | Smuggling Artifacts           |
+| `S6 SCNP+7Instr B.mp3`                       | Containment Protocol          |
+| `S6 SCNP+Dark+Cello&DBass B.mp3`             | What Remains                  |
+| `S6 XCOM+AllowEpic+NoSynth+Slow+Space A.mp3` | Assault on the Alien Facility |
