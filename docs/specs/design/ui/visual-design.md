@@ -348,7 +348,7 @@ The status bar keeps the agency's vital values in view on the Campaign screen, e
 
 ## Meters
 
-A meter shows a value against its limit, e.g. Panic against the Panic limit. It is a row of 10 equal segments, 8 px tall with 3 px gaps. Each full tenth of the limit fills one segment in Accent, a remaining part of a tenth fills the next segment in Accent dim, and the other segments are Divider. The value and the limit are written above the meter's right end in Accent text, e.g. "24.35 / 100%".
+A meter shows a value against its limit, e.g. Panic against the Panic limit. It is a row of 10 equal segments, 8 px tall with 3 px gaps. Its colour says how near the limit the value is, warming as it nears it on the scale of [current health](#agent-condition) run the other way: Text at 0% of the limit, Warning at 25%, Accent text at 50%, Danger at 75%, and Danger deep at 100%, a share between two stops taking the colour between them in proportion, mixed in sRGB. Each full tenth of the limit fills one segment in that colour, a remaining part of a tenth fills the next segment in that colour at 50% opacity, and the other segments are Divider. The value and the limit are written above the meter's right end in that colour, e.g. "24.35 / 100%" almost in Warning.
 
 ## Cap bars
 
