@@ -46,7 +46,7 @@ The Settings panel is titled Settings and holds these rows from top to bottom, e
 
 1. **Music volume:** the [Music volume slider](music.md#music-volume-slider).
 2. **Sounds:** the [Sounds toggle and the Sounds volume slider](sounds.md#sound-settings).
-3. **Other settings:** one row for each other Global configuration setting, e.g. the [Autosave limit](../foundation/saves.md#glossary) or the [Screen limit](visual-design.md#screen-limit), with its input, except Music on, which the [Music control](music.md#music-control) sets, and the [Autopilot settings](screens/campaign-screen.md#autopilot-settings), which the Player sets where they are used.
+3. **Other settings:** one row for each other Global configuration setting, e.g. the [Autosave limit](../foundation/saves.md#glossary) or the [Screen limit](visual-design.md#screen-limit), with its input, except Music on, which the [Music control](music.md#music-control) sets, and the [Autopilot settings](screens/campaign-screen.md#autopilot-settings) and the settings of the [developer tools](#developer-tools), which the Player sets where they are used.
 4. **Changed settings:** what the Player has [changed](#changed-settings).
 5. **Tools,** on the Campaign Screen only: a neutral button for the [keyboard shortcuts](screens/campaign-screen.md#keyboard-shortcuts), and one for the developer tools. Each closes the Settings panel and opens what it names.
 
@@ -56,10 +56,15 @@ A setting changed long ago, or in another place, is easy to forget, so the Setti
 
 # Developer tools
 
-The developer tools are for the Game designer and for testing, not for playing the game, so [Dev mode](../foundation/engine-contract.md#principals-and-access) gates all of them, and the Game designer who uses them sets them up once per [Session](../foundation/core-concepts.md#campaign-and-session) rather than once per [Campaign](../foundation/core-concepts.md#campaign-and-session).
+The developer tools are for the Game designer and for testing, not for playing the game, so [Dev mode](../foundation/engine-contract.md#principals-and-access) gates all of them, and the Game designer who uses them sets them up once rather than in every [Session](../foundation/core-concepts.md#campaign-and-session) or [Campaign](../foundation/core-concepts.md#campaign-and-session). Two [Global configuration](../foundation/configuration.md#global-configuration) settings keep them:
+
+| Setting | Permitted values | Game build default | Set by |
+| --- | --- | --- | --- |
+| Dev mode on | On or off | Off | The "Dev mode" checkbox of the developer tools. |
+| Reveal hidden content on | On or off | Off | The "Reveal hidden content" checkbox of the developer tools. |
 
 - **Gated by Dev mode:** Their first control is a [checkbox](visual-design.md#checkboxes) labelled "Dev mode", which enables and disables Dev mode. While Dev mode is disabled, every other control of the developer tools is disabled, with "Enable Dev mode first." as its tooltip, and a checkbox among them keeps its value.
-- **Kept for the Session:** The GUI keeps whether Dev mode is enabled and whether Reveal hidden content is on as the Game designer last left them for the rest of the Session, whatever Campaign is created or loaded: after a create or a load, which disables Dev mode, the GUI enables it again when it was enabled before. It never persists them, so a new Session starts with both off.
+- **Kept across Sessions:** While Dev mode on is on, the GUI enables Dev mode whenever a Campaign is current and Dev mode is disabled, e.g. after a create or a load, which disable it, and in a new Session; while it is off, the GUI disables Dev mode. Reveal hidden content is on exactly while Reveal hidden content on is on, and it is in effect only while Dev mode is enabled.
 - **Fixed during an engagement:** The "Dev mode" checkbox is disabled while an [Autopilot](../foundation/engine-contract.md#autopilot) engagement is active, because Dev mode cannot change then.
 
 ## Reveal hidden content

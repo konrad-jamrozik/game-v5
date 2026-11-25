@@ -44,7 +44,8 @@ A Game build has the following Global configuration settings. The specification 
 | [Autosave limit](saves.md#limits), [Autopilot Autosave limit](saves.md#limits) | [Limits](saves.md#limits) in Saves |
 | Music on, Music volume | [Music settings](../ui/music.md#music-settings) in Music |
 | Sounds on, Sounds volume | [Sound settings](../ui/sounds.md#sound-settings) in Sounds |
-| Autopilot controls shown, [Autopilot](engine-contract.md#autopilot) [Turns](engine-contract.md#player-actions-and-turns) | [Autopilot settings](../ui/screens/campaign-screen.md#autopilot-settings) in Campaign Screen |
+| Autopilot controls shown, [Autopilot](engine-contract.md#autopilot) [Turns](engine-contract.md#player-actions-and-turns), Autopilot controls expanded, [Autopilot AI](engine-contract.md#principals-and-access) | [Autopilot settings](../ui/screens/campaign-screen.md#autopilot-settings) in Campaign Screen |
+| [Dev mode](engine-contract.md#principals-and-access) on, Reveal hidden content on | [Developer tools](../ui/gui.md#developer-tools) in Graphical User Interface |
 | [Combat simulator](../ui/screens/combat-simulator.md#glossary) shown | [Opening the Combat simulator](../ui/screens/combat-simulator.md#opening-the-combat-simulator) in Combat Simulator |
 | [Screen limit](../ui/visual-design.md#glossary) | [Screen limit](../ui/visual-design.md#screen-limit) in Visual Design |
 

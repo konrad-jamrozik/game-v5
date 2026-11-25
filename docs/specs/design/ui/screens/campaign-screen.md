@@ -110,15 +110,17 @@ The Autopilot controls in the footer of the Side panel let the Player hand play 
 
 The selector and the engaging buttons are disabled, each with the reason as its tooltip, while an Autopilot engagement is active, after the Campaign has ended, and when no Autopilot AI is available. While an Autopilot engagement is active, its [Autopilot progress](../../foundation/autopilot.md#glossary), in Player actions and Turns advanced, and a Stop button that disengages Autopilot stand in the collapsed controls and in place of the line in the expanded controls. When the Autopilot engagement ends, a line takes the place of the progress and the Stop button and tells the Player in plain words its disengagement reason and Autopilot progress, e.g. "Autopilot disengaged because its limit was reached: 14 Player actions, 3 Turns advanced". It stays until Autopilot is engaged again or the [Current world state](../../foundation/engine-contract.md#player-actions-and-turns) changes. For the disengagement reason Advance turn withheld, the line says that the Autopilot AI has left Advance turn to the Player, and, when no Player action was committed, that it has nothing more to do this Turn; e.g., "Autopilot finished this Turn's actions: 6 Player actions. Advancing the Turn is up to you." or "Autopilot has nothing more to do this Turn."
 
-The Player sets up Autopilot once per [Session](../../foundation/core-concepts.md#campaign-and-session) rather than once per Campaign: the GUI keeps whether the Autopilot controls are expanded and the chosen Autopilot AI as the Player last left them for the rest of the Session, whatever Campaign is created or loaded, and never persists them, so a new Session starts with the controls collapsed. When the kept Autopilot AI is no longer available, the selector shows the first available one.
+The Player sets up Autopilot once rather than in every [Session](../../foundation/core-concepts.md#campaign-and-session) or Campaign: whether the Autopilot controls are expanded and the chosen Autopilot AI are [Autopilot settings](#autopilot-settings), so they stay as the Player last left them whatever Campaign is created or loaded and in every later Session. When the chosen Autopilot AI is no longer available, the selector shows the first available one.
 
 ## Autopilot settings
 
-Autopilot is a tool for the Game designer and for testing, not part of playing the game, so its controls stay out of the Player's way until they are asked for, and the Game designer who uses them sets them up once rather than in every Session. Two [Global configuration](../../foundation/configuration.md#global-configuration) settings govern them:
+Autopilot is a tool for the Game designer and for testing, not part of playing the game, so its controls stay out of the Player's way until they are asked for, and the Game designer who uses them sets them up once rather than in every Session. Four [Global configuration](../../foundation/configuration.md#global-configuration) settings govern them:
 
 | Setting | Permitted values | Game build default | Set by |
 | --- | --- | --- | --- |
 | Autopilot controls shown | On or off | Off | The "Show Autopilot controls" checkbox of the [developer tools](../gui.md#developer-tools), which Dev mode gates. |
+| Autopilot controls expanded | On or off | Off | The toggle of the Autopilot controls. |
+| Autopilot AI | The name of an Autopilot AI, or none | None, which shows the first available Autopilot AI | The Autopilot AI selector of the Autopilot controls. |
 | Autopilot Turns | A whole number of at least 1 | 10 | The Turns field of the Autopilot controls, whenever the Player leaves it holding a permitted value, e.g. 100 stays 100 in every later Session. |
 
 The "Show Autopilot controls" checkbox is disabled while an Autopilot engagement is active, so that the Stop button never leaves the screen while it is needed.
