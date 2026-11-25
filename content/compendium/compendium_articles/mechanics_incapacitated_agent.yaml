@@ -1,6 +1,7 @@
 id: mechanics_incapacitated_agent
 type: CompendiumArticle
 category: mechanics
+listed_under: AgentArchetype
 title: Incapacitated Agent
 terms: [Incapacitated Agent, Incapacitated Agents, incapacitated]
 body: >-

@@ -1,6 +1,7 @@
 id: mechanics_fully_rested_agent
 type: CompendiumArticle
 category: mechanics
+listed_under: AgentArchetype
 title: Fully rested Agent
 terms: [Fully rested Agent, Fully rested Agents, fully rested]
 body: >-

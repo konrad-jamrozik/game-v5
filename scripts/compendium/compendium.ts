@@ -97,7 +97,17 @@ const REFERENCE_PROPERTIES: Readonly<Record<string, readonly string[]>> = {
   CombatParameters: ['fallback_weapon'],
 }
 
-const ARTICLE_PROPERTIES = ['category', 'title', 'body', 'subject', 'formulas', 'terms', 'see_also', 'visible_when']
+const ARTICLE_PROPERTIES = [
+  'category',
+  'title',
+  'body',
+  'subject',
+  'formulas',
+  'terms',
+  'see_also',
+  'listed_under',
+  'visible_when',
+]
 const CATEGORIES: readonly ArticleCategory[] = ['guide', 'mechanics', 'subject']
 
 function isRecord(value: unknown): value is Readonly<Record<string, unknown>> {
@@ -379,6 +389,19 @@ export function loadCompendium(gameData: GameData): Compendium {
   const titles = new Map<string, Article>()
   const subjects = new Map<string, Article>()
   const termOwners = new Map<string, Article>()
+  // COMP, CompendiumArticle: `listed_under` names a Type that the subject of some Subject article has, and only a
+  // guide or mechanics article has it.
+  const subjectTypes = new Set(articles.flatMap((article) => (article.subject ? [article.subject.type] : [])))
+  for (const gdr of gameData.gdrs.values()) {
+    if (gdr.type !== ARTICLE_TYPE) continue
+    const listedUnder = gdr.properties['listed_under']
+    if (listedUnder === undefined) continue
+    if (gdr.properties['category'] === 'subject') {
+      findings.push(`${gdr.path}: a subject article has no listed_under.`)
+    } else if (typeof listedUnder !== 'string' || !subjectTypes.has(listedUnder)) {
+      findings.push(`${gdr.path}: listed_under names a Type that the subject of some subject article has.`)
+    }
+  }
   for (const article of articles) {
     const report = (message: string): number => findings.push(`${article.path}: ${message}`)
     const titleKey = article.title.toLowerCase()

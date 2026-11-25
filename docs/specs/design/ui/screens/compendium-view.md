@@ -25,8 +25,8 @@ It reads like a small reference work. The Player narrows from a category to an a
 
 The three panes narrow the Compendium from a category to one article:
 
-1. **Categories:** Guide first, for the [Guide articles](../../mechanics/compendium.md#glossary), then Mechanics, for the [Mechanics articles](../../mechanics/compendium.md#glossary), then one category for each [Type](../../foundation/core-concepts.md#data-modeling) of the subjects of the Player-visible Subject articles, named as [Subject data sheets](#subject-data-sheets) names it and sorted by that name, e.g. Enemies before Leads. Each category shows the number of its Player-visible articles, and a category with none is left out.
-2. **Articles:** the [displayed title](../../mechanics/compendium.md#displayed-title) of each Player-visible article of the selected category, sorted by displayed title ignoring case.
+1. **Categories:** Guide first, for the [Guide articles](../../mechanics/compendium.md#glossary), then Mechanics, for the [Mechanics articles](../../mechanics/compendium.md#glossary), then the categories of the subjects of the Player-visible Subject articles, named after each subject's [Type](../../foundation/core-concepts.md#data-modeling) as [Subject data sheets](#subject-data-sheets) names it and sorted by that name, e.g. Enemies before Leads. A Guide article or a Mechanics article with a [`listed_under`](../../mechanics/compendium.md#compendiumarticle) is in the category of that Type instead of in Guide or Mechanics. Each category shows the number of its Player-visible articles, and a category with none is left out.
+2. **Articles:** the [displayed title](../../mechanics/compendium.md#displayed-title) of each Player-visible article of the selected category: first its Subject articles, grouped by the Type of their subjects in the order of the table under Subject data sheets, then the articles listed under it, each group sorted by displayed title ignoring case. E.g., Weapons lists every Weapon, then every AmmoType, and Agents lists each kind of Agent, then the articles on kinds of Agent, e.g. [Deployable Agent](../../mechanics/missions.md#glossary).
 3. **Article:** the selected article, in the parts of the [Article pane](#article-pane).
 
 When the Compendium View opens, the Guide category and its first article are selected. A search field filters the articles of every category to those whose displayed title contains the search text, ignoring case; while it holds text, the categories show the numbers of matching articles, and a category with none is left out. An article that a new [World state](../../foundation/engine-contract.md#player-actions-and-turns) makes Player-visible appears without reopening the Compendium View.
@@ -83,7 +83,7 @@ Each subject Type has a category name and a Data sheet heading. A Subject articl
 | EnemyArchetype | Enemies | Enemy |
 | Weapon | Weapons | Weapon |
 | Armor | Armor | Armor |
-| AmmoType | Ammo | Ammo |
+| AmmoType | Weapons | Ammo |
 | Upgrade | Upgrades | Upgrade |
 | FactionArchetype | Factions | Faction |
 | Lead | Leads | Lead |

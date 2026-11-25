@@ -1,6 +1,7 @@
 id: mechanics_deployable_agent
 type: CompendiumArticle
 category: mechanics
+listed_under: AgentArchetype
 title: Deployable Agent
 terms: [Deployable Agent, Deployable Agents]
 body: >-
