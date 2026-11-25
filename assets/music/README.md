@@ -2,80 +2,61 @@
 
 The music tracks the game plays, as the [Music](../../docs/specs/design/ui/music.md#soundtrack) specification describes. Each `.opus` or `.mp3` file in [`tracks/`](tracks/) is one track, and its title is its file name without the extension, e.g. `tracks/Descent to Earth.opus` is the track titled "Descent to Earth". The record of how each track was made is in [`yaml/`](yaml/), as [Track records](#track-records) describes.
 
-The Game designer chooses each track's name. It may be any name valid as a file name, as [Custom names](#custom-names) describes, e.g. `tracks/In Pursuit of Shapeshifters.mp3`, or, optionally, a name under the [Naming scheme](#naming-scheme), so that the name tells how the track was made, e.g. `tracks/S6 SCNP A.mp3`, the first name of `Alien Technology.mp3`. A track not named otherwise takes its original title as its name, e.g. `tracks/Subterranean Facility.mp3`. A track's name may differ from its song's title in its source, e.g. `Descent to Earth.opus` is the ElevenLabs song "Silent Threat Protocol"; its record's `source_title`, and for Suno its `song_url`, find the song there, as each source's section below describes. The table lists each track with its record's `serial_id`, code, and `variant`, which keep when it was made, how it was made, and which take it is, whatever its name, as [Track records](#track-records) describes; its original title, the title its source gave it, which finds the song in the source; and its source.
+The Game designer chooses each track's name, as [Track names](#track-names) describes, e.g. `tracks/In Pursuit of Shapeshifters.mp3`. A track's name may differ from its song's title in its source, e.g. `Descent to Earth.opus` is the ElevenLabs song "Silent Threat Protocol"; its record's `source_title`, and for Suno its `song_url`, find the song there, as each source's section below describes. The table lists each track with its record's `serial_id` and `variant`, which keep when it was made and which take of its prompt it is, whatever its name, as [Track records](#track-records) describes; its original title, the title its source gave it, which finds the song in the source; and its source.
 
 Every track in the table is in the Soundtrack. A track the Game designer rejects is deleted: its audio file, its record, and its row, so that its song stays only in its source, e.g. ElevenLabs or Suno.
 
-| File | Serial ID | Code | Variant | Original title | Source |
-| --- | --: | --- | --- | --- | --- |
-| `A City on Sonar.opus` | 3 | `EL-M2.5 XCOM+TFTD+NoPulse` | A | Depth Signal | ElevenLabs |
-| `Alien Lifeforms.mp3` | 15 | `S6 SCNP` | B | Signal Intercept var2 | Suno v6 |
-| `Alien Technology.mp3` | 14 | `S6 SCNP` | A | Signal Intercept var1 | Suno v6 |
-| `Approaching the Megastructure.opus` | 7 | `EL-M2.5 XCOM+Var` | B | Silent Contact | ElevenLabs |
-| `Artifact Experiments.mp3` | 32 | `S6 Clandestine+ToGeo+DissFM+FaintViola&BFlute+76BPM` | B | Unknown Contact B | Suno v6 |
-| `Assault on the Alien Facility.mp3` | 28 | `S6 XCOM+AllowEpic+NoSynth+Slow+Space` | A | S6 XCOM+AllowEpic+NoSynth+Slow+Space A | Suno v6 |
-| `Containment Protocol.mp3` | 25 | `S6 SCNP+7Instr` | B | S6 SCNP+7Instr B | Suno v6 |
-| `Countering the Threat.mp3` | 29 | `S6 XCOM+AllowEpic+NoSynth+Slow+Space` | B | S6 XCOM+AllowEpic+NoSynth+Slow+Space B | Suno v6 |
-| `Cybernetic Elites.mp3` | 34 | `S6 GeoElec+82BPMSeq+Piano&DampedCymbal+FMLead+SonarMix` | B | Deep Space Contact B | Suno v6 |
-| `Dark Omen.mp3` | 16 | `S6 SCNP+Dark+Piano&Cello` | A | Unseen Approach var1 | Suno v6 |
-| `Deployment Preparations.opus` | 5 | `EL-M2.5 XCOM+NoPulse+Geo+Ominous` | One only | Black Orbit Watch | ElevenLabs |
-| `Descent to Earth.opus` | 9 | `EL-M2.5 XCOM+Var+Bare+Slow` | B | Silent Threat Protocol | ElevenLabs |
-| `In Pursuit of Shapeshifters.mp3` | 31 | `S6 Clandestine+ToGeo+DissFM+FaintViola&BFlute+76BPM` | A | Unknown Contact A | Suno v6 |
-| `Inside the Command Center.opus` | 1 | `EL-M2 XCOM` | One only | Silent Contact Protocol | ElevenLabs |
-| `Inside the Megastructure.opus` | 6 | `EL-M2.5 XCOM+Var` | A | Unknown Contact | ElevenLabs |
-| `Network Expansion.mp3` | 22 | `S6 SCNP+Dark+DBass&BowedCymbals` | A | S6 SCNP+Dark+DBass&BowedCymbals A | Suno v6 |
-| `Night Shift.mp3` | 17 | `S6 SCNP+Dark+Piano&Cello` | B | Unseen Approach var2 | Suno v6 |
-| `On the Trail of the Unknown.mp3` | 10 | `V3A-S5 SCNP` | One only | v03AI UFO 3 - Scanning Protocol | Suno v5 via v03ai |
-| `Reports of the Strange.mp3` | 11 | `V3A-S5 SCNP+Dark` | One only | v03AI UFO 4 - Scanning Protocol - Dark | Suno v5 via v03ai |
-| `Sacrifice for Earth.opus` | 8 | `EL-M2.5 XCOM+Var+Bare+Slow` | A | Silent Hostile Sector | ElevenLabs |
-| `Shady Deals.mp3` | 19 | `S6 SCNP+Dark+BClar&Trombone` | B | Bass clarinet + muted trombone var2 | Suno v6 |
-| `Signal Intelligence.mp3` | 33 | `S6 GeoElec+82BPMSeq+Piano&DampedCymbal+FMLead+SonarMix` | A | Deep Space Contact A | Suno v6 |
-| `Smuggling Artifacts.mp3` | 18 | `S6 SCNP+Dark+BClar&Trombone` | A | Bass clarinet + muted trombone var1 | Suno v6 |
-| `Solemn Aftermath.mp3` | 24 | `S6 SCNP+7Instr` | A | S6 SCNP+7Instr A | Suno v6 |
-| `Subterranean Facility.mp3` | 35 | `S6 VatsOfGoo` | One only | Subterranean Facility | Suno v6 |
-| `Surface Logistics.mp3` | 23 | `S6 SCNP+Dark+DBass&BowedCymbals` | B | S6 SCNP+Dark+DBass&BowedCymbals B | Suno v6 |
-| `Survey at Depth.opus` | 4 | `EL-M2.5 XCOM+TFTD+NoPulse` | B | Abyssal Tactical Drift | ElevenLabs |
-| `The Alien Fleet Arrives.mp3` | 26 | `S6 XCOM+Var+NoMIDI+AllowHeroAggr` | A | S6 XCOM+Var+NoMIDI+AllowHeroAggr A | Suno v6 |
-| `The Human Toll.mp3` | 20 | `S6 SCNP+Dark+Cello&DBass` | A | S6 SCNP+Dark+Cello&DBass A | Suno v6 |
-| `The Infestation Spreads.mp3` | 12 | `V3A-S5 SCNP+Dark+Violin` | One only | v03AI UFO 5 - Scanning Protocol - Dark Violin | Suno v5 via v03ai |
-| `The Reports Keep Coming.mp3` | 13 | `V3A-S5 SCNP+Dark+Cello&BClar` | One only | v03AI UFO 6 - Scanning Protocol - Cello + Bass Clarinet | Suno v5 via v03ai |
-| `Their Weapons in Our Hands.mp3` | 27 | `S6 XCOM+Var+NoMIDI+AllowHeroAggr` | B | S6 XCOM+Var+NoMIDI+AllowHeroAggr B | Suno v6 |
-| `UFO Salvage Operation.mp3` | 30 | `S6 XCOM+AllowEpic+NoSynth+Slow+Space` | C | Restricted Orbit | Suno v6 |
-| `Undersea Operations.opus` | 2 | `EL-M2 XCOM+TFTD` | One only | Abyss Protocol | ElevenLabs |
-| `What Remains.mp3` | 21 | `S6 SCNP+Dark+Cello&DBass` | B | S6 SCNP+Dark+Cello&DBass B | Suno v6 |
+| File | Serial ID | Variant | Original title | Source |
+| --- | --: | --- | --- | --- |
+| `A City on Sonar.opus` | 3 | A | Depth Signal | ElevenLabs |
+| `Alien Lifeforms.mp3` | 15 | B | Signal Intercept var2 | Suno v6 |
+| `Alien Technology.mp3` | 14 | A | Signal Intercept var1 | Suno v6 |
+| `Approaching the Megastructure.opus` | 7 | B | Silent Contact | ElevenLabs |
+| `Artifact Experiments.mp3` | 32 | B | Unknown Contact B | Suno v6 |
+| `Assault on the Alien Facility.mp3` | 28 | A | S6 XCOM+AllowEpic+NoSynth+Slow+Space A | Suno v6 |
+| `Containment Protocol.mp3` | 25 | B | S6 SCNP+7Instr B | Suno v6 |
+| `Countering the Threat.mp3` | 29 | B | S6 XCOM+AllowEpic+NoSynth+Slow+Space B | Suno v6 |
+| `Cybernetic Elites.mp3` | 34 | B | Deep Space Contact B | Suno v6 |
+| `Dark Omen.mp3` | 16 | A | Unseen Approach var1 | Suno v6 |
+| `Deployment Preparations.opus` | 5 | One only | Black Orbit Watch | ElevenLabs |
+| `Descent to Earth.opus` | 9 | B | Silent Threat Protocol | ElevenLabs |
+| `In Pursuit of Shapeshifters.mp3` | 31 | A | Unknown Contact A | Suno v6 |
+| `Inside the Command Center.opus` | 1 | One only | Silent Contact Protocol | ElevenLabs |
+| `Inside the Megastructure.opus` | 6 | A | Unknown Contact | ElevenLabs |
+| `Network Expansion.mp3` | 22 | A | S6 SCNP+Dark+DBass&BowedCymbals A | Suno v6 |
+| `Night Shift.mp3` | 17 | B | Unseen Approach var2 | Suno v6 |
+| `On the Trail of the Unknown.mp3` | 10 | One only | v03AI UFO 3 - Scanning Protocol | Suno v5 via v03ai |
+| `Reports of the Strange.mp3` | 11 | One only | v03AI UFO 4 - Scanning Protocol - Dark | Suno v5 via v03ai |
+| `Sacrifice for Earth.opus` | 8 | A | Silent Hostile Sector | ElevenLabs |
+| `Shady Deals.mp3` | 19 | B | Bass clarinet + muted trombone var2 | Suno v6 |
+| `Signal Intelligence.mp3` | 33 | A | Deep Space Contact A | Suno v6 |
+| `Smuggling Artifacts.mp3` | 18 | A | Bass clarinet + muted trombone var1 | Suno v6 |
+| `Solemn Aftermath.mp3` | 24 | A | S6 SCNP+7Instr A | Suno v6 |
+| `Subterranean Facility.mp3` | 35 | One only | Subterranean Facility | Suno v6 |
+| `Surface Logistics.mp3` | 23 | B | S6 SCNP+Dark+DBass&BowedCymbals B | Suno v6 |
+| `Survey at Depth.opus` | 4 | B | Abyssal Tactical Drift | ElevenLabs |
+| `The Alien Fleet Arrives.mp3` | 26 | A | S6 XCOM+Var+NoMIDI+AllowHeroAggr A | Suno v6 |
+| `The Human Toll.mp3` | 20 | A | S6 SCNP+Dark+Cello&DBass A | Suno v6 |
+| `The Infestation Spreads.mp3` | 12 | One only | v03AI UFO 5 - Scanning Protocol - Dark Violin | Suno v5 via v03ai |
+| `The Reports Keep Coming.mp3` | 13 | One only | v03AI UFO 6 - Scanning Protocol - Cello + Bass Clarinet | Suno v5 via v03ai |
+| `Their Weapons in Our Hands.mp3` | 27 | B | S6 XCOM+Var+NoMIDI+AllowHeroAggr B | Suno v6 |
+| `UFO Salvage Operation.mp3` | 30 | C | Restricted Orbit | Suno v6 |
+| `Undersea Operations.opus` | 2 | One only | Abyss Protocol | ElevenLabs |
+| `What Remains.mp3` | 21 | B | S6 SCNP+Dark+Cello&DBass B | Suno v6 |
 
-## Custom names
+## Track names
 
-A track with a custom name, i.e. any name not built under the [Naming scheme](#naming-scheme), e.g. `In Pursuit of Shapeshifters` or `Subterranean Facility`, is outside the scheme: its name has no codes or take, and gives the track no part in the take letters of the scheme's names, while its record's `meta_prompt_taxonomy` still records how it was made, and so gives it a code and a `prompt_code`, e.g. `UFO Salvage Operation` has the code `S6 XCOM+AllowEpic+NoSynth+Slow+Space`. A custom name may still end in a letter that tells apart the songs of one generation, e.g. the earlier names `Unknown Contact A` and `Unknown Contact B`, as the Game designer chooses. It follows only the Windows rules of the scheme: it is a valid Windows file name, with none of `\ / : * ? " < > |` and no trailing space or period.
+A track's name is any name the Game designer chooses, e.g. `In Pursuit of Shapeshifters` or the song's title in its source, e.g. `Subterranean Facility`. A name is a file name, so it must be valid on Windows: it contains none of `\ / : * ? " < > |` and does not end in a space or a period.
 
-## Naming scheme
-
-The naming scheme is optional: the Game designer uses it when a track's name should tell how the track was made. A name under the scheme tells, at a glance, how it came to be: where and with which model it was generated, which prompt stem it grew from, and each adjustment the Game designer asked for on the way to its prompt. It is built from the track's record:
-
-```text
-Source[-Model] Stem[+Adjustment…] [Take]
-```
-
-e.g. `S6 SCNP+Dark+Piano&Cello B`, the first name of `Night Shift`, is the second track that Suno v6 made from the Scanning Protocol stem, made darker and given felt piano and cello.
-
-- **Source and model:** where the song was generated and, joined by a hyphen, the model, from `source` and `model`. A source with no recorded model is its code alone, e.g. `EL`.
-- **Stem:** the code of `meta_prompt_taxonomy.stem`.
-- **Adjustments:** the code of each entry of `meta_prompt_taxonomy.adjustments` that has one, in order, each joined by `+`, e.g. an adjustment that only limits the prompt's length has none.
-- **Take:** tells apart the tracks that would otherwise get the same name, e.g. the two variations of one generation, or two generations of the same prompt with different lengths. A track's take is the letter of its record's `variant`, given when the track is named, e.g. the track first named `S6 SCNP B`, now `Alien Lifeforms`; a track that is the only one of its name when it is named gets no letter, e.g. the track first named `EL-M2 XCOM`, now `Inside the Command Center`. A take never changes: renaming or deleting another track of the same name re-letters nothing, so the letters may have gaps, e.g. `S6 SCNP+7Instr B` kept its letter while `S6 SCNP+7Instr A` already had its custom name.
-- **Renaming:** nothing keeps an old name, so every mention of a renamed track changes with it: its file and record, its record's `file`, the notes of every record, and this README.
-
-The name without its take is the record's code, which every record has, whatever its name, as [Prompt codes](music-taxonomy.md#prompt-codes) describes.
-
-A name under the scheme, with its take but without the extension, is at most 40 characters, and a name without a take at most 38, so that a take letter added later still fits. A name is a file name, so it must be valid on Windows: no code may contain any of `\ / : * ? " < > |`, and a name must not end in a space or a period. The codes use only letters, digits, and `-`, `.`, `&`, with `+` and spaces between them, e.g. a model is `M2.5`, never `M2:5`.
-
-The codes, the `meta_prompt_taxonomy` entry each stands for, and the segment each gives a `prompt_code` are listed in [Prompt codes](music-taxonomy.md#prompt-codes); a new source, model, stem, or adjustment adds its code there.
+- **Before the Game designer names it:** a new track is named by its record's `prompt_code` and, when its `variant` is a letter, `-` and that letter, e.g. `Suno v6 - Scanning Protocol - Dark - Felt Piano and Cello - A` for a first take, or the `prompt_code` alone for a `One only` track. The `prompt_code` is built from the record's `meta_prompt_taxonomy`, as [Prompt codes](music-taxonomy.md#prompt-codes) describes.
+- **Renaming:** nothing keeps an old name, so every mention of a renamed track changes with it: its file and record, its record's `file`, the notes of every record, and this README. Its `prompt_code`, `variant`, and `serial_id` do not change.
 
 ## Track records
 
 A `.yaml` file with the same name as a track records how the track was made, so that it can be told apart from the others and made again: its source and model, when it was made, the key decisions behind its prompt, the prompt and settings submitted to the source, the prompt as the source stored it, and what the source reports about it, e.g. tags and length. Every track has one, and deleting a track deletes its record. A draft record, whose first line is `# DRAFT: TODO values are filled in from the source after generation.`, records a track that is planned but not yet added: its `file` is not yet in `tracks/`, no row of the table lists it, and each value only the source can give is `TODO`. Where a record is kept tells its state:
 
 - `yaml/`: a track's record, e.g. `yaml/Descent to Earth.yaml`.
-- `yaml/drafts/`: a draft record, which moves into `yaml/` once its track is added, e.g. a draft for a third take of `S6 SCNP` is `yaml/drafts/S6 SCNP C.yaml`.
+- `yaml/drafts/`: a draft record, which moves into `yaml/` once its track is added, e.g. a draft for a third take of the Suno v6 Scanning Protocol prompt is `yaml/drafts/Suno v6 - Scanning Protocol - C.yaml`.
 
 The following table lists every key a record may hold; the list is exhaustive. A record holds only the keys it has values for, except the required ones, which every record holds. Keys nested in another key are written with a dot, e.g. `suno.prompt` is the `prompt` key inside `suno`. Once written, `prompt_code` and `variant` never change, also when the track is renamed, and `serial_id` changes only when a deleted track leaves a gap to close.
 
@@ -86,17 +67,17 @@ The following table lists every key a record may hold; the list is exhaustive. A
 | `original_title` | Yes | The track's title before any renaming: its title in its source, or the name the Game designer gave its download. |
 | `source_title` | Yes | The song's title in its source now, which finds it there. It equals `original_title` until the Game designer renames the song in its source, and then changes with it, e.g. after a rename in Suno it is the title Suno shows, read from the song's clip data as [Reading Suno song data](#reading-suno-song-data) describes. |
 | `serial_id` | Yes | The order in which the Game designer made the track among all tracks, from `1` with no gaps, by `created`; songs made at the same time take the order of their takes, e.g. `Alien Technology` is `14` and `Alien Lifeforms` is `15`. Deleting a track renumbers every later one, e.g. deleting track `14` makes `15` the new `14`. A draft holds `TODO` and gets the next number when it is completed. |
-| `prompt_code` | Yes | The record's code with each code spelled out, as [Prompt codes](music-taxonomy.md#prompt-codes) describes, e.g. `V03AI - Suno v5 - Scanning Protocol - Dark - Cello and Bass Clarinet`. |
-| `variant` | Yes | Which take of its `prompt_code` the track is: a letter, `A`, `B`, `C` and on, or `One only` when no other record has the same `prompt_code`. A track whose name ends in a take letter when its record is written has that letter, e.g. `Artifact Experiments`, first named `Unknown Contact B`, is `B`. Every other record takes the next letter after the highest any record of its `prompt_code` holds, in the order of `created`, e.g. `UFO Salvage Operation` is `C` after `Assault on the Alien Facility` and `Countering the Threat`, its `prompt_code`'s `A` and `B`; a record written later for a `prompt_code` whose record is `One only` takes `B`. No two records have the same `prompt_code` and `variant`. |
+| `prompt_code` | Yes | The record's prompt, named by the segments of its source, stem, and adjustments, as [Prompt codes](music-taxonomy.md#prompt-codes) describes, e.g. `V03AI - Suno v5 - Scanning Protocol - Dark - Cello and Bass Clarinet`. |
+| `variant` | Yes | Which take of its `prompt_code` the track is: a letter, `A`, `B`, `C` and on, or `One only` when no other record has the same `prompt_code`. The songs of one generation take `A`, `B`, and on, in the order of their takes, e.g. `In Pursuit of Shapeshifters` is `A` and `Artifact Experiments` `B`. A record written later takes the next letter after the highest any record of its `prompt_code` holds, in the order of `created`, e.g. `UFO Salvage Operation` is `C` after `Assault on the Alien Facility` and `Countering the Threat`, its `prompt_code`'s `A` and `B`; a record written later for a `prompt_code` whose record is `One only` takes `B`. No two records have the same `prompt_code` and `variant`. |
 | `song_url` |  | The song's page in its source, e.g. `https://suno.com/song/<id>`. |
 | `model` |  | The source's model that made the song, as the source labels it, e.g. `Music v2.5` for ElevenLabs, from the label beside the song in the ElevenLabs Music history, or `v6 (chirp-hawk)` for Suno: the version Suno shows, then its internal model name. |
 | `created` | Yes | When the song was made, as a date, or a date and time in Pacific time: the time the source keeps, e.g. the exact Added time of an ElevenLabs song in the Assets page, to the second, which orders songs made in the same minute; or, where the source shows none, e.g. for most v03ai songs, the time its download was saved. |
 | `tags` | Yes, except from v03ai | The source's tags for the song, as a list. v03ai reports none; the "Style:" line given to it is `v03ai.style`. |
 | `length` |  | The song's length as the source reports it, as `m:ss`. |
 | `instrumental` |  | `true` when the song was generated as an instrumental, with no lyrics, e.g. Suno's Instrumental switch. |
-| `meta_prompt_taxonomy` | Yes | The key decisions behind the prompt, at a glance, from which a name under the [Naming scheme](#naming-scheme) is built. It lists only what is in effect in the prompt, e.g. not an instrument that a later adjustment replaced, nor a tint added and dropped again. |
+| `meta_prompt_taxonomy` | Yes | The key decisions behind the prompt, at a glance, from which the record's `prompt_code` is built. It lists only what is in effect in the prompt, e.g. not an instrument that a later adjustment replaced, nor a tint added and dropped again. |
 | `meta_prompt_taxonomy.stem` | Yes | The idea the prompt grew from, which every track of one line of prompts shares, e.g. `Replicate "Scanning Protocol" (Chris D'Ambrosio, XCOM Legacy OST)`. |
-| `meta_prompt_taxonomy.adjustments` | Yes | The adjustments that shaped the prompt from the stem, in the order the Game designer asked for them, each in a few words, as a list; `[]` when the prompt is the stem itself. A source setting is not an adjustment, since the source's key below holds it, unless the Game designer names it as one, e.g. `AllowHeroAggr`. |
+| `meta_prompt_taxonomy.adjustments` | Yes | The adjustments that shaped the prompt from the stem, in the order the Game designer asked for them, each in a few words, as a list; `[]` when the prompt is the stem itself. A source setting is not an adjustment, since the source's key below holds it, unless the Game designer names it as one, e.g. Allow Heroic and Aggressive for styles taken out of the Exclude styles. |
 | `elevenlabs`, `suno`, or `v03ai` | Yes | Everything submitted to the source to generate the song, word for word: the key of the record's source, `elevenlabs` for `ElevenLabs Music`, `suno` for `Suno v6`, and `v03ai` for `Suno v5 via v03ai`. |
 | `elevenlabs.prompt` | Yes | The prompt given to ElevenLabs Music. |
 | `suno.prompt` | Yes | The Styles text pasted into Suno. |
@@ -115,15 +96,15 @@ The following table lists every key a record may hold; the list is exhaustive. A
 
 ## Tracks from ElevenLabs
 
-All the `.opus` files are from [ElevenLabs](https://elevenlabs.io/) Music, their codes start with `EL-`, and they have custom names, e.g. `Descent to Earth.opus`. A track's name differs from its song's title in ElevenLabs, which is its record's `source_title`, the title to search for there; ElevenLabs gives no song link. ElevenLabs downloads a song under its title with underscores for spaces, e.g. `Silent_Threat_Protocol.opus` for the song "Silent Threat Protocol", saved here first as `EL-M2.5 XCOM+Var+Bare+Slow B.opus` and now named `Descent to Earth.opus`. Their track records hold what the song's details panel in the ElevenLabs Assets page shows: the prompt, word for word, and the tags and length; their `model` comes from the ElevenLabs Music history, which labels each song with the model that made it.
+All the `.opus` files are from [ElevenLabs](https://elevenlabs.io/) Music, their records' `source` is `ElevenLabs Music`, and they have names of the Game designer's choosing, e.g. `Descent to Earth.opus`. A track's name differs from its song's title in ElevenLabs, which is its record's `source_title`, the title to search for there; ElevenLabs gives no song link. ElevenLabs downloads a song under its title with underscores for spaces, e.g. `Silent_Threat_Protocol.opus` for the song "Silent Threat Protocol", saved here first as `EL-M2.5 XCOM+Var+Bare+Slow B.opus` and now named `Descent to Earth.opus`. Their track records hold what the song's details panel in the ElevenLabs Assets page shows: the prompt, word for word, and the tags and length; their `model` comes from the ElevenLabs Music history, which labels each song with the model that made it.
 
 ## Tracks from Suno v5 via v03ai
 
-The files whose codes start with `V3A-S5` are from Suno v5, made via [v03ai](https://v03ai.com/), which cannot export Ogg Opus, and they have custom names, e.g. `The Reports Keep Coming.mp3`. A track's name differs from its song's title in v03ai, which is its record's `source_title`, the title to search for there, e.g. "v03AI UFO 6 - Scanning Protocol - Cello + Bass Clarinet"; v03ai gives no song link. v03ai appends a number to the download's file name, e.g. `v03AI UFO 3 - Scanning Protocol-1794952681178.mp3`, which is not part of the title. Their track records come from the Game designer's notes: the prompt given to v03ai, or, where ChatGPT wrote it, the full prompt ChatGPT produced. v03ai caps a Suno v5 prompt at 1,000 characters, so a longer prompt was given to it truncated.
+The files whose records' `source` is `Suno v5 via v03ai` are from Suno v5, made via [v03ai](https://v03ai.com/), which cannot export Ogg Opus, and they have names of the Game designer's choosing, e.g. `The Reports Keep Coming.mp3`. A track's name differs from its song's title in v03ai, which is its record's `source_title`, the title to search for there, e.g. "v03AI UFO 6 - Scanning Protocol - Cello + Bass Clarinet"; v03ai gives no song link. v03ai appends a number to the download's file name, e.g. `v03AI UFO 3 - Scanning Protocol-1794952681178.mp3`, which is not part of the title. Their track records come from the Game designer's notes: the prompt given to v03ai, or, where ChatGPT wrote it, the full prompt ChatGPT produced. v03ai caps a Suno v5 prompt at 1,000 characters, so a longer prompt was given to it truncated.
 
 ## Tracks from Suno v6
 
-The files whose codes start with `S6` are from Suno v6, made directly on [suno.com](https://suno.com/), which cannot export Ogg Opus, and they have custom names, e.g. `Alien Technology.mp3`. A track's name may differ from its song's title in Suno: its record's `song_url` opens the song, and its `source_title` is the song's title in Suno now, e.g. "Signal Intercept var1" for `Alien Technology.mp3`, while its `original_title` is the title the song had when it was made; a Suno song that no record names, e.g. a "(Remastered)" copy, is not a track. Their track records hold the song data Suno keeps for each song: its page, model, creation time, tags, length, Styles text, Exclude styles text, and sliders. Suno caps the Styles text at 1,000 characters, so every prompt written for Suno v6 fits within it.
+The files whose records' `source` is `Suno v6` are from Suno v6, made directly on [suno.com](https://suno.com/), which cannot export Ogg Opus, and they have names of the Game designer's choosing, e.g. `Alien Technology.mp3`. A track's name may differ from its song's title in Suno: its record's `song_url` opens the song, and its `source_title` is the song's title in Suno now, e.g. "Signal Intercept var1" for `Alien Technology.mp3`, while its `original_title` is the title the song had when it was made; a Suno song that no record names, e.g. a "(Remastered)" copy, is not a track. Their track records hold the song data Suno keeps for each song: its page, model, creation time, tags, length, Styles text, Exclude styles text, and sliders. Suno caps the Styles text at 1,000 characters, so every prompt written for Suno v6 fits within it.
 
 ### Reading Suno song data
 
