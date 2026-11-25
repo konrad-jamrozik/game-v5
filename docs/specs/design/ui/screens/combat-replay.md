@@ -24,7 +24,7 @@ It shows only what the Combat report holds and fights nothing again, so in a Cam
 
 # Visualize button
 
-The Player reaches the Combat replay from wherever a [Combat](../../mechanics/domain-model.md#combat) is summed up. A Visualize button stands beside each [Combat report](../../mechanics/domain-model.md#combat) button, i.e. on a [Mission](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) card of the [Turn summary](turn-summary.md#glossary) and on a row of the Missions section of the Turn Report View, and in the title row of a Combat report. It opens the Turn Report View with that Mission's Combat replay shown in place of its content, as a Follow.
+The Player reaches the Combat replay from wherever a [Combat](../../mechanics/domain-model.md#combat) is summed up. A Visualize button stands beside each [Combat report](../../mechanics/domain-model.md#combat) button, i.e. on a row of the Missions section of the Turn Report View and in the title row of a Combat report, and a [Mission](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) card of the [Turn summary](turn-summary.md#mission-cards) does the same when selected. It opens the Turn Report View with that Mission's Combat replay shown in place of its content, as a Follow.
 
 # Battlefield layout
 
