@@ -273,7 +273,7 @@ E.g., after sorting the [Agent table](screens/agents-view.md#agent-table) by eff
 
 A view may lock a tier above the four, which need not be a column, e.g. the Agent table puts the Agents that can be selected first while an [Assignment filter](screens/agents-view.md#glossary) is on. Pressing the header of a locked tier that is a column changes nothing, and pressing any other header changes the tiers under it as above.
 
-The header of each column in a tier shows its direction as ▲ for ascending or ▼ for descending, after its label, coloured by its tier so that the tiers tell apart at a glance: green `#86C26F` for the first tier, yellow `#C8B35A` for the second, orange `#BD8752` for the third, and red `#A8675F` for the fourth, counting a locked tier as the first and showing every tier past the fourth in the fourth's red. Each tier's colour is less saturated and a little darker than the one before, so that the first tier stands out most, and none is as bright as Positive bright or Accent, so that the arrows stay quiet beside the figures. A header is never cut short: each column's width holds its header's label together with that arrow.
+Only the header of the column of the first tier shows its direction, as ▲ for ascending or ▼ for descending, after its label, in the header's own colour, so that the table names one sort and stays quiet. The first tier is the first column tier, so a locked tier that is no column passes the arrow to the tier under it. The lower tiers still order the rows but show no arrow. A header is never cut short: each column's width holds its header's label together with that arrow.
 
 ## Agent condition
 
