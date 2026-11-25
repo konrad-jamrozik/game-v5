@@ -150,8 +150,8 @@ Three typefaces separate three kinds of text: condensed headings name things, th
 | Button | Barlow Condensed | 600 | 14 px | Uppercase, 0.1 em | Button text; 17 px on a screen's main action. |
 | Body | Barlow | 400 | 15 px | Sentence case, line height 1.45 | Prose, table cells that hold words, and input text. |
 | Figure | JetBrains Mono | 400 | 15 px | Tabular figures | Every number and identifier, e.g. Money or a [Campaign ID](../foundation/saves.md#identifiers). |
-| Headline figure | JetBrains Mono | 400 | 22 px | Tabular figures | A status bar value and the current value of a chart. |
-| Axis | JetBrains Mono | 400 | 11 px | Axis colour | Chart axis labels. |
+
+Barlow's own space is a narrow 0.2 em, and its opening parenthesis sits close on its left, so that a space before a parenthesis all but vanishes, e.g. "off (default on)" reads as "off(default on)". Every style in Barlow or Barlow Condensed therefore widens each space by 0.1 em of word spacing, whatever its size or its letter spacing, so that a space always reads as one. | Headline figure | JetBrains Mono | 400 | 22 px | Tabular figures | A status bar value and the current value of a chart. | | Axis | JetBrains Mono | 400 | 11 px | Axis colour | Chart axis labels. |
 
 Text steps down as it nests, so that the Player reads how a screen is built before reading its words: text nested under a heading is never larger than that heading, and each further level is no larger and no brighter than the level it sits under. E.g., in the Turn Summary, the "New Mission sites" Group heading outranks the name of each new Mission site under it, in Body and Text, and the name outranks its details, in Body and Text secondary or Text muted. A Label names a control or a column, e.g. "Assign to" before the Assignment buttons of the Agents View or a table header, and never heads a group of items.
 
