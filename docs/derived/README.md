@@ -17,7 +17,7 @@ These informative views are derived from the registered Markdown specifications.
 | Design             | Foundation    | 17             |
 | Design             | Mechanics     | 13             |
 | Design             | Content       | 1              |
-| Design             | UI            | 21             |
+| Design             | UI            | 20             |
 | Design             | Autopilot AIs | 1              |
 | Implementation     | Mandatory     | 5              |
 | Implementation     | Guidance      | 5              |
@@ -93,7 +93,6 @@ These informative views are derived from the registered Markdown specifications.
 
 | ID | Document | Owns |
 | --- | --- | --- |
-| ACQVIEW | [Acquisitions View](../specs/design/ui/screens/acquisitions-view.md) | What the Acquisitions View of the Campaign screen shows of the Items and Ammo the agency can buy, and how it buys them. |
 | AVIEW | [Agents View](../specs/design/ui/screens/agents-view.md) | What the Agents View of the Campaign screen shows and how it hires, dismisses, and assigns Agents. |
 | CLI | [Command-Line Interface](../specs/design/ui/cli.md) | Guidance on the command-line interface, the headless interface that makes the whole engine API playable from a terminal. |
 | COMPV | [Compendium View](../specs/design/ui/screens/compendium-view.md) | What the Compendium View of the Campaign screen shows of a Compendium article, the data sheet of each kind of subject, and how the Player finds an article and follows the links between articles. |
@@ -109,7 +108,7 @@ These informative views are derived from the registered Markdown specifications.
 | MVIEW | [Missions View](../specs/design/ui/screens/missions-view.md) | What the Missions View of the Campaign screen shows, how its panes are arranged, and how it deploys Agents. |
 | SITP | [Situation Panel](../specs/design/ui/screens/situation-panel.md) | What the Situation panel of the Campaign screen shows. |
 | SOUNDS | [Sounds](../specs/design/ui/sounds.md) | The short sounds the graphical user interface plays in answer to the Player: the Sound set, when each Sound plays, and its settings. |
-| STVIEW | [Storage View](../specs/design/ui/screens/storage-view.md) | What the Storage View of the Campaign screen shows of the Agency's Items and Ammo, and how it sells them. |
+| STVIEW | [Storage View](../specs/design/ui/screens/storage-view.md) | What the Storage View of the Campaign screen shows of the Agency's Items and Ammo and of what it can buy, and how it sells and buys them. |
 | TRVIEW | [Turn Report View](../specs/design/ui/screens/turn-report-view.md) | What the Turn Report View of the Campaign screen shows of the most recent Turn report, and how it opens a Combat report or reopens the Turn summary. |
 | TSUM | [Turn Summary](../specs/design/ui/screens/turn-summary.md) | When the Turn summary dialog of the Campaign screen appears and what it shows. |
 | UVIEW | [Upgrades View](../specs/design/ui/screens/upgrades-view.md) | What the Upgrades View of the Campaign screen shows and how it purchases Upgrades. |

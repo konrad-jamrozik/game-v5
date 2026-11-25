@@ -46,7 +46,6 @@ A → B means A is referenced by B: the text of B links to A. Layer 1 is drawn a
 | 12 | COMP Compendium | COMBAT, COND, CORE, DOM, ENG, EQUIP |
 | 12 | ECON Economy and Upgrades | AGENT, COMBAT, CORE, CSTATE, DOM, EFFECT, ENG, EQUIP, GDR, NUMBERS, WHIST |
 | 12 | STVIEW Storage View | COMBAT, CORE, DOM, ENG, EQUIP |
-| 13 | ACQVIEW Acquisitions View | COMBAT, ECON, EQUIP |
 | 13 | MISSION Missions | AGENT, CINST, COMBAT, COND, CORE, CSTATE, DOM, ECON, EFFECT, ENG, EQUIP, FACTION, NUMBERS, WHIST |
 | 13 | UVIEW Upgrades View | AGENT, CORE, DOM, ECON |
 | 14 | LEAD Leads and Progression | AGENT, COND, CORE, CSTATE, DOM, ECON, EFFECT, ENG, MISSION, WHIST |
