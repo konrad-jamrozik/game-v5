@@ -189,3 +189,10 @@ The Game designer has proposed the renames below. Each proposed name is a custom
 | `S6 SCNP+7Instr B.mp3`                       | Containment Protocol          |
 | `S6 SCNP+Dark+Cello&DBass B.mp3`             | What Remains                  |
 | `S6 XCOM+AllowEpic+NoSynth+Slow+Space A.mp3` | Assault on the Alien Facility |
+| `EL-M2 XCOM.opus`                            | Inside the Command Center     |
+| `EL-M2 XCOM+TFTD.opus`                       | Undersea Operations           |
+| `EL-M2.5 XCOM+NoPulse+Geo+Ominous.opus`      | Deployment Preparations       |
+| `EL-M2.5 XCOM+TFTD+NoPulse A.opus`           | A City on Sonar               |
+| `EL-M2.5 XCOM+TFTD+NoPulse B.opus`           | Survey at Depth               |
+| `V3A-S5 SCNP+Dark+Violin.mp3`                | The Infestation Spreads       |
+| `V3A-S5 SCNP+Dark+Cello&BClar.mp3`           | The Reports Keep Coming       |
