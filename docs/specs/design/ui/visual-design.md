@@ -122,7 +122,7 @@ A chart with several series needs more hues than the roles above can spare, and 
 | Assets | [Transport cap](../mechanics/economy-and-upgrades.md#glossary) | `#3D8FD9` |
 | Assets | [Training cap](../mechanics/economy-and-upgrades.md#glossary) | `#E8C547` |
 | Assets | [Contracting cap](../mechanics/economy-and-upgrades.md#glossary) | `#C77DDB` |
-| Agents by [effective skill](../mechanics/agents-spec.md#combatant-attributes) | Skill bands 1 to 12, from the lowest | `#6A5ACD`, `#4A86D9`, `#2FB0B8`, `#45BF6E`, `#A3CC3F`, `#E3C43A`, `#F0913A`, `#E8605A`, `#D94A8C`, `#B45AD6`, `#F2A6D8`, `#F4EFE6` |
+| Agents by [effective skill](../mechanics/agents-spec.md#combatant-attributes) | Skill bands, from the lowest, in this order, the last colour standing for every band above the twelfth | `#6A5ACD`, `#4A86D9`, `#2FB0B8`, `#45BF6E`, `#A3CC3F`, `#E3C43A`, `#F0913A`, `#E8605A`, `#D94A8C`, `#B45AD6`, `#F2A6D8`, `#F4EFE6` |
 | Agents by effective skill | Recovering | `#FF4D4D` |
 | Agents by effective skill | Exhaustion above `exhaustion_work_limit` | `#FF9A2E` |
 | Agents by effective skill | Exhaustion above `exhaustion_free_points` | `#FFE14D` |

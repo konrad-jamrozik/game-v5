@@ -49,7 +49,6 @@ A → B means A is referenced by B: the text of B links to A. Layer 1 is drawn a
 | 13 | ACQVIEW Acquisitions View | COMBAT, ECON, EQUIP |
 | 13 | MISSION Missions | AGENT, CINST, COMBAT, COND, CORE, CSTATE, DOM, ECON, EFFECT, ENG, EQUIP, FACTION, NUMBERS, WHIST |
 | 13 | UVIEW Upgrades View | AGENT, CORE, DOM, ECON |
-| 14 | CVIEW Charts View | AGENT, COMBAT, CORE, DOM, ECON, ENDING, ENG, MISSION, WHIST |
 | 14 | LEAD Leads and Progression | AGENT, COND, CORE, CSTATE, DOM, ECON, EFFECT, ENG, MISSION, WHIST |
 | 15 | BASICAI Basic Autopilot AI | AGENT, CINST, COMBAT, CORE, DOM, ECON, ENG, EQUIP, LEAD, MISSION |
 | 15 | INVSTG Investigations | AGENT, CINST, CORE, CSTATE, DOM, ENG, LEAD, NUMBERS, WHIST |
@@ -58,6 +57,7 @@ A → B means A is referenced by B: the text of B links to A. Layer 1 is drawn a
 | 17 | AVIEW Agents View | AGENT, CINST, COMBAT, CORE, DOM, ECON, ENG, EQUIP, GUI, RECOVER |
 | 17 | COMPV Compendium View | AGENT, COMP, CORE, DOM, ECON, EFFECT, ENG, GUI, INVSTG, LEAD, MISSION |
 | 17 | CRPLAY Combat Replay | AGENT, CINST, COMBAT, CORE, DOM, GUI |
+| 17 | CVIEW Charts View | AGENT, COMBAT, CORE, DOM, ECON, ENDING, ENG, GUI, MISSION, WHIST |
 | 17 | LVIEW Leads View | AGENT, CINST, DOM, ECON, EFFECT, ENG, GUI, INVSTG, LEAD |
 | 17 | MUSIC Music | CORE, ENG, GUI |
 | 17 | MVIEW Missions View | AGENT, CINST, COMBAT, DOM, ECON, ENG, FACTION, GUI, MISSION, WHIST |
