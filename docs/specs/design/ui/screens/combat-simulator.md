@@ -41,7 +41,7 @@ The Combat simulator has no [Campaign](../../foundation/core-concepts.md#campaig
 
 # Teams
 
-Every value a Combat reads of a [Combatant](../../mechanics/domain-model.md#combat) can be set, so that any Combat can be tried. The Teams pane lists the Agents' side and below it the Enemies' side, each as one row per Combatant in the fixed order of the side, with a count of its Combatants.
+Every value a Combat reads of a [Combatant](../../mechanics/domain-model.md#combat) can be set, so that any Combat can be tried. The Teams pane lists the Agents' side and to its right the Enemies' side, so that both are seen at once without scrolling, each as one row per Combatant in the fixed order of the side, with a count of its Combatants.
 
 A row holds one field for each value of an explicit entry of a [Detached Combat](../../mechanics/combat.md#detached-combat): [base skill](../../mechanics/agents-spec.md#combatant-attributes), [current health](../../mechanics/agents-spec.md#combatant-attributes), [effective max health](../../mechanics/agents-spec.md#combatant-attributes), [exhaustion](../../mechanics/agents-spec.md#combatant-attributes), [effective weapon damage](../../mechanics/agents-spec.md#combatant-attributes), and [effective armor](../../mechanics/agents-spec.md#combatant-attributes). Beside them it holds what the values were filled from, which also decides how the [Combat replay](combat-replay.md#figures) draws the Combatant:
 
@@ -67,11 +67,11 @@ The Fight controls stand at the top of the Teams pane:
 
 - **Seed:** a field holding the Detached seed, which starts as `combat-simulator`.
 - **Fight:** the primary button. It has `session.combatSimulator.fightCombat(setup)` fight a Detached Combat between the two sides as the rows give them, each row as an explicit entry, with the Detached seed of the field, no changed [GDR](../../foundation/core-concepts.md#game-build-and-content) value, and no limit on any AmmoType. The Combat replay then shows that Combat from Combat start.
-- **New seed:** a button that puts a new seed, chosen at random, into the field and then does what Fight does, so that the same teams are seen to fight another way.
+- **New seed:** a button that puts a new seed, chosen at random, into the field and fights nothing, so that the next Fight shows the same teams fighting another way.
 
 When the setup is rejected, e.g. because the Agents' side is empty or a field holds a value out of its range, the reason the engine reports is shown under the Fight controls and no Combat replay is shown. Fight with the same rows and the same Detached seed fights the same Combat, so the Game designer who closed a Combat replay sees it again by pressing Fight.
 
-The [Combat replay](combat-replay.md#battlefield-layout) derives where its figures stand from the Detached seed, and names an Agent by its place in its side, e.g. "agent-3".
+The [Combat replay](combat-replay.md#battlefield-layout) derives where its figures stand from the Detached seed, and names an Agent by its place in its side, e.g. "agent-3". Its title row says what Combat it shows as a [Combat report](../../mechanics/domain-model.md#combat) does, with the [Combat outcome](../../mechanics/combat.md#combat-rounds-and-results) and the number of [Combat rounds](../../mechanics/combat.md#combat-rounds-and-results), beside the two sides' sizes and the Detached seed, e.g. "4 Agents vs 3 Enemies · Won in 2 rounds · seed combat-simulator".
 
 # Screenshot
 
