@@ -19,6 +19,7 @@ Every screen listed by the [Graphical User Interface](gui.md) is drawn with the 
 | Term | Definition |
 | --- | --- |
 | Background artwork | An image that a [Detail view](gui.md#glossary) [draws faintly behind its content](#background-artwork). |
+| Danger scale | The [colour scale](#danger-scale) of every smooth colouring from neutral to red. |
 | Design token | A named visual value, e.g. a colour, a font, or a spacing step, that every screen uses in place of a literal value. |
 | Reference window | The [window size](#reference-window) that every screen is designed for and must fit. |
 | Screen limit | The [setting](#screen-limit) that draws every screen at the size of the Reference window, centred in a larger window. |
@@ -79,7 +80,7 @@ Each colour has one role, so that the same colour always means the same thing ac
 | Danger | `#FF7F78` | Losses, destructive actions, and limits, e.g. upkeep, Delete, the [Panic limit](../mechanics/panic-and-endings.md#glossary), and a hit by an Enemy in the Combat log. |
 | Danger border | `#5E2A26` | The border of a destructive button. |
 | Warning | `#E3C14B` | Values that need watching before they become a problem, e.g. an Agent's [exhaustion at which it can no longer start work](#agent-condition), or a Mission site that [Expires in the next Advance turn](screens/situation-panel.md#mission-site-urgency); and the outline and text of a weighty button. |
-| Danger deep | `#A3271F` | The far end of the [current health](../mechanics/agents-spec.md#combatant-attributes) [scale](#agent-condition): an [Agent](../mechanics/domain-model.md#agency-and-agents) close to death; and a [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) [lost in the most recent Advance turn](screens/situation-panel.md#mission-site-urgency), struck through. |
+| Danger deep | `#A3271F` | The far end of the [Danger scale](#danger-scale), e.g. an [Agent](../mechanics/domain-model.md#agency-and-agents) close to death; and a [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) [lost in the most recent Advance turn](screens/situation-panel.md#mission-site-urgency), struck through. |
 | Notice | `#8FB8D6` | Welcome news that asks for no action, milder than a success in Positive, e.g. a discovered Lead among the events of the History View. |
 | Autopilot | `#B4A0E5` | The outline and text of an [Autopilot](../foundation/engine-contract.md#autopilot) button, which acts on what an [Autopilot AI](../foundation/engine-contract.md#principals-and-access) did. |
 | Agent attack tint | `#B7C77A` at 7% opacity | The fill of a [Combat log](../mechanics/combat.md#combat-rounds-and-results) row [whose attacker is an Agent](screens/turn-report-view.md#combat-log-colours). |
@@ -94,6 +95,10 @@ Each colour has one role, so that the same colour always means the same thing ac
 | Limit band | `#E5484D` at 12% opacity | The band that marks a losing limit on a chart. |
 | Scrim | `#0D0D0B` at 72% opacity | The layer that dims the screen behind a dialog. |
 | Control backdrop | `#0D0D0B` at 55% opacity | The fill behind a group of controls that stands over a Background artwork, with 10 px of inner padding and the control corner radius, so that the artwork interferes less with reading the controls, e.g. the checkboxes of the Agents View. |
+
+## Danger scale
+
+Wherever a colour runs smoothly from neutral to red as a value grows worse, it follows the Danger scale, so that a shade means the same severity on every screen. Each use states its severity, from 0%, nothing wrong, to 100%, the worst, e.g. the share of a limit reached. The stops are Text at 0%, Warning at 25%, Accent text at 50%, Danger at 75%, and Danger deep at 100%; a severity between two stops takes the colour between them in proportion, mixed in sRGB, e.g. 12.5% is halfway between Text and Warning.
 
 ## Chart series colours
 
@@ -245,7 +250,7 @@ A table fits its view, because a table that scrolls sideways hides the columns t
 
 Every row of a table is one line tall, so that rows line up and a long value does not push the rows below it down. Each column is wide enough to hold on one line every value that the specifications list for it, e.g. the Assignment "Recovery · 3 T left" in the Agents View. At most one column of a table holds free text, e.g. the message of an engine rejection or the events of a Turn; it takes the width the other columns leave, and a value too long for it is cut short with "…" and shown in full while the pointer rests on it. A header is worded to fit the values under it and never makes its column wider than they need, e.g. "Exh." over an exhaustion. A header shortened from the name of what its column shows has that name as its tooltip, wherever the column stands, e.g. "Combat rating" for "CR" and "Exhaustion" for "Exh.", so that the Player can always learn what a short header means. In every table, an [effective skill](../mechanics/agents-spec.md#combatant-attributes) is headed "Skill" and a [base skill](../mechanics/agents-spec.md#combatant-attributes) "Base", because effective skill is the one the Player decides by.
 
-A column that shows a game quantity is wide enough for the widest value that quantity can take, in every table and whatever values the [GDRs](../foundation/core-concepts.md#game-build-and-content) give, so that a veteran Agent's row late in a long Campaign is never cut short:
+A column that shows a game quantity is wide enough for the widest value that quantity can take, in every table and whatever values the [GDRs](../foundation/core-concepts.md#game-build-and-content) give, so that a veteran [Agent](../mechanics/domain-model.md#agency-and-agents)'s row late in a long Campaign is never cut short:
 
 | Quantity | Widest value |
 | --- | --- |
@@ -288,7 +293,7 @@ A table whose rows stand in groups, each under a group row, e.g. the Weapons, Ar
 Wherever a table shows an [Agent](../mechanics/domain-model.md#agency-and-agents)'s [exhaustion](../mechanics/agents-spec.md#combatant-attributes) or [current health](../mechanics/agents-spec.md#combatant-attributes), its colour tells the Player at a glance how worn down the Agent is, so that a tired or hurt Agent stands out before it is sent anywhere. The outcome of an attack in a Combat log is the one exception: its colour says [whom the attack favours](screens/turn-report-view.md#combat-log-colours).
 
 - **Exhaustion:** Text up to [`exhaustion_work_start_max`](../mechanics/agents-spec.md#agentparameters); Warning above it; Accent text from the midpoint of `exhaustion_work_start_max` and `exhaustion_work_limit`, rounded up; and Danger from `exhaustion_work_limit`, with a warning-triangle icon before the value. E.g., with thresholds of 25 and 60, exhaustion 25 is in Text, 26 in Warning, 43 in Accent text, and 60 in Danger with the triangle.
-- **Current health:** a smooth scale over the share of [effective max health](../mechanics/agents-spec.md#combatant-attributes) that current health is. Its stops are Text at 100%, Warning at 75%, Accent text at 50%, Danger at 25%, and Danger deep at 0%, and a share between two stops takes the colour between them in proportion, mixed in sRGB. E.g., 30 of 30 is in Text, 15 of 30 in Accent text, and 1 of 30 almost in Danger deep. The share is taken from the exact current health, e.g. 29.40 of 30 is 98%.
+- **Current health:** the [Danger scale](#danger-scale), with the share of [effective max health](../mechanics/agents-spec.md#combatant-attributes) that current health falls short of as its severity. E.g., 30 of 30 is in Text, 15 of 30 in Accent text, and 1 of 30 almost in Danger deep. The share is taken from the exact current health, e.g. 29.40 of 30 is 98%.
 
 ## Icons
 
@@ -348,7 +353,7 @@ The status bar keeps the agency's vital values in view on the Campaign screen, e
 
 ## Meters
 
-A meter shows a value against its limit, e.g. Panic against the Panic limit. It is a row of 10 equal segments, 8 px tall with 3 px gaps. Its colour says how near the limit the value is, warming as it nears it on the scale of [current health](#agent-condition) run the other way: Text at 0% of the limit, Warning at 25%, Accent text at 50%, Danger at 75%, and Danger deep at 100%, a share between two stops taking the colour between them in proportion, mixed in sRGB. Each full tenth of the limit fills one segment in that colour, a remaining part of a tenth fills the next segment in that colour at 50% opacity, and the other segments are Divider. The value and the limit are written above the meter's right end in that colour, e.g. "24.35 / 100%" almost in Warning.
+A meter shows a value against its limit, e.g. Panic against the Panic limit. It is a row of 10 equal segments, 8 px tall with 3 px gaps. Its colour says how near the limit the value is, on the [Danger scale](#danger-scale) with the share of the limit reached as its severity. Each full tenth of the limit fills one segment in that colour, a remaining part of a tenth fills the next segment in that colour at 50% opacity, and the other segments are Divider. The value and the limit are written above the meter's right end in that colour, e.g. "24.35 / 100%" almost in Warning.
 
 ## Cap bars
 
