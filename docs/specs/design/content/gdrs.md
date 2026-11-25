@@ -101,7 +101,6 @@ The GDRs are authored in YAML files under the `content/` directory at the reposi
 | `content/panic-and-endings/` | [Panic and Endings](../mechanics/panic-and-endings.md) | `ending_parameters.yaml` |
 | `content/compendium/` | [Compendium](../mechanics/compendium.md) | The directory `compendium_articles/`, with one file for each Compendium article |
 | `content/visual-design/` | [Visual Design](../ui/visual-design.md) | `background_artworks.yaml` |
-| `content/music/` | [Music](../ui/music.md) | `music_parameters.yaml` |
 
 # Compendium coverage
 
@@ -110,7 +109,6 @@ The [coverage of parameter GDRs](../mechanics/compendium.md#coverage-of-paramete
 | GDR | Property | Why it is exempt |
 | --- | --- | --- |
 | `configuration_parameters` | `default_preset` | It names the preset that campaign creation starts from, which the Player sees while creating a Campaign. |
-| `music` | `excluded_tracks` | It lists the music files left out of the [Soundtrack](../ui/music.md#glossary). |
 | `equipment` | `starting_ammo` | It is a mapping, which no Placeholder can show, and the Player sees the rounds it gives in [Storage](../mechanics/equipment.md#glossary) from the first Turn. |
 | `equipment` | `hire_ammo` | It is a mapping, which no Placeholder can show, and the Player sees the rounds it gives in [Storage](../mechanics/equipment.md#glossary) after each hire. |
 

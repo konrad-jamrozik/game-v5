@@ -33,13 +33,7 @@ The Soundtrack is authored as audio files, so that a composer adds a Track by ad
 - Ogg Opus, with the extension `.opus`, the preferred format because it is the smallest at the same quality.
 - MP3, with the extension `.mp3`, for music whose source cannot export Ogg Opus.
 
-The Soundtrack is every such file except the excluded ones, and the Game build supplies every Track unchanged, in its own format.
-
-Which files are excluded is content rather than design, so it comes from the MusicParameters [GDR](../foundation/core-concepts.md#game-build-and-content) `music`, which serves the Display content purpose: the Game designer excludes a file, e.g. one pending review, by naming it there.
-
-| Property | Meaning |
-| --- | --- |
-| `excluded_tracks` | The files that are not Tracks, each by its file name with its extension, e.g. `GEO-2.opus`. A file it names is never played. A name that matches no file in the directory is allowed, since the Game designer may keep an excluded file's audio elsewhere. |
+The Soundtrack is every such file, and the Game build supplies every Track unchanged, in its own format. A file the Game designer does not want played is removed from the directory, e.g. a Track rejected after review.
 
 The Track title is the file name without its extension, unchanged, so that the title the Player sees is the name of the file that holds the Track. E.g., the file `GEO-4.opus` is the Track titled "GEO-4". No two Tracks have the same Track title.
 

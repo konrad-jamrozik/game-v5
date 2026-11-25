@@ -1,6 +1,6 @@
 # Game-v5 music prompt taxonomy
 
-Every track record in [`yaml/`](yaml/), including the excluded and draft records in its `excluded/` and `drafts/` subfolders, describes its prompt by `meta_prompt_taxonomy`, as the [music README](README.md#track-records) describes. [Prompt codes](#prompt-codes) maps each source, stem, and adjustment of it to a short code and to a spelled-out segment, from which each record's code and `prompt_code` are built. [Analysis as of 2026-11-23](#analysis-as-of-2026-11-23) reviews the prompts as they stood on that date.
+Every track record in [`yaml/`](yaml/), including any draft record in its `drafts/` subfolder, describes its prompt by `meta_prompt_taxonomy`, as the [music README](README.md#track-records) describes. [Prompt codes](#prompt-codes) maps each source, stem, and adjustment of it to a short code and to a spelled-out segment, from which each record's code and `prompt_code` are built. [Analysis as of 2026-11-23](#analysis-as-of-2026-11-23) reviews the prompts as they stood on that date.
 
 ## Prompt codes
 
@@ -66,6 +66,8 @@ Each entry below is word for word as the records hold it, and every entry of eve
 | `SonarMix` | clean, spacious deep-space mix with sonar pings, detuned signals, and deliberate silence | Deep-Space Mix with Sonar Pings |
 
 An adjustment that only limits the prompt's length says nothing about the music, so it has no code and adds nothing to a code or a prompt code: `kept short`, `shortened for Suno v5 via v03ai`, and `fit within v03ai's 1,000 characters`. A source setting, e.g. Suno's sliders or Exclude styles, has no code either, since it is not a request to the chatbot, unless the Game designer names it as an adjustment, e.g. `AllowHeroAggr` for styles taken out of the Exclude styles. Instruments asked for together form one adjustment, joined by `&`, e.g. `Piano&Cello`; when they are too many to join readably, the code is their count instead, e.g. `7Instr`, while the segment still names each of them.
+
+Some rows are kept for future prompts although no current record uses them. So far `Sections`, `Loop`, `shortened for Suno v5 via v03ai`, and `fit within v03ai's 1,000 characters` were used only in generations that were since rejected and deleted, and `ModMil` and `NoDrones` only in draft records that were since deleted.
 
 ## Analysis as of 2026-11-23
 

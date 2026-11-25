@@ -19,7 +19,7 @@ The skill works directly in the main local clone of the Spec repo, e.g. `repos/g
 
 Its own work is exactly these paths: each draft record it writes in `assets/music/yaml/drafts/`, as the designer may have renamed it, and the same record once moved into `assets/music/yaml/`, each record it adds there for another take of a draft's prompt, the music file of the same name as each of these records in `assets/music/tracks/`, `assets/music/README.md`, and `assets/music/music-taxonomy.md`.
 
-Outside the repository, the skill also keeps the Game designer's personal music backup, `C:\Users\spawa\OneDrive\personal\projects\ufo_game\music\`, which holds a copy of every track's audio, kept and excluded. Its own `README.md` gives its layout, e.g. one folder per source, such as `suno/` for Suno v6; read it before copying into the backup. The skill only adds and renames files there, never deletes one.
+Outside the repository, the skill also keeps the Game designer's personal music backup, `C:\Users\spawa\OneDrive\personal\projects\ufo_game\music\`, which holds a copy of every track's audio. Its own `README.md` gives its layout, e.g. one folder per source, such as `suno/` for Suno v6; read it before copying into the backup. The skill only adds and renames files there, never deletes one.
 
 ## Phase 1: Draft
 
@@ -67,7 +67,7 @@ Outside the repository, the skill also keeps the Game designer's personal music 
    - has an extension that the Soundtrack section of Music does not list. Suggest exporting the track as MP3, which every music source used so far can produce;
    - is larger than 7 MB (7 × 1024 × 1024 bytes). Suggest MP3, e.g. a 34 MB WAV from Suno is about 4 MB as MP3;
    - is byte-for-byte identical to a Track already in `assets/music/tracks/` or to another new file, e.g. the same export dropped in twice;
-   - has the same source and original title as a row of the README table, which also lists excluded tracks whose files are gone. Suggest renaming the song in its source.
+   - has the same source and original title as a row of the README table. Suggest renaming the song in its source.
 
    When any file blocks, change nothing, not even for the files that pass, so that the designer fixes the set and confirms again.
 

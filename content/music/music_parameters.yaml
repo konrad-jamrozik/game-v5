@@ -1,9 +1,0 @@
-id: music
-type: MusicParameters
-excluded_tracks:
-  - EL-M2.5 XCOM+Var X1.opus
-  - EL-M2 XCOM+TFTD X1.opus
-  - EL-M2.5 XCOM X1.opus
-  - EL-M2.5 XCOM X2.opus
-  - V3A-S5 XCOM+Var X1.mp3
-  - V3A-S5 XCOM+Sections+Loop X1.mp3
