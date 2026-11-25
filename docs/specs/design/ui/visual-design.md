@@ -93,7 +93,7 @@ Each colour has one role, so that the same colour always means the same thing ac
 | Beam | `#7FD8F0` | The beam of a `beam` shot of the Combat replay, and the glow of its hit. |
 | Limit band | `#E5484D` at 12% opacity | The band that marks a losing limit on a chart. |
 | Scrim | `#0D0D0B` at 72% opacity | The layer that dims the screen behind a dialog. |
-| Control backdrop | `#0D0D0B` at 55% opacity | The fill behind a group of controls that stands over a Background artwork, with 10 px of inner padding and the control corner radius, so that the artwork interferes less with reading the controls, e.g. the Show agents group of the Agents View. |
+| Control backdrop | `#0D0D0B` at 55% opacity | The fill behind a group of controls that stands over a Background artwork, with 10 px of inner padding and the control corner radius, so that the artwork interferes less with reading the controls, e.g. the checkboxes of the Agents View. |
 
 ## Chart series colours
 
@@ -148,7 +148,7 @@ Three typefaces separate three kinds of text: condensed headings name things, th
 | Headline figure | JetBrains Mono | 400 | 22 px | Tabular figures | A status bar value and the current value of a chart. |
 | Axis | JetBrains Mono | 400 | 11 px | Axis colour | Chart axis labels. |
 
-Text steps down as it nests, so that the Player reads how a screen is built before reading its words: text nested under a heading is never larger than that heading, and each further level is no larger and no brighter than the level it sits under. E.g., in the Turn Summary, the "New Mission sites" Group heading outranks the name of each new Mission site under it, in Body and Text, and the name outranks its details, in Body and Text secondary or Text muted. A Label names a control or a column, e.g. "Show agents" above the filters of the Agents View or a table header, and never heads a group of items.
+Text steps down as it nests, so that the Player reads how a screen is built before reading its words: text nested under a heading is never larger than that heading, and each further level is no larger and no brighter than the level it sits under. E.g., in the Turn Summary, the "New Mission sites" Group heading outranks the name of each new Mission site under it, in Body and Text, and the name outranks its details, in Body and Text secondary or Text muted. A Label names a control or a column, e.g. "Assign to" before the Assignment buttons of the Agents View or a table header, and never heads a group of items.
 
 ## Spacing and shape
 
@@ -167,7 +167,7 @@ A screen reads as one instrument only when its parts line up, so every element i
 
 - **Text on one line:** pieces of text of one size on one line share one baseline. Smaller text after a heading on its line, e.g. the free places and their cap bars after the title "Agents" in the Agents View or the money after the title of the Upgrades View, is centred on the heading: the middle of its capitals sits level with the middle of the heading's capitals, never on the heading's baseline. Text is never centred on its line by the height of its box, because styles of different sizes then sit at different heights.
 - **Controls in one row:** the controls of one row, e.g. the filters, buttons, and close control of a Detail view's title row, are equally tall and share one centre line. Text in the row, e.g. a count of selected rows after a button, is centred on that line too.
-- **Labelled groups:** a group of controls with a Label, e.g. the "Show agents" filters of the Agents View, has its Label before its controls on their line, centred on the row's centre line, never above them, because a Label above its controls makes its row a line taller and takes that line from the table below.
+- **Labelled groups:** a group of controls with a Label, e.g. the Assign to buttons of the Agents View, has its Label before its controls on their line, centred on the row's centre line, never above them, because a Label above its controls makes its row a line taller and takes that line from the table below.
 - **Cards side by side:** cards in one row are equally tall, and each part of a card starts at the same height on every card of the row, because each part takes the height of its tallest instance in the row. E.g., when the change of one Upgrade card wraps onto a second line, the Buy buttons of all the Upgrade cards still sit on one line.
 - **A note beside a control:** a note about a control, e.g. the money missing for a disabled Buy button, sits on the control's row, 8 px after it, and never moves below it; a note longer than the space left beside the control wraps within that space. The note never sets the row's height: the row is as tall as its controls, and a wrapped note stays centred on their centre line and extends above and below it into the spacing around the row.
 - **Controls stay still:** a control keeps its place and its size whatever changes around it, e.g. a button turning disabled, a note that appears or wraps, or a count that grows, so that the Player's hand finds it where it was a moment ago. Content that changes grows away from the controls, e.g. downward below them, or within space reserved for it.
@@ -280,6 +280,8 @@ E.g., after sorting the [Agent table](screens/agents-view.md#agent-table) by eff
 A view may lock a tier above the four, which need not be a column, e.g. the Agent table puts the Agents that can be selected first while an [Assignment filter](screens/agents-view.md#glossary) is on. Pressing the header of a locked tier that is a column changes nothing, and pressing any other header changes the tiers under it as above.
 
 Only the header of the column of the first tier shows its direction, as ▲ for ascending or ▼ for descending, after its label, in the header's own colour, so that the table names one sort and stays quiet. The first tier is the first column tier, so a locked tier that is no column passes the arrow to the tier under it. The lower tiers still order the rows but show no arrow. A header is never cut short: each column's width holds its header's label together with that arrow.
+
+A table whose rows stand in groups, each under a group row, e.g. the Weapons, Armor, and Ammo of the [Storage View](screens/storage-view.md), lets the Player fold each group, so that a long group does not push the others out of view. Pressing a group row anywhere folds its group, hiding the group's rows, and pressing it again unfolds it. The group row starts with ▾ while its group is unfolded and with ▸ while it is folded, and it keeps what else it shows, e.g. its sums, either way. Every group is unfolded whenever its view opens.
 
 ## Agent condition
 
