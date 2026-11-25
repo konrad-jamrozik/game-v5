@@ -10,7 +10,7 @@
 
 # Overview
 
-The Acquisitions View is where the Player buys gear, and its mirror is the [Storage View](storage-view.md): the same groups and counts, with prices in place of Sale values and a buy bar in place of the sell bar. It is the last of the Base [Detail views](../gui.md#glossary) of the [Campaign Screen](campaign-screen.md). Its header shows the agency's money.
+The Acquisitions View is where the Player buys gear, and its mirror is the [Storage View](storage-view.md): the same groups and counts, with prices in place of Sale values and a buy bar in place of the sell bar. It is the last of the Operations [Detail views](../gui.md#glossary) of the [Campaign Screen](campaign-screen.md). Its header shows the agency's money.
 
 Finding new gear is part of what the Player discovers, as finding new [Compendium](../../mechanics/compendium.md) articles is, so the Acquisitions View lists only what is [Unlocked](../../mechanics/equipment.md#unlocked-items): an Item that is not Unlocked is not shown at all, and nothing says which interrogation would unlock it.
 
