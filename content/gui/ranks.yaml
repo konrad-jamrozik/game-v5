@@ -1,67 +1,60 @@
-id: rank_1
+id: rank_rookie
 type: Rank
-name: Rank I
-min_base_skill: 0
+name: Rookie
+min_base_skill: 100
 ---
-id: rank_2
+id: rank_junior_agent
 type: Rank
-name: Rank II
+name: Junior Agent
 min_base_skill: 150
 mark: chevron
 count: 1
 ---
-id: rank_3
+id: rank_agent
 type: Rank
-name: Rank III
+name: Agent
 min_base_skill: 200
 mark: chevron
 count: 2
 ---
-id: rank_4
+id: rank_senior_agent
 type: Rank
-name: Rank IV
+name: Senior Agent
 min_base_skill: 250
 mark: chevron
 count: 3
 ---
-id: rank_5
+id: rank_lieutenant
 type: Rank
-name: Rank V
-min_base_skill: 350
+name: Lieutenant
+min_base_skill: 325
 mark: bar
 count: 1
 ---
-id: rank_6
+id: rank_captain
 type: Rank
-name: Rank VI
-min_base_skill: 450
+name: Captain
+min_base_skill: 400
 mark: bar
 count: 2
 ---
-id: rank_7
+id: rank_major
 type: Rank
-name: Rank VII
-min_base_skill: 550
-mark: bar
-count: 3
----
-id: rank_8
-type: Rank
-name: Rank VIII
-min_base_skill: 700
+name: Major
+min_base_skill: 500
 mark: star
 count: 1
 ---
-id: rank_9
+id: rank_colonel
 type: Rank
-name: Rank IX
-min_base_skill: 850
+name: Colonel
+min_base_skill: 600
 mark: star
 count: 2
 ---
-id: rank_10
+id: rank_commander
 type: Rank
-name: Rank X
-min_base_skill: 1000
+name: Commander
+min_base_skill: 750
 mark: star
 count: 3
