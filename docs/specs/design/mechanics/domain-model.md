@@ -26,7 +26,7 @@ The player-controlled organization, its Agents, what each Agent is doing, and wh
 | --- | --- | --- |
 | Agency | The organization the player controls in a [Campaign](../foundation/core-concepts.md#campaign-and-session). It holds the money, funding, upgrades, and the Weapons, Armors, and rounds it [keeps in store](equipment.md#storage), and employs the Agents. |  |
 | Agent | An operative employed by the Agency, whom the player assigns to Investigations and Missions. |  |
-| Assignment | What an Agent is currently assigned to do, e.g. take part in a particular Investigation or Mission. | Current assignment |
+| Assignment | What an Agent is currently assigned to do, e.g. take part in a particular Investigation or Mission. | Current assignment. Assignable, of an Agent, because it names no Assignment: an Agent is instead e.g. [Fit to start work](agents-spec.md#glossary) or a [Deployable Agent](missions.md#glossary). |
 | Agent status | Where an Agent stands with respect to its Assignment and its employment, e.g. still travelling to its Assignment or no longer serving. [Agents](agents-spec.md) states the other Agent statuses. | Task phase; Agent lifecycle state |
 | At assignment | The Agent status of an Agent carrying out its Assignment. |  |
 | In transit | The Agent status of an Agent still travelling to its Assignment. |  |
