@@ -12,7 +12,7 @@ A specification in this family states the goals of an Autopilot AI, the order in
 
 ## Basic Autopilot AI
 
-[Basic Autopilot AI](basic-autopilot-ai.md) answers _how does the default Autopilot AI play?_ It plays a sound, cautious Campaign: it stays solvent, keeps Agents rested, deploys only teams likely to win, keeps Investigations going, and spends surplus money on growing and improving the Agency.
+[Basic Autopilot AI](basic-autopilot-ai.md) answers _how does the default Autopilot AI play?_ It races the Factions' clock: it keeps its strongest Agents in base as a Strike team sized to the next threat, spends on their Weapons and Armors while they fall short, runs several Investigations at once, deploys only teams likely to win, and stays solvent.
 
 A further specification is added for each further Autopilot AI, e.g. one that pursues Victory as fast as possible at greater risk.
 

@@ -5,14 +5,16 @@
 | Spec ID | BASICAI |
 | Family | Autopilot AIs |
 | Audience | AI designer, Implementer |
-| Owns | How the Basic Autopilot AI divides the roster among the Agent reserve, Investigations, and Contracting, how it deploys and musters teams, which Leads it investigates, what it buys and in which order, and the Tuning parameters it is built with. |
+| Owns | How the Basic Autopilot AI measures the strength it needs, which Agents form its Strike team and which work, how it equips, deploys, and musters, which Leads it investigates, what it buys and sells and in which order, and the Tuning parameters it is built with. |
 | Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 
-The Basic Autopilot AI is the [Autopilot AI](../foundation/engine-contract.md#principals-and-access) that a [Game build](../foundation/core-concepts.md#game-build-and-content) offers so that a [Campaign](../foundation/core-concepts.md#campaign-and-session) can be played without a human making every decision. It plays a sound, cautious Campaign rather than an optimal one: it never sends a team that is likely to lose, and it does not try to win quickly.
+The Basic Autopilot AI is the [Autopilot AI](../foundation/engine-contract.md#principals-and-access) that a [Game build](../foundation/core-concepts.md#game-build-and-content) offers so that a [Campaign](../foundation/core-concepts.md#campaign-and-session) can be played without a human making every decision. Its goal is to grow strong enough to answer the [Factions](../mechanics/domain-model.md#factions) before their operations outgrow the Agency, because the Factions escalate on a clock the player cannot slow. It never sends a team that is likely to lose.
 
-Its play follows from one idea: the roster is split into three fixed shares. The Agent reserve stays in base, or on its way back to base, ready for any [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions); a small share investigates [Leads](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) so that new Mission sites appear; and everyone else earns money on [Contracting](../mechanics/agents-spec.md#assignments), as far as the [Contracting cap](../mechanics/economy-and-upgrades.md#glossary) allows, and trains in the Agent reserve beyond it. Work tires an [Agent](../mechanics/domain-model.md#agency-and-agents) until a [Forced return](../mechanics/agents-spec.md#forced-return) sends it to Standby, so a Contractor or an Investigator rests in the Agent reserve before it goes back. A fixed [Turn routine](#turn-routine) applies the shares: each [Turn](../foundation/engine-contract.md#player-actions-and-turns), the Basic Autopilot AI deploys first, then restores the shares, then buys, and then ends the Turn. It decides each [Player action](../foundation/engine-contract.md#player-actions-and-turns) from the current [Player-visible information](../foundation/engine-contract.md#api-surfaces) alone and keeps no plan across Turns, within what [Autopilot](../foundation/autopilot.md) lets any Autopilot AI receive.
+Its play follows from one idea: the Agency always has a next rung, and every decision closes the gap to it. The Strike goal is the stronger of the Threat, the strongest recent Faction operation, and the weakest Next rung, the next kind of Initiative Mission site to win against some Faction. The Strike team, the strongest Agents the Transport cap can carry, stays in base to answer it, and while it falls short, money buys it Weapons, Armors, and room for more Agents. Every other Agent researches several Leads at once or earns on Contracting.
+
+A fixed [Turn routine](#turn-routine) applies this in each [Turn](../foundation/engine-contract.md#player-actions-and-turns). It decides each [Player action](../foundation/engine-contract.md#player-actions-and-turns) from the current [Player-visible information](../foundation/engine-contract.md#api-surfaces) alone and keeps no plan across Turns, within what [Autopilot](../foundation/autopilot.md) lets any Autopilot AI receive.
 
 # Glossary
 
@@ -20,118 +22,129 @@ Its play follows from one idea: the roster is split into three fixed shares. The
 | --- | --- |
 | Basic Autopilot AI | The [Autopilot AI](../foundation/engine-contract.md#principals-and-access) described by this document. |
 | Roster size | The number of [Serving](../mechanics/agents-spec.md#agent-statuses) Agents of the [Agency](../mechanics/domain-model.md#agency-and-agents), whatever their [Assignment](../mechanics/domain-model.md#agency-and-agents) and [Agent status](../mechanics/agents-spec.md#agent-statuses). |
-| Agent reserve | Every Serving [Agent](../mechanics/domain-model.md#agency-and-agents) whose Assignment is [Standby](../mechanics/agents-spec.md#assignments), [Training](../mechanics/agents-spec.md#assignments), [Recovery](../mechanics/agents-spec.md#assignments), or [Deployed](../mechanics/agents-spec.md#assignments), whether it is [In transit](../mechanics/agents-spec.md#agent-statuses) or not: the Agents in base, deployed, or travelling between them, including a hired Agent on its way to Standby. |
-| Investigators | Every Serving Agent whose Assignment is an [Investigation](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), whether it is [In transit](../mechanics/domain-model.md#agency-and-agents) or not. |
-| Contractors | Every Serving Agent whose Assignment is [Contracting](../mechanics/agents-spec.md#assignments), whether it is In transit or not. |
-| Reserve quota | The size the Basic Autopilot AI keeps the Agent reserve at: the Reserve share of the Roster size, rounded down. |
-| Investigator quota | The number of Investigators the Basic Autopilot AI aims for: the Investigator share of the Roster size, rounded down, but at least 1 while the Roster size is at least 1 and the Investigator share is above 0, so that a small roster still investigates the [Lead](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) that unlocks Contracting. |
-| Spare Agent | An Agent of the Agent reserve that is [Fit to start work](../mechanics/agents-spec.md#assignments), [At assignment](../mechanics/domain-model.md#agency-and-agents) on Standby or Training, and not a member of the Muster, while the Agent reserve is larger than the Reserve quota. Only as many Agents are Spare Agents as the Agent reserve exceeds the Reserve quota, [chosen by preference](#choosing-agents). |
-| Projected Agent | An Agent of the Agent reserve as it would be after the Recovery lookahead, i.e. after that many Advance turns of [Agent Recovery](../mechanics/agent-recovery.md) at the Agency's current rates, recovering only in the Advance turns in which [it would recover](../mechanics/agent-recovery.md#which-agents-recover). Its [effective skill](../mechanics/agents-spec.md#combatant-attributes) and whether it would be a [Deployable Agent](../mechanics/missions.md#glossary) are read from those projected values. |
-| Required rating share | The least share of the [Combat rating](../mechanics/combat.md#combatant-condition-in-a-combat) of a [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions)'s Enemies that a team's Combat rating must reach for the Basic Autopilot AI to deploy it there: the [Combat](../mechanics/domain-model.md#combat) margin plus the Loss margin step times the number of Lost Missions at Mission sites of the same [MissionSiteArchetype](../mechanics/missions.md#missionsitearchetype). E.g., with the Game designer values, 110% before any such Lost Mission and 120% after two. |
-| Winning team | A set of Agents whose [Combat rating](../mechanics/combat.md#combat-rating) is at least the Required rating share of the Combat rating of a Mission site's Enemies, whose number is at least the number of those Enemies divided by Enemies per Agent, rounded up, and that the [Transport cap](../mechanics/economy-and-upgrades.md#glossary) [allows to deploy](../mechanics/missions.md#deploying-agents). The team's Combat rating weighs each Agent's effective skill by its [rating factor](../mechanics/combat.md#combatant-condition-in-a-combat), which counts what the Agency's [Weapon damage Upgrades](../mechanics/economy-and-upgrades.md#glossary), [Max health Upgrades](../mechanics/economy-and-upgrades.md#glossary), and [Armor Upgrades](../mechanics/economy-and-upgrades.md#glossary) add, never its [base Combat rating](../mechanics/combat.md#combatant-condition-in-a-combat). |
+| Agent order | The order in which the Basic Autopilot AI ranks Serving Agents for strength: the highest [base skill](../mechanics/agents-spec.md#combatant-attributes) first, among equal base skill the lower [Instance ID](../foundation/campaign-instances.md#glossary) first. |
+| Rested rating | The [Combat rating](../mechanics/combat.md#combat-rating) a set of Agents would have fully rested and unhurt, with the Weapons and Armors they wear: each [Agent](../mechanics/domain-model.md#agency-and-agents)'s [effective skill](../mechanics/agents-spec.md#combatant-attributes) read as its base skill, rounded down. |
+| Threat | The strongest [Creation Combat rating](../mechanics/missions.md#mission-site-properties) among the [Response Mission sites](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) created in the last Threat window [Turns](../foundation/engine-contract.md#player-actions-and-turns), read from the [Mission sites](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) the [Campaign](../foundation/core-concepts.md#campaign-and-session) keeps. While there is none, the strongest [Combat rating](../mechanics/combat.md#combatant-condition-in-a-combat) of the Enemies of a [MissionSiteArchetype](../mechanics/missions.md#missionsitearchetype) of kind `response` that serves the lowest [Faction operation level](../mechanics/factions.md#glossary). |
+| Next rung | Of one [Faction](../mechanics/domain-model.md#factions) that is not [Eliminated](../mechanics/factions.md#glossary): the MissionSiteArchetype of kind `initiative` with the weakest Combat rating of its Enemies that is stronger than every one at which a [Mission](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) against that Faction is Won. The weakest Next rung is the weakest of them over every such Faction. |
+| Strike goal | The Combat rating the Strike team aims for: the stronger of the Threat and the Combat rating of the Enemies of the weakest Next rung, times the [Combat margin](#tuning-parameters). |
+| Eligible Agent | A Serving Agent that is not on an [Investigation](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), [In transit](../mechanics/domain-model.md#agency-and-agents) to one included. |
+| Strike team | The first Eligible Agents in Agent order, as few as reach the Strike goal with their Rested rating and number at least the Agents needed for the Enemies the Strike goal is set by, but never more than the [Transport cap](../mechanics/economy-and-upgrades.md#glossary). |
+| Strength gap | Whether the Rested rating of the Strike team is below the Strike goal. |
+| Required rating share | The least share of the Combat rating of a [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions)'s Enemies that a team's Combat rating must reach for the Basic Autopilot AI to deploy it there: the [Combat](../mechanics/domain-model.md#combat) margin plus the Loss margin step times the number of Lost Missions at Mission sites of the same MissionSiteArchetype. E.g., with the Game designer values, 110% before any such Lost Mission and 120% after two. |
+| Winning team | A set of Agents whose Combat rating is at least the Required rating share of the Combat rating of a Mission site's Enemies, whose number is at least the number of those Enemies divided by Enemies per Agent, rounded up, and that the Transport cap [allows to deploy](../mechanics/missions.md#deploying-agents). |
+| Projected Agent | An Agent on [Standby](../mechanics/agents-spec.md#assignments), [Training](../mechanics/agents-spec.md#assignments), or [Recovery](../mechanics/agents-spec.md#assignments) as it would be after the Recovery lookahead, i.e. after that many Advance turns of [Agent Recovery](../mechanics/agent-recovery.md) at the Agency's current rates, recovering only in the Advance turns in which [it would recover](../mechanics/agent-recovery.md#which-agents-recover). Its effective skill and whether it would be a [Deployable Agent](../mechanics/missions.md#glossary) are read from those projected values. |
 | Muster | The team that the Basic Autopilot AI [gathers](#deploying-and-mustering) for an [Initiative Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) that Deployable Agents alone cannot win yet, from Projected Agents and Contractors. |
-| Musterable Agents | The Agents a Muster may draw on: every Agent of the Agent reserve as a Projected Agent, and every Contractor At assignment as it is now, because a recall brings it to Standby, At assignment, after one Advance turn of transit in which it neither works nor rests. No Investigator is ever a Musterable Agent. |
-| Tuning parameter | One of [the values that the Basic Autopilot AI is built with](#tuning-parameters), e.g. the Reserve share. |
-| Other Upgrade | An [Upgrade](../mechanics/domain-model.md#agency-and-agents) other than a [Cap Upgrade](../mechanics/economy-and-upgrades.md#glossary), i.e. one that raises neither the [Agent cap](../mechanics/domain-model.md#agency-and-agents), the Transport cap, nor the [Training cap](../mechanics/economy-and-upgrades.md#glossary). |
-| Upgrade budget | The money the Basic Autopilot AI may have spent on Other Upgrades: the `price` of the Agent cap Upgrade times the number of Agent cap Upgrades the Agency has acquired. |
+| Contractor | A Serving Agent whose Assignment is [Contracting](../mechanics/agents-spec.md#assignments), In transit to it included. |
+| Researcher | A Serving Agent whose Assignment is an Investigation, In transit to it included. |
+| Free Agent | An Agent that is [Fit to start work](../mechanics/agents-spec.md#assignments), [At assignment](../mechanics/domain-model.md#agency-and-agents) on Standby or Training, and neither of the Strike team nor of the Muster: the Agents the roles may send to work. |
+| Equipping plan | Which Weapon and which Armor each Serving Agent [is to wear](#equipping), with the rounds in [Storage](../mechanics/equipment.md#glossary) as they are. The Buying plan is the same with unlimited rounds of every [Unlocked](../mechanics/equipment.md#glossary) AmmoType. |
+| Ammo need | Of an AmmoType: [`ammo_short_rounds_per_agent`](../mechanics/equipment.md#equipmentparameters) rounds for each Agent that a plan gives a Weapon of that AmmoType, i.e. what keeps the AmmoType from being [Ammo short](../mechanics/equipment.md#ammo-short). |
+| Tuning parameter | One of [the values that the Basic Autopilot AI is built with](#tuning-parameters), e.g. the Combat margin. |
 | Savings floor | The money the Basic Autopilot AI keeps unspent: the Savings floor Tuning parameter times the [projected upkeep](../mechanics/economy-and-upgrades.md#projected-income-and-upkeep) the Agency would have after the purchase. |
 
-# Agent groups
+# Roles
 
-Every Serving Agent belongs to exactly one of the Agent reserve, the Investigators, and the Contractors, by its Assignment; an Agent In transit belongs to the group of the Assignment it travels to. Every Serving Agent beyond the Reserve quota and the Investigator quota is a Contractor, up to the [Contracting cap](../mechanics/economy-and-upgrades.md#glossary); an Agent beyond that cap stays in the Agent reserve, which is then larger than the Reserve quota.
+Every Serving Agent has one role, and the Basic Autopilot AI moves an Agent between roles only as follows:
 
-The Agent reserve counts every Agent in it toward the Reserve quota, whether Fit to start work or not: Agents resting on Standby, Agents on Recovery, and Deployed Agents all fill it. Every Agent of the Agent reserve that is Fit to start work and not Deployed is on Training while the Training cap allows.
+1. **Strike team:** it stays in base, on Standby, Training, or Recovery, or [Deployed](../mechanics/agents-spec.md#assignments). A Contractor that becomes a member of the Strike team, e.g. because a member was Killed, is recalled to Standby.
+2. **Researchers:** Free Agents join Investigations, the highest [effective skill](../mechanics/agents-spec.md#combatant-attributes) first, so that the clock is answered by the most capable minds. The Basic Autopilot AI never assigns a Researcher elsewhere, so no Investigation it runs [loses progress](../mechanics/investigations.md#progress-loss) by its choice.
+3. **Contractors:** Free Agents fill the [Contracting cap](../mechanics/economy-and-upgrades.md#glossary). A Contractor is recalled only to the Strike team or a Muster.
+4. **Everyone else** rests, and trains while the [Training cap](../mechanics/economy-and-upgrades.md#glossary) has a place: first the Agents of the Strike team, then the others, the lowest base skill first.
 
-E.g., with the Game designer values, a Roster size of 100, and a Contracting cap of at least 60, the Reserve quota is 35 and the Investigator quota 5, so 60 Agents are Contractors. When 11 of the Agents are on Recovery, 5 rest on Standby with some exhaustion, and 6 are Deployed, the Agent reserve of 35 holds those 22 and 13 Agents on Training.
+Research and Contracting share the Free Agents in this order: one Investigation team first, so that research never stops; then Contracting up to its cap, because its money pays for everything else; then more Investigation teams, up to Most Investigations.
 
-The Basic Autopilot AI moves an Agent from one group to another only as follows:
-
-1. **Into the Agent reserve:** it recalls a Contractor to Standby, for a Muster or when the Agent reserve is below the Reserve quota.
-2. **Out of the Agent reserve:** it assigns a Spare Agent to an Investigation or to Contracting.
-3. **Never out of an Investigation:** it never assigns an Investigator elsewhere, so no Investigation it runs [loses progress](../mechanics/investigations.md#progress-loss) by its choice.
+E.g., with a Roster size of 30, a Strike team of 10, a Research team size of 3, and a Contracting cap of 8, the 20 other Agents give 3 to research, 8 to Contracting, and the rest to further Investigations, while those not Fit to start work rest.
 
 # Turn routine
 
-During each [Turn](../foundation/engine-contract.md#player-actions-and-turns) the Basic Autopilot AI makes its [Player actions](../foundation/engine-contract.md#player-actions-and-turns) in the following order, and then ends the Turn by [requesting Advance turn](../foundation/autopilot.md#autopilot-limits). When no step has a Player action left to make, e.g. when Autopilot is engaged again in a Turn it has already played through, its first request is Advance turn. Each step sees the Assignments and the money the earlier steps left.
+During each Turn the Basic Autopilot AI makes its [Player actions](../foundation/engine-contract.md#player-actions-and-turns) in the following order, and then ends the Turn by [requesting Advance turn](../foundation/autopilot.md#autopilot-limits). After each Player action it starts again from step 1, so that each Player action is decided from the current [Player-visible information](../foundation/engine-contract.md#api-surfaces). When no step has a Player action left to make, e.g. when Autopilot is engaged again in a Turn it has already played through, its first request is Advance turn.
 
-1. **Deploy and muster:** [deploy Winning teams of Deployable Agents to Mission sites and form at most one Muster](#deploying-and-mustering).
-2. **Refill the Agent reserve:** while the Agent reserve is below the Reserve quota, recall [the preferred Contractor](#choosing-agents) At assignment to Standby, one at a time.
-3. **Investigate:** while the Investigators are fewer than the Investigator quota and a Spare Agent remains, assign a Spare Agent to an Investigation of [a Lead worth investigating](#choosing-leads), adding it to an Active Investigation before starting an Investigation of another [Lead](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), so that effort is concentrated on few Leads rather than spread thin.
-4. **Contract and train:** assign remaining Spare Agents to Contracting while the Contracting cap has a place left. Then assign every Agent of the Agent reserve that is Fit to start work and At assignment on Standby to Training while the Training cap has a place left.
-5. **Buy and equip:** make every [purchase that is due](#purchases), then [equip the Agents](#equipping).
+1. **Equip:** make the Agents wear the [Equipping plan](#equipping).
+2. **Deploy and muster:** [deploy Winning teams to Mission sites and form at most one Muster](#deploying-and-mustering).
+3. **Strike team:** recall a Contractor of the Strike team or of a Muster that is due.
+4. **Research:** reinforce or start Investigations, as [Choosing Leads](#choosing-leads) says.
+5. **Contract and train:** assign Free Agents to Contracting and to Training, as [Roles](#roles) says.
+6. **Buy:** make the first [purchase that is due](#purchases).
+7. **Sell:** sell every [Item](../mechanics/equipment.md#glossary) no Agent is to wear, beyond Spare Items of each, in one `sellItems`.
 
-Deploying comes first because a Mission site expires, while every share can be restored on a later Turn. Refilling the Agent reserve comes before Investigations and Contracting, so that the next Mission site finds a team. Investigations come before Contracting because they are the smaller share and the one that brings new Mission sites.
+Equipping comes first because a team must leave with its gear; deploying comes before the roles because a Mission site expires, while every role can be filled on a later Turn.
 
 When a Player action the Basic Autopilot AI attempts is rejected, it does not retry the same Player action in that Turn and continues with the next step, so a rejection cannot make it repeat itself until it fails.
 
+## Equipping
+
+The best gear goes to the strongest Agents, and an Agent carries a Weapon only when the Agency can feed it, because [a Combat rating reads the Weapon, never the Ammo](../mechanics/combat.md#combat-rating): a rifle without rounds is rated as a rifle but fights as the [Fallback Weapon](../mechanics/combat.md#ammo).
+
+For Weapons, the Equipping plan takes every Weapon that a Serving Agent wears or Storage holds, from the highest `base_weapon_damage` down, and gives them out in Agent order. An Agent gets the best Weapon left whose AmmoType still has `ammo_short_rounds_per_agent` rounds in Storage for it on top of those of the Agents before it; otherwise the next best, and the Fallback Weapon when none qualifies. Armors are given out the same way, from the highest `base_armor` down, with no rounds to count. Agents beyond the Items keep the Fallback Weapon or the [Fallback Armor](../mechanics/equipment.md#glossary).
+
+E.g., with 3 rifles, 25 rounds of rifle Ammo, and an `ammo_short_rounds_per_agent` of 10, the first two Agents get rifles and the third the best pistol whose rounds suffice; the third rifle waits in Storage for rounds.
+
+The Basic Autopilot AI makes one [`equipAgent`](../mechanics/equipment.md#equipping-agents) for each Agent whose plan differs from what it wears, freeing an Item another Agent wears first when the plan moves it.
+
 ## Deploying and mustering
 
-Step 1 considers every Active Mission site to which no team is deployed, in order of urgency: a [Response Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) before an Initiative Mission site, because a Response Mission site that is not Won is penalized, while an Initiative Mission site only has to be found again; and among Mission sites of the same kind, the one that expires soonest first.
+Step 2 considers every Active Mission site to which no team is deployed, in order of urgency: Response Mission sites first, the one whose loss would cost most first, i.e. one that loses the Campaign, then the largest [Panic](../mechanics/domain-model.md#campaign-standing) increase, then the largest funding loss; then Initiative Mission sites; and among equals, the one that expires soonest first.
 
-1. **Deploy now:** when a Winning team of Deployable Agents can be formed for the Mission site from their current values, the Basic Autopilot AI deploys it, with [the members it prefers](#choosing-agents). A team may draw on any Agent of the Agent reserve that is a Deployable Agent, including Agents on Training and Agents still resting. Otherwise it deploys nobody to that Mission site rather than send a team that is likely to lose. The Required rating share rises with each Lost [Mission](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) so that a kind of Mission site the Combat rating underrates is attempted only with ever stronger teams.
-2. **Muster:** for the most urgent Initiative Mission site to which no team can be deployed now, the Basic Autopilot AI forms a Muster when a Winning team of Musterable Agents can be formed whose last member becomes a Deployable Agent within the Recovery lookahead and in fewer Advance turns than the Mission site's Turns until expiration. It forms the team from the Deployable Agents first, then from the Agents of the Agent reserve that become Deployable Agents soonest, and only then from Contractors, so that it recalls as few Contractors as it can. A Response Mission site is never mustered for.
-3. **Recall at the last moment:** the Basic Autopilot AI recalls the Contractors of the Muster to Standby only when every other member of the Muster is a Deployable Agent now or becomes one within one Advance turn, so that the recalled Agents arrive when the team is ready and earn until then. Otherwise it recalls nobody for the Muster this Turn, and judges again on the next one.
+1. **Deploy now:** when a Winning team of Deployable Agents can be formed for the Mission site from their current values, the Basic Autopilot AI deploys it. It takes the Deployable Agents with the lowest [exhaustion](../mechanics/agents-spec.md#combatant-attributes) first, among equal exhaustion the highest effective skill, so that rested Agents go first; when that order forms no Winning team within the Transport cap, the strongest first. Otherwise it deploys nobody rather than send a team likely to lose. The Required rating share rises with each Lost Mission so that a kind of Mission site the Combat rating underrates is attempted only with ever stronger teams.
+2. **Muster:** for the most urgent Initiative Mission site to which no team can be deployed now, the Basic Autopilot AI forms a Muster when a Winning team of Projected Agents and Contractors can be formed whose last member becomes a Deployable Agent within the Recovery lookahead and in fewer Advance turns than the Mission site's Turns until expiration. It takes the Deployable Agents first, then the Projected Agents that become Deployable Agents soonest, and only then Contractors, so that it recalls as few Contractors as it can. A Response Mission site is never mustered for, because it expires before a recalled Agent arrives.
+3. **Recall at the last moment:** step 3 recalls the Contractors of the Muster only when every other member is a Deployable Agent now or becomes one within one Advance turn, so that the recalled Agents earn until the team is ready.
 
-An Agent of the Muster keeps the Assignment it has: no later step gives it another one, e.g. a member on Training stays there. Step 1 forms the Muster anew in every Turn.
+An Agent of the Muster keeps the Assignment it has. Step 2 forms the Muster anew in every Turn.
 
 ## Choosing Leads
 
-The Basic Autopilot AI investigates only the Leads whose completion can advance progression, and the most decisive of them first.
+Research is what the clock runs against, so the Basic Autopilot AI runs several Investigations at once, up to Most Investigations, each with Research team size Agents. Step 4 first adds Free Agents to an Active Investigation whose team is smaller than that, and then starts an Investigation of the first [Lead](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) that qualifies, in this order:
 
-A Lead that creates no Mission site advances progression, or unlocks Contracting, by its completion alone, so it is always worth investigating. A Lead that creates a Mission site advances progression only when the Mission at that Mission site is Won, so it is investigated only when a Winning team of Musterable Agents could be formed for that Mission site at the moment its Investigation would start, with the whole Transport cap and no regard to timing; and, once a Mission from the Lead is Won, only when no other Lead qualifies. The Basic Autopilot AI judges this when it starts the Investigation and does not judge it again while the Investigation is Active.
+1. **A Lead that creates no Mission site**, always: the one that wins the Campaign, then the one that unlocks Contracting, then one that makes a Faction [Eliminated](../mechanics/domain-model.md#factions), then the others from the lowest [Initiative operation level](../mechanics/leads-and-progression.md#initiative-operation-level) up. Such a Lead advances progression by its completion alone, e.g. an interrogation unlocks gear for every Faction at once.
+2. **A Lead that creates a Mission site at the Next rung of its Faction**, the lowest [Initiative operation level](../mechanics/leads-and-progression.md#glossary) first. Climbing every rung, rather than skipping one through a shortcut, matters because each first win raises the Contracting cap and discovers the next interrogation.
+3. **A Lead that creates a Mission site at which a Mission against its Faction is already Won**, the highest Initiative operation level first, as a farm for money, funding, [Experience](../mechanics/agents-spec.md#growth), and Panic reduction. It qualifies only when no Lead of item 2 does, or when Panic is at least the Farming Panic.
 
-Among the Leads worth investigating, one whose completion wins the [Campaign](../foundation/core-concepts.md#campaign-and-session) comes first, then one whose completion unlocks Contracting, because every later Turn of Contracting income depends on it, then one whose completion makes a [Faction](../mechanics/domain-model.md#factions) [Eliminated](../mechanics/factions.md#glossary), then the one furthest along its Faction's chain, i.e. the one with the highest [Initiative operation level](../mechanics/leads-and-progression.md#initiative-operation-level). A Lead with no [Initiative operation level](../mechanics/leads-and-progression.md#glossary) comes after every Lead with one.
-
-## Choosing Agents
-
-When a step chooses among Agents, the Basic Autopilot AI prefers:
-
-| Choice | Preferred Agent |
-| --- | --- |
-| A member of a Winning team or a Muster | The Agent with the lowest [exhaustion](../mechanics/agents-spec.md#combatant-attributes) first, and among Agents of equal exhaustion the one with the highest effective skill, so that rested Agents go first. For a Muster, exhaustion and effective skill are those of the Projected Agent, and of a Contractor its own. |
-| A Contractor to recall in step 2 | The Contractor with the highest effective skill, because the Agent reserve exists to win Missions. |
-| A Spare Agent | The Agent with the lowest effective skill, so that the strongest Agents stay in the Agent reserve. |
-| An Agent to put on Training in step 4 | The Agent with the lowest [base skill](../mechanics/agents-spec.md#combatant-attributes). |
-
-When several choices are equally good, it breaks the tie in a fixed order derived from [Player-visible information](../foundation/engine-contract.md#api-surfaces), so that the same Player-visible information always yields the same Player actions.
+A Lead that creates a Mission site qualifies only when the Strike team, as its Rested rating stands with the whole Transport cap, would be a Winning team for that MissionSiteArchetype's Enemies; while one such Investigation is Active or an Initiative Mission site is Active, no other is started, so that the Strike team answers one Mission site at a time. The Basic Autopilot AI judges a Lead only when it starts the Investigation.
 
 # Purchases
 
-The Basic Autopilot AI spends money in a fixed cycle: it fills the Agent cap, raises it, spends up to the price of that raise on Other Upgrades, and brings the Transport cap and the Training cap up to their share of the new Agent cap. Each purchase in step 5 is the first one that is due in the following list, read again after every purchase:
+The Basic Autopilot AI first keeps its Agents armed and its income growing, then buys strength while the Strength gap is open, then everything else. Step 6 makes the first purchase due in the following list, read again after every purchase:
 
-1. **Ammo:** for each [AmmoType](../mechanics/combat.md#ammotype) that the Weapon of a Serving Agent uses and that holds fewer rounds in [Storage](../mechanics/equipment.md#glossary) than twice what [Ammo short](../mechanics/equipment.md#ammo-short) asks for, buy the rounds that bring it to twice that, all in one `buyItems`.
-2. **Other Upgrades:** while the money spent on Other Upgrades, i.e. the sum over the Other Upgrades of each one's `price` times its acquisitions, is below the Upgrade budget, buy the Other Upgrade chosen by the rotation among those whose `price` still fits within the Upgrade budget. The rotation buys the one with the fewest acquisitions per unit of its [Upgrade weight](#tuning-parameters), counting the acquisition it would make, and never one of weight 0.
-3. **Supporting caps:** while the Transport cap is below the Cap share of the Agent cap, buy a Transport cap Upgrade; then, while the Training cap is below the Cap share of the Agent cap, buy a Training cap Upgrade.
-4. **Hire:** while the Roster size is below the Agent cap, hire Agents, all in one `hireAgents`: as many as both fit below the Agent cap and keep money at or above the Savings floor, which counts the upkeep of every Agent it hires.
-5. **Agent cap:** when the Roster size has reached the Agent cap, buy an Agent cap Upgrade.
+1. **Ammo:** for each Unlocked AmmoType below the [Ammo](../mechanics/combat.md#ammo) reserve times its Ammo need under the Buying plan, the rounds that bring it there, all in one `buyItems`.
+2. **Sidearms:** for every Agent the Buying plan leaves with the Fallback Weapon, the Unlocked Weapon with the highest `base_weapon_damage` whose `price` is at most the Sidearm price, in one `buyItems`.
+3. **Hires and the [Agent cap](../mechanics/domain-model.md#agency-and-agents):** hire Agents, in one `hireAgents`, while the Roster size is below both the Agent cap and the wanted roster, and the planned net income stays at least the Least net income. When the Agent cap alone stops a hire, buy an Agent cap [Upgrade](../mechanics/domain-model.md#agency-and-agents).
+4. **Health recovery:** while more than the Recovery share of the Serving Agents are on Recovery, a health recovery Upgrade.
+5. **Strength:** while the Strength gap is open, the purchase that adds most Rested rating to the Strike team for its money: one Weapon or Armor for the member of the Strike team that gains most from it, with the rounds of its Ammo reserve for a Weapon counted in its cost; or, when the Strike team fills the Transport cap, a Transport cap Upgrade, with the hires that fill it counted in its cost and new Agents of the AgentArchetype counted in its gain.
+6. **Other Upgrades:** a Training cap Upgrade while the Strike team is larger than the Training cap; otherwise the [Rate Upgrade](../mechanics/economy-and-upgrades.md#glossary) with the fewest acquisitions.
 
-A purchase is made only when money stays at or above the Savings floor after it, and a hire only when at least one Agent fits; when the first purchase due does not fit, the Basic Autopilot AI buys nothing more that Turn, rather than a later item of the list.
+The wanted roster is the Strike team, one Investigation team per Lead being or qualifying to be investigated up to Most Investigations, and the Contracting cap, divided by one less the Rest share. The planned net income of a Roster size is the Agency's funding, plus `contracting_income_per_agent` for each Agent of that roster beyond the Rest share, the Strike team, and one Investigation team, up to the Contracting cap, less `upkeep_per_agent` for each Agent. Hires that fill Contracting places therefore always pay, while hires for the Strike team and research stop where they would eat the income that buys strength.
 
-E.g., with a Cap share of 25%, an Agency starts with an Agent cap of 12, a Transport cap of 3, and a Training cap of 6, both at least 25% of 12, and an Upgrade budget of 0. The Basic Autopilot AI therefore hires up to 12 Agents first, then buys an Agent cap Upgrade, here to 24 at a `price` of 900, then up to 900 of Other Upgrades, then a Transport cap Upgrade, because the Transport cap of 3 is below 25% of 24, i.e. 6, and no Training cap Upgrade, because the Training cap of 6 already reaches it, and then hires toward 24.
+A purchase is made only when money stays at or above the Savings floor after it, and a hire only when at least one Agent fits. When the first purchase due does not fit, the Basic Autopilot AI saves for it and buys nothing else that Turn.
 
-## Equipping
-
-The Basic Autopilot AI puts the best gear on the strongest Agents and never sells an [Item](../mechanics/equipment.md#glossary). For Weapons and then for Armors, it takes every Item of that kind that a Serving Agent wears or Storage holds, from the highest `base_weapon_damage` or `base_armor` down, and gives them out in that order to the Serving Agents from the highest effective skill down, among equal effective skill the lower [Instance ID](../foundation/campaign-instances.md#glossary) first, with one [`equipAgent`](../mechanics/equipment.md#equipping-agents) for each Agent whose share differs from what it wears. Agents beyond the Items keep the [Fallback Weapon](../mechanics/combat.md#ammo) or the [Fallback Armor](../mechanics/equipment.md#glossary).
+E.g., in a new Campaign, the Strike goal is set by the Threat of the lowest Faction operation level, and Contracting is not yet unlocked. The Basic Autopilot AI keeps the strongest Agents as its Strike team, sends the others to investigate the Lead that unlocks Contracting, and hires only once Contractors can pay for the new Agents.
 
 # Information
 
-The Basic Autopilot AI decides each Player action from the current Player-visible information alone, within [what an Autopilot AI receives](../foundation/autopilot.md#what-an-autopilot-ai-receives), and keeps no plan across Turns. It counts the Lost Missions of the Required rating share from the Missions the Campaign keeps, so it counts every Lost Mission alike, whoever deployed its team.
+The Basic Autopilot AI decides each Player action from the current Player-visible information alone, within [what an Autopilot AI receives](../foundation/autopilot.md#what-an-autopilot-ai-receives), and keeps no plan across Turns. Every value above, e.g. the Threat, the Next rung, and the Strike team, is derived again from the current [World state](../foundation/engine-contract.md#player-actions-and-turns), the Missions and Mission sites the Campaign keeps, and the game data. It counts the Lost Missions of the Required rating share from the Missions the Campaign keeps, so it counts every Lost Mission alike, whoever deployed its team.
+
+When several choices are equally good, it breaks the tie in a fixed order derived from Player-visible information, so that the same Player-visible information always yields the same Player actions.
 
 # Tuning parameters
 
-The [Game build](../foundation/core-concepts.md#game-build-and-content) offers the Basic Autopilot AI with one fixed set of Tuning parameters, and a player cannot change them. Developer tooling can build the Basic Autopilot AI with other values, e.g. to compare several sets of values over whole Campaigns, and the Game build never offers such a build.
+The [Game build](../foundation/core-concepts.md#game-build-and-content) offers the Basic Autopilot AI with one fixed set of Tuning parameters, and a player cannot change them.
 
 | Tuning parameter | What it sets |
 | --- | --- |
-| Reserve share | The Reserve quota, as a share of the Roster size. |
-| Investigator share | The Investigator quota, as a share of the Roster size. |
-| Cap share | The least Transport cap and Training cap that the Basic Autopilot AI keeps, each as a share of the Agent cap. |
-| Savings floor | The Savings floor, as a number of Turns of projected upkeep. |
-| Combat margin | The Required rating share while no Mission at a Mission site of the same MissionSiteArchetype is Lost. |
+| Combat margin | The Required rating share while no Mission at a Mission site of the same MissionSiteArchetype is Lost, and the share of the Strike goal. |
 | Loss margin step | What each such Lost Mission adds to the Required rating share. |
 | Enemies per Agent | How many Enemies one Agent of a Winning team answers for; it may be fractional. |
 | Recovery lookahead | The number of Advance turns over which a Projected Agent is projected. |
-| Upgrade weights | A non-negative weight of each Other Upgrade in the rotation of [Purchases](#purchases). E.g., an Upgrade of weight 2 is bought about twice as often as one of weight 1. |
+| Threat window | The number of Turns over which the Threat is read. |
+| Research team size | The number of Agents each Investigation is given. |
+| Most Investigations | The most Investigations the Basic Autopilot AI runs at once. |
+| Farming Panic | The Panic, in percent, from which farming a Won rung qualifies even while a new rung does. |
+| Ammo reserve | The rounds of each AmmoType bought, as a multiple of its Ammo need. |
+| Sidearm price | The most a Weapon bought for an Agent with the Fallback Weapon may cost. |
+| Spare Items | How many Items of each Weapon and Armor no Agent is to wear are kept rather than sold. |
+| Rest share | The share of the roster expected to be resting or on Recovery, which the wanted roster adds. |
+| Least net income | The least planned net income a hire may leave. |
+| Recovery share | The share of the Serving Agents on Recovery above which a health recovery Upgrade is due. |
+| Savings floor | The Savings floor, as a number of Turns of projected upkeep. |
 
 ## Game designer values
 
@@ -139,12 +152,18 @@ The Game designer sets the following values of the Game build.
 
 | Tuning parameter | Value in the Game build |
 | --- | --- |
-| Reserve share | 35% of the Roster size. |
-| Investigator share | 5% of the Roster size. |
-| Cap share | 25% of the Agent cap, for each of the Transport cap and the Training cap, because at least a tenth of the roster is expected to be on Recovery or resting rather than on Training or Deployed. |
-| Savings floor | 5 Turns of projected upkeep. |
 | Combat margin | 110%. |
 | Loss margin step | 5 percentage points. |
 | Enemies per Agent | 2.5, e.g. a team of at least 4 Agents for 10 Enemies. |
 | Recovery lookahead | 2 Advance turns. |
-| Upgrade weights | 2 for `training_skill_gain`, `exhaustion_recovery`, and `health_recovery`. |
+| Threat window | 20 Turns. |
+| Research team size | 3 Agents. |
+| Most Investigations | 3. |
+| Farming Panic | 30%. |
+| Ammo reserve | 2, i.e. twice the rounds that keep an AmmoType from being [Ammo short](../mechanics/equipment.md#glossary). |
+| Sidearm price | 10. |
+| Spare Items | 4. |
+| Rest share | 20%. |
+| Least net income | 25 a Turn. |
+| Recovery share | 20%. |
+| Savings floor | 5 Turns of projected upkeep. |

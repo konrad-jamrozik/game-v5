@@ -118,7 +118,7 @@ These informative views are derived from the registered Markdown specifications.
 
 | ID | Document | Owns |
 | --- | --- | --- |
-| BASICAI | [Basic Autopilot AI](../specs/design/autopilot-ais/basic-autopilot-ai.md) | How the Basic Autopilot AI divides the roster among the Agent reserve, Investigations, and Contracting, how it deploys and musters teams, which Leads it investigates, what it buys and in which order, and the Tuning parameters it is built with. |
+| BASICAI | [Basic Autopilot AI](../specs/design/autopilot-ais/basic-autopilot-ai.md) | How the Basic Autopilot AI measures the strength it needs, which Agents form its Strike team and which work, how it equips, deploys, and musters, which Leads it investigates, what it buys and sells and in which order, and the Tuning parameters it is built with. |
 
 ## Mandatory
 
