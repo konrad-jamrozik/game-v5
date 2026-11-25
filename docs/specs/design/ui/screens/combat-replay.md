@@ -116,7 +116,7 @@ The transport buttons look like the keys of a tape player, so each shows a symbo
 | Fast | Three arrows | Plays at the Fast pace. |
 | Very fast | Four arrows | Plays at the Very fast pace. |
 
-Every arrow points right. A pace button plays to the end of the Combat with the values of its pace, from Combat start when the Combat replay is at the end of the Combat, and leaves the Options as they are, so that each pace always plays the same way and the Options keep what the Player set for the step buttons. A pace button pressed with Ctrl held plays the same way and also sets the Options to the values of its pace, so that the step buttons can take up a pace in one press; its tooltip says so after its name. The other transport buttons do the same with Ctrl held as without it, since they have no values to give the Options. While the Combat replay plays at a pace, that pace's button is shown pressed.
+Every arrow points right. A pace button plays to the end of the Combat with the values of its pace, from Combat start when the Combat replay is at the end of the Combat, and leaves the Options as they are, so that each pace always plays the same way and the Options keep what the Player set for the step buttons. A pace button pressed with [Ctrl](../gui.md#glossary) held plays the same way and also sets the Options to the values of its pace, so that the step buttons can take up a pace in one press; its tooltip says so after its name. The other transport buttons do the same with Ctrl held as without it, since they have no values to give the Options. While the Combat replay plays at a pace, that pace's button is shown pressed.
 
 | Pace      | Speed | Overlap | Delay  | Instant | Aim lines |
 | --------- | ----- | ------- | ------ | ------- | --------- |

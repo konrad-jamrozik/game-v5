@@ -196,7 +196,7 @@ Inputs share one shape so that every editable value is recognisable. An input or
 
 ## Steppers
 
-A stepper sets a count: a numeric input between a "−" and a "+" button, 24 px tall. Clicking a button changes the count by 1, by 10 while Shift is held, and by 100 while Ctrl is held, and never past the stepper's bounds, so that large counts take a few clicks rather than many.
+A stepper sets a count: a numeric input between a "−" and a "+" button, 24 px tall. Clicking a button changes the count by 1, by 10 while Shift is held, and by 100 while [Ctrl](gui.md#glossary) is held, and never past the stepper's bounds, so that large counts take a few clicks rather than many.
 
 ## Checkboxes
 

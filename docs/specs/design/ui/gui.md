@@ -25,6 +25,7 @@ Its screens follow the life of a [Session](../foundation/core-concepts.md#campai
 | Progress bar | The [bar](#progress-bar) that shows an Investigation's progress against its [Lead](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions)'s required progress. |
 | Progress circle | The [small circle](#progress-circle) that shows an Active Investigation's progress as a share of its Lead's [Required progress](../mechanics/leads-and-progression.md#glossary). |
 | Settings panel | The [panel](#settings-panel), shown on both screens, through which the Player sets [Global configuration](../foundation/engine-contract.md#persisted-data). |
+| Ctrl | The modifier key that a specification names Ctrl, e.g. in "Ctrl+click": the Ctrl key, and on a Mac also the Command key, so that every action held with Ctrl works with the key a Mac uses in its place. |
 | View trail | The places that the Player came through to reach the one shown, most recent last, which [the Escape key retraces](screens/campaign-screen.md#view-trail). |
 | Back control | The button of the open Detail view that [goes back to the last place of the View trail](screens/campaign-screen.md#view-trail), shown while the View trail is not empty. |
 | Enemy label | The name by which the GUI shows an [Enemy](../mechanics/domain-model.md#combat): its EnemyArchetype's abbreviation and [its number](#enemy-labels) among the Enemies of that EnemyArchetype at its [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), e.g. "init-2". |
