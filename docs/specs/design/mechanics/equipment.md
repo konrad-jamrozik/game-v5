@@ -115,7 +115,7 @@ The Agency should not send Agents into a Combat with too few rounds for their We
 count in Storage  <  ammo_short_rounds_per_agent × N
 ```
 
-where N is the number of Serving Agents whose Weapon's `ammo_type` is that AmmoType. Ammo short is a Derived value and changes no rule; it is for the Player to see. E.g., with an `ammo_short_rounds_per_agent` of 10, seven Agents whose Weapons use one AmmoType make it Ammo short at 69 rounds and not at 70.
+where N is the number of Serving Agents whose Weapon's `ammo_type` is that AmmoType. Ammo short is a Derived value and changes no rule; it is for the Player to see, because [no Combat rating shows a lack of rounds](combat.md#combat-rating). E.g., with an `ammo_short_rounds_per_agent` of 10, seven Agents whose Weapons use one AmmoType make it Ammo short at 69 rounds and not at 70.
 
 # Mission equipment
 
