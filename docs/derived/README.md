@@ -107,7 +107,7 @@ These informative views are derived from the registered Markdown specifications.
 | MUSIC | [Music](../specs/design/ui/music.md) | The music of the graphical user interface: the Soundtrack, how it is played, its settings, and the Music control. |
 | MVIEW | [Missions View](../specs/design/ui/screens/missions-view.md) | What the Missions View of the Campaign screen shows, how its panes are arranged, and how it deploys Agents. |
 | SITP | [Situation Panel](../specs/design/ui/screens/situation-panel.md) | What the Situation panel of the Campaign screen shows. |
-| SOUNDS | [Sounds](../specs/design/ui/sounds.md) | The short sounds the graphical user interface plays in answer to the Player: the Sound set, when each Sound plays, and its settings. |
+| SOUNDS | [Sounds](../specs/design/ui/sounds.md) | The short sounds the graphical user interface plays in answer to the Player and for the attacks of the Combat replay: the Sound set, when each Sound plays, and its settings. |
 | STVIEW | [Storage View](../specs/design/ui/screens/storage-view.md) | What the Storage View of the Campaign screen shows of the Agency's Items and Ammo and of what it can buy, and how it sells and buys them. |
 | TRVIEW | [Turn Report View](../specs/design/ui/screens/turn-report-view.md) | What the Turn Report View of the Campaign screen shows of the most recent Turn report, and how it opens a Combat report or reopens the Turn summary. |
 | TSUM | [Turn Summary](../specs/design/ui/screens/turn-summary.md) | When the Turn summary dialog of the Campaign screen appears and what it shows. |

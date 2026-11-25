@@ -2,11 +2,13 @@ id: knife
 type: Weapon
 name: Knife
 base_weapon_damage: 5 # the Fallback Weapon: every Agent always has one, and it is never an Item
+shot: blade # how an attack with it looks and sounds in the Combat replay
 ---
 id: basic_pistol
 type: Weapon
 name: Basic pistol
 base_weapon_damage: 8
+shot: light_pistol
 price: 6
 ammo_type: pistol_ammo
 ---
@@ -14,6 +16,7 @@ id: combat_pistol
 type: Weapon
 name: Combat pistol
 base_weapon_damage: 10 # the weapon the Agency issues to every Agent
+shot: heavy_pistol
 price: 10
 ammo_type: pistol_ammo
 ---
@@ -21,6 +24,7 @@ id: rifle
 type: Weapon
 name: Rifle
 base_weapon_damage: 14
+shot: rifle
 price: 30
 ammo_type: rifle_ammo
 unlocked_by: [interrogate_red_dawn_lieutenant, interrogate_exalt_lieutenant, interrogate_black_lotus_lieutenant]
@@ -29,6 +33,7 @@ id: augmented_rifle
 type: Weapon
 name: Augmented rifle
 base_weapon_damage: 16
+shot: sighted_rifle
 price: 80
 ammo_type: rifle_ammo
 unlocked_by: [interrogate_red_dawn_lieutenant, interrogate_exalt_lieutenant, interrogate_black_lotus_lieutenant]
@@ -37,6 +42,7 @@ id: machine_gun
 type: Weapon
 name: Machine gun
 base_weapon_damage: 20
+shot: machine_gun
 price: 140
 ammo_type: machine_gun_ammo
 unlocked_by: [interrogate_red_dawn_commander, interrogate_exalt_commander, interrogate_black_lotus_commander]
@@ -45,6 +51,7 @@ id: laser_pistol
 type: Weapon
 name: Laser pistol
 base_weapon_damage: 22
+shot: laser_pistol
 price: 300
 ammo_type: laser_pistol_battery
 unlocked_by: [interrogate_red_dawn_commander, interrogate_exalt_commander, interrogate_black_lotus_commander]
@@ -53,6 +60,7 @@ id: laser_rifle
 type: Weapon
 name: Laser rifle
 base_weapon_damage: 28
+shot: laser_rifle
 price: 800
 ammo_type: laser_rifle_battery
 unlocked_by:
@@ -62,6 +70,7 @@ id: augmented_laser_rifle
 type: Weapon
 name: Augmented laser rifle
 base_weapon_damage: 32
+shot: focused_laser_rifle
 price: 1000
 ammo_type: laser_rifle_battery
 unlocked_by: [interrogate_red_dawn_cult_leader, interrogate_exalt_cult_leader, interrogate_black_lotus_cult_leader]

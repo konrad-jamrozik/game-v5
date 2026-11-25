@@ -28,7 +28,7 @@ The guidance states what the Player is expected to be able to do comfortably and
 
 ## Sounds
 
-[Sounds](sounds.md) answers _how does the graphical user interface answer the Player's clicks?_ It owns the Sound set, which Player inputs play which Sound, and the settings that turn Sounds off and set their volume.
+[Sounds](sounds.md) answers _how does the graphical user interface answer the Player's clicks?_ It owns the Sound set, which Player inputs play which Sound, the Sounds of the attacks of the Combat replay, and the settings that turn Sounds off and set their volume.
 
 ## Screens
 

@@ -5,12 +5,14 @@
 | Spec ID | SOUNDS |
 | Family | UI |
 | Audience | UI designer, Implementer |
-| Owns | The short sounds the graphical user interface plays in answer to the Player: the Sound set, when each Sound plays, and its settings. |
+| Owns | The short sounds the graphical user interface plays in answer to the Player and for the attacks of the Combat replay: the Sound set, when each Sound plays, and its settings. |
 | Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
 
 The GUI answers the Player's clicks with short sounds, so that the command console feels like a responsive instrument and the Player hears that an order was taken without looking for its effect. Each Sound has one meaning: one Sound answers a Main click, which does something, another answers a Select click, which only chooses what to look at or act on, a third answers a Go back, which leaves or cancels something, and a fourth announces that an Advance turn brought news worth a Turn summary.
+
+The Combat replay is the one place where the GUI plays Sounds for what it shows rather than for a click: the Player watches a Combat there, so each attack is heard as it is seen, with a Sound for its Weapon and another for its hit.
 
 Sounds belong to the [Graphical User Interface](gui.md) alone, like the [Music](music.md) they play over. They read no game state beyond what the GUI already shows, change no [Campaign state](../foundation/core-concepts.md#campaign-and-session), and draw no random outcome of a [Campaign](../foundation/core-concepts.md#campaign-and-session); the [Command-Line Interface](cli.md) plays no sounds. Their two settings are part of [Global configuration](../foundation/engine-contract.md#persisted-data), so a choice the Player makes once applies in every later [Session](../foundation/core-concepts.md#campaign-and-session).
 
@@ -18,7 +20,8 @@ Sounds belong to the [Graphical User Interface](gui.md) alone, like the [Music](
 
 | Term | Definition |
 | --- | --- |
-| Sound | One short sound that the GUI plays in answer to the Player, [supplied as one audio file](#sound-set) and named by its Sound name. |
+| Sound | One short sound that the GUI plays in answer to the Player or for an attack of the [Combat replay](screens/combat-replay.md#glossary), [supplied as one audio file](#sound-set) and named by its Sound name. |
+| Combat replay Sound | A Sound that the GUI plays [for an attack that the Combat replay plays](#combat-replay-sounds), e.g. `shot-rifle`. |
 | Sound name | The name of a Sound, which is the name of its file without the extension, e.g. `main-click`. |
 | Sound set | The [Sounds](#sound-set) that the [Game build](../foundation/core-concepts.md#game-build-and-content) supplies for the GUI to play. |
 | Main click | A Player input that [does something](#main-click), e.g. opens a Detail view, advances the Turn, or hires Agents. |
@@ -45,10 +48,13 @@ The GUI plays the following Sounds. A file of the directory whose Sound name is 
 | `select-click` | On every [Select click](#select-click). |
 | `go-back-click` | On every [Go back](#go-back). |
 | `interesting-turn-summary` | When the [Turn summary](screens/turn-summary.md#glossary) [appears after an Advance turn](#turn-summary). |
+| `shot-` followed by a [shot](screens/combat-replay.md#shots) with a hyphen for each underscore, e.g. `shot-light-pistol` | When a Weapon with that shot [fires in the Combat replay](#combat-replay-sounds). |
+| `hit-blade`, `hit-kinetic`, `hit-energy` | When a shot of that kind [hits its defender in the Combat replay](#combat-replay-sounds). |
+| `miss-kinetic` | When a kinetic shot [passes its defender in the Combat replay](#combat-replay-sounds). |
 
 # When Sounds play
 
-Every Sound answers one input of the Player, so the Player hears a Sound only for what they did, never for what the game does on its own, e.g. an [Advance turn](../foundation/engine-contract.md#player-actions-and-turns) that [Autopilot](../foundation/engine-contract.md#autopilot) requests plays no Sound. The Player's inputs fall into four kinds: a Main click, a Select click, a Go back, and every other input, which plays no Sound. A key that does what a button does, e.g. a keyboard shortcut, plays the Sound that the button plays.
+Every Sound but a [Combat replay Sound](#combat-replay-sounds) answers one input of the Player, so the Player hears such a Sound only for what they did, never for what the game does on its own, e.g. an [Advance turn](../foundation/engine-contract.md#player-actions-and-turns) that [Autopilot](../foundation/engine-contract.md#autopilot) requests plays no Sound. The Player's inputs fall into four kinds: a Main click, a Select click, a Go back, and every other input, which plays no Sound. A key that does what a button does, e.g. a keyboard shortcut, plays the Sound that the button plays.
 
 ## Main click
 
@@ -89,6 +95,20 @@ When an Advance turn that the Player requested [shows the Turn summary](screens/
 
 Reopening the Turn summary from the [Turn Report View](screens/turn-report-view.md) is a Main click and plays only `main-click`, because it brings no news. So is every input that [shows the Turn summary again from a Detail view](screens/campaign-screen.md#view-trail), whether the [Back control](gui.md#glossary) labelled "‹ Turn summary", the Escape key, or the close control of a Detail view whose [View trail](gui.md#glossary) begins with the Turn summary.
 
+## Combat replay Sounds
+
+The [Combat replay](screens/combat-replay.md) is watched rather than operated, so its Sounds follow what the [Battlefield](screens/combat-replay.md#glossary) shows: each marks a moment of a [shot](screens/combat-replay.md#shots), and plays at the instant the Player sees that moment. They are the only Sounds that answer no single input of the Player; the Player still hears them only for a playing they started.
+
+For each attack that the Combat replay plays, whether at a pace, as a step, or picked with the slider or a row of the [Combat log](../mechanics/combat.md#combat-rounds-and-results), the GUI plays:
+
+1. **Shot:** the `shot-` Sound of the attack's shot each time the Weapon fires, i.e. once for each round of a `machine_gun` and once for every other shot. A `blade` fires as its attacker reaches the defender.
+2. **Hit:** when the attack hits, one Sound as the shot lands on the defender: `hit-blade` for a blade, `hit-kinetic` for a kinetic shot, and `hit-energy` for an energy shot.
+3. **Miss:** when a kinetic shot misses, `miss-kinetic` once, as its first round passes the defender. A blade or an energy shot that misses plays no further Sound.
+
+An attack that is shown without being played plays no Sound, e.g. after the Rewind button, and neither does a paused attack until it plays on.
+
+With Overlap or Instant on, many attacks play at once, and a wall of Sounds would say less than a few. So of the Combat replay Sounds of one Sound name that would start at the same moment only one is played, and at most 6 Combat replay Sounds play at the same time: one that would start while 6 are playing is not played. So that a Weapon fired again and again does not sound like a machine, the Sounds of each attack are played up to 6% lower or higher in pitch than authored, by an amount that follows from the attack's place in the Combat log, so that the same attack always sounds the same.
+
 # Sound settings
 
 The Player decides whether Sounds play and how loud they are, and the choice should survive the end of a [Session](../foundation/core-concepts.md#campaign-and-session), so both are settings of [Global configuration](../foundation/configuration.md#global-configuration).
@@ -115,6 +135,6 @@ E.g., with a Sounds volume of 50, the gain is 0.5² = 0.25.
 
 # Playing a Sound
 
-A Sound plays once, from its beginning to its end, without a fade. It plays over the music, which neither pauses nor changes its gain, and over any Sound already playing. Changing screen, opening or closing a [Detail view](gui.md#glossary), and a Go back do not stop a Sound that is playing. A change of Sounds on or Sounds volume applies to the Sounds that start after it.
+A Sound plays once, from its beginning to its end, without a fade. It plays over the music, which neither pauses nor changes its gain, and over any Sound already playing, within the [limit on Combat replay Sounds](#combat-replay-sounds). Changing screen, opening or closing a [Detail view](gui.md#glossary), and a Go back do not stop a Sound that is playing. A change of Sounds on or Sounds volume applies to the Sounds that start after it.
 
 A Sound is never worth interrupting play for, so every failure of it is silent: a Sound whose file the Game build lacks, or whose file cannot be loaded or decoded, plays nothing and shows no error to the Player, and every other Sound plays as usual. When the platform withholds sound until the Player first interacts with the GUI, e.g. a web browser that blocks sound until the first click or key press, a Sound withheld by it is not played later.

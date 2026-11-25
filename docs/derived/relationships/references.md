@@ -62,7 +62,7 @@ A → B means A is referenced by B: the text of B links to A. Layer 1 is drawn a
 | 17 | SITP Situation Panel | AGENT, CORE, DOM, ECON, ENG, GUI |
 | 18 | CSIM Combat Simulator | AGENT, COMBAT, CORE, CRPLAY, DOM, ENG, GUI, LIFE |
 | 18 | TSUM Turn Summary | AGENT, COMBAT, CRPLAY, CSTATE, DOM, ECON, ENG, EQUIP, GUI, INVSTG, SITP |
-| 19 | SOUNDS Sounds | COMP, COMPV, CORE, ENG, GUI, TSUM |
+| 19 | SOUNDS Sounds | COMBAT, COMP, COMPV, CORE, CRPLAY, ENG, GUI, TSUM |
 | 19 | TRVIEW Turn Report View | AGENT, CINST, COMBAT, CSTATE, DOM, ENG, EQUIP, GUI, TSUM |
 | 19 | VIS Visual Design | AGENT, CINST, COMBAT, CORE, CRPLAY, DOM, ECON, ENG, GUI, INVSTG, LEAD, LIFE, TSUM |
 | 20 | AVIEW Agents View | AGENT, CINST, COMBAT, CORE, DOM, ECON, ENG, EQUIP, GUI, RECOVER, VIS |

@@ -90,8 +90,12 @@ Each colour has one role, so that the same colour always means the same thing ac
 | Enemy orange | `#F06A32` | The third of those colours. |
 | Enemy red | `#D93A3A` | The fourth of those colours. |
 | Enemy violet | `#A35CE0` | The fifth of those colours. |
-| Tracer | `#FFE9A8` | The tracer of a `bullet` or `burst` [shot](screens/combat-replay.md#shots) of the Combat replay, and the sparks of its hit. |
-| Beam | `#7FD8F0` | The beam of a `beam` shot of the Combat replay, and the glow of its hit. |
+| Tracer | `#FFE9A8` | The sparks of a hit by a blade or a [kinetic shot](screens/combat-replay.md#kinetic-shots) of the Combat replay, and the core of a muzzle flash. |
+| Muzzle | `#FFFAF0` | The muzzle flash and the round of a kinetic shot, the slash of a blade, and the core of a beam. |
+| Tracer red | `#FF5236` | The round of a kinetic shot that fires a tracer round, and the brackets that close on the defender of a `sighted_rifle`. |
+| Brass | `#C9A24A` | The casing a kinetic shot throws. |
+| Beam | `#7FD8F0` | The beam of an [energy shot](screens/combat-replay.md#energy-shots) of the Combat replay, the light that gathers at its muzzle, and the glow and embers of its hit. |
+| Beam fringe | `#B99CFF` | The halo, the filaments, and the closing ring of a `focused_laser_rifle`. |
 | Limit band | `#E5484D` at 12% opacity | The band that marks a losing limit on a chart. |
 | Scrim | `#0D0D0B` at 72% opacity | The layer that dims the screen behind a dialog. |
 | Control backdrop | `#0D0D0B` at 55% opacity | The fill behind a group of controls that stands over a Background artwork, with 10 px of inner padding and the control corner radius, so that the artwork interferes less with reading the controls, e.g. the checkboxes of the Agents View. |

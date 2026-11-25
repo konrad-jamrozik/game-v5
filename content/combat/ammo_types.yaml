@@ -2,28 +2,23 @@ id: pistol_ammo
 type: AmmoType
 name: Pistol ammo
 price: 1
-shot: bullet # how firing one round looks: bullet, burst, or beam
 ---
 id: rifle_ammo
 type: AmmoType
 name: Rifle ammo
 price: 3
-shot: bullet
 ---
 id: machine_gun_ammo
 type: AmmoType
 name: Machine gun ammo
 price: 5
-shot: burst
 ---
 id: laser_pistol_battery
 type: AmmoType
 name: Laser pistol battery
 price: 10
-shot: beam
 ---
 id: laser_rifle_battery
 type: AmmoType
 name: Laser rifle battery
 price: 15
-shot: beam

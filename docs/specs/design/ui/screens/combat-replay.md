@@ -71,18 +71,43 @@ An Agent's figure shows the Rank insignia of the [Rank](../gui.md#ranks) that it
 
 # Shots
 
-Each kind of Weapon attacks in its own way, so that the Player sees what a Combatant is armed with, and when an Agent has run out of [Ammo](../../mechanics/combat.md#ammo), without reading the [Combat log](../../mechanics/combat.md#combat-rounds-and-results). An attack is drawn in this order: the attacker is marked, its shot crosses to the defender, the shot lands or passes beside the defender, and a hit thins the defender's rim, empties its figure, and shows its damage outcome above it.
+Each Weapon attacks in its own way, so that the Player sees what a Combatant is armed with, and when an Agent has run out of [Ammo](../../mechanics/combat.md#ammo), without reading the [Combat log](../../mechanics/combat.md#combat-rounds-and-results). An attack is drawn in this order: the attacker is marked, its Weapon fires, the shot crosses to the defender, the shot lands or passes beside the defender, and a hit thins the defender's rim, empties its figure, and shows its damage outcome above it. What the attack sounds like is said by the [Combat replay Sounds](../sounds.md#combat-replay-sounds).
 
-The shot of an attack follows the `shot` of the AmmoType of the attacker's Weapon. An attack with a Weapon that has no `ammo_type`, e.g. an Agent's attack with the Fallback Weapon after its Ammo has run out, is a blade.
+The shot of an attack is the `shot` of the [Weapon](../../mechanics/combat.md#weapon) the attack is made with, whichever side the attacker is on, e.g. an Agent's attack after its Ammo has run out has the shot of the Fallback Weapon. The shots are of three kinds, told apart at a glance: a blade, the kinetic shots of guns, and the energy shots of lasers. Within a kind, the shot of a stronger Weapon has more to it, so that the Player reads the strength of a Weapon from how much its shot shows.
 
-| Shot | Crossing | Hit |
-| --- | --- | --- |
-| `bullet` | One tracer in Tracer flies from the attacker to the defender. | A ring of sparks. |
-| `burst` | Three tracers in Tracer follow one another. | Three smaller rings of sparks, one after another. |
-| `beam` | A straight beam in Beam appears at once from the attacker to the defender and fades. | A glow in Beam that spreads over the defender. |
-| Blade | The attacker lunges to the defender and returns to its cell. | A slash across the defender. |
+A shot that misses is aimed beside the defender and flies on past it, and a blade that misses slashes beside it. A hit shakes the defender. An attack always looks the same however often it is played, e.g. with the Repeat button: where its sparks fly follows from its place in the Combat log.
 
-A tracer or a beam is the longer and thicker the higher the attacker's [effective weapon damage](../../mechanics/agents-spec.md#combatant-attributes). A shot that misses is aimed beside the defender and flies on past it, and a blade that misses slashes beside it. A hit shakes the defender.
+## Blade
+
+The `blade` is the one shot that crosses no distance: the attacker lunges to the defender and returns to its cell. Its hit is a tapered slash in Muzzle across the defender, with three sparks in Tracer.
+
+## Kinetic shots
+
+A bullet is too fast to see, so a kinetic shot shows that a gun fired more than it shows the bullet. Every kinetic shot has these parts:
+
+- **Muzzle flash:** a short flame in Muzzle with a core in Tracer at the attacker, pointing at the defender, followed by a puff of smoke in Text muted that drifts up.
+- **Round:** a small dot with a thin streak behind it, both without a glow, in Muzzle unless the table says otherwise. It crosses in at most a tenth of the time the attack takes, so that the hit follows the flash almost at once.
+- **Hit:** sparks in Tracer that fly back from the defender toward the attacker.
+
+| Shot | Firing | Crossing | Hit |
+| --- | --- | --- | --- |
+| `light_pistol` | A small flash. | One round with a short streak. | Three sparks. |
+| `heavy_pistol` | A larger flash, and a casing in Brass thrown from the attacker. | One round with a longer streak. | Five sparks. |
+| `rifle` | A long flash and a casing, and the attacker recoils. | One round, faster, with a long streak. It leaves a line of smoke that lifts and fades. | Six sparks, and spall in Text thrown out behind the defender. |
+| `sighted_rifle` | Before it fires, four brackets in Tracer red close on the defender. Then as the `rifle`, with a ring that spreads from the muzzle. | As the `rifle`, in Tracer red. | Seven sparks and more spall. |
+| `machine_gun` | Five rounds one after another, each with a flash, a casing, and a recoil. | The rounds spread a little around the aim. The third is in Tracer red; the others are fainter streaks without a dot. | Three sparks and a little spall for each round. |
+
+## Energy shots
+
+A laser is seen, so an energy shot glows, which no kinetic shot does: its muzzle gathers light before it fires, and its beam is there at once from the attacker to the defender.
+
+| Shot | Firing | Crossing | Hit |
+| --- | --- | --- | --- |
+| `laser_pistol` | The muzzle glows in Beam for a moment. | A thin beam in Beam with a core in Muzzle, gone again almost at once. | A glow in Beam that spreads over the defender, and four embers that fall. |
+| `laser_rifle` | Motes in Beam gather at the muzzle. | A thicker beam that holds, flickers, and narrows as it fades, and leaves a faint line behind. | A larger glow and nine embers. |
+| `focused_laser_rifle` | The longest gathering, under a closing ring in Beam fringe. | The thickest beam, with a halo and two wound filaments in Beam fringe, and three rings that run along it. | The largest glow, fifteen embers, a ring that spreads, and the defender outlined in Beam while it fades. |
+
+Within one shot, the streak of a round is the longer and a beam the thicker the higher the attacker's [effective weapon damage](../../mechanics/agents-spec.md#combatant-attributes).
 
 # Whole screen
 

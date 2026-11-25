@@ -95,6 +95,7 @@ A Weapon GDR gives the [base weapon damage](agents-spec.md#combatant-attributes)
 | --- | --- | --- |
 | `name` | The display name of the Weapon. | [Player-visible information](#player-visible-information) |
 | `base_weapon_damage` | The base weapon damage of a Combatant equipped with this Weapon, in health points: a whole number of at least 1. | [Enemy creation](#enemy-creation); [Agent creation](agents-spec.md#agent-creation); [Equipping Agents](equipment.md#equipping-agents) |
+| `shot` | How an attack with the Weapon looks and sounds to the Player, as Display content: one of the [shots of the Combat replay](../ui/screens/combat-replay.md#shots), e.g. `rifle`. | [Player-visible information](#player-visible-information) |
 | `price` | Optional: the money one of it costs, a whole number of at least 1. Only a Weapon with a `price` can be [bought](equipment.md#buying-items), [sold](equipment.md#selling-items), and kept in store. | [Equipment](equipment.md) |
 | `ammo_type` | Present exactly when `price` is: a reference to the [AmmoType](#ammotype) one Agent attack with it spends. | [Ammo in a Combat](#ammo-in-a-combat) |
 | `unlocked_by` | Optional, only with `price`: one or more references to the [Leads](domain-model.md#leads-investigations-mission-sites-and-missions) of which any one, once completed, lets the Agency [buy it](equipment.md#unlocked-items). | [Equipment](equipment.md) |
@@ -118,7 +119,6 @@ Each kind of round a Weapon spends is one GDR of Type AmmoType.
 | --- | --- | --- |
 | `name` | The display name of the AmmoType. | [Player-visible information](#player-visible-information) |
 | `price` | The money one round costs: a whole number of at least 1. | [Equipment](equipment.md) |
-| `shot` | How firing one round looks to the Player, as Display content: `bullet` for a single projectile, `burst` for several in quick succession, or `beam` for a ray. | [Player-visible information](#player-visible-information) |
 
 ## CombatParameters
 

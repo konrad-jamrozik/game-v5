@@ -663,7 +663,6 @@ Power cells for the [laser pistol](#laser-pistol). Each attack an [Agent](#agent
 | ---------------------- | ---------------------- |
 | `name`                 | `Laser pistol battery` |
 | `price`                | `10`                   |
-| `shot`                 | `beam`                 |
 
 See also: [Equipment and Storage](#equipment-and-storage)
 
@@ -677,7 +676,6 @@ Power cells for the [laser rifle](#laser-rifle) and the [augmented laser rifle](
 | --------------------- | --------------------- |
 | `name`                | `Laser rifle battery` |
 | `price`               | `15`                  |
-| `shot`                | `beam`                |
 
 See also: [Equipment and Storage](#equipment-and-storage)
 
@@ -691,7 +689,6 @@ Belts of [rounds](#equipment-and-storage) for the [machine gun](#machine-gun). E
 | ------------------ | ------------------ |
 | `name`             | `Machine gun ammo` |
 | `price`            | `5`                |
-| `shot`             | `burst`            |
 
 See also: [Equipment and Storage](#equipment-and-storage)
 
@@ -705,7 +702,6 @@ Source: `content/compendium/compendium_articles/pistol_ammo_article.yaml`
 | ------------- | ------------- |
 | `name`        | `Pistol ammo` |
 | `price`       | `1`           |
-| `shot`        | `bullet`      |
 
 See also: [Equipment and Storage](#equipment-and-storage)
 
@@ -719,7 +715,6 @@ Source: `content/compendium/compendium_articles/rifle_ammo_article.yaml`
 | ------------ | ------------ |
 | `name`       | `Rifle ammo` |
 | `price`      | `3`          |
-| `shot`       | `bullet`     |
 
 See also: [Equipment and Storage](#equipment-and-storage)
 
@@ -2069,6 +2064,7 @@ A [laser rifle](#laser-rifle) tuned past every safe limit, carried by the one pe
 | --- | --- |
 | `name` | `Augmented laser rifle` |
 | `base_weapon_damage` | `32` |
+| `shot` | `focused_laser_rifle` |
 | `price` | `1000` |
 | `ammo_type` | `laser_rifle_battery` |
 | `unlocked_by` | `["interrogate_red_dawn_cult_leader","interrogate_exalt_cult_leader","interrogate_black_lotus_cult_leader"]` |
@@ -2083,6 +2079,7 @@ A [rifle](#rifle) refitted with better sights, a heavier barrel, and stronger [r
 | --- | --- |
 | `name` | `Augmented rifle` |
 | `base_weapon_damage` | `16` |
+| `shot` | `sighted_rifle` |
 | `price` | `80` |
 | `ammo_type` | `rifle_ammo` |
 | `unlocked_by` | `["interrogate_red_dawn_lieutenant","interrogate_exalt_lieutenant","interrogate_black_lotus_lieutenant"]` |
@@ -2097,6 +2094,7 @@ A cheap handgun handed to the newest recruits.
 | -------------------- | -------------- |
 | `name`               | `Basic pistol` |
 | `base_weapon_damage` | `8`            |
+| `shot`               | `light_pistol` |
 | `price`              | `6`            |
 | `ammo_type`          | `pistol_ammo`  |
 
@@ -2110,6 +2108,7 @@ A full-size handgun built for a fight, with a larger magazine than a [basic pist
 | -------------------- | --------------- |
 | `name`               | `Combat pistol` |
 | `base_weapon_damage` | `10`            |
+| `shot`               | `heavy_pistol`  |
 | `price`              | `10`            |
 | `ammo_type`          | `pistol_ammo`   |
 
@@ -2123,6 +2122,7 @@ Every [Agent](#agents) carries one, and nobody can take it away. An Agent with n
 | -------------------- | ------- |
 | `name`               | `Knife` |
 | `base_weapon_damage` | `5`     |
+| `shot`               | `blade` |
 
 See also: [Equipment and Storage](#equipment-and-storage)
 
@@ -2136,6 +2136,7 @@ A handgun that fires a beam instead of a bullet, reserved for those a cult trust
 | --- | --- |
 | `name` | `Laser pistol` |
 | `base_weapon_damage` | `22` |
+| `shot` | `laser_pistol` |
 | `price` | `300` |
 | `ammo_type` | `laser_pistol_battery` |
 | `unlocked_by` | `["interrogate_red_dawn_commander","interrogate_exalt_commander","interrogate_black_lotus_commander"]` |
@@ -2150,6 +2151,7 @@ A long-barrelled laser weapon, rare and devastating.
 | --- | --- |
 | `name` | `Laser rifle` |
 | `base_weapon_damage` | `28` |
+| `shot` | `laser_rifle` |
 | `price` | `800` |
 | `ammo_type` | `laser_rifle_battery` |
 | `unlocked_by` | `["interrogate_red_dawn_high_commander","interrogate_exalt_high_commander","interrogate_black_lotus_high_commander"]` |
@@ -2164,6 +2166,7 @@ A fast-firing automatic weapon issued to the best fighters of a cult.
 | --- | --- |
 | `name` | `Machine gun` |
 | `base_weapon_damage` | `20` |
+| `shot` | `machine_gun` |
 | `price` | `140` |
 | `ammo_type` | `machine_gun_ammo` |
 | `unlocked_by` | `["interrogate_red_dawn_commander","interrogate_exalt_commander","interrogate_black_lotus_commander"]` |
@@ -2178,6 +2181,7 @@ A reliable long gun for trained fighters.
 | --- | --- |
 | `name` | `Rifle` |
 | `base_weapon_damage` | `14` |
+| `shot` | `rifle` |
 | `price` | `30` |
 | `ammo_type` | `rifle_ammo` |
 | `unlocked_by` | `["interrogate_red_dawn_lieutenant","interrogate_exalt_lieutenant","interrogate_black_lotus_lieutenant"]` |
