@@ -96,20 +96,20 @@ The transport buttons look like the keys of a tape player, so each shows a symbo
 | Button | Symbol | What it does |
 | --- | --- | --- |
 | Pause | Two upright bars | Stops the playing where it is. It is disabled while nothing plays. |
-| [Combat turn](../../mechanics/combat.md#combat-rounds-and-results) | The digit 1 | Plays the next attack alone, with the Options as they are, except that it plays one attack also with Instant on. A [Combat turn](../../mechanics/combat.md#combat-rounds-and-results) in which a Combatant made no attack is not in the Combat log and is not a step. |
+| [Combat turn](../../mechanics/combat.md#combat-rounds-and-results) | The digit 1 | Plays the next attack alone, with the Speed and the Aim lines of the Options. A [Combat turn](../../mechanics/combat.md#combat-rounds-and-results) in which a Combatant made no attack is not in the Combat log and is not a step. |
 | Slow | One arrow | Plays at the Slow pace. |
 | Medium | Two arrows | Plays at the Medium pace. |
 | Fast | Three arrows | Plays at the Fast pace. |
 | Very fast | Four arrows | Plays at the Very fast pace. |
 
-Every arrow points right. A pace button sets the Options to the values of its pace and plays to the end of the Combat, from Combat start when the Combat replay is at the end of the Combat. While the Combat replay plays to the end of the Combat with the Options of a pace, that pace's button is shown pressed.
+Every arrow points right. A pace button plays to the end of the Combat with the values of its pace, from Combat start when the Combat replay is at the end of the Combat, and leaves the Options as they are, so that each pace always plays the same way and the Options keep what the Player set for the step buttons. While the Combat replay plays at a pace, that pace's button is shown pressed.
 
-| Pace      | Speed | Overlap | Delay    | Instant | Aim lines |
-| --------- | ----- | ------- | -------- | ------- | --------- |
-| Slow      | 2 s   | Off     | As it is | Off     | On        |
-| Medium    | 1.5 s | On      | 1 s      | Off     | On        |
-| Fast      | 1 s   | On      | 0.25 s   | Off     | Off       |
-| Very fast | 1 s   | On      | 0.25 s   | On      | Off       |
+| Pace      | Speed | Overlap | Delay  | Instant | Aim lines |
+| --------- | ----- | ------- | ------ | ------- | --------- |
+| Slow      | 2 s   | Off     | None   | Off     | On        |
+| Medium    | 1.5 s | On      | 1 s    | Off     | On        |
+| Fast      | 1 s   | On      | 0.25 s | Off     | Off       |
+| Very fast | 1 s   | On      | 0.25 s | On      | Off       |
 
 When the Combat replay is opened, its Options have the values of the Medium pace.
 
@@ -119,19 +119,19 @@ A second row holds what the Player needs less often:
 
 - **Rewind:** a button showing the rewind symbol of a tape player and no label. It returns to Combat start.
 - **Back one:** a button showing a left-pointing arrow before the digit 1, the mirror of the Combat turn button. It goes back one attack as the [slider](#slider-and-combat-log) does: it shows the Combat right before the previous attack and plays that attack again, so that the Combat stands where it was before the last attack. It is disabled at Combat start.
-- **Repeat:** a button showing a circling arrow and no label. It plays again the last step the Player took, i.e. with the Combat turn button, the Phase button, or the [Combat round](../../mechanics/combat.md#combat-rounds-and-results) button: it returns to where that step began and plays the same attacks once more, e.g. the same Combat round after the Combat round button, so that the Player can watch a step as often as needed. It is disabled until a step has been taken. The R key presses it. While the Combat replay is shown on the [Campaign screen](campaign-screen.md#undo-and-redo), the R key therefore does not press the Redo button.
+- **Repeat:** a button showing a circling arrow and no label. It plays again the last step the Player took, i.e. with the Combat turn button, the [Turn](../../foundation/engine-contract.md#player-actions-and-turns) button, the Phase button, or the [Combat round](../../mechanics/combat.md#combat-rounds-and-results) button: it returns to where that step began and plays the same attacks once more, e.g. the same Combat round after the Combat round button, so that the Player can watch a step as often as needed. It is disabled until a step has been taken. The R key presses it. While the Combat replay is shown on the [Campaign screen](campaign-screen.md#undo-and-redo), the R key therefore does not press the Redo button.
 - **Options:** a button labelled "Options", which shows the Options and hides them again.
 
 ## Options
 
-The Options are set once and then left alone, or set by a pace button, so they stay hidden until asked for, and the Battlefield and everything beside it share one screen of the [Reference window](../visual-design.md#reference-window) with them shown or hidden. They are hidden whenever a [Session](../../foundation/core-concepts.md#campaign-and-session) starts, and whether they are shown stays as the Player last left it for the rest of the Session. Each is named by one or two words and explained nowhere on the screen, so that all of them take few rows:
+The Options are how the step buttons play, i.e. the Turn, Phase, and Combat round buttons, and how the slider and the Combat log play an attack; the pace buttons never read them or change them. They are set once and then left alone, so they stay hidden until asked for, and the Battlefield and everything beside it share one screen of the [Reference window](../visual-design.md#reference-window) with them shown or hidden. They are hidden whenever a [Session](../../foundation/core-concepts.md#campaign-and-session) starts, and whether they are shown stays as the Player last left it for the rest of the Session. Each is named by one or two words and explained nowhere on the screen, so that all of them take few rows:
 
 - **Speed:** how long one attack takes to play: from 2 s down to 0.25 s in steps of 0.25 s, or 0.1 s.
 - **Overlap:** when on, the next attack starts a Delay after the last one started, whether or not that one has finished, and keeps doing so across phases and Combat rounds.
 - **Delay:** from 1.5 s down to 0.25 s in steps of 0.25 s, or 0.1 s, independent of the Speed. With Instant on, the Delay runs from the start of one phase to the start of the next.
 - **Instant:** when on, all attacks of a phase play at the same time, so a step of the playing is a phase, and several hits on one defender show their damage outcomes as one sum.
 - **Aim lines:** when on, a faint dashed line joins each attacker to its defender, for every attack being played and, at rest, for the step last played. Turning them off helps e.g. in a Combat of many Combatants in which they hide the shots. Whoever moves the slider or selects a row of the Combat log looks for who attacked whom, so the attack it plays has its line even with Aim lines off.
-- **Phase** and **Combat round:** two buttons, labelled "Phase" and "Round", each followed by a filled right-pointing arrow. The Phase button plays to the end of the current Agents' phase or [Enemies' phase](../../mechanics/combat.md#combat-rounds-and-results), and the Combat round button to the end of the current [Combat round](../../mechanics/combat.md#combat-rounds-and-results).
+- **Turn**, **Phase**, and **Combat round:** three buttons in one row, labelled "Turn", "Phase", and "Round", each followed by a filled right-pointing arrow. The Turn button plays the next attack, as the Combat turn button does, also with Instant on; the Phase button plays to the end of the current Agents' phase or [Enemies' phase](../../mechanics/combat.md#combat-rounds-and-results), and the Combat round button to the end of the current [Combat round](../../mechanics/combat.md#combat-rounds-and-results).
 
 ## Slider and Combat log
 
