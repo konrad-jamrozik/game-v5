@@ -16,11 +16,11 @@ The page loads three.js r159 from the jsDelivr CDN, so the first load needs an i
 
 Drag to orbit the camera and scroll to zoom. The three buttons at the bottom left, above the imagery credit, are the globe's controls:
 
-| Button        | Each press                                                                           | Starts at |
-| ------------- | ------------------------------------------------------------------------------------ | --------- |
-| ■ or ▶        | Stops or starts the rotation of the planet in view.                                  | Rotating  |
-| Clouds        | Shows the clouds in full, then at half opacity, then not at all, then again in full. | Full      |
-| Day and night | Sets the speed of the day and night cycle: 1×, 2×, 4×, stopped, then 1× again.       | 1×        |
+| Button        | Each press                                                                              | Starts at |
+| ------------- | --------------------------------------------------------------------------------------- | --------- |
+| ■ or ▶        | Stops or starts the rotation of the planet in view.                                     | Rotating  |
+| Clouds        | Shows the clouds in full, then at half opacity, then not at all, then again in full.    | Full      |
+| Day and night | Sets the speed of the day and night cycle: 1×, 2×, 4×, 8×, 16×, stopped, then 1× again. | 1×        |
 
 The day and night cycle moves the sun over the surface, so it goes on while the rotation is stopped. With rotation on and the cycle at 1×, the two cancel and the sun stands still in view. A browser that asks for reduced motion starts with both the rotation and the cycle stopped.
 
