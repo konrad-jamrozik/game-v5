@@ -48,7 +48,7 @@ No [Upgrade](../mechanics/domain-model.md#agency-and-agents) of the GDRs is a [M
 
 ## Equipment GDRs
 
-The Agency's gear climbs the same ladder as its opponents: each [Item](../mechanics/equipment.md#glossary) is the Weapon or Armor of one rank of Enemy, and the interrogation of that rank's officer, of any Faction, [unlocks](../mechanics/equipment.md#unlocked-items) buying it, so better Armor is only ever bought, since it is never taken as spoils. The two pistols and their [Ammo](../mechanics/combat.md#ammo) are [Unlocked](../mechanics/equipment.md#glossary) from the start, and the Agency issues the combat pistol and the standard uniform to every [Agent](../mechanics/domain-model.md#agency-and-agents) it hires.
+The Agency's gear climbs the same ladder as its opponents: each [Item](../mechanics/equipment.md#glossary) is the Weapon or Armor of one rank of Enemy, and the interrogation of that rank's officer, of any Faction, [unlocks](../mechanics/equipment.md#unlocked-items) buying it, so better Armor is only ever bought, since it is never taken as spoils. The two pistols and their [Ammo](../mechanics/combat.md#ammo) are [Unlocked](../mechanics/equipment.md#glossary) from the start, and the Agency issues the combat pistol and the standard uniform to every [Agent](../mechanics/domain-model.md#agency-and-agents) of its initial roster, while an Agent it hires comes with only the knife, its [Fallback Weapon](../mechanics/combat.md#ammo), and the standard uniform, to be armed from [Storage](../mechanics/equipment.md#glossary).
 
 ## Leads and Progression GDRs
 
@@ -111,7 +111,6 @@ The [coverage of parameter GDRs](../mechanics/compendium.md#coverage-of-paramete
 | --- | --- | --- |
 | `configuration_parameters` | `default_preset` | It names the preset that campaign creation starts from, which the Player sees while creating a Campaign. |
 | `equipment` | `starting_ammo` | It is a mapping, which no Placeholder can show, and the Player sees the rounds it gives in [Storage](../mechanics/equipment.md#glossary) from the first Turn. |
-| `equipment` | `hire_ammo` | It is a mapping, which no Placeholder can show, and the Player sees the rounds it gives in [Storage](../mechanics/equipment.md#glossary) after each hire. |
 
 The repository check `npm run compendium:check` reads the exemptions from this table, so a property added to a parameter GDR fails the check until an article explains the property or the table exempts it.
 

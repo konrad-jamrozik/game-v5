@@ -410,7 +410,7 @@ A Forced return [moves the Agent to Standby](#assignment-changes), and an Agent 
 
 Every Agent is created by one rule, whichever rule causes the creation: the [Initial roster](#initial-roster), [hiring](economy-and-upgrades.md#hiring-agents), or [adding Agents](#adding-agents). Any cost, and the [Agent cap](economy-and-upgrades.md#glossary), belong to the rule that causes the creation.
 
-A new Agent has the AgentArchetype as its Archetype, which gives it its [starting values](#agentarchetype), its equipment included; its base weapon damage is the `base_weapon_damage` of its Weapon, and its base armor the `base_armor` of its Armor. Its Agency is the [Campaign](../foundation/core-concepts.md#campaign-and-session)'s Agency, and its Turn hired is the turn number of the current Turn. It starts on Standby, In transit, with Experience 0, health lost 0, Exact exhaustion 0, Enemies killed 0, and an empty Participation history.
+A new Agent has the AgentArchetype as its Archetype, which gives it its [starting values](#agentarchetype), its equipment included, but for the Weapon of a hired Agent, which [Equipment of new and departing Agents](equipment.md#equipment-of-new-and-departing-agents) gives; its base weapon damage is the `base_weapon_damage` of its Weapon, and its base armor the `base_armor` of its Armor. Its Agency is the [Campaign](../foundation/core-concepts.md#campaign-and-session)'s Agency, and its Turn hired is the turn number of the current Turn. It starts on Standby, In transit, with Experience 0, health lost 0, Exact exhaustion 0, Enemies killed 0, and an empty Participation history.
 
 ## Initial roster
 
