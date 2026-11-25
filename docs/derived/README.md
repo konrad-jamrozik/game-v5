@@ -17,7 +17,7 @@ These informative views are derived from the registered Markdown specifications.
 | Design             | Foundation    | 17             |
 | Design             | Mechanics     | 13             |
 | Design             | Content       | 1              |
-| Design             | UI            | 22             |
+| Design             | UI            | 21             |
 | Design             | Autopilot AIs | 1              |
 | Implementation     | Mandatory     | 5              |
 | Implementation     | Guidance      | 5              |
@@ -94,7 +94,6 @@ These informative views are derived from the registered Markdown specifications.
 | ID | Document | Owns |
 | --- | --- | --- |
 | ACQVIEW | [Acquisitions View](../specs/design/ui/screens/acquisitions-view.md) | What the Acquisitions View of the Campaign screen shows of the Items and Ammo the agency can buy, and how it buys them. |
-| ARMV | [Armory View](../specs/design/ui/screens/armory-view.md) | What the Armory View of the Campaign screen shows and how it equips Agents. |
 | AVIEW | [Agents View](../specs/design/ui/screens/agents-view.md) | What the Agents View of the Campaign screen shows and how it hires, dismisses, and assigns Agents. |
 | CLI | [Command-Line Interface](../specs/design/ui/cli.md) | Guidance on the command-line interface, the headless interface that makes the whole engine API playable from a terminal. |
 | COMPV | [Compendium View](../specs/design/ui/screens/compendium-view.md) | What the Compendium View of the Campaign screen shows of a Compendium article, the data sheet of each kind of subject, and how the Player finds an article and follows the links between articles. |

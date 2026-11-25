@@ -43,7 +43,6 @@ A → B means A is referenced by B: the text of B links to A. Layer 1 is drawn a
 | 10 | HVIEW History View | AGENT, CINST, CORE, CSTATE, DOM, ENG, WHIST |
 | 10 | RECOVER Agent Recovery | AGENT, CINST, CORE, CSTATE, DOM, ENG, NUMBERS, WHIST |
 | 11 | EQUIP Equipment | AGENT, CINST, COMBAT, COND, CORE, CSTATE, DOM, ENG, WHIST |
-| 12 | ARMV Armory View | AGENT, CINST, COMBAT, DOM, ENG, EQUIP |
 | 12 | COMP Compendium | COMBAT, COND, CORE, DOM, ENG, EQUIP |
 | 12 | ECON Economy and Upgrades | AGENT, COMBAT, CORE, CSTATE, DOM, EFFECT, ENG, EQUIP, GDR, NUMBERS, WHIST |
 | 12 | STVIEW Storage View | COMBAT, CORE, DOM, ENG, EQUIP |
