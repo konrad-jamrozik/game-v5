@@ -39,7 +39,7 @@ A Deployed Mission site also shows its Mission's Team sent and the Combat rating
 
 A Concluded Mission site shows what its [Combat](../../mechanics/domain-model.md#combat) did to every participant, so that the Player sees, Turns later, what each Mission cost and won. Its values come from the reduced [Combat report](../../mechanics/combat.md#combat-report) in the History entry of the Turn its Mission's Combat was fought in, never from the participants' current values, which have changed since.
 
-In place of the Enemies lines and of its Mission's Team sent, it shows a table of participants for each side, the Enemies and the Agents of the Team sent, each in its side's [fixed order](../../mechanics/combat.md#fixed-order-of-each-side) and with its side's Combat rating at Combat start and at Combat end, e.g. "COMBAT RATING 240 → 0". Each table has these columns:
+In place of the Enemies lines and of its Mission's Team sent, it shows a table of participants for each side, the Enemies and the Agents of the Team sent, each in its side's [fixed order](../../mechanics/combat.md#fixed-order-of-each-side) and with its side's Combat rating at [Combat start](../../mechanics/combat.md#combat-rounds-and-results) and at [Combat end](../../mechanics/combat.md#combat-rounds-and-results), e.g. "COMBAT RATING 240 → 0". Each table has these columns:
 
 | Column | What it shows |
 | --- | --- |

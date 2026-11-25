@@ -66,7 +66,7 @@ How even a Combat is should be seen before it is fought, so that the Game design
 The Fight controls stand at the top of the Teams pane:
 
 - **Seed:** a field holding the Detached seed, which starts as `combat-simulator`.
-- **Fight:** the primary button. It has `session.combatSimulator.fightCombat(setup)` fight a Detached Combat between the two sides as the rows give them, each row as an explicit entry, with the Detached seed of the field, no changed [GDR](../../foundation/core-concepts.md#game-build-and-content) value, and no limit on any AmmoType. The Combat replay then shows that Combat from Combat start.
+- **Fight:** the primary button. It has `session.combatSimulator.fightCombat(setup)` fight a Detached Combat between the two sides as the rows give them, each row as an explicit entry, with the Detached seed of the field, no changed [GDR](../../foundation/core-concepts.md#game-build-and-content) value, and no limit on any AmmoType. The Combat replay then shows that Combat from [Combat start](../../mechanics/combat.md#combat-rounds-and-results).
 - **New seed:** a button that puts a new seed, chosen at random, into the field and fights nothing, so that the next Fight shows the same teams fighting another way.
 
 When the setup is rejected, e.g. because the Agents' side is empty or a field holds a value out of its range, the reason the engine reports is shown under the Fight controls and no Combat replay is shown. Fight with the same rows and the same Detached seed fights the same Combat, so the Game designer who closed a Combat replay sees it again by pressing Fight.

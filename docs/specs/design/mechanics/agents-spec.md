@@ -42,7 +42,7 @@ What makes an [Agent](domain-model.md#agency-and-agents) or an [Enemy](domain-mo
 | Effective weapon damage | A Combatant's base weapon damage as adjusted for the situation; the value around which a Combat rolls the damage outcome. A Combat [can replace it](combat.md#ammo-in-a-combat) for an Agent whose rounds run out. |  |
 | Base armor | How much of the damage of hits a Combatant's armor absorbs in one Combat before its current health starts to fall, as a stored whole number of at least zero, before any adjustment for the situation. | Armor, naming the stored value |
 | Effective armor | A Combatant's base armor as adjusted for the situation; the current armor it starts every Combat with. |  |
-| Current armor | How much more of the damage of hits a Combatant's armor can absorb in the current Combat, from zero up to its effective armor. It [exists only while a Combat lasts](combat.md#combat-only-properties), so every Combat starts with it full; losing it lowers neither current health nor effective skill. | Armor points |
+| Current armor | How much more of the damage of hits a Combatant's armor can absorb in the current Combat, from zero up to its effective armor. It [exists only while a Combat lasts](combat.md#combat-only-properties), so it is full when every Combat begins; losing it lowers neither current health nor effective skill. | Armor points |
 
 ## Assignments
 
@@ -161,7 +161,7 @@ An Agent that leaves the Agency keeps a record of how its service ended and what
 | Property | Meaning |
 | --- | --- |
 | Enemies killed | The number of [Enemies](domain-model.md#combat) the Agent's attacks have made dead: it rises by 1 each time an attack the Agent makes [leaves its defender dead](combat.md#killed-and-incapacitated). |
-| Turn terminated | Present exactly when the Agent is Terminated: the turn number of the Turn in which it became Terminated. For a Killed Agent, that is the Turn that the Advance turn fighting its Combat ends. |
+| Turn terminated | Present exactly when the Agent is Terminated: the turn number of the Turn in which it became Terminated. For a Killed Agent, that is the Turn ended by the Advance turn that fights its Combat. |
 | Killed by | Present exactly when the Agent is Killed: an Immutable reference to the Enemy whose attack made it dead, and one to that Enemy's [Mission site](domain-model.md#leads-investigations-mission-sites-and-missions). |
 | Final max health | Present exactly when the Agent is Terminated: the effective max health it had as a Serving Agent in the [World state](../foundation/engine-contract.md#player-actions-and-turns) before it became Terminated. |
 | Final weapon damage | Present exactly when the Agent is Terminated: the effective weapon damage it had in that World state. |
@@ -190,7 +190,7 @@ The [Combatant Role Type](domain-model.md#combat) is a [Role Type](../foundation
 
 - **Adoption condition:** a Campaign instance Type can adopt the Combatant Role Type if the State of its Campaign instances has all of the following properties: base skill, health lost, base health, exhaustion, equipped weapon values, i.e. a Weapon and a base weapon damage, and equipped armor values, i.e. an Armor and a base armor. A Type may hold its exhaustion as a stored value from which the exhaustion derives, as Agent does with Exact exhaustion.
 - **Adopters:** Agent and Enemy adopt the Combatant Role Type.
-- **Gained properties:** every Combatant taking part in a Combat gains [properties that mean something only while that Combat lasts](combat.md#combat-only-properties), e.g. whether it is [Incapacitated](combat.md#glossary). It gains them when the Combat begins and loses them when the Combat ends.
+- **Gained properties:** every Combatant taking part in a Combat gains [properties that mean something only while that Combat lasts](combat.md#combat-only-properties), e.g. whether it is [Incapacitated](combat.md#glossary). It gains them when the Combat begins and loses them once the Combat is over.
 
 The properties named by the adoption condition persist outside a Combat; e.g., an Agent has current health and exhaustion between Combats. What outlasts a Combat is its [Combat report](domain-model.md#combat) and every change the Combat made to those properties, e.g. lost current health.
 
