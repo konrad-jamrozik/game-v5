@@ -369,7 +369,7 @@ Each row lists the Prohibited synonyms that the owning Glossary records for a te
 | Ammunition, naming the counted rounds | Ammo | [COMBAT — Combat](../specs/design/mechanics/combat.md#glossary) |
 | Template; EnemyType; EnemyKind, for which say EnemyArchetype | Archetype | [CORE — Core Concepts](../specs/design/foundation/core-concepts.md#glossary) |
 | Armor damage | Armor removed | [COMBAT — Combat](../specs/design/mechanics/combat.md#glossary) |
-| Current assignment. Assignable, of an Agent, because it names no Assignment: an Agent is instead e.g. [Fit to start work](../specs/design/mechanics/agents-spec.md#glossary) or a [Deployable Agent](../specs/design/mechanics/missions.md#glossary). | Assignment | [DOM — Domain Model](../specs/design/mechanics/domain-model.md#glossary) |
+| Current assignment. Assignable, of an Agent, because it names no Assignment: an Agent instead e.g. [can take orders](../specs/design/mechanics/agents-spec.md#agents-that-can-take-orders), is [Fit to start work](../specs/design/mechanics/agents-spec.md#glossary), or is a [Deployable Agent](../specs/design/mechanics/missions.md#glossary). | Assignment | [DOM — Domain Model](../specs/design/mechanics/domain-model.md#glossary) |
 | selection filter | Assignment filter | [AVIEW — Agents View](../specs/design/ui/screens/agents-view.md#glossary) |
 | Authoritative fact | Authoritative value | [CORE — Core Concepts](../specs/design/foundation/core-concepts.md#glossary) |
 | Delegation | Autopilot | [ENG — Engine Contract](../specs/design/foundation/engine-contract.md#glossary) |
