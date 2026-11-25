@@ -2,47 +2,47 @@
 
 The music tracks the game plays, as the [Music](../../docs/specs/design/ui/music.md#soundtrack) specification describes. Each `.opus` or `.mp3` file in [`tracks/`](tracks/) is one track, and its title is its file name without the extension, e.g. `tracks/Descent to Earth.opus` is the track titled "Descent to Earth". The record of how each track was made is in [`yaml/`](yaml/), as [Track records](#track-records) describes.
 
-The Game designer chooses each track's name, as [Track names](#track-names) describes, e.g. `tracks/In Pursuit of Shapeshifters.mp3`. The table lists each track with its record's `serial_id` and `variant`, which keep when it was made and which take of its prompt it is, whatever its name, as [Track records](#track-records) describes; its original title, the title its source gave it, which finds the song in the source; and its source.
+The Game designer chooses each track's name, as [Track names](#track-names) describes, e.g. `tracks/In Pursuit of Shapeshifters.mp3`. The table lists each track, in the order of its record's `serial_id`, with that `serial_id` and its `variant`, which keep when it was made and which take of its prompt it is, whatever its name, as [Track records](#track-records) describes; its original title, the title its source gave it, which finds the song in the source; and its source.
 
 Every track in the table is in the Soundtrack. A track the Game designer rejects is deleted: its audio file, its record, and its row, so that its song stays only in its source, e.g. ElevenLabs or Suno.
 
 | File | Serial ID | Variant | Original title | Source |
 | --- | --: | --- | --- | --- |
-| `A City on Sonar.opus` | 3 | A | Depth Signal | ElevenLabs |
-| `Alien Lifeforms.mp3` | 15 | B | Signal Intercept var2 | Suno v6 |
-| `Alien Technology.mp3` | 14 | A | Signal Intercept var1 | Suno v6 |
-| `Approaching the Megastructure.opus` | 7 | B | Silent Contact | ElevenLabs |
-| `Artifact Experiments.mp3` | 32 | B | Unknown Contact B | Suno v6 |
-| `Assault on the Alien Facility.mp3` | 28 | A | S6 XCOM+AllowEpic+NoSynth+Slow+Space A | Suno v6 |
-| `Containment Protocol.mp3` | 25 | B | S6 SCNP+7Instr B | Suno v6 |
-| `Countering the Threat.mp3` | 29 | B | S6 XCOM+AllowEpic+NoSynth+Slow+Space B | Suno v6 |
-| `Cybernetic Elites.mp3` | 34 | B | Deep Space Contact B | Suno v6 |
-| `Dark Omen.mp3` | 16 | A | Unseen Approach var1 | Suno v6 |
-| `Deployment Preparations.opus` | 5 | One only | Black Orbit Watch | ElevenLabs |
-| `Descent to Earth.opus` | 9 | B | Silent Threat Protocol | ElevenLabs |
-| `In Pursuit of Shapeshifters.mp3` | 31 | A | Unknown Contact A | Suno v6 |
 | `Inside the Command Center.opus` | 1 | One only | Silent Contact Protocol | ElevenLabs |
+| `Undersea Operations.opus` | 2 | One only | Abyss Protocol | ElevenLabs |
+| `A City on Sonar.opus` | 3 | A | Depth Signal | ElevenLabs |
+| `Survey at Depth.opus` | 4 | B | Abyssal Tactical Drift | ElevenLabs |
+| `Deployment Preparations.opus` | 5 | One only | Black Orbit Watch | ElevenLabs |
 | `Inside the Megastructure.opus` | 6 | A | Unknown Contact | ElevenLabs |
-| `Network Expansion.mp3` | 22 | A | S6 SCNP+Dark+DBass&BowedCymbals A | Suno v6 |
-| `Night Shift.mp3` | 17 | B | Unseen Approach var2 | Suno v6 |
+| `Approaching the Megastructure.opus` | 7 | B | Silent Contact | ElevenLabs |
+| `Sacrifice for Earth.opus` | 8 | A | Silent Hostile Sector | ElevenLabs |
+| `Descent to Earth.opus` | 9 | B | Silent Threat Protocol | ElevenLabs |
 | `On the Trail of the Unknown.mp3` | 10 | One only | v03AI UFO 3 - Scanning Protocol | Suno v5 via v03ai |
 | `Reports of the Strange.mp3` | 11 | One only | v03AI UFO 4 - Scanning Protocol - Dark | Suno v5 via v03ai |
-| `Sacrifice for Earth.opus` | 8 | A | Silent Hostile Sector | ElevenLabs |
-| `Shady Deals.mp3` | 19 | B | Bass clarinet + muted trombone var2 | Suno v6 |
-| `Signal Intelligence.mp3` | 33 | A | Deep Space Contact A | Suno v6 |
-| `Smuggling Artifacts.mp3` | 18 | A | Bass clarinet + muted trombone var1 | Suno v6 |
-| `Solemn Aftermath.mp3` | 24 | A | S6 SCNP+7Instr A | Suno v6 |
-| `Subterranean Facility.mp3` | 35 | One only | Subterranean Facility | Suno v6 |
-| `Surface Logistics.mp3` | 23 | B | S6 SCNP+Dark+DBass&BowedCymbals B | Suno v6 |
-| `Survey at Depth.opus` | 4 | B | Abyssal Tactical Drift | ElevenLabs |
-| `The Alien Fleet Arrives.mp3` | 26 | A | S6 XCOM+Var+NoMIDI+AllowHeroAggr A | Suno v6 |
-| `The Human Toll.mp3` | 20 | A | S6 SCNP+Dark+Cello&DBass A | Suno v6 |
 | `The Infestation Spreads.mp3` | 12 | One only | v03AI UFO 5 - Scanning Protocol - Dark Violin | Suno v5 via v03ai |
 | `The Reports Keep Coming.mp3` | 13 | One only | v03AI UFO 6 - Scanning Protocol - Cello + Bass Clarinet | Suno v5 via v03ai |
-| `Their Weapons in Our Hands.mp3` | 27 | B | S6 XCOM+Var+NoMIDI+AllowHeroAggr B | Suno v6 |
-| `UFO Salvage Operation.mp3` | 30 | C | Restricted Orbit | Suno v6 |
-| `Undersea Operations.opus` | 2 | One only | Abyss Protocol | ElevenLabs |
+| `Alien Technology.mp3` | 14 | A | Signal Intercept var1 | Suno v6 |
+| `Alien Lifeforms.mp3` | 15 | B | Signal Intercept var2 | Suno v6 |
+| `Dark Omen.mp3` | 16 | A | Unseen Approach var1 | Suno v6 |
+| `Night Shift.mp3` | 17 | B | Unseen Approach var2 | Suno v6 |
+| `Smuggling Artifacts.mp3` | 18 | A | Bass clarinet + muted trombone var1 | Suno v6 |
+| `Shady Deals.mp3` | 19 | B | Bass clarinet + muted trombone var2 | Suno v6 |
+| `The Human Toll.mp3` | 20 | A | S6 SCNP+Dark+Cello&DBass A | Suno v6 |
 | `What Remains.mp3` | 21 | B | S6 SCNP+Dark+Cello&DBass B | Suno v6 |
+| `Network Expansion.mp3` | 22 | A | S6 SCNP+Dark+DBass&BowedCymbals A | Suno v6 |
+| `Surface Logistics.mp3` | 23 | B | S6 SCNP+Dark+DBass&BowedCymbals B | Suno v6 |
+| `Solemn Aftermath.mp3` | 24 | A | S6 SCNP+7Instr A | Suno v6 |
+| `Containment Protocol.mp3` | 25 | B | S6 SCNP+7Instr B | Suno v6 |
+| `The Alien Fleet Arrives.mp3` | 26 | A | S6 XCOM+Var+NoMIDI+AllowHeroAggr A | Suno v6 |
+| `Their Weapons in Our Hands.mp3` | 27 | B | S6 XCOM+Var+NoMIDI+AllowHeroAggr B | Suno v6 |
+| `Assault on the Alien Facility.mp3` | 28 | A | S6 XCOM+AllowEpic+NoSynth+Slow+Space A | Suno v6 |
+| `Countering the Threat.mp3` | 29 | B | S6 XCOM+AllowEpic+NoSynth+Slow+Space B | Suno v6 |
+| `UFO Salvage Operation.mp3` | 30 | C | Restricted Orbit | Suno v6 |
+| `In Pursuit of Shapeshifters.mp3` | 31 | A | Unknown Contact A | Suno v6 |
+| `Artifact Experiments.mp3` | 32 | B | Unknown Contact B | Suno v6 |
+| `Signal Intelligence.mp3` | 33 | A | Deep Space Contact A | Suno v6 |
+| `Cybernetic Elites.mp3` | 34 | B | Deep Space Contact B | Suno v6 |
+| `Subterranean Facility.mp3` | 35 | One only | Subterranean Facility | Suno v6 |
 
 ## Track names
 
