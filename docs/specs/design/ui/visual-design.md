@@ -284,9 +284,9 @@ Wherever a table shows an [Agent](../mechanics/domain-model.md#agency-and-agents
 
 ## Icons
 
-An icon stands for a state wherever words would widen a column, and the pointer resting on it shows its name.
+An icon stands for a state, alone wherever words would widen a column and after the words where the room is spare, and the pointer resting on it shows its name.
 
-- **In transit icon:** a flying airplane, "✈", in the colour of the text it follows, marking an Agent [In transit](../mechanics/domain-model.md#agency-and-agents) wherever a table or a list of Agents shows the Agent's [Assignment](../mechanics/domain-model.md#agency-and-agents) or team, never the words "In transit".
+- **In transit icon:** a flying airplane, "✈", in the colour of the text it follows, marking an Agent [In transit](../mechanics/domain-model.md#agency-and-agents). In an [Assignment](../mechanics/domain-model.md#agency-and-agents) column it follows the [Assignment](../mechanics/domain-model.md#agency-and-agents) without the words "In transit".
 
 ## Consequences
 
