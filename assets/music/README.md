@@ -179,3 +179,5 @@ The Game designer has proposed the renames below. Each proposed name is a custom
 | `V3A-S5 SCNP+Dark.mp3`                       | Reports of the Strange        |
 | `S6 XCOM+Var+NoMIDI+AllowHeroAggr B.mp3`     | Their Weapons in Our Hands    |
 | `EL-M2.5 XCOM+Var+Bare+Slow A.opus`          | Sacrifice for Earth           |
+| `EL-M2.5 XCOM+Var A.opus`                    | Inside the Megastructure      |
+| `EL-M2.5 XCOM+Var+Bare+Slow B.opus`          | Descent to Earth              |
