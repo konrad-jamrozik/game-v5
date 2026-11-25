@@ -185,6 +185,8 @@ Buttons come in five kinds so that the Player can tell at a glance what a button
 
 A button is 36 px tall, 32 px inside a table row, and 44 to 46 px for the main action of a screen. A button's label never wraps onto a second line. Buttons that belong together sit in one row. A row of buttons that follows content on the same line, e.g. the Load and Delete of a Campaign save, or that ends a panel or dialog, aligns to the right edge of its row or panel. A row of buttons that is a part of its own in a card whose parts are stacked, e.g. the Buy button of an Upgrade card, starts at the card's left content edge, as the card's text does. When a row is too narrow, the whole group wraps below the content, never a single label. A disabled button keeps its kind and is drawn at 60% opacity, so that its label stays readable over a [Background artwork](#background-artwork).
 
+The Player learns a keyboard shortcut from the control it presses, so the tooltip of every button, checkbox, or tab that a key presses names that key, whether the control is enabled or disabled, e.g. "Next article · Shortcut: W" or "Close · Shortcut: Esc". The Escape key is named only on the control it presses at that moment, e.g. on the Back control and not on the close control while a Back control is shown.
+
 ## Inputs
 
 Inputs share one shape so that every editable value is recognisable. An input or a select is 40 px tall, has a Background fill, a Border outline, and Body text. Its label sits above it in the Label style, or to its left with a muted hint below the label when the input is one row of a settings list. A numeric input uses the Figure style and aligns its value to the right.
@@ -226,7 +228,7 @@ The Player closes every view opened over a screen the same way and finds its clo
 
 - **Shape:** the close control is a square neutral button, 36 px wide and tall, holding a ✕, never a text button, e.g. one labelled Close.
 - **Place:** it ends the title row of its view, at the right edge of the view's rectangle inset by that view's inner padding, never at the corner of the window when the view is narrower. It sits on the title's line, centred on it, whatever else the row holds, so that the ✕ is at the same place in every Detail view.
-- **Escape:** the Escape key does what the close control of the topmost open view does, except in a Detail view that shows a [Back control](gui.md#glossary), where it [does what the Back control does](screens/campaign-screen.md#view-trail).
+- **Escape:** the Escape key does what the close control of the topmost open view does, except in a Detail view that shows a [Back control](gui.md#glossary), where it [does what the Back control does](screens/campaign-screen.md#view-trail), and except while the [search field of the Compendium View](screens/compendium-view.md#panes) holds text, where it clears that field.
 
 ## Tables
 
