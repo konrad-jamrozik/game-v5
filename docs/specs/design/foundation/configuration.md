@@ -48,6 +48,7 @@ A Game build has the following Global configuration settings. The specification 
 | Autopilot controls shown, [Autopilot](engine-contract.md#autopilot) [Turns](engine-contract.md#player-actions-and-turns), Autopilot controls expanded, [Autopilot AI](engine-contract.md#principals-and-access) | [Autopilot settings](../ui/screens/campaign-screen.md#autopilot-settings) in Campaign Screen |
 | [Dev mode](engine-contract.md#principals-and-access) on, Reveal hidden content on | [Developer tools](../ui/gui.md#developer-tools) in Graphical User Interface |
 | [Combat simulator](../ui/screens/combat-simulator.md#glossary) shown | [Opening the Combat simulator](../ui/screens/combat-simulator.md#opening-the-combat-simulator) in Combat Simulator |
+| Combat simulator setup | [Teams](../ui/screens/combat-simulator.md#teams) in Combat Simulator |
 | [Screen limit](../ui/visual-design.md#glossary) | [Screen limit](../ui/visual-design.md#screen-limit) in Visual Design |
 | [Side panel](../ui/gui.md#glossary) hidden | [Hiding the Side panel](../ui/screens/campaign-screen.md#hiding-the-side-panel) in Campaign Screen |
 | Last 100 Turns charts | [Charts](../ui/visual-design.md#charts) in Visual Design |

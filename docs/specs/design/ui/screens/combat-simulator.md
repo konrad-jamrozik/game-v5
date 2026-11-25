@@ -12,7 +12,7 @@
 
 Judging how a Combat goes, or how the Combat replay draws it, should not need a Campaign played up to the Combat in question. The Combat simulator is a screen on which the Game designer puts any Agents against any Enemies, has the Combat fought, and watches it in the [Combat replay](combat-replay.md).
 
-It is a tool for the Game designer and for testing, not part of playing the game, so it stays hidden until it is asked for. It has no [Campaign](../../foundation/core-concepts.md#campaign-and-session): it reads only the [Game build](../../foundation/core-concepts.md#game-build-and-content), every Combat it fights is a [Detached Combat](../../mechanics/combat.md#detached-combat-without-a-current-campaign), and nothing it does is saved.
+It is a tool for the Game designer and for testing, not part of playing the game, so it stays hidden until it is asked for. It has no [Campaign](../../foundation/core-concepts.md#campaign-and-session): it reads only the [Game build](../../foundation/core-concepts.md#game-build-and-content), every Combat it fights is a [Detached Combat](../../mechanics/combat.md#detached-combat-without-a-current-campaign), and nothing it does is saved but [its setup](#teams), so that the Game designer finds the teams as they were left.
 
 # Glossary
 
@@ -55,7 +55,13 @@ Each side is filled as a whole from a preset, which replaces all its rows:
 - **Agents' side:** a select of every [DetachedCombatTeam](../../mechanics/combat.md#detachedcombatteam) of the Game build in their authored order, each shown by its `name`. Selecting one fills the side with the Agents of its groups.
 - **Enemies' side:** a select of every MissionSiteArchetype of the Game build, each shown by its name. Selecting one fills the side with the Enemies a new [Mission site](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) of it would have, in their [creation order](../../mechanics/missions.md#enemy-creation).
 
-The Combat simulator opens with the first DetachedCombatTeam against the first MissionSiteArchetype.
+The Combat simulator opens with its setup as the Game designer last left it, in this [Session](../../foundation/core-concepts.md#campaign-and-session) or an earlier one: the rows of both sides, the preset selected for each, and the Detached seed of the [Seed field](#fighting-the-combat). The setup is a [Global configuration](../../foundation/configuration.md#global-configuration) setting:
+
+| Setting | Permitted values | Game build default | Set by |
+| --- | --- | --- | --- |
+| Combat simulator setup | A setup whose rows name only Weapons, Armors, and EnemyArchetypes of the Game build | The first DetachedCombatTeam against the first MissionSiteArchetype, with the Detached seed `combat-simulator` | Every change to the rows, the presets, or the Seed field |
+
+A stored setup that the current Game build does not permit, e.g. one naming a Weapon it no longer has, gives way to the Game build default.
 
 ## Combat ratings of the teams
 
@@ -65,7 +71,7 @@ How even a Combat is should be seen before it is fought, so that the Game design
 
 The Fight controls stand at the top of the Teams pane:
 
-- **Seed:** a field holding the Detached seed, which starts as `combat-simulator`.
+- **Seed:** a field holding the Detached seed.
 - **Fight:** the primary button. It has `session.combatSimulator.fightCombat(setup)` fight a Detached Combat between the two sides as the rows give them, each row as an explicit entry, with the Detached seed of the field, no changed [GDR](../../foundation/core-concepts.md#game-build-and-content) value, and no limit on any AmmoType. The Combat replay then shows that Combat from [Combat start](../../mechanics/combat.md#combat-rounds-and-results).
 - **New seed:** a button that puts a new seed, chosen at random, into the field and fights nothing, so that the next Fight shows the same teams fighting another way.
 
