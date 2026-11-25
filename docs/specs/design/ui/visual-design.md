@@ -48,7 +48,7 @@ A Player whose window is larger than the Reference window, e.g. the Game designe
 | ------------ | ---------------- | ------------------ |
 | Screen limit | On or off        | Off                |
 
-While the Screen limit is on, every screen, with everything shown over it, e.g. a [dialog](#dialogs), is drawn in an area as wide and as tall as the Reference window, centred in the window. The rest of the window is a Background fill, and no line or frame marks where the area ends, so that the [Globe stage](gui.md#glossary) and the [Main menu](../foundation/campaign-lifecycle.md#glossary) run into it without an edge. In a direction in which the window is smaller than the Reference window, the area is as large as the window. While the Screen limit is off, a screen fills the window.
+While the Screen limit is on, every screen, with everything shown over it, e.g. a [dialog](#dialogs), is drawn in an area as wide and as tall as the Reference window, centred in the window. The rest of the window is an Out of bounds fill, a shade darker than the Background, so that the Game designer sees where the area ends, e.g. to check that a screen fits the Reference window; no line or frame marks the edge. In a direction in which the window is smaller than the Reference window, the area is as large as the window. While the Screen limit is off, a screen fills the window.
 
 # Design tokens
 
@@ -61,6 +61,7 @@ Each colour has one role, so that the same colour always means the same thing ac
 | Token | Value | Role |
 | --- | --- | --- |
 | Background | `#0D0D0B` | The page behind all panels, and the fill of inputs and of an enabled unchecked checkbox. |
+| Out of bounds | `#000000` | The part of the window outside the area of the [Screen limit](#screen-limit). |
 | Surface | `#151512` | Panels, cards, and chart frames. |
 | Raised | `#22211C` | Neutral buttons, navigation buttons, and row dividers inside panels. |
 | Divider | `#2B2A24` | Dividers between panel sections, empty meter segments, and the outline of a disabled checkbox. |
