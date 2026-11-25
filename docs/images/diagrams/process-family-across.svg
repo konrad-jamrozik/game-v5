@@ -25,11 +25,10 @@
   <text class="legend" x="66" y="36">referenced by</text>
   <rect class="box external" x="182.4" y="25" width="22" height="14" rx="3"/>
   <text class="legend" x="214.4" y="36">another family</text>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 134.1 113 C 134.1 147.5 390.8 147.5 390.8 182"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 79.1 113 C 79.1 147.5 168.2 147.5 168.2 182"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 304.1 113 C 304.1 147.5 431.3 147.5 431.3 182"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 494.2 113 C 494.2 147.5 471.7 147.5 471.7 182"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 654.7 113 C 654.7 147.5 512.1 147.5 512.1 182"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 106.6 113 C 106.6 147.5 320 147.5 320 182"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 304.1 113 C 304.1 147.5 360.4 147.5 360.4 182"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 494.2 113 C 494.2 147.5 400.9 147.5 400.9 182"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 654.7 113 C 654.7 147.5 441.3 147.5 441.3 182"/>
   <rect class="box external" x="24" y="68" width="165.2" height="45" rx="6"/>
   <text class="label" x="106.6" y="94">Conventions family</text>
   <rect class="box external" x="225.2" y="68" width="157.8" height="45" rx="6"/>
@@ -38,8 +37,6 @@
   <text class="label" x="494.2" y="94">Mandatory family</text>
   <rect class="box external" x="605.4" y="68" width="98.6" height="45" rx="6"/>
   <text class="label" x="654.7" y="94">UI family</text>
-  <rect class="box" x="104.1" y="185" width="128.2" height="45" rx="6"/>
-  <text class="label" x="168.2" y="211">TODOS — TODOs</text>
-  <rect class="box" x="350.4" y="185" width="202.2" height="45" rx="6"/>
-  <text class="label" x="451.5" y="211">LOOP — Development Loop</text>
+  <rect class="box" x="279.6" y="185" width="202.2" height="45" rx="6"/>
+  <text class="label" x="380.7" y="211">LOOP — Development Loop</text>
 </svg>

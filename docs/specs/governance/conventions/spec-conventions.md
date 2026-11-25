@@ -28,6 +28,7 @@ What a specification is and how it is identified and classified.
 | Family | A subdivision of a Specification kind that is a specification's single ownership category, declared in metadata and mapped to its directory. |  |
 | Design specification | A specification of the Design Specification kind, which describes the game itself. |  |
 | Requirement | A normative statement with a stable identifier that defines implementable behavior or a constraint. |  |
+| Set-aside task | One piece of work the Game designer has set aside for later, recorded in [TODOs](../process/todos.md) until it is done. Unlike a TODO, it need not be missing content of any one specification. | Work item; backlog item |
 
 ## Artifacts
 
@@ -232,3 +233,15 @@ A TODO states what is missing and what a complete answer must include. E.g., pre
 Avoid vague placeholders; e.g., "TODO: implement discounts." Documentation TODOs request decisions or contract content, not implementation. A `TODO (later):` item names the feature in one line, e.g. "TODO (later): Gift wrapping."
 
 Do not invent a default to close a TODO unless it is explicitly labeled as a proposal.
+
+## Set-aside tasks
+
+Work often surfaces in a T3 thread that is about something else, e.g. a question the Game designer wants to think over, or a step that has to wait a few days. Such work is recorded as a Set-aside task in [TODOs](../process/todos.md), completely enough that an agent or the Game designer can pick it up later without the thread's context.
+
+A Set-aside task is added when the Game designer sets work aside, and removed in the change that does it, or when the Game designer drops it; Git history is the record. A task is never marked done.
+
+- **Heading:** each Set-aside task is a topic section of TODOs of its own, whose heading names the work as an instruction, e.g. "Review the bench".
+- **Opening bullets:** the section opens with three bullets, in this order: `Added:` followed by when the task was added, as `YYYY-MM-DD hh:mm PST`, in Pacific time on a 24-hour clock, e.g. `Added: 2026-11-24 22:19 PST`; `T3 thread:` followed by the name of the thread where the work was set aside; and `T3 thread ID:` followed by its ID in backticks.
+- **Body:** after the three bullets, the section says what to do and what a finished task looks like, completely enough to act on without reading the thread, e.g. which questions are open and which recommendations are not yet applied.
+
+The linter checks the three bullets. A Set-aside task needs no links to the terms it mentions, and its words count toward no word budget, because tasks come and go.

@@ -1,32 +1,16 @@
 # TODOs
 
-| Metadata    | Value                                                                       |
-| ----------- | --------------------------------------------------------------------------- |
-| Spec ID     | TODOS                                                                       |
-| Family      | Process                                                                     |
-| Audience    | Game designer                                                               |
-| Owns        | The work the Game designer has set aside for later, and how it is recorded. |
-| Conventions | [Specification Conventions](../conventions/spec-conventions.md)             |
+| Metadata    | Value                                                           |
+| ----------- | --------------------------------------------------------------- |
+| Spec ID     | TODOS                                                           |
+| Family      | Process                                                         |
+| Audience    | Game designer                                                   |
+| Owns        | The work the Game designer has set aside for later.             |
+| Conventions | [Specification Conventions](../conventions/spec-conventions.md) |
 
 # Overview
 
-Work often surfaces in a T3 thread that is about something else, e.g. a question the Game designer wants to think over, or a step that has to wait a few days. A Set-aside task records such work here, completely enough that an agent or the Game designer can pick it up later without the thread's context, and names the thread where the context lives.
-
-# Glossary
-
-| Term | Definition | Prohibited synonyms |
-| --- | --- | --- |
-| Set-aside task | One piece of work the [Game designer](../conventions/spec-conventions.md#participants) has set aside for later, recorded in this document until it is done. Unlike a TODO of a [specification](../conventions/spec-conventions.md#specifications), it need not be missing content of any one specification. | Work item; backlog item |
-
-# Recording a Set-aside task
-
-A Set-aside task is added when the Game designer sets work aside, and removed in the change that does it, or when the Game designer drops it; Git history is the record. A task is never marked done.
-
-- **Heading:** each Set-aside task is a top-level section of its own, after this section, whose heading names the work as an instruction, e.g. "Review the CR Sweep Bench".
-- **Opening bullets:** the section opens with three bullets, in this order: `Added:` followed by when the task was added, as `YYYY-MM-DD hh:mm PST`, in Pacific time on a 24-hour clock, e.g. `Added: 2026-11-24 22:19 PST`; `T3 thread:` followed by the name of the thread where the work was set aside; and `T3 thread ID:` followed by its ID in backticks.
-- **Body:** after the three bullets, the section says what to do and what a finished task looks like, completely enough to act on without reading the thread, e.g. which questions are open and which recommendations are not yet applied.
-
-The linter checks the heading and the three bullets. A Set-aside task needs no links to the terms it mentions, and its words count toward no word budget, because tasks come and go.
+Each topic section below is one [Set-aside task](../conventions/spec-conventions.md#set-aside-tasks): work the Game designer has set aside for later, with the T3 thread it came from.
 
 # Review the CR Sweep Bench
 

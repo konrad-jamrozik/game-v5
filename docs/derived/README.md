@@ -41,7 +41,7 @@ These informative views are derived from the registered Markdown specifications.
 | ID | Document | Owns |
 | --- | --- | --- |
 | LOOP | [Development Loop](../specs/governance/process/development-loop.md) | How the game is developed in a loop between the specifications and the Implementation, and the LLM skills that run it. |
-| TODOS | [TODOs](../specs/governance/process/todos.md) | The work the Game designer has set aside for later, and how it is recorded. |
+| TODOS | [TODOs](../specs/governance/process/todos.md) | The work the Game designer has set aside for later. |
 
 ## Foundation
 

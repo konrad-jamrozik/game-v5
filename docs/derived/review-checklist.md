@@ -29,6 +29,7 @@ Applies to every specification.
   - [Word budgets](../specs/governance/conventions/spec-conventions.md#word-budgets) — **linted**
   - [Deterministic validation](../specs/governance/conventions/spec-conventions.md#deterministic-validation)
   - [Kinds of unspecified content](../specs/governance/conventions/spec-conventions.md#kinds-of-unspecified-content) — **linted**
+  - [Set-aside tasks](../specs/governance/conventions/spec-conventions.md#set-aside-tasks)
 
 ## Terminology Conventions
 

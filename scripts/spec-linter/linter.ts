@@ -99,12 +99,11 @@ const REMOVED_CLOSING_HEADING = 'Edge cases and failure behavior'
 /** The order of the closing sections, with the removed one where it stood, so a document awaiting its cut keeps its order. */
 const CLOSING_ORDER = [REMOVED_CLOSING_HEADING, TODOS_HEADING]
 /**
- * The one specification that lists Set-aside tasks. Every top-level section after its rules section is one task: it
- * opens with the two bullets naming its T3 thread instead of a lead, and its words count toward no word budget and
- * need no Term links, since tasks come and go.
+ * The one specification that lists Set-aside tasks. Every topic section of it is one task: it opens with the bullets
+ * naming when it was added and its T3 thread instead of a lead, and its words count toward no word budget and need no
+ * Term links, since tasks come and go.
  */
 const TASK_LIST_PATH = 'docs/specs/governance/process/todos.md'
-const TASK_RULES_HEADING = 'Recording a Set-aside task'
 const TASK_ADDED = /^Added: \d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]) ([01]\d|2[0-3]):[0-5]\d PST$/
 const TASK_THREAD_NAME = /^T3 thread: \S/
 const TASK_THREAD_ID = /^T3 thread ID: [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
@@ -515,9 +514,9 @@ function validateLead(specification: Specification, heading: Heading, diagnostic
 /** The top-level sections of the task list that are Set-aside tasks; none in any other specification. */
 function taskHeadings(specification: { readonly path: string; readonly document: ParsedDocument }): readonly Heading[] {
   if (specification.path !== TASK_LIST_PATH) return []
-  const h1s = topLevelHeadings(specification.document)
-  const rules = h1s.findIndex((heading) => headingText(heading) === TASK_RULES_HEADING)
-  return rules < 0 ? [] : h1s.slice(rules + 1)
+  return topLevelHeadings(specification.document)
+    .slice(1)
+    .filter((heading) => !FRAMING_HEADINGS.includes(headingText(heading)) && headingText(heading) !== TODOS_HEADING)
 }
 
 /**

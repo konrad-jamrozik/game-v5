@@ -34,7 +34,7 @@ To change the game, use the `apply` skill: it settles the change in the specific
 
 ## Setting work aside
 
-When the Game designer sets work aside for later, add it to [TODOs](docs/specs/governance/process/todos.md) as its rules say: one top-level section per task, opening with when it was added in Pacific time, then the T3 thread's name and ID. Remove the task in the change that does it.
+When the Game designer sets work aside for later, add it to [TODOs](docs/specs/governance/process/todos.md) as [Set-aside tasks](docs/specs/governance/conventions/spec-conventions.md#set-aside-tasks) says: one top-level section per task, opening with when it was added in Pacific time, then the T3 thread's name and ID. Remove the task in the change that does it.
 
 ## Marking examples
 
