@@ -747,18 +747,20 @@
       // has that is not listed here appears under Other, without a description, and is passed to the AI as edited.
       const GROUPS = [
         {
-          title: 'Agent groups',
+          title: 'Strike team and research',
           params: [
             [
-              'reserveSharePct',
-              'reserve',
-              'The Reserve quota, as a % of the roster, rounded down: Agents on Standby, Training, Recovery, or Deployed, In transit included, whether rested or not.',
+              'threatWindowTurns',
+              'threat window',
+              'The Threat is the strongest Response Mission site created in this many last Turns. The Strike team is sized to the stronger of it and the weakest Next rung, times the Combat margin.',
               1,
             ],
+            ['researchTeamSize', 'team', 'The Agents each Investigation is given.', 1],
+            ['mostInvestigations', 'most inv', 'The most Investigations run at once.', 1],
             [
-              'investigatorSharePct',
-              'inv',
-              'The Investigator quota, as a % of the roster, rounded down. Every Agent beyond both quotas goes to Contracting.',
+              'farmingPanicPct',
+              'farm panic',
+              'From this Panic %, a Lead to a Mission site already Won qualifies even while a Lead to a new rung does.',
               1,
             ],
           ],
@@ -796,9 +798,29 @@
           title: 'Purchases',
           params: [
             [
-              'capSharePct',
-              'cap share',
-              'Transport cap and Training cap are each bought while below this % of the Agent cap.',
+              'ammoReserve',
+              'ammo reserve',
+              'Rounds of each Unlocked AmmoType bought, as a multiple of what keeps it from being Ammo short.',
+              0.5,
+            ],
+            ['sidearmPrice', 'sidearm', 'The most a Weapon bought for an Agent with the Fallback Weapon may cost.', 1],
+            [
+              'spareItems',
+              'spare',
+              'Items of each Weapon and Armor that no Agent is to wear kept rather than sold.',
+              1,
+            ],
+            [
+              'restSharePct',
+              'rest',
+              'The % of the roster expected to rest or recover, which the wanted roster adds.',
+              1,
+            ],
+            ['leastNetIncome', 'net', 'The least planned net income a hire may leave.', 1],
+            [
+              'recoverySharePct',
+              'recovery',
+              'A health recovery Upgrade is due, at most one a Turn, while more than this % of the Agents are on Recovery.',
               1,
             ],
             [
@@ -808,7 +830,6 @@
               1,
             ],
           ],
-          weights: true,
         },
       ]
       const KNOWN = new Map(GROUPS.flatMap((g) => g.params.map((p) => [p[0], p])))
@@ -870,7 +891,7 @@
       /** The parameters a launch sends: every default of the engine, with the edits on this page. */
       function params() {
         const out = { ...DEFAULTS, ...edited }
-        out.upgradeWeights = { ...(DEFAULTS.upgradeWeights ?? {}), ...weights }
+        if (DEFAULTS.upgradeWeights !== undefined) out.upgradeWeights = { ...DEFAULTS.upgradeWeights, ...weights }
         return out
       }
 
@@ -911,12 +932,12 @@
           'A Deployable Agent that is also Fit to start work, i.e. with exhaustion 0 and no health lost.',
         ],
         [
-          'Agent reserve',
-          'Every Agent on Standby, Training, Recovery, or Deployed, In transit included, whether rested or not. Its quota is <code>reserveSharePct</code> of the roster, rounded down.',
+          'Strike team',
+          'The strongest Agents not on an Investigation, as few as reach the Strike goal and at most the Transport cap, leaving room for Contracting and one Investigation team. They stay in base; while they fall short of the Strike goal, money buys them Weapons, Armors, and Transport cap.',
         ],
         [
-          'Spare Agent',
-          'A Fit to start work Agent of the Agent reserve, on Standby or Training and not in the Muster, while the Agent reserve exceeds its quota; the AI sends Spare Agents to Investigations, then to Contracting.',
+          'Strike goal',
+          'The stronger of the Threat and the weakest Next rung, times <code>combatMarginPct</code>. The Threat is the strongest Response Mission site of the last <code>threatWindowTurns</code> Turns; a Next rung is the weakest Initiative Mission site stronger than every one Won against a Faction.',
         ],
         [
           'Muster',
@@ -1017,7 +1038,7 @@
         const lines = [
           'Basic Autopilot AI Tuning parameter changes to apply to BASIC_AI_THRESHOLDS (old -> new):',
           '',
-          'game-v5-impl-web/src/ai/basic/basic-autopilot-ai.ts',
+          'game-v5-impl-web/src/ai/basic/tuning.ts',
           ...list.map(([k, from, to]) => `  ${k}: ${from} -> ${to}`),
         ]
         if (list.some(([k]) => k.startsWith('upgradeWeights.')))
@@ -1181,6 +1202,41 @@
           ],
         ]
         const L2 = [
+          [
+            'Strike',
+            'The Strike team: its Rested rating against the Strike goal, 🔴 while it falls short; after it, its Agents of the number the Strike goal asks for',
+            (s) =>
+              s.strike == null
+                ? '<span class="dim">—</span>'
+                : `${s.strike.gap ? '🔴' : '🟢'} ${fmt(s.strike.rating)} <span class="dim">/</span> ${fmt(s.strike.goal)} <span class="dim">(${fmt(s.strike.size)}/${fmt(s.strike.wanted)})</span>`,
+            200,
+          ],
+          [
+            'Threat',
+            "The strongest Response Mission site of the Threat window, and the weakest Next rung with its Enemies' Combat rating",
+            (s) =>
+              s.strike == null
+                ? '<span class="dim">—</span>'
+                : `${fmt(s.strike.threat)} <span class="dim">·</span> ${s.strike.rung === null ? '—' : `${esc(s.strike.rung.name)} ${fmt(s.strike.rung.rating)}`}`,
+            260,
+            true,
+          ],
+          [
+            'Research',
+            'Projected progress points of every Active Investigation together, per Turn',
+            (s) => fmt1(s.research),
+            80,
+          ],
+          [
+            'Ammo short',
+            'The AmmoTypes that are Ammo short',
+            (s) =>
+              (s.ammoShort ?? []).length === 0
+                ? '<span class="dim">none</span>'
+                : `<span class="bad">${esc(s.ammoShort.join(', '))}</span>`,
+            140,
+            true,
+          ],
           [
             'CR ready',
             'Combat rating of the Deployable Agents, the Agents the AI deploys a team from now; after it, their number of all Serving Agents',

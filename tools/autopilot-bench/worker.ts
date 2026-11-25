@@ -58,6 +58,9 @@ interface Campaign {
   siteRatings: Map<string, number>
   /** The last Turn recorded in the series. */
   recordedTurn: number
+  /** The Tuning parameters the Campaign plays with, and the game data, for deriving the AI's plan. */
+  readonly thresholds: unknown
+  readonly gameData: Any
 }
 
 /** The Upgrades whose effect raises a cap, by ID: the Cap Upgrades. */
@@ -430,7 +433,7 @@ function readMissions(campaign: Campaign) {
 
 async function boot() {
   const { MemoryStorage, createEngine } = await import(pathToFileURL(path.join(impl, 'src/engine/index.ts')).href)
-  const { BASIC_AI_THRESHOLDS, createBasicAutopilotAi } = await import(
+  const { BASIC_AI_THRESHOLDS, createBasicAutopilotAi, makePlan } = await import(
     pathToFileURL(path.join(impl, 'src/ai/index.ts')).href
   )
   // The Upgrades, read from a scratch Campaign, so that the page can name them and weigh them.
@@ -464,8 +467,12 @@ async function boot() {
       chain.set(item.level as number, item.id as string)
     }
   }
+  planOf = makePlan
   return { MemoryStorage, createEngine, BASIC_AI_THRESHOLDS, createBasicAutopilotAi, upgrades }
 }
+
+/** The Implementation's `makePlan`, which derives the Basic Autopilot AI's plan from Player-visible information. */
+let planOf: ((live: Any, retired: Any, data: Any, thresholds: unknown) => Any) | null = null
 
 /** The name of the Initiative Mission site of each Initiative operation level. */
 const chain = new Map<number, string>()
@@ -603,6 +610,13 @@ function statsOf(campaign: Campaign): CampaignStats {
         },
       }
     }),
+    strike: strikeOf(campaign, live, retired),
+    ammoShort: (agency.equipment.items as Any[])
+      .filter((item) => item.kind === 'ammo' && item.ammoShort === true)
+      .map((item) => item.name as string),
+    research:
+      (live.investigations as Any[]).reduce((sum, i) => sum + ((i.projectedProgressGain as number | null) ?? 0), 0) /
+      100,
     hired: all.length - campaign.initialAgents,
     killed: all.filter((a) => a.agentStatus === 'Killed').length,
     dismissed: all.filter((a) => a.agentStatus === 'Dismissed').length,
@@ -611,6 +625,31 @@ function statsOf(campaign: Campaign): CampaignStats {
       name: i.leadName as string,
       agents: (i.currentTeam as Any[]).length,
     })),
+  }
+}
+
+/** BASICAI: the Strike team and what it answers, from the Implementation's own plan. */
+function strikeOf(campaign: Campaign, live: Any, retired: Any): CampaignStats['strike'] {
+  if (planOf === null) {
+    return null
+  }
+  const plan = planOf(live, retired, campaign.gameData, campaign.thresholds)
+  if (plan.goal === null) {
+    return null
+  }
+  const rungs = [...(plan.rungs as Map<string, Any>).values()].sort((a, b) => a.combatRating - b.combatRating)
+  const rung = rungs[0]
+  return {
+    size: plan.strike.length as number,
+    wanted: plan.strikeWanted as number,
+    rating: plan.strikeRating as number,
+    goal: plan.goal.combatRating as number,
+    gap: plan.gap as boolean,
+    threat: plan.threat === null ? null : (plan.threat.combatRating as number),
+    rung:
+      rung === undefined
+        ? null
+        : { name: archetypeNames.get(rung.archetype) ?? (rung.archetype as string), rating: rung.combatRating },
   }
 }
 
@@ -691,6 +730,8 @@ async function create(message: Extract<ToWorker, { type: 'create' }>) {
     recordedTurn: 0,
     log,
     actions: [],
+    thresholds,
+    gameData: ok<Any>(engine.player.queries.getGameData()),
   }
   holder.campaign = campaign
   campaigns.set(id, campaign)

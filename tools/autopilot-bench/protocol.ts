@@ -166,6 +166,23 @@ export interface CampaignStats {
       } | null
     } | null
   }[]
+  /**
+   * BASICAI, as the Basic Autopilot AI derives it now: the Strike team, its Rested rating against the Strike goal, the
+   * Threat, and the weakest Next rung; none while there is no Strike goal.
+   */
+  readonly strike: {
+    readonly size: number
+    readonly wanted: number
+    readonly rating: number
+    readonly goal: number
+    readonly gap: boolean
+    readonly threat: number | null
+    readonly rung: { readonly name: string; readonly rating: number } | null
+  } | null
+  /** The AmmoTypes that are Ammo short. */
+  readonly ammoShort: readonly string[]
+  /** The Projected progress gain of every Active Investigation together, in progress points per Turn. */
+  readonly research: number
   /** Agents beyond those the Campaign started with. */
   readonly hired: number
   readonly killed: number
