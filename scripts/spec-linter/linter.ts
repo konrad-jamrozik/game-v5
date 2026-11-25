@@ -23,6 +23,7 @@ import {
   textOf,
   topLevelHeadings,
   visit,
+  type ParsedDocument,
 } from './markdown.ts'
 import {
   FAMILY_DIAGRAM_END,
@@ -97,6 +98,15 @@ const CLOSING_HEADINGS = [TODOS_HEADING]
 const REMOVED_CLOSING_HEADING = 'Edge cases and failure behavior'
 /** The order of the closing sections, with the removed one where it stood, so a document awaiting its cut keeps its order. */
 const CLOSING_ORDER = [REMOVED_CLOSING_HEADING, TODOS_HEADING]
+/**
+ * The one specification that lists Set-aside tasks. Every top-level section after its rules section is one task: it
+ * opens with the two bullets naming its T3 thread instead of a lead, and its words count toward no word budget and
+ * need no Term links, since tasks come and go.
+ */
+const TASK_LIST_PATH = 'docs/specs/governance/process/todos.md'
+const TASK_RULES_HEADING = 'Recording a Set-aside task'
+const TASK_THREAD_NAME = /^T3 thread: \S/
+const TASK_THREAD_ID = /^T3 thread ID: [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 /** Phrases that state no rule: a claim that a list is whole, or that nothing happens. */
 const REPETITION_PHRASES =
   /\b(?:is|are) exhaustive\b|\bthe following (?:[\w-]+ ){1,4}(?:is|are) complete\b|\bnot listed\b[^.]{0,60}\bis impossible\b|\bno rounding occurs\b|\bImplementer['’]s choice\b/gi
@@ -501,6 +511,38 @@ function validateLead(specification: Specification, heading: Heading, diagnostic
   )
 }
 
+/** The top-level sections of the task list that are Set-aside tasks; none in any other specification. */
+function taskHeadings(specification: { readonly path: string; readonly document: ParsedDocument }): readonly Heading[] {
+  if (specification.path !== TASK_LIST_PATH) return []
+  const h1s = topLevelHeadings(specification.document)
+  const rules = h1s.findIndex((heading) => headingText(heading) === TASK_RULES_HEADING)
+  return rules < 0 ? [] : h1s.slice(rules + 1)
+}
+
+/**
+ * Requires a Set-aside task to open with exactly two bullets, its T3 thread's name and then its ID in a code span, and
+ * to say after them what the task is.
+ */
+function validateTaskOpening(specification: Specification, heading: Heading, diagnostics: Diagnostic[]): void {
+  const nodes = sectionNodes(specification.document, heading).filter((node) => node.type !== 'html')
+  const [first, ...rest] = nodes
+  const items = first && first.type === 'list' ? first.children : []
+  const texts = items.map((item) => textOf(item).trim())
+  const opens =
+    texts.length === 2 &&
+    TASK_THREAD_NAME.test(texts[0] ?? '') &&
+    TASK_THREAD_ID.test(texts[1] ?? '') &&
+    rest.length > 0
+  if (opens) return
+  addDiagnostic(
+    diagnostics,
+    specification.path,
+    heading,
+    'SPEC219',
+    `Set-aside task "${headingText(heading)}" must open with two bullets, "T3 thread: <name>" and "T3 thread ID: \`<ID>\`", followed by what the task is.`,
+  )
+}
+
 function validateLayout(parsed: ParsedInput, diagnostics: Diagnostic[]): void {
   for (const specification of parsed.specifications) {
     const headings = specification.document.headings
@@ -615,6 +657,7 @@ function validateLayout(parsed: ParsedInput, diagnostics: Diagnostic[]): void {
     let previousCategory = 0
     let previousClosing = -1
     let orderReported = false
+    const tasks = new Set(taskHeadings(specification))
     for (const heading of topLevel) {
       const text = headingText(heading)
       if (text === RENAMED_TODOS_HEADING) {
@@ -653,7 +696,9 @@ function validateLayout(parsed: ParsedInput, diagnostics: Diagnostic[]): void {
         )
       }
       if (current === 1 || current === 2) validateSectionContent(specification, heading, diagnostics)
-      if (current === 1) {
+      if (current === 1 && tasks.has(heading)) {
+        validateTaskOpening(specification, heading, diagnostics)
+      } else if (current === 1) {
         validateLead(specification, heading, diagnostics)
         for (const node of sectionNodes(specification.document, heading)) {
           if (isHeading(node) && node.depth === 2) validateLead(specification, node, diagnostics)
@@ -675,8 +720,9 @@ function validateWordBudgets(parsed: ParsedInput, diagnostics: Diagnostic[]): vo
   const wordBudgets = parsed.wordBudgets
   if (!wordBudgets) return
   const documents = [...parsed.specifications, ...parsed.overviews]
-  const paths = new Set(documents.map((document) => document.path))
+  const paths = new Set(documents.map((document) => document.path).filter((path) => path !== TASK_LIST_PATH))
   for (const { path, document } of documents) {
+    if (path === TASK_LIST_PATH) continue
     const budget = wordBudgets.budgets[path]
     if (budget === undefined) {
       addDiagnostic(
@@ -1360,15 +1406,19 @@ function todoNodes(specification: Specification): readonly Todo[] {
     const nextSkip = text !== undefined && isListItem(node) ? node.children[0] : undefined
     for (const child of node.children) walk(child, nextSkip)
   }
+  const title = topLevelHeadings(specification.document)[0]
   for (const child of specification.document.children) {
-    if (isHeading(child) && child.depth === 1) inTodosSection = headingText(child) === TODOS_HEADING
+    // The title is no section, so a specification titled "TODOs" has no TODOs section through it.
+    if (isHeading(child) && child.depth === 1) inTodosSection = child !== title && headingText(child) === TODOS_HEADING
     walk(child, undefined)
   }
   return todos
 }
 
 function validateTodosSection(specification: Specification, todos: readonly Todo[], diagnostics: Diagnostic[]): void {
-  const heading = findHeading(specification.document, 1, TODOS_HEADING)
+  const heading = topLevelHeadings(specification.document)
+    .slice(1)
+    .find((candidate) => headingText(candidate) === TODOS_HEADING)
   if (!heading) return
   const nodes = sectionNodes(specification.document, heading)
   if (nodes.every((node) => textOf(node).trim() === '')) return // SPEC204 reports an empty section.
@@ -1565,11 +1615,19 @@ export function analyzeSpecifications(input: LintInput): SpecificationAnalysis {
 
 function firstMentions(parsed: ParsedInput, glossary: readonly GlossaryTerm[]): readonly TermMention[] {
   // The specification index navigates to every specification, so it is exempt like the other overviews.
-  const specifications = parsed.specifications.flatMap((specification) =>
-    isSpecificationFamily(specification.family) && specification.path !== parsed.indexPath
-      ? [{ ...specification, family: specification.family }]
-      : [],
-  )
+  const specifications = parsed.specifications.flatMap((specification) => {
+    if (!isSpecificationFamily(specification.family) || specification.path === parsed.indexPath) return []
+    // Set-aside tasks mention the game's terms in passing and come and go, so only the text before them is scanned.
+    const firstTask = taskHeadings(specification)[0]
+    const document =
+      firstTask === undefined
+        ? specification.document
+        : {
+            ...specification.document,
+            children: specification.document.children.slice(0, specification.document.children.indexOf(firstTask)),
+          }
+    return [{ ...specification, family: specification.family, document }]
+  })
   const definitions = glossary.map((entry) => ({
     term: entry.term,
     ownerPath: entry.specification.path,

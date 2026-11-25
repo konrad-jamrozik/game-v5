@@ -32,6 +32,10 @@ When changing the Implementation, follow every specification in `docs/specs/impl
 
 To change the game, use the `apply` skill: it settles the change in the specifications when it is a design decision, changes the Implementation, and publishes both. Which artifact is the truth for which question is stated under [Sources of truth](docs/specs/governance/process/development-loop.md#sources-of-truth).
 
+## Setting work aside
+
+When the Game designer sets work aside for later, add it to [TODOs](docs/specs/governance/process/todos.md) as its rules say: one top-level section per task, opening with the T3 thread's name and ID. Remove the task in the change that does it.
+
 ## Marking examples
 
 In every document and in chat, introduce every example with "e.g.", as defined in [Marking examples](docs/specs/governance/conventions/spec-conventions.md#marking-examples). Never state an example as a bare sentence after a general statement; the reader must not have to infer whether a sentence is general or illustrative.

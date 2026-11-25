@@ -1018,6 +1018,53 @@ describe('specification linter', () => {
     })
   })
 
+  describe('Set-aside tasks', () => {
+    const taskList = (task: readonly string[]): SourceFile[] => [
+      ...validCorpus(),
+      {
+        path: 'docs/specs/governance/process/todos.md',
+        content: lines([
+          '# TODOs',
+          '',
+          '| Metadata | Value |',
+          '| --- | --- |',
+          '| Spec ID | TODOS |',
+          '| Family | Process |',
+          '| Audience | Engine designer |',
+          '| Owns | Work set aside. |',
+          '| Conventions | [Specification Conventions](../conventions/spec-conventions.md) |',
+          '',
+          '# Overview',
+          '',
+          'Work set aside for later.',
+          '',
+          '# Recording a Set-aside task',
+          '',
+          'Each task is a section of its own.',
+          '',
+          '# Review the bench',
+          '',
+          ...task,
+        ]),
+      },
+    ]
+    const thread = ['- T3 thread: Bench calibration', '- T3 thread ID: `6664326e-82ae-4710-b1a5-24a101803ff6`', '']
+
+    test('accepts a task that opens with its thread name and ID, though it has no lead', () => {
+      expect(diagnosticCodes(taskList([...thread, 'Run the bench.']))).toEqual([])
+    })
+
+    test.each([
+      ['a lead instead of the bullets', ['Run the bench.']],
+      ['only the thread name', ['- T3 thread: Bench calibration', '', 'Run the bench.']],
+      ['the bullets in the other order', [thread[1] ?? '', thread[0] ?? '', '', 'Run the bench.']],
+      ['an ID that is not one', ['- T3 thread: Bench calibration', '- T3 thread ID: `none`', '', 'Run the bench.']],
+      ['nothing after the bullets', thread],
+    ])('rejects a task with %s', (_name, task) => {
+      expect(diagnosticCodes(taskList(task))).toEqual(['SPEC219'])
+    })
+  })
+
   describe('TODOs', () => {
     const alpha = 'docs/specs/design/foundation/alpha.md'
     const alphaEnd = '[Rule](#rule): the same input has the same result.'
