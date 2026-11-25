@@ -26,7 +26,7 @@ The Side panel is the Player's way into every [Detail view](../gui.md#glossary) 
 
 1. **[Navigation](#navigation):** a button for every Detail view.
 2. **[Situation panel](situation-panel.md):** it scrolls inside when its content is taller than the room it has.
-3. **Footer:** while [Autopilot](../../foundation/engine-contract.md#autopilot) controls shown is on, the [Autopilot controls](#autopilot-controls), and always the [Music control](../music.md#music-control).
+3. **Footer:** while [Dev mode](../../foundation/engine-contract.md#principals-and-access) is enabled and [Autopilot](../../foundation/engine-contract.md#autopilot) controls shown is on, the [Autopilot controls](#autopilot-controls), and always the [Music control](../music.md#music-control).
 
 ## Navigation
 
@@ -118,7 +118,7 @@ Autopilot is a tool for the Game designer and for testing, not part of playing t
 
 | Setting | Permitted values | Game build default | Set by |
 | --- | --- | --- | --- |
-| Autopilot controls shown | On or off | Off | The "Show Autopilot controls" checkbox of the developer tools, which [Dev mode](../../foundation/engine-contract.md#principals-and-access) does not gate. |
+| Autopilot controls shown | On or off | Off | The "Show Autopilot controls" checkbox of the [developer tools](../gui.md#developer-tools), which Dev mode gates. |
 | Autopilot Turns | A whole number of at least 1 | 10 | The Turns field of the Autopilot controls, whenever the Player leaves it holding a permitted value, e.g. 100 stays 100 in every later Session. |
 
 The "Show Autopilot controls" checkbox is disabled while an Autopilot engagement is active, so that the Stop button never leaves the screen while it is needed.

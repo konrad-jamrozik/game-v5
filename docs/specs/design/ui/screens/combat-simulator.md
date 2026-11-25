@@ -26,7 +26,7 @@ The [Main menu](main-menu.md) shows a Combat simulator button while the [Global 
 
 | Setting | Permitted values | Game build default | Set by |
 | --- | --- | --- | --- |
-| Combat simulator shown | On or off | Off | The "Show Combat simulator" checkbox of the developer tools, which [Dev mode](../../foundation/engine-contract.md#principals-and-access) does not gate. |
+| Combat simulator shown | On or off | Off | The "Show Combat simulator" checkbox of the [developer tools](../gui.md#developer-tools), which [Dev mode](../../foundation/engine-contract.md#principals-and-access) gates. |
 
 A test, or a developer at work on the Combat simulator, must reach it without setting anything first. Opening the game at an address whose query holds `combat-simulator`, e.g. `?combat-simulator`, therefore shows the Combat simulator at once when the [Session](../../foundation/core-concepts.md#campaign-and-session) has no [Current campaign](../../foundation/core-concepts.md#campaign-and-session), whatever the setting is.
 

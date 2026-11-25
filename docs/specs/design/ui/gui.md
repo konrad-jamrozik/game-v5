@@ -5,7 +5,7 @@
 | Spec ID | GUI |
 | Family | UI |
 | Audience | UI designer, Implementer |
-| Owns | Which screens the graphical user interface has, the progress indicators that several of them show, the warnings it gives, and how it names an Enemy and a Mission site. |
+| Owns | Which screens the graphical user interface has, the progress indicators that several of them show, the warnings it gives, its developer tools, and how it names an Enemy and a Mission site. |
 | Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
@@ -54,9 +54,17 @@ The Settings panel is titled Settings and holds these rows from top to bottom, e
 
 A setting changed long ago, or in another place, is easy to forget, so the Settings panel lists in one place every Global configuration setting whose stored value overrides its [Game build default](../foundation/engine-contract.md#persisted-data), whatever row or control sets it. The row is headed "Changed settings" and lists them in the order of the [Global configuration table](../foundation/configuration.md#global-configuration), one line each: the setting's name, its value, and its Game build default, in plain words, e.g. "Autopilot Turns: 100 (default 10)", "Autopilot controls: shown (default hidden)", or "Music: off (default on)". A volume reads as a percentage, e.g. "Music volume: 30% (default 50%)". Each line ends with a neutral Reset button, which makes the setting follow its Game build default again, so that its line leaves the list. While no setting is changed, the row says "Every setting is at its default."
 
-# Reveal hidden content
+# Developer tools
 
-The Game designer checks content in play by turning on [Reveal hidden content](../foundation/developer-access.md#revealed-presentation), and finds it among the developer tools, beside the other powers that [Dev mode](../foundation/engine-contract.md#principals-and-access) gates. The developer tools hold a [checkbox](visual-design.md#checkboxes) labelled "Reveal hidden content", which is disabled while Dev mode is disabled or [Autopilot](../foundation/engine-contract.md#autopilot) is engaged.
+The developer tools are for the Game designer and for testing, not for playing the game, so [Dev mode](../foundation/engine-contract.md#principals-and-access) gates all of them, and the Game designer who uses them sets them up once per [Session](../foundation/core-concepts.md#campaign-and-session) rather than once per [Campaign](../foundation/core-concepts.md#campaign-and-session).
+
+- **Gated by Dev mode:** Their first control is a [checkbox](visual-design.md#checkboxes) labelled "Dev mode", which enables and disables Dev mode. While Dev mode is disabled, every other control of the developer tools is disabled, with "Enable Dev mode first." as its tooltip, and a checkbox among them keeps its value.
+- **Kept for the Session:** The GUI keeps whether Dev mode is enabled and whether Reveal hidden content is on as the Game designer last left them for the rest of the Session, whatever Campaign is created or loaded: after a create or a load, which disables Dev mode, the GUI enables it again when it was enabled before. It never persists them, so a new Session starts with both off.
+- **Fixed during an engagement:** The "Dev mode" checkbox is disabled while an [Autopilot](../foundation/engine-contract.md#autopilot) engagement is active, because Dev mode cannot change then.
+
+## Reveal hidden content
+
+The Game designer checks content in play by turning on [Reveal hidden content](../foundation/developer-access.md#revealed-presentation) with the developer tools' checkbox labelled "Reveal hidden content", which is also disabled while Autopilot is engaged.
 
 # Warning on deploying tired Agents
 
