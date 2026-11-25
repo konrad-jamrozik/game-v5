@@ -69,7 +69,7 @@ The GUI plays music from the moment it opens until the Session ends, whichever s
 - **Music off:** When Music on becomes `false`, the Current Track fades out and then pauses at the point it reached.
 - **Music on:** When Music on becomes `true`, the paused Current Track resumes from the point at which it paused and fades in. When no Track has started yet in the Session, the first Track of the playing order starts instead.
 - **Volume:** A change of Music volume changes the [gain](#loudness) at once, also during a fade, and never restarts or pauses the Current Track. A Music volume of 0 with Music on `true` keeps the Tracks playing silently, so the playing order goes on.
-- **Unplayable Track:** A Track whose file cannot be loaded or decoded is skipped as if it had ended at once. When every Track of a round fails, the GUI plays no more music in the Session, and the Track title reads nothing. Music is never worth interrupting play for, so no failure of it shows an error to the Player.
+- **Unplayable Track:** A Track whose file cannot be loaded or decoded is skipped as if it had ended at once. A failure to read the file, e.g. a network error a web browser reports while loading the Track, is often brief, so the GUI first loads the Track once more and resumes it from the point it reached; only a second failure skips it. When every Track of a round fails, the GUI plays no more music in the Session, and the Track title reads nothing. Music is never worth interrupting play for, so no failure of it shows an error to the Player.
 
 ## Playing order
 
