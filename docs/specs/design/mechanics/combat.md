@@ -183,7 +183,7 @@ Fighting a Combat is one procedure, so that what a balancing tool measures is ex
 
 ## Combat-only properties
 
-Two properties mean something only while a Combat lasts. They are the gained properties of the [Combatant Role Type](agents-spec.md#combatant-role-type), and both are set at [Combat start](#combat-start):
+Two properties mean something only while a Combat lasts. They are the gained properties of the [Combatant Role Type](agents-spec.md#combatant-role-type): every Combatant of a Combat gains both at [Combat start](#combat-start), set as it describes, and loses both at [Combat end](#combat-end):
 
 | Gained property | Value | Meaning |
 | --- | --- | --- |
