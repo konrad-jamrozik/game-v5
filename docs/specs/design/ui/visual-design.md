@@ -254,6 +254,7 @@ A column that shows a game quantity is wide enough for the widest value that qua
 
 | Quantity | Widest value |
 | --- | --- |
+| Agent, i.e. an [Agent](../mechanics/domain-model.md#agency-and-agents)'s [Instance ID](../foundation/campaign-instances.md#glossary) | 30 characters, so that it can later hold an Agent's full name. |
 | Skill, base or effective | Four digits, e.g. "1234". |
 | Exhaustion | Three digits, e.g. "123". |
 | Health | Three digits, followed by the max health it is out of when the column shows both, e.g. "123/123". |
