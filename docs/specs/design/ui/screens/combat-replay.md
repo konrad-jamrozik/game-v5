@@ -118,6 +118,7 @@ When the Combat replay is opened, its Options have the values of the Medium pace
 A second row holds what the Player needs less often:
 
 - **Rewind:** a button showing the rewind symbol of a tape player and no label. It returns to Combat start.
+- **Back one:** a button showing a left-pointing arrow before the digit 1, the mirror of the Combat turn button. It goes back one attack as the [slider](#slider-and-combat-log) does: it shows the Combat right before the previous attack and plays that attack again, so that the Combat stands where it was before the last attack. It is disabled at Combat start.
 - **Repeat:** a button showing a circling arrow and no label. It plays again the last step the Player took, i.e. with the Combat turn button, the Phase button, or the [Combat round](../../mechanics/combat.md#combat-rounds-and-results) button: it returns to where that step began and plays the same attacks once more, e.g. the same Combat round after the Combat round button, so that the Player can watch a step as often as needed. It is disabled until a step has been taken. The R key presses it. While the Combat replay is shown on the [Campaign screen](campaign-screen.md#undo-and-redo), the R key therefore does not press the Redo button.
 - **Options:** a button labelled "Options", which shows the Options and hides them again.
 
