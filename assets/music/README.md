@@ -157,28 +157,28 @@ Other tools that may serve the same purpose have not been tested yet: [Google AI
 
 ## Proposed renames
 
-The Game designer has proposed the renames below. Each proposed name is a custom name, as [Custom names](#custom-names) describes, and no rename is applied until the Game designer accepts it.
+The Game designer has proposed the renames below. Each proposed name is a custom name, as [Custom names](#custom-names) describes, and no rename is applied until the Game designer accepts it. The Song in Suno column links each song's page, its record's `song_url`, where the Game designer renames the song in Suno to its proposed name; its `original_title` keeps the old title.
 
-| File                                         | Proposed name                 |
-| -------------------------------------------- | ----------------------------- |
-| `S6 XCOM+Var+NoMIDI+AllowHeroAggr A.mp3`     | The Alien Fleet Arrives       |
-| `Deep Space Contact A.mp3`                   | Signal Intelligence           |
-| `S6 SCNP+Dark+BClar&Trombone B.mp3`          | Shady Deals                   |
-| `S6 SCNP+7Instr A.mp3`                       | Solemn Aftermath              |
-| `S6 SCNP+Dark+Cello&DBass A.mp3`             | The Human Toll                |
-| `S6 XCOM+AllowEpic+NoSynth+Slow+Space B.mp3` | Countering the Threat         |
-| `S6 XCOM+Var+NoMIDI+AllowHeroAggr B.mp3`     | Their Weapons in Our Hands    |
-| `Deep Space Contact B.mp3`                   | Cybernetic Elites             |
-| `Restricted Orbit.mp3`                       | UFO Salvage Operation         |
-| `Unknown Contact A.mp3`                      | In Pursuit of Shapeshifters   |
-| `Unknown Contact B.mp3`                      | Artifact Experiments          |
-| `S6 SCNP+Dark+BClar&Trombone A.mp3`          | Smuggling Artifacts           |
-| `S6 SCNP+7Instr B.mp3`                       | Containment Protocol          |
-| `S6 SCNP+Dark+Cello&DBass B.mp3`             | What Remains                  |
-| `S6 XCOM+AllowEpic+NoSynth+Slow+Space A.mp3` | Assault on the Alien Facility |
-| `S6 SCNP A.mp3`                              | Alien Technology              |
-| `S6 SCNP B.mp3`                              | Alien Lifeforms               |
-| `S6 SCNP+Dark+Piano&Cello A.mp3`             | Dark Omen                     |
-| `S6 SCNP+Dark+Piano&Cello B.mp3`             | Night Shift                   |
-| `S6 SCNP+Dark+DBass&BowedCymbals A.mp3`      | Network Expansion             |
-| `S6 SCNP+Dark+DBass&BowedCymbals B.mp3`      | Surface Logistics             |
+| File | Proposed name | Song in Suno |
+| --- | --- | --- |
+| `S6 XCOM+Var+NoMIDI+AllowHeroAggr A.mp3` | The Alien Fleet Arrives | <https://suno.com/song/af9ac107-bfa1-47d7-817a-88e7f3336a87> |
+| `Deep Space Contact A.mp3` | Signal Intelligence | <https://suno.com/song/d237fe73-8783-4528-8066-0da304f25b8a> |
+| `S6 SCNP+Dark+BClar&Trombone B.mp3` | Shady Deals | <https://suno.com/song/43ac40cb-ca03-4624-92c4-58b02b4ebd80> |
+| `S6 SCNP+7Instr A.mp3` | Solemn Aftermath | <https://suno.com/song/fee835a7-513a-4f47-bc06-311dd16052ca> |
+| `S6 SCNP+Dark+Cello&DBass A.mp3` | The Human Toll | <https://suno.com/song/38874a24-f261-42ec-a253-faf8faa0be89> |
+| `S6 XCOM+AllowEpic+NoSynth+Slow+Space B.mp3` | Countering the Threat | <https://suno.com/song/d08a8576-3b68-456a-8547-2e775decb863> |
+| `S6 XCOM+Var+NoMIDI+AllowHeroAggr B.mp3` | Their Weapons in Our Hands | <https://suno.com/song/fe0b5c85-02f7-4d8e-a16f-93ab2a1a2f78> |
+| `Deep Space Contact B.mp3` | Cybernetic Elites | <https://suno.com/song/251bc2cd-853c-4c56-92b5-a02ed9035dee> |
+| `Restricted Orbit.mp3` | UFO Salvage Operation | <https://suno.com/song/80ccffaa-15b3-406d-a0a6-1cda627d7b68> |
+| `Unknown Contact A.mp3` | In Pursuit of Shapeshifters | <https://suno.com/song/c864e73b-5123-45e6-bc3f-81e805d38922> |
+| `Unknown Contact B.mp3` | Artifact Experiments | <https://suno.com/song/8698c8f6-09ac-49b9-b010-dca3a9b504c5> |
+| `S6 SCNP+Dark+BClar&Trombone A.mp3` | Smuggling Artifacts | <https://suno.com/song/b6fca565-f6e6-47c9-b03a-3a04ce1f264e> |
+| `S6 SCNP+7Instr B.mp3` | Containment Protocol | <https://suno.com/song/0802b4c8-ef9f-4c93-8827-541ae9bc9e89> |
+| `S6 SCNP+Dark+Cello&DBass B.mp3` | What Remains | <https://suno.com/song/52086cbd-4c5b-47af-b543-ecd2af20b803> |
+| `S6 XCOM+AllowEpic+NoSynth+Slow+Space A.mp3` | Assault on the Alien Facility | <https://suno.com/song/b69361c4-340c-4e8a-91cf-17c72f44b11d> |
+| `S6 SCNP A.mp3` | Alien Technology | <https://suno.com/song/d4b1248f-965c-4e78-876e-75b2216fd0fc> |
+| `S6 SCNP B.mp3` | Alien Lifeforms | <https://suno.com/song/725ddb4b-4f7a-442d-943a-dc903f5e9f91> |
+| `S6 SCNP+Dark+Piano&Cello A.mp3` | Dark Omen | <https://suno.com/song/d21c736d-38a9-4e91-ad81-502302ff010f> |
+| `S6 SCNP+Dark+Piano&Cello B.mp3` | Night Shift | <https://suno.com/song/3afb7b9b-ff21-4b88-9c8c-d9aa646f3299> |
+| `S6 SCNP+Dark+DBass&BowedCymbals A.mp3` | Network Expansion | <https://suno.com/song/8f3d0acb-ceb5-4015-8289-35d51fdd1e70> |
+| `S6 SCNP+Dark+DBass&BowedCymbals B.mp3` | Surface Logistics | <https://suno.com/song/f6f12491-aecd-41cb-ac57-53966a3e3f8b> |
