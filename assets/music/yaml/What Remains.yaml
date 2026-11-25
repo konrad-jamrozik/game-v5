@@ -1,15 +1,15 @@
-file: 'S6 SCNP+Dark+Cello&DBass A.mp3'
+file: 'What Remains.mp3'
 source: Suno v6
-original_title: 'S6 SCNP+Dark+Cello&DBass A'
-source_title: 'S6 SCNP+Dark+Cello&DBass A'
-serial_id: 20
+original_title: 'S6 SCNP+Dark+Cello&DBass B'
+source_title: 'S6 SCNP+Dark+Cello&DBass B'
+serial_id: 21
 prompt_code: 'Suno v6 - Scanning Protocol - Dark - Cello and Double Bass'
-variant: 'A'
-song_url: https://suno.com/song/38874a24-f261-42ec-a253-faf8faa0be89
+variant: 'B'
+song_url: https://suno.com/song/52086cbd-4c5b-47af-b543-ecd2af20b803
 model: 'v6 (chirp-hawk)'
 created: '2026-11-18 18:03:10'
 tags: ['ambient', 'minimalist', 'dark']
-length: '3:00'
+length: '2:33'
 instrumental: true
 meta_prompt_taxonomy:
   stem: 'Replicate "Scanning Protocol" (Chris D''Ambrosio, XCOM Legacy OST)'

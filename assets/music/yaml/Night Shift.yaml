@@ -1,15 +1,15 @@
-file: 'S6 SCNP+Dark+Piano&Cello A.mp3'
+file: 'Night Shift.mp3'
 source: Suno v6
-original_title: 'Unseen Approach var1'
-source_title: 'Unseen Approach var1'
-serial_id: 16
+original_title: 'Unseen Approach var2'
+source_title: 'Unseen Approach var2'
+serial_id: 17
 prompt_code: 'Suno v6 - Scanning Protocol - Dark - Felt Piano and Cello'
-variant: 'A'
-song_url: https://suno.com/song/d21c736d-38a9-4e91-ad81-502302ff010f
+variant: 'B'
+song_url: https://suno.com/song/3afb7b9b-ff21-4b88-9c8c-d9aa646f3299
 model: 'v6 (chirp-hawk)'
 created: '2026-11-17 19:35'
-tags: [soundtrack, minimalist, intimate]
-length: '3:29'
+tags: [soundtrack, minimalist, hypnotic]
+length: '2:59'
 instrumental: true
 meta_prompt_taxonomy:
   stem: 'Replicate "Scanning Protocol" (Chris D''Ambrosio, XCOM Legacy OST)'
@@ -31,6 +31,6 @@ suno:
   style_influence: 0.7
   variety: 1
 final_prompt_from_gen_tool: |-
-  Soundtrack; instrumental, intimate and restrained; minimalist, gritty mix with resonant low-end, shadowed minor harmonies, subtle dissonance, and slowly evolving layers; very slow hypnotic pulses with understated intensity; deep bass drones and low rumble beneath isolated muted felt piano, sparse percussion, sustained bowed strings, and mournful restrained cello.
+  Soundtrack, instrumental, very slow hypnotic pulse; intimate, gritty, minimalist production with thick resonant low-end, shadowy minor harmonies, subtle dissonance, and slowly evolving layers. Deep bass drones and rumbling underpin sparse percussion, isolated muted felt piano notes, restrained mournful cello, and sustained bowed strings; understated and seamlessly loopable.
 notes: |-
   `final_prompt_from_gen_tool` is the Styles text Suno stored, not the one pasted in: ChatGPT's `suno.prompt` was pasted into Styles, and Suno's Variety control, which was at Normal (`suno.variety: 1`), rewrote it, differently for each variation. The `suno.exclude_styles` and the Weirdness and Style influence sliders are those ChatGPT recommended.

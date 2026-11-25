@@ -1,4 +1,4 @@
-file: 'Unknown Contact B.mp3'
+file: 'Artifact Experiments.mp3'
 source: Suno v6
 original_title: 'Unknown Contact B'
 source_title: 'Unknown Contact B'
@@ -33,4 +33,4 @@ final_prompt_from_gen_tool: |-
   Electronic strategy-game soundtrack, around 76 BPM with irregular sequencer accents that shift and drop away, seamlessly loopable; instrumental. Cold FM synths trace sparse dissonant motifs over a low grainy electronic bed, with faint radio interference, detuned signal fragments, and hollow metallic resonances in the gaps. Occasional dry pizzicato viola and a brief filtered bass flute breath sit deep in the mix.
 human_assessment: 'Good result.'
 notes: |-
-  The Game designer generated this song without a draft record and gave it a name of their own choosing rather than one under the naming scheme; the prompt and settings are the Game designer's. It is the second song of its generation (`batch_index` 1). `final_prompt_from_gen_tool` is the Styles text Suno stored, which Suno's Variety at Normal rewrote from `suno.prompt`, differently from Unknown Contact A. `created`, `length`, `model`, `tags`, and Variety come from Suno's clip data; `created` is its UTC creation time converted to Pacific time. `suno.weirdness` and `suno.style_influence` are the values the Game designer set, which Suno's clip data omits at their default of 50%; Max Mode, Personalize, and Duration are the Game designer's settings, which the clip data does not hold.
+  The Game designer generated this song without a draft record and gave it a name of their own choosing rather than one under the naming scheme; the prompt and settings are the Game designer's. It is the second song of its generation (`batch_index` 1). `final_prompt_from_gen_tool` is the Styles text Suno stored, which Suno's Variety at Normal rewrote from `suno.prompt`, differently from In Pursuit of Shapeshifters. `created`, `length`, `model`, `tags`, and Variety come from Suno's clip data; `created` is its UTC creation time converted to Pacific time. `suno.weirdness` and `suno.style_influence` are the values the Game designer set, which Suno's clip data omits at their default of 50%; Max Mode, Personalize, and Duration are the Game designer's settings, which the clip data does not hold.
