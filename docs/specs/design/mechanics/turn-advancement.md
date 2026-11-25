@@ -115,6 +115,11 @@ When it is 1, campaign creation continues from the initial Campaign state: the e
 Whatever the [Campaign seed](../foundation/determinism-and-randomness.md#glossary), a Campaign that the player receives after a Prologue has no Campaign ending and holds at least:
 
 - one Killed Agent, one Recovering Agent, one Agent in Training, and one Agent on an Active Investigation;
+- at least 12 [Serving](agents-spec.md#agent-statuses) Agents, of at least three [Ranks](../ui/gui.md#ranks);
+- Serving Agents that wear at least three different Weapons and at least two different Armors;
+- at least two Serving Agents whose [current health](agents-spec.md#combatant-attributes) is below their [effective max health](agents-spec.md#combatant-attributes);
+- Serving Agents whose [exhaustion](agents-spec.md#combatant-attributes) is above `exhaustion_work_start_max`, above `exhaustion_work_limit`, and above `exhaustion_incapacitation` of [AgentParameters](agents-spec.md#agentparameters), at least one of each;
+- a [Storage](equipment.md#storage) that holds Weapons of at least two kinds, at least one Armor, and Ammo;
 - one Completed Investigation;
-- one Active Mission site and one Won Mission;
+- one Active Mission site, and at least 15 Mission sites in a [final state](missions.md#glossary): at least 8 whose Mission is Won, at least 3 whose Mission is Lost, of which one Retreated and one Wiped, and at least 3 Expired;
 - one [Upgrade](domain-model.md#agency-and-agents) the Agency has bought.
