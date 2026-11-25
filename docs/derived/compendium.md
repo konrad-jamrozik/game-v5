@@ -846,13 +846,14 @@ Source: `content/compendium/compendium_articles/commander_article.yaml`
 
 A senior officer who directs the larger [operations](#faction-operations) of a cult, and fights as well as several [Soldiers](#soldier).
 
-| `commander`   | EnemyArchetype |
-| ------------- | -------------- |
-| `name`        | `Commander`    |
-| `base_skill`  | `300`          |
-| `base_health` | `40`           |
-| `weapon`      | `laser_pistol` |
-| `armor`       | `battle_suit`  |
+| `commander`    | EnemyArchetype |
+| -------------- | -------------- |
+| `name`         | `Commander`    |
+| `abbreviation` | `cmdr`         |
+| `base_skill`   | `300`          |
+| `base_health`  | `40`           |
+| `weapon`       | `laser_pistol` |
+| `armor`        | `battle_suit`  |
 
 ### Cult leader
 
@@ -860,13 +861,14 @@ Source: `content/compendium/compendium_articles/cult_leader_article.yaml`
 
 The heart of a cult, guarded in its headquarters. Only a strong, rested team should face the Cult leader, who must be captured and interrogated before the cult can be ended.
 
-| `cult_leader` | EnemyArchetype          |
-| ------------- | ----------------------- |
-| `name`        | `Cult leader`           |
-| `base_skill`  | `800`                   |
-| `base_health` | `80`                    |
-| `weapon`      | `augmented_laser_rifle` |
-| `armor`       | `augmented_battle_suit` |
+| `cult_leader`  | EnemyArchetype          |
+| -------------- | ----------------------- |
+| `name`         | `Cult leader`           |
+| `abbreviation` | `cldr`                  |
+| `base_skill`   | `800`                   |
+| `base_health`  | `80`                    |
+| `weapon`       | `augmented_laser_rifle` |
+| `armor`        | `augmented_battle_suit` |
 
 ### Elite
 
@@ -874,13 +876,14 @@ Source: `content/compendium/compendium_articles/elite_article.yaml`
 
 A hand-picked veteran, far more dangerous than a [Soldier](#soldier). Only well-trained [Agents](#agents) meet an Elite on even terms.
 
-| `elite`       | EnemyArchetype   |
-| ------------- | ---------------- |
-| `name`        | `Elite`          |
-| `base_skill`  | `250`            |
-| `base_health` | `40`             |
-| `weapon`      | `machine_gun`    |
-| `armor`       | `tactical_armor` |
+| `elite`        | EnemyArchetype   |
+| -------------- | ---------------- |
+| `name`         | `Elite`          |
+| `abbreviation` | `elit`           |
+| `base_skill`   | `250`            |
+| `base_health`  | `40`             |
+| `weapon`       | `machine_gun`    |
+| `armor`        | `tactical_armor` |
 
 ### Handler
 
@@ -888,13 +891,14 @@ Source: `content/compendium/compendium_articles/handler_article.yaml`
 
 A junior officer who runs a cell of [Initiates](#initiate) and [Operatives](#operative).
 
-| `handler`     | EnemyArchetype  |
-| ------------- | --------------- |
-| `name`        | `Handler`       |
-| `base_skill`  | `80`            |
-| `base_health` | `25`            |
-| `weapon`      | `combat_pistol` |
-| `armor`       | `padded_jacket` |
+| `handler`      | EnemyArchetype  |
+| -------------- | --------------- |
+| `name`         | `Handler`       |
+| `abbreviation` | `hndl`          |
+| `base_skill`   | `80`            |
+| `base_health`  | `25`            |
+| `weapon`       | `combat_pistol` |
+| `armor`        | `padded_jacket` |
 
 ### High commander
 
@@ -905,6 +909,7 @@ One of the few who answer only to the [Cult leader](#cult-leader). A High comman
 | `high_commander` | EnemyArchetype           |
 | ---------------- | ------------------------ |
 | `name`           | `High commander`         |
+| `abbreviation`   | `hcmd`                   |
 | `base_skill`     | `500`                    |
 | `base_health`    | `50`                     |
 | `weapon`         | `laser_rifle`            |
@@ -916,13 +921,14 @@ Source: `content/compendium/compendium_articles/initiate_article.yaml`
 
 A new recruit of a hostile cult, with more zeal than [skill](#skill). Initiates are dangerous mainly in numbers.
 
-| `initiate`    | EnemyArchetype   |
-| ------------- | ---------------- |
-| `name`        | `Initiate`       |
-| `base_skill`  | `40`             |
-| `base_health` | `20`             |
-| `weapon`      | `basic_pistol`   |
-| `armor`       | `basic_clothing` |
+| `initiate`     | EnemyArchetype   |
+| -------------- | ---------------- |
+| `name`         | `Initiate`       |
+| `abbreviation` | `init`           |
+| `base_skill`   | `40`             |
+| `base_health`  | `20`             |
+| `weapon`       | `basic_pistol`   |
+| `armor`        | `basic_clothing` |
 
 ### Lieutenant
 
@@ -930,13 +936,14 @@ Source: `content/compendium/compendium_articles/lieutenant_article.yaml`
 
 An officer who [leads](#leads) [Soldiers](#soldier) in the field, and fights a little better than those under command.
 
-| `lieutenant`  | EnemyArchetype              |
-| ------------- | --------------------------- |
-| `name`        | `Lieutenant`                |
-| `base_skill`  | `140`                       |
-| `base_health` | `30`                        |
-| `weapon`      | `augmented_rifle`           |
-| `armor`       | `reinforced_ballistic_vest` |
+| `lieutenant`   | EnemyArchetype              |
+| -------------- | --------------------------- |
+| `name`         | `Lieutenant`                |
+| `abbreviation` | `ltnt`                      |
+| `base_skill`   | `140`                       |
+| `base_health`  | `30`                        |
+| `weapon`       | `augmented_rifle`           |
+| `armor`        | `reinforced_ballistic_vest` |
 
 ### Operative
 
@@ -944,13 +951,14 @@ Source: `content/compendium/compendium_articles/operative_article.yaml`
 
 A cult member trusted with real work. Operatives shoot straighter than [Initiates](#initiate) and stand beside them in most fights.
 
-| `operative`   | EnemyArchetype   |
-| ------------- | ---------------- |
-| `name`        | `Operative`      |
-| `base_skill`  | `60`             |
-| `base_health` | `25`             |
-| `weapon`      | `combat_pistol`  |
-| `armor`       | `basic_clothing` |
+| `operative`    | EnemyArchetype   |
+| -------------- | ---------------- |
+| `name`         | `Operative`      |
+| `abbreviation` | `oper`           |
+| `base_skill`   | `60`             |
+| `base_health`  | `25`             |
+| `weapon`       | `combat_pistol`  |
+| `armor`        | `basic_clothing` |
 
 ### Soldier
 
@@ -958,13 +966,14 @@ Source: `content/compendium/compendium_articles/soldier_article.yaml`
 
 A seasoned fighter, roughly a match for a newly [hired](#hiring-and-upkeep) [Agent](#agents). Soldiers guard the places a [Faction](#factions) cannot afford to lose.
 
-| `soldier`     | EnemyArchetype   |
-| ------------- | ---------------- |
-| `name`        | `Soldier`        |
-| `base_skill`  | `120`            |
-| `base_health` | `30`             |
-| `weapon`      | `rifle`          |
-| `armor`       | `ballistic_vest` |
+| `soldier`      | EnemyArchetype   |
+| -------------- | ---------------- |
+| `name`         | `Soldier`        |
+| `abbreviation` | `sold`           |
+| `base_skill`   | `120`            |
+| `base_health`  | `30`             |
+| `weapon`       | `rifle`          |
+| `armor`        | `ballistic_vest` |
 
 ## Subject articles: FactionArchetype
 

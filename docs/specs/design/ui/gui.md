@@ -27,7 +27,7 @@ Its screens follow the life of a [Session](../foundation/core-concepts.md#campai
 | Settings panel | The [panel](#settings-panel), shown on both screens, through which the Player sets [Global configuration](../foundation/engine-contract.md#persisted-data). |
 | View trail | The places that the Player came through to reach the one shown, most recent last, which [the Escape key retraces](screens/campaign-screen.md#view-trail). |
 | Back control | The button of the open Detail view that [goes back to the last place of the View trail](screens/campaign-screen.md#view-trail), shown while the View trail is not empty. |
-| Enemy label | The name by which the GUI shows an [Enemy](../mechanics/domain-model.md#combat): its EnemyArchetype and [its number](#enemy-labels) among the Enemies of that EnemyArchetype at its [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), e.g. "initiate-2". |
+| Enemy label | The name by which the GUI shows an [Enemy](../mechanics/domain-model.md#combat): its EnemyArchetype's abbreviation and [its number](#enemy-labels) among the Enemies of that EnemyArchetype at its [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), e.g. "init-2". |
 | Mission site title | The [full name](#mission-site-titles) by which the GUI shows a Mission site wherever it reports what the Mission site's [Mission](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) brought, e.g. "Apprehend member · Red Dawn · Initiative · #3". |
 
 # Screens
@@ -127,9 +127,9 @@ The Player meets the same few kinds of Enemy everywhere, so the GUI lists them i
 
 # Enemy labels
 
-The Player meets Enemies only a few at a time, at one [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), and tells them apart by what they are, so the GUI shows every Enemy by its Enemy label, never by its [Instance ID](../foundation/campaign-instances.md#glossary). The Enemy label is the `name` of the Enemy's EnemyArchetype in lower case, with each space replaced by a hyphen, then a hyphen and the Enemy's number: its position, counted from 1, among the Enemies of the same EnemyArchetype in its Mission site's [list of Enemies](../mechanics/combat.md#fixed-order-of-each-side). An Enemy label is unique only within its Mission site, so wherever an Enemy is named outside the context of its Mission site, e.g. in the Cause column of the [Memorial](screens/agents-view.md#memorial), its Mission site is named beside it, there in the Where column.
+The Player meets Enemies only a few at a time, at one [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), and tells them apart by what they are, so the GUI shows every Enemy by its Enemy label, never by its [Instance ID](../foundation/campaign-instances.md#glossary). The Enemy label is short, so that it fits beside a figure of the [Combat replay](screens/combat-replay.md#figures) and in a narrow column: it is the [`abbreviation`](../mechanics/combat.md#enemyarchetype) of the Enemy's EnemyArchetype, then a hyphen and the Enemy's number: its position, counted from 1, among the Enemies of the same EnemyArchetype in its Mission site's [list of Enemies](../mechanics/combat.md#fixed-order-of-each-side). An Enemy label is unique only within its Mission site, so wherever an Enemy is named outside the context of its Mission site, e.g. in the Cause column of the [Memorial](screens/agents-view.md#memorial), its Mission site is named beside it, there in the Where column.
 
-E.g., a Mission site whose list of Enemies is three Initiates followed by two Soldiers, with the Instance IDs enemy-19 to enemy-23, shows them as initiate-1, initiate-2, initiate-3, soldier-1, and soldier-2. An Enemy of an EnemyArchetype named "Cult leader" is shown as cult-leader-1.
+E.g., a Mission site whose list of Enemies is three Initiates followed by two Soldiers, with the Instance IDs enemy-19 to enemy-23, shows them as init-1, init-2, init-3, sold-1, and sold-2 when the abbreviations of their EnemyArchetypes are `init` and `sold`.
 
 # Mission site titles
 

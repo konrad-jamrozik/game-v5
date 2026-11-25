@@ -81,6 +81,7 @@ An EnemyArchetype is the [Archetype](../foundation/core-concepts.md#campaign-ins
 | Property | Meaning | Read by |
 | --- | --- | --- |
 | `name` | The display name of the kind of Enemy. | [Player-visible information](#player-visible-information) |
+| `abbreviation` | The short name of the kind of Enemy, which the GUI uses wherever it names the kind in short, e.g. in an [Enemy label](../ui/gui.md#enemy-labels): one to four lowercase letters, e.g. `init` for an Initiate. No two EnemyArchetypes share one. | [Player-visible information](#player-visible-information) |
 | `base_skill` | The [base skill](agents-spec.md#combatant-attributes) of a newly created Enemy, a whole number of at least 0. | [Enemy creation](#enemy-creation) |
 | `base_health` | The [base health](agents-spec.md#combatant-attributes) of a newly created Enemy, a whole number of at least 1. | [Enemy creation](#enemy-creation) |
 | `weapon` | A reference to the Weapon GDR a newly created Enemy is equipped with. | [Enemy creation](#enemy-creation) |

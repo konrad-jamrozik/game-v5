@@ -1,0 +1,53 @@
+id: one_chevron
+type: RankInsignia
+min_base_skill: 150
+mark: chevron
+count: 1
+---
+id: two_chevrons
+type: RankInsignia
+min_base_skill: 200
+mark: chevron
+count: 2
+---
+id: three_chevrons
+type: RankInsignia
+min_base_skill: 250
+mark: chevron
+count: 3
+---
+id: one_bar
+type: RankInsignia
+min_base_skill: 350
+mark: bar
+count: 1
+---
+id: two_bars
+type: RankInsignia
+min_base_skill: 450
+mark: bar
+count: 2
+---
+id: three_bars
+type: RankInsignia
+min_base_skill: 550
+mark: bar
+count: 3
+---
+id: one_star
+type: RankInsignia
+min_base_skill: 700
+mark: star
+count: 1
+---
+id: two_stars
+type: RankInsignia
+min_base_skill: 850
+mark: star
+count: 2
+---
+id: three_stars
+type: RankInsignia
+min_base_skill: 1000
+mark: star
+count: 3

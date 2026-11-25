@@ -1,6 +1,7 @@
 id: initiate
 type: EnemyArchetype
 name: Initiate
+abbreviation: init
 base_skill: 40
 base_health: 20
 weapon: basic_pistol
@@ -9,6 +10,7 @@ armor: basic_clothing
 id: operative
 type: EnemyArchetype
 name: Operative
+abbreviation: oper
 base_skill: 60
 base_health: 25
 weapon: combat_pistol
@@ -17,6 +19,7 @@ armor: basic_clothing
 id: handler
 type: EnemyArchetype
 name: Handler
+abbreviation: hndl
 base_skill: 80
 base_health: 25
 weapon: combat_pistol
@@ -25,6 +28,7 @@ armor: padded_jacket
 id: soldier
 type: EnemyArchetype
 name: Soldier
+abbreviation: sold
 base_skill: 120
 base_health: 30
 weapon: rifle
@@ -33,6 +37,7 @@ armor: ballistic_vest
 id: lieutenant
 type: EnemyArchetype
 name: Lieutenant
+abbreviation: ltnt
 base_skill: 140
 base_health: 30
 weapon: augmented_rifle
@@ -41,6 +46,7 @@ armor: reinforced_ballistic_vest
 id: elite
 type: EnemyArchetype
 name: Elite
+abbreviation: elit
 base_skill: 250
 base_health: 40
 weapon: machine_gun
@@ -49,6 +55,7 @@ armor: tactical_armor
 id: commander
 type: EnemyArchetype
 name: Commander
+abbreviation: cmdr
 base_skill: 300
 base_health: 40
 weapon: laser_pistol
@@ -57,6 +64,7 @@ armor: battle_suit
 id: high_commander
 type: EnemyArchetype
 name: High commander
+abbreviation: hcmd
 base_skill: 500
 base_health: 50
 weapon: laser_rifle
@@ -65,6 +73,7 @@ armor: reinforced_battle_suit
 id: cult_leader
 type: EnemyArchetype
 name: Cult leader
+abbreviation: cldr
 base_skill: 800
 base_health: 80
 weapon: augmented_laser_rifle

@@ -100,7 +100,7 @@ The Memorial remembers the Agents who have left the [Agency](../../mechanics/dom
 
 - **Instance ID,** **base skill,** and **Experience,** headed Exp.
 - **Turn terminated,** headed Ended.
-- **Cause:** for a [Dismissed](../../mechanics/agents-spec.md#agent-statuses) Agent, "Dismissed" in Text muted; for a [Killed](../../mechanics/agents-spec.md#agent-statuses) one, "Killed by" and the [Enemy](../../mechanics/domain-model.md#combat) that its Killed by references, by its [Enemy label](../gui.md#glossary), in Danger text, e.g. "Killed by initiate-2".
+- **Cause:** for a [Dismissed](../../mechanics/agents-spec.md#agent-statuses) Agent, "Dismissed" in Text muted; for a [Killed](../../mechanics/agents-spec.md#agent-statuses) one, "Killed by" and the [Enemy](../../mechanics/domain-model.md#combat) that its Killed by references, by its [Enemy label](../gui.md#glossary), in Danger text, e.g. "Killed by init-2".
 - **Missions:** the number of Missions in its [Participation history](../../mechanics/domain-model.md#agency-and-agents).
 - **Turns with the Agency,** headed Turns: its Turn terminated minus its Turn hired.
 - **Enemies killed,** headed Kills: the Enemies killed of its [Service record](../../mechanics/agents-spec.md#service-record).
