@@ -1031,7 +1031,7 @@
         combat: {},
         /**
          * Each dimension of the Sweeper: fixed at its value, or sampled along an axis, over its list of values, e.g.
-         * `10, 25, 60`, or, while the list is empty, from, to, by step.
+         * `10, 25, 60`, or, while the list is empty, from base − count × step to base + count × step, by step.
          */
         sweeper: {
           showRatio: true,
@@ -1044,13 +1044,13 @@
           /** Draws the CR ratio line, contour lines of the rating ratio, over any colouring. */
           showLine: false,
           showDiff: false,
-          count: { mode: 'x', value: 20, from: 10, to: 100, step: 10, list: '' },
-          skill: { mode: 'fixed', value: 250, from: 100, to: 500, step: 50, list: '' },
-          damage: { mode: 'y', value: 0, from: 0, to: 8, step: 2, list: '' },
-          armor: { mode: 'fixed', value: 0, from: 0, to: 40, step: 10, list: '' },
+          count: { mode: 'x', value: 20, base: 50, step: 10, count: 4, list: '' },
+          skill: { mode: 'fixed', value: 250, base: 250, step: 50, count: 3, list: '' },
+          damage: { mode: 'y', value: 0, base: 4, step: 2, count: 2, list: '' },
+          armor: { mode: 'fixed', value: 0, base: 20, step: 10, count: 2, list: '' },
           // An empty site is the first site under Mission sites.
           site: { mode: 'fixed', value: '' },
-          trials: { mode: 'fixed', value: 100, from: 50, to: 500, step: 50, list: '' },
+          trials: { mode: 'fixed', value: 100, base: 100, step: 50, count: 1, list: '' },
         },
       })
 
@@ -2292,8 +2292,8 @@
       /** Whether a numeric dimension of the Sweeper is sampled over its list of values rather than by step. */
       const hasList = (d) => typeof d.list === 'string' && d.list.trim() !== ''
       /**
-       * The values of one numeric dimension: its fixed value, its list of values in the order given, or from, to, by
-       * step; whole numbers, at most 60.
+       * The values of one numeric dimension: its fixed value, its list of values in the order given, or Count steps
+       * on each side of its base; whole numbers, at most 60.
        */
       function dimValues(name) {
         const d = state.sweeper[name]
@@ -2322,16 +2322,23 @@
           return out
         }
         const step = Math.abs(d.step)
-        if (!(step > 0) || !Number.isFinite(d.from) || !Number.isFinite(d.to)) {
-          throw new Error(`${label}: From and To must be numbers and Step above 0`)
+        const count = Math.round(d.count)
+        if (!(step > 0) || !Number.isFinite(d.base) || !(count >= 0)) {
+          throw new Error(`${label}: Base must be a number, Step above 0, and Count 0 or more`)
         }
-        const dir = d.to >= d.from ? 1 : -1
+        if (2 * count + 1 > 60) {
+          throw new Error(`${label}: more than 60 values; lower the count`)
+        }
+        // Count steps below the base and Count above it; a value below the dimension's least is left out.
         const out = []
-        for (let v = d.from; dir > 0 ? v <= d.to + 1e-9 : v >= d.to - 1e-9; v += dir * step) {
-          out.push(whole(v))
-          if (out.length > 60) {
-            throw new Error(`${label}: more than 60 values; raise the step`)
+        for (let i = -count; i <= count; i++) {
+          const v = Math.round(d.base + i * step)
+          if (v >= lo && v <= hi) {
+            out.push(v)
           }
+        }
+        if (out.length === 0) {
+          throw new Error(`${label}: no value within range`)
         }
         return [...new Set(out)]
       }
@@ -2387,7 +2394,7 @@
         }
         const total = Object.values(values).reduce((n, v) => n * v.length, 1)
         if (total > 5000) {
-          throw new Error(`${total.toLocaleString('en')} samples; at most 5,000, so raise a step or fix a dimension`)
+          throw new Error(`${total.toLocaleString('en')} samples; at most 5,000, so lower a count or fix a dimension`)
         }
         const ax = Object.fromEntries(
           ['x', 'y', 'z'].map((a) => [
@@ -2583,9 +2590,9 @@
         const num = (name, key) =>
           `<input type="number" step="1" style="width: 90px" data-bind="sweeper.${name}.${key}" data-type="num" value="${state.sweeper[name][key]}" aria-label="${sweeperLabel(name)} ${key}">`
         const listIn = (name) =>
-          `<input type="text" style="width: 160px" placeholder="e.g. 10, 25, 60" title="Values separated by commas, sampled in the order given in place of From, To, and Step; empty to step" data-bind="sweeper.${name}.list" data-type="str" value="${esc(state.sweeper[name].list ?? '')}" aria-label="${sweeperLabel(name)} values">`
+          `<input type="text" style="width: 160px" placeholder="e.g. 10, 25, 60" title="Values separated by commas, sampled in the order given in place of Base, Step, and Count; empty to step" data-bind="sweeper.${name}.list" data-type="str" value="${esc(state.sweeper[name].list ?? '')}" aria-label="${sweeperLabel(name)} values">`
         $('#sweeperDims').innerHTML =
-          `<tr><th>Dimension</th><th>Mode</th><th>Fixed value</th><th>From</th><th>To</th><th>Step</th><th>Values</th></tr>` +
+          `<tr><th>Dimension</th><th>Mode</th><th>Fixed value</th><th>Base</th><th>Step</th><th>Count</th><th>Values</th></tr>` +
           SWEEPER_DIMS.map(([name, label]) => {
             const d = state.sweeper[name]
             const fixed = d.mode === 'fixed'
@@ -2601,15 +2608,15 @@
                 <td colspan="4" class="note" style="opacity: ${fixed ? 0.35 : 1}">every site shown under Mission sites</td></tr>`
             }
             return `<tr data-dim="${name}"><td>${label}</td><td>${modeSel(name)}</td><td class="${on(fixed)}">${num(name, 'value')}</td>${[
-              'from',
-              'to',
+              'base',
               'step',
+              'count',
             ]
               .map((k) => `<td class="${on(!fixed && !hasList(d))}" data-range>${num(name, k)}</td>`)
               .join('')}<td class="${on(!fixed)}" data-list>${listIn(name)}</td></tr>`
           }).join('')
       }
-      /** Greys From, To, and Step while a dimension's list of values is used, without drawing the inputs anew. */
+      /** Greys Base, Step, and Count while a dimension's list of values is used, without drawing the inputs anew. */
       function markSweeperList(name) {
         const d = state.sweeper[name]
         const row = document.querySelector(`#sweeperDims tr[data-dim="${name}"]`)
@@ -2744,6 +2751,12 @@
         const value = type === 'bool' ? t.checked : type === 'num' ? Number(t.value) : t.value
         if (type === 'num' && (t.value === '' || !Number.isFinite(value))) {
           return
+        }
+        // A dimension leaving Fixed for an axis steps around its fixed value.
+        const dimName = path.startsWith('sweeper.') && path.endsWith('.mode') ? path.split('.')[1] : null
+        const dim = dimName ? state.sweeper[dimName] : null
+        if (dim && dim.mode === 'fixed' && value !== 'fixed' && 'base' in dim) {
+          dim.base = dim.value
         }
         setPath(path, value)
         if (path.startsWith('formula.params.')) {
