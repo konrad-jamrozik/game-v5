@@ -12,7 +12,7 @@
 
 The GUI plays quiet background music under every screen, so that watching the Earth from the command console feels like a covert operation under way. The music is meant to be heard and then forgotten: it plays the Tracks of the Soundtrack in a random order, each fading in and out smoothly, and never stops or restarts because the Player changes screen. The Player can turn it off or skip to the next Track at any time, from the Main menu and from the Campaign screen, can always see which Track is playing, and sets its volume in the Settings panel.
 
-The music belongs to the [Graphical User Interface](gui.md) alone. It reads no game state, changes no [Campaign state](../foundation/core-concepts.md#campaign-and-session), and draws no random outcome of a [Campaign](../foundation/core-concepts.md#campaign-and-session); the [Command-Line Interface](cli.md) plays no music. Its two settings are part of [Global configuration](../foundation/engine-contract.md#persisted-data), so a choice the Player makes once applies in every later [Session](../foundation/core-concepts.md#campaign-and-session).
+The music belongs to the [Graphical User Interface](gui.md) alone. It reads no game state, changes no [Campaign state](../foundation/core-concepts.md#campaign-and-session), and draws no random outcome of a [Campaign](../foundation/core-concepts.md#campaign-and-session); the [Command-Line Interface](cli.md) plays no music. Its settings are part of [Global configuration](../foundation/engine-contract.md#persisted-data), so a choice the Player makes once applies in every later [Session](../foundation/core-concepts.md#campaign-and-session).
 
 # Glossary
 
@@ -109,7 +109,7 @@ The Music control holds these parts, in one row from left to right on the Main M
 The Side panel is narrow, and a Track title beside two buttons would be cut to a few letters, so there the Track title takes a line of its own, with the Music toggle and the Skip button in a row under it. The Player who wants that room for the [Situation panel](screens/situation-panel.md) collapses the Music control to its Track title:
 
 - **Collapse button:** a small neutral button at the right end of the Track title's line, showing "▾", with the accessible name "Collapse the Music control". Selecting it hides the row of the Music toggle and the Skip button, and the button then shows "▴", with the accessible name "Expand the Music control", and brings the row back.
-- **Kept for the Session:** whether the Music control is collapsed belongs to the GUI alone: it is expanded whenever a [Session](../foundation/core-concepts.md#campaign-and-session) starts and stays as the Player last left it for the rest of the Session, whatever Campaign is loaded. Collapsing it changes neither Music on nor what plays.
+- **Kept across Sessions:** whether the Music control is collapsed is the [Global configuration](../foundation/configuration.md#global-configuration) setting Music control collapsed, off by default, so it stays as the Player last left it whatever Campaign is loaded and in every later [Session](../foundation/core-concepts.md#campaign-and-session). Collapsing it changes neither Music on nor what plays.
 
 # Music volume slider
 

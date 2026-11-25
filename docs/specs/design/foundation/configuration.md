@@ -43,11 +43,16 @@ A Game build has the following Global configuration settings. The specification 
 | --- | --- |
 | [Autosave limit](saves.md#limits), [Autopilot Autosave limit](saves.md#limits) | [Limits](saves.md#limits) in Saves |
 | Music on, Music volume | [Music settings](../ui/music.md#music-settings) in Music |
+| Music control collapsed | [Music control in the Side panel](../ui/music.md#music-control-in-the-side-panel) in Music |
 | Sounds on, Sounds volume | [Sound settings](../ui/sounds.md#sound-settings) in Sounds |
 | Autopilot controls shown, [Autopilot](engine-contract.md#autopilot) [Turns](engine-contract.md#player-actions-and-turns), Autopilot controls expanded, [Autopilot AI](engine-contract.md#principals-and-access) | [Autopilot settings](../ui/screens/campaign-screen.md#autopilot-settings) in Campaign Screen |
 | [Dev mode](engine-contract.md#principals-and-access) on, Reveal hidden content on | [Developer tools](../ui/gui.md#developer-tools) in Graphical User Interface |
 | [Combat simulator](../ui/screens/combat-simulator.md#glossary) shown | [Opening the Combat simulator](../ui/screens/combat-simulator.md#opening-the-combat-simulator) in Combat Simulator |
 | [Screen limit](../ui/visual-design.md#glossary) | [Screen limit](../ui/visual-design.md#screen-limit) in Visual Design |
+| [Side panel](../ui/gui.md#glossary) hidden | [Hiding the Side panel](../ui/screens/campaign-screen.md#hiding-the-side-panel) in Campaign Screen |
+| Last 100 Turns charts | [Charts](../ui/visual-design.md#charts) in Visual Design |
+| Artwork tuning | [Artwork tuning](../ui/visual-design.md#artwork-tuning) in Visual Design |
+| [Combat replay](../ui/screens/combat-replay.md#glossary) Options shown | [Options](../ui/screens/combat-replay.md#options) in Combat Replay |
 
 Global configuration stores only values the player has set. A setting the player has not set follows the current Game build default, so a changed Game build default in a later Game build reaches it. Resetting a setting removes its stored value.
 
