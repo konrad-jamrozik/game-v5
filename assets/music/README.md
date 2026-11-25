@@ -176,3 +176,9 @@ The Game designer has proposed the renames below. Each proposed name is a custom
 | `S6 SCNP+7Instr B.mp3`                       | Containment Protocol          |
 | `S6 SCNP+Dark+Cello&DBass B.mp3`             | What Remains                  |
 | `S6 XCOM+AllowEpic+NoSynth+Slow+Space A.mp3` | Assault on the Alien Facility |
+| `S6 SCNP A.mp3`                              | Alien Technology              |
+| `S6 SCNP B.mp3`                              | Alien Lifeforms               |
+| `S6 SCNP+Dark+Piano&Cello A.mp3`             | Dark Omen                     |
+| `S6 SCNP+Dark+Piano&Cello B.mp3`             | Night Shift                   |
+| `S6 SCNP+Dark+DBass&BowedCymbals A.mp3`      | Network Expansion             |
+| `S6 SCNP+Dark+DBass&BowedCymbals B.mp3`      | Surface Logistics             |
