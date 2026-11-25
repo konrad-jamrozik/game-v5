@@ -123,7 +123,7 @@ Every arrow points right. A pace button plays to the end of the Combat with the 
 | Slow      | 2 s   | Off     | None   | Off     | On        |
 | Medium    | 1.5 s | On      | 1 s    | Off     | On        |
 | Fast      | 1 s   | On      | 0.25 s | Off     | Off       |
-| Very fast | 1 s   | On      | 0.25 s | On      | Off       |
+| Very fast | 1 s   | Off     | None   | On      | Off       |
 
 When the Combat replay is opened, its Options have the values of the Medium pace.
 
