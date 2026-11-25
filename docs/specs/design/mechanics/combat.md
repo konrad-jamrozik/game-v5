@@ -35,6 +35,7 @@ How a [Combat](domain-model.md#combat) is divided, and how it ends.
 | Phase order | The order in which the Combatants of one side take their Combat turns in one phase: from the highest to the lowest [effective skill](agents-spec.md#combatant-attributes) at the start of the phase, ties broken by the fixed order of the side. | Initiative, naming the order of Combat turns |
 | Combat turn | One Combatant's part in a phase: it attacks once if it is able to fight, and otherwise does nothing. | Turn, naming a Combatant's part in a phase |
 | Hit chance | The chance that one attack hits, as a whole number of thousandths from 1 to 999, which both decides its [hit outcome](#hit-outcome) and is shown to the player as a percentage with one decimal place, e.g. 996 as 99.6%. |  |
+| Hit roll | The whole number from 0 to 999 that the Combat log holds for one attack beside its [hit outcome](#hit-outcome), which says how narrowly the attack hit or missed: it is less than the hit chance exactly when the attack hits. |  |
 | Selection weight | How strongly an attacker is drawn to one opponent able to fight, as a whole number of at least 1; an attacker picks the opponent it attacks at random, in proportion to these weights. |  |
 | Combat log | The list of every attack of one Combat, in the order in which it was made, kept in its [Combat report](domain-model.md#combat). |  |
 | Armor removed | The [current armor](agents-spec.md#combatant-attributes) [one attack takes](#effects-of-an-attack) from its defender: the smaller of the damage outcome and the defender's current armor before the attack, or 0 on a miss. | Armor damage |
@@ -298,6 +299,10 @@ Here A is the attacker's effective skill and D is the defender's, both read at t
 
 E.g., A = 107 and D = 40 give `round down(877.38…) = 877`, i.e. 87.7%.
 
+So that the player can see how narrowly an attack hit or missed, each attack also has a hit roll, a whole number from 0 to 999. The attack is a hit exactly when its hit roll is less than its hit chance, and among the hit rolls its hit outcome allows, each has the same Probability. The hit roll is decided together with the hit outcome and is no random outcome of its own, so a random outcome override fixes the hit outcome alone. It influences nothing in the Combat.
+
+E.g., an attack with the hit chance 116 and the hit roll 168 misses by 52 thousandths, i.e. by 5.2%, and one with the hit chance 320 and the hit roll 230 hits with 90 thousandths, i.e. 9.0%, to spare.
+
 ## Damage outcome
 
 Each attack whose hit outcome is a hit has one named random outcome, the damage outcome. It is a [uniform whole-number outcome](../foundation/numbers.md#uniform-whole-number-outcomes) over the inclusive range from `lo` to `hi`:
@@ -401,7 +406,7 @@ A Combat report is the full account of one Combat, from which a player can follo
 6. **Damage dealt and damage taken:** for each participant, its damage dealt and its damage taken; and for each Agent, its [combat experience](#combat-experience).
 7. **Combat ratings:** the Combat rating of each side at Combat start and at the end of every Combat round.
 8. **Ammo:** for each AmmoType that a Weapon of the Agents' side uses, its rounds at hand at Combat start and its rounds left at Combat end.
-9. **Combat log:** every attack, each with its Combat round number, its attacker and defender by Instance ID, A and D, the hit chance, the hit outcome, the damage outcome when there is one, the armor removed, the health removed, the defender's current armor after the attack, the current health and exhaustion of the attacker and the defender after the attack, and whether the attack made the defender dead or the defender or the attacker Incapacitated, and for an Agent's attack, the AmmoType of the round it spent, or that it was made with the Fallback Weapon because its Ammo had run out.
+9. **Combat log:** every attack, each with its Combat round number, its attacker and defender by Instance ID, A and D, the hit chance, the hit roll, the hit outcome, the damage outcome when there is one, the armor removed, the health removed, the defender's current armor after the attack, the current health and exhaustion of the attacker and the defender after the attack, and whether the attack made the defender dead or the defender or the attacker Incapacitated, and for an Agent's attack, the AmmoType of the round it spent, or that it was made with the Fallback Weapon because its Ammo had run out.
 10. **Mission:** the Instance ID of the Mission whose Combat it records, which influences nothing in the Combat. The Combat report of a Detached Combat has no Mission, and identifies each participant [by its side and position](#detached-combat).
 
 The health removed from an Agent, and the damage dealt and damage taken that sum it, are [Decimal quantities](../foundation/numbers.md#glossary), because an Agent's current health is one. E.g., a damage outcome of 10 against an Agent with current health 5.60 removes 5.60.

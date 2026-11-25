@@ -5,7 +5,7 @@
 | Spec ID | CRPLAY |
 | Family | UI |
 | Audience | UI designer, Implementer |
-| Owns | How the Combat replay opens in the Turn Report View, how it draws the Combatants and their attacks on the Battlefield, and how the Player steps and plays it. |
+| Owns | How the Combat replay opens from the Turn Report View and covers its screen, how it draws the Combatants and their attacks on the Battlefield, and how the Player steps and plays it. |
 | Conventions | [Specification Conventions](../../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
@@ -24,7 +24,7 @@ It shows only what the Combat report holds and fights nothing again, so in a Cam
 
 # Visualize button
 
-The Player reaches the Combat replay from wherever a [Combat](../../mechanics/domain-model.md#combat) is summed up. A Visualize button stands beside each [Combat report](../../mechanics/domain-model.md#combat) button, i.e. on a row of the Missions section of the Turn Report View and in the title row of a Combat report, and a [Mission](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) card of the [Turn summary](turn-summary.md#mission-cards) does the same when selected. It opens the Turn Report View with that Mission's Combat replay shown in place of its content, as a Follow.
+The Player reaches the Combat replay from wherever a [Combat](../../mechanics/domain-model.md#combat) is summed up. A Visualize button stands beside each [Combat report](../../mechanics/domain-model.md#combat) button, i.e. on a row of the Missions section of the Turn Report View and in the title row of a Combat report, and a [Mission](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) card of the [Turn summary](turn-summary.md#mission-cards) does the same when selected. It opens the Turn Report View with that Mission's Combat replay shown in place of its content, as a Follow, and the Combat replay then covers the [whole screen](#whole-screen).
 
 # Battlefield layout
 
@@ -79,21 +79,73 @@ The shot of an attack follows the `shot` of the AmmoType of the attacker's Weapo
 
 A tracer or a beam is the longer and thicker the higher the attacker's [effective weapon damage](../../mechanics/agents-spec.md#combatant-attributes). A shot that misses is aimed beside the defender and flies on past it, and a blade that misses slashes beside it. A hit shakes the defender.
 
+# Whole screen
+
+The Battlefield needs all the room there is, so while the Combat replay is shown it covers the whole screen it was opened on: on the [Campaign screen](campaign-screen.md#regions) the status bar, the [Side panel](../gui.md#glossary), and the [Globe stage](../gui.md#glossary), and on the [Combat simulator](combat-simulator.md#layout) its Teams pane. Its title row holds the title "Combat replay", what Combat it shows, and at its right end the [Back control](../gui.md#glossary), when there is one, before a [close control](../visual-design.md#close-controls).
+
+On the [Campaign](../../foundation/core-concepts.md#campaign-and-session) screen the Combat replay stays a place of the [View trail](campaign-screen.md#view-trail): the Back control, the close control, and the Escape key do what they do in the Turn Report View. The Campaign screen takes no other keyboard shortcut while the Combat replay is shown, because the Player would not see what the key did.
+
 # Playback
 
-The Player sets the pace: one attack at a time to study a Combat, or all of it at once to see how it went.
+The Player sets the pace: one attack at a time to study a Combat, or all of it at a chosen pace to see how it went. Beside the Battlefield stand, from the top, the [attack being played](#attack-being-played), the [transport buttons](#transport-buttons), the [Rewind, Repeat, and Options buttons](#rewind-repeat-and-options-buttons), the [Options](#options) while shown, and [the slider and the Combat log](#slider-and-combat-log).
 
-- **Steps:** a [Combat turn](../../mechanics/combat.md#combat-rounds-and-results) button plays the next attack, a Phase button plays to the end of the current Agents' phase or [Enemies' phase](../../mechanics/combat.md#combat-rounds-and-results), and a [Combat round](../../mechanics/combat.md#combat-rounds-and-results) button plays to the end of the current Combat round. A Combat turn in which a Combatant made no attack is not in the Combat log and is not a step.
-- **Repeat:** a Repeat button plays again the last of these three steps the Player took: it returns to where that step began and plays the same attacks once more, e.g. the same Combat round after the Combat round button, so that the Player can watch a step as often as needed. It is disabled until a step has been taken. The R key presses it. While the Combat replay is shown on the [Campaign screen](campaign-screen.md#undo-and-redo), the R key therefore does not press the Redo button.
-- **Play:** a Play button plays to the end of the Combat and becomes Pause while it plays. At the end of the Combat it becomes Replay, which plays the Combat again from its start.
-- **Going back:** a Back button returns to before the last attack, a Start button to Combat start, and a slider to any attack. The Combat log is listed beside the Battlefield, and selecting a row of it shows the Combat right after that attack.
+## Transport buttons
+
+The transport buttons look like the keys of a tape player, so each shows a symbol and no label, and its name is its tooltip and its accessible name. They stand in one row, in this order:
+
+| Button | Symbol | What it does |
+| --- | --- | --- |
+| Pause | Two upright bars | Stops the playing where it is. It is disabled while nothing plays. |
+| [Combat turn](../../mechanics/combat.md#combat-rounds-and-results) | The digit 1 | Plays the next attack alone, with the Options as they are, except that it plays one attack also with Instant on. A [Combat turn](../../mechanics/combat.md#combat-rounds-and-results) in which a Combatant made no attack is not in the Combat log and is not a step. |
+| Slow | One arrow | Plays at the Slow pace. |
+| Medium | Two arrows | Plays at the Medium pace. |
+| Fast | Three arrows | Plays at the Fast pace. |
+| Very fast | Four arrows | Plays at the Very fast pace. |
+
+Every arrow points right. A pace button sets the Options to the values of its pace and plays to the end of the Combat, from Combat start when the Combat replay is at the end of the Combat. While the Combat replay plays to the end of the Combat with the Options of a pace, that pace's button is shown pressed.
+
+| Pace      | Speed | Overlap | Delay    | Instant | Aim lines |
+| --------- | ----- | ------- | -------- | ------- | --------- |
+| Slow      | 2 s   | Off     | As it is | Off     | On        |
+| Medium    | 1.5 s | On      | 1 s      | Off     | On        |
+| Fast      | 1 s   | On      | 0.25 s   | Off     | Off       |
+| Very fast | 1 s   | On      | 0.25 s   | On      | Off       |
+
+When the Combat replay is opened, its Options have the values of the Medium pace.
+
+## Rewind, Repeat, and Options buttons
+
+A second row holds what the Player needs less often:
+
+- **Rewind:** a button showing the rewind symbol of a tape player and no label. It returns to Combat start.
+- **Repeat:** a button showing a circling arrow and no label. It plays again the last step the Player took, i.e. with the Combat turn button, the Phase button, or the [Combat round](../../mechanics/combat.md#combat-rounds-and-results) button: it returns to where that step began and plays the same attacks once more, e.g. the same Combat round after the Combat round button, so that the Player can watch a step as often as needed. It is disabled until a step has been taken. The R key presses it. While the Combat replay is shown on the [Campaign screen](campaign-screen.md#undo-and-redo), the R key therefore does not press the Redo button.
+- **Options:** a button labelled "Options", which shows the Options and hides them again.
+
+## Options
+
+The Options are set once and then left alone, or set by a pace button, so they stay hidden until asked for, and the Battlefield and everything beside it share one screen of the [Reference window](../visual-design.md#reference-window) with them shown or hidden. They are hidden whenever a [Session](../../foundation/core-concepts.md#campaign-and-session) starts, and whether they are shown stays as the Player last left it for the rest of the Session. Each is named by one or two words and explained nowhere on the screen, so that all of them take few rows:
+
 - **Speed:** how long one attack takes to play: 2 s, 1.5 s, 1 s, 0.5 s, 0.25 s, or 0.1 s.
-- **Instant:** when on, all attacks of a phase play at the same time, so a step is a phase, and several hits on one defender show their damage outcomes as one sum.
-- **Overlap:** when on, the next attack starts a Delay after the last one started, whether or not that one has finished, and keeps doing so across phases and Combat rounds. The Delay is 1.5 s, 1 s, 0.5 s, 0.25 s, or 0.1 s, and is independent of the Speed. With Instant on, the Delay runs from the start of one phase to the start of the next.
-- **Aim lines:** a faint dashed line joins each attacker to its defender, for every attack being played and, at rest, for the step last played. An Aim lines checkbox, on at first, turns these lines off, e.g. for a Combat of many Combatants in which they hide the shots.
-- **Options:** the Speed, Instant, Overlap with its Delay, and Aim lines are set once and then left alone, so they sit behind an Options button, which shows them and hides them again, and the Battlefield, the buttons, the slider, and the Combat log share one screen of the [Reference window](../visual-design.md#reference-window) without them. They are hidden whenever a [Session](../../foundation/core-concepts.md#campaign-and-session) starts, and whether they are shown stays as the Player last left it for the rest of the Session.
+- **Overlap:** when on, the next attack starts a Delay after the last one started, whether or not that one has finished, and keeps doing so across phases and Combat rounds.
+- **Delay:** 1.5 s, 1 s, 0.5 s, 0.25 s, or 0.1 s, independent of the Speed. With Instant on, the Delay runs from the start of one phase to the start of the next.
+- **Instant:** when on, all attacks of a phase play at the same time, so a step of the playing is a phase, and several hits on one defender show their damage outcomes as one sum.
+- **Aim lines:** when on, a faint dashed line joins each attacker to its defender, for every attack being played and, at rest, for the step last played. Turning them off helps e.g. in a Combat of many Combatants in which they hide the shots.
+- **Phase** and **Combat round:** two buttons. The Phase button plays to the end of the current Agents' phase or [Enemies' phase](../../mechanics/combat.md#combat-rounds-and-results), and the Combat round button to the end of the current [Combat round](../../mechanics/combat.md#combat-rounds-and-results).
 
-Beside the Battlefield, the Combat replay names the attack being played, i.e. its Combat round and phase, attacker, defender, [Hit chance](../../mechanics/combat.md#combat-rounds-and-results), and result, and at the end the [Combat outcome](../../mechanics/combat.md#combat-rounds-and-results). A bar compares the [Combat ratings](../../mechanics/combat.md#combatant-condition-in-a-combat) of the two sides as of the last Combat round completed. The pointer resting on a figure shows the values of its Combatant.
+## Slider and Combat log
+
+Under the buttons, a slider returns to any attack, and the Combat log is listed below it, one short row per attack. Selecting a row of it shows the Combat right after that attack.
+
+## Attack being played
+
+Above the buttons, the Combat replay names the attack being played, i.e. its Combat round and phase, attacker, defender, [Hit chance](../../mechanics/combat.md#combat-rounds-and-results), and result, and at the end the [Combat outcome](../../mechanics/combat.md#combat-rounds-and-results).
+
+The result says how narrowly the attack hit or missed, as its margin: the difference between its Hit chance and its [Hit roll](../../mechanics/combat.md#hit-outcome), shown like a Hit chance, as a percentage with one decimal place. Nothing on the screen explains the margin.
+
+- **Miss:** the margin alone, e.g. "miss by 5.2%" for the Hit chance 11.6% and the Hit roll 168.
+- **Hit:** the margin, the damage outcome, and the defender's [current health](../../mechanics/agents-spec.md#combatant-attributes) before and after the attack, e.g. "hit with 9.0% margin, for 8 damage, health 20 → 12". When the defender had current armor before the hit, the [armor removed](../../mechanics/combat.md#combat-rounds-and-results) and the defender's current armor before and after the attack stand between the damage outcome and the health, e.g. "hit with 9.0% margin, for 15 damage, 8 absorbed, armor 8 → 0, health 31 → 23".
+
+A bar above the Battlefield compares the [Combat ratings](../../mechanics/combat.md#combatant-condition-in-a-combat) of the two sides as of the last Combat round completed. The pointer resting on a figure shows the values of its Combatant.
 
 # Screenshot
 

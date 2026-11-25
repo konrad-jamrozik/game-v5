@@ -30,14 +30,14 @@ The [Main menu](main-menu.md) shows a Combat simulator button while the [Global 
 
 A test, or a developer at work on the Combat simulator, must reach it without setting anything first. Opening the game at an address whose query holds `combat-simulator`, e.g. `?combat-simulator`, therefore shows the Combat simulator at once when the [Session](../../foundation/core-concepts.md#campaign-and-session) has no [Current campaign](../../foundation/core-concepts.md#campaign-and-session), whatever the setting is.
 
-The Combat simulator has a [close control](../visual-design.md#close-controls). It and the Escape key show the Main menu again.
+The Combat simulator has a [close control](../visual-design.md#close-controls). It and the Escape key show the Main menu again, except that while the Combat replay is shown the Escape key closes the Combat replay.
 
 # Layout
 
-The Combat simulator has no [Campaign](../../foundation/core-concepts.md#campaign-and-session) to report on, so it has none of the regions of the [Campaign screen](campaign-screen.md) and gives its whole width to two parts:
+The Combat simulator has no [Campaign](../../foundation/core-concepts.md#campaign-and-session) to report on, so it has none of the regions of the [Campaign screen](campaign-screen.md). It shows one of two parts at a time:
 
-1. **Teams pane,** at the left: the [two teams](#teams) and the [Fight controls](#fighting-the-combat).
-2. **Combat replay,** to its right: the [Combat replay](combat-replay.md) of the [Combat](../../mechanics/domain-model.md#combat) last fought. Until a Combat has been fought, a line in its place says to press Fight.
+1. **Teams pane:** the [two teams](#teams) and the [Fight controls](#fighting-the-combat). It is what the Combat simulator opens with.
+2. **Combat replay:** the [Combat replay](combat-replay.md) of the [Combat](../../mechanics/domain-model.md#combat) last fought, which [covers the whole screen](combat-replay.md#whole-screen) once a Combat has been fought. Its close control shows the Teams pane again, with its rows as they were.
 
 # Teams
 
@@ -69,7 +69,7 @@ The Fight controls stand at the top of the Teams pane:
 - **Fight:** the primary button. It has `session.combatSimulator.fightCombat(setup)` fight a Detached Combat between the two sides as the rows give them, each row as an explicit entry, with the Detached seed of the field, no changed [GDR](../../foundation/core-concepts.md#game-build-and-content) value, and no limit on any AmmoType. The Combat replay then shows that Combat from Combat start.
 - **New seed:** a button that puts a new seed, chosen at random, into the field and then does what Fight does, so that the same teams are seen to fight another way.
 
-When the setup is rejected, e.g. because the Agents' side is empty or a field holds a value out of its range, the reason the engine reports is shown under the Fight controls and the Combat replay keeps the Combat it shows. The Combat replay keeps showing the Combat last fought while the rows are edited, until Fight is pressed again.
+When the setup is rejected, e.g. because the Agents' side is empty or a field holds a value out of its range, the reason the engine reports is shown under the Fight controls and no Combat replay is shown. Fight with the same rows and the same Detached seed fights the same Combat, so the Game designer who closed a Combat replay sees it again by pressing Fight.
 
 The [Combat replay](combat-replay.md#battlefield-layout) derives where its figures stand from the Detached seed, and names an Agent by its place in its side, e.g. "agent-3".
 
