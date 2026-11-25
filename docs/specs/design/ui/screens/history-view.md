@@ -32,7 +32,7 @@ The [Turn](../../foundation/engine-contract.md#player-actions-and-turns) by Turn
 
 The current Turn's row shows each column as if the Advance turn ending it were committed at the [Current world state](../../foundation/engine-contract.md#player-actions-and-turns), as far as that is known before it is committed:
 
-- **Turn:** t, followed by "now".
+- **Turn:** t in [Notice](../visual-design.md#colours), with no word after it, so that the row reads as the Turn still in play without widening the column.
 - **Income and Upkeep:** the [projected income and projected upkeep](../../mechanics/economy-and-upgrades.md#projected-income-and-upkeep).
 - **Panic:** Panic in the Current world state.
 - **Agents:** the number of Serving Agents in the Current world state.
