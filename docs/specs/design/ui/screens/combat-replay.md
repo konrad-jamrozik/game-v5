@@ -42,7 +42,7 @@ A figure shows what the Player must know about its Combatant without a table: wh
 
 - **Name:** each figure is named beside it, an [Agent](../../mechanics/domain-model.md#agency-and-agents) by its [Instance ID](../../foundation/campaign-instances.md#glossary) and an [Enemy](../../mechanics/domain-model.md#combat) by its [Enemy label](../gui.md#glossary). A name that would lie over another figure or another name, e.g. in a crowded column, is left out, and the names of a side are placed in its fixed order. The pointer resting on a figure names it in a tooltip, an Enemy by its [full Enemy label](../gui.md#enemy-labels), with its health and armor as what is left of what it started the Combat with, e.g. "health 24/30 · armor 12/20".
 - **Agent:** a circle in Positive.
-- **Enemy:** a shape, a colour, and diamonds inside the shape that say its EnemyArchetype, as [Enemy figures](#enemy-figures) gives them.
+- **Enemy:** a shape, a colour, and chevrons inside the shape that say its EnemyArchetype, as [Enemy figures](#enemy-figures) gives them.
 - **Health:** the figure is filled with its colour from the bottom, as far as its [current health](../../mechanics/agents-spec.md#combatant-attributes) is of its [effective max health](../../mechanics/agents-spec.md#combatant-attributes), so that it empties from the top as it is hit.
 - **Armor:** a rim around the figure in Text muted, the thicker the more [current armor](../../mechanics/agents-spec.md#combatant-attributes) the Combatant has, so that a hit thins the rim before it empties the figure, and a Combatant with no current armor has no rim.
 - **Condition:** a figure whose Combatant is [Incapacitated](../../mechanics/combat.md#combatant-condition-in-a-combat) is dimmed and has a dashed outline, and that of a dead one is empty and crossed out.
@@ -50,9 +50,9 @@ A figure shows what the Player must know about its Combatant without a table: wh
 
 ## Enemy figures
 
-The shape of an Enemy's figure says how strong its EnemyArchetype is at a glance: the stronger, the more corners, and each shape has a colour of its own. Within one shape, the stronger EnemyArchetypes carry more diamonds inside the shape. The figure follows the place of the EnemyArchetype in the [EnemyArchetype order](../gui.md#enemyarchetype-order):
+The shape of an Enemy's figure says how strong its EnemyArchetype is at a glance: the stronger, the more corners, and each shape has a colour of its own. Within one shape, the stronger EnemyArchetypes carry more upward chevrons inside the shape. The figure follows the place of the EnemyArchetype in the [EnemyArchetype order](../gui.md#enemyarchetype-order):
 
-| Place | Shape    | Colour       | Diamonds inside |
+| Place | Shape    | Colour       | Chevrons inside |
 | ----- | -------- | ------------ | --------------- |
 | 1     | Triangle | Enemy yellow | None            |
 | 2     | Triangle | Enemy yellow | One             |
@@ -64,7 +64,7 @@ The shape of an Enemy's figure says how strong its EnemyArchetype is at a glance
 | 8     | Hexagon  | Enemy red    | None            |
 | 9 on  | Heptagon | Enemy violet | None            |
 
-A diamond is a filled square turned 45 degrees, so that it is not mistaken for the chevrons of a [Rank insignia](#rank-insignia-thresholds). The diamonds are alike in size and stand centred in the shape, two of them side by side. They are drawn in the figure's colour where the figure is empty and in Background where it is filled, so that they show at any [health](#figures).
+The chevrons are alike in shape and size and stand centred in the shape, two of them one above the other. They are drawn in the figure's colour where the figure is empty and in Background where it is filled, so that they show at any [health](#figures).
 
 ## Rank insignia thresholds
 
