@@ -38,9 +38,11 @@ A button shows a count where that section gives one, and no count while it is 0.
 
 The Player who reads a wide chart or a long table wants the whole width of the screen, so the Side panel can be put away and brought back at a keystroke. Pressing the button "»", with the accessible name "Hide the Side panel", or the V key, hides the Side panel: a narrow strip takes its place, holding the button "«", with the accessible name "Show the Side panel", and the Globe stage and the open Detail view take the rest of the width. Pressing that button, or the V key again, shows the Side panel as it was. The V key does so wherever the Player is on the Campaign screen, except while typing in a field. Whether the Side panel is hidden belongs to the GUI alone: it is shown whenever a [Session](../../foundation/core-concepts.md#campaign-and-session) starts and stays as the Player last left it for the rest of the Session, whatever Campaign is loaded.
 
+While the [Compendium View](compendium-view.md) is open, the Side panel is left out altogether, with no strip in its place, and the Compendium View takes the whole width under the status bar, because the Player reading a reference needs neither the Situation panel nor the navigation. The V key does nothing meanwhile. Once the Compendium View gives way to another place, or closes, the Side panel is back, hidden or shown as the Player last left it.
+
 # Detail views
 
-A Detail view opens over the Globe stage and covers it, while the status bar and the Side panel stay in view, so that the Player keeps the [Situation panel](situation-panel.md#glossary) in sight while acting in a Detail view. One Detail view is open at a time: opening another replaces it. The Detail views are in these groups:
+A Detail view opens over the Globe stage and covers it, while the status bar and the Side panel stay in view, except for the Compendium View as [Hiding the Side panel](#hiding-the-side-panel) says, so that the Player keeps the [Situation panel](situation-panel.md#glossary) in sight while acting in a Detail view. One Detail view is open at a time: opening another replaces it. The Detail views are in these groups:
 
 - **Operations,** the Detail views of the work the Player sends Agents to:
   1. [Missions](missions-view.md), for the [Mission sites](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) and the deployment of Agents to them, with the number of Active Mission sites.
