@@ -10,7 +10,7 @@
 
 # Overview
 
-The Agents View is where the Player manages the roster: who serves, what each [Agent](../../mechanics/domain-model.md#agency-and-agents) is doing, and how fit each is for the next task. It is the third of the Operations [Detail views](../gui.md#glossary) of the [Campaign Screen](campaign-screen.md). Unlike the [Missions View](missions-view.md) and the [Leads View](leads-view.md), it is one table, because the Player compares Agents with one another and acts on several at once. It is also where the Player equips Agents, so that what an Agent wears is weighed beside how well it fights.
+The Agents View is where the Player manages the roster: who serves, what each [Agent](../../mechanics/domain-model.md#agency-and-agents) is doing, and how fit each is for the next task. It is the third of the Operations [Detail views](../gui.md#glossary) of the [Campaign Screen](campaign-screen.md). Unlike the [Missions View](missions-view.md) and the [Leads View](leads-view.md), it is one table, because the Player compares Agents with one another and acts on several at once. It is also where the Player equips Agents, in its [Equip table](#equip-table), so that what an Agent wears is weighed beside how well it fights.
 
 # Glossary
 
@@ -44,7 +44,7 @@ The Agents View has two kinds of filter: one decides which Agents the table show
 
 ## Row filters
 
-Five row filters, each with its count, stand in the title row after the places free, without a Label, because their names say what they filter. Exactly one is on at a time, and All is on whenever the Agents View opens.
+Five row filters, each with its count, need no Label, because their names say what they filter: All, Fit, [In base](../../mechanics/agents-spec.md#agent-statuses), and [Away](../../mechanics/agents-spec.md#agent-statuses) stand in the title row after the places free, and Memorial, which shows former Agents rather than the roster, stands at the right end of the row under it, after the Equip button. Exactly one is on at a time, and All is on whenever the Agents View opens.
 
 - **All:** every Serving [Agent](../../mechanics/domain-model.md#agency-and-agents).
 - **Fit:** every Agent that [can take orders](../../mechanics/agents-spec.md#agents-that-can-take-orders) and is [Fit to start work](../../mechanics/agents-spec.md#assignments), i.e. every Agent the Player can give new work now.
@@ -52,12 +52,12 @@ Five row filters, each with its count, stand in the title row after the places f
 - **[Away](../../mechanics/agents-spec.md#agent-statuses):** every Agent Away.
 - **Memorial:** every [Terminated](../../mechanics/agents-spec.md#agent-statuses) Agent, in the [Memorial](#memorial).
 
-On a row of their own under the title row, two checkboxes hide more Agents from the table that All, Fit, In base, or Away shows, so that the Player can keep in view only the Agents ready for work, and a third, Details, chooses the [columns of the table](#agent-table):
+At the left of the row under the title row, two checkboxes hide more Agents from the table that All, Fit, In base, or Away shows, so that the Player can keep in view only the Agents ready for work:
 
 - **Hide too exhausted to start work:** hides every Agent whose [exhaustion](../../mechanics/agents-spec.md#combatant-attributes) is above `exhaustion_work_start_max` of [AgentParameters](../../mechanics/agents-spec.md#agentparameters), so that it is not [Fit to start work](../../mechanics/agents-spec.md#start-work-gate) whatever its health.
 - **Hide recovering:** hides every Agent whose Assignment is [Recovery](../../mechanics/agents-spec.md#assignments), whether it is [Recovering](../../mechanics/agents-spec.md#agent-statuses) or [In transit](../../mechanics/domain-model.md#agency-and-agents).
 
-All three are unchecked whenever the Agents View opens. They change no count of the row filters. While Memorial is on, all three are disabled and keep their check.
+Both are unchecked whenever the Agents View opens. They change no count of the row filters. While Memorial is on, both are disabled and keep their check.
 
 ## Assignment filters
 
@@ -69,11 +69,9 @@ Whenever the Assignment filter, the row filter, a checkbox of the [row filters](
 
 # Agent table
 
-The table lists one row per Serving [Agent](../../mechanics/domain-model.md#agency-and-agents) that the row filter shows and its checkboxes do not hide, with a selection checkbox and these columns: [Instance ID](../../foundation/campaign-instances.md#glossary), [Combat rating](../../mechanics/combat.md#combatant-condition-in-a-combat) headed CR, [Rank](../gui.md#ranks), [current health](../../mechanics/agents-spec.md#combatant-attributes) against [effective max health](../../mechanics/agents-spec.md#combatant-attributes), exhaustion, Weapon, Armor, and Assignment with its [Agent status](../../mechanics/agents-spec.md#agent-statuses). The table's default order is by Instance ID, and its column headers [sort it](../visual-design.md#tables). Current health and exhaustion take the colours of their [Agent condition](../visual-design.md#agent-condition).
+The table lists one row per Serving [Agent](../../mechanics/domain-model.md#agency-and-agents) that the row filter shows and its checkboxes do not hide, with a selection checkbox and these columns: [Instance ID](../../foundation/campaign-instances.md#glossary), [Combat rating](../../mechanics/combat.md#combatant-condition-in-a-combat) headed CR, [Rank](../gui.md#ranks), [current health](../../mechanics/agents-spec.md#combatant-attributes) against [effective max health](../../mechanics/agents-spec.md#combatant-attributes), exhaustion, and Assignment with its [Agent status](../../mechanics/agents-spec.md#agent-statuses). The Instance ID column holds 30 characters, so that it can later hold an Agent's full name. The table's default order is by Instance ID, and its column headers [sort it](../visual-design.md#tables). Current health and exhaustion take the colours of their [Agent condition](../visual-design.md#agent-condition).
 
 The CR cell shows the Combat rating alone. The [Rank](../gui.md#glossary) cell shows the Rank's `abbreviation` followed by its [Rank insignia](../gui.md#glossary), e.g. "Jr Agent" and one chevron, with its `name` in the tooltip, and the column sorts by [base skill](../../mechanics/agents-spec.md#combatant-attributes).
-
-While the Details checkbox is checked, the table trades what the Agents wear for the numbers behind how well they fight: Weapon and Armor are left out, the [Equipment Combat rating](../../mechanics/combat.md#rested-and-equipment-combat-ratings) headed Equip. stands after CR, and [effective skill](../../mechanics/agents-spec.md#combatant-attributes) headed Skill, [base skill](../../mechanics/agents-spec.md#combatant-attributes) headed Base, and [Experience](../../mechanics/agents-spec.md#growth) headed Exp. stand after Rank. The Equip. cell shows the Equipment Combat rating with its sign, e.g. "+56", "0", or "−25": in Positive when it is above 0, in Danger when it is below 0, and in Text muted at 0. A sort tier on a column that is left out is dropped.
 
 The Assignment cell reads:
 
@@ -98,11 +96,17 @@ A row whose Agent cannot be selected has its checkbox disabled and its text in T
 8. **Contracting full:** the Contracting Assignment filter is on and the Contracting cap has no place left.
 9. **Otherwise:** the message of the rejection that Action preview reports.
 
+# Equip table
+
+What an Agent wears and every number behind how well it fights need more width than the Agents View has, so they are one press away: the Equip button, at the right end of the row under the title row, before Memorial, shows the Equip table over the whole screen, over a Scrim and inset 24 px from the window's edges, as a [chart shown full screen](../visual-design.md#charts) is. It is disabled while Memorial is on. A close control, ✕, ends its title row, "Equip", and it, the Escape key, and a press on the Scrim close it; it is closed whenever the Agents View opens.
+
+The Equip table lists the Agents that the Agent table shows, in the order of its own [sort](../visual-design.md#tables), by default by Instance ID, without selection checkboxes, because the Player equips one Agent at a time. Its columns are the Instance ID, as wide as in the Agent table; CR; the [Equipment Combat rating](../../mechanics/combat.md#rested-and-equipment-combat-ratings) headed Equip.; Rank; [effective skill](../../mechanics/agents-spec.md#combatant-attributes) headed Skill; [base skill](../../mechanics/agents-spec.md#combatant-attributes) headed Base; [Experience](../../mechanics/agents-spec.md#growth) headed Exp.; current health; exhaustion; Weapon; Armor; and Assignment, each read as in the Agent table. The Equip. cell shows the Equipment Combat rating with its sign, e.g. "+56", "0", or "−25": in Positive when it is above 0, in Danger when it is below 0, and in Text muted at 0. Selecting an Instance ID closes the Equip table and opens the [Agent details](#agent-details).
+
 ## Weapon and Armor cells
 
 The Weapon cell shows the `name` of the Agent's Weapon and its `base_weapon_damage` with the sword icon, e.g. "Combat pistol 10 ⚔", and the Armor cell the `name` of its Armor and its `base_armor` with the shield icon, e.g. "Ballistic vest 20 🛡"; each column sorts by the number. While the [AmmoType](../../mechanics/combat.md#ammotype) of the Agent's Weapon is [Ammo short](../../mechanics/equipment.md#ammo-short), the Weapon cell shows the warning icon in Warning, with the tooltip "[Ammo short](../../mechanics/equipment.md#glossary)".
 
-Pressing a Weapon or Armor cell opens the [Equipment picker](#equipment-picker) for it, without selecting or unselecting its row, whether or not its Agent can be selected.
+Pressing a Weapon or Armor cell opens the [Equipment picker](#equipment-picker) for it.
 
 ## Equipment picker
 
@@ -154,3 +158,7 @@ _Captured on 2026-11-23 19:47 UTC._
 ![Agent details Screenshot](../../../../images/screens/agent-details.png)
 
 _Captured on 2026-11-23 19:47 UTC._
+
+# TODOs
+
+- TODO (later): The [Equip table](#equip-table) is wider than the [Reference window](../visual-design.md#glossary) and scrolls sideways in it; fit it so that it does not.
