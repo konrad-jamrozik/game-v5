@@ -1,0 +1,16 @@
+id: mechanics_recovering_agent
+type: CompendiumArticle
+category: mechanics
+title: Recovering Agent
+terms: [Recovering Agent, Recovering Agents]
+body: >-
+  A Recovering Agent has come home wounded from a Mission and has arrived on Recovery, where it heals and rests. It is
+  in base, but it cannot be given orders until it is back at max health.
+formulas:
+  - label: 'Recovering'
+    text: 'On Recovery and no longer in transit'
+  - label: 'Orders'
+    text: 'None: it cannot be deployed, sent away, trained, or dismissed'
+  - label: 'Leaving'
+    text: 'Back on Standby at once when its health is full'
+see_also: [mechanics_recovery, mechanics_in_base_agent, mechanics_health]

@@ -1,0 +1,14 @@
+id: mechanics_away_agent
+type: CompendiumArticle
+category: mechanics
+title: Away Agent
+terms: [Away Agent, Away Agents]
+body: >-
+  An Away Agent is not at your Agency's base, whatever its health and exhaustion. Every serving Agent is either an
+  Away Agent or an In base Agent.
+formulas:
+  - label: 'Away'
+    text: 'In transit to any Assignment, deployed to a Mission site, or arrived on Contracting or an Investigation'
+  - label: 'From away'
+    text: 'An Agent on Contracting or an Investigation can only be recalled to Standby, which takes a turn in transit'
+see_also: [mechanics_in_base_agent, mechanics_assignments, mechanics_transit]

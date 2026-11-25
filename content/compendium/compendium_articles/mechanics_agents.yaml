@@ -22,5 +22,12 @@ see_also:
     mechanics_exhaustion,
     mechanics_assignments,
     mechanics_hiring_and_upkeep,
+    mechanics_deployable_agent,
+    mechanics_fit_to_start_work,
+    mechanics_in_base_agent,
+    mechanics_away_agent,
+    mechanics_fully_rested_agent,
+    mechanics_recovering_agent,
+    mechanics_incapacitated_agent,
     field_agent_article,
   ]

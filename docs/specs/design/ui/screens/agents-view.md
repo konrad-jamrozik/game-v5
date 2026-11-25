@@ -73,12 +73,12 @@ The table lists one row per Serving [Agent](../../mechanics/domain-model.md#agen
 
 The Assignment cell reads:
 
-- for an [Investigation](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), "Investigating:" and its [Lead](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions)'s `name`, e.g. "Investigating: Contracting opportunities";
-- for a [Mission](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), "[Deployed](../../mechanics/agents-spec.md#assignments):" and its Mission site's MissionSiteArchetype `name`;
+- for an [Investigation](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), "Investigating", without its [Lead](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions)'s `name`;
+- for a [Mission](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), "[Deployed](../../mechanics/agents-spec.md#assignments)", without its Mission site's `name`;
 - for Recovery, "Recovery" and the Agent's [Recovery turns remaining](../../mechanics/agent-recovery.md#glossary), e.g. "Recovery · 3 T left";
 - for any other Assignment, its name.
 
-An Agent In transit says so, e.g. "Contracting · In transit". The cell is in Accent text for Recovery, in Text muted for Standby or In transit, and in Positive otherwise. The Assignment column never [cuts its value short](../visual-design.md#tables) with "…". Pressing the Lead's or the Mission site's name opens the [Leads View](leads-view.md) with that Lead selected or the [Missions View](missions-view.md) with that Mission site selected, as a [Follow](campaign-screen.md#view-trail), so that the Player can go from an Agent to the work it is on.
+An Agent In transit is marked by the [In transit icon](../visual-design.md#icons) after the Assignment, never by words, e.g. "Contracting ✈", so that the Assignment column stays narrow. The cell is in Accent text for Recovery, in Text muted for Standby or In transit, and in Positive otherwise. The Assignment column never [cuts its value short](../visual-design.md#tables) with "…". Pressing "Investigating" or "Deployed" opens the [Leads View](leads-view.md) with the Investigation's Lead selected or the [Missions View](missions-view.md) with the Mission's Mission site selected, as a [Follow](campaign-screen.md#view-trail), so that the Player can go from an Agent to the work it is on, and the pointer resting on it shows that Lead's or Mission site's `name`.
 
 While an Assignment filter is on, a [locked](../visual-design.md#tables) first sort tier puts the Agents that can be selected first, and the tiers the Player chooses order the Agents within each of the two groups. When the Assignment filter is turned off, that tier is dropped, and the tiers the Player chose stay.
 

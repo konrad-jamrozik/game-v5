@@ -71,7 +71,7 @@ Agents are the people of your Agency. Each one has [skill](#skill), [health](#he
 | A hired Agent       | Starts on Standby and arrives next turn                         |
 | Killed or dismissed | The Agent is gone for good, and its skill with it               |
 
-See also: [Skill](#skill) · [Health](#health) · [Exhaustion](#exhaustion) · [Assignments](#assignments) · [Hiring and upkeep](#hiring-and-upkeep) · [Field agent](#field-agent)
+See also: [Skill](#skill) · [Health](#health) · [Exhaustion](#exhaustion) · [Assignments](#assignments) · [Hiring and upkeep](#hiring-and-upkeep) · [Deployable Agent](#deployable-agent) · [Fit to start work](#fit-to-start-work) · [In base Agent](#in-base-agent) · [Away Agent](#away-agent) · [Fully rested Agent](#fully-rested-agent) · [Recovering Agent](#recovering-agent) · [Incapacitated Agent](#incapacitated-agent) · [Field agent](#field-agent)
 
 ### Assignments
 
@@ -90,6 +90,19 @@ Every [Agent](#agents) has exactly one Assignment: Standby, [Contracting](#contr
 
 See also: [Contracting](#contracting) · [Training](#training) · [Investigations](#investigations) · [Missions](#missions) · [Recovery](#recovery) · [Transit](#transit)
 
+### Away Agent
+
+Source: `content/compendium/compendium_articles/mechanics_away_agent.yaml`
+
+An Away Agent is not at your Agency's base, whatever its [health](#health) and [exhaustion](#exhaustion). Every serving [Agent](#agents) is either an Away Agent or an [In base Agent](#in-base-agent).
+
+| Formulas |  |
+| --- | --- |
+| Away | [In transit](#transit) to any [Assignment](#assignments), [deployed](#missions) to a [Mission site](#mission-sites), or arrived on [Contracting](#contracting) or an [Investigation](#investigations) |
+| From away | An Agent on Contracting or an Investigation can only be recalled to Standby, which takes a [turn](#turns) in transit |
+
+See also: [In base Agent](#in-base-agent) · [Assignments](#assignments) · [Transit](#transit)
+
 ### Combat
 
 Source: `content/compendium/compendium_articles/mechanics_combat.yaml`
@@ -103,7 +116,7 @@ A Combat is fought in [rounds](#equipment-and-storage). In each round every [Age
 | Enemy target | Any Agent able to fight, each equally likely |
 | Agent target | Any Enemy able to fight, with a weight of 100 minus one for each whole hundredth by which the chance to hit it lies above or below 0.8, times the share of the Agent's [weapon damage](#damage) that the Enemy's health and armor can still take, rounded up |
 | Each attack | +1 [exhaustion](#exhaustion) for the attacker and +0 for the defender, hit or miss |
-| Incapacitated | Alive but unable to fight: effective skill at or below 0.1 × skill, or exhaustion of 100 or more |
+| [Incapacitated](#incapacitated-agent) | Alive but unable to fight: effective skill at or below 0.1 × skill, or exhaustion of 100 or more |
 | End of the Combat | As soon as no Enemy or no Agent is able to fight, or after a round in which the team retreats |
 
 See also: [Combat rating](#combat-rating) · [Damage](#damage) · [Retreat](#retreat) · [Skill](#skill) · [Missions](#missions)
@@ -120,7 +133,7 @@ A Combat rating measures how strong a side is in a [Combat](#combat), so that yo
 | At the rating bases | A Combatant with weapon damage 10, max health 30, and no armor has a rating factor of 1 |
 | One Combatant | Its effective skill × its rating factor, rounded down |
 | A side | The sum of effective skill × rating factor over its Combatants able to fight, × n ^ (1.2 − 1), where n is their number, rounded down once, so that a larger side counts for more than its sum |
-| Incapacitated Combatants | Add nothing to the Combat rating of their side |
+| [Incapacitated](#incapacitated-agent) Combatants | Add nothing to the Combat rating of their side |
 | Base Combat rating | An [Agent](#agents)'s effective skill alone, shown beside its Combat rating so that you can see how much its [equipment](#equipment-and-storage) and [Upgrades](#upgrades) add |
 
 See also: [Combat](#combat) · [Retreat](#retreat) · [Damage](#damage) · [Skill](#skill) · [Missions](#missions)
@@ -159,6 +172,20 @@ A hit deals damage to its target. How much depends on the weapon of the attacker
 | A miss | No damage |
 
 See also: [Combat](#combat) · [Health](#health) · [Equipment and Storage](#equipment-and-storage) · [Knife](#knife) · [Combat pistol](#combat-pistol) · [Standard uniform](#standard-uniform) · [Basic pistol](#basic-pistol) · [Rifle](#rifle) · [Augmented rifle](#augmented-rifle) · [Machine gun](#machine-gun) · [Laser pistol](#laser-pistol) · [Laser rifle](#laser-rifle)
+
+### Deployable Agent
+
+Source: `content/compendium/compendium_articles/mechanics_deployable_agent.yaml`
+
+A Deployable Agent is one you can send to a [Mission site](#mission-sites) right now. The [Missions](#missions) View lists only Deployable Agents, however [tired](#exhaustion) they are.
+
+| Formulas |  |
+| --- | --- |
+| Where it is | [In base](#in-base-agent), on [Standby](#assignments) or [Training](#training), and not [in transit](#transit) |
+| How worn down it may be | Not so worn down that it would be [incapacitated](#incapacitated-agent) the moment the [Combat](#combat) starts |
+| Never deployable | An [Agent](#agents) in transit, deployed, [recovering](#recovery), on [Contracting](#contracting), or on an [Investigation](#investigations) |
+
+See also: [In base Agent](#in-base-agent) · [Incapacitated Agent](#incapacitated-agent) · [Missions](#missions)
 
 ### Equipment and Storage
 
@@ -257,6 +284,34 @@ Factions are the hostile groups you are fighting. Each acts on its own, grows mo
 
 See also: [Faction operations](#faction-operations) · [Panic](#panic) · [Winning and losing](#winning-and-losing)
 
+### Fit to start work
+
+Source: `content/compendium/compendium_articles/mechanics_fit_to_start_work.yaml`
+
+An [Agent](#agents) that is Fit to start work is rested and healthy enough to begin [Contracting](#contracting), [Training](#training), or an [Investigation](#investigations). An Agent already at work keeps working until it is too [tired](#exhaustion), even once it is no longer fit to start.
+
+| Formulas |  |
+| --- | --- |
+| Exhaustion | At most 30 |
+| [Health](#health) | Full: no health lost |
+| Deploying to a [Mission site](#mission-sites) | Needs no fitness to start work, only that the Agent could still fight |
+
+See also: [Exhaustion](#exhaustion) · [Health](#health) · [Assignments](#assignments) · [Fully rested Agent](#fully-rested-agent)
+
+### Fully rested Agent
+
+Source: `content/compendium/compendium_articles/mechanics_fully_rested_agent.yaml`
+
+A Fully rested Agent has no [exhaustion](#exhaustion) left, so more rest cannot make it any fresher. Its [health](#health) may still be low.
+
+| Formulas |  |
+| --- | --- |
+| Exhaustion | 0 |
+| Getting there | Each [turn](#turns) on [Standby](#assignments) or [Recovery](#recovery) lowers exhaustion by 5, plus [Upgrades](#upgrades) |
+| Max [combat rating](#combat-rating) | The combat rating the [Agent](#agents) would have if it were fully rested and had lost no health |
+
+See also: [Exhaustion](#exhaustion) · [Fit to start work](#fit-to-start-work) · [Combat rating](#combat-rating)
+
 ### Health
 
 Source: `content/compendium/compendium_articles/mechanics_health.yaml`
@@ -287,6 +342,33 @@ Hiring adds an [Agent](#agents) to your Agency for a one-time cost, and every Ag
 | Dismissing | Only an Agent on Standby that is not in transit; it never returns |
 
 See also: [Agents](#agents) · [Money and funding](#money-and-funding) · [Agent cap](#agent-cap)
+
+### In base Agent
+
+Source: `content/compendium/compendium_articles/mechanics_in_base_agent.yaml`
+
+An In base Agent is at your Agency's base, whatever its [health](#health) and [exhaustion](#exhaustion). Every serving [Agent](#agents) is either an In base Agent or an [Away Agent](#away-agent).
+
+| Formulas |  |
+| --- | --- |
+| In base | Arrived on [Standby](#assignments) or [Training](#training), or [recovering](#recovery) |
+| From base | An Agent on Standby or Training can be given any order: [deployed](#missions), sent away, or switched between the two |
+
+See also: [Away Agent](#away-agent) · [Assignments](#assignments) · [Transit](#transit)
+
+### Incapacitated Agent
+
+Source: `content/compendium/compendium_articles/mechanics_incapacitated_agent.yaml`
+
+An Incapacitated Agent is alive but too weakened or too worn down to fight on in a [Combat](#combat). It takes no further part in it and is no longer attacked. An [Agent](#agents) that would be incapacitated the moment a Combat starts cannot be [deployed](#missions).
+
+| Formulas      |                                                                         |
+| ------------- | ----------------------------------------------------------------------- |
+| Too weakened  | [Effective skill](#skill) at or below 0.1 × skill                       |
+| Too worn down | [Exhaustion](#exhaustion) of 100 or more                                |
+| Alive         | An Agent whose [health](#health) reaches 0 is killed, not incapacitated |
+
+See also: [Combat](#combat) · [Deployable Agent](#deployable-agent) · [Exhaustion](#exhaustion)
 
 ### Investigations
 
@@ -392,11 +474,25 @@ Panic measures how frightened the world is, from 0% to 100%. [Faction operations
 
 See also: [Faction operations](#faction-operations) · [Winning and losing](#winning-and-losing) · [Keeping Panic down](#keeping-panic-down)
 
+### Recovering Agent
+
+Source: `content/compendium/compendium_articles/mechanics_recovering_agent.yaml`
+
+A Recovering Agent has come home [wounded](#recovery) from a [Mission](#missions) and has arrived on Recovery, where it heals and rests. It is [in base](#in-base-agent), but it cannot be given orders until it is back at [max health](#health).
+
+| Formulas   |                                                                                     |
+| ---------- | ----------------------------------------------------------------------------------- |
+| Recovering | On Recovery and no longer [in transit](#transit)                                    |
+| Orders     | None: it cannot be deployed, sent away, trained, or [dismissed](#hiring-and-upkeep) |
+| Leaving    | Back on [Standby](#assignments) at once when its health is full                     |
+
+See also: [Recovery](#recovery) · [In base Agent](#in-base-agent) · [Health](#health)
+
 ### Recovery
 
 Source: `content/compendium/compendium_articles/mechanics_recovery.yaml`
 
-An [Agent](#agents) that comes back from a [Mission](#missions) with lost [health](#health) goes to Recovery and stays there until it is back at max health. You cannot send an Agent to Recovery or take it off early. A recovering Agent also rests, so its [exhaustion](#exhaustion) falls.
+An [Agent](#agents) that comes back from a [Mission](#missions) with lost [health](#health) goes to Recovery and stays there until it is back at max health. You cannot send an Agent to Recovery or take it off early. A [recovering Agent](#recovering-agent) also rests, so its [exhaustion](#exhaustion) falls.
 
 | Formulas |  |
 | --- | --- |

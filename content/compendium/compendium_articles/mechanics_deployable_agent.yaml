@@ -1,0 +1,16 @@
+id: mechanics_deployable_agent
+type: CompendiumArticle
+category: mechanics
+title: Deployable Agent
+terms: [Deployable Agent, Deployable Agents]
+body: >-
+  A Deployable Agent is one you can send to a Mission site right now. The Missions View lists only Deployable Agents,
+  however tired they are.
+formulas:
+  - label: 'Where it is'
+    text: 'In base, on Standby or Training, and not in transit'
+  - label: 'How worn down it may be'
+    text: 'Not so worn down that it would be incapacitated the moment the Combat starts'
+  - label: 'Never deployable'
+    text: 'An Agent in transit, deployed, recovering, on Contracting, or on an Investigation'
+see_also: [mechanics_in_base_agent, mechanics_incapacitated_agent, mechanics_missions]

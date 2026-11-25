@@ -1,0 +1,16 @@
+id: mechanics_fit_to_start_work
+type: CompendiumArticle
+category: mechanics
+title: Fit to start work
+terms: [Fit to start work]
+body: >-
+  An Agent that is Fit to start work is rested and healthy enough to begin Contracting, Training, or an Investigation.
+  An Agent already at work keeps working until it is too tired, even once it is no longer fit to start.
+formulas:
+  - label: 'Exhaustion'
+    text: 'At most {agent_parameters.exhaustion_work_start_max}'
+  - label: 'Health'
+    text: 'Full: no health lost'
+  - label: 'Deploying to a Mission site'
+    text: 'Needs no fitness to start work, only that the Agent could still fight'
+see_also: [mechanics_exhaustion, mechanics_health, mechanics_assignments, mechanics_fully_rested_agent]

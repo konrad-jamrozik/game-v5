@@ -1,0 +1,16 @@
+id: mechanics_incapacitated_agent
+type: CompendiumArticle
+category: mechanics
+title: Incapacitated Agent
+terms: [Incapacitated Agent, Incapacitated Agents, incapacitated]
+body: >-
+  An Incapacitated Agent is alive but too weakened or too worn down to fight on in a Combat. It takes no further part
+  in it and is no longer attacked. An Agent that would be incapacitated the moment a Combat starts cannot be deployed.
+formulas:
+  - label: 'Too weakened'
+    text: 'Effective skill at or below {combat_parameters.incapacitation_skill_fraction} × skill'
+  - label: 'Too worn down'
+    text: 'Exhaustion of {agent_parameters.exhaustion_incapacitation} or more'
+  - label: 'Alive'
+    text: 'An Agent whose health reaches 0 is killed, not incapacitated'
+see_also: [mechanics_combat, mechanics_deployable_agent, mechanics_exhaustion]

@@ -1,0 +1,15 @@
+id: mechanics_fully_rested_agent
+type: CompendiumArticle
+category: mechanics
+title: Fully rested Agent
+terms: [Fully rested Agent, Fully rested Agents, fully rested]
+body: >-
+  A Fully rested Agent has no exhaustion left, so more rest cannot make it any fresher. Its health may still be low.
+formulas:
+  - label: 'Exhaustion'
+    text: '0'
+  - label: 'Getting there'
+    text: 'Each turn on Standby or Recovery lowers exhaustion by {recovery.exhaustion_recovery_per_turn}, plus Upgrades'
+  - label: 'Max combat rating'
+    text: 'The combat rating the Agent would have if it were fully rested and had lost no health'
+see_also: [mechanics_exhaustion, mechanics_fit_to_start_work, mechanics_combat_rating]

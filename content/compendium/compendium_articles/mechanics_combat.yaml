@@ -2,7 +2,7 @@ id: mechanics_combat
 type: CompendiumArticle
 category: mechanics
 title: Combat
-terms: [Combat, Combats, incapacitated]
+terms: [Combat, Combats]
 body: >-
   A Combat is fought in rounds. In each round every Agent attacks once, then every Enemy still able to fight attacks
   once, the most skilled of each side first. Enemies attack any Agent able to fight, at random. Agents choose at random

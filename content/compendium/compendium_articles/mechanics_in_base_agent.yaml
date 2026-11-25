@@ -1,0 +1,14 @@
+id: mechanics_in_base_agent
+type: CompendiumArticle
+category: mechanics
+title: In base Agent
+terms: [In base Agent, In base Agents, in base]
+body: >-
+  An In base Agent is at your Agency's base, whatever its health and exhaustion. Every serving Agent is either an In
+  base Agent or an Away Agent.
+formulas:
+  - label: 'In base'
+    text: 'Arrived on Standby or Training, or recovering'
+  - label: 'From base'
+    text: 'An Agent on Standby or Training can be given any order: deployed, sent away, or switched between the two'
+see_also: [mechanics_away_agent, mechanics_assignments, mechanics_transit]

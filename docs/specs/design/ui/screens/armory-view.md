@@ -18,7 +18,7 @@ The table lets the Player compare what the Agents wear against how well each fig
 
 The CR cell shows the Agent's Combat rating followed by its [Equipment Combat rating](../../mechanics/combat.md#rested-and-equipment-combat-ratings) in parentheses, with its sign, e.g. "136 (+56)", "100 (0)", or "75 (−25)": in Positive when it is above 0, in Danger when it is below 0, and in Text muted at 0. The column sorts by the Combat rating.
 
-The Assignment cell names the Agent's Assignment without the work it is on, which the [Assignment cell of the Agents View](agents-view.md#agent-table) names: "Investigating" for an [Investigation](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) and "[Deployed](../../mechanics/agents-spec.md#assignments)" for a [Mission](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), and otherwise what that cell reads, in its colours, e.g. "Recovery · 3 T left" or "Contracting · In transit".
+The Assignment cell reads as the [Assignment cell of the Agents View](agents-view.md#agent-table) does, in its colours and with its links, e.g. "Recovery · 3 T left" or "Contracting ✈".
 
 Selecting an Agent's Instance ID opens the Agents View with its [Agent details](agents-view.md#agent-details), as a [Follow](campaign-screen.md#view-trail).
 
