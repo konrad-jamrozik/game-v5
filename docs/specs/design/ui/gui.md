@@ -131,6 +131,8 @@ The Player meets Enemies only a few at a time, at one [Mission site](../mechanic
 
 E.g., a Mission site whose list of Enemies is three Initiates followed by two Soldiers, with the Instance IDs enemy-19 to enemy-23, shows them as init-1, init-2, init-3, sold-1, and sold-2 when the abbreviations of their EnemyArchetypes are `init` and `sold`.
 
+Where there is room to spare, e.g. in a tooltip, the GUI shows the full Enemy label instead: the `name` of the EnemyArchetype in lower case, with each space replaced by a hyphen, then the same hyphen and number, e.g. soldier-2 for sold-2, and high-commander-1 for an Enemy of an EnemyArchetype named "High commander".
+
 # Mission site titles
 
 Several Mission sites of one MissionSiteArchetype can be met in one Campaign, so wherever the GUI reports what a [Mission](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) brought, it names the Mission site by its Mission site title, which tells them apart. The Mission site title is its MissionSiteArchetype's `name`, its target [Faction](../mechanics/domain-model.md#factions)'s `name`, its kind, "Initiative" or "Response", and "#" followed by the number that ends its [Instance ID](../foundation/campaign-instances.md#glossary), joined by " · ", e.g. "Apprehend member · Red Dawn · Initiative · #3" for mission-site-3. The name is in Text and the rest in Text muted.
