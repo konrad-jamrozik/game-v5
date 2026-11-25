@@ -165,7 +165,7 @@ What a Combat reads and what it produces are fixed, so that the same Combat foug
 1. **The Agents' side:** a list of one or more distinct [Serving](agents-spec.md#agent-statuses) Agents.
 2. **The Enemies' side:** a list of zero or more distinct Enemies.
 3. **Current values:** the base skill, current health, effective max health, exhaustion, effective weapon damage, and effective armor of every Combatant in the two lists, as they are when the Combat begins.
-4. **GDR values:** the properties of CombatParameters, the properties of AgentParameters that [effective skill](agents-spec.md#effective-skill), the [Incapacitation condition](#incapacitation-condition), the [effects of an attack](#effects-of-an-attack), and [combat experience](#combat-experience) read, and the Weapon of each Agent with its `ammo_type` and the `base_weapon_damage` of the Fallback Weapon.
+4. **GDR values:** the properties of CombatParameters, the properties of AgentParameters that [effective skill](agents-spec.md#effective-skill), the [Incapacitation condition](#incapacitation-condition), the [effects of an attack](#effects-of-an-attack), and [combat experience](#combat-experience) read, the Weapon of each Agent with its `ammo_type`, the Weapon of each Enemy, which only the Combat report reads, and the `base_weapon_damage` of the Fallback Weapon.
 5. **Ammo:** for each AmmoType, the rounds at hand when the Combat begins, or no limit.
 6. **Random outcomes:** the target outcome of each [target selection](#target-selection), and the [hit outcome](#hit-outcome) and [damage outcome](#damage-outcome) of each attack.
 
@@ -404,7 +404,7 @@ A Combat report is the full account of one Combat, from which a player can follo
 1. **Combat outcome:** Won, Retreated, or Wiped.
 2. **Number of Combat rounds:** a whole number of at least 0.
 3. **Participants:** the Agents' side and the Enemies' side, each as the list of [Instance IDs](../foundation/campaign-instances.md#glossary) in its fixed order.
-4. **Starting values:** for each participant, its base skill, current health, effective max health, exhaustion, effective weapon damage, effective armor, effective skill, Combat rating, and Incapacitated value when the Combat began, after step 1 of [Combat start](#combat-start).
+4. **Starting values:** for each participant, its base skill, current health, effective max health, exhaustion, effective weapon damage, effective armor, effective skill, Combat rating, and Incapacitated value when the Combat began, after step 1 of [Combat start](#combat-start); and the Weapon it is equipped with, which a participant given as explicit values lacks, so that a player sees what each attack was made with.
 5. **Final values:** for each participant, its current health, current armor, exhaustion, and effective skill when the Combat ended, and its final condition: able to fight, Incapacitated, or dead.
 6. **Damage dealt and damage taken:** for each participant, its damage dealt and its damage taken; and for each Agent, its [combat experience](#combat-experience).
 7. **Combat ratings:** the Combat rating of each side at Combat start and at the end of every Combat round.
