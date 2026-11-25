@@ -405,7 +405,7 @@ Each row lists the Prohibited synonyms that the owning Glossary records for a te
 | Gear rating | Equipment Combat rating | [COMBAT — Combat](../specs/design/mechanics/combat.md#glossary) |
 | Fatigue | Exhaustion | [AGENT — Agents](../specs/design/mechanics/agents-spec.md#glossary) |
 | XP; experience points | Experience | [AGENT — Agents](../specs/design/mechanics/agents-spec.md#glossary) |
-| Resolving, running, computing, executing, or simulating a Combat. A Mission, not a Combat, is resolved. | Fighting a Combat | [COMBAT — Combat](../specs/design/mechanics/combat.md#glossary) |
+| Resolving, running, computing, evaluating, executing, or simulating a Combat. A Mission, not a Combat, is resolved. | Fighting a Combat | [COMBAT — Combat](../specs/design/mechanics/combat.md#glossary) |
 | Build. Ordinary build-tool operations keep their meaning. | Game build | [CORE — Core Concepts](../specs/design/foundation/core-concepts.md#glossary) |
 | Content entry; Content; entry; entries; Content definition; GDR role, for which say GDR purpose. The Content Family, document titles, and the Display content GDR purpose keep their names. | Game Data Record (GDR) | [CORE — Core Concepts](../specs/design/foundation/core-concepts.md#glossary) |
 | Game behavior; game behaviour. Ordinary uses of "behavior", e.g. the behavior of an interface, remain valid. | Game rules | [CORE — Core Concepts](../specs/design/foundation/core-concepts.md#glossary) |
