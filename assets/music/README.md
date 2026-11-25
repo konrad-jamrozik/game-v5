@@ -88,7 +88,7 @@ The following table lists every key a record may hold; the list is exhaustive. A
 | `suno.max_mode` |  | Suno's Max Mode, `true` when on. |
 | `suno.personalize` |  | Suno's Personalize, `true` when on. |
 | `suno.duration` |  | Suno's Duration, e.g. `auto`. |
-| `v03ai.prompt` | Yes | The prompt given to v03ai, or the full prompt it was cut from, as the notes say. |
+| `v03ai.prompt` | Yes | The prompt given to v03ai, or the full prompt it was cut from to fit v03ai's 1,000 characters. |
 | `v03ai.style` |  | The comma-separated words of the "Style:" line given to v03ai, as a list. |
 | `final_prompt_from_gen_tool` |  | The prompt as the source stored it, word for word, when it differs from the one submitted, e.g. Suno's Variety rewrote the Styles text, differently for each take. Without it, the source kept the submitted prompt unchanged. |
 | `human_assessment` |  | The Game designer's verdict on the song after listening to it, optionally followed by why, e.g. `Great result.` |

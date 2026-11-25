@@ -21,5 +21,4 @@ v03ai:
 
     Very slow tempo, understated intensity, seamless loopable background music for prolonged strategy gameplay. No vocals, no bright synth leads, no spacey effects, no upbeat rhythms, no dramatic crescendos, no epic orchestration.
   style: [Dark ambient, bass-heavy, ominous, minimalist, brooding, cinematic, acoustic textures]
-notes: |-
-  This is the full prompt ChatGPT produced. At 1,005 characters it is over v03ai's cap of 1,000 characters for a Suno v5 prompt, so the prompt given to v03ai was slightly truncated.
+human_assessment: 'Very dark, could be a defeat/loss track'

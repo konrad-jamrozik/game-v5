@@ -32,5 +32,3 @@ suno:
   variety: 1
 final_prompt_from_gen_tool: |-
   Soundtrack; instrumental, intimate and restrained; minimalist, gritty mix with resonant low-end, shadowed minor harmonies, subtle dissonance, and slowly evolving layers; very slow hypnotic pulses with understated intensity; deep bass drones and low rumble beneath isolated muted felt piano, sparse percussion, sustained bowed strings, and mournful restrained cello.
-notes: |-
-  `final_prompt_from_gen_tool` is the Styles text Suno stored, not the one pasted in: ChatGPT's `suno.prompt` was pasted into Styles, and Suno's Variety control, which was at Normal (`suno.variety: 1`), rewrote it, differently for each variation. The `suno.exclude_styles` and the Weirdness and Style influence sliders are those ChatGPT recommended.

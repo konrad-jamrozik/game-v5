@@ -30,5 +30,4 @@ suno:
   weirdness: 0.4
   style_influence: 0.7
   variety: 0
-notes: |-
-  `suno.prompt` is the Styles text ChatGPT produced, word for word: Suno's Variety control was Off (`suno.variety: 0`), as ChatGPT recommended, so Suno stored the text as pasted. The `suno.exclude_styles` and the Weirdness and Style influence sliders are also those ChatGPT recommended; it added heroic brass, big band, and jazz swing to the Exclude styles of S6 SCNP+Dark+Piano&Cello to keep the brass and woodwind from pulling the song toward jazz or orchestral brass.
+human_assessment: 'Gives me a bit of Fallout 1 towns soundtrack vibes, probably because of the clarinet.'

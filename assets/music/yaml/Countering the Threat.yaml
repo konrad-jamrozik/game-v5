@@ -32,5 +32,3 @@ suno:
   variety: 2
 final_prompt_from_gen_tool: |-
   Contemporary science-fiction game soundtrack, instrumental; slow, restrained 65 BPM pulse, sparse and wide with deep reverberation and deliberate silences; glassy string harmonics, dissonant clusters, bowed metal, low cello and double bass sustains, muted brass swells, sonar-like pings, faint radio static, precise ticking percussion and distant sparse military snare.
-notes: |-
-  `final_prompt_from_gen_tool` is the Styles text Suno stored for this variation, which Suno's Variety at High rewrote from `suno.prompt`, the prompt pasted in. `created`, `length`, `model`, `tags`, Style influence, and Variety come from Suno's clip data for the song; `created` is its UTC creation time converted to Pacific time. `suno.weirdness` is the value the Game designer set, which Suno's clip data omits at its default of 50%.

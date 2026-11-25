@@ -34,5 +34,3 @@ suno:
   duration: auto
 final_prompt_from_gen_tool: |-
   Ambient soundtrack, understated seamless-loop production with subtle dissonance and wide negative space; retro-futuristic synth drones and faint electronic signals beneath low bowed double bass and muted trombone, sparse felt piano and bass clarinet answering, cello and distant violins drifting, bowed cymbals swelling in brief metallic traces; instrumental; slow pulse-free ambient drift.
-notes: |-
-  `final_prompt_from_gen_tool` is the Styles text Suno stored for this variation; the pasted text is `suno.prompt`, which Suno's Variety at High rewrote differently for each variation. Suno's UI shows the rewritten Styles text followed by the Exclude styles, each prefixed with a non-breaking hyphen; the stored Styles text ends before them. `created`, `length`, `model`, and the sliders come from Suno's clip data for the song; `created` is its UTC creation time converted to Pacific time.
