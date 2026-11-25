@@ -45,7 +45,6 @@ A → B means A is referenced by B: the text of B links to A. Layer 1 is drawn a
 | 11 | EQUIP Equipment | AGENT, CINST, COMBAT, COND, CORE, CSTATE, DOM, ENG, WHIST |
 | 12 | COMP Compendium | COMBAT, COND, CORE, DOM, ENG, EQUIP |
 | 12 | ECON Economy and Upgrades | AGENT, COMBAT, CORE, CSTATE, DOM, EFFECT, ENG, EQUIP, GDR, NUMBERS, WHIST |
-| 12 | STVIEW Storage View | COMBAT, CORE, DOM, ENG, EQUIP |
 | 13 | MISSION Missions | AGENT, CINST, COMBAT, COND, CORE, CSTATE, DOM, ECON, EFFECT, ENG, EQUIP, FACTION, NUMBERS, WHIST |
 | 13 | UVIEW Upgrades View | AGENT, CORE, DOM, ECON |
 | 14 | LEAD Leads and Progression | AGENT, COND, CORE, CSTATE, DOM, ECON, EFFECT, ENG, MISSION, WHIST |
@@ -60,6 +59,7 @@ A → B means A is referenced by B: the text of B links to A. Layer 1 is drawn a
 | 17 | MUSIC Music | CORE, ENG, GUI |
 | 17 | MVIEW Missions View | AGENT, CINST, COMBAT, DOM, ECON, ENG, FACTION, GUI, MISSION, WHIST |
 | 17 | SITP Situation Panel | AGENT, CORE, DOM, ECON, ENG, GUI |
+| 17 | STVIEW Storage View | COMBAT, CORE, DOM, ENG, EQUIP, GUI |
 | 18 | CSIM Combat Simulator | AGENT, COMBAT, CORE, CRPLAY, DOM, ENG, GUI, LIFE |
 | 18 | TSUM Turn Summary | AGENT, COMBAT, CRPLAY, CSTATE, DOM, ECON, ENG, EQUIP, GUI, INVSTG, SITP |
 | 19 | SOUNDS Sounds | COMBAT, COMP, COMPV, CORE, CRPLAY, ENG, GUI, TSUM |
