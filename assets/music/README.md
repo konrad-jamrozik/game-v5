@@ -83,6 +83,7 @@ The following table lists every key a record may hold; the list is exhaustive. A
 | `file` | Yes | The track's file name in `tracks/`. |
 | `source` | Yes | Where the track was made, as in the table, e.g. `ElevenLabs Music`, `Suno v5 via v03ai`, or `Suno v6`. |
 | `original_title` | Yes | The track's title before any renaming: its title in its source, or the name the Game designer gave its download. |
+| `source_title` | Yes | The song's title in its source now, which finds it there. It equals `original_title` until the Game designer renames the song in its source, and then changes with it, e.g. after a rename in Suno it is the title Suno shows, read from the song's clip data as [Reading Suno song data](#reading-suno-song-data) describes. |
 | `serial_id` | Yes | The order in which the Game designer made the track among all tracks, from `1` with no gaps, by `created`; songs made at the same time take the order of their takes, e.g. `S6 SCNP A` is `14` and `S6 SCNP B` is `15`. Deleting a track renumbers every later one, e.g. deleting track `14` makes `15` the new `14`. A draft holds `TODO` and gets the next number when it is completed. |
 | `prompt_code` | Yes | The record's code with each code spelled out, as [Prompt codes](music-taxonomy.md#prompt-codes) describes, e.g. `V03AI - Suno v5 - Scanning Protocol - Dark - Cello and Bass Clarinet`. |
 | `variant` | Yes | Which take of its `prompt_code` the track is: a letter, `A`, `B`, `C` and on, or `One only` when no other record has the same `prompt_code`. A track whose name ends in a take letter has that letter, e.g. `S6 SCNP B` or `Unknown Contact B`. Every other record takes the next letter after the highest any record of its `prompt_code` holds, in the order of `created`, e.g. `Restricted Orbit` is `C` after `S6 XCOM+AllowEpic+NoSynth+Slow+Space A` and `B`; a record written later for a `prompt_code` whose record is `One only` takes `B`. No two records have the same `prompt_code` and `variant`. |
@@ -131,7 +132,7 @@ A Suno song page renders its data in the browser, so a web fetch of the page sho
 
 | Clip JSON field | Record key |
 | --- | --- |
-| `title` | `original_title`, which must match the take's name |
+| `title` | `source_title`; and, for a new song, `original_title` too, which must match the take's name |
 | `major_model_version` and `model_name`, e.g. `v6` and `chirp-hawk` | `model`, e.g. `v6 (chirp-hawk)` |
 | `created_at`, in UTC | `created`, converted to Pacific time |
 | `display_tags`, comma-separated | `tags`, as a list; `[]` when Suno gives none |
@@ -157,7 +158,7 @@ Other tools that may serve the same purpose have not been tested yet: [Google AI
 
 ## Proposed renames
 
-The Game designer has proposed the renames below. Each proposed name is a custom name, as [Custom names](#custom-names) describes, and no rename is applied until the Game designer accepts it. The Song in Suno column links each song's page, its record's `song_url`, where the Game designer renames the song in Suno to its proposed name; its `original_title` keeps the old title.
+The Game designer has proposed the renames below. Each proposed name is a custom name, as [Custom names](#custom-names) describes, and no rename is applied until the Game designer accepts it. The Song in Suno column links each song's page, its record's `song_url`, where the Game designer renames the song in Suno to its proposed name; its `original_title` then keeps the old title, and its `source_title` takes the new one.
 
 | File | Proposed name | Song in Suno |
 | --- | --- | --- |

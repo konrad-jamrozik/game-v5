@@ -41,7 +41,7 @@ Outside the repository, the skill also keeps the Game designer's personal music 
    - `file`: the take's name with the extension the source downloads, e.g. `.mp3` for Suno, which must be one the Soundtrack section of Music lists. Read the list from the specification, never from memory;
    - `prompt_code`, built from `meta_prompt_taxonomy`, and `variant`, the take's letter or `One only`, as the README's Track records section describes, with `serial_id` written as `TODO`;
    - `source`, `model` as far as known, `instrumental`, `meta_prompt_taxonomy`, and the source's key with the prompt and every setting to submit, e.g. `suno` with `prompt`, `exclude_styles`, `weirdness`, `style_influence`, `variety`, `max_mode`, `personalize`, and `duration`;
-   - `original_title`: the take's name itself, e.g. `S6 SCNP+Dark+Cello&DBass A`, which the designer gives the song in the source, so that it finds one song there and the download is named after the take.
+   - `original_title`: the take's name itself, e.g. `S6 SCNP+Dark+Cello&DBass A`, which the designer gives the song in the source, so that it finds one song there and the download is named after the take, and `source_title` the same.
 
    Every value only the source can give, e.g. `song_url`, `created`, `tags`, `length`, and the full `model` label, is written as `TODO`, and the record starts with the comment line `# DRAFT: TODO values are filled in from the source after generation.` Commit and push the drafts as steps 8 to 10 of Phase 2 do, with the draft records as the paths and a message that names them, e.g. "Draft Suno v6 track S6 SCNP+Dark+Cello&DBass A", so that a draft is kept even when its song is never downloaded.
 

@@ -1,6 +1,7 @@
 file: 'S6 SCNP B.mp3'
 source: Suno v6
 original_title: 'Signal Intercept var2'
+source_title: 'Signal Intercept var2'
 serial_id: 15
 prompt_code: 'Suno v6 - Scanning Protocol'
 variant: 'B'
