@@ -256,6 +256,7 @@ A column that shows a game quantity is wide enough for the widest value that qua
 | --- | --- |
 | Agent, i.e. an [Agent](../mechanics/domain-model.md#agency-and-agents)'s [Instance ID](../foundation/campaign-instances.md#glossary) | 30 characters, so that it can later hold an Agent's full name. |
 | [Rank](gui.md#ranks) | The widest `abbreviation` of the [Rank](gui.md#glossary) GDRs followed by its [Rank insignia](gui.md#glossary), e.g. "Hi Cmdr" and three stars. |
+| [Enemy label](gui.md#enemy-labels) | The longest the [Game build](../foundation/core-concepts.md#game-build-and-content) can give, with a two-digit number, e.g. "high-commander-12". |
 | [Assignment](screens/agents-view.md#agent-table) | "[Recovery](../mechanics/agents-spec.md#assignments) · 99 T left" followed by the In transit icon. |
 | Skill, base or effective | Four digits, e.g. "1234". |
 | Exhaustion | Three digits, e.g. "123". |
