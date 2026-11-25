@@ -23,13 +23,14 @@ Work often surfaces in a T3 thread that is about something else, e.g. a question
 A Set-aside task is added when the Game designer sets work aside, and removed in the change that does it, or when the Game designer drops it; Git history is the record. A task is never marked done.
 
 - **Heading:** each Set-aside task is a top-level section of its own, after this section, whose heading names the work as an instruction, e.g. "Review the CR Sweep Bench".
-- **Thread:** the section opens with two bullets, in this order: `T3 thread:` followed by the thread's name, and `T3 thread ID:` followed by its ID in backticks. They name the thread where the work was set aside.
-- **Body:** after the two bullets, the section says what to do and what a finished task looks like, completely enough to act on without reading the thread, e.g. which questions are open and which recommendations are not yet applied.
+- **Opening bullets:** the section opens with three bullets, in this order: `Added:` followed by when the task was added, as `YYYY-MM-DD hh:mm PST`, in Pacific time on a 24-hour clock, e.g. `Added: 2026-11-24 22:19 PST`; `T3 thread:` followed by the name of the thread where the work was set aside; and `T3 thread ID:` followed by its ID in backticks.
+- **Body:** after the three bullets, the section says what to do and what a finished task looks like, completely enough to act on without reading the thread, e.g. which questions are open and which recommendations are not yet applied.
 
-The linter checks the heading and the two bullets. A Set-aside task needs no links to the terms it mentions, and its words count toward no word budget, because tasks come and go.
+The linter checks the heading and the three bullets. A Set-aside task needs no links to the terms it mentions, and its words count toward no word budget, because tasks come and go.
 
 # Review the CR Sweep Bench
 
+- Added: 2026-11-24 22:19 PST
 - T3 thread: Combat Rating Formula Calibration
 - T3 thread ID: `6664326e-82ae-4710-b1a5-24a101803ff6`
 
@@ -37,6 +38,7 @@ Review the CR Sweep Bench, described in `tools/cr-sweep-bench/README.md`: read h
 
 # Settle the open decisions from slimming the specifications
 
+- Added: 2026-11-24 22:21 PST
 - T3 thread: Merging Spec and Code Repositories
 - T3 thread ID: `82296efa-3238-472a-9f0e-8ceb41fe87d2`
 
@@ -49,6 +51,7 @@ Settle the open decisions left from slimming the specifications. The 14 decision
 
 # Settle what the Compendium View shows for Equipment
 
+- Added: 2026-11-24 22:21 PST
 - T3 thread: Merging Spec and Code Repositories
 - T3 thread ID: `82296efa-3238-472a-9f0e-8ceb41fe87d2`
 
@@ -56,6 +59,7 @@ The Compendium View's specification describes an Ammo data sheet and the "Ammo" 
 
 # Generate the Screenshots again after the Reference window redesign
 
+- Added: 2026-11-24 22:24 PST
 - T3 thread: Fit Game UI to 1408x784 Screens
 - T3 thread ID: `42b665aa-ff94-40b0-8819-89662f41cb0b`
 

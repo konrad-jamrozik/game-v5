@@ -1048,18 +1048,24 @@ describe('specification linter', () => {
         ]),
       },
     ]
-    const thread = ['- T3 thread: Bench calibration', '- T3 thread ID: `6664326e-82ae-4710-b1a5-24a101803ff6`', '']
+    const added = '- Added: 2026-11-24 22:19 PST'
+    const name = '- T3 thread: Bench calibration'
+    const id = '- T3 thread ID: `6664326e-82ae-4710-b1a5-24a101803ff6`'
+    const body = ['', 'Run the bench.']
 
-    test('accepts a task that opens with its thread name and ID, though it has no lead', () => {
-      expect(diagnosticCodes(taskList([...thread, 'Run the bench.']))).toEqual([])
+    test('accepts a task that opens with its time and thread, though it has no lead', () => {
+      expect(diagnosticCodes(taskList([added, name, id, ...body]))).toEqual([])
     })
 
     test.each([
       ['a lead instead of the bullets', ['Run the bench.']],
-      ['only the thread name', ['- T3 thread: Bench calibration', '', 'Run the bench.']],
-      ['the bullets in the other order', [thread[1] ?? '', thread[0] ?? '', '', 'Run the bench.']],
-      ['an ID that is not one', ['- T3 thread: Bench calibration', '- T3 thread ID: `none`', '', 'Run the bench.']],
-      ['nothing after the bullets', thread],
+      ['no time', [name, id, ...body]],
+      ['only the time and the thread name', [added, name, ...body]],
+      ['the bullets in another order', [name, added, id, ...body]],
+      ['a time not in Pacific time', ['- Added: 2026-11-24 22:19 UTC', name, id, ...body]],
+      ['a time without its minutes', ['- Added: 2026-11-24 22 PST', name, id, ...body]],
+      ['an ID that is not one', [added, name, '- T3 thread ID: `none`', ...body]],
+      ['nothing after the bullets', [added, name, id]],
     ])('rejects a task with %s', (_name, task) => {
       expect(diagnosticCodes(taskList(task))).toEqual(['SPEC219'])
     })

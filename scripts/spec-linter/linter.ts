@@ -105,6 +105,7 @@ const CLOSING_ORDER = [REMOVED_CLOSING_HEADING, TODOS_HEADING]
  */
 const TASK_LIST_PATH = 'docs/specs/governance/process/todos.md'
 const TASK_RULES_HEADING = 'Recording a Set-aside task'
+const TASK_ADDED = /^Added: \d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]) ([01]\d|2[0-3]):[0-5]\d PST$/
 const TASK_THREAD_NAME = /^T3 thread: \S/
 const TASK_THREAD_ID = /^T3 thread ID: [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 /** Phrases that state no rule: a claim that a list is whole, or that nothing happens. */
@@ -520,8 +521,8 @@ function taskHeadings(specification: { readonly path: string; readonly document:
 }
 
 /**
- * Requires a Set-aside task to open with exactly two bullets, its T3 thread's name and then its ID in a code span, and
- * to say after them what the task is.
+ * Requires a Set-aside task to open with exactly three bullets, when it was added in Pacific time, its T3 thread's name,
+ * and the thread's ID in a code span, and to say after them what the task is.
  */
 function validateTaskOpening(specification: Specification, heading: Heading, diagnostics: Diagnostic[]): void {
   const nodes = sectionNodes(specification.document, heading).filter((node) => node.type !== 'html')
@@ -529,9 +530,10 @@ function validateTaskOpening(specification: Specification, heading: Heading, dia
   const items = first && first.type === 'list' ? first.children : []
   const texts = items.map((item) => textOf(item).trim())
   const opens =
-    texts.length === 2 &&
-    TASK_THREAD_NAME.test(texts[0] ?? '') &&
-    TASK_THREAD_ID.test(texts[1] ?? '') &&
+    texts.length === 3 &&
+    TASK_ADDED.test(texts[0] ?? '') &&
+    TASK_THREAD_NAME.test(texts[1] ?? '') &&
+    TASK_THREAD_ID.test(texts[2] ?? '') &&
     rest.length > 0
   if (opens) return
   addDiagnostic(
@@ -539,7 +541,7 @@ function validateTaskOpening(specification: Specification, heading: Heading, dia
     specification.path,
     heading,
     'SPEC219',
-    `Set-aside task "${headingText(heading)}" must open with two bullets, "T3 thread: <name>" and "T3 thread ID: \`<ID>\`", followed by what the task is.`,
+    `Set-aside task "${headingText(heading)}" must open with three bullets, "Added: YYYY-MM-DD hh:mm PST", "T3 thread: <name>", and "T3 thread ID: \`<ID>\`", followed by what the task is.`,
   )
 }
 
