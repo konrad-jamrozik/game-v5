@@ -24,7 +24,6 @@
     "balance:bench": "node --watch tools/gdr-balance-bench/server.ts",
     "autopilot:bench": "node --watch-path=tools/autopilot-bench/server.ts tools/autopilot-bench/server.ts",
     "rating:bench": "node --watch tools/combat-rating-bench/server.ts",
-    "sweep:bench": "node --watch tools/cr-sweep-bench/server.ts",
     "lint": "npm run lint:specs && npm run lint:code",
     "lint:fix": "npm run lint:specs && npm run lint:code -- --fix",
     "format": "oxfmt . --write",

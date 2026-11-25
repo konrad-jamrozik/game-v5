@@ -59,7 +59,6 @@ When agents run in [T3 Code](https://github.com/pingdotgg/t3code), the skills th
 | `npm run balance:bench` | Serve the [GDR Balance Bench](tools/gdr-balance-bench/README.md), a local page for balancing GDR values |
 | `npm run autopilot:bench` | Serve the [Autopilot Bench](tools/autopilot-bench/README.md), a local page for tuning the Basic Autopilot AI |
 | `npm run rating:bench` | Serve the [Combat Rating Bench](tools/combat-rating-bench/README.md), a local page for finding a Combat rating formula that predicts who wins against each Mission site |
-| `npm run sweep:bench` | Serve the [CR Sweep Bench](tools/cr-sweep-bench/README.md), a local page that sweeps the Agent count of many teams against many Enemy teams and scores Combat rating formulas against the win rates |
 | `npm run terms:report` | List the first mention of every term in every specification |
 | `npm run lint` | Run code and specification linting |
 | `npm run fix` | Link terms, regenerate derived views, format, fix code lint |

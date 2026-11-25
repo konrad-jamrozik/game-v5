@@ -12,14 +12,6 @@
 
 Each topic section below is one [Set-aside task](../conventions/spec-conventions.md#set-aside-tasks): work the Game designer has set aside for later, with the T3 thread it came from.
 
-# Review the CR Sweep Bench
-
-- Added: 2026-11-24 22:19 PST
-- T3 thread: Combat Rating Formula Calibration
-- T3 thread ID: `6664326e-82ae-4710-b1a5-24a101803ff6`
-
-Review the CR Sweep Bench, described in `tools/cr-sweep-bench/README.md`: read how its yardstick and its experiments work, run it with `npm run sweep:bench`, and try formulas in it, to understand what it shows about a Combat rating formula. It was built, and its first readings were discussed, in the thread. Two questions from that thread are still open: whether the safe ratio may depend on the size of the fight, and whether to build a formula from the measured curves.
-
 # Settle the open decisions from slimming the specifications
 
 - Added: 2026-11-24 22:21 PST

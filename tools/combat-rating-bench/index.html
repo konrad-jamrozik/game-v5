@@ -30,9 +30,9 @@
         /* The win rate of the Agents in a cell: below 50% tints toward red, --low, above toward green, --high. */
         --low: 229, 72, 77;
         --high: 120, 190, 90;
-        /* The Sampler's colourings: a win rate above the rating ratio, or a ratio above 100%, tints toward yellow. */
+        /* The Sweeper's colourings: a win rate above the rating ratio, or a ratio above 100%, tints toward yellow. */
         --over: 255, 200, 60;
-        /* The Sampler's Win rate + CR ratio line: the contour lines of equal ratings, in a colour neither red nor green. */
+        /* The Sweeper's Win rate + CR ratio line: the contour lines of equal ratings, in a colour neither red nor green. */
         --line: 90, 220, 255;
         --head: 'Barlow Condensed', 'Arial Narrow', sans-serif;
         --body: 'Barlow', 'Segoe UI', system-ui, sans-serif;
@@ -460,7 +460,7 @@
         color: var(--text);
         opacity: 0.85;
       }
-      /* The Sampler's CR left and exhaustion read by colour, keyed by their checkboxes' labels. */
+      /* The Sweeper's CR left and exhaustion read by colour, keyed by their checkboxes' labels. */
       .k-cr {
         color: #9fd0ff;
       }
@@ -525,8 +525,8 @@
         align-items: center;
         margin-bottom: 6px;
       }
-      #samplerDims td.dim-off input,
-      #samplerDims td.dim-off select {
+      #sweeperDims td.dim-off input,
+      #sweeperDims td.dim-off select {
         opacity: 0.35;
       }
 
@@ -808,13 +808,13 @@
         <div class="scroll"><div id="grid" class="grid"></div></div>
       </section>
 
-      <section>
+      <section id="sweeper">
         <div class="shead">
-          <h2>Sampler</h2>
+          <h2>Sweeper</h2>
         </div>
         <div class="row" style="align-items: flex-start; gap: 18px 36px">
-          <div class="scroll"><table id="samplerDims"></table></div>
-          <div id="samplerSite" class="site"></div>
+          <div class="scroll"><table id="sweeperDims"></table></div>
+          <div id="sweeperSite" class="site"></div>
         </div>
         <div class="row" style="margin-top: 10px">
           <button
@@ -832,50 +832,50 @@
           >
             Re-run samples
           </button>
-          <button class="small" data-act="reset-sampler" title="Restore every dimension of the sampler to its default">
-            Restore sampler defaults
+          <button class="small" data-act="reset-sweeper" title="Restore every dimension of the sweeper to its default">
+            Restore sweeper defaults
           </button>
-          <span id="samplerInfo" class="note"></span>
+          <span id="sweeperInfo" class="note"></span>
         </div>
-        <div id="samplerErr" class="err"></div>
+        <div id="sweeperErr" class="err"></div>
         <!-- The display panel stays on the left of the screen while the samples scroll past it. -->
         <div class="sbody">
           <aside class="sview">
             <span class="lbl note">Show</span>
             <label class="inline"
-              ><input type="checkbox" data-bind="sampler.showWin" data-type="bool" /> Win rate</label
+              ><input type="checkbox" data-bind="sweeper.showWin" data-type="bool" /> Win rate</label
             >
             <label class="inline"
-              ><input type="checkbox" data-bind="sampler.showRatio" data-type="bool" /> Rating ratio</label
+              ><input type="checkbox" data-bind="sweeper.showRatio" data-type="bool" /> Rating ratio</label
             >
             <label class="inline"
-              ><input type="checkbox" data-bind="sampler.showCrLeft" data-type="bool" />
+              ><input type="checkbox" data-bind="sweeper.showCrLeft" data-type="bool" />
               <span class="k-cr">Agent CR left</span></label
             >
             <label class="inline"
-              ><input type="checkbox" data-bind="sampler.showExhaustion" data-type="bool" />
+              ><input type="checkbox" data-bind="sweeper.showExhaustion" data-type="bool" />
               <span class="k-ex">Agent exhaustion</span></label
             >
             <label class="inline" title="The win rate minus the rating ratio, in points, e.g. +8% for 98% and 90%"
-              ><input type="checkbox" data-bind="sampler.showDiff" data-type="bool" />
+              ><input type="checkbox" data-bind="sweeper.showDiff" data-type="bool" />
               <span class="k-df">CR to win diff</span></label
             >
             <span class="lbl note" style="margin-top: 10px">Colouring</span>
             <div role="radiogroup" aria-label="Cell colouring" class="sview-group">
               <label class="inline" title="Red below a 50% win rate, green above, as in the grid"
-                ><input type="radio" name="coloring" value="win" data-bind="sampler.coloring" data-type="str" /> Win
+                ><input type="radio" name="coloring" value="win" data-bind="sweeper.coloring" data-type="str" /> Win
                 rate</label
               >
               <label
                 class="inline"
                 title="None at a rating ratio of 100%, more red down to 80% and more yellow up to 120%, and none beyond"
-                ><input type="radio" name="coloring" value="ratio" data-bind="sampler.coloring" data-type="str" /> CR
+                ><input type="radio" name="coloring" value="ratio" data-bind="sweeper.coloring" data-type="str" /> CR
                 ratio</label
               >
               <label
                 class="inline"
                 title="For a rating ratio from 90% to 120% only, the rest greyed out. The ratio sets the saturation, very low at 90%, medium at 100%, and full at 120%; the win rate sets the hue: green when it matches the ratio, through yellow toward red when below, fully turned at 20 points, and toward purple when above, fully turned at 10 points"
-                ><input type="radio" name="coloring" value="diff" data-bind="sampler.coloring" data-type="str" /> CR to
+                ><input type="radio" name="coloring" value="diff" data-bind="sweeper.coloring" data-type="str" /> CR to
                 win diff</label
               >
             </div>
@@ -883,11 +883,11 @@
               class="inline"
               style="margin-top: 10px"
               title="Cyan lines between the cells where the rating ratio crosses 100%, bold, and 90% and 110%, faint, over any colouring"
-              ><input type="checkbox" data-bind="sampler.showLine" data-type="bool" />
+              ><input type="checkbox" data-bind="sweeper.showLine" data-type="bool" />
               <span class="k-line">CR ratio line</span></label
             >
           </aside>
-          <div id="samplerOut" class="samples"></div>
+          <div id="sweeperOut" class="samples"></div>
         </div>
       </section>
 
@@ -1030,10 +1030,10 @@
         setupEdited: {},
         combat: {},
         /**
-         * Each dimension of the Sampler: fixed at its value, or sampled along an axis, over its list of values, e.g.
+         * Each dimension of the Sweeper: fixed at its value, or sampled along an axis, over its list of values, e.g.
          * `10, 25, 60`, or, while the list is empty, from, to, by step.
          */
-        sampler: {
+        sweeper: {
           showRatio: true,
           showCrLeft: true,
           showExhaustion: true,
@@ -1126,6 +1126,11 @@
               saved.formula.enemy ??= saved.formula.combatant
               delete saved.formula.combatant
             }
+            // The Sweeper was once the Sampler, saved under that name.
+            if (saved.sampler) {
+              saved.sweeper ??= saved.sampler
+              delete saved.sampler
+            }
             return {
               ...d,
               ...saved,
@@ -1143,14 +1148,14 @@
               },
               setup: { ...d.setup, ...editedSetup(saved) },
               setupEdited: saved.setupEdited ?? {},
-              sampler: Object.fromEntries(
-                Object.entries(d.sampler).map(([k, v]) => [
+              sweeper: Object.fromEntries(
+                Object.entries(d.sweeper).map(([k, v]) => [
                   k,
-                  typeof v === 'object' ? { ...v, ...saved.sampler?.[k] } : (saved.sampler?.[k] ?? v),
+                  typeof v === 'object' ? { ...v, ...saved.sweeper?.[k] } : (saved.sweeper?.[k] ?? v),
                 ]),
               ),
-              ...(saved.sampler?.coloring === 'winline'
-                ? { sampler: { ...d.sampler, ...saved.sampler, coloring: 'win', showLine: true } }
+              ...(saved.sweeper?.coloring === 'winline'
+                ? { sweeper: { ...d.sweeper, ...saved.sweeper, coloring: 'win', showLine: true } }
                 : {}),
             }
           }
@@ -1496,7 +1501,7 @@
 
       /**
        * What a cell still needs fought, as { from, trials, detail }, or null when its result is complete. A cell with
-       * detail, i.e. a Sampler sample, needs the final values of every one of its Combats under the current formula.
+       * detail, i.e. a Sweeper sample, needs the final values of every one of its Combats under the current formula.
        */
       function jobFor(cell) {
         const r = store.results[cell.key]
@@ -1999,7 +2004,7 @@
         markUnused()
         renderTypes()
         renderAnalysis()
-        renderSampler()
+        renderSweeper()
       }
 
       /**
@@ -2272,8 +2277,8 @@
 
       /* ---------- events ---------- */
       let renderTimer = 0
-      /* ---------- the Sampler ---------- */
-      const SAMPLER_DIMS = [
+      /* ---------- the Sweeper ---------- */
+      const SWEEPER_DIMS = [
         ['count', 'Agent count'],
         ['skill', 'Agent base skill'],
         ['damage', 'Added weapon damage'],
@@ -2281,18 +2286,18 @@
         ['site', 'Mission site'],
         ['trials', 'Combats per sample'],
       ]
-      const samplerLabel = (name) => SAMPLER_DIMS.find(([n]) => n === name)[1]
-      /** The samples of the current formula, or null when the Sampler's dimensions are broken. */
-      let sampler = null
-      /** Whether a numeric dimension of the Sampler is sampled over its list of values rather than by step. */
+      const sweeperLabel = (name) => SWEEPER_DIMS.find(([n]) => n === name)[1]
+      /** The samples of the current formula, or null when the Sweeper's dimensions are broken. */
+      let sweeper = null
+      /** Whether a numeric dimension of the Sweeper is sampled over its list of values rather than by step. */
       const hasList = (d) => typeof d.list === 'string' && d.list.trim() !== ''
       /**
        * The values of one numeric dimension: its fixed value, its list of values in the order given, or from, to, by
        * step; whole numbers, at most 60.
        */
       function dimValues(name) {
-        const d = state.sampler[name]
-        const label = samplerLabel(name)
+        const d = state.sweeper[name]
+        const label = sweeperLabel(name)
         const [lo, hi] = name === 'trials' ? [1, 10000] : name === 'damage' || name === 'armor' ? [0, 1e6] : [1, 1e6]
         const whole = (x) => Math.min(hi, Math.max(lo, Math.round(x)))
         if (d.mode === 'fixed') {
@@ -2331,7 +2336,7 @@
         return [...new Set(out)]
       }
       /**
-       * The site a Sampler with no chosen site fights: the shown site whose rating is closest to that of the middle
+       * The site a Sweeper with no chosen site fights: the shown site whose rating is closest to that of the middle
        * sample, e.g. 50 Agents of skill 250 when the count runs from 10 to 100, so that the samples are not all lost.
        */
       function closestSite(shown, values, cv) {
@@ -2357,8 +2362,8 @@
       function buildSamples() {
         const cv = model.cv
         const onAxis = {}
-        for (const [name, label] of SAMPLER_DIMS) {
-          const m = state.sampler[name].mode
+        for (const [name, label] of SWEEPER_DIMS) {
+          const m = state.sweeper[name].mode
           if (m !== 'fixed') {
             if (onAxis[m]) {
               throw new Error(`${onAxis[m]} and ${label} are both on the ${m.toUpperCase()} axis; give each its own`)
@@ -2367,14 +2372,14 @@
           }
         }
         const values = {}
-        for (const [name] of SAMPLER_DIMS) {
+        for (const [name] of SWEEPER_DIMS) {
           if (name !== 'site') {
             values[name] = dimValues(name)
           }
         }
         const all = sitesOf(cv, false)
         const shown = sitesOf(cv)
-        const s = state.sampler.site
+        const s = state.sweeper.site
         const formula = state.formula
         values.site = s.mode === 'fixed' ? [all.find((x) => x.id === s.value) ?? closestSite(shown, values, cv)] : shown
         if (values.site.length === 0 || values.site[0] === undefined) {
@@ -2387,7 +2392,7 @@
         const ax = Object.fromEntries(
           ['x', 'y', 'z'].map((a) => [
             a,
-            SAMPLER_DIMS.map(([n]) => n).find((n) => state.sampler[n].mode === a) ?? null,
+            SWEEPER_DIMS.map(([n]) => n).find((n) => state.sweeper[n].mode === a) ?? null,
           ]),
         )
         for (const site of values.site) {
@@ -2454,7 +2459,7 @@
        * that reads 90% is in range.
        */
       function sampleBackground(cell, r) {
-        const coloring = state.sampler.coloring
+        const coloring = state.sweeper.coloring
         if (coloring === 'win') {
           return r ? tint(winOf(r)) : null
         }
@@ -2535,7 +2540,7 @@
           .trim()
         const style = bg === null || bg === 'grey' ? '' : `background:${bg}`
         const text = queued ? '…' : shown ? pct(winOf(shown)) : '–'
-        const s = state.sampler
+        const s = state.sweeper
         // The CR left is greyed when it was measured with another formula.
         const old = shown?.crSig !== crSig() ? ' old' : ''
         const lines = [
@@ -2556,13 +2561,13 @@
         const shadow = edges ? `;box-shadow:${edges}` : ''
         return `<div class="${cls}" style="${style}${shadow}" data-sample="${esc(cell.id)}">${lines.join('')}</div>`
       }
-      /** The Sampler's dimensions as inputs; drawn anew only when a mode changes, so typing keeps its focus. */
-      function renderSamplerDims() {
+      /** The Sweeper's dimensions as inputs; drawn anew only when a mode changes, so typing keeps its focus. */
+      function renderSweeperDims() {
         for (const name of ['showWin', 'showRatio', 'showCrLeft', 'showExhaustion', 'showDiff', 'showLine']) {
-          $(`[data-bind="sampler.${name}"]`).checked = state.sampler[name]
+          $(`[data-bind="sweeper.${name}"]`).checked = state.sweeper[name]
         }
-        for (const radio of document.querySelectorAll('[data-bind="sampler.coloring"]')) {
-          radio.checked = radio.value === state.sampler.coloring
+        for (const radio of document.querySelectorAll('[data-bind="sweeper.coloring"]')) {
+          radio.checked = radio.value === state.sweeper.coloring
         }
         const sites = info ? sitesOf(combatValues(), false) : []
         const modes = [
@@ -2572,21 +2577,21 @@
           ['z', 'Z axis'],
         ]
         const modeSel = (name) =>
-          `<select data-bind="sampler.${name}.mode" data-type="str" aria-label="${samplerLabel(name)} mode">${modes
-            .map(([v, l]) => `<option value="${v}" ${state.sampler[name].mode === v ? 'selected' : ''}>${l}</option>`)
+          `<select data-bind="sweeper.${name}.mode" data-type="str" aria-label="${sweeperLabel(name)} mode">${modes
+            .map(([v, l]) => `<option value="${v}" ${state.sweeper[name].mode === v ? 'selected' : ''}>${l}</option>`)
             .join('')}</select>`
         const num = (name, key) =>
-          `<input type="number" step="1" style="width: 90px" data-bind="sampler.${name}.${key}" data-type="num" value="${state.sampler[name][key]}" aria-label="${samplerLabel(name)} ${key}">`
+          `<input type="number" step="1" style="width: 90px" data-bind="sweeper.${name}.${key}" data-type="num" value="${state.sweeper[name][key]}" aria-label="${sweeperLabel(name)} ${key}">`
         const listIn = (name) =>
-          `<input type="text" style="width: 160px" placeholder="e.g. 10, 25, 60" title="Values separated by commas, sampled in the order given in place of From, To, and Step; empty to step" data-bind="sampler.${name}.list" data-type="str" value="${esc(state.sampler[name].list ?? '')}" aria-label="${samplerLabel(name)} values">`
-        $('#samplerDims').innerHTML =
+          `<input type="text" style="width: 160px" placeholder="e.g. 10, 25, 60" title="Values separated by commas, sampled in the order given in place of From, To, and Step; empty to step" data-bind="sweeper.${name}.list" data-type="str" value="${esc(state.sweeper[name].list ?? '')}" aria-label="${sweeperLabel(name)} values">`
+        $('#sweeperDims').innerHTML =
           `<tr><th>Dimension</th><th>Mode</th><th>Fixed value</th><th>From</th><th>To</th><th>Step</th><th>Values</th></tr>` +
-          SAMPLER_DIMS.map(([name, label]) => {
-            const d = state.sampler[name]
+          SWEEPER_DIMS.map(([name, label]) => {
+            const d = state.sweeper[name]
             const fixed = d.mode === 'fixed'
             const on = (f) => (f ? '' : 'dim-off')
             if (name === 'site') {
-              const sel = `<select data-bind="sampler.site.value" data-type="str" aria-label="Mission site">${sites
+              const sel = `<select data-bind="sweeper.site.value" data-type="str" aria-label="Mission site">${sites
                 .map(
                   (s) =>
                     `<option value="${esc(s.id)}" ${s.id === d.value ? 'selected' : ''}>${esc(s.name)} · ${siteLevel(s)}</option>`,
@@ -2605,37 +2610,37 @@
           }).join('')
       }
       /** Greys From, To, and Step while a dimension's list of values is used, without drawing the inputs anew. */
-      function markSamplerList(name) {
-        const d = state.sampler[name]
-        const row = document.querySelector(`#samplerDims tr[data-dim="${name}"]`)
+      function markSweeperList(name) {
+        const d = state.sweeper[name]
+        const row = document.querySelector(`#sweeperDims tr[data-dim="${name}"]`)
         for (const td of row?.querySelectorAll('td[data-range]') ?? []) {
           td.classList.toggle('dim-off', d.mode === 'fixed' || hasList(d))
         }
       }
-      function renderSampler() {
-        const out = $('#samplerOut')
+      function renderSweeper() {
+        const out = $('#sweeperOut')
         try {
-          sampler = buildSamples()
-          $('#samplerErr').textContent = ''
+          sweeper = buildSamples()
+          $('#sweeperErr').textContent = ''
         } catch (e) {
-          sampler = null
-          $('#samplerErr').textContent = e.message
-          $('#samplerInfo').textContent = ''
-          $('#samplerSite').innerHTML = ''
+          sweeper = null
+          $('#sweeperErr').textContent = e.message
+          $('#sweeperInfo').textContent = ''
+          $('#sweeperSite').innerHTML = ''
           out.innerHTML = ''
           return
         }
-        const { values, ax, cells } = sampler
+        const { values, ax, cells } = sweeper
         const fixedValue = (n) => values[n][0]
         // With no site chosen, the list shows the one fought.
-        const siteSel = $('[data-bind="sampler.site.value"]')
-        if (siteSel && state.sampler.site.mode === 'fixed' && siteSel.value !== values.site[0].id) {
+        const siteSel = $('[data-bind="sweeper.site.value"]')
+        if (siteSel && state.sweeper.site.mode === 'fixed' && siteSel.value !== values.site[0].id) {
           siteSel.value = values.site[0].id
         }
         const done = cells.filter((c) => jobFor(c) === null).length
-        $('#samplerInfo').innerHTML = `${cells.length} samples, ${done} complete.`
-        const fixedSite = state.sampler.site.mode === 'fixed' ? values.site[0] : null
-        $('#samplerSite').innerHTML = fixedSite ? `<b>${esc(fixedSite.name)}</b>${siteMeta(fixedSite)}` : ''
+        $('#sweeperInfo').innerHTML = `${cells.length} samples, ${done} complete.`
+        const fixedSite = state.sweeper.site.mode === 'fixed' ? values.site[0] : null
+        $('#sweeperSite').innerHTML = fixedSite ? `<b>${esc(fixedSite.name)}</b>${siteMeta(fixedSite)}` : ''
         // As under Mission sites, the first values are at the upper left: X grows to the right and Y down.
         const xs = ax.x ? values[ax.x] : [null]
         const ys = ax.y ? values[ax.y] : [null]
@@ -2652,7 +2657,7 @@
           return parts.map(([n, v]) => dimText(n, v)).join(stacked ? '<br>' : ' ')
         }
         const cellAt = (x, y, z) => {
-          const v = Object.fromEntries(SAMPLER_DIMS.map(([n]) => [n, fixedValue(n)]))
+          const v = Object.fromEntries(SWEEPER_DIMS.map(([n]) => [n, fixedValue(n)]))
           for (const [a, val] of [
             ['x', x],
             ['y', y],
@@ -2662,9 +2667,9 @@
               v[ax[a]] = val
             }
           }
-          return sampler.byId.get(sampleId(v))
+          return sweeper.byId.get(sampleId(v))
         }
-        const corner = [ax.y ? `${samplerLabel(ax.y)} ↓` : '', ax.x ? `${samplerLabel(ax.x)} →` : '']
+        const corner = [ax.y ? `${sweeperLabel(ax.y)} ↓` : '', ax.x ? `${sweeperLabel(ax.x)} →` : '']
           .filter(Boolean)
           .join('<br>')
         out.innerHTML = zs
@@ -2672,13 +2677,13 @@
             const inZ = cells.filter((c) => !ax.z || c.v[ax.z] === z)
             const wins = inZ.filter((c) => resultOf(c)).map((c) => winOf(resultOf(c)))
             const mean = wins.length > 0 ? wins.reduce((a, b) => a + b, 0) / wins.length : NaN
-            let html = `<div><div class="stitle"><b>${ax.z ? `${samplerLabel(ax.z)} ${dimText(ax.z, z)}` : 'Samples'}</b>
+            let html = `<div><div class="stitle"><b>${ax.z ? `${sweeperLabel(ax.z)} ${dimText(ax.z, z)}` : 'Samples'}</b>
               ${wins.length > 0 ? `<span class="note">μ ${pct(mean)} over ${wins.length}</span>` : ''}
               <button class="small" data-act="run-samples" data-z="${zi}">Run</button>
               <button class="small" data-act="run-samples" data-z="${zi}" data-rerun="1" title="Forget these samples' results and fight them again, on new seeds">Re-run</button></div>
               <div class="sgrid" style="grid-template-columns: auto repeat(${xs.length}, minmax(50px, auto))">
               <span class="ax"><span>${corner}</span></span>${xs.map((x) => `<span class="ax"><span>${axisLabel('x', x, z, true)}</span></span>`).join('')}`
-            const lined = state.sampler.showLine
+            const lined = state.sweeper.showLine
             for (const [yi, y] of ys.entries()) {
               html += `<span class="ax y"><span>${axisLabel('y', y, z, false)}</span></span>`
               html += xs
@@ -2698,7 +2703,7 @@
       }
       /** Lays the Z tables out in as many columns as fit, filling each column from the top before the next. */
       function layoutSamples() {
-        const out = $('#samplerOut')
+        const out = $('#sweeperOut')
         const tables = [...out.children]
         if (tables.length === 0) {
           return
@@ -2709,8 +2714,8 @@
         const cols = Math.max(1, Math.floor((out.clientWidth + gap) / (width + gap)))
         out.style.gridTemplateRows = `repeat(${Math.ceil(tables.length / cols)}, auto)`
       }
-      window.addEventListener('resize', () => sampler && layoutSamples())
-      // The Sampler's display panel sticks just below the top bar, whatever its height.
+      window.addEventListener('resize', () => sweeper && layoutSamples())
+      // The Sweeper's display panel sticks just below the top bar, whatever its height.
       new ResizeObserver(([entry]) =>
         document.documentElement.style.setProperty('--bar-h', `${entry.target.offsetHeight}px`),
       ).observe($('.bar'))
@@ -2747,11 +2752,11 @@
         if (path.startsWith('setup.')) {
           state.setupEdited = { ...state.setupEdited, [path.slice('setup.'.length)]: true }
         }
-        if (path.startsWith('sampler.') && path.endsWith('.mode')) {
-          renderSamplerDims()
+        if (path.startsWith('sweeper.') && path.endsWith('.mode')) {
+          renderSweeperDims()
         }
-        if (path.startsWith('sampler.') && path.endsWith('.list')) {
-          markSamplerList(path.split('.')[1])
+        if (path.startsWith('sweeper.') && path.endsWith('.list')) {
+          markSweeperList(path.split('.')[1])
         }
         changed()
       }
@@ -2795,18 +2800,49 @@
           request(model.cells.filter((c) => c.site.id === b.dataset.site && c.t === t))
         } else if (act === 'run-col') {
           request(model.cells.filter((c) => c.t === t))
-        } else if (act === 'run-samples' && sampler !== null) {
-          const { ax, values } = sampler
+        } else if (act === 'run-samples' && sweeper !== null) {
+          const { ax, values } = sweeper
           const z = b.dataset.z === undefined || !ax.z ? null : values[ax.z][Number(b.dataset.z)]
           request(
-            sampler.cells.filter((c) => z === null || c.v[ax.z] === z),
+            sweeper.cells.filter((c) => z === null || c.v[ax.z] === z),
             b.dataset.rerun === '1',
           )
-        } else if (act === 'reset-sampler') {
-          state.sampler = defaults().sampler
-          renderSamplerDims()
+        } else if (act === 'reset-sweeper') {
+          state.sweeper = defaults().sweeper
+          renderSweeperDims()
           changed()
         }
+      })
+
+      /**
+       * Ctrl+click on a grid cell sets the Sweeper to that cell's team against its site: its Agent count and base skill
+       * fixed, the weapon damage of the grid's gear sets along X, and their armor along Y.
+       */
+      document.addEventListener('click', (e) => {
+        if (!(e.ctrlKey || e.metaKey) || model === null) {
+          return
+        }
+        const el = e.target.closest?.('[data-cell]')
+        const cell = el && model.byId?.get(el.dataset.cell)
+        if (!cell) {
+          return
+        }
+        e.preventDefault()
+        const s = state.sweeper
+        const list = (key) => [...new Set(model.ups.map((u) => u[key]))].join(', ')
+        s.count = { ...s.count, mode: 'fixed', value: cell.count }
+        s.skill = { ...s.skill, mode: 'fixed', value: cell.skill }
+        s.damage = { ...s.damage, mode: 'x', list: list('w') }
+        s.armor = { ...s.armor, mode: 'y', list: list('a') }
+        s.site = { mode: 'fixed', value: cell.site.id }
+        if (s.trials.mode === 'x' || s.trials.mode === 'y') {
+          s.trials = { ...s.trials, mode: 'fixed' }
+        }
+        renderSweeperDims()
+        changed()
+        const section = $('#sweeper')
+        section.classList.remove('folded')
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' })
       })
 
       // The tooltip of a cell.
@@ -2818,7 +2854,7 @@
           return
         }
         const isSample = el.dataset.sample !== undefined
-        const cell = isSample ? sampler?.byId.get(el.dataset.sample) : model.byId.get(el.dataset.cell)
+        const cell = isSample ? sweeper?.byId.get(el.dataset.sample) : model.byId.get(el.dataset.cell)
         if (!cell) {
           return
         }
@@ -2945,7 +2981,7 @@
         applyDefaults()
         renderFormula()
         renderSetup()
-        renderSamplerDims()
+        renderSweeperDims()
         render()
       }
       void start()
