@@ -1,53 +1,67 @@
-id: one_chevron
-type: RankInsignia
+id: rank_1
+type: Rank
+name: Rank I
+min_base_skill: 0
+---
+id: rank_2
+type: Rank
+name: Rank II
 min_base_skill: 150
 mark: chevron
 count: 1
 ---
-id: two_chevrons
-type: RankInsignia
+id: rank_3
+type: Rank
+name: Rank III
 min_base_skill: 200
 mark: chevron
 count: 2
 ---
-id: three_chevrons
-type: RankInsignia
+id: rank_4
+type: Rank
+name: Rank IV
 min_base_skill: 250
 mark: chevron
 count: 3
 ---
-id: one_bar
-type: RankInsignia
+id: rank_5
+type: Rank
+name: Rank V
 min_base_skill: 350
 mark: bar
 count: 1
 ---
-id: two_bars
-type: RankInsignia
+id: rank_6
+type: Rank
+name: Rank VI
 min_base_skill: 450
 mark: bar
 count: 2
 ---
-id: three_bars
-type: RankInsignia
+id: rank_7
+type: Rank
+name: Rank VII
 min_base_skill: 550
 mark: bar
 count: 3
 ---
-id: one_star
-type: RankInsignia
+id: rank_8
+type: Rank
+name: Rank VIII
 min_base_skill: 700
 mark: star
 count: 1
 ---
-id: two_stars
-type: RankInsignia
+id: rank_9
+type: Rank
+name: Rank IX
 min_base_skill: 850
 mark: star
 count: 2
 ---
-id: three_stars
-type: RankInsignia
+id: rank_10
+type: Rank
+name: Rank X
 min_base_skill: 1000
 mark: star
 count: 3

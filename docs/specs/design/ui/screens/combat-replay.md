@@ -20,7 +20,6 @@ It shows only what the Combat report holds and fights nothing again, so in a Cam
 | --- | --- |
 | Combat replay | The view, e.g. of the Turn Report View, that plays one [Combat](../../mechanics/domain-model.md#combat) back from its [Combat report](../../mechanics/domain-model.md#combat), as attacks between the figures of its [Combatants](../../mechanics/domain-model.md#combat) on the Battlefield. |
 | Battlefield | The square grid of the Combat replay on which one figure stands for each [Combatant](../../mechanics/domain-model.md#combat) of both sides. |
-| Rank insignia | The mark beside an [Agent](../../mechanics/domain-model.md#agency-and-agents)'s figure on the Battlefield that says how skilled the Agent is when rested. |
 
 # Visualize button
 
@@ -46,7 +45,7 @@ A figure shows what the Player must know about its Combatant without a table: wh
 - **Health:** the figure is filled with its colour from the bottom, as far as its [current health](../../mechanics/agents-spec.md#combatant-attributes) is of its [effective max health](../../mechanics/agents-spec.md#combatant-attributes), so that it empties from the top as it is hit.
 - **Armor:** a rim around the figure in Text muted, the thicker the more [current armor](../../mechanics/agents-spec.md#combatant-attributes) the Combatant has, so that a hit thins the rim before it empties the figure, and a Combatant with no current armor has no rim.
 - **Condition:** a figure whose Combatant is [Incapacitated](../../mechanics/combat.md#combatant-condition-in-a-combat) is dimmed and has a dashed outline, and that of a dead one is empty and crossed out.
-- **Rank insignia:** a mark beside an Agent's figure, as [Rank insignia thresholds](#rank-insignia-thresholds) gives it.
+- **[Rank insignia](../gui.md#glossary):** beside an Agent's figure, that of its [Rank](../gui.md#ranks), as [Rank on the Battlefield](#rank-on-the-battlefield) gives it.
 
 ## Enemy figures
 
@@ -66,17 +65,9 @@ The shape of an Enemy's figure says how strong its EnemyArchetype is at a glance
 
 The chevrons are alike in shape and size and stand centred in the shape, two of them one above the other. They are drawn in the figure's colour where the figure is empty and in Background where it is filled, so that they show at any [health](#figures).
 
-## Rank insignia thresholds
+## Rank on the Battlefield
 
-A Rank insignia lets the Player pick out the veterans among the Agents, so it must not change as an Agent is worn down in the Combat. It is therefore taken from the Agent's [base skill](../../mechanics/agents-spec.md#combatant-attributes) at Combat start, rounded down, which is its [effective skill](../../mechanics/agents-spec.md#combatant-attributes) at full current health and without [exhaustion](../../mechanics/agents-spec.md#combatant-attributes). An Enemy's figure has no Rank insignia, because its [shape](#enemy-figures) already says how strong its kind is.
-
-Which base skill earns which mark is content rather than design, so it comes from the RankInsignia [GDRs](../../foundation/core-concepts.md#game-build-and-content), which serve the Display content purpose. An Agent has the Rank insignia of the RankInsignia [GDR](../../foundation/core-concepts.md#game-build-and-content) with the highest `min_base_skill` that its base skill reaches, and none when it reaches no `min_base_skill`.
-
-| Property | Meaning |
-| --- | --- |
-| `min_base_skill` | The least base skill that earns the mark, a whole number of at least 0. No two GDRs share one. |
-| `mark` | The kind of mark: `chevron`, `bar`, or `star`. Chevrons stand one above the other, bars and stars side by side. |
-| `count` | How many of the mark stand beside the figure, a whole number from 1 to 3. |
+An Agent's figure shows the Rank insignia of the [Rank](../gui.md#ranks) that its [base skill](../../mechanics/agents-spec.md#combatant-attributes) at [Combat start](../../mechanics/combat.md#combat-rounds-and-results) earns, so that it does not change as the Agent is worn down in the Combat; a [Rank](../gui.md#glossary) without a Rank insignia shows nothing, and the Rank's `name` is not shown. An Enemy's figure has no Rank insignia, because its [shape](#enemy-figures) already says how strong its kind is.
 
 # Shots
 

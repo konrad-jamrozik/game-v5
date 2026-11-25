@@ -5,7 +5,7 @@
 | Spec ID | GUI |
 | Family | UI |
 | Audience | UI designer, Implementer |
-| Owns | Which screens the graphical user interface has, the progress indicators that several of them show, the warnings it gives, its developer tools, and how it names an Enemy and a Mission site. |
+| Owns | Which screens the graphical user interface has, the progress indicators that several of them show, the warnings it gives, its developer tools, how it names an Enemy and a Mission site, and the Ranks of Agents. |
 | Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
@@ -30,6 +30,8 @@ Its screens follow the life of a [Session](../foundation/core-concepts.md#campai
 | Back control | The button of the open Detail view that [goes back to the last place of the View trail](screens/campaign-screen.md#view-trail), shown while the View trail is not empty. |
 | Enemy label | The name by which the GUI shows an [Enemy](../mechanics/domain-model.md#combat): its EnemyArchetype's abbreviation and [its number](#enemy-labels) among the Enemies of that EnemyArchetype at its [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), e.g. "init-2". |
 | Mission site title | The [full name](#mission-site-titles) by which the GUI shows a Mission site wherever it reports what the Mission site's [Mission](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) brought, e.g. "Apprehend member · Red Dawn · Initiative · #3". |
+| Rank | The [standing](#ranks) by which the GUI says how skilled an [Agent](../mechanics/domain-model.md#agency-and-agents) is when rested, e.g. "Rank II". |
+| Rank insignia | The mark of a Rank, e.g. one chevron, drawn beside the Rank's name and beside an Agent's figure in the [Combat replay](screens/combat-replay.md#figures). |
 
 # Screens
 
@@ -133,6 +135,19 @@ The Player meets Enemies only a few at a time, at one [Mission site](../mechanic
 E.g., a Mission site whose list of Enemies is three Initiates followed by two Soldiers, with the Instance IDs enemy-19 to enemy-23, shows them as init-1, init-2, init-3, sold-1, and sold-2 when the abbreviations of their EnemyArchetypes are `init` and `sold`.
 
 Where there is room to spare, e.g. in a tooltip, the GUI shows the full Enemy label instead: the `name` of the EnemyArchetype in lower case, with each space replaced by a hyphen, then the same hyphen and number, e.g. soldier-2 for sold-2, and high-commander-1 for an Enemy of an EnemyArchetype named "High commander".
+
+# Ranks
+
+A Rank lets the Player pick out the veterans among the Agents without reading numbers, so it must not change as an Agent is worn down. It is therefore taken from the Agent's [base skill](../mechanics/agents-spec.md#combatant-attributes), rounded down, which is its [effective skill](../mechanics/agents-spec.md#combatant-attributes) at full current health and without [exhaustion](../mechanics/agents-spec.md#combatant-attributes); an Enemy has no Rank.
+
+Which base skill earns which Rank is content rather than design, so the Ranks come from the Rank [GDRs](../foundation/core-concepts.md#game-build-and-content), which serve the Display content purpose. An Agent has the Rank of the Rank GDR with the highest `min_base_skill` that its base skill reaches. One Rank GDR has a `min_base_skill` of 0, so that every Agent has a Rank. Wherever the GUI shows a Rank, it shows its `name` followed by its Rank insignia, e.g. "Rank II" and one chevron, and a Rank without a `mark` shows its `name` alone.
+
+| Property | Meaning |
+| --- | --- |
+| `name` | The Rank's name, e.g. "Rank II". |
+| `min_base_skill` | The least base skill that earns the Rank, a whole number of at least 0. No two Rank GDRs share one. |
+| `mark` | Optional. The kind of the Rank insignia: `chevron`, `bar`, or `star`. Chevrons stand one above the other, bars and stars side by side. A Rank without it has no Rank insignia. |
+| `count` | How many of the mark the Rank insignia holds, a whole number from 1 to 3. Present exactly when `mark` is. |
 
 # Mission site titles
 

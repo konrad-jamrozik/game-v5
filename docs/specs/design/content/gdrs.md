@@ -101,6 +101,7 @@ The GDRs are authored in YAML files under the `content/` directory at the reposi
 | `content/panic-and-endings/` | [Panic and Endings](../mechanics/panic-and-endings.md) | `ending_parameters.yaml` |
 | `content/compendium/` | [Compendium](../mechanics/compendium.md) | The directory `compendium_articles/`, with one file for each Compendium article |
 | `content/visual-design/` | [Visual Design](../ui/visual-design.md) | `background_artworks.yaml` |
+| `content/gui/` | [Graphical User Interface](../ui/gui.md) | `ranks.yaml` |
 
 # Compendium coverage
 
