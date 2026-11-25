@@ -99,8 +99,6 @@ The analysis below reviews the 35 track records as of 2026-11-24, under `assets/
 | **Form and gameplay function** | Instrumental background music for long sessions, unobtrusive evolution, gentle transitions, seamless looping and consistent dynamics. A deep-sea branch requests an unresolved conclusion. |
 | **Prompt construction** | Bare-bones or kept short, fitting v03ai's 1,000-character cap, preserving length when adding violins, hand-cutting phrases, and experimenting with Suno Variety rewrites. |
 
-**“Minimal” has three concrete meanings here.** Minimalist or sparse describes the number of layers and how much silence they leave. Minimal percussion describes rhythmic density. Consistent low intensity describes the size of dynamic changes. Tempo, pulse, density and intensity each have their own controls in the taxonomy.
-
 ### Instruments and sound sources
 
 | Family | Named instruments, treatments and roles |
@@ -113,41 +111,6 @@ The analysis below reviews the 35 track records as of 2026-11-24, under `assets/
 | **Electronic sound sources** | Amiga-style and digital synths, Sound Blaster/dark FM, cold FM synths with sparse dissonant motifs, a rounded FM lead over a faint synth bed, retro-futurist synths, analog synth pulses in a stored rewrite, synth pads, dissonant synth chords and occasional high electronic tones. MIDI is part of the period aesthetic. |
 | **Sound design** | Bass drones, low-frequency rumble, sonar-like pings, faint radio interference and static, detuned signal fragments, electrical hum, console-like ticks, alien tones and textures, abyssal and muffled resonances. Acoustic double bass also supplies drone-like sustain. |
 | **Exclusions and permissions** | Guitars, vocals/singing, choir, intelligible speech, drum kit, cymbal crashes, aggressive drums, heroic brass, bright synth leads and synthesizer appear in exclusion language depending on the branch. Choir comes off the exclusion list in Allow Epic variants. Those records still specify instrumental. |
-
-The **eight deliberate instrument additions** in `meta_prompt_taxonomy.adjustments` are listed below. Counts include repeated takes.
-
-| Instrument addition                                                                         | Records |
-| ------------------------------------------------------------------------------------------- | ------: |
-| Felt piano, violins, cello, bowed double bass, bass clarinet, muted trombone, bowed cymbals |       2 |
-| Bass clarinet + muted trombone                                                              |       2 |
-| Cello + bowed double bass                                                                   |       2 |
-| Bowed double bass + bowed cymbals                                                           |       2 |
-| Felt piano + cello                                                                          |       2 |
-| Close-miked felt piano + damped cymbal                                                      |       2 |
-| Cello + bass clarinet                                                                       |       1 |
-| Violin(s)                                                                                   |       1 |
-
-### What the adjustments bundle together
-
-| Adjustment | What changed in this corpus |
-| --- | --- |
-| **Dark** | Eleven records explicitly ask for darker and bassier, less electronic and spacey. The prompts combine heavier bass, organic/gritty texture, claustrophobia and very slow pacing. Several retain drones and slow pulses. |
-| **Variety / No Pulse** | Six records label “more variety, less monotonous.” Three use the explicit “no repeated pulse” adjustment. Variety often varies motifs, harmony or textures while retaining occasional pulse. No Pulse targets a continuous rhythmic foundation and uses stillness or irregular accents. |
-| **Slow / Bare-bones** | Five carry the combined slower/darker/less intense adjustment. Two explicitly shorten to a bare-bones prompt. The orbital inputs specify around 65 BPM. |
-| **No MIDI / No Synth / No Drones** | No MIDI removes the explicit MIDI/Amiga timbre. No Synth replaces the synth palette with acoustic/orchestral sources and excludes synthesizer; orbital No Synth retains sonar/static effects. No Drones, cutting ambient drones and high tones, appeared only in a since-deleted draft. |
-| **Terror from the Deep / Geoscape / Modern Military / Space** | Three add Terror from the Deep and Lovecraftian color. Geoscape uses a global command perspective. Space trades close military percussion for weightless strings, sonar/static, distant snare and a wide mix. Modern Military, with staccato strings, snare and taiko, appeared only in a since-deleted draft. |
-| **Allow Epic / Allow Heroic and Aggressive** | Three records remove choir, synthwave, epic orchestral, aggressive drums and heroic brass from Exclude Styles. Two use the corresponding heroic/aggressive adjustment and keep choir excluded. These are permissions in the form, while the prose frequently still prioritizes psychological tension. |
-| **Toward X-COM Geoscape / Dissonant FM Motifs / Faint Pizzicato Viola and Bass Flute / 76 BPM** | Two records turn a grounded clandestine-strategy prompt toward cold Geoscape electronics: dissonant FM motifs and irregular sequencer accents lead, the acoustic viola and bass flute shrink to rare accents, and quiet forward motion sits at around 76 BPM. |
-| **Irregular Sequencer at 82 BPM / Felt Piano and Damped Cymbal / Rounded FM Lead / Deep-Space Mix with Sonar Pings** | Two records build a deep-space contact cue: short irregular sequencer phrases at around 82 BPM, a rounded FM lead over a fading synth bed, felt piano fragments and a damped cymbal tick, and a clean mix of sonar pings, detuned signals and silence. |
-
-### Other metadata that affects interpretation
-
-- **Input versus stored prompt.** The fourteen Suno rewrites are the seven-instrument pair's half-time and pulse-free variants, two very slow felt piano/cello rewrites, the two orbital rewrites, the UFO Salvage Operation rewrite, the two No MIDI rewrites, the clandestine-strategy pair, the deep-space pair, and Subterranean Facility. The No MIDI rewrites add analog synth pulses/uneven ostinato or free-time drones/tape hiss. The rewrite stored for Countering the Threat was reused verbatim as UFO Salvage Operation’s input, which also used Countering the Threat as audio inspiration at 25% influence.
-- **Exclude Styles.** Twenty of the twenty-two Suno records have an Exclude styles list, and all of them exclude vocals and EDM. Branch additions include singing, choir, intelligible speech, synthwave, upbeat, trailer music, rock, pop, bright melodies, epic orchestral, aggressive drums, heroic brass, jazz swing, big band, cymbal crashes, cymbal washes, drum fills, drum kit, steady drum beats, industrial beats, industrial rock, risers, impacts, synthesizer, chiptune, 8-bit, retro, lo-fi, military march, fast tempo, fantasy soundtrack, pastoral woodwinds, flute solos, playful pizzicato, chamber classical, repetitive bass ostinatos, sentimental piano, prominent bass riffs, orchestral swells and jump scares.
-- **v03ai style labels.** Dark ambient, sci-fi electronica, cinematic synth, minimal electronic, atmospheric, ominous, bass-heavy, minimalist, brooding, industrial, cinematic and acoustic textures.
-- **Track tags.** Electronic, ambient, sci-fi/science-fiction, strategy-game soundtrack, soundtrack, atmospheric, retro-futuristic, instrumental, cinematic, minimalist, intimate, dark, brooding, hypnotic, dark ambient, tactical strategy, suspenseful, ominous, industrial, lo-fi and sparse.
-- **Generation provenance and controls.** Nine ElevenLabs Music records (two v2, seven v2.5), twenty-two Suno v6 records and four Suno v5 via v03ai records. Recorded Suno controls span Weirdness 40–50%, Style Influence 50% or 70%, Variety 0–2, Max Mode off, Personalize on or off, and Duration Auto. File/title, song URL, date, model and duration establish provenance. Inside the Command Center's recorded ElevenLabs input ends mid-sentence. All four v03ai records keep the full prompt ChatGPT produced, which v03ai's 1,000-character cap truncated on submission.
-- **Human assessments.** Eleven records carry the Game designer's verdict. Four are very dark, possibly defeat or loss tracks: Solemn Aftermath, The Human Toll, What Remains, and The Reports Keep Coming. Two are higher-energy tracks: The Alien Fleet Arrives and Their Weapons in Our Hands. The bass clarinet and muted trombone pair, Smuggling Artifacts and Shady Deals, recalls the Fallout 1 town music. Signal Intelligence is a great result, Artifact Experiments a good result, and Subterranean Facility is a pleasing first prompt built on another game's track. These are observations from the metadata.
 
 ### Index of all input prompts
 
