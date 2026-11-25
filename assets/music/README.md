@@ -36,6 +36,7 @@ Every track in the table is in the Soundtrack. A track the Game designer rejects
 | `S6 XCOM+Var+NoMIDI+AllowHeroAggr A.mp3` | 26 | `S6 XCOM+Var+NoMIDI+AllowHeroAggr` | A | S6 XCOM+Var+NoMIDI+AllowHeroAggr A | Suno v6 |
 | `S6 XCOM+Var+NoMIDI+AllowHeroAggr B.mp3` | 27 | `S6 XCOM+Var+NoMIDI+AllowHeroAggr` | B | S6 XCOM+Var+NoMIDI+AllowHeroAggr B | Suno v6 |
 | `Sacrifice for Earth.opus` | 8 | `EL-M2.5 XCOM+Var+Bare+Slow` | A | Silent Hostile Sector | ElevenLabs |
+| `Subterranean Facility.mp3` | 35 | `S6 VatsOfGoo` | One only | Subterranean Facility | Suno v6 |
 | `Survey at Depth.opus` | 4 | `EL-M2.5 XCOM+TFTD+NoPulse` | B | Abyssal Tactical Drift | ElevenLabs |
 | `The Infestation Spreads.mp3` | 12 | `V3A-S5 SCNP+Dark+Violin` | One only | v03AI UFO 5 - Scanning Protocol - Dark Violin | Suno v5 via v03ai |
 | `The Reports Keep Coming.mp3` | 13 | `V3A-S5 SCNP+Dark+Cello&BClar` | One only | v03AI UFO 6 - Scanning Protocol - Cello + Bass Clarinet | Suno v5 via v03ai |
@@ -122,7 +123,7 @@ The files whose codes start with `V3A-S5` are from Suno v5, made via [v03ai](htt
 
 ## Tracks from Suno v6
 
-The files named `S6 …`, and the custom-named `Restricted Orbit.mp3`, `Unknown Contact A.mp3`, `Unknown Contact B.mp3`, `Deep Space Contact A.mp3`, and `Deep Space Contact B.mp3`, are from Suno v6, made directly on [suno.com](https://suno.com/), which cannot export Ogg Opus. A record's `original_title` is the song's title in Suno, e.g. "Signal Intercept var1" for `S6 SCNP A.mp3`, and its `song_url` is the song's page; a Suno song that no record names, e.g. a "(Remastered)" copy, is not a track. Their track records hold the song data Suno keeps for each song: its page, model, creation time, tags, length, Styles text, Exclude styles text, and sliders. Suno caps the Styles text at 1,000 characters, so every prompt written for Suno v6 fits within it.
+The files named `S6 …`, and the custom-named `Restricted Orbit.mp3`, `Unknown Contact A.mp3`, `Unknown Contact B.mp3`, `Deep Space Contact A.mp3`, `Deep Space Contact B.mp3`, and `Subterranean Facility.mp3`, are from Suno v6, made directly on [suno.com](https://suno.com/), which cannot export Ogg Opus. A record's `original_title` is the song's title in Suno, e.g. "Signal Intercept var1" for `S6 SCNP A.mp3`, and its `song_url` is the song's page; a Suno song that no record names, e.g. a "(Remastered)" copy, is not a track. Their track records hold the song data Suno keeps for each song: its page, model, creation time, tags, length, Styles text, Exclude styles text, and sliders. Suno caps the Styles text at 1,000 characters, so every prompt written for Suno v6 fits within it.
 
 ### Reading Suno song data
 

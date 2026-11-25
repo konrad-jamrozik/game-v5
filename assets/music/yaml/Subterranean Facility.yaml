@@ -1,0 +1,31 @@
+file: 'Subterranean Facility.mp3'
+source: Suno v6
+original_title: 'Subterranean Facility'
+source_title: 'Subterranean Facility'
+serial_id: 35
+prompt_code: 'Suno v6 - Fallout 1 Soundtrack - Vats of Goo (Mariposa Base)'
+variant: 'One only'
+song_url: https://suno.com/song/f4909d35-bc4a-4f3b-953f-f193f12344ce
+model: 'v6 (chirp-hawk)'
+created: '2026-11-24 19:38:52'
+tags: [industrial, ambient]
+length: '2:39'
+instrumental: true
+meta_prompt_taxonomy:
+  stem: 'Fallout 1 Soundtrack - Vats of Goo (Mariposa Base)'
+  adjustments: []
+suno:
+  prompt: |-
+    Instrumental dark industrial ambient for a 1990s sci-fi RPG. A sealed underground research facility where the machinery is still running. Deep, slowly shifting synth drones, hollow low-end resonance, and a muted mechanical pulse that drifts in and out. Sparse metallic strikes echo down concrete corridors. Faint electrical hum, brief bursts of filtered radio static, and distant dissonant tones dissolve back into the drone. Cold, claustrophobic, and hypnotic, with long gaps between sounds. Lo-fi sampled textures, minimal melody, very slow pacing, and subtle changes over a seamless exploration loop.
+  exclude_styles: |-
+    Vocals, choir, intelligible speech, EDM, synthwave, industrial rock, steady drum beat, prominent bass riff, orchestral swells, trailer impacts, jump scares
+  weirdness: 0.5
+  style_influence: 0.5
+  variety: 1
+  max_mode: false
+  personalize: false
+  duration: auto
+final_prompt_from_gen_tool: |-
+  Dark industrial ambient, instrumental; 1990s sci-fi RPG atmosphere with lo-fi sampled textures and long gaps between sounds; deep, slowly shifting synth drones and hollow low-end resonance, a muted mechanical pulse that drifts in and out, sparse metallic strikes echoing down concrete corridors, faint electrical hum, brief bursts of filtered radio static, and distant dissonant tones dissolving back into the drone; very slow pacing, minimal melody, subtle changes in a seamless exploration loop, cold, claustrophobic, and hypnotic.
+notes: |-
+  The Game designer generated this song without a draft record, and the track keeps the song's title in Suno as its name, a custom name. It is the first song of its generation (`batch_index` 0); the Game designer kept only this one. `final_prompt_from_gen_tool` is the Styles text Suno stored, which Suno's Variety at Normal rewrote from `suno.prompt`. `created`, `length`, `model`, `tags`, and Variety come from Suno's clip data for the song, found from the song ID in the downloaded MP3; `created` is its UTC creation time converted to Pacific time. `suno.weirdness` and `suno.style_influence` are the values the Game designer gave, which Suno's clip data omits at their default of 50%; Max Mode, Personalize, and Duration are the Game designer's settings, which the clip data does not hold.

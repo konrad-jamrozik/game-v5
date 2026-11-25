@@ -27,6 +27,7 @@ Each entry below is word for word as the records hold it, and every entry of eve
 | `SCNP` | Replicate "Scanning Protocol" (Chris D'Ambrosio, XCOM Legacy OST) | Scanning Protocol |
 | `Clandestine` | Dark, grounded soundtrack for a modern clandestine strategy game | Clandestine Strategy |
 | `GeoElec` | Cold, ominous electronic strategy-game soundtrack inspired by the original X-COM Geoscape | X-COM Geoscape Electronics |
+| `VatsOfGoo` | Fallout 1 Soundtrack - Vats of Goo (Mariposa Base) | Fallout 1 Soundtrack - Vats of Goo (Mariposa Base) |
 
 ### Adjustments
 
