@@ -129,12 +129,12 @@ The Options are set once and then left alone, or set by a pace button, so they s
 - **Overlap:** when on, the next attack starts a Delay after the last one started, whether or not that one has finished, and keeps doing so across phases and Combat rounds.
 - **Delay:** from 1.5 s down to 0.25 s in steps of 0.25 s, or 0.1 s, independent of the Speed. With Instant on, the Delay runs from the start of one phase to the start of the next.
 - **Instant:** when on, all attacks of a phase play at the same time, so a step of the playing is a phase, and several hits on one defender show their damage outcomes as one sum.
-- **Aim lines:** when on, a faint dashed line joins each attacker to its defender, for every attack being played and, at rest, for the step last played. Turning them off helps e.g. in a Combat of many Combatants in which they hide the shots. Whoever moves the slider or selects a row of the Combat log looks for who attacked whom, so the attack it shows has its line even with Aim lines off, until the playing goes on.
+- **Aim lines:** when on, a faint dashed line joins each attacker to its defender, for every attack being played and, at rest, for the step last played. Turning them off helps e.g. in a Combat of many Combatants in which they hide the shots. Whoever moves the slider or selects a row of the Combat log looks for who attacked whom, so the attack it plays has its line even with Aim lines off.
 - **Phase** and **Combat round:** two buttons, labelled "Phase" and "Round", each followed by a filled right-pointing arrow. The Phase button plays to the end of the current Agents' phase or [Enemies' phase](../../mechanics/combat.md#combat-rounds-and-results), and the Combat round button to the end of the current [Combat round](../../mechanics/combat.md#combat-rounds-and-results).
 
 ## Slider and Combat log
 
-Under the buttons, a slider returns to any attack, and the Combat log is listed below it, one short row per attack. Selecting a row of it shows the Combat right after that attack.
+Under the buttons, a slider returns to any attack, and the Combat log is listed below it, one short row per attack. Moving the slider to an attack, or selecting its row, shows the Combat right before that attack and plays the attack alone, with the Options as they are, so that the Player sees the shot and not only its result. The slider at 0 shows Combat start.
 
 ## Attack being played
 
