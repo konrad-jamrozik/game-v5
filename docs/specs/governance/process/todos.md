@@ -48,3 +48,11 @@ The Compendium View's specification describes an Ammo data sheet and the "Ammo" 
 - T3 thread ID: `42b665aa-ff94-40b0-8819-89662f41cb0b`
 
 Generate the Screenshots again after the redesign that fits every screen to the Reference window of 1408 × 784. The Screenshots still show the layouts from before it, e.g. the wide Side panel. They were left alone because each was captured less than 72 hours earlier; the oldest pass that age on 2026-11-26 19:47 UTC and the newest on 2026-11-27 00:10 UTC. After that, run `npm run screens:capture` in `game-v5-impl-web`, which already captures in the Reference window, and commit the images that differ with their new capture times.
+
+# Hire Agents with only a knife
+
+- Added: 2026-11-25 11:19 PST
+- T3 thread: Agent Rank System and Deploy View Layout
+- T3 thread ID: `cf920142-897b-40c2-afa7-5677cf0fd2fe`
+
+Make a newly hired Agent arrive with only the knife, the Fallback Weapon, instead of the issued combat pistol, and with no Ammo, so that the Agency arms its Agents from Storage itself.
