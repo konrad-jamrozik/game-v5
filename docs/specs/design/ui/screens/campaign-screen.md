@@ -104,7 +104,7 @@ The Autopilot controls in the footer of the Side panel let the Player hand play 
 
 1. The toggle, which collapses them again.
 2. **Autopilot AI:** a selector of the [available Autopilot AIs](../../foundation/autopilot.md#available-autopilot-ais), by name.
-3. **One action** and **This [Turn](../../foundation/engine-contract.md#player-actions-and-turns)'s actions:** buttons that engage the chosen Autopilot AI with the [Autopilot limit](../../foundation/autopilot.md#glossary) `singleAction` or `turnActions`.
+3. **One action** and **Turn actions:** two buttons side by side on one row, the second standing for this [Turn](../../foundation/engine-contract.md#player-actions-and-turns)'s actions, that engage the chosen Autopilot AI with the [Autopilot limit](../../foundation/autopilot.md#glossary) `singleAction` or `turnActions`.
 4. **Turns:** a field for a whole number of Turns, which shows [Autopilot Turns](#autopilot-settings), and a Turns button that engages with the Autopilot limit `turnAdvancements` and that number as `count`.
 5. A line saying that the Autopilot AI plays for the Player through the same Player actions the Player has.
 
