@@ -1,11 +1,13 @@
 id: rank_rookie
 type: Rank
 name: Rookie
+abbreviation: Rookie
 min_base_skill: 100
 ---
 id: rank_junior_agent
 type: Rank
 name: Junior Agent
+abbreviation: Jr Agent
 min_base_skill: 150
 mark: chevron
 count: 1
@@ -13,6 +15,7 @@ count: 1
 id: rank_agent
 type: Rank
 name: Agent
+abbreviation: Agent
 min_base_skill: 200
 mark: chevron
 count: 2
@@ -20,6 +23,7 @@ count: 2
 id: rank_senior_agent
 type: Rank
 name: Senior Agent
+abbreviation: Sr Agent
 min_base_skill: 250
 mark: chevron
 count: 3
@@ -27,6 +31,7 @@ count: 3
 id: rank_lieutenant
 type: Rank
 name: Lieutenant
+abbreviation: Lt
 min_base_skill: 325
 mark: bar
 count: 1
@@ -34,6 +39,7 @@ count: 1
 id: rank_captain
 type: Rank
 name: Captain
+abbreviation: Capt
 min_base_skill: 400
 mark: bar
 count: 2
@@ -41,20 +47,31 @@ count: 2
 id: rank_major
 type: Rank
 name: Major
+abbreviation: Maj
 min_base_skill: 500
-mark: star
-count: 1
+mark: bar
+count: 3
 ---
 id: rank_colonel
 type: Rank
 name: Colonel
+abbreviation: Col
 min_base_skill: 600
 mark: star
-count: 2
+count: 1
 ---
 id: rank_commander
 type: Rank
 name: Commander
+abbreviation: Cmdr
 min_base_skill: 750
+mark: star
+count: 2
+---
+id: rank_high_commander
+type: Rank
+name: High Commander
+abbreviation: Hi Cmdr
+min_base_skill: 900
 mark: star
 count: 3

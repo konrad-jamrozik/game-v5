@@ -140,11 +140,12 @@ Where there is room to spare, e.g. in a tooltip, the GUI shows the full Enemy la
 
 A Rank lets the Player pick out the veterans among the Agents without reading numbers, so it must not change as an Agent is worn down. It is therefore taken from the Agent's [base skill](../mechanics/agents-spec.md#combatant-attributes), rounded down, which is its [effective skill](../mechanics/agents-spec.md#combatant-attributes) at full current health and without [exhaustion](../mechanics/agents-spec.md#combatant-attributes); an Enemy has no Rank.
 
-Which base skill earns which Rank is content rather than design, so the Ranks come from the Rank [GDRs](../foundation/core-concepts.md#game-build-and-content), which serve the Display content purpose. An Agent has the Rank of the Rank GDR with the highest `min_base_skill` that its base skill reaches. An Agent whose base skill reaches no `min_base_skill`, e.g. one that the [Combat Simulator](screens/combat-simulator.md) makes weaker than any hire, has no Rank, and the GUI shows nothing in its place. Wherever the GUI shows a Rank, it shows its `name` followed by its Rank insignia, e.g. "Junior Agent" and one chevron, and a Rank without a `mark` shows its `name` alone.
+Which base skill earns which Rank is content rather than design, so the Ranks come from the Rank [GDRs](../foundation/core-concepts.md#game-build-and-content), which serve the Display content purpose. An Agent has the Rank of the Rank GDR with the highest `min_base_skill` that its base skill reaches. An Agent whose base skill reaches no `min_base_skill`, e.g. one that the [Combat Simulator](screens/combat-simulator.md) makes weaker than any hire, has no Rank, and the GUI shows nothing in its place. Wherever the GUI shows a Rank, it shows its `name` followed by its Rank insignia, e.g. "Junior Agent" and one chevron, and a Rank without a `mark` shows its `name` alone. A table, whose columns are narrow, shows its `abbreviation` in place of its `name`, e.g. "Jr Agent" and one chevron, with the `name` in its tooltip.
 
 | Property | Meaning |
 | --- | --- |
 | `name` | The Rank's name, e.g. "Junior Agent". |
+| `abbreviation` | The Rank's short name for tables, of any length up to its `name`, e.g. "Jr Agent" or "Hi Cmdr". No two Rank GDRs share one. |
 | `min_base_skill` | The least base skill that earns the Rank, a whole number of at least 0. No two Rank GDRs share one. |
 | `mark` | Optional. The kind of the Rank insignia: `chevron`, `bar`, or `star`. Chevrons stand one above the other, bars and stars side by side. A Rank without it has no Rank insignia. |
 | `count` | How many of the mark the Rank insignia holds, a whole number from 1 to 3. Present exactly when `mark` is. |
