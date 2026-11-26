@@ -121,5 +121,5 @@ Whatever the [Campaign seed](../foundation/determinism-and-randomness.md#glossar
 - Serving Agents whose [exhaustion](agents-spec.md#combatant-attributes) is above `exhaustion_work_start_max`, above `exhaustion_work_limit`, and above `exhaustion_incapacitation` of [AgentParameters](agents-spec.md#agentparameters), at least one of each;
 - a [Storage](equipment.md#storage) that holds Weapons of at least two kinds, at least one Armor, and Ammo;
 - one Completed Investigation;
-- one Active Mission site, and at least 15 Mission sites in a [final state](missions.md#glossary): at least 8 whose Mission is Won, at least 3 whose Mission is Lost, of which one Wiped, and at least 3 Expired;
+- one Active Mission site, and at least 15 Mission sites in a [final state](missions.md#glossary): at least 8 whose Mission is Won, at least 3 whose Mission is Lost, of which one Retreated and one Wiped, and at least 3 Expired;
 - one [Upgrade](domain-model.md#agency-and-agents) the Agency has bought.
