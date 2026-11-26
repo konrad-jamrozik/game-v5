@@ -43,6 +43,7 @@ What a version of the game supplies: shared by every Campaign and unchanged duri
 | Term | Definition | Prohibited synonyms |
 | --- | --- | --- |
 | Game build | A particular version of the game's data and of the executable implementation of its Game rules, supplied together. | Build. Ordinary build-tool operations keep their meaning. |
+| Game build ID | The text that tells one Game build from another: the date, in Pacific Standard Time all year, of the Implementation commit the Game build is made from, that commit's number among the commits of that date in its history, and the first seven characters of its hash, e.g. "2026-11-25 PST #48 ec8d48c". A Game build made without a known commit has the Game build ID "dev". No version number and no hash of the game data is part of it. | Game build version; build version; version number; build hash |
 | Game rules | The rules of the game: which actions the player may take, what each action changes, what happens when the player ends a turn, and what each query reports. A Game build implements them, and the specifications state them. | Game behavior; game behaviour. Ordinary uses of "behavior", e.g. the behavior of an interface, remain valid. |
 | Game Data Record (GDR) | Concrete game data supplied by a Game build, conforming to a declared Type and immutable during gameplay; a GDR is never instantiated. | Content entry; Content; entry; entries; Content definition; GDR role, for which say GDR purpose. The Content Family, document titles, and the Display content GDR purpose keep their names. |
 
