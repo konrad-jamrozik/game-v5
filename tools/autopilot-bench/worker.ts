@@ -47,12 +47,10 @@ interface Campaign {
 }
 
 /**
- * A Deployable Agent, as the engine defines it: In base and able to take orders, i.e. At assignment on Standby or
- * Training, and Capable for deployment, i.e. not meeting the incapacitation condition with its current values, which
- * the engine reports as `ableToFight`.
+ * A Deployable Agent: the engine decides it and reports it on the Agent's view as `deployable`, so that the bench never
+ * holds a definition of its own that could drift from the engine's.
  */
-const isDeployable = (a: Any): boolean =>
-  a.canBeAssigned && (a.assignment?.kind === 'Standby' || a.assignment?.kind === 'Training') && a.ableToFight
+const isDeployable = (a: Any): boolean => a.deployable === true
 
 /**
  * A Rested deployable Agent of the Basic Autopilot AI: a Deployable Agent that is also Fit to start work, i.e. one the
