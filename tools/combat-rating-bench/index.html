@@ -473,11 +473,30 @@
       .k-df {
         color: #f0a8ff;
       }
+      .k-rt {
+        color: #ffa36b;
+      }
       .sgrid .cell .n.k-cr,
       .sgrid .cell .n.k-ex,
+      .sgrid .cell .n.k-rt,
       .sgrid .cell .n.k-df {
         opacity: 1;
         font-weight: 500;
+      }
+      .sgrid .cell .n.k-rt {
+        color: #ffa36b;
+      }
+      .retreat {
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: 6px 10px;
+        align-items: center;
+      }
+      .retreat input[type='number'] {
+        width: 60px;
+      }
+      .retreat.off label:not(:first-child) {
+        opacity: 0.45;
       }
       .sgrid .cell .n.k-cr {
         color: #9fd0ff;
@@ -675,9 +694,44 @@
             >Combats per cell
             <input type="number" min="10" max="2000" step="10" data-bind="setup.trials" data-type="num"
           /></label>
-          <label class="inline"
-            ><input type="checkbox" data-bind="setup.retreat" data-type="bool" /> Allow retreat</label
-          >
+          <span class="inline retreat">
+            <label class="inline"
+              ><input type="checkbox" data-bind="setup.retreat" data-type="bool" /> Allow retreat</label
+            >
+            <label
+              class="inline"
+              title="retreat_below_agent_rating_fraction: the team considers retreating once its Combat rating falls below this share of its starting Combat rating"
+              >below
+              <input
+                type="number"
+                min="0"
+                step="5"
+                data-bind="combat.retreat_below_agent_rating_fraction"
+                data-type="pct"
+                data-retreat
+              />% of its starting CR</label
+            >
+            <label
+              class="inline"
+              title="retreat_at_enemy_to_agent_rating: a team that considers retreating retreats once the Enemies' Combat rating is at least this share of its own"
+              >when the Enemies' CR is ≥
+              <input
+                type="number"
+                min="0"
+                step="5"
+                data-bind="combat.retreat_at_enemy_to_agent_rating"
+                data-type="pct"
+                data-retreat
+              />% of the Agents'</label
+            >
+            <button
+              class="small"
+              data-act="reset-retreat"
+              title="Restore both retreat conditions to their content values"
+            >
+              ↺
+            </button>
+          </span>
           <label class="inline"
             ><input type="checkbox" data-bind="setup.skipResponse" data-type="bool" /> Skip Response missions</label
           >
@@ -687,9 +741,13 @@
         </div>
         <p class="note">
           Retreat is off by default, by setting <code>retreat_below_agent_rating_fraction</code> to 0, because it reads
-          the game's own Combat rating rather than this formula; when it is allowed, a retreat counts as a loss. A cell
-          whose closest Agent count still misses its share by more than 5% is excluded: drawn dashed, never fought, and
-          left out of the statistics and the fit, e.g. one Agent of skill 500 against a small site.
+          the game's own Combat rating rather than this formula. When it is allowed, the engine's own Retreated check
+          ends a Combat after a Combat round in which the Agents' rating has fallen below the first share of its
+          starting rating and the Enemies' rating is at least the second share of the Agents'; both start from the
+          content's CombatParameters and show in orange once changed. A retreat counts as a loss, and a cell shows its
+          retreat rate beside its Agent count, e.g. <code>55 ↩12%</code>. A cell whose closest Agent count still misses
+          its share by more than 5% is excluded: drawn dashed, never fought, and left out of the statistics and the fit,
+          e.g. one Agent of skill 500 against a small site.
         </p>
         <details>
           <summary class="lbl note" style="cursor: pointer">Combat values passed to the engine</summary>
@@ -855,6 +913,10 @@
             <label class="inline"
               ><input type="checkbox" data-bind="sweeper.showExhaustion" data-type="bool" />
               <span class="k-ex">Agent exhaustion</span></label
+            >
+            <label class="inline" title="The share of the Combats that ended Retreated, while retreat is allowed"
+              ><input type="checkbox" data-bind="sweeper.showRetreat" data-type="bool" />
+              <span class="k-rt">Retreat rate</span></label
             >
             <label class="inline" title="The win rate minus the rating ratio, in points, e.g. +8% for 98% and 90%"
               ><input type="checkbox" data-bind="sweeper.showDiff" data-type="bool" />
@@ -1037,6 +1099,7 @@
           showRatio: true,
           showCrLeft: true,
           showExhaustion: true,
+          showRetreat: true,
           showWin: true,
           /** Shows each sample's win rate against its rating ratio in place of every other figure. */
           /** What a sample's background shows: its win rate, its CR to win diff, or its rating ratio. */
@@ -1892,6 +1955,7 @@
           }
         }
         const base = info?.gdr.combatValues ?? {}
+        syncCombatInputs(null)
         $('#combat').innerHTML =
           `<tr><th>Value</th><th class="r">Content</th><th class="r">Used</th></tr>` +
           Object.keys(base)
@@ -1901,6 +1965,35 @@
             )
             .join('')
       }
+
+      /** The retreat conditions the setup offers, as CombatParameters names. */
+      const RETREAT_VALUES = ['retreat_below_agent_rating_fraction', 'retreat_at_enemy_to_agent_rating']
+      /**
+       * Shows the Combat values used in every input bound to them but `except`, the one being typed in: the setup's
+       * retreat conditions, as percentages, and the table of Combat values. A retreat condition away from its content
+       * value shows in orange, and both are greyed while retreat is off.
+       */
+      function syncCombatInputs(except) {
+        const base = info?.gdr.combatValues ?? {}
+        for (const input of document.querySelectorAll('[data-bind^="combat."]')) {
+          const name = input.dataset.bind.slice('combat.'.length)
+          const v = state.combat[name] ?? base[name]
+          if (input !== except && v !== undefined) {
+            input.value = input.dataset.type === 'pct' ? String(Number((v * 100).toPrecision(10))) : String(v)
+          }
+          if (input.dataset.retreat !== undefined) {
+            input.disabled = !state.setup.retreat
+            input.classList.toggle('changed', name in state.combat && state.combat[name] !== base[name])
+          }
+        }
+        const reset = $('[data-act="reset-retreat"]')
+        reset.disabled = !RETREAT_VALUES.some((name) => name in state.combat && state.combat[name] !== base[name])
+        $('.retreat').classList.toggle('off', !state.setup.retreat)
+      }
+      /** The share of a result's Combats the Agents retreated from, or NaN. */
+      const retreatOf = (r) => (r?.fought > 0 ? (r.retreated ?? 0) / r.fought : NaN)
+      const outcomesText = (r) =>
+        `won ${r.won} (${pct(r.won / r.fought)}), retreated ${r.retreated ?? 0} (${pct(retreatOf(r))}), wiped ${r.wiped ?? 0} (${pct((r.wiped ?? 0) / r.fought)}) of ${r.fought}`
 
       /* ---------- rendering of the grid and the analysis ---------- */
       let renderQueued = false
@@ -1944,7 +2037,10 @@
         const w = r ? winOf(r) : old ? winOf(old) : null
         const style = r ? `background:${tint(winOf(r))}` : ''
         const text = queued ? '…' : w === null ? '–' : pct(w)
-        return `<div class="${cls}" style="${style}" data-cell="${esc(cell.id)}"><span class="n">${cell.count}</span><span class="w">${text}</span></div>`
+        // The retreat rate, when any Combat ended Retreated.
+        const shown = r ?? old
+        const rt = shown?.retreated > 0 ? ` <span class="k-rt">↩${pct(retreatOf(shown))}</span>` : ''
+        return `<div class="${cls}" style="${style}" data-cell="${esc(cell.id)}"><span class="n">${cell.count}${rt}</span><span class="w">${text}</span></div>`
       }
 
       function render() {
@@ -2097,6 +2193,12 @@
         )
         const grade = (x, dice) =>
           !Number.isFinite(x) ? '' : x <= dice * 0.75 ? 'good' : x <= dice * 1.5 ? 'warn' : 'bad'
+        /** The share of the Combats of a share's cells that ended Retreated. */
+        const retreatShare = (t) => {
+          const rs = fresh.filter((f) => f.cell.t === t).map((f) => resultOf(f.cell))
+          const fought = rs.reduce((sum, r) => sum + r.fought, 0)
+          return fought > 0 ? rs.reduce((sum, r) => sum + (r.retreated ?? 0), 0) / fought : NaN
+        }
         const tile = (label, value, sub, cls = '') =>
           `<div class="tile"><span class="lbl">${label}</span><span class="v ${cls}">${value}</span><span class="s">${sub}</span></div>`
         $('#tiles').innerHTML =
@@ -2111,7 +2213,8 @@
                 `${t}% of the site · ${s.n} cells`,
                 `${pct(s.mean, 1)} <span style="font-size:15px">± ${pp(s.sd, 1).replace(' pp', '')}</span>`,
                 `mean win ± spread; range ${pct(s.min)}–${pct(s.max)}. Dice spread ${pp(s.dice)}, so formula spread <b class="${grade(s.formula, s.dice)}">${pp(s.formula)}</b>.` +
-                  (curve ? ` The curve predicts ${pct(predict(t / 100, curve), 1)}.` : ''),
+                  (curve ? ` The curve predicts ${pct(predict(t / 100, curve), 1)}.` : '') +
+                  (state.setup.retreat ? ` Retreated ${pct(retreatShare(t), 1)} of the Combats.` : ''),
               )
             })
             .join('') +
@@ -2172,7 +2275,7 @@
               ? `${t}%: no cells`
               : `${t}%: ${s.n} cells, win ${pct(s.mean, 1)} ± ${pp(s.sd)} (dice ${pp(s.dice)}, formula ${pp(s.formula)})`
           }),
-          `curve: ${curve ? pct(atParity(curve), 1) : '–'} at equal ratings, k = ${sig(k)}; ${trials} Combats per cell${state.setup.retreat ? ', retreat allowed' : ''}`,
+          `curve: ${curve ? pct(atParity(curve), 1) : '–'} at equal ratings, k = ${sig(k)}; ${trials} Combats per cell${state.setup.retreat ? `, retreat allowed below ${pct(model.cv.retreat_below_agent_rating_fraction)} of the starting CR at an Enemy to Agent CR of ${pct(model.cv.retreat_at_enemy_to_agent_rating)} or more` : ''}`,
         ].join('\n')
       }
 
@@ -2561,6 +2664,9 @@
           s.showExhaustion
             ? `<span class="n k-ex" title="Agent exhaustion: the mean exhaustion of the Agents alive at the end of a Combat">${Number.isFinite(exhaustionOf(shown)) ? Math.round(exhaustionOf(shown)) : '–'}</span>`
             : '',
+          s.showRetreat && state.setup.retreat
+            ? `<span class="n k-rt" title="Retreat rate: the share of the Combats that ended Retreated">↩${pct(retreatOf(shown))}</span>`
+            : '',
           s.showDiff
             ? `<span class="n k-df" title="CR to win diff: the win rate minus the rating ratio">${shown ? signedPct(winOf(shown) - cell.ratio) : '–'}</span>`
             : '',
@@ -2570,7 +2676,15 @@
       }
       /** The Sweeper's dimensions as inputs; drawn anew only when a mode changes, so typing keeps its focus. */
       function renderSweeperDims() {
-        for (const name of ['showWin', 'showRatio', 'showCrLeft', 'showExhaustion', 'showDiff', 'showLine']) {
+        for (const name of [
+          'showWin',
+          'showRatio',
+          'showCrLeft',
+          'showExhaustion',
+          'showRetreat',
+          'showDiff',
+          'showLine',
+        ]) {
           $(`[data-bind="sweeper.${name}"]`).checked = state.sweeper[name]
         }
         for (const radio of document.querySelectorAll('[data-bind="sweeper.coloring"]')) {
@@ -2748,8 +2862,18 @@
           return
         }
         const type = t.dataset.type
-        const value = type === 'bool' ? t.checked : type === 'num' ? Number(t.value) : t.value
-        if (type === 'num' && (t.value === '' || !Number.isFinite(value))) {
+        const value =
+          type === 'bool'
+            ? t.checked
+            : type === 'num'
+              ? Number(t.value)
+              : type === 'pct'
+                ? Number(t.value) / 100
+                : t.value
+        if (
+          (type === 'num' || type === 'pct') &&
+          (t.value === '' || !Number.isFinite(value) || (type === 'pct' && value < 0))
+        ) {
           return
         }
         // A dimension leaving Fixed for an axis steps around its fixed value.
@@ -2764,6 +2888,9 @@
         }
         if (path.startsWith('setup.')) {
           state.setupEdited = { ...state.setupEdited, [path.slice('setup.'.length)]: true }
+        }
+        if (path.startsWith('combat.') || path === 'setup.retreat') {
+          syncCombatInputs(t)
         }
         if (path.startsWith('sweeper.') && path.endsWith('.mode')) {
           renderSweeperDims()
@@ -2796,9 +2923,14 @@
           }
           renderFormula()
           changed()
-        } else if (act === 'reset-setup') {
-          state.setup = defaults().setup
-          state.setupEdited = {}
+        } else if (act === 'reset-setup' || act === 'reset-retreat') {
+          if (act === 'reset-setup') {
+            state.setup = defaults().setup
+            state.setupEdited = {}
+          }
+          for (const name of RETREAT_VALUES) {
+            delete state.combat[name]
+          }
           renderSetup()
           changed()
         } else if (act === 'reset-param') {
@@ -2893,7 +3025,7 @@
         const shown = r ?? store.results[cell.key]
         if (shown) {
           lines.push(
-            `won ${shown.won} of ${shown.fought}; Agents killed ${fmt(shown.agentsDead / shown.fought, 1)} per Combat${shown.retreated ? `; retreated ${shown.retreated}` : ''}${r ? '' : `; ${cell.trials} asked for`}`,
+            `${outcomesText(shown)}; Agents killed ${fmt(shown.agentsDead / shown.fought, 1)} per Combat${r ? '' : `; ${cell.trials} asked for`}`,
           )
           const agents = cell.groups.reduce((sum, g) => sum + g.count, 0)
           lines.push(
