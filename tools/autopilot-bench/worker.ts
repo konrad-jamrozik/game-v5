@@ -80,27 +80,24 @@ const skillChart: { starts: number[]; bands: string[]; workLimit: number; freePo
 }
 
 /**
- * The game's base skill bands, from its Ranks: a first band from 0 up to below the lowest `min_base_skill`, then one
- * band for each Rank up to below the next, the highest open-ended, each named by its range and a Rank's by its name in
- * parentheses, e.g. "0–99", "100–149 (Rookie)", and "900+ (High Commander)".
+ * The game's base skill bands, from its Ranks: one band for each Rank up to below the next, the highest open-ended, each
+ * named by its range and the Rank's name in parentheses, e.g. "100–149 (Rookie)" and "900+ (High Commander)". An
+ * Agent whose base skill reaches no Rank counts in the band of the lowest, as `bandOf` places it.
  */
 function readSkillChart(data: Any): void {
   const ranks = [...(data.ranks as Any[])].sort((a, b) => a.minBaseSkill - b.minBaseSkill)
-  const starts: { name: string | null; min: number }[] = [
-    ...(ranks[0]?.minBaseSkill === 0 ? [] : [{ name: null, min: 0 }]),
-    ...ranks.map((r) => ({ name: r.name as string, min: r.minBaseSkill as number })),
-  ]
-  skillChart.starts = starts.map((s) => s.min)
-  skillChart.bands = starts.map((s, i) => {
-    const next = starts[i + 1]
-    const range = next === undefined ? `${s.min}+` : `${s.min}–${next.min - 1}`
-    return s.name === null ? range : `${range} (${s.name})`
+  if (ranks.length === 0) return
+  skillChart.starts = ranks.map((r) => r.minBaseSkill as number)
+  skillChart.bands = ranks.map((r, i) => {
+    const next = ranks[i + 1]
+    const range = next === undefined ? `${r.minBaseSkill}+` : `${r.minBaseSkill}–${next.minBaseSkill - 1}`
+    return `${range} (${r.name})`
   })
   skillChart.workLimit = data.agentParameters.exhaustionWorkLimit ?? skillChart.workLimit
   skillChart.freePoints = data.agentParameters.exhaustionFreePoints ?? skillChart.freePoints
 }
 
-/** The band of a base skill, rounded down. */
+/** The band of a base skill, rounded down; the lowest for one below every band. */
 function bandOf(skill: number): number {
   let band = 0
   skillChart.starts.forEach((min, i) => {
