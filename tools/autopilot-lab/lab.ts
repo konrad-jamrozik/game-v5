@@ -6,6 +6,7 @@
  * Usage:
  *   node tools/autopilot-lab/lab.ts [--campaigns 20] [--turns 200] [--seeds lab] [--set key=value,...]
  *     [--vs key=value,...] [--impl <clone>] [--impl-b <clone>] [--threads <n>] [--out <folder>] [--json]
+ *     [--limit <seconds, at most 180>]
  */
 import { execFileSync } from 'node:child_process'
 import fs from 'node:fs'
@@ -82,8 +83,25 @@ function commitOf(impl: string): string {
   }
 }
 
-/** Plays every task of one variant on its own pool of worker threads. */
-async function run(variant: Variant, share: number): Promise<{ results: CampaignResult[]; failures: string[] }> {
+/** ALAB, Run time limit: three minutes from the start of the Lab run; `--limit` may only shorten it, in seconds. */
+const LIMIT_SECONDS = 180
+const limitSeconds = Math.min(LIMIT_SECONDS, Math.max(1, Number(arg('limit', String(LIMIT_SECONDS)))))
+const began = performance.now()
+
+/** What the Run time limit cut short of one variant: Campaigns stopped while being played, and never started. */
+interface Cut {
+  readonly stopped: number
+  readonly notStarted: number
+}
+
+/**
+ * Plays every task of one variant on its own pool of worker threads until the Run time limit, when every Campaign still
+ * being played is stopped and no other is started.
+ */
+async function run(
+  variant: Variant,
+  share: number,
+): Promise<{ results: CampaignResult[]; failures: string[]; cut: Cut }> {
   const tasks: LabTask[] = Array.from({ length: campaigns }, (_, i) => ({
     variant: variant.name,
     seed: `${prefix}-${i + 1}`,
@@ -94,21 +112,40 @@ async function run(variant: Variant, share: number): Promise<{ results: Campaign
   const results: CampaignResult[] = []
   const failures: string[] = []
   const pool = Math.max(1, Math.min(share, tasks.length))
+  const playing = new Set<Worker>()
+  const stops: (() => void)[] = []
+  let timedOut = false
+  let stopped = 0
+  const deadline = setTimeout(
+    () => {
+      timedOut = true
+      stopped = playing.size
+      for (const stop of stops) stop()
+    },
+    Math.max(0, began + limitSeconds * 1000 - performance.now()),
+  )
   await Promise.all(
     Array.from(
       { length: pool },
       () =>
         new Promise<void>((resolve, reject) => {
           const worker = new Worker(path.join(HERE, 'worker.ts'), { workerData: { impl: variant.impl } })
+          stops.push(() => {
+            playing.delete(worker)
+            void worker.terminate().then(() => resolve())
+          })
           const next = () => {
-            const task = tasks.shift()
+            const task = timedOut ? undefined : tasks.shift()
             if (task === undefined) {
+              playing.delete(worker)
               void worker.terminate().then(() => resolve())
               return
             }
+            playing.add(worker)
             worker.postMessage(task)
           }
           worker.on('message', (message: FromWorker) => {
+            if (timedOut) return
             if (message.type === 'done') {
               results.push(message.result)
               process.stderr.write('.')
@@ -118,12 +155,13 @@ async function run(variant: Variant, share: number): Promise<{ results: Campaign
             }
             next()
           })
-          worker.on('error', reject)
+          worker.on('error', (error) => (timedOut ? resolve() : reject(error)))
         }),
     ),
   )
+  clearTimeout(deadline)
   results.sort((a, b) => a.seed.localeCompare(b.seed, 'en', { numeric: true }))
-  return { results, failures }
+  return { results, failures, cut: { stopped, notStarted: tasks.length } }
 }
 
 // ---- Summary ------------------------------------------------------------------------------------
@@ -188,7 +226,7 @@ function table(header: readonly string[], rows: readonly (readonly string[])[]):
 }
 
 function summarize(
-  runs: readonly { variant: Variant; results: CampaignResult[]; failures: string[] }[],
+  runs: readonly { variant: Variant; results: CampaignResult[]; failures: string[]; cut: Cut }[],
   seconds: number,
 ) {
   const names = runs.map((r) => r.variant.name)
@@ -200,6 +238,13 @@ function summarize(
     lines.push(`- **${variant.name}:** ${variant.impl} @ ${commitOf(variant.impl)}; parameters ${params}`)
   }
   lines.push(`- Wall-clock ${seconds.toFixed(1)} s on ${threads} threads; records in ${out}`)
+  for (const { variant, cut } of runs) {
+    if (cut.stopped + cut.notStarted > 0) {
+      lines.push(
+        `- **${variant.name} stopped at the Run time limit of ${limitSeconds} s:** ${cut.stopped} Campaigns stopped while being played and ${cut.notStarted} never started; the summary holds only the finished ones.`,
+      )
+    }
+  }
   lines.push('')
 
   // Endings.
@@ -507,7 +552,6 @@ function summarize(
   return lines.join('\n')
 }
 
-const began = performance.now()
 const share = Math.max(1, Math.floor(threads / variants.length))
 const runs = await Promise.all(variants.map(async (variant) => ({ variant, ...(await run(variant, share)) })))
 process.stderr.write('\n')
@@ -520,6 +564,7 @@ fs.writeFileSync(
     runs.map((r) => ({
       variant: r.variant,
       failures: r.failures,
+      cut: r.cut,
       results: r.results.map(({ rows: _rows, ...rest }) => rest),
     })),
   ),

@@ -12,7 +12,7 @@
 
 The Autopilot Lab lets an agent study how an [Autopilot AI](../foundation/engine-contract.md#principals-and-access) plays and how balanced the game is, quickly enough that the Game designer waits for the answer rather than for the run. It plays many Campaigns with the [Basic Autopilot AI](basic-autopilot-ai.md) at once, compares variants on the same Campaigns, and returns one compact summary.
 
-Two rules shape it. A run never takes more than two minutes, so the agent sizes each experiment to fit and the Game designer never waits long. And every Campaign and every Combat it reports carries a setup seed, so that the Game designer can play any finding again in the game, e.g. a Mission lost at Turn 53 with a team at 150% of the Enemies' Combat rating, either by playing that Campaign for 53 Turns with the same Autopilot AI or by fighting that one Combat in the [Combat simulator](../ui/screens/combat-simulator.md).
+Two rules shape it. A run never takes more than three minutes, so the agent sizes each experiment to fit and the Game designer never waits long. And every Campaign and every Combat it reports carries a setup seed, so that the Game designer can play any finding again in the game, e.g. a Mission lost at Turn 53 with a team at 150% of the Enemies' Combat rating, either by playing that Campaign for 53 Turns with the same Autopilot AI or by fighting that one Combat in the [Combat simulator](../ui/screens/combat-simulator.md).
 
 # Glossary
 
@@ -22,7 +22,7 @@ Two rules shape it. A run never takes more than two minutes, so the agent sizes 
 | Lab run | One invocation of the Autopilot Lab: one or more Lab variants, each playing the same [Campaigns](../foundation/core-concepts.md#campaign-and-session), and the summary of them. |
 | Lab variant | What plays the Campaigns of a Lab run: an Implementation clone, the [Autopilot AI](../foundation/engine-contract.md#principals-and-access) it offers, and the [Tuning parameters](basic-autopilot-ai.md#glossary) that differ from that Autopilot AI's Game designer values. |
 | Ready rating | Of a [Response Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) when it appears: the [Combat rating](../mechanics/combat.md#combat-rating) of the strongest [Deployable Agents](../mechanics/missions.md#glossary) within the free [Transport cap](../mechanics/economy-and-upgrades.md#glossary), as a share of the [Combat rating](../mechanics/combat.md#combatant-condition-in-a-combat) of its Enemies. |
-| Run time limit | The most wall-clock time a Lab run may take: two minutes from its start. |
+| Run time limit | The most wall-clock time a Lab run may take: three minutes from its start. |
 | Forced loss share | For a run of the Autopilot Lab: the [Probability](../foundation/numbers.md#glossary) with which each [Mission](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) is made Lost, whatever its [Combat](../mechanics/domain-model.md#combat) would have been. |
 
 # What a Lab run plays
@@ -37,7 +37,7 @@ A Lab run stops at its Run time limit, whatever it was asked to play, because th
 
 1. At the Run time limit, the Lab stops every Campaign still being played and starts no other.
 2. It returns the summary of the Campaigns that reached their [Campaign ending](../mechanics/domain-model.md#campaign-standing) or their last Turn before then, and says how many it stopped and how many it never started.
-3. The agent sizes each Lab run to end within the Run time limit, from the time per Campaign that the Lab reports, e.g. fewer Campaigns or fewer Turns for a variant whose Campaigns last longer, and runs a larger experiment as several Lab runs.
+3. The agent sizes each Lab run to end within the Run time limit, from the time per Campaign that the Lab reports, e.g. fewer Campaigns or fewer Turns for a variant whose Campaigns last longer, and runs a larger experiment as several Lab runs. A comparison of two Lab variants plays 20 Campaigns each.
 
 # What a Lab run reports
 
@@ -60,4 +60,4 @@ A Campaign of a Lab run is reproduced in the game by creating a Campaign from it
 
 # TODOs
 
-- TODO: Give the Autopilot Lab the Run time limit; it already records the Campaign setup seed of each Campaign and the Combat setup seed of each Combat.
+- TODO: Give the Autopilot Lab the Forced loss share, so that a Lab run can check whether an Autopilot AI still wins through losses.

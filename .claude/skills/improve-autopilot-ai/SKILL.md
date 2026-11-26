@@ -9,7 +9,7 @@ This skill is a study followed by changes. It uses the [`autopilot-lab` skill](.
 
 ## 1. How it fares now
 
-Run a baseline of at least 30 Campaigns with the Turns long enough to reach their endings, e.g. `npm run autopilot:lab -- --campaigns 40 --turns 400`, within the two-minute Run time limit of the `autopilot-lab` skill, and answer, with spreads:
+Run a baseline of 20 Campaigns on each of two sets of seeds, with the Turns long enough to reach their endings, e.g. `npm run autopilot:lab -- --campaigns 20 --turns 400` and the same with `--seeds two`, each within the three-minute Run time limit of the `autopilot-lab` skill, and answer, with spreads:
 
 - Does any Campaign end in Victory?
 - If not, how many Turns until Defeat, and by which Ending reasons?
@@ -31,7 +31,7 @@ State each root cause as a mechanism with its evidence, e.g. "Response Mission s
 For each root cause, from the most consequential:
 
 1. **Make the change in a temporary worktree of the Implementation repo,** under the rules of `AGENTS.md` for worktrees, e.g. its `node_modules` linked and unlinked before removal. Prefer a change of the AI's decisions over a new Tuning parameter value; a Tuning parameter value alone is tried with `--vs`.
-2. **Measure it against the baseline** with `--impl-b <worktree>` on the same seeds and at least 30 Campaigns, naming beforehand the measure it should move, e.g. the median Turn of Defeat.
+2. **Measure it against the baseline** with `--impl-b <worktree>` on the same seeds, 20 Campaigns per variant, naming beforehand the measure it should move, e.g. the median Turn of Defeat.
 3. **Keep it only when it helps** on that measure beyond the spread and makes nothing else clearly worse; otherwise discard it and record why. A kept change becomes the baseline of the next one.
 4. **Stop** once Campaigns are won reliably, once the remaining defeats come from the game rather than from the AI, or once further changes stop helping.
 

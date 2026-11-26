@@ -11,9 +11,9 @@ It is not a specification and not part of any Implementation. It writes nothing 
 It needs a clone of the Implementation repo `game-v5-impl-web` with its dependencies installed, by default the sibling of this repository's main local clone, also when run from a worktree. From the repository root:
 
 ```bash
-npm run autopilot:lab -- --campaigns 30 --turns 200
-npm run autopilot:lab -- --campaigns 30 --turns 200 --vs combatMarginPct=120,researchTeamSize=4
-npm run autopilot:lab -- --campaigns 30 --turns 200 --impl-b <another game-v5-impl-web clone or worktree>
+npm run autopilot:lab -- --campaigns 20 --turns 400
+npm run autopilot:lab -- --campaigns 20 --turns 400 --vs combatMarginPct=120,researchTeamSize=4
+npm run autopilot:lab -- --campaigns 20 --turns 400 --impl-b <another game-v5-impl-web clone or worktree>
 ```
 
 | Option | Default | Meaning |
@@ -28,8 +28,9 @@ npm run autopilot:lab -- --campaigns 30 --turns 200 --impl-b <another game-v5-im
 | `--threads` | CPU cores less one | Worker threads, shared evenly between the variants. |
 | `--out` | `autopilot-lab/<time>` in the OS temporary folder | Where the records and the summary go. |
 | `--json` | off | Print `summary.json` instead of the Markdown summary. |
+| `--limit` | 180 | The Run time limit in seconds, which may only be shortened. |
 
-A Campaign of 150 Turns takes about one second on one thread, so 40 Campaigns of 200 Turns on a machine of many cores take seconds.
+A Lab run stops at its Run time limit of three minutes: it stops every Campaign still being played, starts no other, and summarizes only the finished ones, saying at the top how many of each variant it stopped and never started. A Campaign of 300 Turns takes 15 to 30 seconds on one thread, so a comparison of 20 Campaigns per variant to Turn 400 takes one to two minutes on a machine of many cores.
 
 To try a change of game data or of the AI's code, make it in a temporary worktree of the Implementation repo, link or install its `node_modules`, and compare with `--impl-b`. Game data in the Implementation is a copy made by its `npm run sync:spec`, so edit it in the worktree directly for an experiment and put a change that is kept into `content/` of this repository.
 

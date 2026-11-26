@@ -18,11 +18,11 @@ A further specification is added for each further Autopilot AI, e.g. one that pu
 
 ## Autopilot AI Expectations
 
-[Autopilot AI Expectations](autopilot-ai-expectations.md) answers _how well must the Basic Autopilot AI play?_ It must win half of its Campaigns, still win some while losing a quarter of its Missions, and win by the Required rating share the game promises the player, so that a player can learn from it.
+[Autopilot AI Expectations](autopilot-ai-expectations.md) answers _how well must the Basic Autopilot AI play?_ It must win half of its Campaigns, still win some while losing a fifth of its Missions, and win by the Required rating share the game promises the player, so that a player can learn from it.
 
 ## Autopilot Lab
 
-[Autopilot Lab](autopilot-lab.md) answers _how is an Autopilot AI measured?_ A tool plays many Campaigns at once within two minutes, compares variants on the same Campaigns, and gives every Campaign and Combat it reports a setup seed, so that each finding can be played again in the game.
+[Autopilot Lab](autopilot-lab.md) answers _how is an Autopilot AI measured?_ A tool plays many Campaigns at once within three minutes, compares variants on the same Campaigns, and gives every Campaign and Combat it reports a setup seed, so that each finding can be played again in the game.
 
 # How they relate
 
