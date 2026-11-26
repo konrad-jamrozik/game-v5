@@ -33,6 +33,9 @@ export interface TurnRow {
   readonly killed: number
   /** Player actions the AI made in the Turn, Advance turn excluded. */
   readonly actions: number
+  /** The Strike team's mean weapon damage and armor, as worn. */
+  readonly strikeWeapon: number
+  readonly strikeArmor: number
 }
 
 export interface CampaignResult {
@@ -59,6 +62,24 @@ export interface CampaignResult {
   readonly leadsCompleted: number
   readonly leadsDiscovered: number
   readonly upgrades: Record<string, number>
+  /**
+   * The money the AI spent over the Campaign, by kind: `hire`, each Upgrade by ID, `ammo` and `items` for buyItems,
+   * and `sold` for what sellItems brought, as a negative amount.
+   */
+  readonly spent: Record<string, number>
+  /**
+   * For each Response Mission site, when it first appeared: its operation level, its Enemies' Combat rating, the
+   * Combat rating of the strongest Deployable Agents within the free Transport cap, how many Deployable Agents there
+   * were against how many its Enemies ask for, and what became of it.
+   */
+  readonly responses: readonly {
+    readonly level: number
+    readonly rating: number
+    readonly ready: number
+    readonly deployable: number
+    readonly needed: number
+    readonly outcome: string
+  }[]
   readonly detectors: {
     /** The longest run of Turns with a Contracting cap above 0 and nobody on Contracting. */
     readonly contractingIdleTurns: number

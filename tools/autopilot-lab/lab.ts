@@ -236,6 +236,8 @@ function summarize(
     ['Strike rating / goal %', (row) => (row.goal === 0 ? 0 : (100 * row.strikeRating) / row.goal), 0],
     ['Mean base skill', (row) => row.meanSkill, 0],
     ['Killed so far', (row) => row.killed, 0],
+    ['Strike weapon damage', (row) => row.strikeWeapon ?? 0, 1],
+    ['Strike armor', (row) => row.strikeArmor ?? 0, 1],
   ]
   lines.push('## Over time')
   lines.push('')
@@ -320,6 +322,36 @@ function summarize(
   )
   lines.push('')
 
+  // Response Mission sites when they appear.
+  lines.push('## Response Mission sites when they appear')
+  lines.push('')
+  lines.push(
+    "Per operation level and outcome: how many, and the median (p25–p75) of the ready Combat rating over the Enemies' in %, i.e. the strongest Deployable Agents within the free Transport cap; then Deployable Agents against those the Enemies ask for.",
+  )
+  lines.push('')
+  const outcomes = [
+    ...new Set(
+      runs.flatMap((r) => r.results.flatMap((x) => (x.responses ?? []).map((s) => `L${s.level} ${s.outcome}`))),
+    ),
+  ].sort()
+  lines.push(
+    table(
+      ['Level and outcome', ...names.flatMap((n) => [`${n} sites`, `${n} ready %`, `${n} deployable / needed`])],
+      outcomes.map((key) => [
+        key,
+        ...runs.flatMap((r) => {
+          const list = r.results.flatMap((x) => (x.responses ?? []).filter((s) => `L${s.level} ${s.outcome}` === key))
+          return [
+            String(list.length),
+            spread(list.map((s) => (100 * s.ready) / Math.max(1, s.rating))),
+            `${spread(list.map((s) => s.deployable))} / ${spread(list.map((s) => s.needed))}`,
+          ]
+        }),
+      ]),
+    ),
+  )
+  lines.push('')
+
   // Progress, Upgrades.
   const upgradeIds = [...new Set(runs.flatMap((r) => r.results.flatMap((x) => Object.keys(x.upgrades))))]
   lines.push('## Progress and purchases, at the end, per Campaign on average')
@@ -334,6 +366,12 @@ function summarize(
           `Upgrade ${id}`,
           ...runs.map((r) => round(mean(r.results.map((x) => x.upgrades[id] ?? 0)), 1)),
         ]),
+        ...[...new Set(runs.flatMap((r) => r.results.flatMap((x) => Object.keys(x.spent ?? {}))))]
+          .sort()
+          .map((kind) => [
+            `Money spent: ${kind}`,
+            ...runs.map((r) => round(mean(r.results.map((x) => x.spent?.[kind] ?? 0)))),
+          ]),
         ['Seconds per Campaign', ...runs.map((r) => round(mean(r.results.map((x) => x.seconds)), 2))],
       ],
     ),

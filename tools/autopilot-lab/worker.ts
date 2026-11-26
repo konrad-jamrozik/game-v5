@@ -34,8 +34,12 @@ const booted = (async () => {
   return { ...engine, ...ai }
 })()
 
+/** The AmmoType IDs, so that a buyItems of only rounds counts as `ammo`. */
+const ammoIds = new Set<string>()
+
 /** The AI with its Player actions counted, by name and argument, for the Turn being played. */
-function counted(ai: Any, counts: Map<string, number>): Any {
+/** The AI with its Player actions counted, by name and argument, and the money of each spending one recorded. */
+function counted(ai: Any, counts: Map<string, number>, spent: Record<string, number>): Any {
   return {
     ...ai,
     step: ({ player }: Any) => {
@@ -47,7 +51,24 @@ function counted(ai: Any, counts: Map<string, number>): Any {
             : async (...args: unknown[]) => {
                 const key = op === 'purchaseUpgrade' ? `${op} ${String(args[0])}` : op
                 counts.set(key, (counts.get(key) ?? 0) + 1)
-                return action(...args)
+                const spends = ['purchaseUpgrade', 'hireAgents', 'buyItems', 'sellItems'].includes(op)
+                const money = () => player.queries.getCurrentLiveWorldState().value?.agency.money ?? 0
+                const before = spends ? money() : 0
+                const result = await action(...args)
+                if (spends && result.ok) {
+                  const kind =
+                    op === 'purchaseUpgrade'
+                      ? String(args[0])
+                      : op === 'hireAgents'
+                        ? 'hire'
+                        : op === 'sellItems'
+                          ? 'sold'
+                          : (args[0] as Any[]).every((entry) => ammoIds.has(entry.id))
+                            ? 'ammo'
+                            : 'items'
+                  spent[kind] = (spent[kind] ?? 0) + before - money()
+                }
+                return result
               }
       }
       return ai.step({ player: { ...player, actions } })
@@ -59,6 +80,7 @@ async function play(task: LabTask): Promise<CampaignResult> {
   const b = await booted
   const thresholds = { ...b.BASIC_AI_THRESHOLDS, ...task.params }
   const counts = new Map<string, number>()
+  const spent: Record<string, number> = {}
   let n = 0
   const engine = await b.createEngine(
     {
@@ -66,12 +88,13 @@ async function play(task: LabTask): Promise<CampaignResult> {
       newId: () => `lab-${(n += 1)}`,
       randomNumbers: (count: number) => Array.from({ length: count }, (_, i) => i * 7 + 1),
     },
-    { autopilotAis: [counted(b.createBasicAutopilotAi(thresholds), counts)] },
+    { autopilotAis: [counted(b.createBasicAutopilotAi(thresholds), counts, spent)] },
   )
   ok(await engine.session.globalConfiguration.set('autosaveLimit', 0))
   ok(await engine.session.campaign.create({ seed: task.seed }))
   const player = engine.player
   const data = ok<Any>(player.queries.getGameData())
+  for (const ammo of data.ammoTypes as Any[]) ammoIds.add(ammo.id)
   const rows: TurnRow[] = []
   const detectors = {
     contractingIdleTurns: 0,
@@ -82,6 +105,7 @@ async function play(task: LabTask): Promise<CampaignResult> {
     maxActionsPerTurn: 0,
   }
   const streaks = { contractingIdle: 0, strikeShort: 0, negativeNet: 0 }
+  const seen = new Map<string, { level: number; rating: number; ready: number; deployable: number; needed: number }>()
   let error: string | null = null
   const began = performance.now()
   for (;;) {
@@ -123,6 +147,23 @@ async function play(task: LabTask): Promise<CampaignResult> {
       detectors.strandedWeaponTurns += 1
     }
     const agents = after.agents as Any[]
+    for (const site of after.missionSites as Any[]) {
+      if (site.kind !== 'Response' || site.lifecycle !== 'Active' || seen.has(site.id)) continue
+      const free = agency.transportCap - agency.deployedAgents
+      const team = agents
+        .filter((a) => a.deployable)
+        .sort((x, y) => y.effectiveSkill - x.effectiveSkill)
+        .slice(0, Math.max(0, free))
+        .map((a) => a.id)
+      const ready = team.length === 0 ? 0 : ok<Any>(player.queries.previewDeployment(null, team)).teamCombatRating
+      seen.set(site.id, {
+        level: site.operationLevel?.level ?? 0,
+        rating: site.enemiesCombatRating,
+        ready,
+        deployable: agents.filter((a) => a.deployable).length,
+        needed: Math.ceil(site.enemies.length / thresholds.enemiesPerAgent),
+      })
+    }
     rows.push({
       turn: live.turn,
       panic: after.panicHundredths / 100,
@@ -144,6 +185,14 @@ async function play(task: LabTask): Promise<CampaignResult> {
       meanSkill: agents.length === 0 ? 0 : agents.reduce((s, a) => s + a.skillHundredths, 0) / agents.length / 100,
       killed: (retired.agents as Any[]).filter((a) => a.agentStatus === 'Killed').length,
       actions,
+      strikeWeapon:
+        plan.strike.length === 0
+          ? 0
+          : (plan.strike as Any[]).reduce((s, a) => s + a.baseWeaponDamage, 0) / plan.strike.length,
+      strikeArmor:
+        plan.strike.length === 0
+          ? 0
+          : (plan.strike as Any[]).reduce((s, a) => s + a.effectiveArmor, 0) / plan.strike.length,
     })
   }
   const live = ok<Any>(player.queries.getCurrentLiveWorldState())
@@ -201,6 +250,20 @@ async function play(task: LabTask): Promise<CampaignResult> {
     leadsCompleted: (retired.leads as Any[]).filter((l) => l.completionCount > 0).length,
     leadsDiscovered: (retired.leads as Any[]).length,
     upgrades: Object.fromEntries((live.agency.upgrades as Any[]).map((u) => [u.id, u.acquisitions])),
+    spent,
+    responses: [...seen.entries()].map(([id, value]) => {
+      const site = siteOf.get(id)
+      const mission = site?.mission ? (retired.missions as Any[]).find((m) => m.id === site.mission) : undefined
+      return {
+        ...value,
+        outcome:
+          site === undefined
+            ? 'Active'
+            : site.lifecycle === 'Expired'
+              ? 'Expired'
+              : (mission?.lifecycle ?? site.lifecycle),
+      }
+    }),
     detectors,
     error,
   }
