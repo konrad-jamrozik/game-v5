@@ -764,7 +764,13 @@
             [
               'threatWindowTurns',
               'threat window',
-              'The Threat is the strongest Response Mission site created in this many last Turns. The Strike team is sized to the stronger of it and the weakest Next rung, times the Combat margin.',
+              'The Response Mission sites created in this many last Turns show the highest Faction operation level seen so far. The Strike team is sized to the stronger of the Threat and the weakest Next rung, times the Combat margin.',
+              1,
+            ],
+            [
+              'threatLevelsAhead',
+              'levels ahead',
+              'The Threat is the strongest Response Mission site of the Faction operation level this many levels above the highest seen in the threat window, so the Strike team is ready before that level’s operations arrive. 0 sizes it to the level already seen.',
               1,
             ],
             ['researchTeamSize', 'team', 'The Agents each Investigation is given.', 1],
@@ -802,6 +808,12 @@
               'recoveryLookaheadTurns',
               'lookahead',
               'Advance turns of recovery over which resting Agents are projected for a Muster and for choosing Leads.',
+              1,
+            ],
+            [
+              'fullTeamPct',
+              'full team',
+              'Once a team that passes the margin can be formed for a Response Mission site, a stronger one goes instead: the fewest Agents, strongest first, that reach this % of the Enemies’ Combat rating, when the free Transport cap allows. A Mission site whose loss loses the Campaign gets the strongest Agents the cap allows.',
               1,
             ],
           ],
