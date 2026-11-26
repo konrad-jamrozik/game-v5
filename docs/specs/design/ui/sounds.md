@@ -91,7 +91,7 @@ The Escape key when there is nothing to close or cancel, e.g. while the Campaign
 
 ## Turn summary
 
-When an Advance turn that the Player requested [shows the Turn summary](screens/turn-summary.md#groups), the GUI announces it with a Sound of its own, so that the news is heard before it is read. The Player's Advance turn therefore plays one Sound, and the GUI chooses it when the Advance turn ends, because only then does it know whether there is news: `interesting-turn-summary`, at once as the Turn summary appears, when the Advance turn shows one, and `main-click` otherwise.
+When an Advance turn that the Player requested [shows the Turn summary](screens/turn-summary.md#summary-events), the GUI announces it with a Sound of its own, so that the news is heard before it is read. The Player's Advance turn therefore plays one Sound, and the GUI chooses it when the Advance turn ends, because only then does it know whether there is news: `interesting-turn-summary`, at once as the Turn summary appears, when the Advance turn shows one, and `main-click` otherwise.
 
 Reopening the Turn summary from the [Turn Report View](screens/turn-report-view.md) is a Main click and plays only `main-click`, because it brings no news. So is every input that [shows the Turn summary again from a Detail view](screens/campaign-screen.md#view-trail), whether the [Back control](gui.md#glossary) labelled "‹ Turn summary", the Escape key, or the close control of a Detail view whose [View trail](gui.md#glossary) begins with the Turn summary.
 
