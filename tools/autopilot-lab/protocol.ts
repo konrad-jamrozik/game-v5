@@ -41,6 +41,8 @@ export interface TurnRow {
 export interface CampaignResult {
   readonly variant: string
   readonly seed: string
+  /** CONFIG, Campaign setup seed: from which the game creates this Campaign again; none from an earlier Implementation. */
+  readonly setupSeed: string | null
   readonly ending: { readonly ending: string; readonly reasons: readonly string[]; readonly turn: number } | null
   readonly turns: number
   readonly seconds: number

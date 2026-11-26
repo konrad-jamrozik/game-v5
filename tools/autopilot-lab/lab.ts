@@ -426,6 +426,17 @@ function summarize(
       ),
     )
     lines.push('')
+    // CONFIG, Campaign setup seed: each Campaign quoted above, to create it again in the game and play it to the Turn.
+    const quoted = [...new Set(lost.slice(0, 12).map((c) => c.seed))]
+    if (quoted.length > 0) {
+      lines.push('Campaign setup seeds of the Campaigns above, for the Seed field of the New Campaign panel:')
+      lines.push('')
+      for (const seed of quoted) {
+        const setupSeed = run.results.find((x) => x.seed === seed)?.setupSeed ?? null
+        lines.push(`- ${seed}: ${setupSeed === null ? '—' : `\`${setupSeed}\``}`)
+      }
+      lines.push('')
+    }
   }
 
   // Progress, Upgrades.
@@ -483,7 +494,9 @@ function summarize(
   lines.push('')
   const errors = runs.flatMap((r) => [
     ...r.failures,
-    ...r.results.flatMap((x) => (x.error === null ? [] : [`${x.variant} ${x.seed}: ${x.error}`])),
+    ...r.results.flatMap((x) =>
+      x.error === null ? [] : [`${x.variant} ${x.seed} (${x.setupSeed ?? 'no setup seed'}): ${x.error}`],
+    ),
   ])
   if (errors.length > 0) {
     lines.push('## Errors')

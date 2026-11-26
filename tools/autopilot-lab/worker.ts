@@ -92,6 +92,7 @@ async function play(task: LabTask): Promise<CampaignResult> {
   )
   ok(await engine.session.globalConfiguration.set('autosaveLimit', 0))
   ok(await engine.session.campaign.create({ seed: task.seed }))
+  const setupSeed = (ok<Any>(engine.session.getStatus()).campaignSetupSeed as string | undefined) ?? null
   const player = engine.player
   const data = ok<Any>(player.queries.getGameData())
   for (const ammo of data.ammoTypes as Any[]) ammoIds.add(ammo.id)
@@ -260,6 +261,7 @@ async function play(task: LabTask): Promise<CampaignResult> {
   const outcome: CampaignResult = {
     variant: task.variant,
     seed: task.seed,
+    setupSeed,
     ending:
       live.ending === null
         ? null

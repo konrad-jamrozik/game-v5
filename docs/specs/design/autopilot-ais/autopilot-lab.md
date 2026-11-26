@@ -60,4 +60,4 @@ A Campaign of a Lab run is reproduced in the game by creating a Campaign from it
 
 # TODOs
 
-- TODO: Give the Autopilot Lab the Run time limit and the Campaign setup seed of each Campaign; it already records the Combat setup seed of each Combat.
+- TODO: Give the Autopilot Lab the Run time limit; it already records the Campaign setup seed of each Campaign and the Combat setup seed of each Combat.
