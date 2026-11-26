@@ -22,7 +22,7 @@ The Development loop needs a few things from the Implementation that no play of 
 
 ## Campaign Tests
 
-[Campaign Tests](campaign-tests.md) answers _how much play may a test simulate?_ A test that plays Campaigns with an Autopilot AI stays short and checks only that play runs, never balance.
+[Campaign Tests](campaign-tests.md) answers _how much play may a test simulate?_ A test that plays Campaigns with an Autopilot AI stays short and checks only that play runs, never balance; balance is studied in Balancing runs, which an agent makes only when the Game designer asks.
 
 ## Test Values
 

@@ -16,6 +16,7 @@
     "lib/globe",
     "tools/gdr-balance-bench",
     "tools/autopilot-bench",
+    "tools/autopilot-lab",
     "tools/combat-rating-bench"
   ],
   "rules": {

@@ -124,7 +124,7 @@ These informative views are derived from the registered Markdown specifications.
 
 | ID | Document | Owns |
 | --- | --- | --- |
-| CTEST | [Campaign Tests](../specs/implementation/mandatory/campaign-tests.md) | How much play an automated test or a verification run of an Implementation may simulate with an Autopilot AI, and what it may check. |
+| CTEST | [Campaign Tests](../specs/implementation/mandatory/campaign-tests.md) | How much play an automated test or a verification run of an Implementation may simulate with an Autopilot AI, what it may check, and when Campaigns may be played to study balance. |
 | LICENSE | [Implementation License](../specs/implementation/mandatory/implementation-license.md) | The license under which each Implementation is published, and the files that state it. |
 | PLACE | [Implementation Placement](../specs/implementation/mandatory/implementation-placement.md) | Where each implementation and everything it needs reside, relative to the Spec repo. |
 | REUSE | [Rule Reuse](../specs/implementation/mandatory/rule-reuse.md) | That each Developer tool runs the code that play runs, that a rule which another rule reads runs as one implementation, and the tests that show it. |

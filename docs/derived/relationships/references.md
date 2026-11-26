@@ -71,7 +71,7 @@ A → B means A is referenced by B: the text of B links to A. Layer 1 is drawn a
 | 20 | GDRS GDRs | AGENT, COMBAT, COMP, CORE, DOM, ECON, EFFECT, ENG, EQUIP, FACTION, GDR, LEAD, MUSIC, VIS |
 | 20 | PLACE Implementation Placement | CORE, MUSIC, SOUNDS, VIS |
 | 21 | APPERF Autopilot Performance | AGENT, BASICAI, COMBAT, COND, CORE, CSTATE, DOM, ECON, ENG, PLACE, SAVES |
-| 21 | CTEST Campaign Tests | CORE, DOM, ENG, PLACE |
+| 21 | CTEST Campaign Tests | BASICAI, CORE, DOM, ENG, PLACE |
 | 21 | GLOBE Globe Integration | CORE, ENG, GUI, PLACE |
 | 21 | LICENSE Implementation License | PLACE |
 | 21 | LOOP Development Loop | CORE, ENG, PLACE, VIS |

@@ -25,7 +25,8 @@
   <text class="legend" x="66" y="36">referenced by</text>
   <rect class="box external" x="182.4" y="25" width="22" height="14" rx="3"/>
   <text class="legend" x="214.4" y="36">another family</text>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 198 230 C 198 264.5 198 264.5 198 299"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 158.1 230 C 158.1 264.5 106.6 264.5 106.6 299"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 237.8 230 C 237.8 264.5 289.3 264.5 289.3 299"/>
   <path class="edge edge-references" marker-end="url(#head-references)" d="M 102.9 113 C 102.9 147.5 158.1 147.5 158.1 182"/>
   <path class="edge edge-references" marker-end="url(#head-references)" d="M 293 113 C 293 147.5 237.8 147.5 237.8 182"/>
   <rect class="box external" x="24" y="68" width="157.8" height="45" rx="6"/>
@@ -34,6 +35,8 @@
   <text class="label" x="293" y="94">Mechanics family</text>
   <rect class="box" x="78.4" y="185" width="239.2" height="45" rx="6"/>
   <text class="label" x="198" y="211">BASICAI — Basic Autopilot AI</text>
-  <rect class="box external" x="126.5" y="302" width="143" height="45" rx="6"/>
-  <text class="label" x="198" y="328">Guidance family</text>
+  <rect class="box external" x="35.1" y="302" width="143" height="45" rx="6"/>
+  <text class="label" x="106.6" y="328">Guidance family</text>
+  <rect class="box external" x="214.1" y="302" width="150.4" height="45" rx="6"/>
+  <text class="label" x="289.3" y="328">Mandatory family</text>
 </svg>
