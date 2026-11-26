@@ -512,7 +512,7 @@ Your team does not fight to the last [Agent](#agents). After each round of a [Co
 
 | Formulas |  |
 | --- | --- |
-| The team retreats when both hold | Its [Combat rating](#combat-rating) is below 0.5 × what it was at the start, and the Combat rating of the Enemies is at least 0.8 × that of the team now |
+| The team retreats when both hold | Its [Combat rating](#combat-rating) is below 0.01 × what it was at the start, and the Combat rating of the Enemies is at least 0.99 × that of the team now |
 | Checked | After each round, once both sides have attacked |
 | Result | The Mission is lost |
 | [Exhaustion](#exhaustion) | Survivors gain as much as after any other Mission |
@@ -1712,8 +1712,8 @@ A cult has found your headquarters and is coming with everything it has. If the 
 | `kind` | `response` |
 | `name` | `Defend against HQ assault` |
 | `operation_level` | `5` |
-| `expires_in_turns` | `1` |
-| `enemies` | `{"initiate":40,"operative":30,"soldier":20,"elite":10,"handler":20,"lieutenant":4,"commander":4,"high_commander":1}` |
+| `expires_in_turns` | `3` |
+| `enemies` | `{"initiate":30,"operative":20,"soldier":20,"elite":10,"handler":10,"lieutenant":4,"commander":4,"high_commander":1}` |
 
 ### Defend against office raid
 
@@ -1740,7 +1740,7 @@ A cult is ready to release a plague it has bred. If it gets out, the Campaign is
 | `kind` | `response` |
 | `name` | `Foil bioweapon release` |
 | `operation_level` | `5` |
-| `expires_in_turns` | `1` |
+| `expires_in_turns` | `3` |
 | `enemies` | `{"operative":30,"soldier":24,"elite":8,"handler":6,"lieutenant":6,"commander":3,"high_commander":1}` |
 
 ### Foil business extortion
@@ -1880,7 +1880,7 @@ A cult has seized a nuclear warhead and the means to launch it. If it flies, the
 | `kind`                | `response`                                                                  |
 | `name`                | `Foil warhead launch`                                                       |
 | `operation_level`     | `5`                                                                         |
-| `expires_in_turns`    | `1`                                                                         |
+| `expires_in_turns`    | `3`                                                                         |
 | `enemies`             | `{"soldier":24,"elite":16,"lieutenant":6,"commander":3,"high_commander":1}` |
 
 ### Intercept arms deal

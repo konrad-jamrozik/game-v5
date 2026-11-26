@@ -9,7 +9,7 @@ next: faint
 id: faint
 type: FactionActivityLevel
 name: Faint
-lasts_turns: [15, 30]
+lasts_turns: [20, 30]
 operation_every_turns: [10, 15]
 operation_level_weights:
   1: 80
@@ -19,7 +19,7 @@ next: emerging
 id: emerging
 type: FactionActivityLevel
 name: Emerging
-lasts_turns: [15, 30]
+lasts_turns: [20, 30]
 operation_every_turns: [9, 14]
 operation_level_weights:
   1: 55
@@ -30,7 +30,7 @@ next: active
 id: active
 type: FactionActivityLevel
 name: Active
-lasts_turns: [15, 30]
+lasts_turns: [20, 30]
 operation_every_turns: [8, 13]
 operation_level_weights:
   1: 30
@@ -42,7 +42,7 @@ next: expanding
 id: expanding
 type: FactionActivityLevel
 name: Expanding
-lasts_turns: [15, 30]
+lasts_turns: [20, 30]
 operation_every_turns: [7, 12]
 operation_level_weights:
   1: 25
@@ -54,7 +54,7 @@ next: escalating
 id: escalating
 type: FactionActivityLevel
 name: Escalating
-lasts_turns: [15, 30]
+lasts_turns: [20, 30]
 operation_every_turns: [6, 11]
 operation_level_weights:
   1: 20
@@ -66,7 +66,7 @@ next: war
 id: war
 type: FactionActivityLevel
 name: War
-lasts_turns: [15, 30]
+lasts_turns: [20, 30]
 operation_every_turns: [5, 10]
 operation_level_weights:
   1: 15

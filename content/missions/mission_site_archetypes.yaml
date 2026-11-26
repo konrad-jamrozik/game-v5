@@ -253,7 +253,7 @@ type: MissionSiteArchetype
 kind: response
 name: Foil bioweapon release
 operation_level: 5
-expires_in_turns: 1
+expires_in_turns: 3
 enemies:
   operative: 30
   soldier: 24
@@ -268,7 +268,7 @@ type: MissionSiteArchetype
 kind: response
 name: Foil warhead launch
 operation_level: 5
-expires_in_turns: 1
+expires_in_turns: 3
 enemies:
   soldier: 24
   elite: 16
@@ -281,13 +281,13 @@ type: MissionSiteArchetype
 kind: response
 name: Defend against HQ assault
 operation_level: 5
-expires_in_turns: 1
+expires_in_turns: 3
 enemies:
-  initiate: 40
-  operative: 30
+  initiate: 30
+  operative: 20
   soldier: 20
   elite: 10
-  handler: 20
+  handler: 10
   lieutenant: 4
   commander: 4
   high_commander: 1
