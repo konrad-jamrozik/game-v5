@@ -24,12 +24,24 @@ export interface UpgradeInfo {
   readonly effect: string
 }
 
+/**
+ * The skill chart's bands and lines as the game's Agents by base skill chart has them: the name of each base skill
+ * band, the lowest first, and the exhaustion thresholds of the lines, `exhaustion_work_limit` and
+ * `exhaustion_free_points`.
+ */
+export interface SkillChartInfo {
+  readonly bands: readonly string[]
+  readonly workLimit: number
+  readonly freePoints: number
+}
+
 /** From a worker thread to server.ts. */
 export type FromWorker =
   | {
       readonly type: 'ready'
       readonly defaults: Record<string, unknown>
       readonly upgrades: readonly UpgradeInfo[]
+      readonly skillChart: SkillChartInfo
     }
   | { readonly type: 'error'; readonly message: string }
   | { readonly type: 'stats'; readonly id: string; readonly stats: CampaignStats }
@@ -82,11 +94,14 @@ export interface TurnPoint {
    * In transit count only there, whatever their Assignment.
    */
   readonly status: readonly number[]
-  /** At the same moment: Serving Agents per effective skill band of 50, the lowest first, i.e. 0–49, 50–99, and so on. */
+  /**
+   * At the same moment: Serving Agents per base skill band of `SkillChartInfo.bands`, the lowest first, up to the
+   * highest band that holds an Agent.
+   */
   readonly skill: readonly number[]
   /**
    * At the same moment: the Serving Agents recovering, i.e. whose Assignment is Recovery, In transit to it included;
-   * those of exhaustion above 70; and those of exhaustion above 30.
+   * those of exhaustion above `SkillChartInfo.workLimit`; and those of exhaustion above `SkillChartInfo.freePoints`.
    */
   readonly worn: readonly number[]
   /**

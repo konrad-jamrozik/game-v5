@@ -1455,8 +1455,9 @@
       /** A Turn point's strength: a Campaign launched before the chart existed reports none. */
       const strengthOf = (p) => p.strength ?? [0, 0, -1, -1]
       /**
-       * The game's skill bands, under Chart series colours in Visual Design: eleven 50 wide, 0–49 up to 500–549, and a
-       * last band of every effective skill from 550 up, so that every band keeps a colour of its own.
+       * The colours of the game's base skill bands, under Chart series colours in Visual Design, the lowest first; the
+       * last colour stands for every band above the twelfth. The bands themselves and their names are the game's, from
+       * its Ranks, as the engine reports them in `INFO.skillChart`.
        */
       const BAND_COLORS = [
         '#6A5ACD',
@@ -1472,22 +1473,18 @@
         '#F2A6D8',
         '#F4EFE6',
       ]
-      const SKILL_BAND = 50
-      const LAST_BAND = BAND_COLORS.length - 1
-      const bandColor = (i) => BAND_COLORS[Math.min(i, LAST_BAND)]
-      const bandName = (i) =>
-        i >= LAST_BAND ? `${LAST_BAND * SKILL_BAND}+` : `${i * SKILL_BAND}–${i * SKILL_BAND + SKILL_BAND - 1}`
-      /** A Turn point's Agents per band, the bands from 550 up merged into the last one. */
-      const bandsOf = (p) => {
-        const out = p.skill.slice(0, LAST_BAND)
-        if (p.skill.length > LAST_BAND) out.push(p.skill.slice(LAST_BAND).reduce((a, b) => a + b, 0))
-        return out
-      }
-      /** The lines over the skill chart: Agents recovering, of exhaustion above 30, and of exhaustion above 0. */
-      const WORN_LINES = [
+      const bandColor = (i) => BAND_COLORS[Math.min(i, BAND_COLORS.length - 1)]
+      const bandName = (i) => INFO?.skillChart?.bands[i] ?? `Band ${i + 1}`
+      /** A Turn point's Agents per base skill band. */
+      const bandsOf = (p) => p.skill
+      /**
+       * The lines over the skill chart: Agents recovering, of exhaustion above `exhaustion_work_limit`, and of exhaustion
+       * above `exhaustion_free_points`, named with those thresholds as the game names them.
+       */
+      const wornLines = () => [
         ['Recovering', '#FF4D4D'],
-        ['Exhaustion > 30', '#FF9A2E'],
-        ['Exhaustion > 0', '#FFE14D'],
+        [`Exhaustion > ${INFO?.skillChart?.workLimit ?? 70}`, '#FF9A2E'],
+        [`Exhaustion > ${INFO?.skillChart?.freePoints ?? 30}`, '#FFE14D'],
       ]
 
       /** The plot area of every chart, in the units of its 360 × 120 viewBox. */
@@ -1678,11 +1675,11 @@
           tip: (p) => ASSETS.map(([name, color], j) => [name, color, p.start[j], true]),
         },
         skill: {
-          title: 'Agents by effective skill',
+          title: 'Agents by base skill',
           legend: (turns) => {
             const top = Math.max(0, ...turns.map((p) => bandsOf(p).length - 1))
             const bands = Array.from({ length: top + 1 }, (_, i) => [bandName(i), bandColor(i)])
-            return legend([...bands, ...WORN_LINES], (i) => i >= bands.length)
+            return legend([...bands, ...wornLines()], (i) => i >= bands.length)
           },
           draw(turns) {
             const rows = turns.map(bandsOf)
@@ -1690,11 +1687,12 @@
             const y = yScale(0, hi)
             // A Campaign launched before the lines existed reports no `worn`, and draws no line.
             // Each line has a dark outline, so that it stays apart from a band of a like colour behind it.
-            const lines = WORN_LINES.map(([, color], j) => {
-              if (!turns.some((p) => p.worn)) return ''
-              const values = turns.map((p) => p.worn?.[j] ?? null)
-              return polyline(values, y, '#0D0D0B', 4, 0.5) + polyline(values, y, color, 2, 0.5)
-            })
+            const lines = wornLines()
+              .map(([, color], j) => {
+                if (!turns.some((p) => p.worn)) return ''
+                const values = turns.map((p) => p.worn?.[j] ?? null)
+                return polyline(values, y, '#0D0D0B', 4, 0.5) + polyline(values, y, color, 2, 0.5)
+              })
               .reverse()
               .join('')
             return chartSvg(
@@ -1712,7 +1710,7 @@
                 .map((v, i) => [bandName(i), bandColor(i), v])
                 .filter((r) => r[2] > 0)
                 .reverse(),
-              ...WORN_LINES.map(([name, color], j) => [name, color, p.worn?.[j] ?? null, true]),
+              ...wornLines().map(([name, color], j) => [name, color, p.worn?.[j] ?? null, true]),
             ]
           },
         },

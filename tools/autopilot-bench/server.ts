@@ -15,7 +15,7 @@ import path from 'node:path'
 import { Worker } from 'node:worker_threads'
 import { execFileSync } from 'node:child_process'
 
-import type { CampaignStats, FromWorker, ToWorker, TurnPoint, UpgradeInfo } from './protocol.ts'
+import type { CampaignStats, FromWorker, SkillChartInfo, ToWorker, TurnPoint, UpgradeInfo } from './protocol.ts'
 
 const arg = (name: string, fallback: string) => {
   const at = process.argv.indexOf(`--${name}`)
@@ -292,10 +292,17 @@ const json = (res: http.ServerResponse, status: number, value: unknown) => {
   res.end(JSON.stringify(value))
 }
 
-/** The engine's defaults and Upgrades, from a worker thread started for this alone, so they are read from disk. */
-function readInfo(): Promise<{ defaults: Record<string, unknown>; upgrades: readonly UpgradeInfo[] }> {
+/**
+ * The engine's defaults, Upgrades, and skill chart bands, from a worker thread started for this alone, so they are read
+ * from disk.
+ */
+function readInfo(): Promise<{
+  defaults: Record<string, unknown>
+  upgrades: readonly UpgradeInfo[]
+  skillChart: SkillChartInfo
+}> {
   return new Promise((resolve, reject) => {
-    const thread = startThread((m) => resolve({ defaults: m.defaults, upgrades: m.upgrades }))
+    const thread = startThread((m) => resolve({ defaults: m.defaults, upgrades: m.upgrades, skillChart: m.skillChart }))
     thread.ready.then(
       () => void thread.worker.terminate(),
       (e: unknown) => {

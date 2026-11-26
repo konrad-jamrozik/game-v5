@@ -67,8 +67,47 @@ interface Campaign {
 const capUpgrades = new Set<string>()
 const CAP_EFFECTS = new Set(['agent_cap', 'transport_cap', 'training_cap'])
 
-/** The width of an effective skill band of the skill chart. */
-const SKILL_BAND = 50
+/**
+ * The skill chart as the game draws its Agents by base skill chart, read from the game data in `boot`: the lowest base
+ * skill of each band, the lowest first, and the exhaustion thresholds of its lines, `exhaustion_work_limit` and
+ * `exhaustion_free_points`.
+ */
+const skillChart: { starts: number[]; bands: string[]; workLimit: number; freePoints: number } = {
+  starts: [0],
+  bands: ['0+'],
+  workLimit: 70,
+  freePoints: 30,
+}
+
+/**
+ * The game's base skill bands, from its Ranks: a first band from 0 up to below the lowest `min_base_skill`, then one
+ * band for each Rank up to below the next, the highest open-ended, each named by its range and a Rank's by its name in
+ * parentheses, e.g. "0–99", "100–149 (Rookie)", and "900+ (High Commander)".
+ */
+function readSkillChart(data: Any): void {
+  const ranks = [...(data.ranks as Any[])].sort((a, b) => a.minBaseSkill - b.minBaseSkill)
+  const starts: { name: string | null; min: number }[] = [
+    ...(ranks[0]?.minBaseSkill === 0 ? [] : [{ name: null, min: 0 }]),
+    ...ranks.map((r) => ({ name: r.name as string, min: r.minBaseSkill as number })),
+  ]
+  skillChart.starts = starts.map((s) => s.min)
+  skillChart.bands = starts.map((s, i) => {
+    const next = starts[i + 1]
+    const range = next === undefined ? `${s.min}+` : `${s.min}–${next.min - 1}`
+    return s.name === null ? range : `${range} (${s.name})`
+  })
+  skillChart.workLimit = data.agentParameters.exhaustionWorkLimit ?? skillChart.workLimit
+  skillChart.freePoints = data.agentParameters.exhaustionFreePoints ?? skillChart.freePoints
+}
+
+/** The band of a base skill, rounded down. */
+function bandOf(skill: number): number {
+  let band = 0
+  skillChart.starts.forEach((min, i) => {
+    if (skill >= min) band = i
+  })
+  return band
+}
 
 /** The Agents of a Turn point, from the Serving Agents as they are now. */
 function agentsPoint(agents: readonly Any[]): {
@@ -78,13 +117,13 @@ function agentsPoint(agents: readonly Any[]): {
 } {
   const status = [0, 0, 0, 0, 0, 0, 0]
   const skill: number[] = []
-  // Agents recovering, i.e. whose Assignment is Recovery, In transit to it included; and Agents of exhaustion above 30
-  // and above 0.
+  // Agents recovering, i.e. whose Assignment is Recovery, In transit to it included; and Agents of exhaustion above
+  // `exhaustion_work_limit` and above `exhaustion_free_points`.
   const worn = [0, 0, 0]
   for (const a of agents) {
     if (a.assignment?.kind === 'Recovery') worn[0]! += 1
-    if ((a.exhaustion as number) > 30) worn[1]! += 1
-    if ((a.exhaustion as number) > 0) worn[2]! += 1
+    if ((a.exhaustion as number) > skillChart.workLimit) worn[1]! += 1
+    if ((a.exhaustion as number) > skillChart.freePoints) worn[2]! += 1
     const kind = a.assignment?.kind as string | undefined
     const group =
       a.agentStatus === 'InTransit'
@@ -103,7 +142,7 @@ function agentsPoint(agents: readonly Any[]): {
                     ? 4
                     : 0
     status[group]! += 1
-    const band = Math.max(0, Math.floor((a.effectiveSkill as number) / SKILL_BAND))
+    const band = bandOf(Math.floor((a.skillHundredths as number) / 100))
     while (skill.length <= band) skill.push(0)
     skill[band]! += 1
   }
@@ -455,7 +494,9 @@ async function boot() {
   // a row can name the next Initiative Mission site to win against each Faction. It is fixed game data.
   ok(scratch.session.developer.enable())
   const levels = ok<Any>(scratch.developer.queries.getInitiativeOperationLevels()).missionSiteArchetypes as Any[]
-  for (const a of ok<Any>(scratch.player.queries.getGameData()).missionSiteArchetypes as Any[]) {
+  const data = ok<Any>(scratch.player.queries.getGameData())
+  readSkillChart(data)
+  for (const a of data.missionSiteArchetypes as Any[]) {
     archetypeNames.set(a.id, a.name)
     archetypeEnemies.set(a.id, {
       rating: a.enemiesCombatRating as number,
@@ -785,7 +826,13 @@ async function handle(message: ToWorker) {
 }
 
 booted.then(
-  (b) => port.postMessage({ type: 'ready', defaults: b.BASIC_AI_THRESHOLDS, upgrades: b.upgrades }),
+  (b) =>
+    port.postMessage({
+      type: 'ready',
+      defaults: b.BASIC_AI_THRESHOLDS,
+      upgrades: b.upgrades,
+      skillChart: { bands: skillChart.bands, workLimit: skillChart.workLimit, freePoints: skillChart.freePoints },
+    }),
   (e: unknown) => port.postMessage({ type: 'error', message: e instanceof Error ? (e.stack ?? e.message) : String(e) }),
 )
 
