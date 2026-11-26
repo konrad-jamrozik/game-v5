@@ -9,7 +9,7 @@ This skill is a study followed by changes. It uses the [`autopilot-lab` skill](.
 
 ## 1. How it fares now
 
-Run a baseline of at least 30 Campaigns with the Turns long enough to reach their endings, e.g. `npm run autopilot:lab -- --campaigns 40 --turns 400`, and answer, with spreads:
+Run a baseline of at least 30 Campaigns with the Turns long enough to reach their endings, e.g. `npm run autopilot:lab -- --campaigns 40 --turns 400`, within the two-minute Run time limit of the `autopilot-lab` skill, and answer, with spreads:
 
 - Does any Campaign end in Victory?
 - If not, how many Turns until Defeat, and by which Ending reasons?
@@ -49,11 +49,11 @@ Recommend values for the Game designer to try; change no GDR value or Game desig
 
 ## 5. Report
 
-In chat, and in an Artifact for a long study:
+In chat, and in an Artifact for a long study; when the Game designer asks for the study to be kept, also as a dated study in [the Autopilot Studies family](../../../docs/specs/implementation/autopilot-studies/about-autopilot-studies.md), e.g. `basic-autopilot-ai-study-<yyyy-mm-dd>.md`, naming the Implementation commit and the seeds:
 
 - **How it fares:** the baseline answers of step 1, with spreads.
 - **Root causes:** each mechanism with its evidence.
 - **What was tried:** every change, kept or discarded, with its measure before and after over the same seeds.
-- **How well it worked:** the final variant against the baseline on the step 1 questions.
+- **How well it worked:** the final variant against the baseline on the step 1 questions, and against the [Autopilot AI Expectations](../../../docs/specs/design/autopilot-ais/autopilot-ai-expectations.md).
 - **Balance issues:** each with its evidence and a recommendation.
 - The commit links of the `apply` run and of any Autopilot Lab change.

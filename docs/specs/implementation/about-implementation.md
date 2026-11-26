@@ -13,7 +13,8 @@ The Implementation specifications divide by how binding they are and what they c
 - [About the Mandatory family](mandatory/about-mandatory.md): repository constraints that every Implementation must meet, whatever its platform.
 - [About the Guidance family](guidance/about-guidance.md): technical suggestions on matters the Design specifications leave open.
 - [About the Recipes family](recipes/about-recipes.md): suggested steps for carrying out one recurring task.
+- [About the Autopilot Studies family](autopilot-studies/about-autopilot-studies.md): what studies of the Implementation's Autopilot AIs found and suggest.
 
 # Why these boundaries
 
-Advice to implementers must never become an observable contract, so Implementation specifications are kept apart from the Design specifications. Within them, the line between Mandatory and the other two Families is the line an Implementer must not cross: an Implementation that ignores every Guidance and Recipes specification can still be correct, while one that violates a Mandatory specification cannot. Guidance and Recipes are split because a suggestion about what to build changes for different reasons than the steps of a task.
+Advice to implementers must never become an observable contract, so Implementation specifications are kept apart from the Design specifications. Within them, the line between Mandatory and the other Families is the line an Implementer must not cross: an Implementation that ignores every Guidance, Recipes, and Autopilot Studies specification can still be correct, while one that violates a Mandatory specification cannot. Guidance and Recipes are split because a suggestion about what to build changes for different reasons than the steps of a task, and Autopilot Studies is split from both because it records what was measured of one Implementation at one time, which neither a suggestion nor a task does.

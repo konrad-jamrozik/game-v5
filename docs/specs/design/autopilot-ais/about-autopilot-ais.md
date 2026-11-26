@@ -16,6 +16,14 @@ A specification in this family states the goals of an Autopilot AI, the order in
 
 A further specification is added for each further Autopilot AI, e.g. one that pursues Victory as fast as possible at greater risk.
 
+## Autopilot AI Expectations
+
+[Autopilot AI Expectations](autopilot-ai-expectations.md) answers _how well must the Basic Autopilot AI play?_ It must win half of its Campaigns, still win some while losing a quarter of its Missions, and win by the Required rating share the game promises the player, so that a player can learn from it.
+
+## Autopilot Lab
+
+[Autopilot Lab](autopilot-lab.md) answers _how is an Autopilot AI measured?_ A tool plays many Campaigns at once within two minutes, compares variants on the same Campaigns, and gives every Campaign and Combat it reports a setup seed, so that each finding can be played again in the game.
+
 # How they relate
 
 Basic Autopilot AI uses Autopilot and Engine Contract from the Foundation family for what it may receive and call, and the Mechanics specifications whose values it reads, e.g. Agents, Missions, and Economy and Upgrades. Gameplay Dependency Direction in the Guidance family uses it.
@@ -26,7 +34,7 @@ _Generated from the links between the specifications by `npm run docs:generate`;
 
 ## Within the family
 
-This family has a single specification, so there are no references within it.
+![Autopilot AIs family: references within the family](../../../images/diagrams/autopilot-ais-family-within.svg)
 
 ## Across families
 

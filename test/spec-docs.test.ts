@@ -110,7 +110,7 @@ describe('derived specification renderer', () => {
   test('renders catalog fields, grouping, sorting, and counts', async () => {
     const outputs = await renderDerivedDocumentation(sampleCorpus(), FORMATTER_CONFIG)
     const catalog = outputs.get('docs/derived/README.md') ?? ''
-    expect(catalog).toContain('| Governance         | Conventions   | 2              |')
+    expect(catalog).toContain('| Governance         | Conventions       | 2              |')
     expect(catalog).toContain('| AAA | [Alpha "Quoted" & More](../specs/design/foundation/alpha.md) | Alpha rules. |')
     expect(catalog.indexOf('| CONV')).toBeLessThan(catalog.indexOf('| INDEX'))
     expect(catalog).not.toContain('Scope')

@@ -39,6 +39,7 @@ Each Specification kind and each Family has an informative overview that explain
   - [About the Mandatory family](implementation/mandatory/about-mandatory.md)
   - [About the Guidance family](implementation/guidance/about-guidance.md)
   - [About the Recipes family](implementation/recipes/about-recipes.md)
+  - [About the Autopilot Studies family](implementation/autopilot-studies/about-autopilot-studies.md)
 
 # Family architecture
 

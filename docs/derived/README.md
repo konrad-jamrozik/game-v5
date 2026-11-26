@@ -10,18 +10,19 @@ These informative views are derived from the registered Markdown specifications.
 
 ## Counts by family
 
-| Specification kind | Family        | Specifications |
-| ------------------ | ------------- | -------------- |
-| Governance         | Conventions   | 8              |
-| Governance         | Process       | 2              |
-| Design             | Foundation    | 17             |
-| Design             | Mechanics     | 13             |
-| Design             | Content       | 1              |
-| Design             | UI            | 20             |
-| Design             | Autopilot AIs | 1              |
-| Implementation     | Mandatory     | 5              |
-| Implementation     | Guidance      | 5              |
-| Implementation     | Recipes       | 2              |
+| Specification kind | Family            | Specifications |
+| ------------------ | ----------------- | -------------- |
+| Governance         | Conventions       | 8              |
+| Governance         | Process           | 2              |
+| Design             | Foundation        | 17             |
+| Design             | Mechanics         | 13             |
+| Design             | Content           | 1              |
+| Design             | UI                | 20             |
+| Design             | Autopilot AIs     | 3              |
+| Implementation     | Mandatory         | 5              |
+| Implementation     | Guidance          | 5              |
+| Implementation     | Recipes           | 2              |
+| Implementation     | Autopilot Studies | 1              |
 
 ## Conventions
 
@@ -50,7 +51,7 @@ These informative views are derived from the registered Markdown specifications.
 | AUTO | [Autopilot](../specs/design/foundation/autopilot.md) | Autopilot limits, what an Autopilot AI receives, and Autopilot engagement lifecycle. |
 | CINST | [Campaign Instances](../specs/design/foundation/campaign-instances.md) | How every thing in a Campaign's world is modeled as a Campaign instance. |
 | COND | [Conditions](../specs/design/foundation/conditions.md) | How game data declares a yes-or-no question about a Campaign: Conditions, Condition kinds, and how Conditions combine. |
-| CONFIG | [Configuration](../specs/design/foundation/configuration.md) | Kinds of setting, Global configuration, and the configuration cascade. |
+| CONFIG | [Configuration](../specs/design/foundation/configuration.md) | Kinds of setting, Global configuration, the configuration cascade, and the Campaign setup seed. |
 | CORE | [Core Concepts](../specs/design/foundation/core-concepts.md) | Shared vocabulary for modeling and engine execution, e.g. Campaign, Session, and Game build. |
 | CSTATE | [Campaign State](../specs/design/foundation/campaign-state.md) | What Campaign state is made of, what the Game rules read of it, and how Campaign initialization produces it. |
 | DETERM | [Determinism and Randomness](../specs/design/foundation/determinism-and-randomness.md) | The determinism guarantee, the Campaign seed, rules for every random outcome, and unique identifiers under replay. |
@@ -70,7 +71,7 @@ These informative views are derived from the registered Markdown specifications.
 | ID | Document | Owns |
 | --- | --- | --- |
 | AGENT | [Agents](../specs/design/mechanics/agents-spec.md) | What an Agent has, the Combatant Role Type, Agent status, Assignments and the transit rule, effective skill, Training, Mission growth and Experience, work exhaustion, the start-work gate and Forced return, Agent creation and the initial roster, and the assignAgents and addAgents actions. |
-| COMBAT | [Combat](../specs/design/mechanics/combat.md) | Enemies and the Combat GDRs, how a Combat is fought in Combat rounds, attacks and their random outcomes, Ammo spent in a Combat, Incapacitated, Combat rating with base Combat rating, rating factor, and team size factor, the Rested and Equipment Combat ratings, Combat outcomes, and the Combat report. |
+| COMBAT | [Combat](../specs/design/mechanics/combat.md) | Enemies and the Combat GDRs, how a Combat is fought in Combat rounds, attacks and their random outcomes, Ammo spent in a Combat, Incapacitated, Combat rating with base Combat rating, rating factor, and team size factor, the Rested and Equipment Combat ratings, Combat outcomes, the Combat report, and the Combat setup seed. |
 | COMP | [Compendium](../specs/design/mechanics/compendium.md) | The CompendiumArticle GDR, how the Placeholders and Article links of a Compendium article are resolved, when a Compendium article is Player-visible, including which EnemyArchetypes, Weapons, Armors, and AmmoTypes are Met subjects, what Player API reports of it, and the Revealed Compendium. |
 | DOM | [Domain Model](../specs/design/mechanics/domain-model.md) | Game concepts, how they relate, and the structural invariants that span several concepts. |
 | ECON | [Economy and Upgrades](../specs/design/mechanics/economy-and-upgrades.md) | The Agency's money, funding, and Upgrade Acquisitions, Agency income and upkeep, the Agent cap, Transport cap, Training cap, and Contracting cap, the unlock_contracting Effect kind, Upgrade effects, the money change in each Action record, and the hireAgents, dismissAgents, purchaseUpgrade, and addMoney actions. |
@@ -118,6 +119,8 @@ These informative views are derived from the registered Markdown specifications.
 
 | ID | Document | Owns |
 | --- | --- | --- |
+| AIEXPECT | [Autopilot AI Expectations](../specs/design/autopilot-ais/autopilot-ai-expectations.md) | How well the Basic Autopilot AI must play, the Required rating share it must decide by, and the Expectations run that checks both. |
+| ALAB | [Autopilot Lab](../specs/design/autopilot-ais/autopilot-lab.md) | What the Autopilot Lab plays and reports, its time limit, and what it records so that every Campaign and Combat it reports can be played again in the game. |
 | BASICAI | [Basic Autopilot AI](../specs/design/autopilot-ais/basic-autopilot-ai.md) | How the Basic Autopilot AI measures the strength it needs, which Agents form its Strike team and which work, how it equips, deploys, and musters, which Leads it investigates, what it buys and sells and in which order, and the Tuning parameters it is built with. |
 
 ## Mandatory
@@ -146,3 +149,9 @@ These informative views are derived from the registered Markdown specifications.
 | --- | --- | --- |
 | GHPAGES | [GitHub Pages Deployment](../specs/implementation/recipes/github-pages-deployment.md) | Guidance on publishing an Implementation to a public GitHub repository that deploys every push to GitHub Pages and checks the Implementation once a day. |
 | GLOBE | [Globe Integration](../specs/implementation/recipes/globe-integration.md) | Guidance on carrying the reference globe of the Spec repo into an Implementation and showing it in its graphical user interface. |
+
+## Autopilot Studies
+
+| ID | Document | Owns |
+| --- | --- | --- |
+| AISTUDY1 | [Basic Autopilot AI Study, 2026-11-25](../specs/implementation/autopilot-studies/basic-autopilot-ai-study-2026-11-25.md) | What the Autopilot Lab study of the Basic Autopilot AI of 2026-11-25 measured, the root causes of its defeats it found, the changes it tried and how each worked, and the balance issues it suggests. |

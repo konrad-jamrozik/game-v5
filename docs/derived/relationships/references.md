@@ -66,10 +66,11 @@ A → B means A is referenced by B: the text of B links to A. Layer 1 is drawn a
 | 19 | TRVIEW Turn Report View | AGENT, CINST, COMBAT, CSTATE, DOM, ENG, EQUIP, GUI, TSUM |
 | 19 | VIS Visual Design | AGENT, CINST, COMBAT, CORE, CRPLAY, DOM, ECON, ENG, GUI, INVSTG, LEAD, LIFE, TSUM |
 | 20 | AVIEW Agents View | AGENT, CINST, COMBAT, CORE, DOM, ECON, ENG, EQUIP, GUI, RECOVER, VIS |
-| 20 | CONFIG Configuration | CORE, CRPLAY, CSIM, CSTATE, ENG, GDR, GUI, SAVES, TIMELINE, VIS, WHIST |
+| 20 | CONFIG Configuration | CORE, CRPLAY, CSIM, CSTATE, DETERM, ENG, GDR, GUI, SAVES, TIMELINE, VIS, WHIST |
 | 20 | CSCR Campaign Screen | AGENT, AUTO, CORE, CSTATE, DOM, ENDING, ENG, GUI, LIFE, SAVES, SITP, SOUNDS, TSUM |
 | 20 | GDRS GDRs | AGENT, COMBAT, COMP, CORE, DOM, ECON, EFFECT, ENG, EQUIP, FACTION, GDR, LEAD, MUSIC, VIS |
 | 20 | PLACE Implementation Placement | CORE, MUSIC, SOUNDS, VIS |
+| 21 | ALAB Autopilot Lab | BASICAI, COMBAT, CONFIG, CORE, CSIM, DOM, ECON, ENG, FACTION, GDR, NUMBERS |
 | 21 | APPERF Autopilot Performance | AGENT, BASICAI, COMBAT, COND, CORE, CSTATE, DOM, ECON, ENG, PLACE, SAVES |
 | 21 | CTEST Campaign Tests | BASICAI, CORE, DOM, ENG, PLACE |
 | 21 | GLOBE Globe Integration | CORE, ENG, GUI, PLACE |
@@ -78,6 +79,8 @@ A → B means A is referenced by B: the text of B links to A. Layer 1 is drawn a
 | 21 | MENU Main Menu | CONFIG, CORE, CSIM, CSTATE, DETERM, ENG, GDR, LIFE, SAVES |
 | 21 | REUSE Rule Reuse | COMBAT, CORE, DOM, ENG, PLACE |
 | 21 | TESTVAL Test Values | CORE, PLACE |
+| 22 | AIEXPECT Autopilot AI Expectations | ALAB, BASICAI, COMBAT, CONFIG, CORE, DOM, ENG |
+| 22 | AISTUDY1 Basic Autopilot AI Study, 2026-11-25 | AGENT, ALAB, BASICAI, COMBAT, CONFIG, CORE, DOM, ECON, ENG, EQUIP, FACTION, GDR |
 
 ## Governance specifications
 

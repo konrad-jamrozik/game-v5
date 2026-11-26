@@ -14,6 +14,7 @@ export const FAMILY_ORDER: readonly SpecificationFamily[] = [
   'Mandatory',
   'Guidance',
   'Recipes',
+  'Autopilot Studies',
 ]
 
 export const FAMILY_KIND: Readonly<Record<SpecificationFamily, SpecificationKind>> = {
@@ -27,6 +28,7 @@ export const FAMILY_KIND: Readonly<Record<SpecificationFamily, SpecificationKind
   Mandatory: 'Implementation',
   Guidance: 'Implementation',
   Recipes: 'Implementation',
+  'Autopilot Studies': 'Implementation',
 }
 
 export function isSpecificationFamily(value: string | undefined): value is SpecificationFamily {

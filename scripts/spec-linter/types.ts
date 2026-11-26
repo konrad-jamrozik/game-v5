@@ -46,6 +46,7 @@ export type SpecificationFamily =
   | 'Mandatory'
   | 'Guidance'
   | 'Recipes'
+  | 'Autopilot Studies'
 
 /** The one relationship between specifications: a specification references every specification its text links. */
 export type RelationshipKind = 'references'

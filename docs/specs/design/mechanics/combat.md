@@ -5,7 +5,7 @@
 | Spec ID | COMBAT |
 | Family | Mechanics |
 | Audience | Engine designer, Content designer, AI designer, Implementer |
-| Owns | Enemies and the Combat GDRs, how a Combat is fought in Combat rounds, attacks and their random outcomes, Ammo spent in a Combat, Incapacitated, Combat rating with base Combat rating, rating factor, and team size factor, the Rested and Equipment Combat ratings, Combat outcomes, and the Combat report. |
+| Owns | Enemies and the Combat GDRs, how a Combat is fought in Combat rounds, attacks and their random outcomes, Ammo spent in a Combat, Incapacitated, Combat rating with base Combat rating, rating factor, and team size factor, the Rested and Equipment Combat ratings, Combat outcomes, the Combat report, and the Combat setup seed. |
 | Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
@@ -29,6 +29,7 @@ How a [Combat](domain-model.md#combat) is divided, and how it ends.
 | Fighting a Combat | Producing a Combat's outputs from its inputs: from Combat start through Combat rounds to its Combat outcome and [Combat report](domain-model.md#combat). It is [one procedure](#fighting-a-combat), whoever has the Combat fought. Its verb is "fight", e.g. "the Mission resolution step has the Combat fought". | Resolving, running, computing, evaluating, executing, or simulating a Combat. A Mission, not a Combat, is resolved. |
 | Combat summary | How a Combat ended, which [fighting it always produces](#fighting-a-combat), with or without its Combat report: its Combat outcome and the number of Agents that are dead when it ends. |  |
 | Detached Combat | A Combat fought by `developer.tools.fightCombat(setup)` or `developer.tools.fightCombatBatch(setup, count, stop)` on [Combatants](domain-model.md#combat) and [values the caller supplies](#detached-combat), outside every [World state](../foundation/engine-contract.md#player-actions-and-turns), whose outputs are returned and applied to nothing. | Simulated Combat; test Combat |
+| Combat setup seed | One line of text from which a Detached Combat fights again exactly the Combat it was taken from: it holds both sides' Combatants as explicit values in their fixed order, the rounds at hand of each AmmoType, the Detached seed of the Combat, and the [Game build](../foundation/core-concepts.md#game-build-and-content). |  |
 | Combat start | The moment a Combat [begins](#combat-start), before its first Combat round. At this moment it is settled which Combatants are able to fight, and the Agents' side's starting Combat rating is taken. A Combat in which one side has no Combatant able to fight ends here, after 0 Combat rounds. | Combat initialization |
 | Combat round | One pass of a Combat in which every [Combatant](domain-model.md#combat) able to fight attacks once, unless the Combat ends first. | Round, naming a pass of a Combat |
 | Agents' phase | The first part of a Combat round, in which each [Agent](domain-model.md#agency-and-agents) of the Agents' side takes one Combat turn, in the Phase order of its side. |  |
@@ -412,7 +413,8 @@ A Combat report is the full account of one Combat, from which a player can follo
 7. **Combat ratings:** the Combat rating of each side at Combat start and at the end of every Combat round.
 8. **Ammo:** for each AmmoType that a Weapon of the Agents' side uses, its rounds at hand at Combat start and its rounds left at Combat end.
 9. **Combat log:** every attack, each with its Combat round number, its attacker and defender by Instance ID, A and D, the hit chance, the hit roll, the hit outcome, the damage outcome when there is one, the armor removed, the health removed, the defender's current armor after the attack, the current health and exhaustion of the attacker and the defender after the attack, and whether the attack made the defender dead or the defender or the attacker Incapacitated, and for an Agent's attack, the AmmoType of the round it spent, or that it was made with the Fallback Weapon because its Ammo had run out.
-10. **Mission:** the Instance ID of the Mission whose Combat it records, which influences nothing in the Combat. The Combat report of a Detached Combat has no Mission, and identifies each participant [by its side and position](#detached-combat).
+10. **Mission:** the Instance ID of the Mission whose Combat it records, which influences nothing in the Combat.
+11. **Combat setup seed:** the [Combat setup seed](#combat-setup-seed) of the Combat, from which a Detached Combat fights it again. The Combat report of a Detached Combat has no Mission, and identifies each participant [by its side and position](#detached-combat).
 
 The health removed from an Agent, and the damage dealt and damage taken that sum it, are [Decimal quantities](../foundation/numbers.md#glossary), because an Agent's current health is one. E.g., a damage outcome of 10 against an Agent with current health 5.60 removes 5.60.
 
@@ -433,6 +435,17 @@ Balancing a Combat needs many Combats fought on chosen teams and chosen GDR valu
 Every random outcome of the Detached Combat derives from the Detached seed alone, with the distribution its rule states. The same `setup` therefore always gives the same outputs, and no [random outcome override](../foundation/developer-access.md#random-outcome-overrides) applies.
 
 `fightCombat` returns the Combat summary, the Combat report, and each Combatant's final current health and exhaustion and whether it is dead. Each participant is identified by its side and its position in it, together with the Instance ID or identifier its entry named, if any.
+
+## Combat setup seed
+
+Any Combat a player has seen, e.g. a Mission Lost with a team well above the Enemies' Combat rating, must be possible to fight again alone, without playing the Campaign up to it. Every Combat therefore has a Combat setup seed, and fighting a Detached Combat on it gives the same Combat: the same Combatants in the same order, and the same attacks with the same random outcomes, so that the same Combat report follows.
+
+- **What it holds:** each Combatant of both sides as explicit values, in the fixed order of its side, i.e. its base skill, current health, effective max health, exhaustion, effective weapon damage, effective armor, and, for an Agent, its Weapon, whose `ammo_type` its attacks spend and whose Fallback Weapon it falls back to; the rounds at hand of each AmmoType; the Detached seed; and the Game build. An explicit entry of a Detached Combat may therefore name a Weapon in place of its effective weapon damage.
+- **A Mission's Combat:** Every random outcome of the Combat of a Mission derives from a Detached seed of its own, which derives from the Campaign seed and the Mission's Instance ID, so that every random outcome of the Campaign still derives from its Campaign seed alone. The Combat setup seed of that Combat holds that Detached seed, so a Detached Combat on it draws the same random outcomes.
+- **A Detached Combat's own:** A Detached Combat has the Combat setup seed of its setup, so that a user interface can give the seed of any Combat it fought.
+- **Player-visible:** The Combat setup seed of a Combat fought in a Mission is [Player-visible information](../foundation/engine-contract.md#api-surfaces) from the Advance turn that fought it, with its Combat report; a Detached seed derived for a Combat not yet fought is not.
+- **Overrides:** A Combat in which a random outcome override applied keeps its Combat setup seed, but a Detached Combat on it draws its own random outcomes, so the Combat report says that it cannot be fought again exactly.
+- **Form:** It is one line of printable ASCII text that a player can copy and paste. Its encoding is the Implementation's to choose.
 
 ## Batch of Detached Combats
 

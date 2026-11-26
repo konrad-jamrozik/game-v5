@@ -31,7 +31,7 @@ Implementation specifications are non-behavioural. They own no rule of the game,
 
 # Implementation binding
 
-Not every Implementation specification binds the Implementation equally. The Binding of an Implementation specification follows from its Family, and no specification has a Binding metadata row: a specification of the Mandatory Family is Mandatory, and a specification of the Guidance or Recipes Family is Guidance.
+Not every Implementation specification binds the Implementation equally. The Binding of an Implementation specification follows from its Family, and no specification has a Binding metadata row: a specification of the Mandatory Family is Mandatory, and a specification of the Guidance, Recipes, or Autopilot Studies Family is Guidance.
 
 | Binding | Meaning | Wording of the document's own statements |
 | --- | --- | --- |

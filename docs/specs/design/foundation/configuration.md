@@ -5,7 +5,7 @@
 | Spec ID | CONFIG |
 | Family | Foundation |
 | Audience | Engine designer, UI designer, Implementer |
-| Owns | Kinds of setting, Global configuration, and the configuration cascade. |
+| Owns | Kinds of setting, Global configuration, the configuration cascade, and the Campaign setup seed. |
 | Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
@@ -20,6 +20,7 @@ Because a setting's value can come from more than one place, a configuration cas
 | --- | --- |
 | Game build default preset | The one [Campaign configuration preset](game-data-records.md#glossary) that the [Game build](core-concepts.md#game-build-and-content) designates as selected when the player has selected no other. |
 | Preset edit | A value the player sets before creating a [Campaign](core-concepts.md#campaign-and-session) to override one [Campaign configuration](campaign-state.md#glossary) value of one Campaign configuration preset. The [Session](core-concepts.md#campaign-and-session) holds it. |
+| Campaign setup seed | One line of text from which a Campaign can be created again exactly as it was: it holds the [Campaign seed](determinism-and-randomness.md#glossary), the Campaign configuration preset, every Preset edit, and the [Game build](core-concepts.md#game-build-and-content) the Campaign was created with. |
 
 # Kinds of setting
 
@@ -105,6 +106,16 @@ Before creating a Campaign, the Session controller selects one Campaign configur
 - **Edits belong to their preset:** Each preset has its own Preset edits. Selecting another preset neither discards nor applies them, and selecting the preset again shows them as they were left.
 - **Creation:** [Campaign creation uses](#configuration-cascade) the selected preset and that preset's Preset edits, so Preset edits of presets that are not selected have no effect. A successful campaign creation then discards every Preset edit of every preset and selects the Game build default preset, so the next Campaign is set up from scratch. A failed campaign creation changes neither.
 - **Lifetime:** The [Session holds](engine-contract.md#data-ownership) the preset selection and the Preset edits. They are never persisted, and they are discarded when the Session ends. Loading or closing a Campaign changes neither.
+
+# Campaign setup seed
+
+A Campaign seed alone recreates a Campaign only with the same new-Campaign setup, which the player would have to repeat by hand. A Campaign setup seed carries the whole setup, so that a Campaign reported by anyone, e.g. by a tool that played many Campaigns, can be created again from one line and played out the same way.
+
+- **Every Campaign has one:** Campaign creation records the Campaign setup seed of the new Campaign: its Campaign seed, whether supplied or chosen, its Campaign configuration preset, its Preset edits, and its Game build. It never changes, and a [Campaign save](engine-contract.md#persisted-data) carries it.
+- **Readable:** `session.getStatus()` reports the Campaign setup seed of the [Current campaign](core-concepts.md#campaign-and-session) to the Session controller, as it reports the Campaign seed. Like the Campaign seed, it is not [Player-visible information](engine-contract.md#api-surfaces), and an Autopilot AI never receives it.
+- **Creating from it:** The Session controller may supply a Campaign setup seed to `session.campaign.create(options)` in place of a Campaign seed. Creation then uses its Campaign seed, its preset, and its Preset edits, and ignores the Session's new-Campaign setup. Because [the same Player actions give the same Campaign](determinism-and-randomness.md#determinism), the new Campaign then equals the one it came from at creation, and stays equal while it receives the same ordered Player actions, e.g. those the same Autopilot AI makes under Autopilot.
+- **Another Game build:** A Campaign setup seed whose Game build is not the current one still creates a Campaign, but creation reports that the Game build differs, because Determinism does not hold across Game builds. A text that is not a Campaign setup seed, or that names a preset or a Preset edit the current Game build does not accept, fails creation.
+- **Form:** It is one line of printable ASCII text that a player can copy and paste, and it is distinguishable from every permitted Campaign seed, so that one field can take either. Its encoding is the Implementation's to choose.
 
 # Changing Campaign configuration during play
 
