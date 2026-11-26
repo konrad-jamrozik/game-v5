@@ -79,7 +79,7 @@ A Select click is the Player selecting or clearing an item, or choosing which it
 - **[Article history](screens/compendium-view.md#glossary):** selecting the Previous article or Next article button of the Article history in the Compendium View.
 - **Search:** pressing the Enter key in the search field of the Compendium View when an article matches, which [selects the first matching article](screens/compendium-view.md#panes). The Enter key when no article matches plays no Sound.
 - **Filter:** turning on or off a filter, which chooses the items a list or table shows or lets be selected, e.g. a filter of [Row filters](screens/agents-view.md#row-filters) in the Agents View, an [Assignment filter](screens/agents-view.md#glossary), or the toggle of the Missions View that shows the Mission sites in a final state.
-- **Expand or collapse:** expanding or collapsing a part of the [Side panel](gui.md#glossary) that chooses which of its controls are shown, i.e. the [Autopilot controls](screens/campaign-screen.md#autopilot-controls) with their toggle and the [Music control](music.md#music-control-in-the-side-panel) with its Collapse button, both alike.
+- **Expand or collapse:** expanding or collapsing a part of the [Side panel](gui.md#glossary) that chooses which of its controls are shown, i.e. the [Autopilot controls](screens/campaign-screen.md#autopilot-controls) with their toggle.
 
 The GUI plays `select-click` once for each Select click when the Player presses, also when the item already had the state the Select click gives it, so the Player hears every selection answered. A drag over several rows is one Select click, and plays `select-click` once, when the Player presses on its first row.
 

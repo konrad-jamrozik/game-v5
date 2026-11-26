@@ -96,20 +96,17 @@ Outside these fades, f is 1. When a fade starts while another is under way, the 
 
 # Music control
 
-The Player should be able to silence the music or skip a Track without leaving what they are doing, and to find out what is playing. The Music control does all of these, and it appears in two places: above the [Settings panel](gui.md#glossary) of the [Main Menu](screens/main-menu.md), and in the footer of the [Side panel](gui.md#glossary) of the [Campaign Screen](screens/campaign-screen.md), so it is always one click away. Setting the volume is rarer, so the [Music volume slider](#music-volume-slider) sits in the Settings panel instead.
+The Player should be able to silence the music or skip a Track without leaving what they are doing, and to find out what is playing. The Music control does all of these, and it appears in two places: above the [Settings panel](gui.md#glossary) of the [Main Menu](screens/main-menu.md), and on the [Globe stage](gui.md#glossary) of the [Campaign Screen](screens/campaign-screen.md), so it is one click away whenever the globe is in view, and one step away, by closing the [Detail view](gui.md#glossary), while one covers the Globe stage. Setting the volume is rarer, so the [Music volume slider](#music-volume-slider) sits in the Settings panel instead.
 
-The Music control holds these parts, in one row from left to right on the Main Menu, and [on two lines in the Side panel](#music-control-in-the-side-panel):
+The Music control holds these parts, in one row from left to right on the Main Menu, and in one row [with the Track title first on the Globe stage](#music-control-on-the-globe-stage):
 
 1. **Music toggle:** a neutral button showing a speaker, struck through while Music on is `false`. Selecting it sets Music on to the opposite value. Its accessible name is "Music on" or "Music off", after the state it shows.
 2. **Skip button:** a neutral button showing "⏭", with the accessible name "Next Track". Selecting it [skips the Current Track](#playback). It is disabled while Music on is `false` and before the first Track starts.
 3. **Track title:** the Track title of the Current Track, after a music note, e.g. "♪ GEO-4", in 13 px Body and Text secondary. While Music on is `false` it reads "Music off" in Text muted instead, and before the first Track starts it reads nothing. A title too long for the space ends in an ellipsis, and the whole title shows on hover.
 
-## Music control in the Side panel
+## Music control on the Globe stage
 
-The Side panel is narrow, and a Track title beside two buttons would be cut to a few letters, so there the Track title takes a line of its own, with the Music toggle and the Skip button in a row under it. The Player who wants that room for the [Situation panel](screens/situation-panel.md) collapses the Music control to its Track title:
-
-- **Collapse button:** a small neutral button at the right end of the Track title's line, showing "▾", with the accessible name "Collapse the Music control". Selecting it hides the row of the Music toggle and the Skip button, and the button then shows "▴", with the accessible name "Expand the Music control", and brings the row back.
-- **Kept across Sessions:** whether the Music control is collapsed is the [Global configuration](../foundation/configuration.md#global-configuration) setting Music control collapsed, off by default, so it stays as the Player last left it whatever Campaign is loaded and in every later [Session](../foundation/core-concepts.md#campaign-and-session). Collapsing it changes neither Music on nor what plays.
+On the Campaign Screen the Music control stands over the cosmos around the globe rather than in the [Side panel](gui.md#glossary), which leaves the Side panel's room to the [Situation panel](screens/situation-panel.md). It belongs with the globe's own controls of [Globe Integration](../../implementation/recipes/globe-integration.md), so it is drawn as they are: its buttons are transparent with a thin light outline, so that the stars show through them, and it has no panel or fill of its own. It stands at the bottom right corner of the Globe stage, level with the row of the globe's controls at the bottom left, with the Track title first and the Music toggle and the Skip button at the right end, so that the buttons stay in place whatever the length of the title. It is shown whenever the Globe stage is in view, also when no globe can be shown, and is hidden while a Detail view covers the Globe stage.
 
 # Music volume slider
 

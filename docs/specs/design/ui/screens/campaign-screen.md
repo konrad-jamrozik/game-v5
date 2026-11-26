@@ -18,7 +18,7 @@ The Campaign screen is one of the screens that the [Graphical User Interface](..
 
 The regions keep the agency's vital values and the work waiting for the Player in view, while leaving most of the screen to the globe. They are the [status bar](../visual-design.md#status-bar), the [Side panel](../gui.md#glossary), unless the Player [has hidden it](#hiding-the-side-panel), and the [Globe stage](../gui.md#glossary).
 
-The globe is a decoration: it shows a rotating Earth that the Player can turn and zoom, reads no game state, and offers no [Player action](../../foundation/engine-contract.md#player-actions-and-turns). The globe and its own controls are those of [Globe Integration](../../../implementation/recipes/globe-integration.md). The screen is complete without the globe; when no globe can be shown, the Globe stage is left empty.
+The globe is a decoration: it shows a rotating Earth that the Player can turn and zoom, reads no game state, and offers no [Player action](../../foundation/engine-contract.md#player-actions-and-turns). The globe and its own controls are those of [Globe Integration](../../../implementation/recipes/globe-integration.md). The screen is complete without the globe; when no globe can be shown, the Globe stage is left empty. The Globe stage also holds the [Music control](../music.md#music-control-on-the-globe-stage), at its bottom right corner.
 
 # Side panel
 
@@ -26,7 +26,7 @@ The Side panel is the Player's way into every [Detail view](../gui.md#glossary) 
 
 1. **[Navigation](#navigation):** a button for every Detail view.
 2. **[Situation panel](situation-panel.md):** it scrolls inside when its content is taller than the room it has.
-3. **Footer:** while [Dev mode](../../foundation/engine-contract.md#principals-and-access) is enabled and [Autopilot](../../foundation/engine-contract.md#autopilot) controls shown is on, the [Autopilot controls](#autopilot-controls), and always the [Music control](../music.md#music-control).
+3. **Footer:** while [Dev mode](../../foundation/engine-contract.md#principals-and-access) is enabled and [Autopilot](../../foundation/engine-contract.md#autopilot) controls shown is on, the [Autopilot controls](#autopilot-controls); otherwise the Side panel has no footer.
 
 ## Navigation
 
