@@ -13,7 +13,7 @@ import os from 'node:os'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { Worker } from 'node:worker_threads'
-import type { CampaignResult, FromWorker, LabTask, TurnRow } from './protocol.ts'
+import type { CampaignResult, CombatRecord, FromWorker, LabTask, TurnRow } from './protocol.ts'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
 const argv = process.argv.slice(2)
@@ -351,6 +351,82 @@ function summarize(
     ),
   )
   lines.push('')
+
+  // Combats by the ratio of the Combat ratings at Combat start.
+  const bands: readonly [string, number, number][] = [
+    ['below 100%', 0, 100],
+    ['100% to 110%', 100, 110],
+    ['110% to 150%', 110, 150],
+    ['150% to 200%', 150, 200],
+    ['200% to 400%', 200, 400],
+    ['400% and above', 400, Infinity],
+  ]
+  const ratio = (c: CombatRecord) => (c.enemiesRating === 0 ? Infinity : (100 * c.agentsRating) / c.enemiesRating)
+  lines.push('## Combats by the ratio of the Combat ratings at Combat start')
+  lines.push('')
+  lines.push(
+    'Every Combat a Mission fought: how many, the share Lost, the Agents dead per Combat, and the share of Combats in which an Agent ran out of Ammo.',
+  )
+  lines.push('')
+  lines.push(
+    table(
+      [
+        'Agents : Enemies',
+        ...names.flatMap((n) => [`${n} Combats`, `${n} Lost`, `${n} dead/Combat`, `${n} out of Ammo`]),
+      ],
+      bands.map(([label, low, high]) => [
+        label,
+        ...runs.flatMap((r) => {
+          const list = r.results.flatMap((x) => (x.combats ?? []).filter((c) => ratio(c) >= low && ratio(c) < high))
+          const pct = (part: number) => (list.length === 0 ? '—' : `${Math.round((100 * part) / list.length)}%`)
+          return [
+            String(list.length),
+            pct(list.filter((c) => c.outcome !== 'Won').length),
+            round(mean(list.map((c) => c.agentsDead)), 2),
+            pct(list.filter((c) => c.outOfAmmoAttacks > 0).length),
+          ]
+        }),
+      ]),
+    ),
+  )
+  lines.push('')
+  for (const run of runs) {
+    const lost = run.results
+      .flatMap((x) => (x.combats ?? []).map((c) => ({ ...c, seed: x.seed })))
+      .filter((c) => c.outcome !== 'Won' && ratio(c) >= 110)
+      .sort((a, b) => ratio(b) - ratio(a))
+    lines.push(`### ${run.variant.name}: Lost Combats at 110% or more, the strongest first (${lost.length})`)
+    lines.push('')
+    lines.push(
+      table(
+        [
+          'Campaign',
+          'Turn',
+          'Mission site',
+          'Ratio',
+          'Agents vs Enemies',
+          'Outcome, rounds',
+          'Agents dead',
+          'Out-of-Ammo attacks',
+          'Combat setup seed',
+        ],
+        lost
+          .slice(0, 12)
+          .map((c) => [
+            c.seed,
+            String(c.turn),
+            `${c.kind} ${c.archetype}`,
+            `${Math.round(ratio(c))}% (${c.agentsRating} : ${c.enemiesRating})`,
+            `${c.agents} vs ${c.enemies}`,
+            `${c.outcome}, ${c.rounds}`,
+            String(c.agentsDead),
+            String(c.outOfAmmoAttacks),
+            c.setupSeed === null ? '—' : `\`${c.setupSeed}\``,
+          ]),
+      ),
+    )
+    lines.push('')
+  }
 
   // Progress, Upgrades.
   const upgradeIds = [...new Set(runs.flatMap((r) => r.results.flatMap((x) => Object.keys(x.upgrades))))]

@@ -80,6 +80,8 @@ export interface CampaignResult {
     readonly needed: number
     readonly outcome: string
   }[]
+  /** Every Combat a Mission of the Campaign fought, in the order fought. */
+  readonly combats: readonly CombatRecord[]
   readonly detectors: {
     /** The longest run of Turns with a Contracting cap above 0 and nobody on Contracting. */
     readonly contractingIdleTurns: number
@@ -95,6 +97,27 @@ export interface CampaignResult {
   }
   /** Why play stopped before the Campaign ending or the last Turn, e.g. the AI failed. */
   readonly error: string | null
+}
+
+/** One Combat a Mission fought, as its Combat report gives it. */
+export interface CombatRecord {
+  readonly turn: number
+  readonly mission: string
+  /** The kind of Mission site, Initiative or Response, and its MissionSiteArchetype. */
+  readonly kind: string
+  readonly archetype: string
+  /** The Combat ratings of the two sides at Combat start. */
+  readonly agentsRating: number
+  readonly enemiesRating: number
+  readonly agents: number
+  readonly enemies: number
+  readonly outcome: string
+  readonly rounds: number
+  readonly agentsDead: number
+  /** Attacks an Agent made with the Fallback Weapon because its rounds had run out. */
+  readonly outOfAmmoAttacks: number
+  /** COMBAT, Combat setup seed: from which the Combat simulator fights this Combat again; none before it existed. */
+  readonly setupSeed: string | null
 }
 
 export type FromWorker =

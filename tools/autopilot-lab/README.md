@@ -42,6 +42,7 @@ Each section has one column per variant:
 - **Missions:** for each kind of Mission site, from the weakest, the Missions Won, Lost, and Expired per Campaign, the share of Campaigns with a win, and the median Turn of the first win.
 - **Panic:** the Panic each Faction operation level added per Campaign by Lost and Expired Response Mission sites, and what Won Missions took away.
 - **Progress and purchases:** Leads completed and discovered, and the acquisitions of each Upgrade, at the end.
+- **Combats by the ratio of the Combat ratings at Combat start:** every Combat a Mission fought, by the Agents' side's Combat rating over the Enemies' at Combat start, in bands from below 100% to 400% and above: how many, the share Lost, the Agents dead per Combat, and the share in which an Agent ran out of Ammo. Then, per variant, the Lost Combats at 110% or more, the strongest first, each with its Campaign, Turn, Mission site, ratio, sides, outcome, and its Combat setup seed, which the Combat simulator's Seed field takes to fight the same Combat again.
 - **Detectors:** how many Campaigns show a pattern that points at a defect rather than at balance, with the worst seed: Contracting idle with a cap above 0, an Upgrade bought 3 or more times in one Turn, Agents with the Fallback Weapon while Storage holds Weapons, a Strike team short of its goal for 50 Turns in a row, projected income below upkeep for 10 Turns in a row, and 200 or more Player actions in one Turn.
 - **Errors:** every Campaign that failed, with the start of its stack.
 

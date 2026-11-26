@@ -9,7 +9,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { parentPort, workerData } from 'node:worker_threads'
-import type { CampaignResult, LabTask, TurnRow } from './protocol.ts'
+import type { CampaignResult, CombatRecord, LabTask, TurnRow } from './protocol.ts'
 
 // The engine's types live in the Implementation repo, which this file does not import types from.
 type Any = any
@@ -105,6 +105,7 @@ async function play(task: LabTask): Promise<CampaignResult> {
     maxActionsPerTurn: 0,
   }
   const streaks = { contractingIdle: 0, strikeShort: 0, negativeNet: 0 }
+  const fought: Omit<CombatRecord, 'kind' | 'archetype'>[] = []
   const seen = new Map<string, { level: number; rating: number; ready: number; deployable: number; needed: number }>()
   let error: string | null = null
   const began = performance.now()
@@ -119,6 +120,27 @@ async function play(task: LabTask): Promise<CampaignResult> {
     if (result.reason !== 'limitReached' && result.reason !== 'campaignEnded') {
       error = `Turn ${live.turn}: Autopilot disengaged with ${result.reason}${result.detail ? `: ${result.detail}` : ''}`
       break
+    }
+    // Every Combat the Advance turn fought, from its Turn report.
+    const turnReport = ok<Any>(player.queries.getTurnReport())
+    for (const combat of (turnReport?.combatReports ?? []) as Any[]) {
+      const start = (combat.ratings as Any[])[0] ?? { agents: 0, enemies: 0 }
+      fought.push({
+        turn: live.turn,
+        mission: combat.mission,
+        agentsRating: start.agents,
+        enemiesRating: start.enemies,
+        agents: (combat.agents as Any[]).length,
+        enemies: (combat.enemies as Any[]).length,
+        outcome: combat.outcome,
+        rounds: combat.rounds,
+        agentsDead: (combat.participants as Any[]).filter((p) => p.side === 'agent' && p.final?.condition === 'dead')
+          .length,
+        outOfAmmoAttacks: (combat.log as Any[]).filter(
+          (attack) => attack.outOfAmmo !== null && attack.outOfAmmo !== undefined,
+        ).length,
+        setupSeed: combat.setupSeed ?? null,
+      })
     }
     // The Turn just played, as the AI left it is gone; the next Turn's start is read instead, with the actions it made.
     const after = ok<Any>(player.queries.getCurrentLiveWorldState())
@@ -251,6 +273,11 @@ async function play(task: LabTask): Promise<CampaignResult> {
     leadsDiscovered: (retired.leads as Any[]).length,
     upgrades: Object.fromEntries((live.agency.upgrades as Any[]).map((u) => [u.id, u.acquisitions])),
     spent,
+    combats: fought.map((combat) => {
+      const mission = (retired.missions as Any[]).find((m) => m.id === combat.mission)
+      const site = mission === undefined ? undefined : siteOf.get(mission.missionSite)
+      return { ...combat, kind: site?.kind ?? '?', archetype: site?.archetype ?? '?' }
+    }),
     responses: [...seen.entries()].map(([id, value]) => {
       const site = siteOf.get(id)
       const mission = site?.mission ? (retired.missions as Any[]).find((m) => m.id === site.mission) : undefined
