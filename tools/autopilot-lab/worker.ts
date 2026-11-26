@@ -107,7 +107,18 @@ async function play(task: LabTask): Promise<CampaignResult> {
   }
   const streaks = { contractingIdle: 0, strikeShort: 0, negativeNet: 0 }
   const fought: Omit<CombatRecord, 'kind' | 'archetype'>[] = []
-  const seen = new Map<string, { level: number; rating: number; ready: number; deployable: number; needed: number }>()
+  const seen = new Map<
+    string,
+    {
+      turn: number
+      archetype: string
+      level: number
+      rating: number
+      ready: number
+      deployable: number
+      needed: number
+    }
+  >()
   let error: string | null = null
   const began = performance.now()
   for (;;) {
@@ -180,6 +191,8 @@ async function play(task: LabTask): Promise<CampaignResult> {
         .map((a) => a.id)
       const ready = team.length === 0 ? 0 : ok<Any>(player.queries.previewDeployment(null, team)).teamCombatRating
       seen.set(site.id, {
+        turn: live.turn,
+        archetype: site.archetype,
         level: site.operationLevel?.level ?? 0,
         rating: site.enemiesCombatRating,
         ready,
@@ -216,6 +229,11 @@ async function play(task: LabTask): Promise<CampaignResult> {
         plan.strike.length === 0
           ? 0
           : (plan.strike as Any[]).reduce((s, a) => s + a.effectiveArmor, 0) / plan.strike.length,
+      transportCap: agency.transportCap,
+      deployed: agency.deployedAgents,
+      deployable: agents.filter((a) => a.deployable).length,
+      activeResponses: (after.missionSites as Any[]).filter((s) => s.kind === 'Response' && s.lifecycle === 'Active')
+        .length,
     })
   }
   const live = ok<Any>(player.queries.getCurrentLiveWorldState())

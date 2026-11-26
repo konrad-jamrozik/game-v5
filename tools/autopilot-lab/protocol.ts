@@ -36,6 +36,11 @@ export interface TurnRow {
   /** The Strike team's mean weapon damage and armor, as worn. */
   readonly strikeWeapon: number
   readonly strikeArmor: number
+  /** After the AI acted: the Transport cap, the Agents deployed, the Deployable Agents, and the Active Response sites. */
+  readonly transportCap: number
+  readonly deployed: number
+  readonly deployable: number
+  readonly activeResponses: number
 }
 
 export interface CampaignResult {
@@ -75,6 +80,9 @@ export interface CampaignResult {
    * were against how many its Enemies ask for, and what became of it.
    */
   readonly responses: readonly {
+    // The Turn the Lab first saw it Active, and its Mission site archetype.
+    readonly turn: number
+    readonly archetype: string
     readonly level: number
     readonly rating: number
     readonly ready: number
