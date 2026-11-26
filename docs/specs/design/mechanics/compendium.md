@@ -143,7 +143,7 @@ A Placeholder shows a value as plain text in one fixed form, so that every user 
 
 | Value | Shown as |
 | --- | --- |
-| A whole number | Its decimal digits, without a sign when it is zero or positive, without leading zeros, and without separators between groups of digits, e.g. `1000`. |
+| A whole number | Its decimal digits, without a sign when it is zero or positive, without leading zeros, and with a comma between each group of three digits counted from the right, as the GUI [groups digits](../ui/gui.md#digit-grouping), e.g. `1,000` and `250`. |
 | A number with a fractional part | Its whole part as above, a full stop, and its fractional digits without trailing zeros, e.g. `0.5` for a value authored as `0.50`. A number authored with only zeros after the full stop is shown as a whole number. |
 | A negative number | The minus sign `−` (U+2212) followed by the number without its sign, as above. |
 | Text | The text, unchanged. |

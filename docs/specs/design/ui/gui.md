@@ -107,6 +107,10 @@ It is written with "T" for Advance turns, by the first of the following cases th
 3. **Lead that is not an Assessed Lead:** "ETA ?".
 4. **Assessed Lead and g above 0:** the Investigation completes at the earliest after a = max(1, ⌈(R − p) / g⌉) and at the latest after b = ⌈(M − p) / g⌉ Advance turns, written "ETA a–b T", or "ETA a T" when a equals b, e.g. "ETA 3–5 T". Once p has reached R, it is written "ETA ≤ b T".
 
+# Digit grouping
+
+Every number of 1,000 or more, or of −1,000 or less, that the GUI shows has a comma between each group of three digits of its whole part, counted from the right, so that the Player reads its size at a glance, e.g. "45,817", "−1,040", and "1,250.50". This holds wherever a number is shown, e.g. on the status bar, in a table, on a chart axis, and in a Compendium article. Two kinds of digits are not numbers and stay ungrouped: an identifier, e.g. a [Campaign ID](../foundation/saves.md#identifiers) or a seed, and a number in a field while the Player edits it, e.g. the [Turns](../foundation/engine-contract.md#player-actions-and-turns) field of the [Autopilot controls](screens/campaign-screen.md#autopilot-controls).
+
 # Decimal quantities shown
 
 The rules read whole numbers, so the GUI shows every [Decimal quantity](../foundation/numbers.md#glossary) as a whole number, except the values listed below, which it shows with two decimals.
