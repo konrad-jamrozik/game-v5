@@ -169,3 +169,32 @@ These are the next changes to try, from the most consequential; none has been me
 - **Win more Factions at each level,** now that a second and a third Faction Won at a level raise the [Contracting cap](../../design/mechanics/economy-and-upgrades.md#glossary).
 - **Buy the [Training cap](../../design/mechanics/economy-and-upgrades.md#glossary) at most once a Turn,** like Rate Upgrades: it was bought four or five times in one Turn in about half of the Campaigns.
 - **Keep the three changes that helped:** the strongest team for a site whose loss is a Defeat, Response teams grown to 150% when they can be, and the three kept changes of the first study.
+
+# Second follow-up on the new balance
+
+On 2026-11-26 the Game designer asked for the Strike goal to be redesigned around the true Combat rating of a MissionSiteArchetype's Enemies and for farming for money to be tried, measured on the balance changed since the follow-up.
+
+## Method of the second follow-up
+
+The Implementation was `game-v5-impl-web` at commit `dccd50c`, with retreat on at a `retreat_below_agent_rating_fraction` of 0.4 and a `retreat_at_enemy_to_agent_rating` of 0.9, existential Response Mission sites that stay Active for 3 Turns, Faction activity levels of 20 to 30 Turns, an easier HQ assault, Contracting places for a second and a third Faction Won at a level, and the true Combat rating of a MissionSiteArchetype's Enemies. Every variant deployed at the Required rating share or above. Each played 40 Campaigns of up to 400 Turns on both sets of seeds, `lab` and `two`. A comparison of two variants took up to 3.5 minutes, beyond the two-minute [Run time limit](../../design/autopilot-ais/autopilot-lab.md#glossary), because Campaigns now last past Turn 300; the [Autopilot Lab](../../design/autopilot-ais/autopilot-lab.md) does not yet stop at that limit.
+
+## How it fared on the new balance
+
+The kept changes of both studies, with the Least net income back at 25, met the first of the [Autopilot AI Expectations](../../design/autopilot-ais/autopilot-ai-expectations.md): they won 65 of 80 Campaigns, where the Basic Autopilot AI of the Implementation won 5. A Victory came at Turn 320 median (300–340), never before Turn 273, and the HQ was raided in 73% to 93% of Campaigns, against 5% to 8%. No Campaign won lost or let expire more than 22% of its Missions, so the Victory at a quarter of Missions lost was again not shown. With retreat on, teams of 21 or more Agents at 110% to 150% lost 28% of their Combats.
+
+## What was tried on the new balance
+
+Each row is a variant against the kept changes on both sets of seeds, in Victories of 80.
+
+| Change | Victories | Kept |
+| --- | --- | --- |
+| The kept changes of both studies | 65, against 5 for the Implementation | Yes |
+| A Strike goal at 50% of the Threat | 52 | No |
+| The Threat at the highest Faction operation level seen, not one above | 33 | No |
+| Farming whenever no Next rung qualifies, Farming Panic 0% | 65 | No |
+| A second Lead that creates a Mission site at a time, farms only | 11 of 40 on `lab`, against 29 | No |
+| Least net income 25 instead of −150 | 65 | Yes, the Game designer value stays |
+
+The Strike goal needed no redesign. With the Contracting places and the longer existential Response Mission sites, a Strike goal at the Combat margin of the true Threat one Faction operation level ahead is what wins, and both smaller goals lost. Farming alongside the climb delayed it: the logistics hub was raided 21 times a Campaign and the regional stronghold first won at Turn 291 instead of 186, while the Contracting places now pay for the growth that farming was meant to fund.
+
+The kept changes were applied to the [Basic Autopilot AI](../../design/autopilot-ais/basic-autopilot-ai.md): the Next rung counts only Initiative Missions, the Threat looks one Faction operation level ahead, at most one Rate Upgrade a Turn, the strongest team for a Response Mission site whose loss is a Defeat, and the Full team share of 150% for other Response Mission sites.
