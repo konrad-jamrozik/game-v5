@@ -64,12 +64,12 @@ Source: `content/compendium/compendium_articles/mechanics_agents.yaml`
 
 Agents are the people of your Agency. Each one has [skill](#skill), [health](#health), and [exhaustion](#exhaustion), carries a weapon, and has one [Assignment](#assignments) at a time. You start with a small team and [hire](#hiring-and-upkeep) more as your [money](#money-and-funding) allows.
 
-| Formulas            |                                                                 |
-| ------------------- | --------------------------------------------------------------- |
-| Starting team       | 8 Agents, ready for orders on the first [turn](#turns)          |
-| A new Agent         | Skill 100, health 30, no exhaustion, armed with a Combat pistol |
-| A hired Agent       | Starts on Standby and arrives next turn                         |
-| Killed or dismissed | The Agent is gone for good, and its skill with it               |
+| Formulas            |                                                                                         |
+| ------------------- | --------------------------------------------------------------------------------------- |
+| Starting team       | 8 Agents, ready for orders on the first [turn](#turns), each armed with a Combat pistol |
+| A new Agent         | Skill 100, health 30, no exhaustion                                                     |
+| A hired Agent       | Starts on Standby, armed with only a Knife, and arrives next turn                       |
+| Killed or dismissed | The Agent is gone for good, and its skill with it                                       |
 
 See also: [Skill](#skill) · [Health](#health) · [Exhaustion](#exhaustion) · [Assignments](#assignments) · [Hiring and upkeep](#hiring-and-upkeep) · [Deployable Agent](#deployable-agent) · [Fit to start work](#fit-to-start-work) · [In base Agent](#in-base-agent) · [Away Agent](#away-agent) · [Fully rested Agent](#fully-rested-agent) · [Recovering Agent](#recovering-agent) · [Incapacitated Agent](#incapacitated-agent) · [Field agent](#field-agent)
 
@@ -2102,7 +2102,7 @@ A cheap handgun handed to the newest recruits.
 
 Source: `content/compendium/compendium_articles/combat_pistol_article.yaml`
 
-A full-size handgun built for a fight, with a larger magazine than a [basic pistol](#basic-pistol) and still easy to carry unseen. The Agency issues one to every [Agent](#agents) it [hires](#hiring-and-upkeep).
+A full-size handgun built for a fight, with a larger magazine than a [basic pistol](#basic-pistol) and still easy to carry unseen. The Agency arms its starting team with them; an [Agent](#agents) it [hires](#hiring-and-upkeep) comes with only a [knife](#knife).
 
 | `combat_pistol`      | Weapon          |
 | -------------------- | --------------- |

@@ -8,11 +8,11 @@ body: >-
   Assignment at a time. You start with a small team and hire more as your money allows.
 formulas:
   - label: 'Starting team'
-    text: '{agent_parameters.initial_roster_size} Agents, ready for orders on the first turn'
+    text: '{agent_parameters.initial_roster_size} Agents, ready for orders on the first turn, each armed with a {field_agent.weapon}'
   - label: 'A new Agent'
-    text: 'Skill {field_agent.base_skill}, health {field_agent.base_health}, no exhaustion, armed with a {field_agent.weapon}'
+    text: 'Skill {field_agent.base_skill}, health {field_agent.base_health}, no exhaustion'
   - label: 'A hired Agent'
-    text: 'Starts on Standby and arrives next turn'
+    text: 'Starts on Standby, armed with only a {combat_parameters.fallback_weapon}, and arrives next turn'
   - label: 'Killed or dismissed'
     text: 'The Agent is gone for good, and its skill with it'
 see_also:
