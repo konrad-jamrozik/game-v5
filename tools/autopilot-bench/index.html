@@ -1264,7 +1264,7 @@
           ['Initiative', 'Initiative Missions Won / Lost / Expired', (s) => ml(s.missions.Initiative), 104],
           ...factions.map((f, i) => [
             f.name,
-            `The next Initiative Mission site to win against ${f.name}: one Initiative operation level above the highest it has Won; Eliminated once the Faction is. Below it, four checks, each 🟢 when it holds and 🔴 when not. First, whether a Mission site of it is available, i.e. Active; when not, the state of the Lead that creates it: available for the first time, investigated for the first time, or completed at least once. Then the three tests of the Basic Autopilot AI's winning team, with this Campaign's parameters: CR ready against the Enemies' Combat rating and the Combat margin; the Rested deployable Agents against the Agents needed for the Enemies; and the free Transport cap against the Agents needed`,
+            `The next Initiative Mission site to win against ${f.name}: one Initiative operation level above the highest it has Won; Eliminated once the Faction is. Below it, four checks, each 🟢 when it holds and 🔴 when not. First, the three tests of the Basic Autopilot AI's winning team, with this Campaign's parameters: CR ready against the Enemies' Combat rating and the Combat margin; the Rested deployable Agents against the Agents needed for the Enemies; and the free Transport cap against the Agents needed. Last, whether a Mission site of it is available, i.e. Active; when not, the state of the Lead that creates it: available for the first time, investigated for the first time, or completed at least once`,
             (s, c) => {
               const x = s.factions[i]
               if (!x) return ''
@@ -1292,11 +1292,12 @@
               const needed = Math.max(1, Math.ceil(x.next.enemies / perAgent - 1e-9))
               const free = s.transportCap - (s.assignments?.Deployed ?? 0)
               const site = x.next.site
+              // The Site check comes last, since it is the last to turn green.
               const checks = [
-                `<span title="An Active Mission site of it against the Faction, which a team can be deployed to now; otherwise the state of the Lead that creates it">${mark(site !== null)} <span class="dim">Site</span> ${site !== null ? `<span class="good">available</span> <span class="dim">· expires in ${fmt(site.turnsUntilExpiration)}</span>` : status}</span>`,
                 `<span title="CR ready must reach ${margin}% of the Enemies' Combat rating">${mark(crPass)} <span class="dim">CR</span> ${fmt(s.ratingReady)} <span class="dim">/</span> ${fmt(x.next.enemiesRating)} <span class="dim">=</span> <span class="${crPass ? 'good' : 'bad'}">${pct === null ? '—' : `${pct.toFixed(0)}%`}</span> <span class="dim">&gt;${margin}%</span></span>`,
                 `<span title="Deployable Agents against the Agents needed: one per ${perAgent} Enemies, rounded up">${mark(s.ready >= needed)} <span class="dim">Agents</span> ${fmt(s.ready)} <span class="dim">/</span> ${fmt(needed)} <span class="dim">(${fmt(x.next.enemies)} en ÷ ${perAgent})</span></span>`,
                 `<span title="Free Transport cap, i.e. Transport cap less the Deployed Agents, against the Agents needed">${mark(free >= needed)} <span class="dim">Transport</span> ${fmt(free)} <span class="dim">/</span> ${fmt(needed)} <span class="dim">(cap ${fmt(s.transportCap)})</span></span>`,
+                `<span title="An Active Mission site of it against the Faction, which a team can be deployed to now; otherwise the state of the Lead that creates it">${mark(site !== null)} <span class="dim">Site</span> ${site !== null ? `<span class="good">available</span> <span class="dim">· expires in ${fmt(site.turnsUntilExpiration)}</span>` : status}</span>`,
               ]
               return `<span class="dim">L${x.next.level}</span> ${esc(x.next.name)}<br>${checks.join('<br>')}`
             },
