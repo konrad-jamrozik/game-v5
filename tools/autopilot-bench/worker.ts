@@ -5,12 +5,11 @@
  * with that Campaign's parameters, and its Turns are played by ordinary Autopilot engagements with the Autopilot limit
  * `turnAdvancements`. Everything the thread reports is read through Player API queries.
  */
-import fs from 'node:fs'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { parentPort, workerData } from 'node:worker_threads'
 
-import type { CampaignStats, MissionRecord, ToWorker, TurnPoint } from './protocol.ts'
+import type { CampaignStats, MissionRecord, ToWorker } from './protocol.ts'
 
 const impl = (workerData as { impl: string }).impl
 const port = parentPort!
@@ -40,110 +39,11 @@ interface Campaign {
   /** The last Missions fought, the latest first, and the Turn of the last Turn report read for them. */
   recentMissions: MissionRecord[]
   missionsReadTurn: number
-  /** The Turn-start values of the Current Turn, as `TurnPoint.start` holds them. */
-  turnStart: number[]
-  /** The money the Current Turn's Player actions spent so far: on hiring, on Cap Upgrades, and on other Upgrades. */
-  spent: [number, number, number]
-  /** The ended Turns not yet reported to server.ts. */
-  unsent: TurnPoint[]
-  /** The Serving Agents of the Turn whose Advance turn was requested last, read just before it. */
-  turnEnd: { status: number[]; skill: number[]; worn: number[]; strength: number[]; state: unknown } | null
-  /**
-   * The Campaign log file, none when the launch asked for no log, and the Player actions the AI requested in the
-   * Current Turn, for its next Turn line.
-   */
-  readonly log: string | null
-  actions: unknown[]
-  /** The Creation Combat rating of every Mission site seen so far, by Instance ID. */
-  siteRatings: Map<string, number>
-  /** The last Turn recorded in the series. */
-  recordedTurn: number
+  /** How many History entries have been reported to server.ts. */
+  sentEntries: number
   /** The Tuning parameters the Campaign plays with, and the game data, for deriving the AI's plan. */
   readonly thresholds: unknown
   readonly gameData: Any
-}
-
-/** The Upgrades whose effect raises a cap, by ID: the Cap Upgrades. */
-const capUpgrades = new Set<string>()
-const CAP_EFFECTS = new Set(['agent_cap', 'transport_cap', 'training_cap'])
-
-/**
- * The skill chart as the game draws its Agents by base skill chart, read from the game data in `boot`: the lowest base
- * skill of each band, the lowest first, and the exhaustion thresholds of its lines, `exhaustion_work_limit` and
- * `exhaustion_free_points`.
- */
-const skillChart: { starts: number[]; bands: string[]; workLimit: number; freePoints: number } = {
-  starts: [0],
-  bands: ['0+'],
-  workLimit: 70,
-  freePoints: 30,
-}
-
-/**
- * The game's base skill bands, from its Ranks: one band for each Rank up to below the next, the highest open-ended, each
- * named by its range and the Rank's name in parentheses, e.g. "100–149 (Rookie)" and "900+ (High Commander)". An
- * Agent whose base skill reaches no Rank counts in the band of the lowest, as `bandOf` places it.
- */
-function readSkillChart(data: Any): void {
-  const ranks = [...(data.ranks as Any[])].sort((a, b) => a.minBaseSkill - b.minBaseSkill)
-  if (ranks.length === 0) return
-  skillChart.starts = ranks.map((r) => r.minBaseSkill as number)
-  skillChart.bands = ranks.map((r, i) => {
-    const next = ranks[i + 1]
-    const range = next === undefined ? `${r.minBaseSkill}+` : `${r.minBaseSkill}–${next.minBaseSkill - 1}`
-    return `${range} (${r.name})`
-  })
-  skillChart.workLimit = data.agentParameters.exhaustionWorkLimit ?? skillChart.workLimit
-  skillChart.freePoints = data.agentParameters.exhaustionFreePoints ?? skillChart.freePoints
-}
-
-/** The band of a base skill, rounded down; the lowest for one below every band. */
-function bandOf(skill: number): number {
-  let band = 0
-  skillChart.starts.forEach((min, i) => {
-    if (skill >= min) band = i
-  })
-  return band
-}
-
-/** The Agents of a Turn point, from the Serving Agents as they are now. */
-function agentsPoint(agents: readonly Any[]): {
-  status: number[]
-  skill: number[]
-  worn: number[]
-} {
-  const status = [0, 0, 0, 0, 0, 0, 0]
-  const skill: number[] = []
-  // Agents recovering, i.e. whose Assignment is Recovery, In transit to it included; and Agents of exhaustion above
-  // `exhaustion_work_limit` and above `exhaustion_free_points`.
-  const worn = [0, 0, 0]
-  for (const a of agents) {
-    if (a.assignment?.kind === 'Recovery') worn[0]! += 1
-    if ((a.exhaustion as number) > skillChart.workLimit) worn[1]! += 1
-    if ((a.exhaustion as number) > skillChart.freePoints) worn[2]! += 1
-    const kind = a.assignment?.kind as string | undefined
-    const group =
-      a.agentStatus === 'InTransit'
-        ? 6
-        : a.agentStatus === 'Recovering' || kind === 'Recovery'
-          ? 5
-          : kind === 'Standby'
-            ? 0
-            : kind === 'Training'
-              ? 1
-              : kind === 'Contracting'
-                ? 2
-                : kind === 'Investigation'
-                  ? 3
-                  : kind === 'Deployed'
-                    ? 4
-                    : 0
-    status[group]! += 1
-    const band = bandOf(Math.floor((a.skillHundredths as number) / 100))
-    while (skill.length <= band) skill.push(0)
-    skill[band]! += 1
-  }
-  return { status, skill, worn }
 }
 
 /**
@@ -169,265 +69,6 @@ function ratingOf(player: Any, agents: readonly Any[]): number {
       agents.map((a) => a.id),
     ),
   ).teamCombatRating as number
-}
-
-/** The number that ends a Mission site's Instance ID, which orders the Mission sites by creation. */
-function siteNumber(id: string): number {
-  return Number(/(\d+)$/.exec(id)?.[1] ?? 0)
-}
-
-/**
- * The Combat strength of a Turn point, as the game's Combat strength chart holds it: the Combat rating of the
- * Deployable Agents and of every Serving Agent, each taken as one side, then the Creation Combat rating of the last
- * Mission site created and the mean of the last five, rounded down, or -1 for both while no Mission site exists. A
- * Mission site's Creation Combat rating is the engine's `creationCombatRating` when it reports one, and otherwise the
- * Combat rating of its Enemies the first time the bench sees it, i.e. while they are still as created, since the bench
- * reads every Turn.
- */
-function strengthPoint(campaign: Campaign, player: Any): number[] {
-  const live = ok<Any>(player.queries.getCurrentLiveWorldState())
-  const retired = ok<Any>(player.queries.getCurrentRetiredWorldState())
-  const agents: Any[] = live.agents
-  for (const site of [...(live.missionSites as Any[]), ...(retired.missionSites as Any[])]) {
-    if (!campaign.siteRatings.has(site.id)) {
-      campaign.siteRatings.set(site.id, (site.creationCombatRating ?? site.enemiesCombatRating) as number)
-    }
-  }
-  const ordered = [...campaign.siteRatings.entries()].sort((x, y) => siteNumber(x[0]) - siteNumber(y[0]))
-  const last = ordered.slice(-5).map(([, rating]) => rating)
-  const sites =
-    last.length === 0 ? [-1, -1] : [last[last.length - 1]!, Math.floor(last.reduce((a, b) => a + b, 0) / last.length)]
-  return [ratingOf(player, agents.filter(isDeployable)), ratingOf(player, agents), ...sites]
-}
-
-function startPoint(live: Any): number[] {
-  const agency = live.agency
-  return [agency.money, agency.servingAgents, agency.agentCap, agency.transportCap, agency.trainingCap]
-}
-
-/**
- * The Basic Autopilot AI, with its Player API wrapped so that the bench sees each Turn's player phase end: just before
- * the AI requests Advance turn, it reads the Serving Agents, and once the Advance turn has ended the Turn, it reads the
- * Turn report and the next Turn's start. It also reads the money each `hireAgents` and `purchaseUpgrade` spent, the
- * money after it less the money before, as the Action record holds it. The AI plays exactly as it would unwrapped.
- */
-function observed(ai: Any, holder: { campaign: Campaign | null }): Any {
-  return {
-    ...ai,
-    step: ({ player }: Any) => {
-      const host = () => holder.campaign?.engine.player
-      const money = () => ok<Any>(host().queries.getCurrentLiveWorldState()).agency.money as number
-      // The slot of `spent` each action that spends money adds to. Only these read the money before and after, since
-      // reading the World state is costly in a Campaign of many Agents and the AI requests many other actions a Turn.
-      const slotOf = (op: string, args: unknown[]): 0 | 1 | 2 | null =>
-        // `hireAgent` is the name before hiring took a count; an Implementation at an older baseline still has it.
-        op === 'hireAgents' || op === 'hireAgent'
-          ? 0
-          : op === 'purchaseUpgrade'
-            ? capUpgrades.has(args[0] as string)
-              ? 1
-              : 2
-            : null
-      const logging = holder.campaign?.log != null
-      // Every Player action the AI requests, other than Advance turn, goes to the log's Turn line with its outcome,
-      // a rejected one included. Without a log, only the actions that spend money are wrapped.
-      const wrapped: Record<string, Any> = {}
-      for (const [op, action] of Object.entries(player.actions as Record<string, Any>)) {
-        if (op === 'advanceTurn' || typeof action !== 'function') continue
-        if (!logging && slotOf(op, []) === null) continue
-        wrapped[op] = async (...args: unknown[]) => {
-          const campaign = holder.campaign
-          if (campaign === null) return action(...args)
-          const slot = slotOf(op, args)
-          const before = slot === null ? 0 : money()
-          const result = await action(...args)
-          const change = slot === null ? 0 : money() - before
-          if (slot !== null) campaign.spent[slot] -= change
-          if (logging) {
-            campaign.actions.push({
-              op,
-              args,
-              ok: result.ok,
-              ...(result.ok ? {} : { error: result.error }),
-              ...(slot === null ? {} : { moneyChange: change }),
-            })
-          }
-          return result
-        }
-      }
-      const actions = {
-        ...player.actions,
-        ...wrapped,
-        advanceTurn: async () => {
-          const campaign = holder.campaign
-          if (campaign === null) return player.actions.advanceTurn()
-          const live = ok<Any>(host().queries.getCurrentLiveWorldState())
-          campaign.turnEnd = {
-            ...agentsPoint(live.agents),
-            strength: strengthPoint(campaign, host()),
-            state: logging ? logState(live, ok<Any>(host().queries.getCurrentRetiredWorldState())) : null,
-          }
-          const result = await player.actions.advanceTurn()
-          endTurn(campaign)
-          return result
-        },
-      }
-      return ai.step({ player: { ...player, actions } })
-    },
-  }
-}
-
-/* ---------- Campaign log ---------- */
-
-/**
- * Appends one line to the Campaign log, unless the Campaign has none. A log that cannot be written never stops the
- * Campaign.
- */
-function writeLog(campaign: { log: string | null }, line: unknown) {
-  if (campaign.log === null) return
-  try {
-    fs.appendFileSync(campaign.log, `${JSON.stringify(line)}\n`)
-  } catch (e) {
-    console.error(`Campaign log ${campaign.log}: ${e instanceof Error ? e.message : String(e)}`)
-  }
-}
-
-/**
- * The Campaign as the AI left it at the end of a Turn's player phase, for the log's Turn line: the Agency, every
- * Serving Agent, Active Mission site, Investigation, discovered Lead, and Faction, each reduced to the values that
- * explain the AI's choices, so that a long Campaign keeps a log of a manageable size.
- */
-function logState(live: Any, retired: Any): unknown {
-  const agency = live.agency
-  return {
-    panicHundredths: live.panicHundredths,
-    agency: {
-      money: agency.money,
-      funding: agency.funding,
-      projectedIncome: agency.projectedIncome,
-      projectedUpkeep: agency.projectedUpkeep,
-      servingAgents: agency.servingAgents,
-      deployedAgents: agency.deployedAgents,
-      trainingAgents: agency.trainingAgents,
-      agentCap: agency.agentCap,
-      transportCap: agency.transportCap,
-      trainingCap: agency.trainingCap,
-      hireCost: agency.hireCost,
-      upgrades: Object.fromEntries((agency.upgrades as Any[]).map((u) => [u.id, u.acquisitions])),
-    },
-    agents: (live.agents as Any[]).map((a) => ({
-      id: a.id,
-      status: a.agentStatus,
-      assignment: a.assignment,
-      skill: a.skillHundredths / 100,
-      effectiveSkill: a.effectiveSkill,
-      health: `${a.currentHealthHundredths / 100}/${a.effectiveMaxHealth}`,
-      exhaustion: a.exhaustion,
-      fitForWork: a.fitForWork,
-      ableToFight: a.ableToFight,
-      deployable: a.deployable,
-      combatRating: a.combatRating,
-      recoveryTurnsRemaining: a.recoveryTurnsRemaining,
-      missions: (a.participationHistory as Any[]).filter((p) => p.kind === 'Mission').length,
-    })),
-    missionSites: (live.missionSites as Any[]).map((s) => ({
-      id: s.id,
-      archetype: s.archetype,
-      kind: s.kind,
-      targetFaction: s.targetFaction,
-      initiativeOperationLevel: s.initiativeOperationLevel,
-      operationLevel: s.operationLevel,
-      lifecycle: s.lifecycle,
-      turnsUntilExpiration: s.turnsUntilExpiration,
-      enemies: (s.enemies as Any[]).length,
-      enemiesCombatRating: s.enemiesCombatRating,
-      creationCombatRating: s.creationCombatRating,
-      rewards: s.rewards,
-      penalties: s.penalties,
-      mission: s.mission,
-    })),
-    investigations: (live.investigations as Any[]).map((i) => ({
-      id: i.id,
-      lead: i.lead,
-      turnStarted: i.turnStarted,
-      progress: i.progress,
-      assessed: i.assessed,
-      projectedProgressGain: i.projectedProgressGain,
-      team: (i.currentTeam as Any[]).map((m) => m.agent),
-    })),
-    leads: (retired.leads as Any[]).map((l) => ({
-      id: l.id,
-      faction: l.faction,
-      status: l.status,
-      canBeInvestigatedNow: l.canBeInvestigatedNow,
-      completionCount: l.completionCount,
-      requiredProgress: l.requiredProgress,
-      createsMissionSite: l.createsMissionSite,
-      initiativeOperationLevel: l.initiativeOperationLevel,
-    })),
-    factions: live.factions,
-  }
-}
-
-/** A Turn report for the log: in full, except each Combat's attack log, of which it keeps only the count. */
-function logReport(report: Any): unknown {
-  return {
-    ...report,
-    combatReports: (report.combatReports as Any[]).map(({ log, ...combat }) => ({
-      ...combat,
-      attacks: (log as Any[]).length,
-    })),
-  }
-}
-
-/**
- * Records the Turn that an Advance turn has just ended, from its Turn report, and the start of the next one, once per
- * Turn report. It runs right after the Advance turn, and again after each step and after the engagement ends, since
- * an Advance turn that ends the engagement can let the run finish before the wrapper above resumes.
- */
-function endTurn(campaign: Campaign) {
-  const player = campaign.engine.player
-  const end = campaign.turnEnd
-  const report = ok<Any>(player.queries.getTurnReport())
-  if (report === null || end === null || report.turn <= campaign.recordedTurn) return
-  campaign.recordedTurn = report.turn
-  campaign.turnEnd = null
-  const funding = report.income.funding as number
-  const rewards = (report.missions as Any[]).reduce((sum, m) => sum + Math.max(0, m.consequence.money as number), 0)
-  const [hiring, caps, other] = campaign.spent
-  campaign.unsent.push({
-    turn: report.turn,
-    start: campaign.turnStart,
-    status: end.status,
-    skill: end.skill,
-    worn: end.worn,
-    strength: end.strength,
-    money: [funding, report.income.income - funding, rewards, report.upkeep.upkeep, hiring, caps, other],
-  })
-  campaign.spent = [0, 0, 0]
-  campaign.turnStart = startPoint(ok<Any>(player.queries.getCurrentLiveWorldState()))
-  if (campaign.log === null) return
-  writeLog(campaign, {
-    kind: 'turn',
-    turn: report.turn,
-    state: end.state,
-    actions: campaign.actions.splice(0),
-    report: logReport(report),
-  })
-}
-
-/** Ends a run in the log: why it ended, and the whole Campaign as the Player API shows it, unreduced. */
-function logRun(campaign: Campaign, reason: string, detail: unknown) {
-  if (campaign.log === null) return
-  const player = campaign.engine.player
-  const live = ok<Any>(player.queries.getCurrentLiveWorldState())
-  writeLog(campaign, { kind: 'run', turn: live.turn, reason, detail, at: new Date().toISOString() })
-  writeLog(campaign, {
-    kind: 'snapshot',
-    turn: live.turn,
-    live,
-    retired: ok<Any>(player.queries.getCurrentRetiredWorldState()),
-  })
 }
 
 /** How many of the last Missions fought a Campaign keeps. */
@@ -472,6 +113,8 @@ async function boot() {
   const { BASIC_AI_THRESHOLDS, createBasicAutopilotAi, makePlan } = await import(
     pathToFileURL(path.join(impl, 'src/ai/index.ts')).href
   )
+  // The game's own reduction of a History entry to what its Agency charts read, which the page draws them from.
+  chartEntryOf = (await import(pathToFileURL(path.join(impl, 'src/web/agency-charts.ts')).href)).chartEntryOf
   // The Upgrades, read from a scratch Campaign, so that the page can name them and weigh them.
   const scratch = await createEngine({
     storage: new MemoryStorage(),
@@ -484,15 +127,15 @@ async function boot() {
     name: u.name as string,
     effect: u.effect as string,
   }))
-  for (const u of upgrades) {
-    if (CAP_EFFECTS.has(u.effect)) capUpgrades.add(u.id)
-  }
   // Each Initiative operation level's MissionSiteArchetype, from Developer API on the scratch Campaign alone, so that
   // a row can name the next Initiative Mission site to win against each Faction. It is fixed game data.
   ok(scratch.session.developer.enable())
   const levels = ok<Any>(scratch.developer.queries.getInitiativeOperationLevels()).missionSiteArchetypes as Any[]
   const data = ok<Any>(scratch.player.queries.getGameData())
-  readSkillChart(data)
+  const chartData = {
+    ranks: (data.ranks as Any[]).map((r) => ({ name: r.name as string, minBaseSkill: r.minBaseSkill as number })),
+    agentParameters: data.agentParameters as Record<string, number>,
+  }
   for (const a of data.missionSiteArchetypes as Any[]) {
     archetypeNames.set(a.id, a.name)
     archetypeEnemies.set(a.id, {
@@ -506,8 +149,11 @@ async function boot() {
     }
   }
   planOf = makePlan
-  return { MemoryStorage, createEngine, BASIC_AI_THRESHOLDS, createBasicAutopilotAi, upgrades }
+  return { MemoryStorage, createEngine, BASIC_AI_THRESHOLDS, createBasicAutopilotAi, upgrades, chartData }
 }
+
+/** The Implementation's `chartEntryOf`, which reduces a History entry to what the Agency charts read. */
+let chartEntryOf: (entry: Any) => unknown = () => null
 
 /** The Implementation's `makePlan`, which derives the Basic Autopilot AI's plan from Player-visible information. */
 let planOf: ((live: Any, retired: Any, data: Any, thresholds: unknown) => Any) | null = null
@@ -578,15 +224,26 @@ function statsOf(campaign: Campaign): CampaignStats {
       restedDeployable[kind] = (restedDeployable[kind] ?? 0) + 1
     }
   }
+  // The per-Turn charts read the History, as the game's Agency charts do: the History entries not yet reported, and the
+  // Open History entry for the Current Turn.
+  const history = ok<Any>(player.queries.getHistory())
+  const moneyAt = new Map<number, number>(
+    (history.turnSeries.moneyAtStartOfTurn as Any[]).map((v) => [v.turn as number, v.value as number]),
+  )
+  const fresh = (history.entries as Any[]).slice(campaign.sentEntries)
+  campaign.sentEntries += fresh.length
+  const open = history.openEntry
   return {
-    series: campaign.unsent.splice(0),
+    series: fresh.map((entry) => ({ entry: chartEntryOf(entry), moneyAtStart: moneyAt.get(entry.turn) ?? null })),
     current: {
-      turn: live.turn,
-      start: campaign.turnStart,
-      ...agentsPoint(agents),
-      strength: strengthPoint(campaign, player),
-      money: null,
+      open: { turn: open.turn, turnStart: open.turnStart, turnEnd: open.turnEnd },
+      moneyAtStart: moneyAt.get(open.turn) ?? null,
     },
+    sites: [...(live.missionSites as Any[]), ...(retired.missionSites as Any[])].map((s) => ({
+      id: s.id as string,
+      turnCreated: s.turnCreated as number,
+      creationCombatRating: s.creationCombatRating as number,
+    })),
     turn: live.turn,
     ending:
       live.ending === null
@@ -701,7 +358,7 @@ function report(campaign: Campaign, force: boolean) {
 }
 
 async function create(message: Extract<ToWorker, { type: 'create' }>) {
-  const { id, seed, params, log } = message
+  const { id, seed, params } = message
   const b = await booted
   const thresholds = { ...b.BASIC_AI_THRESHOLDS, ...(params as object) }
   let n = 0
@@ -716,41 +373,17 @@ async function create(message: Extract<ToWorker, { type: 'create' }>) {
       yieldToHost: async () => {
         const campaign = holder.campaign
         if (campaign !== null && campaign.engagementId !== null) {
-          endTurn(campaign)
           readMissions(campaign)
           report(campaign, false)
         }
         await new Promise((resolve) => setImmediate(resolve))
       },
     },
-    { autopilotAis: [observed(b.createBasicAutopilotAi(thresholds), holder)] },
+    { autopilotAis: [b.createBasicAutopilotAi(thresholds)] },
   )
   ok(await engine.session.globalConfiguration.set('autosaveLimit', 0))
   ok(await engine.session.campaign.create({ seed }))
   const live = ok<Any>(engine.player.queries.getCurrentLiveWorldState())
-  if (log !== null) {
-    fs.writeFileSync(log, '')
-  }
-  writeLog(
-    { log },
-    {
-      kind: 'campaign',
-      id,
-      seed,
-      ...message.launch,
-      createdAt: new Date().toISOString(),
-      // Every parameter of the Basic Autopilot AI, and those that differ from BASIC_AI_THRESHOLDS.
-      thresholds,
-      changed: Object.fromEntries(
-        Object.entries(thresholds).filter(
-          ([k, v]) => JSON.stringify(v) !== JSON.stringify((b.BASIC_AI_THRESHOLDS as Record<string, unknown>)[k]),
-        ),
-      ),
-      configuration: ok<Any>(engine.player.queries.getCampaignConfiguration()),
-      gameData: ok<Any>(engine.player.queries.getGameData()),
-      start: log === null ? null : logState(live, ok<Any>(engine.player.queries.getCurrentRetiredWorldState())),
-    },
-  )
   const initialAgents = live.agents.length
   const campaign: Campaign = {
     id,
@@ -760,14 +393,7 @@ async function create(message: Extract<ToWorker, { type: 'create' }>) {
     lastReport: 0,
     recentMissions: [],
     missionsReadTurn: 0,
-    turnStart: startPoint(live),
-    spent: [0, 0, 0],
-    unsent: [],
-    turnEnd: null,
-    siteRatings: new Map(),
-    recordedTurn: 0,
-    log,
-    actions: [],
+    sentEntries: 0,
     thresholds,
     gameData: ok<Any>(engine.player.queries.getGameData()),
   }
@@ -787,9 +413,7 @@ async function play(campaign: Campaign, turns: number) {
   campaign.engagementId = engaged.engagementId
   const result = ok<Any>(await engine.session.autopilot.whenDisengaged(engaged.engagementId))
   campaign.engagementId = null
-  endTurn(campaign)
   readMissions(campaign)
-  logRun(campaign, result.reason, result.detail ?? null)
   port.postMessage({
     type: 'done',
     id: campaign.id,
@@ -828,17 +452,13 @@ booted.then(
       type: 'ready',
       defaults: b.BASIC_AI_THRESHOLDS,
       upgrades: b.upgrades,
-      skillChart: { bands: skillChart.bands, workLimit: skillChart.workLimit, freePoints: skillChart.freePoints },
+      chartData: b.chartData,
     }),
   (e: unknown) => port.postMessage({ type: 'error', message: e instanceof Error ? (e.stack ?? e.message) : String(e) }),
 )
 
 port.on('message', (message: ToWorker) => {
   handle(message).catch((e: unknown) => {
-    const campaign = campaigns.get(message.id)
-    if (campaign !== undefined) {
-      writeLog(campaign, { kind: 'error', message: e instanceof Error ? (e.stack ?? e.message) : String(e) })
-    }
     port.postMessage({
       type: 'failed',
       id: 'id' in message ? message.id : null,

@@ -2,18 +2,7 @@
 
 /** From server.ts to a worker thread. */
 export type ToWorker =
-  | {
-      readonly type: 'create'
-      readonly id: string
-      readonly seed: string
-      readonly params: unknown
-      /**
-       * The Campaign log file the worker thread writes, none when the launch asked for no log, and what its first line
-       * tells of the launch.
-       */
-      readonly log: string | null
-      readonly launch: { readonly batch: number; readonly engine: string; readonly impl: string }
-    }
+  | { readonly type: 'create'; readonly id: string; readonly seed: string; readonly params: unknown }
   | { readonly type: 'play'; readonly id: string; readonly turns: number }
   | { readonly type: 'stop'; readonly id: string }
   | { readonly type: 'remove'; readonly id: string }
@@ -24,15 +13,10 @@ export interface UpgradeInfo {
   readonly effect: string
 }
 
-/**
- * The skill chart's bands and lines as the game's Agents by base skill chart has them: the name of each base skill
- * band, the lowest first, and the exhaustion thresholds of the lines, `exhaustion_work_limit` and
- * `exhaustion_free_points`.
- */
-export interface SkillChartInfo {
-  readonly bands: readonly string[]
-  readonly workLimit: number
-  readonly freePoints: number
+/** The game data the Implementation's `agencyCharts` reads beside the History: the Ranks and the AgentParameters. */
+export interface ChartDataInfo {
+  readonly ranks: readonly { readonly name: string; readonly minBaseSkill: number }[]
+  readonly agentParameters: Readonly<Record<string, number>>
 }
 
 /** From a worker thread to server.ts. */
@@ -41,7 +25,7 @@ export type FromWorker =
       readonly type: 'ready'
       readonly defaults: Record<string, unknown>
       readonly upgrades: readonly UpgradeInfo[]
-      readonly skillChart: SkillChartInfo
+      readonly chartData: ChartDataInfo
     }
   | { readonly type: 'error'; readonly message: string }
   | { readonly type: 'stats'; readonly id: string; readonly stats: CampaignStats }
@@ -81,40 +65,18 @@ export interface MissionCounts {
 }
 
 /**
- * One Turn of a Campaign for the per-Turn charts, as arrays of small numbers so that a long Campaign stays cheap to
- * send.
+ * One ended Turn of a Campaign for the per-Turn charts: its History entry, reduced by the Implementation's
+ * `chartEntryOf` to what the charts read, and its Money at the start of turn.
  */
 export interface TurnPoint {
-  readonly turn: number
-  /** At Turn start: money, Serving Agents, Agent cap, Transport cap, and Training cap. */
-  readonly start: readonly number[]
-  /**
-   * At the end of the Turn's player phase, i.e. just before its Advance turn, or now for the Current Turn: Serving
-   * Agents in seven groups, Standby, Training, Contracting, Investigation, Deployed, Recovering, and In transit. Those
-   * In transit count only there, whatever their Assignment.
-   */
-  readonly status: readonly number[]
-  /**
-   * At the same moment: Serving Agents per base skill band of `SkillChartInfo.bands`, the lowest first, up to the
-   * highest band that holds an Agent.
-   */
-  readonly skill: readonly number[]
-  /**
-   * At the same moment: the Serving Agents recovering, i.e. whose Assignment is Recovery, In transit to it included;
-   * those of exhaustion above `SkillChartInfo.workLimit`; and those of exhaustion above `SkillChartInfo.freePoints`.
-   */
-  readonly worn: readonly number[]
-  /**
-   * At the same moment: the Combat rating of the Deployable Agents and of every Serving Agent, each taken as one side,
-   * then the Creation Combat rating of the last Mission site created and the mean of the last five, rounded down, or
-   * -1 for both while no Mission site exists.
-   */
-  readonly strength: readonly number[]
-  /**
-   * The money of the ended Turn, none for the Current Turn: funding, contracting income, Mission rewards, upkeep,
-   * Agent hiring, Cap Upgrades, and other Upgrades, every expenditure a positive number.
-   */
-  readonly money: readonly number[] | null
+  readonly entry: unknown
+  readonly moneyAtStart: number | null
+}
+
+/** The Current Turn for the per-Turn charts: the Open History entry, reduced alike, and its Money at the start of turn. */
+export interface CurrentPoint {
+  readonly open: { readonly turn: number; readonly turnStart: unknown; readonly turnEnd: unknown }
+  readonly moneyAtStart: number | null
 }
 
 /** What the page shows of a Campaign at its Current Turn, all read through Player API queries. */
@@ -124,8 +86,13 @@ export interface CampaignStats {
    * only the part of it the page does not have.
    */
   readonly series: readonly TurnPoint[]
-  /** The Current Turn: its Turn-start values, and its Agents as they are now. */
-  readonly current: TurnPoint
+  readonly current: CurrentPoint
+  /** Every Mission site, live and Retired, as the Combat strength chart reads it. */
+  readonly sites: readonly {
+    readonly id: string
+    readonly turnCreated: number
+    readonly creationCombatRating: number
+  }[]
   readonly turn: number
   readonly ending: { readonly ending: string; readonly reasons: readonly string[]; readonly turn: number } | null
   readonly panicHundredths: number

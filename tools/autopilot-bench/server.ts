@@ -14,8 +14,9 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { Worker } from 'node:worker_threads'
 import { execFileSync } from 'node:child_process'
+import { stripTypeScriptTypes } from 'node:module'
 
-import type { CampaignStats, FromWorker, SkillChartInfo, ToWorker, TurnPoint, UpgradeInfo } from './protocol.ts'
+import type { CampaignStats, ChartDataInfo, FromWorker, ToWorker, TurnPoint, UpgradeInfo } from './protocol.ts'
 
 const arg = (name: string, fallback: string) => {
   const at = process.argv.indexOf(`--${name}`)
@@ -26,13 +27,10 @@ const SPEC = path.resolve(HERE, '../..')
 const IMPL = path.resolve(arg('impl', path.join(SPEC, '../game-v5-impl-web')))
 const PORT = Number(arg('port', '4718'))
 /**
- * Where the Campaign logs go: one folder per server start, so that a restart, which reuses the Campaign IDs, never
- * writes into the logs of an earlier one. It is outside the repository.
+ * The Implementation's chart modules, which the page draws its charts with, so that they are the game's own: the
+ * Agency charts and their layout. They import types alone, so the page runs them once their types are stripped.
  */
-const LOGS = path.join(
-  path.resolve(arg('logs', path.join(os.tmpdir(), 'autopilot-bench'))),
-  new Date().toISOString().replace(/[:.]/g, '-'),
-)
+const CHART_MODULES = new Set(['src/web/agency-charts.ts', 'src/web/series-chart-scene.ts'])
 const THREADS = Math.max(1, os.availableParallelism() - 1)
 const MAX_CAMPAIGNS = 500
 const MAX_TURNS = 100_000
@@ -56,8 +54,6 @@ interface Campaign {
   readonly seed: string
   /** The parameters of the Basic Autopilot AI, every one of them, as they were at launch. */
   readonly params: Record<string, unknown>
-  /** The Campaign log file, which its worker thread writes; none when its launch asked for no log. */
-  readonly log: string | null
   readonly thread: Thread
   state: 'starting' | 'running' | 'idle' | 'failed'
   stats: CampaignStats | null
@@ -197,13 +193,11 @@ async function launch(
   untilTurn: number,
   seeds: { readonly prefix: string } | { readonly exact: string },
   params: Record<string, unknown>,
-  logged: boolean,
 ) {
   const threads = Array.from({ length: Math.min(count, THREADS) }, () => startThread())
   const batch: Batch = { id: batches.length + 1, engine: engineVersion(), createdAt: Date.now(), threads }
   batches.push(batch)
   const created: Campaign[] = []
-  if (logged) fs.mkdirSync(LOGS, { recursive: true })
   for (let i = 0; i < count; i += 1) {
     const thread = threads[i % threads.length]!
     thread.campaigns += 1
@@ -215,7 +209,6 @@ async function launch(
       batch: batch.id,
       seed,
       params,
-      log: logged ? path.join(LOGS, `${id}-${seed.replace(/[^\w.-]/g, '_')}.jsonl`) : null,
       thread,
       state: 'starting',
       stats: null,
@@ -232,15 +225,7 @@ async function launch(
   }
   for (const c of created) {
     c.thread.ready.then(
-      () =>
-        send(c, {
-          type: 'create',
-          id: c.id,
-          seed: c.seed,
-          params,
-          log: c.log,
-          launch: { batch: batch.id, engine: batch.engine, impl: IMPL },
-        }),
+      () => send(c, { type: 'create', id: c.id, seed: c.seed, params }),
       (e: unknown) => fail(c, `The engine did not start: ${e instanceof Error ? e.message : String(e)}`),
     )
   }
@@ -293,16 +278,16 @@ const json = (res: http.ServerResponse, status: number, value: unknown) => {
 }
 
 /**
- * The engine's defaults, Upgrades, and skill chart bands, from a worker thread started for this alone, so they are read
- * from disk.
+ * The engine's defaults, Upgrades, and the game data the charts read, from a worker thread started for this alone, so
+ * they are read from disk.
  */
 function readInfo(): Promise<{
   defaults: Record<string, unknown>
   upgrades: readonly UpgradeInfo[]
-  skillChart: SkillChartInfo
+  chartData: ChartDataInfo
 }> {
   return new Promise((resolve, reject) => {
-    const thread = startThread((m) => resolve({ defaults: m.defaults, upgrades: m.upgrades, skillChart: m.skillChart }))
+    const thread = startThread((m) => resolve({ defaults: m.defaults, upgrades: m.upgrades, chartData: m.chartData }))
     thread.ready.then(
       () => void thread.worker.terminate(),
       (e: unknown) => {
@@ -328,7 +313,6 @@ function view(c: Campaign, have: number) {
     batch: c.batch,
     seed: c.seed,
     params: c.params,
-    log: c.log,
     state: c.state,
     stats: c.stats,
     run: c.run,
@@ -353,6 +337,11 @@ const server = http.createServer((req, res) => {
     if (req.method === 'GET' && url === '/') {
       res.writeHead(200, { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' })
       res.end(fs.readFileSync(path.join(HERE, 'index.html'), 'utf8'))
+    } else if (req.method === 'GET' && url !== undefined && CHART_MODULES.has(url.replace(/^\/impl\//, ''))) {
+      // As it is on disk now, so that a reload of the page draws with the Implementation's latest charts.
+      const source = fs.readFileSync(path.join(IMPL, url.replace(/^\/impl\//, '')), 'utf8')
+      res.writeHead(200, { 'content-type': 'text/javascript; charset=utf-8', 'cache-control': 'no-store' })
+      res.end(stripTypeScriptTypes(source))
     } else if (req.method === 'GET' && url === '/api/info') {
       const info = await readInfo().catch((e: unknown) => ({ engineError: e instanceof Error ? e.message : String(e) }))
       json(res, 200, { ...info, engine: engineVersion(), impl: IMPL, threads: THREADS })
@@ -381,7 +370,7 @@ const server = http.createServer((req, res) => {
         })
         return
       }
-      await launch(count, untilTurn, seeds, b.params as Record<string, unknown>, b.log !== false)
+      await launch(count, untilTurn, seeds, b.params as Record<string, unknown>)
       json(res, 200, { ok: true })
     } else if (req.method === 'POST' && url === '/api/play') {
       const b = await body(req)
@@ -423,6 +412,5 @@ const server = http.createServer((req, res) => {
 server.listen(PORT, '127.0.0.1', () => {
   console.log(`Autopilot Bench: http://127.0.0.1:${PORT}/`)
   console.log(`  engine  ${IMPL} (${engineVersion()}), up to ${THREADS} worker threads per launch`)
-  console.log(`  logs    ${LOGS}`)
   console.log('Each launch starts the engine again from the source on disk; its Campaigns keep that engine.')
 })

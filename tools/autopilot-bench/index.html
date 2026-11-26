@@ -274,17 +274,6 @@
       input:disabled {
         opacity: 0.4;
       }
-      /* The Write log checkbox sits on the inputs' baseline, not under a label of its own. */
-      .ctl label.logbox {
-        flex-direction: row;
-        align-items: center;
-        gap: 6px;
-        align-self: center;
-        font-size: 13px;
-      }
-      .logbox input {
-        width: auto;
-      }
       input.chg {
         border-color: var(--accent);
         color: var(--accent-text);
@@ -353,7 +342,9 @@
       }
       .crow {
         display: grid;
-        grid-template-columns: 180px 250px max-content;
+        /* The last column takes the width left and no more, so that the list never scrolls sideways: its lines wrap
+           within it, and the charts below span the whole block. */
+        grid-template-columns: 180px 250px minmax(0, 1fr);
         gap: 0 14px;
         padding: 6px 0;
         border-bottom: 1px solid var(--border);
@@ -413,8 +404,10 @@
         padding: 1px 7px;
         font-size: 12px;
       }
+      /* A line wraps the stats that do not fit; the header wraps at the same places, so each stays under its label. */
       .line {
         display: flex;
+        flex-wrap: wrap;
         align-items: flex-end;
         padding: 2px 0 3px;
       }
@@ -534,20 +527,6 @@
       .charts:empty {
         display: none;
       }
-      /* Below the charts, the path of the Campaign log, to hand to Claude. */
-      .logline {
-        grid-column: 1 / -1;
-        font-size: 12px;
-        padding: 2px 0 4px;
-        white-space: normal;
-        overflow-wrap: anywhere;
-      }
-      .logline code {
-        user-select: all;
-      }
-      .logline:empty {
-        display: none;
-      }
       .chart {
         width: 360px;
         box-sizing: content-box;
@@ -556,7 +535,9 @@
         border: 1px solid var(--divider);
         padding: 4px 6px 2px;
       }
+      /* The title row keeps its Last 100 checkbox and Full screen button within it, so they never push into the legend. */
       .chart h4 {
+        display: flow-root;
         margin: 0;
         font-family: var(--head);
         font-weight: 600;
@@ -590,7 +571,41 @@
       .chart svg {
         display: block;
         width: 360px;
-        height: 120px;
+        height: 150px;
+      }
+      /* The shapes of the game's chart layout, styled as the game's charts are. */
+      .chart svg line.grid {
+        stroke: var(--raised);
+        stroke-width: 1;
+      }
+      .chart svg line.base {
+        stroke: var(--border);
+        stroke-width: 1;
+      }
+      .chart svg rect.hov {
+        fill: rgba(232, 228, 216, 0.12);
+      }
+      .chart svg path.line,
+      .chart svg path.outline,
+      .chart svg path.dot {
+        fill: none;
+        stroke-linejoin: round;
+        stroke-linecap: round;
+        vector-effect: non-scaling-stroke;
+      }
+      .chart svg path.line {
+        stroke-width: 2;
+      }
+      .chart svg path.outline {
+        stroke: var(--bg);
+        stroke-width: 4;
+      }
+      .chart svg path.dot {
+        stroke-width: 7;
+      }
+      .chart .nochart {
+        margin: 8px 0;
+        font-size: 12px;
       }
       .chart h4 .last100 {
         float: right;
@@ -649,9 +664,6 @@
         width: 100%;
         height: auto;
       }
-      .chart.full svg text {
-        font-size: var(--fs, 9px);
-      }
       /* Below a full-screen chart, the values of the Turn under the pointer, as the game's charts show them; it keeps
          its height while no Turn is under the pointer, so that the chart never moves. */
       .chart .readout {
@@ -687,7 +699,7 @@
       }
       .chart svg text {
         font-family: var(--mono);
-        font-size: 9px;
+        font-size: 11px;
         fill: var(--muted);
       }
       .tip {
@@ -841,7 +853,7 @@
       let edited = {}
       let weights = {}
       // `seed`, when not empty, is an exact Campaign seed: the launch plays that one Campaign, e.g. to replay one.
-      let launchForm = { count: 10, untilTurn: 200, seedPrefix: 'seed', seed: '', log: true }
+      let launchForm = { count: 10, untilTurn: 200, seedPrefix: 'seed', seed: '' }
       let moreTurns = 50
       let STATE = { now: Date.now(), campaigns: [], batches: [] }
       let clockOffset = 0
@@ -1113,7 +1125,6 @@
     <label><span class="lbl">Until turn</span><input type="number" id="l_until" min="1" step="1" value="${esc(launchForm.untilTurn)}" /></label>
     <label><span class="lbl">Seed prefix</span><input class="wide" id="l_seed" value="${esc(launchForm.seedPrefix)}" /></label>
     <label><span class="lbl">Exact seed</span><input class="wide" id="l_exact" placeholder="none" value="${esc(launchForm.seed)}" /></label>
-    <label class="logbox" title="Write a Campaign log of every Turn, for Claude to analyze; it costs some speed"><input type="checkbox" id="l_log"${launchForm.log ? ' checked' : ''} /> Write log</label>
     <button class="pri" id="launch">Launch</button>
     <span class="note" style="align-self:center">with <span id="launchParams"></span></span>
   </div>
@@ -1363,9 +1374,6 @@
                 ? '<span class="f dim">none yet</span>'
                 : ''
         }
-        cells.log = c.log
-          ? `<span class="dim" title="Every Turn of the Campaign as JSON Lines: the Agency, Agents, Mission sites, Investigations and Leads at the end of each player phase, the Player actions the AI requested, and the Turn report; and the whole Campaign at the end of every run">Log</span> <code>${esc(c.log)}</code> <button type="button" data-act="copylog" title="Copy the log's path">Copy path</button>`
-          : '<span class="dim">No log: launched without Write log</span>'
         return cells
       }
 
@@ -1413,151 +1421,21 @@
 
       /* ---------- Per-Turn charts ---------- */
 
+      /**
+       * The Implementation's chart modules, which `load` imports from the server: the game's Agency charts, i.e. their
+       * series, colours, and per-Turn values, and their layout, so that every chart here is drawn as the game draws it.
+       */
+      let AGENCY = null
+      let SCENE = null
+
       /** Every ended Turn of each Campaign, by its ID, as the server sent them: only the part not held is sent again. */
       const SERIES = new Map()
 
-      const STATUS_GROUPS = [
-        ['Standby', '#7FD45F'],
-        ['In training', '#2E8B3E'],
-        ['Contracting', '#E8C547'],
-        ['Investigating', '#A77BDB'],
-        ['Deployed', '#F28C28'],
-        ['Recovering', '#D2453D'],
-        ['In transit', '#3D8FD9'],
-      ]
-      const INCOME = [
-        ['Funding', '#3E8E41'],
-        ['Contracting income', '#6CC05B'],
-        ['Mission rewards', '#A9DD8F'],
-      ]
-      const SPENDING = [
-        ['Upkeep', '#A8322D'],
-        ['Agent hiring', '#D9473F'],
-        ['Cap Upgrades', '#FF6F61'],
-        ['Other Upgrades', '#F2A39B'],
-      ]
-      const NET = ['Net flow', '#E8C547']
-      const ASSETS = [
-        ['Money', '#8BC34A'],
-        ['Serving Agents', '#A1887F'],
-        ['Agent cap', '#D7CCC8'],
-        ['Transport cap', '#3D8FD9'],
-        ['Training cap', '#E8C547'],
-      ]
-      /** The Combat strength chart's series, as the game's Combat strength chart colours them. */
-      const STRENGTH_BARS = [
-        ['Deployable Agents', '#4A86D9'],
-        ['Other Agents', '#2E4E78'],
-      ]
-      const STRENGTH_LINES = [
-        ['Last Mission site', '#E8605A'],
-        ['Last 5 Mission sites', '#E3C43A'],
-      ]
-      /** A Turn point's strength: a Campaign launched before the chart existed reports none. */
-      const strengthOf = (p) => p.strength ?? [0, 0, -1, -1]
-      /**
-       * The colours of the game's base skill bands, under Chart series colours in Visual Design, the lowest first; the
-       * last colour stands for every band above the twelfth. The bands themselves and their names are the game's, from
-       * its Ranks, as the engine reports them in `INFO.skillChart`.
-       */
-      const BAND_COLORS = [
-        '#6A5ACD',
-        '#4A86D9',
-        '#2FB0B8',
-        '#45BF6E',
-        '#A3CC3F',
-        '#E3C43A',
-        '#F0913A',
-        '#E8605A',
-        '#D94A8C',
-        '#B45AD6',
-        '#F2A6D8',
-        '#F4EFE6',
-      ]
-      const bandColor = (i) => BAND_COLORS[Math.min(i, BAND_COLORS.length - 1)]
-      const bandName = (i) => INFO?.skillChart?.bands[i] ?? `Band ${i + 1}`
-      /** A Turn point's Agents per base skill band. */
-      const bandsOf = (p) => p.skill
-      /**
-       * The lines over the skill chart: Agents recovering, of exhaustion above `exhaustion_work_limit`, and of exhaustion
-       * above `exhaustion_free_points`, named with those thresholds as the game names them.
-       */
-      const wornLines = () => [
-        ['Recovering', '#FF4D4D'],
-        [`Exhaustion > ${INFO?.skillChart?.workLimit ?? 70}`, '#FF9A2E'],
-        [`Exhaustion > ${INFO?.skillChart?.freePoints ?? 30}`, '#FFE14D'],
-      ]
+      /** The size of a chart in a Campaign block, in px, which its viewBox matches so that nothing is stretched. */
+      const CHART_W = 360
+      const CHART_H = 150
 
-      /** The plot area of every chart, in the units of its 360 × 120 viewBox. */
-      const CW = 360
-      const CH = 120
-      const PAD = { l: 34, r: 30, t: 6, b: 13 }
-
-      /** The least of 1, 2, 2.5, or 5 times a power of ten that is at least `v`, for an axis end. */
-      function niceCeil(v) {
-        if (!(v > 0)) return 1
-        const p = 10 ** Math.floor(Math.log10(v))
-        for (const m of [1, 2, 2.5, 5, 10]) if (m * p >= v) return m * p
-        return 10 * p
-      }
-      const compact = (v) => {
-        const a = Math.abs(v)
-        if (a >= 1e6) return `${+(v / 1e6).toFixed(a >= 1e7 ? 0 : 1)}M`
-        if (a >= 1e4) return `${+(v / 1e3).toFixed(0)}k`
-        if (a >= 1e3) return `${+(v / 1e3).toFixed(1)}k`
-        return String(Math.round(v))
-      }
-      const legend = (items, line) =>
-        `<div class="leg">${items.map(([name, color], i) => `<span><i class="${line?.(i) ? 'ln' : ''}" style="background:${color}"></i>${esc(name)}</span>`).join('')}</div>`
-
-      /**
-       * The skeleton of one chart: its frame, axis labels, and the marks given, with the plot geometry on the svg so
-       * that a hover can tell the Turn under the pointer.
-       */
-      function chartSvg(kind, n, marks, labels) {
-        const w = CW - PAD.l - PAD.r
-        return `<svg viewBox="0 0 ${CW} ${CH}" preserveAspectRatio="none" data-chart="${kind}" data-n="${n}">${marks}${labels}<rect class="hov" x="0" y="${PAD.t}" width="0" height="${CH - PAD.t - PAD.b}" fill="rgba(232,228,216,0.12)" /><text x="${PAD.l}" y="${CH - 2}">T${CHART_FIRST}</text><text x="${PAD.l + w}" y="${CH - 2}" text-anchor="end">T${CHART_FIRST + n - 1}</text></svg>`
-      }
-
-      /** Stacked bars, one per Turn: `rows[i]` lists the values of Turn i+1 bottom-up from `base(i)` going `dir`. */
-      function stackBars(rows, colors, y, dir) {
-        const n = rows.length
-        const w = CW - PAD.l - PAD.r
-        const bw = w / Math.max(n, 1)
-        const gap = bw > 4 ? 1 : 0
-        let out = ''
-        rows.forEach((vals, i) => {
-          let acc = 0
-          const x = PAD.l + i * bw
-          vals.forEach((v, j) => {
-            if (!(v > 0)) return
-            const y0 = y(dir * acc)
-            const y1 = y(dir * (acc + v))
-            acc += v
-            out += `<rect x="${x.toFixed(2)}" y="${Math.min(y0, y1).toFixed(2)}" width="${Math.max(bw - gap, 0.4).toFixed(2)}" height="${Math.abs(y1 - y0).toFixed(2)}" fill="${colors(j)}" />`
-          })
-        })
-        return out
-      }
-
-      function polyline(values, y, color, width, opacity = 1) {
-        const n = values.length
-        const w = CW - PAD.l - PAD.r
-        const bw = w / Math.max(n, 1)
-        const pts = values
-          .map((v, i) => (v === null ? null : `${(PAD.l + (i + 0.5) * bw).toFixed(2)},${y(v).toFixed(2)}`))
-          .filter((p) => p !== null)
-        if (pts.length === 1) pts.push(pts[0])
-        return `<polyline points="${pts.join(' ')}" fill="none" stroke="${color}" stroke-width="${width}" vector-effect="non-scaling-stroke" stroke-linejoin="round"${opacity < 1 ? ` opacity="${opacity}"` : ''} />`
-      }
-
-      const yScale = (lo, hi) => (v) => PAD.t + ((hi - v) / (hi - lo || 1)) * (CH - PAD.t - PAD.b)
-      const axisLabel = (v, y, right) =>
-        `<text x="${right ? CW - PAD.r + 3 : PAD.l - 3}" y="${(y + 3).toFixed(1)}" text-anchor="${right ? 'start' : 'end'}">${compact(v)}</text>`
-      const gridLine = (y, strong) =>
-        `<line x1="${PAD.l}" x2="${CW - PAD.r}" y1="${y.toFixed(2)}" y2="${y.toFixed(2)}" stroke="${strong ? 'var(--border)' : 'var(--divider)'}" stroke-width="1" vector-effect="non-scaling-stroke" />`
-
-      /** The kinds of chart that show only their last 100 Turns, kept in the browser for the next visit. */
+      /** The charts that show only their last 100 Turns, by key, kept in the browser for the next visit. */
       const LAST_100 = new Set(
         (() => {
           try {
@@ -1567,227 +1445,91 @@
           }
         })(),
       )
-      /** The first Turn the chart being drawn shows, for its axis labels. */
-      let CHART_FIRST = 1
-      /** The Turns a chart of this kind shows: the last 100 while its checkbox is checked, otherwise all. */
-      const shownTurns = (kind, turns) => (LAST_100.has(kind) ? turns.slice(-100) : turns)
 
-      /** Every Turn of a Campaign, Turn 1 to its Current Turn: the ended Turns, then the Current Turn. */
-      function turnsOf(c) {
-        const ended = SERIES.get(c.id) ?? []
+      /** The game's five Agency charts of a Campaign, from its History as the server sent it. */
+      function agencyChartsOf(c) {
+        const held = SERIES.get(c.id) ?? []
         const cur = c.stats?.current
-        return cur && (ended.length === 0 || ended[ended.length - 1].turn < cur.turn) ? [...ended, cur] : ended
+        const open = cur && (held.length === 0 || held[held.length - 1].entry.turn < cur.open.turn) ? cur.open : null
+        const moneyAtStartOfTurn = [
+          ...held.filter((p) => p.moneyAtStart !== null).map((p) => ({ turn: p.entry.turn, value: p.moneyAtStart })),
+          ...(open && cur.moneyAtStart !== null ? [{ turn: open.turn, value: cur.moneyAtStart }] : []),
+        ]
+        return AGENCY.agencyCharts({
+          entries: held.map((p) => p.entry),
+          open,
+          moneyAtStartOfTurn,
+          capUpgrades: AGENCY.capUpgradeIds(UPGRADES),
+          sites: c.stats?.sites ?? [],
+          ranks: INFO.chartData?.ranks ?? [],
+          agentParameters: INFO.chartData?.agentParameters ?? {},
+        })
       }
 
-      /** The values of each chart at Turn index i, for its tooltip. */
-      const CHARTS = {
-        status: {
-          title: 'Agents by status',
-          legend: () => legend(STATUS_GROUPS),
-          draw(turns) {
-            const rows = turns.map((p) => p.status)
-            const hi = niceCeil(Math.max(1, ...rows.map((r) => r.reduce((a, b) => a + b, 0))))
-            const y = yScale(0, hi)
-            return chartSvg(
-              'status',
-              turns.length,
-              gridLine(y(hi / 2)) + stackBars(rows, (j) => STATUS_GROUPS[j][1], y, 1) + gridLine(y(0), true),
-              axisLabel(0, y(0)) + axisLabel(hi / 2, y(hi / 2)) + axisLabel(hi, y(hi)),
-            )
-          },
-          tip: (p) => [
-            ...STATUS_GROUPS.map(([name, color], j) => [name, color, p.status[j]]).reverse(),
-            ['Serving', null, p.status.reduce((a, b) => a + b, 0)],
-          ],
-        },
-        money: {
-          title: 'Finances',
-          legend: () => legend([...INCOME, ...SPENDING, NET], (i) => i === INCOME.length + SPENDING.length),
-          draw(turns) {
-            // The ended Turns only: the Current Turn has no income or upkeep yet. Net flow needs the next Turn's start.
-            const ended = turns.filter((p) => p.money !== null)
-            const n = Math.max(ended.length, 1)
-            const inc = ended.map((p) => p.money.slice(0, 3))
-            const exp = ended.map((p) => p.money.slice(3))
-            const net = ended.map((p, i) => (turns[i + 1] ? turns[i + 1].start[0] - p.start[0] : null))
-            const hi = niceCeil(
-              Math.max(1, ...inc.map((r) => r.reduce((a, b) => a + b, 0)), ...net.filter((v) => v !== null)),
-            )
-            const lo = -niceCeil(
-              Math.max(
-                1,
-                ...exp.map((r) => r.reduce((a, b) => a + b, 0)),
-                ...net.filter((v) => v !== null).map((v) => -v),
-              ),
-            )
-            const y = yScale(lo, hi)
-            return chartSvg(
-              'money',
-              n,
-              stackBars(inc, (j) => INCOME[j][1], y, 1) +
-                stackBars(exp, (j) => SPENDING[j][1], y, -1) +
-                gridLine(y(0), true) +
-                (ended.length ? polyline(net, y, NET[1], 2, 0.5) : ''),
-              axisLabel(hi, y(hi)) + axisLabel(0, y(0)) + axisLabel(lo, y(lo)),
-            )
-          },
-          points: (turns) => turns.filter((p) => p.money !== null),
-          tip: (p, i, turns) => {
-            const next = turns.find((q) => q.turn === p.turn + 1)
-            return [
-              ...INCOME.map(([name, color], j) => [name, color, p.money[j]]),
-              ...SPENDING.map(([name, color], j) => [name, color, p.money[3 + j] ? -p.money[3 + j] : 0]),
-              [NET[0], NET[1], next ? next.start[0] - p.start[0] : null, true],
-            ]
-          },
-        },
-        assets: {
-          title: 'Assets at Turn start',
-          legend: () => legend(ASSETS, () => true),
-          draw(turns) {
-            const money = turns.map((p) => p.start[0])
-            const mHi = niceCeil(Math.max(1, ...money))
-            const mLo = Math.min(0, ...money) < 0 ? -niceCeil(-Math.min(...money)) : 0
-            const aHi = niceCeil(Math.max(1, ...turns.flatMap((p) => p.start.slice(1))))
-            const ym = yScale(mLo, mHi)
-            const ya = yScale(0, aHi)
-            const lines = ASSETS.slice(1)
-              .map(([, color], j) =>
-                polyline(
-                  turns.map((p) => p.start[1 + j]),
-                  ya,
-                  color,
-                  1.5,
-                ),
-              )
-              .reverse()
-              .join('')
-            return chartSvg(
-              'assets',
-              turns.length,
-              gridLine(ya(aHi / 2)) + gridLine(ym(0), true) + lines + polyline(money, ym, ASSETS[0][1], 2),
-              axisLabel(mLo, ym(mLo)) +
-                axisLabel(mHi, ym(mHi)) +
-                axisLabel(0, ya(0), true) +
-                axisLabel(aHi / 2, ya(aHi / 2), true) +
-                axisLabel(aHi, ya(aHi), true),
-            )
-          },
-          tip: (p) => ASSETS.map(([name, color], j) => [name, color, p.start[j], true]),
-        },
-        skill: {
-          title: 'Agents by base skill',
-          legend: (turns) => {
-            const top = Math.max(0, ...turns.map((p) => bandsOf(p).length - 1))
-            const bands = Array.from({ length: top + 1 }, (_, i) => [bandName(i), bandColor(i)])
-            return legend([...bands, ...wornLines()], (i) => i >= bands.length)
-          },
-          draw(turns) {
-            const rows = turns.map(bandsOf)
-            const hi = niceCeil(Math.max(1, ...rows.map((r) => r.reduce((a, b) => a + b, 0))))
-            const y = yScale(0, hi)
-            // A Campaign launched before the lines existed reports no `worn`, and draws no line.
-            // Each line has a dark outline, so that it stays apart from a band of a like colour behind it.
-            const lines = wornLines()
-              .map(([, color], j) => {
-                if (!turns.some((p) => p.worn)) return ''
-                const values = turns.map((p) => p.worn?.[j] ?? null)
-                return polyline(values, y, '#0D0D0B', 4, 0.5) + polyline(values, y, color, 2, 0.5)
-              })
-              .reverse()
-              .join('')
-            return chartSvg(
-              'skill',
-              turns.length,
-              gridLine(y(hi / 2)) + stackBars(rows, bandColor, y, 1) + gridLine(y(0), true) + lines,
-              axisLabel(0, y(0)) + axisLabel(hi / 2, y(hi / 2)) + axisLabel(hi, y(hi)),
-            )
-          },
-          tip: (p) => {
-            const bands = bandsOf(p)
-            return [
-              ['Serving', null, bands.reduce((a, b) => a + b, 0)],
-              ...bands
-                .map((v, i) => [bandName(i), bandColor(i), v])
-                .filter((r) => r[2] > 0)
-                .reverse(),
-              ...wornLines().map(([name, color], j) => [name, color, p.worn?.[j] ?? null, true]),
-            ]
-          },
-        },
-        strength: {
-          title: 'Combat strength',
-          legend: () => legend([...STRENGTH_BARS, ...STRENGTH_LINES], (i) => i >= STRENGTH_BARS.length),
-          draw(turns) {
-            // The bar of a Turn is the Combat rating of every Serving Agent: the Deployable Agents' at the bottom, and
-            // the rest of it, i.e. the whole less theirs, on top.
-            const rows = turns.map((p) => {
-              const [deployable, all] = strengthOf(p)
-              return [deployable, Math.max(0, all - deployable)]
-            })
-            const line = (j) => turns.map((p) => (strengthOf(p)[2 + j] < 0 ? null : strengthOf(p)[2 + j]))
-            const hi = niceCeil(
-              Math.max(1, ...turns.map((p) => Math.max(strengthOf(p)[1], strengthOf(p)[2], strengthOf(p)[3]))),
-            )
-            const y = yScale(0, hi)
-            const lines = STRENGTH_LINES.map(([, color], j) =>
-              line(j).some((v) => v !== null) ? polyline(line(j), y, color, 2, 0.5) : '',
-            )
-              .reverse()
-              .join('')
-            return chartSvg(
-              'strength',
-              turns.length,
-              gridLine(y(hi / 2)) + stackBars(rows, (j) => STRENGTH_BARS[j][1], y, 1) + gridLine(y(0), true) + lines,
-              axisLabel(0, y(0)) + axisLabel(hi / 2, y(hi / 2)) + axisLabel(hi, y(hi)),
-            )
-          },
-          tip: (p) => {
-            const [deployable, all, last, last5] = strengthOf(p)
-            return [
-              ['All Agents', null, all],
-              [STRENGTH_BARS[0][0], STRENGTH_BARS[0][1], deployable],
-              [STRENGTH_BARS[1][0], STRENGTH_BARS[1][1], Math.max(0, all - deployable)],
-              [STRENGTH_LINES[0][0], STRENGTH_LINES[0][1], last < 0 ? null : last, true],
-              [STRENGTH_LINES[1][0], STRENGTH_LINES[1][1], last5 < 0 ? null : last5, true],
-            ]
-          },
-        },
+      const fix1 = (v) => (Math.round(v * 10) / 10).toString()
+
+      /** The SVG of a chart's scene: the same shapes the game's SeriesChart draws. */
+      function sceneSvg(key, scene) {
+        const grid = scene.grid
+          .map(
+            (g) =>
+              `<line class="${g.base ? 'base' : 'grid'}" x1="${fix1(g.x1)}" x2="${fix1(g.x2)}" y1="${fix1(g.y)}" y2="${fix1(g.y)}" />`,
+          )
+          .join('')
+        const ticks = scene.ticks
+          .map((t) => `<text x="${fix1(t.x)}" y="${fix1(t.y)}" text-anchor="${t.anchor}">${esc(t.text)}</text>`)
+          .join('')
+        const rects = scene.rects
+          .map(
+            (r) =>
+              `<rect x="${fix1(r.x)}" y="${fix1(r.y)}" width="${fix1(r.width)}" height="${fix1(r.height)}" fill="${r.color}" />`,
+          )
+          .join('')
+        const lines = scene.lines
+          .map(
+            (l) =>
+              `<g${l.opacity === 1 ? '' : ` opacity="${l.opacity}"`}>${l.outline ? `<path class="outline" d="${l.d}" />` : ''}<path class="line" d="${l.d}" stroke="${l.color}" /><path class="dot" d="M${fix1(l.dot.x)},${fix1(l.dot.y)}h0" stroke="${l.color}" /></g>`,
+          )
+          .join('')
+        return `<svg viewBox="0 0 ${scene.width} ${scene.height}" data-chart="${esc(key)}">${grid}${ticks}<rect class="hov" x="0" y="0" width="0" height="0" />${rects}${lines}</svg>`
       }
 
-      /** The five charts of a Campaign block, from every Turn it has played. */
-      function chartsHtml(turns, expanded) {
-        if (turns.length === 0) return ''
+      /** The legend of a chart, as the game lists it: the bar series, then the lines. */
+      const legendHtml = (shown) =>
+        `<div class="leg">${SCENE.legendOf(shown)
+          .map((s) => `<span><i class="${s.line ? 'ln' : ''}" style="background:${s.color}"></i>${esc(s.name)}</span>`)
+          .join('')}</div>`
+
+      /** The charts of a Campaign block, and the one shown full screen, with the scenes a hover reads. */
+      function chartsHtml(row, charts) {
+        const expanded = row.expanded
+        row.scenes = new Map()
         return (
           (expanded ? '<div class="chart-backdrop"></div>' : '') +
-          Object.entries(CHARTS)
-            .map(([kind, ch]) => {
-              const full = kind === expanded
-              const shown = shownTurns(kind, turns)
-              const points = ch.points ? ch.points(shown) : shown
-              CHART_FIRST = points[0]?.turn ?? 1
-              const drawn = ch.draw(shown)
-              const svg = full
-                ? drawn.replace('preserveAspectRatio="none"', 'preserveAspectRatio="xMidYMid meet"')
-                : drawn
-              const last100 = `<label class="last100" title="Show only the last 100 Turns"><input type="checkbox" data-last100="${kind}"${LAST_100.has(kind) ? ' checked' : ''}> Last 100</label>`
-              return `<div class="chart${full ? ' full' : ''}"><h4>${esc(ch.title)}<button type="button" class="expand" data-act="expand" data-kind="${kind}" title="${full ? 'Close (Esc)' : 'Show full screen'}" aria-label="${full ? 'Close' : 'Show full screen'}">${full ? '✕' : '⤢'}</button>${last100}</h4>${ch.legend(turns)}${svg}${full ? '<div class="readout">&nbsp;</div>' : ''}</div>`
+          charts
+            .map((chart) => {
+              const full = chart.key === expanded
+              const shown = SCENE.shownChart(chart, LAST_100.has(chart.key))
+              // A chart shown full screen is laid out at the size it takes on screen, as the game's is.
+              const w = full ? Math.max(CHART_W, window.innerWidth - 84) : CHART_W
+              const h = full ? Math.max(CHART_H, window.innerHeight - 220) : CHART_H
+              const scene = SCENE.seriesChartScene(shown, w, h)
+              row.scenes.set(chart.key, { shown, scene, total: chart.total })
+              const plot = scene === null ? '<p class="dim nochart">No ended Turn yet.</p>' : sceneSvg(chart.key, scene)
+              const last100 = `<label class="last100" title="Show only the last 100 Turns"><input type="checkbox" data-last100="${esc(chart.key)}"${LAST_100.has(chart.key) ? ' checked' : ''}> Last 100</label>`
+              return `<div class="chart${full ? ' full' : ''}"><h4>${esc(chart.title)}<button type="button" class="expand" data-act="expand" data-kind="${esc(chart.key)}" title="${full ? 'Close (Esc)' : 'Show full screen'}" aria-label="${full ? 'Close' : 'Show full screen'}">${full ? '✕' : '⤢'}</button>${last100}</h4>${legendHtml(shown)}${plot}${full ? '<div class="readout">&nbsp;</div>' : ''}</div>`
             })
             .join('')
         )
       }
 
       function drawCharts(row, c) {
-        const turns = turnsOf(c)
-        const last = turns[turns.length - 1]
-        const key = `${turns.length}|${JSON.stringify(last ?? null)}|${row.expanded ?? ''}|${[...LAST_100].join(',')}`
+        if (AGENCY === null) return
+        const held = SERIES.get(c.id) ?? []
+        const key = `${held.length}|${JSON.stringify(c.stats?.current ?? null)}|${row.expanded ?? ''}|${[...LAST_100].join(',')}|${window.innerWidth}x${window.innerHeight}`
         if (row.chartKey === key) return
         row.chartKey = key
-        row.turns = turns
-        row.charts.innerHTML = chartsHtml(turns, row.expanded)
-        // A chart shown full screen scales its viewBox up; its labels keep a readable size on screen instead.
-        const full = row.charts.querySelector('.chart.full svg')
-        if (full) full.style.setProperty('--fs', `${(12 * CW) / Math.max(full.clientWidth, 1)}px`)
+        row.charts.innerHTML = held.length === 0 && !c.stats ? '' : chartsHtml(row, agencyChartsOf(c))
       }
 
       /** Shows one chart of a Campaign block full screen, or closes it when it already is. */
@@ -1798,60 +1540,38 @@
         drawCharts(row, row.campaign)
       }
 
-      /** The tooltip of a chart: the Turn under the pointer and its values. */
+      /** One readout item, as a key in its colour, its name, and its value. */
+      const itemHtml = (item, sep) =>
+        `${item.color ? `<i class="${item.line ? 'ln' : ''}" style="background:${item.color}"></i>` : sep ? '' : '<i></i>'}${esc(item.name)}${sep ? ` ${fmt(item.value)}` : `<span class="v">${fmt(item.value)}</span>`}`
+
+      /** The values of the Turn under the pointer: in the tooltip, or in the readout below a full-screen chart. */
       function hover(e) {
         const tip = $('tip')
         const svg = e.target.closest?.('svg[data-chart]')
         const row = svg && rows.get(svg.closest('[data-id]').dataset.id)
         for (const r of document.querySelectorAll('svg .hov[width]:not([width="0"])'))
           if (!svg || r.ownerSVGElement !== svg) r.setAttribute('width', '0')
-        // A full-screen chart shows the values in its readout below the plot rather than in the tooltip.
         const readout = svg?.closest('.chart.full')?.querySelector('.readout') ?? null
         for (const r of document.querySelectorAll('.chart.full .readout')) if (r !== readout) r.innerHTML = '&nbsp;'
-        if (!svg || !row?.turns) {
+        const drawn = svg ? row?.scenes?.get(svg.dataset.chart) : undefined
+        if (!svg || !drawn?.scene) {
           tip.style.display = 'none'
           return
         }
-        const ch = CHARTS[svg.dataset.chart]
-        const base = shownTurns(svg.dataset.chart, row.turns)
-        const points = ch.points ? ch.points(base) : base
+        const { shown, scene, total } = drawn
         const box = svg.getBoundingClientRect()
-        const x = ((e.clientX - box.left) / box.width) * CW
-        const w = CW - PAD.l - PAD.r
-        const i = Math.floor(((x - PAD.l) / w) * points.length)
-        const p = points[i]
-        if (p === undefined) {
-          tip.style.display = 'none'
-          if (readout) readout.innerHTML = '&nbsp;'
-          return
-        }
-        const bw = w / points.length
+        const turn = SCENE.sceneTurnAt(scene, ((e.clientX - box.left) / box.width) * scene.width)
+        const h = SCENE.hoverRect(scene, turn)
         const hov = svg.querySelector('.hov')
-        hov.setAttribute('x', String(PAD.l + i * bw))
-        hov.setAttribute('width', String(Math.max(bw, 1)))
-        const now = p.money === null && svg.dataset.chart !== 'assets' ? ' <span class="dim">now</span>' : ''
+        for (const [k, v] of Object.entries(h)) hov.setAttribute(k, String(v))
+        const items = AGENCY.readout({ turn, ...shown, total }) ?? []
         if (readout) {
           tip.style.display = 'none'
           readout.innerHTML =
-            `<b>Turn ${fmt(p.turn)}</b>${now}: ` +
-            ch
-              .tip(p, i, base)
-              .map(
-                ([name, color, v, line]) =>
-                  `${color ? `<i class="${line ? 'ln' : ''}" style="background:${color}"></i>` : ''}${esc(name)} ${v === null ? '—' : fmt(v)}`,
-              )
-              .join('<span class="sep">·</span>')
+            `<b>Turn ${fmt(turn)}</b>: ` + items.map((item) => itemHtml(item, true)).join('<span class="sep">·</span>')
           return
         }
-        tip.innerHTML =
-          `<b>Turn ${fmt(p.turn)}</b>${now}<br>` +
-          ch
-            .tip(p, i, base)
-            .map(
-              ([name, color, v, line]) =>
-                `${color ? `<i class="${line ? 'ln' : ''}" style="background:${color}"></i>` : '<i></i>'}${esc(name)}<span class="v">${v === null ? '—' : fmt(v)}</span>`,
-            )
-            .join('<br>')
+        tip.innerHTML = `<b>Turn ${fmt(turn)}</b><br>` + items.map((item) => itemHtml(item, false)).join('<br>')
         tip.style.display = 'block'
         const tw = tip.offsetWidth
         const th = tip.offsetHeight
@@ -1892,7 +1612,7 @@
           { length: RECENT_LINES },
           (_, i) =>
             `<div class="line rm l${LAYER_NAMES.length + i + 1}"><span class="c layer"${i === 0 ? ' title="The last Missions fought, the latest first"' : ''}>${i === 0 ? 'Fought' : ''}</span><span data-k="rm${i}"></span></div>`,
-        ).join('')}</div><div class="charts"></div><div class="logline" data-k="log"></div>`
+        ).join('')}</div><div class="charts"></div>`
         $('cbody').appendChild(el)
         const cells = {}
         for (const k of el.querySelectorAll('[data-k]')) cells[k.dataset.k] = k
@@ -1995,14 +1715,12 @@
             untilTurn: num('l_until'),
             seedPrefix: $('l_seed').value,
             seed: $('l_exact').value.trim(),
-            log: $('l_log').checked,
           }
           moreTurns = num('more')
           seedMode()
           save()
         }
-        for (const id of ['l_count', 'l_until', 'l_seed', 'l_exact', 'l_log', 'more'])
-          $(id).addEventListener('input', remember)
+        for (const id of ['l_count', 'l_until', 'l_seed', 'l_exact', 'more']) $(id).addEventListener('input', remember)
         seedMode()
         $('launch').addEventListener('click', () => {
           remember()
@@ -2031,20 +1749,6 @@
           else if (a === 'remove') post('api/remove', { ids: [id] })
           else if (a === 'use') useCampaign(rows.get(id).campaign)
           else if (a === 'expand') expandChart(rows.get(id), b.dataset.kind)
-          else if (a === 'copylog') {
-            const done = (label) => {
-              b.textContent = label
-              setTimeout(() => (b.textContent = 'Copy path'), 1500)
-            }
-            try {
-              navigator.clipboard.writeText(rows.get(id).campaign.log).then(
-                () => done('Copied'),
-                () => done('Select it and press Ctrl+C'),
-              )
-            } catch {
-              done('Select it and press Ctrl+C')
-            }
-          }
         }
         // Escape, or a press on the backdrop around it, closes a chart shown full screen.
         document.addEventListener('keydown', (e) => {
@@ -2135,6 +1839,16 @@
           : `Engine and AI: <code>${esc(INFO.impl)}</code>, ${esc(INFO.engine)}, read again from disk at each launch; up to ${INFO.threads} worker threads per launch.`
         DEFAULTS = INFO.defaults ?? {}
         UPGRADES = INFO.upgrades ?? []
+        // The game's own Agency charts and their layout, from the Implementation clone as it is on disk now.
+        try {
+          ;[AGENCY, SCENE] = await Promise.all([
+            import('./impl/src/web/agency-charts.ts'),
+            import('./impl/src/web/series-chart-scene.ts'),
+          ])
+        } catch (e) {
+          $('engine').innerHTML +=
+            ` <span class="bad">The charts did not load: ${esc(e instanceof Error ? e.message : String(e))}</span>`
+        }
         for (const k of Object.keys(edited)) if (!(k in DEFAULTS)) delete edited[k]
         $('app').innerHTML = renderParams() + renderCampaignsSection() + renderChangesSection() + renderGlossary()
         bindParams()
