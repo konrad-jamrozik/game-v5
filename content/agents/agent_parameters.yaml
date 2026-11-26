@@ -6,7 +6,7 @@ exhaustion_free_points: 30 # exhaustion up to this has no effect on skill
 skill_penalty_pct_per_exhaustion: 1 # per point of exhaustion above exhaustion_free_points
 exhaustion_per_attack: 1
 exhaustion_per_defense: 0
-exhaustion_per_mission: 5
+exhaustion_per_mission: 15
 exhaustion_per_pct_killed: 1
 exhaustion_per_contracting_turn: 1
 exhaustion_per_training_turn: 1

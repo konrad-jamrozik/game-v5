@@ -147,10 +147,11 @@ The Data sheet of an AmmoType shows what a round costs and which Weapons spend i
 
 The Data sheet of an Upgrade shows what one acquisition costs and [adds](../../mechanics/economy-and-upgrades.md#upgrade-effects). What the [Agency](../../mechanics/domain-model.md#agency-and-agents) has acquired so far is shown by the [Upgrades View](upgrades-view.md), not here.
 
-| Label         | Value                                                                                   |
-| ------------- | --------------------------------------------------------------------------------------- |
-| Price         | `price`, followed by "money", e.g. "500 money".                                         |
+| Label | Value |
+| --- | --- |
+| Price | `price`, followed by "money", e.g. "500 money". |
 | Each purchase | The `increment` with a plus sign, worded by the `effect` as the following table states. |
+| Purchases | The `max_acquisitions` followed by "at most", e.g. "8 at most"; the row is left out for an Upgrade without one. |
 
 | `effect` | Wording, e.g. |
 | --- | --- |

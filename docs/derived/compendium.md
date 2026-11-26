@@ -219,7 +219,7 @@ Exhaustion measures how tired an [Agent](#agents) is. Work and fighting raise it
 | Each turn on an [Investigation](#investigations) | +1 |
 | Each attack made in a [Combat](#combat) | +1, hit or miss |
 | Each attack defended against | +0, hit or miss |
-| Each [Mission](#missions) survived | +5, and +1 for each 1% of the team that was killed, rounded up |
+| Each [Mission](#missions) survived | +15, and +1 for each 1% of the team that was killed, rounded up |
 | Each turn on Standby or Recovery | −5, plus [Upgrades](#upgrades), never below 0 |
 | [In transit](#transit) or deployed | No rest |
 | [Skill](#skill) penalty | −1% of skill for each point above 30 |
@@ -437,7 +437,7 @@ A Mission is your team's one attempt at a [Mission site](#mission-sites). You de
 | Transport cap | 8 Agents deployed at one time, over all Missions, plus [Upgrades](#upgrades) |
 | Won | No Enemy is able to fight; the rewards of the Mission site apply |
 | Lost | The team [retreats](#retreat), or no Agent is able to fight; no reward, and a [Faction operation](#faction-operations) that was not stopped applies its penalty |
-| Exhaustion of survivors | +5, and +1 for each 1% of the team that was killed, rounded up |
+| Exhaustion of survivors | +15, and +1 for each 1% of the team that was killed, rounded up |
 | After the Combat | Survivors below [max health](#health) go to [Recovery](#recovery), the others to Standby; all are [in transit](#transit) for a turn |
 
 See also: [Mission sites](#mission-sites) · [Combat](#combat) · [Retreat](#retreat) · [Experience](#experience) · [Transport cap](#transport-cap)
@@ -1999,6 +1999,7 @@ Better quarters and rest rotations let every resting [Agent](#agents) shake off 
 | `price`               | `1000`                |
 | `effect`              | `exhaustion_recovery` |
 | `increment`           | `1`                   |
+| `max_acquisitions`    | `10`                  |
 
 ### Health recovery
 
@@ -2006,12 +2007,13 @@ Source: `content/compendium/compendium_articles/health_recovery_article.yaml`
 
 A better infirmary lets every [Agent](#agents) on [Recovery](#recovery) heal faster.
 
-| `health_recovery` | Upgrade           |
-| ----------------- | ----------------- |
-| `name`            | `Health recovery` |
-| `price`           | `1000`            |
-| `effect`          | `health_recovery` |
-| `increment`       | `1`               |
+| `health_recovery`  | Upgrade           |
+| ------------------ | ----------------- |
+| `name`             | `Health recovery` |
+| `price`            | `1000`            |
+| `effect`           | `health_recovery` |
+| `increment`        | `1`               |
+| `max_acquisitions` | `8`               |
 
 ### Training cap
 
@@ -2038,6 +2040,7 @@ Better instructors and simulators make every [Agent](#agents) on [Training](#tra
 | `price`               | `1000`                |
 | `effect`              | `training_skill_gain` |
 | `increment`           | `0.5`                 |
+| `max_acquisitions`    | `8`                   |
 
 ### Transport cap
 

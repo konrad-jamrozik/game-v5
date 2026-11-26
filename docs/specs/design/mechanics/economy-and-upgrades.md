@@ -61,6 +61,7 @@ Each Upgrade the Agency can buy is one [GDR](../foundation/core-concepts.md#game
 | `price` | The money one acquisition of the Upgrade costs: a whole number of at least 0. | [Purchasing Upgrades](#purchasing-upgrades) |
 | `effect` | What the Upgrade improves: one of the effect identifiers. Several Upgrades may share one. | [Upgrade effects](#upgrade-effects) |
 | `increment` | The Upgrade's Increment: a whole number of at least 0, or for a Rate Upgrade a [Decimal quantity](../foundation/numbers.md#glossary) of at least 0. | [Upgrade bonus](#upgrade-bonus) |
+| `max_acquisitions` | Optional: the most Acquisitions the Agency can have of the Upgrade, a whole number of at least 1. Absent, the Upgrade has no such limit. | [Purchasing Upgrades](#purchasing-upgrades) |
 
 ## AgencyArchetype
 
@@ -220,7 +221,7 @@ Upgrades let the Agency spend money on lasting improvements instead of on more A
 
 The Player action `player.actions.purchaseUpgrade(upgrade)` buys one acquisition of the Upgrade that `upgrade` identifies.
 
-It requires that the Agency's money is at least the Upgrade's `price`. The Agency's money falls by the `price`, and its Acquisitions of the Upgrade rise by 1. The `price` is the same for every acquisition, and an Upgrade can be purchased any number of times, in one [Turn](../foundation/engine-contract.md#player-actions-and-turns) and in the whole Campaign.
+It requires that the Agency's money is at least the Upgrade's `price` and, when the Upgrade has a `max_acquisitions`, that its Acquisitions are below it. The Agency's money falls by the `price`, and its Acquisitions of the Upgrade rise by 1. The `price` is the same for every acquisition, and an Upgrade without a `max_acquisitions` can be purchased any number of times, in one [Turn](../foundation/engine-contract.md#player-actions-and-turns) and in the whole Campaign.
 
 ## Upgrade effects
 
