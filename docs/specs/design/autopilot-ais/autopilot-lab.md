@@ -23,13 +23,10 @@ Two rules shape it. A run never takes more than three minutes, so the agent size
 | Lab variant | What plays the Campaigns of a Lab run: an Implementation clone, the [Autopilot AI](../foundation/engine-contract.md#principals-and-access) it offers, and the [Tuning parameters](basic-autopilot-ai.md#glossary) that differ from that Autopilot AI's Game designer values. |
 | Ready rating | Of a [Response Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) when it appears: the [Combat rating](../mechanics/combat.md#combat-rating) of the strongest [Deployable Agents](../mechanics/missions.md#glossary) within the free [Transport cap](../mechanics/economy-and-upgrades.md#glossary), as a share of the [Combat rating](../mechanics/combat.md#combatant-condition-in-a-combat) of its Enemies. |
 | Run time limit | The most wall-clock time a Lab run may take: three minutes from its start. |
-| Forced loss share | For a run of the Autopilot Lab: the [Probability](../foundation/numbers.md#glossary) with which each [Mission](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) is made Lost, whatever its [Combat](../mechanics/domain-model.md#combat) would have been. |
 
 # What a Lab run plays
 
-Every Lab variant of a Lab run plays the same Campaigns, so that a difference between variants comes from the variants and not from chance. A Lab run is given the number of Campaigns, the last [Turn](../foundation/engine-contract.md#player-actions-and-turns), the seeds, the [Campaign configuration preset](../foundation/game-data-records.md#glossary) and [Preset edits](../foundation/configuration.md#glossary), and its Lab variants; each Campaign of it is the one its [Campaign setup seed](../foundation/configuration.md#glossary) creates. Each Turn of a Campaign is played with [Autopilot engaged](../foundation/autopilot.md) by the Lab variant's Autopilot AI, as a player would engage it, and the Lab reads the Campaign only through [Player API](../foundation/engine-contract.md#api-surfaces), except for the [Developer tools](../foundation/engine-contract.md#api-surfaces) that a [Forced loss share](autopilot-ai-expectations.md#glossary) needs.
-
-A Lab run may give a Forced loss share, with which each [Mission](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) is made Lost, so that it can check whether an Autopilot AI still wins through losses. How a Mission is made Lost is open: e.g., a Developer tool could make its team retreat at Combat start, so that the Agents survive as from a Retreated Combat.
+Every Lab variant of a Lab run plays the same Campaigns, so that a difference between variants comes from the variants and not from chance. A Lab run is given the number of Campaigns, the last [Turn](../foundation/engine-contract.md#player-actions-and-turns), the seeds, the [Campaign configuration preset](../foundation/game-data-records.md#glossary) and [Preset edits](../foundation/configuration.md#glossary), and its Lab variants; each Campaign of it is the one its [Campaign setup seed](../foundation/configuration.md#glossary) creates. Each Turn of a Campaign is played with [Autopilot engaged](../foundation/autopilot.md) by the Lab variant's Autopilot AI, as a player would engage it, and the Lab reads the Campaign only through [Player API](../foundation/engine-contract.md#api-surfaces).
 
 # Run time limit
 
@@ -43,7 +40,7 @@ A Lab run stops at its Run time limit, whatever it was asked to play, because th
 
 The summary answers the questions of a study at a glance, with one column for each Lab variant:
 
-- how the Campaigns ended, and when;
+- how the Campaigns ended, and when, and for the Campaigns that end in Victory the share of their [Mission sites](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) that Expired or whose [Mission](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) is Lost, among those that Expired or whose Mission is Won or Lost;
 - values over time, e.g. Panic, money, Agents, and the Strike team against its Strike goal, as the median and the 25th to 75th percentiles over the Campaigns still being played;
 - for each MissionSiteArchetype, the Missions Won and Lost and the [Mission sites](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) Expired, and when the first was Won;
 - where [Panic](../mechanics/domain-model.md#campaign-standing) came from, by [Faction operation level](../mechanics/factions.md#glossary);
@@ -57,7 +54,3 @@ Each Campaign also has a record of its own, with its Campaign setup seed, its va
 # Reproducing a finding
 
 A Campaign of a Lab run is reproduced in the game by creating a Campaign from its Campaign setup seed and playing it with [Autopilot engaged](../foundation/engine-contract.md#autopilot) with the same Implementation and the same Autopilot AI and Tuning parameters, one Turn advancement at a time or all at once: it plays exactly as in the Lab run, because [the same Player actions give the same Campaign](../foundation/determinism-and-randomness.md#determinism). A Combat of it is reproduced either by playing the Campaign up to that Combat's Turn, or by entering its Combat setup seed in the [Combat simulator](../ui/screens/combat-simulator.md#glossary), which fights the same Combat, [Combatant](../mechanics/domain-model.md#combat) for Combatant and attack for attack.
-
-# TODOs
-
-- TODO: Give the Autopilot Lab the Forced loss share, so that a Lab run can check whether an Autopilot AI still wins through losses.

@@ -25,27 +25,27 @@
   <text class="legend" x="66" y="36">referenced by</text>
   <rect class="box external" x="182.4" y="25" width="22" height="14" rx="3"/>
   <text class="legend" x="214.4" y="36">another family</text>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 99.2 239.5 C 99.2 280.3 99.2 280.3 99.2 321 L 99.2 385 C 99.2 421 119.6 421 119.6 457 L 119.6 502 C 119.6 538 189.8 538 189.8 574 L 189.8 619 C 189.8 653.5 746.6 653.5 746.6 688"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 1106 249 C 1106 285 1185.2 285 1185.2 321 L 1185.2 385 C 1185.2 421 1041.4 421 1041.4 457 L 1041.4 502 C 1041.4 536.5 1144.6 536.5 1144.6 571"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 993.8 249 C 993.8 285 842.2 285 842.2 321 L 842.2 385 C 842.2 421 993.4 421 993.4 457 L 993.4 502 C 993.4 538 1016.6 538 1016.6 574 L 1016.6 619 C 1016.6 653.5 1094.6 653.5 1094.6 688"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 1049.9 249 C 1049.9 285 1173.2 285 1173.2 321 L 1173.2 385 C 1173.2 421 1029.4 421 1029.4 457 L 1029.4 502 C 1029.4 538 1260.6 538 1260.6 574 L 1260.6 619 C 1260.6 653.5 876.6 653.5 876.6 688"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 1303.3 239.5 C 1303.3 280.3 1268.8 280.3 1268.8 321 L 1268.8 385 C 1268.8 421 1295.6 421 1295.6 457 L 1295.6 502 C 1295.6 536.5 1368.6 536.5 1368.6 571"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 1250.7 239.5 C 1250.7 280.3 1251 280.3 1251 321 L 1251 385 C 1251 421 1053.4 421 1053.4 457 L 1053.4 502 C 1053.4 538 1272.6 538 1272.6 574 L 1272.6 619 C 1272.6 653.5 1146.6 653.5 1146.6 688"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 759.1 239.5 C 759.1 280.3 753.8 280.3 753.8 321 L 753.8 385 C 753.8 421 981.4 421 981.4 457 L 981.4 502 C 981.4 536.5 1108.6 536.5 1108.6 571"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 710.4 239.5 C 710.4 280.3 741.8 280.3 741.8 321 L 741.8 385 C 741.8 421 969.4 421 969.4 457 L 969.4 502 C 969.4 536.5 891.8 536.5 891.8 571"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 661.7 239.5 C 661.7 280.3 675.6 280.3 675.6 321 L 675.6 385 C 675.6 421 728.3 421 728.3 457 L 728.3 502 C 728.3 538 571.4 538 571.4 574 L 571.4 619 C 571.4 653.5 798.6 653.5 798.6 688"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 587.4 385 C 587.4 421 643.3 421 643.3 457 L 643.3 502 C 643.3 536.5 1072.6 536.5 1072.6 571"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 561.4 385 C 561.4 421 578.6 421 578.6 457 L 578.6 502 C 578.6 536.5 839.4 536.5 839.4 571"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 457.4 385 C 457.4 421 497.3 421 497.3 457 L 497.3 502 C 497.3 536.5 649.3 536.5 649.3 571"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 613.4 385 C 613.4 421 716.3 421 716.3 457 L 716.3 502 C 716.3 536.5 1342.6 536.5 1342.6 571"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 509.4 385 C 509.4 421 526.4 421 526.4 457 L 526.4 502 C 526.4 536.5 464.2 536.5 464.2 571"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 483.4 385 C 483.4 421 509.3 421 509.3 457 L 509.3 502 C 509.3 538 369 538 369 574 L 369 619 C 369 653.5 1042.6 653.5 1042.6 688"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 405.4 385 C 405.4 421 338.2 421 338.2 457 L 338.2 502 C 338.2 538 201.8 538 201.8 574 L 201.8 619 C 201.8 653.5 102.7 653.5 102.7 688"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 431.4 385 C 431.4 421 350.2 421 350.2 457 L 350.2 502 C 350.2 538 213.8 538 213.8 574 L 213.8 619 C 213.8 653.5 274.3 653.5 274.3 688"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 535.4 385 C 535.4 421 538.4 421 538.4 457 L 538.4 502 C 538.4 538 559.4 538 559.4 574 L 559.4 619 C 559.4 653.5 772.6 653.5 772.6 688"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 1484.9 385 C 1484.9 421 1331.6 421 1331.6 457 L 1331.6 502 C 1331.6 536.5 1394.6 536.5 1394.6 571"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 1354.2 385 C 1354.2 421 1307.6 421 1307.6 457 L 1307.6 502 C 1307.6 538 1492.6 538 1492.6 574 L 1492.6 619 C 1492.6 653.5 1198.6 653.5 1198.6 688"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 1419.5 385 C 1419.5 421 1319.6 421 1319.6 457 L 1319.6 502 C 1319.6 538 1504.6 538 1504.6 574 L 1504.6 619 C 1504.6 653.5 928.6 653.5 928.6 688"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 99.2 230 C 99.2 266 99.2 266 99.2 302 L 99.2 385 C 99.2 421 119.6 421 119.6 457 L 119.6 502 C 119.6 538 189.8 538 189.8 574 L 189.8 619 C 189.8 653.5 746.6 653.5 746.6 688"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 1106 230 C 1106 266 1185.2 266 1185.2 302 L 1185.2 385 C 1185.2 421 1041.4 421 1041.4 457 L 1041.4 502 C 1041.4 536.5 1144.6 536.5 1144.6 571"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 993.8 230 C 993.8 266 842.2 266 842.2 302 L 842.2 385 C 842.2 421 993.4 421 993.4 457 L 993.4 502 C 993.4 538 1016.6 538 1016.6 574 L 1016.6 619 C 1016.6 653.5 1094.6 653.5 1094.6 688"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 1049.9 230 C 1049.9 266 1173.2 266 1173.2 302 L 1173.2 385 C 1173.2 421 1029.4 421 1029.4 457 L 1029.4 502 C 1029.4 538 1260.6 538 1260.6 574 L 1260.6 619 C 1260.6 653.5 876.6 653.5 876.6 688"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 1303.3 230 C 1303.3 266 1268.8 266 1268.8 302 L 1268.8 385 C 1268.8 421 1295.6 421 1295.6 457 L 1295.6 502 C 1295.6 536.5 1368.6 536.5 1368.6 571"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 1250.7 230 C 1250.7 266 1251 266 1251 302 L 1251 385 C 1251 421 1053.4 421 1053.4 457 L 1053.4 502 C 1053.4 538 1272.6 538 1272.6 574 L 1272.6 619 C 1272.6 653.5 1146.6 653.5 1146.6 688"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 759.1 230 C 759.1 266 753.8 266 753.8 302 L 753.8 385 C 753.8 421 981.4 421 981.4 457 L 981.4 502 C 981.4 536.5 1108.6 536.5 1108.6 571"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 710.4 230 C 710.4 266 741.8 266 741.8 302 L 741.8 385 C 741.8 421 969.4 421 969.4 457 L 969.4 502 C 969.4 536.5 891.8 536.5 891.8 571"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 661.7 230 C 661.7 266 675.6 266 675.6 302 L 675.6 385 C 675.6 421 728.3 421 728.3 457 L 728.3 502 C 728.3 538 571.4 538 571.4 574 L 571.4 619 C 571.4 653.5 798.6 653.5 798.6 688"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 587.4 375.5 C 587.4 416.3 643.3 416.3 643.3 457 L 643.3 502 C 643.3 536.5 1072.6 536.5 1072.6 571"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 561.4 375.5 C 561.4 416.3 578.6 416.3 578.6 457 L 578.6 502 C 578.6 536.5 839.4 536.5 839.4 571"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 457.4 375.5 C 457.4 416.3 497.3 416.3 497.3 457 L 497.3 502 C 497.3 536.5 649.3 536.5 649.3 571"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 613.4 375.5 C 613.4 416.3 716.3 416.3 716.3 457 L 716.3 502 C 716.3 536.5 1342.6 536.5 1342.6 571"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 509.4 375.5 C 509.4 416.3 526.4 416.3 526.4 457 L 526.4 502 C 526.4 536.5 464.2 536.5 464.2 571"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 483.4 375.5 C 483.4 416.3 509.3 416.3 509.3 457 L 509.3 502 C 509.3 538 369 538 369 574 L 369 619 C 369 653.5 1042.6 653.5 1042.6 688"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 405.4 375.5 C 405.4 416.3 338.2 416.3 338.2 457 L 338.2 502 C 338.2 538 201.8 538 201.8 574 L 201.8 619 C 201.8 653.5 102.7 653.5 102.7 688"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 431.4 375.5 C 431.4 416.3 350.2 416.3 350.2 457 L 350.2 502 C 350.2 538 213.8 538 213.8 574 L 213.8 619 C 213.8 653.5 274.3 653.5 274.3 688"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 535.4 375.5 C 535.4 416.3 538.4 416.3 538.4 457 L 538.4 502 C 538.4 538 559.4 538 559.4 574 L 559.4 619 C 559.4 653.5 772.6 653.5 772.6 688"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 1484.9 375.5 C 1484.9 416.3 1331.6 416.3 1331.6 457 L 1331.6 502 C 1331.6 536.5 1394.6 536.5 1394.6 571"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 1354.2 375.5 C 1354.2 416.3 1307.6 416.3 1307.6 457 L 1307.6 502 C 1307.6 538 1492.6 538 1492.6 574 L 1492.6 619 C 1492.6 653.5 1198.6 653.5 1198.6 688"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 1419.5 375.5 C 1419.5 416.3 1319.6 416.3 1319.6 457 L 1319.6 502 C 1319.6 538 1504.6 538 1504.6 574 L 1504.6 619 C 1504.6 653.5 928.6 653.5 928.6 688"/>
   <path class="edge edge-references" marker-end="url(#head-references)" d="M 959.2 385 C 959.2 421 1005.4 421 1005.4 457 L 1005.4 502 C 1005.4 538 1236.6 538 1236.6 574 L 1236.6 619 C 1236.6 653.5 1120.6 653.5 1120.6 688"/>
   <path class="edge edge-references" marker-end="url(#head-references)" d="M 1056.2 385 C 1056.2 421 1017.4 421 1017.4 457 L 1017.4 502 C 1017.4 538 1248.6 538 1248.6 574 L 1248.6 619 C 1248.6 653.5 850.6 653.5 850.6 688"/>
   <path class="edge edge-references" marker-end="url(#head-references)" d="M 888.8 502 C 888.8 536.5 683.2 536.5 683.2 571"/>
@@ -59,30 +59,30 @@
   <path class="edge edge-references" marker-end="url(#head-references)" d="M 1394.4 502 C 1394.4 536.5 1420.6 536.5 1420.6 571"/>
   <path class="edge edge-references" marker-end="url(#head-references)" d="M 1437.1 502 C 1437.1 538 1534.6 538 1534.6 574 L 1534.6 619 C 1534.6 653.5 954.6 653.5 954.6 688"/>
   <path class="edge edge-references" marker-end="url(#head-references)" d="M 1602.1 502 C 1602.1 536.5 1446.6 536.5 1446.6 571"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 206.9 113 C 206.9 149 206.9 149 206.9 185 L 206.9 249 C 206.9 285 209.8 285 209.8 321 L 209.8 385 C 209.8 419.5 218.5 419.5 218.5 454"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 710.4 113 C 710.4 152.3 710.4 152.3 710.4 191.5"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 206.9 113 C 206.9 149 206.9 149 206.9 185 L 206.9 230 C 206.9 266 209.8 266 209.8 302 L 209.8 385 C 209.8 419.5 218.5 419.5 218.5 454"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 710.4 113 C 710.4 147.5 710.4 147.5 710.4 182"/>
   <rect class="box external" x="131.7" y="68" width="150.4" height="45" rx="6"/>
   <text class="label" x="206.9" y="94">Mechanics family</text>
   <rect class="box external" x="661.1" y="68" width="98.6" height="45" rx="6"/>
   <text class="label" x="710.4" y="94">UI family</text>
-  <rect class="box" x="24" y="194.5" width="150.4" height="45" rx="6"/>
-  <text class="label" x="99.2" y="220.5">AUTO — Autopilot</text>
-  <rect class="box" x="613" y="194.5" width="194.8" height="45" rx="6"/>
-  <text class="label" x="710.4" y="220.5">CONFIG — Configuration</text>
-  <rect class="box" x="937.7" y="185" width="224.4" height="64" rx="6"/>
+  <rect class="box" x="24" y="185" width="150.4" height="45" rx="6"/>
+  <text class="label" x="99.2" y="211">AUTO — Autopilot</text>
+  <rect class="box" x="613" y="185" width="194.8" height="45" rx="6"/>
+  <text class="label" x="710.4" y="211">CONFIG — Configuration</text>
+  <rect class="box" x="937.7" y="185" width="224.4" height="45" rx="6"/>
   <text class="label" x="1049.9" y="211">CINST — Campaign Instances</text>
-  <text class="label" x="1049.9" y="230">NUMBERS — Numbers</text>
-  <rect class="box" x="1198.1" y="194.5" width="157.8" height="45" rx="6"/>
-  <text class="label" x="1277" y="220.5">COND — Conditions</text>
-  <rect class="box" x="379.4" y="321" width="260" height="64" rx="6"/>
-  <text class="label" x="509.4" y="347">CORE — Core Concepts</text>
-  <text class="label" x="509.4" y="366">ENG — Engine Contract</text>
-  <rect class="box" x="862.2" y="321" width="291" height="64" rx="6"/>
-  <text class="label" x="1007.7" y="347">DETERM — Determinism and Randomness</text>
-  <text class="label" x="1007.7" y="366">LIFE — Campaign Lifecycle</text>
-  <rect class="box" x="1288.8" y="321" width="261.4" height="64" rx="6"/>
-  <text class="label" x="1419.5" y="347">CSTATE — Campaign State</text>
-  <text class="label" x="1419.5" y="366">WHIST — History and Turn Report</text>
+  <rect class="box" x="1198.1" y="185" width="157.8" height="45" rx="6"/>
+  <text class="label" x="1277" y="211">COND — Conditions</text>
+  <rect class="box" x="379.4" y="311.5" width="260" height="64" rx="6"/>
+  <text class="label" x="509.4" y="337.5">CORE — Core Concepts</text>
+  <text class="label" x="509.4" y="356.5">ENG — Engine Contract</text>
+  <rect class="box" x="862.2" y="302" width="291" height="83" rx="6"/>
+  <text class="label" x="1007.7" y="328">DETERM — Determinism and Randomness</text>
+  <text class="label" x="1007.7" y="347">LIFE — Campaign Lifecycle</text>
+  <text class="label" x="1007.7" y="366">NUMBERS — Numbers</text>
+  <rect class="box" x="1288.8" y="311.5" width="261.4" height="64" rx="6"/>
+  <text class="label" x="1419.5" y="337.5">CSTATE — Campaign State</text>
+  <text class="label" x="1419.5" y="356.5">WHIST — History and Turn Report</text>
   <rect class="box" x="139.6" y="457" width="157.8" height="45" rx="6"/>
   <text class="label" x="218.5" y="483">PAPI — Player API</text>
   <rect class="box" x="748.3" y="457" width="187.4" height="45" rx="6"/>

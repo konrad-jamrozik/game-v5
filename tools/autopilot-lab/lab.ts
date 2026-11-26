@@ -225,6 +225,20 @@ function table(header: readonly string[], rows: readonly (readonly string[])[]):
   ].join('\n')
 }
 
+/**
+ * AIEXPECT, Glossary, Loss share, of each Campaign that ends in Victory, in percent: its Mission sites Expired or whose
+ * Mission is Lost, among those Expired or whose Mission is Won or Lost.
+ */
+function victoryLossShares(results: readonly CampaignResult[]): number[] {
+  return results.flatMap((x) => {
+    if (x.ending?.ending !== 'Victory') return []
+    const sites = Object.values(x.missions)
+    const lost = sites.reduce((sum, m) => sum + m.lost + m.expired, 0)
+    const all = lost + sites.reduce((sum, m) => sum + m.won, 0)
+    return all === 0 ? [] : [(100 * lost) / all]
+  })
+}
+
 function summarize(
   runs: readonly { variant: Variant; results: CampaignResult[]; failures: string[]; cut: Cut }[],
   seconds: number,
@@ -259,6 +273,11 @@ function summarize(
         [
           'Turn of the ending, median (p25–p75)',
           ...runs.map((r) => spread(r.results.flatMap((x) => (x.ending ? [x.ending.turn] : [])))),
+        ],
+        ['Loss share of Victories %, median (p25–p75)', ...runs.map((r) => spread(victoryLossShares(r.results)))],
+        [
+          'Victories with a Loss share of 20% or more',
+          ...runs.map((r) => String(victoryLossShares(r.results).filter((share) => share >= 20).length)),
         ],
       ],
     ),

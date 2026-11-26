@@ -38,7 +38,7 @@ To try a change of game data or of the AI's code, make it in a temporary worktre
 
 Each section has one column per variant:
 
-- **Endings:** how many Campaigns end in Victory, in Defeat by each set of Ending reasons, in an error, or are still being played at the last Turn; and the Turn of the ending.
+- **Endings:** how many Campaigns end in Victory, in Defeat by each set of Ending reasons, in an error, or are still being played at the last Turn; the Turn of the ending; and the Loss share of the Victories, i.e. their Mission sites Expired or whose Mission is Lost among those Expired, Won, or Lost, with how many reach 20%.
 - **Over time:** at Turns 10, 25, 50, 75, 100, 150, 200, and the last, the median and the 25th to 75th percentile, over the Campaigns still being played, of Panic, money, net projected income, Agents, Contracting against its cap, the share on Recovery, research points per Turn, the Strike team's Rested rating against its Strike goal, mean base skill, and Agents Killed.
 - **Missions:** for each kind of Mission site, from the weakest, the Missions Won, Lost, and Expired per Campaign, the share of Campaigns with a win, and the median Turn of the first win.
 - **Panic:** the Panic each Faction operation level added per Campaign by Lost and Expired Response Mission sites, and what Won Missions took away.
