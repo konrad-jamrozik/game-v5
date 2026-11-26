@@ -37,7 +37,7 @@ The prices, rates, and starting caps of the Agency's economy are game data, held
 
 ## EconomyParameters
 
-EconomyParameters bundles the scalar values that hiring, upkeep, Agency income, and the caps read. Each is a whole number of at least 0.
+EconomyParameters bundles the values that hiring, upkeep, Agency income, and the caps read. Each is a whole number of at least 0, except `contracting_cap_per_initiative_level`, a non-empty list of them.
 
 | Property | Meaning | Read by |
 | --- | --- | --- |
@@ -49,7 +49,7 @@ EconomyParameters bundles the scalar values that hiring, upkeep, Agency income, 
 | `base_transport_cap` | The Transport cap before any Upgrade is acquired. | [Agency caps](#agency-caps) |
 | `base_training_cap` | The Training cap before any Upgrade is acquired. | [Agency caps](#agency-caps) |
 | `base_contracting_cap` | The Contracting cap once Contracting is unlocked, before any first win raises it. | [Contracting cap](#contracting-cap) |
-| `contracting_cap_per_initiative_level` | How much each first win that [Contracting cap growth](leads-and-progression.md#contracting-cap-growth) counts raises the Contracting cap once Contracting is unlocked. | [Contracting cap](#contracting-cap) |
+| `contracting_cap_per_initiative_level` | The rises of the Contracting cap that [Contracting cap growth](leads-and-progression.md#contracting-cap-growth) counts at each level: one entry for the first, the second, and each later distinct [Faction](domain-model.md#factions) Won against there, in that order. | [Contracting cap](#contracting-cap) |
 
 ## Upgrade
 
@@ -147,11 +147,11 @@ The Agency finds work for its Agents only once it has learned where to look, and
 The Contracting cap is a Derived value, and no Upgrade raises it:
 
 ```text
-Contracting cap = 0                                                                 while Contracting unlocked is no
-Contracting cap = base_contracting_cap + contracting_cap_per_initiative_level × W   once Contracting unlocked is yes
+Contracting cap = 0                          while Contracting unlocked is no
+Contracting cap = base_contracting_cap + G   once Contracting unlocked is yes
 ```
 
-Here W is the number of first wins that [Contracting cap growth](leads-and-progression.md#contracting-cap-growth) counts. Contracting unlocked gates only the cap and not W: a first win that comes while Contracting is locked counts from the moment Contracting is unlocked. E.g., with a `base_contracting_cap` of 3, a `contracting_cap_per_initiative_level` of 2, and a W of 2, the Contracting cap is 0 until Contracting is unlocked and `3 + 2 × 2 = 7` from then on.
+Here G is the [Contracting cap growth](leads-and-progression.md#contracting-cap-growth). Contracting unlocked gates only the cap and not G: a win that comes while Contracting is locked counts from the moment Contracting is unlocked. E.g., with a `base_contracting_cap` of 3, a `contracting_cap_per_initiative_level` of [2, 1], and wins at level 1 against two Factions and at level 2 against one, G is `2 + 1 + 2 = 5`, so the Contracting cap is 0 until Contracting is unlocked and `3 + 5 = 8` from then on.
 
 The Contracting cap limits the Serving Agents whose Assignment is Contracting, those [In transit](agents-spec.md#agent-statuses) included, and [assigning Agents](#caps-on-assigning-agents) applies it.
 

@@ -150,7 +150,7 @@ Contracting sends an [Agent](#agents) out to work for [money](#money-and-funding
 | Total | The income of every Agent on Contracting is added up, then rounded down |
 | Exhaustion | +1 each turn, after the income is paid |
 | Contracting cap | 0 until a [Lead](#leads) unlocks Contracting; then 4 Agents |
-| Raising the Contracting cap | +4 the first time you win a Mission at an Initiative [Mission site](#mission-sites) of each [operation](#faction-operations) level, against any [Faction](#factions) |
+| Raising the Contracting cap | At each [operation](#faction-operations) level of Initiative [Mission sites](#mission-sites): +4 the first time you win one there, then +2 and +1 the first time you win one there against a second and a third [Faction](#factions); a second win against the same Faction adds nothing |
 | Getting there and back | One turn [in transit](#transit) each way, with no income |
 
 See also: [Money and funding](#money-and-funding) · [Exhaustion](#exhaustion) · [Transit](#transit) · [Contracting opportunities](#contracting-opportunities)

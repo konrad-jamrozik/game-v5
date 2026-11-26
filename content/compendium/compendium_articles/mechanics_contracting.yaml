@@ -19,7 +19,7 @@ formulas:
   - label: 'Contracting cap'
     text: '0 until a Lead unlocks Contracting; then {economy.base_contracting_cap} Agents'
   - label: 'Raising the Contracting cap'
-    text: '+{economy.contracting_cap_per_initiative_level} the first time you win a Mission at an Initiative Mission site of each operation level, against any Faction'
+    text: 'At each operation level of Initiative Mission sites: +{economy.contracting_cap_per_initiative_level.1} the first time you win one there, then +{economy.contracting_cap_per_initiative_level.2} and +{economy.contracting_cap_per_initiative_level.3} the first time you win one there against a second and a third Faction; a second win against the same Faction adds nothing'
   - label: 'Getting there and back'
     text: 'One turn in transit each way, with no income'
 see_also: [mechanics_money_and_funding, mechanics_exhaustion, mechanics_transit, contracting_opportunities_article]

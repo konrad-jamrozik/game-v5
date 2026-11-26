@@ -317,6 +317,8 @@ A player decides where to send a team from what stands at a Mission site and wha
 
 Every value of a Mission site and of a Mission, and every property of a MissionSiteArchetype and of the MissionArchetype, is [Player-visible information](../foundation/engine-contract.md#api-surfaces) from the moment it exists, whatever the lifecycle state. The one exception is the `can_exist_when` of a MissionSiteArchetype: neither it nor whether it or any part of it holds is Player-visible information.
 
+A MissionSiteArchetype also has a Derived value that is Player-visible information, so that a player or an [Autopilot AI](../foundation/engine-contract.md#principals-and-access) can weigh a Mission site before one exists: the [Combat rating](combat.md#combat-rating) of its Enemies, i.e. the Creation Combat rating that [Mission site creation](#mission-site-creation) gives every Mission site of that MissionSiteArchetype. It is never rated another way, e.g. by summing the Enemies' skill.
+
 # TODOs
 
 - TODO (later): Partial success among the [Consequences](#consequences), so that attempting and failing a Mission differs materially from ignoring its Mission site, as [F. Mission commitment: force concentration, casualties, and partial success](../../../game-design-brief.md#f-mission-commitment-force-concentration-casualties-and-partial-success) in the game design brief requires.

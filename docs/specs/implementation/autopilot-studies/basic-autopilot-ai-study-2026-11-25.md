@@ -5,7 +5,7 @@
 | Spec ID | AISTUDY1 |
 | Family | Autopilot Studies |
 | Audience | Game designer, AI designer, Implementer |
-| Owns | What the Autopilot Lab study of the Basic Autopilot AI of 2026-11-25 measured, the root causes of its defeats it found, the changes it tried and how each worked, and the balance issues it suggests. |
+| Owns | What the Autopilot Lab study of the Basic Autopilot AI of 2026-11-25 measured, the root causes of its defeats it found, the changes it tried and how each worked, and the balance issues it suggests, with retreat and in a follow-up without it. |
 | Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Implementation Specification Conventions](../../governance/conventions/implementation-spec-conventions.md) |
 
 # Overview
@@ -101,3 +101,71 @@ The study points at three pieces of work, from the most consequential.
 - Recalibrate the Combat rating, or the share the game promises, so that the Basic Autopilot AI meets the Autopilot AI Expectations at the promised share.
 - Apply the four kept changes of decisions to the Basic Autopilot AI through the `apply` skill, since each helped at either margin.
 - Study again once the Autopilot Lab gives every Campaign a [Campaign setup seed](../../design/foundation/configuration.md#glossary) and every Combat a [Combat setup seed](../../design/mechanics/combat.md#combat-rounds-and-results), so that each finding above can be replayed in the game.
+
+# Follow-up without retreat
+
+The Game designer asked for the study again with two rules fixed: Agents never retreat, and every team is deployed at the promised 110% plus the Loss margin step of 5% for each Lost Mission at a [Mission site](../../design/mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) of its MissionSiteArchetype. The Combat Rating Bench, which fights without retreat, had found that 110% wins far more often than the first study's Campaigns did.
+
+## Method of the follow-up
+
+Retreat was turned off by setting `retreat_below_agent_rating_fraction` of the CombatParameters to 0, authored as `0.0` because Value formatting then rejected a decimal property authored as `0`, only in two temporary worktrees of `game-v5-impl-web` at commit `ec8d48c`; the [Game build](../../design/foundation/core-concepts.md#game-build-and-content) kept its value. Every variant deployed at the Required rating share and never below it. Each variant played 40 Campaigns of up to 400 Turns on two sets of seeds, `lab-1` to `lab-40` and `two-1` to `two-40`, since a change that moved one set by 8 Victories moved the other by 2: between two sets, a difference of about 3 Victories in 40 is within chance. Every Campaign it names can be created again from its Campaign setup seed in its record, with the same retreat value.
+
+## How it fared without retreat
+
+Without retreat the Basic Autopilot AI of the Implementation still lost nearly every Campaign: no Victory of 40 on `lab`, at Turn 154 median (139–175), and 2 of 40 on `two`. Lost Combats at 110% to 150% of the Enemies' Combat rating fell from 29% with retreat to about 10%, so retreat explains most of the gap to the Combat Rating Bench, but a Lost Combat now killed more Agents.
+
+The best variant won 17 of 40 on each set of seeds, 34 of 80, at Turn 307 median (285–330) and never before Turn 257. That is short of the half the [Autopilot AI Expectations](../../design/autopilot-ais/autopilot-ai-expectations.md) require. No Campaign it won lost or let expire more than 18% of its Missions, so no natural Campaign showed the Victory at a quarter of Missions lost that they also require; the [Forced loss share](../../design/autopilot-ais/autopilot-lab.md#glossary) of the [Autopilot Lab](../../design/autopilot-ais/autopilot-lab.md) is not built, so it was not measured directly.
+
+| Question                            | Study baseline, no retreat | Best variant, no retreat |
+| ----------------------------------- | -------------------------- | ------------------------ |
+| Victories of 80                     | 2                          | 34                       |
+| Defeats by an existential operation | 41                         | 37                       |
+| Defeats by Panic at the limit       | 37                         | 9                        |
+| The HQ raided, share of Campaigns   | 4%                         | 44%                      |
+
+## Root causes without retreat
+
+Without retreat, four mechanisms explained the defeats, from the most consequential.
+
+1. **Existential operations outrate the Agency when they first come.** The first Response Mission site of Faction operation level 5 came at Turn 130 to 170, rated 44,000 to 58,000, and was Expired at the end of the Turn it was seen. Then the strongest Deployable Agents within a Transport cap of 56 rated a median of about 70% of it, from 40% to 100%, with about 95 Agents serving and 50 to 60 Deployable. Each such site that expired was a Defeat, and they caused about half of all defeats of every variant.
+2. **The smallest [Winning team](../../design/autopilot-ais/basic-autopilot-ai.md#glossary) went to sites whose loss is a Defeat.** Without retreat, such teams were wiped at 115% to 146%, e.g. in `lab-10` at Turn 146 and `lab-19` at Turn 175, each a Defeat.
+3. **Small Agencies stalled on the planned net income.** The Basic Autopilot AI hires, and buys an [Agent cap](../../design/mechanics/domain-model.md#agency-and-agents) Upgrade, only while the planned net income of the larger roster, i.e. Funding plus the Contracting income of the [Contractors](../../design/autopilot-ais/basic-autopilot-ai.md#glossary) it would have, less every Agent's upkeep, stays at least the Least net income of 25. With few Contracting places, an extra Agent brings upkeep and no income, so the roster stopped at the Agent cap of 20, e.g. in `two-21` from Turn 20 to 130, and the Campaign ended at the Panic limit. Mission rewards never enter the planned net income, yet late [Initiative Mission sites](../../design/mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) pay 4,000 to 100,000, so the same Agencies that stalled early held 5,000 to 60,000 unspent late.
+4. **The Combat rating of a MissionSiteArchetype's Enemies was wrong.** [Player API](../../design/foundation/engine-contract.md#api-surfaces) reported it as the sum of the Enemies' skill, the Combat rating as it was before the [rating factor](../../design/mechanics/combat.md#combatant-condition-in-a-combat) and the [team size factor](../../design/mechanics/combat.md#combatant-condition-in-a-combat), e.g. 12,160 for the HQ assault, whose Mission sites rate 57,623. The Next rung, the Threat by level, and whether the Strike team can win a Lead's Mission site all read it, so the Strike goal was a fifth to a half of the Enemies it stands for, and Leads were investigated whose Mission sites outrated the Strike team. Rating it correctly made the Basic Autopilot AI worse, 8 Victories instead of 17 on each set, because a Strike goal at its true size is short for most of the Campaign and takes the money and Agents that hiring and Contracting need.
+
+## What was tried without retreat
+
+Each row is a variant against the best variant before it; the numbers are Victories of 40 on `lab`, and on `two` where measured.
+
+| Change | lab | two | Kept |
+| --- | --- | --- | --- |
+| The three kept changes of decisions of the first study, without the 200% margin | 0 to 9 | — | Yes |
+| A Strike goal at 150% or 200% of the Threat, deploying still at 110% | 9 or 4 | — | No |
+| A site whose loss is a Defeat gets the strongest Deployable Agents that fit, once a Winning team exists | 11 | — | Yes |
+| Each Response team grows, strongest first, to 150% of the Enemies when it can, else the Winning team goes | 19 | 8 to 10 | Yes |
+| The same to 200% | 16 | — | No |
+| The same growth for Initiative teams | 19 | 10 | No |
+| Least net income −150, so that Agencies grow on Mission rewards | 17 | 17 | Yes |
+| Least net income −300 | — | 16 | No |
+| Up to four Rate Upgrades a Turn | 17 | 17 | No |
+| The true Combat rating of a MissionSiteArchetype's Enemies | 8 | 8 | No |
+| The true Combat rating with a Strike goal at 25% or 50% of the Threat | — | 15 or 14 | No |
+
+The kept changes are not in the Implementation: the Game designer asked to see the conclusions before any is applied.
+
+## Balance issues without retreat
+
+These findings are about the game rather than the AI, and the Game designer has already acted on two of them.
+
+- **Large Combats are costly even when Won.** At 110% to 150%, teams of 21 or more Agents lost 10% of their Combats and about 12.5 Agents in each, Won or not; teams of 4 to 8 lost 7% and 1.3 Agents. A won Campaign Killed 100 to 500 Agents. The Combat Rating Bench at 20 to 50 Agents a side would show whether the team size factor overrates large sides.
+- **Existential operations come before an Agency can answer them,** as root cause 1 shows. Since this follow-up the Game designer has given those sites 3 Turns before they expire, made the [Faction activity levels](../../design/mechanics/factions.md#glossary) last 20 to 30 Turns instead of 15 to 30, and made the HQ assault easier.
+- **Contracting places are too few for a growing roster.** At 4 places plus 4 for the first Initiative win at each level, an Agency beyond about 20 Agents earns less than its upkeep before Mission rewards. Since this follow-up the Game designer has added places for winning a level against a second and a third Faction.
+
+## How to improve the Basic Autopilot AI next
+
+These are the next changes to try, from the most consequential; none has been measured yet.
+
+- **Size the Strike team again.** The Strike goal only worked because the rating it read was too small. Once that rating is correct, a goal at the true Threat must not starve hiring and Contracting, e.g. a Strike goal that grows with the Agency's income rather than jumping to the next Faction operation level, or one aimed at the Next rung while the Threat is met by mustering Contractors.
+- **Farm Initiative Mission sites for money.** The Basic Autopilot AI investigates again a Lead whose Mission it has Won only when no Next rung remains or Panic is at least 30%, and one Lead that creates a Mission site at a time, so it Won each kind of Initiative Mission site about 3 times a Campaign. Raiding the strongest Initiative Mission site it can win whenever Agents are idle, e.g. an outpost for 4,000, would pay for growth that the planned net income now refuses, and the expected income from such raids should then count in the planned net income instead of a negative Least net income.
+- **Win more Factions at each level,** now that a second and a third Faction Won at a level raise the [Contracting cap](../../design/mechanics/economy-and-upgrades.md#glossary).
+- **Buy the [Training cap](../../design/mechanics/economy-and-upgrades.md#glossary) at most once a Turn,** like Rate Upgrades: it was bought four or five times in one Turn in about half of the Campaigns.
+- **Keep the three changes that helped:** the strongest team for a site whose loss is a Defeat, Response teams grown to 150% when they can be, and the three kept changes of the first study.

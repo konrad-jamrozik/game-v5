@@ -139,7 +139,7 @@ The properties of the last three Types are Player-visible only while the GDR its
 
 ### Value formatting
 
-A Placeholder shows a value as plain text in one fixed form, so that every user interface shows the same characters. A number is shown as the [exact decimal number the GDR file states](../foundation/game-data-records.md#gdr-authoring-format).
+A Placeholder shows a value as plain text in one fixed form, so that every user interface shows the same characters. A number is shown as the [exact decimal number the GDR file states](../foundation/game-data-records.md#gdr-authoring-format). A whole number is a whole number also where its property holds a decimal number, e.g. a `retreat_below_agent_rating_fraction` authored as `0` is shown as `0`.
 
 | Value | Shown as |
 | --- | --- |
