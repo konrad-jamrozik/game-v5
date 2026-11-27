@@ -256,7 +256,7 @@ A table fits its view, because a table that scrolls sideways hides the columns t
 
 Every row of a table is one line tall, so that rows line up and a long value does not push the rows below it down. Each column is wide enough to hold on one line every value that the specifications list for it, e.g. the Assignment "Recovery · 3 T left" in the Agents View. At most one column of a table holds free text, e.g. the message of an engine rejection or the events of a Turn; it takes the width the other columns leave, and a value too long for it is cut short with "…" and shown in full while the pointer rests on it. A header is worded to fit the values under it and never makes its column wider than they need, e.g. "Exh." over an exhaustion. A header shortened from the name of what its column shows has that name as its tooltip, wherever the column stands, e.g. "Combat rating" for "CR" and "Exhaustion" for "Exh.", so that the Player can always learn what a short header means. In every table, an [effective skill](../mechanics/agents-spec.md#combatant-attributes) is headed "Skill" and a [base skill](../mechanics/agents-spec.md#combatant-attributes) "Base", because effective skill is the one the Player decides by.
 
-A column that shows a game quantity is wide enough for the widest value that quantity can take, in every table and whatever values the [GDRs](../foundation/core-concepts.md#game-build-and-content) give, so that a veteran [Agent](../mechanics/domain-model.md#agency-and-agents)'s row late in a long Campaign is never cut short:
+A column that shows a game quantity is wide enough for the widest value that quantity can take, in every table and whatever values the [GDRs](../foundation/core-concepts.md#game-build-and-content) give, so that a veteran [Agent](../mechanics/domain-model.md#agency-and-agents)'s row late in a long Campaign is never cut short. A value of four or more digits includes the commas of its [Digit grouping](gui.md#digit-grouping), e.g. "1,234" is five characters wide, and so does a column of any other number that can reach 1,000, e.g. money or a Turn:
 
 | Quantity | Widest value |
 | --- | --- |
@@ -264,7 +264,8 @@ A column that shows a game quantity is wide enough for the widest value that qua
 | [Rank](gui.md#ranks) | The widest `abbreviation` of the [Rank](gui.md#glossary) GDRs followed by its [Rank insignia](gui.md#glossary), e.g. "Hi Cmdr" and three stars. |
 | [Enemy label](gui.md#enemy-labels) | The longest the [Game build](../foundation/core-concepts.md#game-build-and-content) can give, with a two-digit number, e.g. "high-commander-12". |
 | [Assignment](screens/agents-view.md#agent-table) | "[Recovery](../mechanics/agents-spec.md#assignments) · 99 T left" followed by the In transit icon. |
-| Skill, base or effective | Four digits, e.g. "1234". |
+| Skill, base or effective | Four digits, e.g. "1,234". |
+| [Combat rating](../mechanics/combat.md#combatant-condition-in-a-combat), e.g. CR | Four digits, e.g. "1,234". |
 | Exhaustion | Three digits, e.g. "123". |
 | Health | Three digits, followed by the max health it is out of when the column shows both, e.g. "123/123". |
 | Armor | Three digits, e.g. "123". |
@@ -272,7 +273,7 @@ A column that shows a game quantity is wide enough for the widest value that qua
 | Experience gained, e.g. Mission experience | Three digits after its sign, e.g. "+123". |
 | Chance, e.g. a hit chance | Two digits and one decimal before the percent sign, e.g. "99.9%". |
 
-A column that shows a value at two moments joined by "→" holds the widest value on both sides, e.g. "1234 → 1234" for an effective skill, "123 → 123/123" for a health, and "123 → 123" for an armor. A column that shows several quantities in one value holds the widest value of each, e.g. "99.9% (1234 vs 1234)" for a hit chance with the effective skills it compares.
+A column that shows a value at two moments joined by "→" holds the widest value on both sides, e.g. "1,234 → 1,234" for an effective skill, "123 → 123/123" for a health, and "123 → 123" for an armor. A column that shows several quantities in one value holds the widest value of each, e.g. "99.9% (1,234 vs 1,234)" for a hit chance with the effective skills it compares.
 
 A table whose rows each have a selection checkbox lets the Player select several rows at once, in these ways:
 
