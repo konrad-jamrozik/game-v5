@@ -51,6 +51,7 @@ A Game build has the following Global configuration settings. The specification 
 | Combat simulator setup | [Teams](../ui/screens/combat-simulator.md#teams) in Combat Simulator |
 | [Screen limit](../ui/visual-design.md#glossary) | [Screen limit](../ui/visual-design.md#screen-limit) in Visual Design |
 | [Side panel](../ui/gui.md#glossary) hidden | [Hiding the Side panel](../ui/screens/campaign-screen.md#hiding-the-side-panel) in Campaign Screen |
+| Globe devastation controls shown | [Globe devastation controls](../ui/screens/campaign-screen.md#globe-devastation-controls) in Campaign Screen |
 | Last 100 Turns charts | [Charts](../ui/visual-design.md#charts) in Visual Design |
 | Artwork tuning | [Artwork tuning](../ui/visual-design.md#artwork-tuning) in Visual Design |
 | [Combat replay](../ui/screens/combat-replay.md#glossary) Options shown | [Options](../ui/screens/combat-replay.md#options) in Combat Replay |

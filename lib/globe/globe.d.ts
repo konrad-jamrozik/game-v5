@@ -23,18 +23,7 @@ export interface GlobeOptions {
 }
 
 /** An effect of devastation that can be switched off on its own. */
-export type DevastationEffect =
-  | 'scars'
-  | 'terrain'
-  | 'slicks'
-  | 'alien'
-  | 'lightning'
-  | 'fireLines'
-  | 'wind'
-  | 'debris'
-  | 'dayFires'
-  | 'bloom'
-  | 'sky'
+export type DevastationEffect = 'debris' | 'bloom' | 'sky'
 
 /** The effects of devastation, each with the label and the description the reference viewer shows for it. */
 export const DEVASTATION_EFFECTS: readonly {

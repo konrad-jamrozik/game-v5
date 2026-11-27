@@ -5,7 +5,7 @@
 | Spec ID | CSCR |
 | Family | UI |
 | Audience | UI designer, Implementer |
-| Owns | The regions of the Campaign screen of the graphical user interface, its Side panel, its Detail views and the View trail through them, its status bar values and controls, its Autopilot controls, and its keyboard shortcuts view. |
+| Owns | The regions of the Campaign screen of the graphical user interface, its Side panel, its Detail views and the View trail through them, its status bar values and controls, its Autopilot controls, its Globe devastation controls, and its keyboard shortcuts view. |
 | Conventions | [Specification Conventions](../../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
@@ -19,6 +19,21 @@ The Campaign screen is one of the screens that the [Graphical User Interface](..
 The regions keep the agency's vital values and the work waiting for the Player in view, while leaving most of the screen to the globe. They are the [status bar](../visual-design.md#status-bar), the [Side panel](../gui.md#glossary), unless the Player [has hidden it](#hiding-the-side-panel), and the [Globe stage](../gui.md#glossary).
 
 The globe is a decoration: it shows a rotating Earth that the Player can turn and zoom, reads no game state, and offers no [Player action](../../foundation/engine-contract.md#player-actions-and-turns). The globe and its own controls are those of [Globe Integration](../../../implementation/recipes/globe-integration.md). The screen is complete without the globe; when no globe can be shown, the Globe stage is left empty. The Globe stage also holds the [Music control](../music.md#music-control-on-the-globe-stage), at its bottom right corner.
+
+## Globe devastation controls
+
+The globe can show the Earth wrecked: its devastation runs from 0%, the Earth as it is, to 100%, with smoke, a fouled sky, scorched land, and fires. Nothing in the game sets it yet, so the Player always sees the Earth as it is. The Globe devastation controls let the Game designer set it by hand, to judge how it looks in the game, and stay out of the Player's way until they are asked for. One [Global configuration](../../foundation/configuration.md#global-configuration) setting governs them:
+
+| Setting | Permitted values | Game build default | Set by |
+| --- | --- | --- | --- |
+| Globe devastation controls shown | On or off | Off | The "Show Globe devastation controls" checkbox of the [developer tools](../gui.md#developer-tools), which [Dev mode](../../foundation/engine-contract.md#principals-and-access) gates. |
+
+While the setting is on and Dev mode is enabled, the controls stand at the top left corner of the Globe stage, drawn as the globe's own controls are, and are hidden while a [Detail view](../gui.md#glossary) covers the Globe stage:
+
+- **Devastation:** a [slider](../visual-design.md#sliders) labelled "Devastation", from 0 to 100 in steps of 1, followed by its value as a percentage in the Figure style. The globe follows it within about a second.
+- **Effects:** three [checkboxes](../visual-design.md#checkboxes), "Ash in orbit", "Bloom", and "Dim sun", each switching one effect of devastation on or off.
+
+What the controls hold belongs to the [Session](../../foundation/core-concepts.md#campaign-and-session), not to a [Campaign](../../foundation/core-concepts.md#campaign-and-session) or to [Global configuration](../../foundation/engine-contract.md#persisted-data): a Session starts with devastation at 0% and every effect on. While the setting is off or Dev mode is disabled, the globe shows the Earth as it is, and the controls come back holding what they held.
 
 # Side panel
 

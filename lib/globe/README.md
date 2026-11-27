@@ -29,7 +29,7 @@ The planet's axis stands upright in view, with the equator level. The day and ni
 
 ## Devastation
 
-Devastation is an experiment: one number from 0, the planet as it is, to 1, wrecked, that an Implementation would set from the game, e.g. from Panic, with `setDevastation` on the handle. Nothing sets it yet, so the globe is drawn at 0 everywhere but in the viewer.
+Devastation is an experiment: one number from 0, the planet as it is, to 1, wrecked, that an Implementation sets with `setDevastation` on the handle. Nothing in the game sets it yet, e.g. from Panic: the globe is drawn at 0 everywhere but in the viewer and under the Globe devastation controls of the game's developer tools.
 
 In the viewer, the Devastation slider at the top left sets it, and `?devastation=60` in the address starts with it at 60%. Each effect comes in over its own part of the range:
 
@@ -44,21 +44,28 @@ In the viewer, the Devastation slider at the top left sets it, and `?devastation
 
 The globe eases to a new level over about a second. A browser that asks for reduced motion gets fires and smoke that stand still. Turning the clouds off also hides the smoke, which is drawn on the cloud shell.
 
-On top of those, eleven further effects can each be switched off, with the checkboxes under the slider or with `setDevastationEffects` on the handle, e.g. `{ bloom: false }`. `?off=bloom,alien` in the address starts with those off, and `?only=scars` with every other one off. `DEVASTATION_EFFECTS` in `globe.js` lists them:
+On top of those, three further effects can each be switched off, with the checkboxes under the slider or with `setDevastationEffects` on the handle, e.g. `{ bloom: false }`. `?off=bloom` in the address starts with that one off, and `?only=bloom` with every other one off. `DEVASTATION_EFFECTS` in `globe.js` lists them:
 
-| Name | From about | Effect |
-| --- | --- | --- |
-| `scars` | 30% | Craters, each appearing white-hot at its own level and cooling to dull red and then black as devastation rises further. |
-| `terrain` | 15% | Forests scorch and burn first, deserts raise dust storms, the ice greys with soot and melts back from its edge, and the sea floods the coasts. |
-| `slicks` | 15% | Slicks spread from the coasts, algae-green in some seas and oil-black in others. |
-| `alien` | 65% | Violet and green veins glow in a few regions of the scorched land and around the scars, and curtains of the same light hang in the atmosphere glow. |
-| `lightning` | 40% | Cells of thick smoke flash now and then. Left out for a browser that asks for reduced motion. |
-| `fireLines` | 40% | Fire fronts creep over the land and leave black behind them. |
-| `wind` | 45% | The smoke is drawn out along the parallels, plumes trail downwind, and storms turn in the smoke. |
-| `debris` | 55% | Ash and embers drift around the planet. |
-| `dayFires` | 30% | Fires are bright on the day side too, under darker smoke columns that shade the ground. |
-| `bloom` | 10% | Fires, lightning, and the red rim glow. The one effect with a real cost: the scene is drawn into an offscreen picture and blurred, though only while devastation is above 0. |
-| `sky` | 20% | The sun dims and reddens, and the fainter stars go out. |
+| Name | Label | From about | Effect |
+| --- | --- | --- | --- |
+| `debris` | Ash in orbit | 55% | Ash and embers drift around the planet. |
+| `bloom` | Bloom | 10% | The fires and the red rim glow. The one effect with a real cost: the scene is drawn into an offscreen picture and blurred, though only while devastation is above 0. |
+| `sky` | Dim sun | 40% | The sunlight on the planet dims and reddens further. The stars stay as they are. |
+
+### Decision record: rejected effects
+
+Eleven switchable effects were built and judged in the viewer on 2026-11-26. The three above were kept; the eight below were removed, each for one of four reasons. An effect proposed later should be held against the same reasons before it is built.
+
+| Reason | Effects rejected for it |
+| --- | --- |
+| It is a cheap effect that looks bad. | Scars, i.e. craters that appear white-hot and cool to black; Alien glow, i.e. violet and green veins in the scorched land and curtains of light in the sky; Sickly water, i.e. algae-green and oil-black slicks spreading from the coasts. |
+| It does not add much. | Day-side fires, i.e. fires bright by day under darker smoke columns that shade the ground. |
+| Movement seen at this scale is unrealistic: nothing on a planet moves visibly when the whole planet is in view. | Fire lines, i.e. fire fronts creeping over the land and leaving black behind; Lightning, i.e. flashes inside the thick smoke. |
+| It is not what devastation is about: the planet is being wrecked, not nature getting angry. | Terrain fates, i.e. forests burning first, deserts raising dust storms, ice greying and melting, and the sea flooding the coasts; Wind and storms, i.e. smoke drawn out downwind and storms turning in it. |
+
+The Dim sun effect at first also hid the fainter stars and dimmed the rest. That was rejected too: devastation changes the planet and leaves the stars as they are.
+
+The rejected effects are in the history of `globe-scene.js`, in the commit "Globe devastation: eleven further effects, each with its own switch".
 
 ## Files
 

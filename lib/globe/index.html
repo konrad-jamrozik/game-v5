@@ -123,8 +123,8 @@
       devastationLevel.addEventListener('input', showDevastation)
       showDevastation()
 
-      // One checkbox for each effect of devastation, to judge each on its own; `?off=bloom,alien` in the address starts
-      // with those off, and `?only=scars` with every other one off.
+      // One checkbox for each effect of devastation, to judge each on its own; `?off=bloom,sky` in the address starts
+      // with those off, and `?only=bloom` with every other one off.
       const effects = document.getElementById('effects')
       const off = (address.get('off') ?? '').split(',')
       const only = address.get('only')?.split(',')
