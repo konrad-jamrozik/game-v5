@@ -153,6 +153,8 @@ The Player undoes and redoes with one Undo button and one Redo button in the sta
 
 The operations are those of [Action navigation](../../foundation/timeline.md#action-navigation) and [Autosave navigation](../../foundation/timeline.md#autosave-navigation), which also reports whether a step crosses an Autopilot engagement. A button with no available operation is disabled and keeps its Action label. A button is a neutral button while it takes an Action step, a [weighty button](../visual-design.md#buttons) while it takes a Turn step, and an Autopilot button while it takes an Autopilot step. It keeps one width, that of its widest label, so that no control moves when its label changes. A Turn or Autopilot step's tooltip names the Turn and [Autosave](../../foundation/saves.md#autosave-kinds) it loads, e.g. "Back to the end of Turn 12" or "Back to Turn 5, before Autopilot was engaged". The U and R keys press the Undo and Redo buttons, except that the R key belongs to the [Combat replay](combat-replay.md#playback) while it is shown.
 
+While [Ctrl](../gui.md#glossary) is held, both buttons take their step across Turns, so that the Player who wants the last Turn back skips the Actions within it in one press: each button takes `undoToAutosave()` or `redoToAutosave()` even when its Action step is available, labelled and styled as the table gives for that operation, e.g. Undo Turn or Redo Autopilot, and is disabled with the label Undo Turn or Redo Turn when that operation is unavailable.
+
 # Keyboard shortcuts
 
 The keyboard shortcuts view, opened from the [Settings panel](../gui.md#settings-panel), lets the Player learn every key of the Campaign screen at one glance. It is a [dialog](../visual-design.md#dialogs).
