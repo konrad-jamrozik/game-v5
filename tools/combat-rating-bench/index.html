@@ -788,12 +788,24 @@
             <div class="scroll detail"><table id="types"></table></div>
           </div>
           <div style="display: flex; flex-direction: column; gap: 10px">
+            <div class="note">
+              The game rates a side in two steps, under Combat rating in Combat: each Combatant alone, by the same
+              expression for Agents and Enemies, and then the side, its Team Combat rating adjustment times
+              <code>sum</code>. The adjustment is the team size factor for the Enemies’ side, and also the skill
+              evenness factor <code>1 − gini_penalty × gini</code> for the Agents’ side.
+            </div>
             <label class="lbl note" for="exprA">combatant_cr of an Agent</label>
             <textarea id="exprA" data-bind="formula.agent" data-type="str" spellcheck="false"></textarea>
             <label class="lbl note" for="exprE">combatant_cr of an Enemy</label>
             <textarea id="exprE" data-bind="formula.enemy" data-type="str" spellcheck="false"></textarea>
-            <label class="lbl note" for="exprT">team_cr</label>
+            <label class="lbl note" for="exprT"
+              >team_cr of the Enemies’ side: its Team Combat rating adjustment × sum</label
+            >
             <textarea id="exprT" data-bind="formula.team" data-type="str" spellcheck="false"></textarea>
+            <label class="lbl note" for="exprTA"
+              >team_cr of the Agents’ side: its Team Combat rating adjustment, with gini, × sum</label
+            >
+            <textarea id="exprTA" data-bind="formula.teamAgent" data-type="str" spellcheck="false"></textarea>
             <div id="exprErr" class="err"></div>
             <div class="row">
               <button
@@ -1060,6 +1072,11 @@
           'Exponent of the team size in team_cr: 1 sums the Combatants; above 1 favours larger teams, e.g. 2 is the Lanchester square law. Defaults to the game’s rating_team_size_exponent.',
           0.05,
         ],
+        [
+          'gini_penalty',
+          'How much the team_cr of the Agents’ side falls for each unit of gini, the Gini coefficient of its Agents’ effective skill, from 0 for equal skills towards 1 for one Agent carrying the team. Defaults to the game’s rating_agent_skill_gini_penalty.',
+          0.05,
+        ],
       ]
       const FORMULAS = {
         // The game's formula, under COMBAT, Combat rating: half the sum of an attack, a health, and an armor term,
@@ -1068,26 +1085,31 @@
           combatant:
             'skill * ((damage / damage_base) + (health / health_base) + (armor / armor_base)) / 2 * exhaustion_mult',
           team: 'sum * count ** team_exp / count',
+          teamAgent: 'sum * count ** team_exp / count * (1 - gini_penalty * gini)',
         },
         lanchester: {
           combatant: 'skill * health_mult * armor_mult * damage_mult * exhaustion_mult',
           team: 'sqrt(sum * count)',
+          teamAgent: 'sqrt(sum * count) * (1 - gini_penalty * gini)',
         },
         // The bonuses multiply, e.g. +10% health, +15% armor, and +30% damage make skill × 1.64.
         multiplicative: {
           combatant: 'skill * health_mult * armor_mult * damage_mult * exhaustion_mult',
           team: 'sum * count ** team_exp / count',
+          teamAgent: 'sum * count ** team_exp / count * (1 - gini_penalty * gini)',
         },
         // The game's expressions alone, keeping the parameters, unlike Restore all defaults.
         game: {
           combatant:
             'skill * ((damage / damage_base) + (health / health_base) + (armor / armor_base)) / 2 * exhaustion_mult',
           team: 'sum * count ** team_exp / count',
+          teamAgent: 'sum * count ** team_exp / count * (1 - gini_penalty * gini)',
         },
         // The bonuses add rather than multiply, e.g. +10% health, +15% armor, and +30% damage make skill × 1.55.
         additive: {
           combatant: 'skill * (1 + (health_mult - 1) + (armor_mult - 1) + (damage_mult - 1)) * exhaustion_mult',
           team: 'sum * count ** team_exp / count',
+          teamAgent: 'sum * count ** team_exp / count * (1 - gini_penalty * gini)',
         },
       }
       /**
@@ -1100,8 +1122,16 @@
         'skill * health_mult * armor_mult * damage_mult': FORMULAS.multiplicative.combatant,
         'skill * (1 + (health_mult - 1) + (armor_mult - 1) + (damage_mult - 1))': FORMULAS.additive.combatant,
       }
-      /** A preset's expressions: its combatant expression rates Agents and Enemies alike. */
-      const expressionsOf = ({ combatant, team }) => ({ agent: combatant, enemy: combatant, team })
+      /**
+       * A preset's expressions: its combatant expression rates Agents and Enemies alike, `team` rates an Enemies' side, and
+       * `teamAgent` an Agents' side, i.e. the Team Combat rating adjustment of each side times `sum`.
+       */
+      const expressionsOf = ({ combatant, team, teamAgent }) => ({
+        agent: combatant,
+        enemy: combatant,
+        team,
+        teamAgent,
+      })
       /**
        * The default formula and setup: the game's Combat rating, its parameters read from CombatParameters once the
        * content is loaded.
@@ -1120,6 +1150,7 @@
             exhaustion_span: contentValue('rating_exhaustion_span') ?? 30,
             exhaustion_base: 100,
             team_exp: contentValue('rating_team_size_exponent') ?? 1.3,
+            gini_penalty: contentValue('rating_agent_skill_gini_penalty') ?? 0.25,
           },
           /** The parameters the designer edited, by typing or by Fit; every other one follows the content. */
           edited: {},
@@ -1130,6 +1161,7 @@
             cr_per_damage: true,
             exhaustion_span: true,
             team_exp: true,
+            gini_penalty: true,
           },
           fit: {
             health_base: false,
@@ -1142,6 +1174,7 @@
             exhaustion_span: false,
             exhaustion_base: false,
             team_exp: true,
+            gini_penalty: false,
           },
           ...expressionsOf(FORMULAS.default),
         },
@@ -1254,6 +1287,10 @@
             if (removed.test(`${saved.formula?.combatant} ${saved.formula?.team}`)) {
               saved.formula.combatant = FORMULAS.default.combatant
               saved.formula.team = FORMULAS.default.team
+            }
+            // A formula saved before the Agents' side had a team expression of its own rates it by the game's.
+            if (saved.formula && typeof saved.formula.teamAgent !== 'string') {
+              saved.formula.teamAgent = FORMULAS.default.teamAgent
             }
             // A formula saved with one combatant expression rates Agents and Enemies by it.
             if (saved.formula && 'combatant' in saved.formula) {
@@ -1400,6 +1437,9 @@
         if (on.team_exp === false) {
           p.team_exp = 1
         }
+        if (on.gini_penalty === false) {
+          p.gini_penalty = 0
+        }
         if (on.exhaustion_span === false) {
           p.exhaustion_free = Infinity
         }
@@ -1435,13 +1475,19 @@
         }
         return c
       }
-      /** The rating of a list of groups of one side, 'agent' or 'enemy', under a formula; throws on a broken expression. */
+      /**
+       * The rating of a list of groups of one side, 'agent' or 'enemy', under a formula; throws on a broken expression.
+       * The Enemies' side is rated by `team`, the Agents' side by `teamAgent`, and both may read `gini`, the Gini
+       * coefficient of the effective skill of the side's Combatants able to fight, under COMBAT, Combat rating:
+       * Σ over every ordered pair |e(c) − e(d)| / (2 × n × Σ e(c)).
+       */
       function rate(groups, formula, cv, side) {
         const p = effectiveParams(formula)
-        const ft = compile(formula.team)
+        const ft = compile(side === 'agent' ? (formula.teamAgent ?? formula.team) : formula.team)
         let sum = 0
         let count = 0
         let game = 0
+        const able = []
         for (const g of groups) {
           if (g.count <= 0 || !ableToFight(g, cv)) {
             continue
@@ -1451,8 +1497,16 @@
           sum += c * g.count
           count += g.count
           game += skill * g.count
+          able.push({ skill, count: g.count })
         }
-        const cr = count === 0 ? 0 : ft({ ...cv, ...p, sum, count, game })
+        let differences = 0
+        for (const a of able) {
+          for (const b of able) {
+            differences += a.count * b.count * Math.abs(a.skill - b.skill)
+          }
+        }
+        const gini = count > 1 && game > 0 ? differences / (2 * count * game) : 0
+        const cr = count === 0 ? 0 : ft({ ...cv, ...p, sum, count, game, gini })
         if (typeof cr !== 'number' || Number.isNaN(cr)) {
           throw new Error('team_cr is not a number')
         }
@@ -1657,7 +1711,13 @@
       }
       const winOf = (r) => r.won / r.fought
       /** What the Agents' rating by the current formula is measured with: a result's CR left is kept with it. */
-      const crSig = () => JSON.stringify([state.formula.agent, state.formula.team, effectiveParams(state.formula)])
+      const crSig = () =>
+        JSON.stringify([
+          state.formula.agent,
+          state.formula.team,
+          state.formula.teamAgent,
+          effectiveParams(state.formula),
+        ])
       /** The mean share of the Agents' starting rating left at the end, or NaN; stale under another formula. */
       const crLeftOf = (r) => (r?.dN > 0 ? r.crLeftSum / r.dN : NaN)
       const exhaustionOf = (r) => (r?.exhN > 0 ? r.exhSum / r.exhN : NaN)
@@ -2047,6 +2107,7 @@
         $('#exprA').value = state.formula.agent
         $('#exprE').value = state.formula.enemy
         $('#exprT').value = state.formula.team
+        $('#exprTA').value = state.formula.teamAgent
       }
       function renderSetup() {
         for (const input of document.querySelectorAll('[data-bind^="setup."]')) {
@@ -2222,7 +2283,7 @@
         if (state.formula.enabled?.[partOf(name)] === false) {
           return 'off'
         }
-        const text = `${state.formula.agent} ${state.formula.enemy} ${state.formula.team}`
+        const text = `${state.formula.agent} ${state.formula.enemy} ${state.formula.team} ${state.formula.teamAgent}`
         const mentions = (word) => new RegExp(`\\b${word}\\b`).test(text)
         const stat = ['health', 'armor', 'damage'].find((s) => name === `${s}_base` || name === `cr_per_${s}`)
         const viaExhaustion = (name === 'exhaustion_free' || name === 'exhaustion_span') && mentions('exhaustion_mult')
@@ -2372,11 +2433,13 @@
         $('#formulaText').textContent = [
           `agent_cr     = ${state.formula.agent}`,
           `enemy_cr     = ${state.formula.enemy}`,
-          `team_cr      = ${state.formula.team}`,
+          `enemies_cr   = ${state.formula.team}`,
+          `agents_cr    = ${state.formula.teamAgent}`,
           `health_mult  = 1 + (health − ${p.health_base}) × ${p.cr_per_health}`,
           `armor_mult   = 1 + (armor − ${p.armor_base}) × ${p.cr_per_armor}`,
           `damage_mult  = 1 + (damage − ${p.damage_base}) × ${p.cr_per_damage}`,
           `team_exp     = ${p.team_exp}`,
+          `gini_penalty = ${p.gini_penalty}`,
           ``,
           ...targets.map((t) => {
             const s = per.get(t)
