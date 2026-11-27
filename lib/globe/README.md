@@ -80,6 +80,8 @@ export function Globe({ covered }: { covered: boolean }) {
 }
 ```
 
+The globe keeps nothing between page loads. To keep the tilt, pass the kept value as `tilt`, e.g. `'Earth'`, and keep each new one that `onTiltChange` reports.
+
 `mapBase` is the address of the maps relative to the page, so the globe also loads when the build is served from a sub-path. `background` is the opaque colour behind the planet: the atmosphere is blended additively onto it, so it cannot be transparent. Everything else, i.e. loading three.js and the maps on first show, pausing while hidden, the controls, the messages, and recovery from a lost graphics context, is done by the copied files.
 
 A browser test that is not about the globe runs much faster without it, because a browser without a display draws the globe in software. Before the page loads, make `HTMLCanvasElement.prototype.getContext('webgl2')` return `null`; the globe then shows its message in its place.
