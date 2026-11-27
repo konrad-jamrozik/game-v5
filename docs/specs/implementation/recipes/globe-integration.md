@@ -26,7 +26,7 @@ An Implementation cannot draw its globe from `lib/globe/` directly, because it m
 - **The code** is copied unchanged into one directory of the user-interface source, which the Implementation's formatter and linter leave out, because they would otherwise rewrite or reject code written in the Spec repo's own style.
 - **three.js** is a dependency of the Implementation's own, at the version `index.html` pins, rather than loaded from the content delivery network the viewer uses, because a Game build that loads code from a third-party host stops working when that host does.
 
-Copying the files unchanged keeps the globe's look, its controls, and its failure handling exactly those of the reference viewer, and lets a later comparison with the Spec repo show only real changes. The viewer's page, `README.md`, and the script that rebuilds the maps are not copied.
+Copying the files unchanged keeps the globe's look, its controls, and its failure handling exactly those of the reference viewer, and lets a later comparison with the Spec repo show only real changes. The viewer's page, `README.md`, and the scripts that serve the viewer and rebuild the maps are not copied.
 
 # Full-quality maps
 

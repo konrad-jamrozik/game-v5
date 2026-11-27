@@ -25,6 +25,7 @@
     "autopilot:bench": "node --watch-path=tools/autopilot-bench/server.ts tools/autopilot-bench/server.ts",
     "autopilot:lab": "node tools/autopilot-lab/lab.ts",
     "rating:bench": "node --watch tools/combat-rating-bench/server.ts",
+    "globe": "node lib/globe/scripts/serve.ts",
     "lint": "npm run lint:specs && npm run lint:code",
     "lint:fix": "npm run lint:specs && npm run lint:code -- --fix",
     "format": "oxfmt . --write",

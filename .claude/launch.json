@@ -3,9 +3,9 @@
   "configurations": [
     {
       "name": "globe",
-      "runtimeExecutable": "python",
-      "runtimeArgs": ["-m", "http.server", "4173", "--directory", "lib/globe"],
-      "port": 4173
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["lib/globe/scripts/serve.ts"],
+      "port": 4720
     },
     {
       "name": "gdr-balance-bench",

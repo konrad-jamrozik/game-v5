@@ -7,10 +7,12 @@ A rotating Earth: NASA satellite maps on a sphere, with a cloud shell, an atmosp
 The viewer is static files, but a browser will not load the maps from a `file://` page, so serve the folder over HTTP. From the repository root:
 
 ```bash
-python -m http.server 4173 --directory lib/globe
+npm run globe
 ```
 
-Then open <http://localhost:4173/>. Any static file server works, e.g. `npx serve lib/globe`.
+Then open <http://localhost:4720/>. To use another port, run `npm run globe -- --port 4800`.
+
+This server forbids the browser to keep any file, so a reload always shows the globe as it is on disk. Any other static file server also works, e.g. `python -m http.server 4720 --directory lib/globe`, but the browser may then go on running the globe's code from before a change, e.g. a new control that does nothing, until a reload that skips its cache, Ctrl+Shift+R in most browsers.
 
 The page loads three.js r159 from the jsDelivr CDN, so the first load needs an internet connection. It needs a browser with WebGL 2.
 
@@ -53,6 +55,7 @@ The globe eases to a new level over about a second. A browser that asks for redu
 | `index.html` | The viewer page: the three.js import map, the globe filling the window, the Devastation slider, and the map-set comparison. |
 | `assets/` | The four maps the globe loads, about 5.3 MB together. |
 | `scripts/build-globe-textures.py` | Rebuilds the maps from NASA's original maps. |
+| `scripts/serve.ts` | Serves the viewer on localhost, as `npm run globe` runs it. |
 
 The values most worth tuning, e.g. spin speed, day and night speed, and sharpness, are in `SETTINGS` at the top of `globe-scene.js`.
 
