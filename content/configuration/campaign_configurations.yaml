@@ -4,6 +4,7 @@ name: Standard
 starting_money: 500 # fixed after creation
 starting_funding: 100 # the Agency's initial recurring funding
 prologue: 0 # the Campaign starts from the initial Campaign state
+tutorials: true # adjustable during play; no rule reads it yet
 ---
 id: showcase
 type: CampaignConfiguration
@@ -11,3 +12,4 @@ name: Showcase
 starting_money: 500
 starting_funding: 100
 prologue: 1 # the Campaign starts already under way, with something to show on every screen
+tutorials: true

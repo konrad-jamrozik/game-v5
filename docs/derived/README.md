@@ -111,7 +111,7 @@ These informative views are derived from the registered Markdown specifications.
 | SOUNDS | [Sounds](../specs/design/ui/sounds.md) | The short sounds the graphical user interface plays in answer to the Player and for the attacks of the Combat replay: the Sound set, when each Sound plays, and its settings. |
 | STVIEW | [Storage View](../specs/design/ui/screens/storage-view.md) | What the Storage View of the Campaign screen shows of the Agency's Items and Ammo and of what it can buy, and how it sells and buys them. |
 | TRVIEW | [Turn Report View](../specs/design/ui/screens/turn-report-view.md) | What the Turn Report View of the Campaign screen shows of the most recent Turn report, and how it opens a Combat report or reopens the Turn summary. |
-| TSUM | [Turn Summary](../specs/design/ui/screens/turn-summary.md) | When the Turn summary dialog of the Campaign screen appears, which Summary events it shows, and how the Player steps through them; the Special events and the SpecialEvent GDRs. |
+| TSUM | [Turn Summary](../specs/design/ui/screens/turn-summary.md) | When the Turn summary dialog of the Campaign screen appears, which Summary events it shows, and how the Player steps through them; the Special events and the SpecialEvent GDRs; the Tutorials setting. |
 | UVIEW | [Upgrades View](../specs/design/ui/screens/upgrades-view.md) | What the Upgrades View of the Campaign screen shows and how it purchases Upgrades. |
 | VIS | [Visual Design](../specs/design/ui/visual-design.md) | How the graphical user interface looks: its visual direction, Design tokens, and the styling of its components and charts. |
 

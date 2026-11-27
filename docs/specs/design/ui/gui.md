@@ -48,11 +48,12 @@ The Player changes [Global configuration](../foundation/engine-contract.md#persi
 
 The Settings panel is titled Settings and holds these rows from top to bottom, each a [row of a settings list](visual-design.md#inputs):
 
-1. **Music volume:** the [Music volume slider](music.md#music-volume-slider).
+1. **Music:** the [Music toggle and the Music volume slider](music.md#music-volume-slider).
 2. **Sounds:** the [Sounds toggle and the Sounds volume slider](sounds.md#sound-settings).
-3. **Other settings:** one row for each other Global configuration setting, e.g. the [Autosave limit](../foundation/saves.md#glossary) or the [Screen limit](visual-design.md#screen-limit), with its input, except a setting that a control elsewhere sets where the Player uses it, e.g. Music on, which the [Music control](music.md#music-control) sets, or the [Autopilot settings](screens/campaign-screen.md#autopilot-settings).
-4. **Changed settings:** what the Player has [changed](#changed-settings).
-5. **Tools,** on the Campaign Screen only: a neutral button for the [keyboard shortcuts](screens/campaign-screen.md#keyboard-shortcuts), and one for the developer tools. Each closes the Settings panel and opens what it names.
+3. **Tutorials,** on the Campaign Screen only: a checkbox labelled "Tutorials enabled" that shows and sets the [Tutorials](screens/turn-summary.md#tutorials) of the current Campaign, which is [Campaign configuration](../foundation/campaign-state.md#glossary) rather than Global configuration.
+4. **Other settings:** one row for each other Global configuration setting, e.g. the [Autosave limit](../foundation/saves.md#glossary) or the [Screen limit](visual-design.md#screen-limit), with its input, except a setting that a control elsewhere sets where the Player uses it, e.g. the [Autopilot settings](screens/campaign-screen.md#autopilot-settings).
+5. **Changed settings:** what the Player has [changed](#changed-settings).
+6. **Tools,** on the Campaign Screen only: a neutral button for the [keyboard shortcuts](screens/campaign-screen.md#keyboard-shortcuts), and one for the developer tools. Each closes the Settings panel and opens what it names.
 
 ## Changed settings
 
