@@ -84,6 +84,8 @@ The clamp is applied once, to the sum, and it never reads the Panic limit: Panic
 
 E.g., with a Panic of 97, Panic increases of 4 and 2.50, and a Panic reduction of 0.50, the Pending panic change is 6 and Panic becomes 100. A Panic reduction of 3 in the next Advance turn then takes Panic to 97, not to 100.
 
+**Informative rationale:** Panic never fades with time: no rule lowers it because Turns pass. A Panic decay, a small Panic reduction in every Advance turn so that Response Mission sites ignored over a long Campaign would not pile up, was considered and rejected by the Game designer, so that Panic falls only through rules that game data ties to what the Agency achieves, e.g. a Won Initiative Mission.
+
 # Victory Effect kind
 
 Game data wins the Campaign through one Effect kind, so that completing a [Lead](domain-model.md#leads-investigations-mission-sites-and-missions) can be the objective of the Campaign.

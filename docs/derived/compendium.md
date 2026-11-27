@@ -513,7 +513,7 @@ Your team does not fight to the last [Agent](#agents). After each round of a [Co
 
 | Formulas |  |
 | --- | --- |
-| The team retreats when both hold | Its [Combat rating](#combat-rating) is below 0.4 × what it was at the start, and the Combat rating of the Enemies is at least 0.9 × that of the team now |
+| The team retreats when both hold | Its [Combat rating](#combat-rating) is below 0.5 × what it was at the start, and the Combat rating of the Enemies is at least 0.9 × that of the team now |
 | Checked | After each round, once both sides have attacked |
 | Result | The Mission is lost |
 | [Exhaustion](#exhaustion) | Survivors gain as much as after any other Mission |
