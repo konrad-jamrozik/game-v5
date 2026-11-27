@@ -261,7 +261,7 @@ A column that shows a game quantity is wide enough for the widest value that qua
 
 | Quantity | Widest value |
 | --- | --- |
-| Agent, i.e. an [Agent name](../mechanics/agents-spec.md#agent-names) | 30 characters, the most an [Agent name](../mechanics/agents-spec.md#namelist) can hold. |
+| Agent, i.e. an [Agent name](../mechanics/agents-spec.md#agent-names) | 30 characters, the most an [Agent name](../mechanics/agents-spec.md#namelist) can hold, followed by the widest [Rank insignia](gui.md#glossary) where the column shows one, e.g. in the [deployment pane](screens/missions-view.md#deployment). |
 | [Rank](gui.md#ranks) | The widest `abbreviation` of the [Rank](gui.md#glossary) GDRs followed by its [Rank insignia](gui.md#glossary), e.g. "Hi Cmdr" and three stars. |
 | [Enemy label](gui.md#enemy-labels) | The longest the [Game build](../foundation/core-concepts.md#game-build-and-content) can give, with a two-digit number, e.g. "high-commander-12". |
 | [Assignment](screens/agents-view.md#agent-table) | "[Recovery](../mechanics/agents-spec.md#assignments) · 99 T left" followed by the In transit icon. |
