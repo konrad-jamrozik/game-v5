@@ -22,11 +22,34 @@ export interface GlobeOptions {
   readonly memory?: object
 }
 
+/** An effect of devastation that can be switched off on its own. */
+export type DevastationEffect =
+  | 'scars'
+  | 'terrain'
+  | 'slicks'
+  | 'alien'
+  | 'lightning'
+  | 'fireLines'
+  | 'wind'
+  | 'debris'
+  | 'dayFires'
+  | 'bloom'
+  | 'sky'
+
+/** The effects of devastation, each with the label and the description the reference viewer shows for it. */
+export const DEVASTATION_EFFECTS: readonly {
+  readonly name: DevastationEffect
+  readonly label: string
+  readonly about: string
+}[]
+
 export interface GlobeHandle {
   /** False while something covers the globe, e.g. a panel opened over it; it then stops drawing. */
   setVisible(visible: boolean): void
   /** How wrecked the planet looks, from 0, as it is, to 1; the globe eases to it over about a second. */
   setDevastation(level: number): void
+  /** Switches effects of devastation off or back on, e.g. `{ bloom: false }`; an effect not named stays as it is. */
+  setDevastationEffects(effects: Partial<Record<DevastationEffect, boolean>>): void
   /** Releases everything the globe created and removes it from its container. */
   dispose(): void
 }

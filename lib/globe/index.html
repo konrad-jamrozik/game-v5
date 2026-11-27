@@ -21,38 +21,72 @@
         position: fixed;
         inset: 0;
       }
-      /* Viewer only: the hint and the Devastation slider, which an Implementation does not copy. */
+      /* Viewer only: the Devastation panel and the hint, which an Implementation does not copy. The panel sits at the
+         top left, clear of the planet and of the globe's own controls at the bottom left. */
       #viewer {
         position: fixed;
-        left: 0;
-        right: 0;
-        bottom: 12px;
+        left: 16px;
+        top: 12px;
         display: flex;
         flex-direction: column;
-        align-items: center;
-        gap: 8px;
-        pointer-events: none;
-      }
-      #hint {
-        font-size: 13px;
-        color: #9c978a;
-      }
-      #devastation {
-        pointer-events: auto;
-        display: flex;
-        align-items: center;
+        align-items: flex-start;
         gap: 10px;
         font-size: 13px;
         color: #e8e4d8;
       }
+      #hint {
+        color: #9c978a;
+      }
+      #devastation {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
       #devastation input {
-        width: 260px;
+        width: 150px;
         accent-color: #ff7a1a;
       }
       #devastation output {
-        min-width: 3ch;
+        min-width: 4ch;
         font-family: ui-monospace, Consolas, monospace;
         font-variant-numeric: tabular-nums;
+      }
+      #effects {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        margin: 0;
+        padding: 0;
+        border: 0;
+      }
+      #effects legend {
+        padding: 0 0 4px;
+        color: #9c978a;
+      }
+      #effects label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+      }
+      #effects input {
+        margin: 0;
+        accent-color: #ff7a1a;
+      }
+      #effects button {
+        align-self: flex-start;
+        margin-top: 4px;
+        height: 26px;
+        padding: 0 10px;
+        background: transparent;
+        border: 1px solid rgb(232 228 216 / 28%);
+        border-radius: 2px;
+        color: #e8e4d8;
+        font: inherit;
+        cursor: pointer;
+      }
+      #effects button:hover {
+        border-color: rgb(232 228 216 / 60%);
       }
     </style>
     <script type="importmap">
@@ -67,12 +101,16 @@
         <input id="devastation-level" type="range" min="0" max="100" step="1" value="0" />
         <output id="devastation-shown" for="devastation-level">0%</output>
       </label>
+      <fieldset id="effects">
+        <legend>Effects</legend>
+      </fieldset>
       <div id="hint">Drag to orbit · scroll to zoom</div>
     </div>
     <script type="module">
-      import { mountGlobe } from './globe.js'
+      import { mountGlobe, DEVASTATION_EFFECTS } from './globe.js'
 
       const globe = mountGlobe(document.getElementById('stage'))
+      const address = new URLSearchParams(location.search)
 
       // The devastation an Implementation would set from the game; `?devastation=60` in the address starts with it.
       const devastationLevel = document.getElementById('devastation-level')
@@ -81,9 +119,38 @@
         devastationShown.textContent = `${devastationLevel.value}%`
         globe.setDevastation(devastationLevel.value / 100)
       }
-      devastationLevel.value = new URLSearchParams(location.search).get('devastation') ?? '0'
+      devastationLevel.value = address.get('devastation') ?? '0'
       devastationLevel.addEventListener('input', showDevastation)
       showDevastation()
+
+      // One checkbox for each effect of devastation, to judge each on its own; `?off=bloom,alien` in the address starts
+      // with those off, and `?only=scars` with every other one off.
+      const effects = document.getElementById('effects')
+      const off = (address.get('off') ?? '').split(',')
+      const only = address.get('only')?.split(',')
+      const boxes = DEVASTATION_EFFECTS.map(({ name, label, about }) => {
+        const row = document.createElement('label')
+        row.title = about
+        const box = document.createElement('input')
+        box.type = 'checkbox'
+        box.checked = only ? only.includes(name) : !off.includes(name)
+        box.addEventListener('change', () => globe.setDevastationEffects({ [name]: box.checked }))
+        row.append(box, label)
+        effects.append(row)
+        return { name, box }
+      })
+      const showEffects = () =>
+        globe.setDevastationEffects(Object.fromEntries(boxes.map(({ name, box }) => [name, box.checked])))
+      const toggle = document.createElement('button')
+      toggle.type = 'button'
+      toggle.textContent = 'All on or off'
+      toggle.addEventListener('click', () => {
+        const on = boxes.some(({ box }) => !box.checked)
+        for (const { box } of boxes) box.checked = on
+        showEffects()
+      })
+      effects.append(toggle)
+      showEffects()
     </script>
   </body>
 </html>

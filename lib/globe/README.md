@@ -31,7 +31,7 @@ The planet's axis stands upright in view, with the equator level. The day and ni
 
 Devastation is an experiment: one number from 0, the planet as it is, to 1, wrecked, that an Implementation would set from the game, e.g. from Panic, with `setDevastation` on the handle. Nothing sets it yet, so the globe is drawn at 0 everywhere but in the viewer.
 
-In the viewer, the Devastation slider above the hint sets it, and `?devastation=60` in the address starts with it at 60%. Each effect comes in over its own part of the range:
+In the viewer, the Devastation slider at the top left sets it, and `?devastation=60` in the address starts with it at 60%. Each effect comes in over its own part of the range:
 
 | From about | Effect |
 | --- | --- |
@@ -44,15 +44,31 @@ In the viewer, the Devastation slider above the hint sets it, and `?devastation=
 
 The globe eases to a new level over about a second. A browser that asks for reduced motion gets fires and smoke that stand still. Turning the clouds off also hides the smoke, which is drawn on the cloud shell.
 
+On top of those, eleven further effects can each be switched off, with the checkboxes under the slider or with `setDevastationEffects` on the handle, e.g. `{ bloom: false }`. `?off=bloom,alien` in the address starts with those off, and `?only=scars` with every other one off. `DEVASTATION_EFFECTS` in `globe.js` lists them:
+
+| Name | From about | Effect |
+| --- | --- | --- |
+| `scars` | 30% | Craters, each appearing white-hot at its own level and cooling to dull red and then black as devastation rises further. |
+| `terrain` | 15% | Forests scorch and burn first, deserts raise dust storms, the ice greys with soot and melts back from its edge, and the sea floods the coasts. |
+| `slicks` | 15% | Slicks spread from the coasts, algae-green in some seas and oil-black in others. |
+| `alien` | 65% | Violet and green veins glow in a few regions of the scorched land and around the scars, and curtains of the same light hang in the atmosphere glow. |
+| `lightning` | 40% | Cells of thick smoke flash now and then. Left out for a browser that asks for reduced motion. |
+| `fireLines` | 40% | Fire fronts creep over the land and leave black behind them. |
+| `wind` | 45% | The smoke is drawn out along the parallels, plumes trail downwind, and storms turn in the smoke. |
+| `debris` | 55% | Ash and embers drift around the planet. |
+| `dayFires` | 30% | Fires are bright on the day side too, under darker smoke columns that shade the ground. |
+| `bloom` | 10% | Fires, lightning, and the red rim glow. The one effect with a real cost: the scene is drawn into an offscreen picture and blurred, though only while devastation is above 0. |
+| `sky` | 20% | The sun dims and reddens, and the fainter stars go out. |
+
 ## Files
 
 | Path | Content |
 | --- | --- |
 | `globe.js` | `mountGlobe`: the globe's elements, its controls, its messages, and its lifetime. It does not import three.js. |
-| `globe-scene.js` | The scene, the three shaders, and the orbit and zoom. It imports three.js and is loaded on first show. |
+| `globe-scene.js` | The scene, its shaders, and the orbit and zoom. It imports three.js and is loaded on first show. |
 | `globe.css` | The styles of the globe's elements, using the game's Design tokens where the page defines them. |
 | `globe.d.ts` | The types of `globe.js`, for TypeScript. |
-| `index.html` | The viewer page: the three.js import map, the globe filling the window, and the Devastation slider. |
+| `index.html` | The viewer page: the three.js import map, the globe filling the window, and the Devastation slider and effect checkboxes. |
 | `assets/` | The four maps the globe loads, about 14 MB together. |
 | `scripts/build-globe-textures.py` | Rebuilds the maps from NASA's original maps. |
 | `scripts/serve.ts` | Serves the viewer on localhost, as `npm run globe` runs it. |
