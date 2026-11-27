@@ -5,7 +5,7 @@
 | Spec ID | AGENT |
 | Family | Mechanics |
 | Audience | Engine designer, Content designer, AI designer, Implementer |
-| Owns | What an Agent has, the Combatant Role Type, Agent status, Assignments and the transit rule, effective skill, Training, Mission growth and Experience, work exhaustion, the start-work gate and Forced return, Agent creation and the initial roster, and the assignAgents and addAgents actions. |
+| Owns | What an Agent has, the Combatant Role Type, Agent status, Assignments and the transit rule, effective skill, Training, Mission growth and Experience, work exhaustion, the start-work gate and Forced return, Agent creation and the initial roster, Agent names and the NameLists, and the assignAgents and addAgents actions. |
 | Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
@@ -91,7 +91,7 @@ How an Agent's base skill grows. Skill gain and Experience are separate ideas: a
 
 # Agent GDRs
 
-One AgentArchetype gives every new Agent its starting values, and AgentParameters holds the thresholds and amounts that the rules about Agents read.
+One AgentArchetype gives every new Agent its starting values, the NameLists give it its [Agent name](#agent-names), and AgentParameters holds the thresholds and amounts that the rules about Agents read.
 
 ## AgentArchetype
 
@@ -105,6 +105,21 @@ An AgentArchetype is the [Archetype](../foundation/core-concepts.md#campaign-ins
 | `weapon` | A reference to the [Weapon](combat.md#weapon) GDR a newly created Agent is equipped with. | [Agent creation](#agent-creation) |
 | `armor` | A reference to the [Armor](combat.md#armor) GDR a newly created Agent is equipped with. | [Agent creation](#agent-creation) |
 
+## NameList
+
+A NameList holds the first names and last names of one nationality, from which [Agent names](#agent-names) are drawn. A Game build supplies at least one.
+
+| Property | Meaning | Read by |
+| --- | --- | --- |
+| `name` | The display name of the nationality, e.g. "Polish". | [Player-visible information](#player-visible-information) |
+| `weight` | How often an Agent name is drawn from the NameList, against the `weight` of every other NameList, a whole number of at least 1. | [Agent names](#agent-names) |
+| `male_first_names` | The first names of men, a non-empty list. | [Agent names](#agent-names) |
+| `female_first_names` | The first names of women, a non-empty list. | [Agent names](#agent-names) |
+| `male_last_names` | The last names of men, a non-empty list. | [Agent names](#agent-names) |
+| `female_last_names` | Optional. The last names of women, a non-empty list, for a nationality whose last names differ between men and women, e.g. "Kowalska" beside "Kowalski". A NameList without it gives women the `male_last_names`. | [Agent names](#agent-names) |
+
+No name in the lists starts or ends with a space or holds two spaces in a row. Only a last name may be empty, for a nationality in which many people have one name only, e.g. many Indonesians. A name may stand in a list more than once, and each entry counts, so a name listed twice is drawn twice as often. Every [Agent name](#agent-names) a NameList can give is at most 30 characters long, counted as Unicode code points, so that it fits the [column that shows it](../ui/visual-design.md#tables).
+
 ## AgentParameters
 
 AgentParameters bundles the values that the Agent rules read, and the values that [Combat](combat.md) and [Missions](missions.md) read about exhaustion and about the Experience an Agent earns in a Combat. Each value is a whole number of at least 0 unless its row says otherwise.
@@ -112,6 +127,7 @@ AgentParameters bundles the values that the Agent rules read, and the values tha
 | Property | Meaning | Read by |
 | --- | --- | --- |
 | `initial_roster_size` | How many Agents the initial [Campaign state](../foundation/core-concepts.md#campaign-and-session) contains. It may be 0. | [Initial roster](#initial-roster) |
+| `female_name_percent` | A [Percent value](../foundation/numbers.md#glossary) from 0 to 100: the [Probability](../foundation/numbers.md#glossary), in percent, that an Agent name is a woman's. | [Agent names](#agent-names) |
 | `exhaustion_incapacitation` | The exhaustion at or above which a Combatant stops fighting in a Combat. It is a whole number of at least 1. | [Incapacitation condition](combat.md#incapacitation-condition) |
 | `exhaustion_free_points` | The exhaustion up to which effective skill is not reduced. | [Effective skill](#effective-skill) |
 | `skill_penalty_pct_per_exhaustion` | A [Percent value](../foundation/numbers.md#glossary): the percent of base skill lost for each point of exhaustion above `exhaustion_free_points`. | [Effective skill](#effective-skill) |
@@ -139,6 +155,7 @@ An Agent is a [Campaign instance](../foundation/core-concepts.md#campaign-instan
 | --- | --- | --- |
 | Agency | [Constants](../foundation/core-concepts.md#campaign-instances) | An Immutable reference to the Agency that employs the Agent. |
 | Turn hired | Constants | The turn number of the [Turn](../foundation/engine-contract.md#player-actions-and-turns) in which the Agent was created. |
+| First name and last name | Constants | The two parts of the Agent's [Agent name](#agent-names), kept apart because either can hold a space, e.g. "de la Vega". |
 | Base skill, Experience, health lost, and base health | [State](../foundation/core-concepts.md#campaign-instances) | The Agent's values of these names. |
 | Exact exhaustion | State | The value that holds the Agent's [exhaustion](#exhaustion-and-exact-exhaustion). |
 | Weapon and base weapon damage | State | A reference to the Weapon GDR the Agent is [equipped](equipment.md#equipping-agents) with, and the Agent's base weapon damage. |
@@ -410,11 +427,24 @@ A Forced return [moves the Agent to Standby](#assignment-changes), and an Agent 
 
 Every Agent is created by one rule, whichever rule causes the creation: the [Initial roster](#initial-roster), [hiring](economy-and-upgrades.md#hiring-agents), or [adding Agents](#adding-agents). Any cost, and the [Agent cap](economy-and-upgrades.md#glossary), belong to the rule that causes the creation.
 
-A new Agent has the AgentArchetype as its Archetype, which gives it its [starting values](#agentarchetype), its equipment included, but for the Weapon of a hired Agent, which [Equipment of new and departing Agents](equipment.md#equipment-of-new-and-departing-agents) gives; its base weapon damage is the `base_weapon_damage` of its Weapon, and its base armor the `base_armor` of its Armor. Its Agency is the [Campaign](../foundation/core-concepts.md#campaign-and-session)'s Agency, and its Turn hired is the turn number of the current Turn. It starts on Standby, In transit, with Experience 0, health lost 0, Exact exhaustion 0, Enemies killed 0, and an empty Participation history.
+A new Agent has the AgentArchetype as its Archetype, which gives it its [starting values](#agentarchetype), its equipment included, but for the Weapon of a hired Agent, which [Equipment of new and departing Agents](equipment.md#equipment-of-new-and-departing-agents) gives; its base weapon damage is the `base_weapon_damage` of its Weapon, and its base armor the `base_armor` of its Armor. Its Agency is the [Campaign](../foundation/core-concepts.md#campaign-and-session)'s Agency, its Turn hired is the turn number of the current Turn, and its first name and last name are drawn as [Agent names](#agent-names) states. It starts on Standby, In transit, with Experience 0, health lost 0, Exact exhaustion 0, Enemies killed 0, and an empty Participation history.
 
 ## Initial roster
 
 The Agents a Campaign starts with are at hand from its first Turn. The [initial Campaign state](domain-model.md#initial-campaign-state) contains `initial_roster_size` Agents, each [created](#agent-creation) At assignment instead of In transit.
+
+## Agent names
+
+An Agent is a person to the Player, so every Agent has a name of its own, which the GUI shows in place of its [Instance ID](../foundation/campaign-instances.md#glossary). An Agent name is the Agent's first name and last name joined by one space, or its first name alone when its last name is empty. They are a new Agent's Agent name outcome, a named random outcome whose possible values are the pairs of a first name and a last name that one NameList gives, drawn in four steps:
+
+1. **NameList:** a NameList, each with the Probability of its `weight` over the sum of the `weight` of every NameList.
+2. **Woman or man:** a woman's name with the Probability `female_name_percent` / 100, otherwise a man's.
+3. **First name:** one entry of the NameList's `female_first_names` or `male_first_names`, each entry with the same Probability.
+4. **Last name:** one entry of the NameList's `female_last_names` for a woman's name, or of its `male_last_names` for a man's name or when it has no `female_last_names`, each entry with the same Probability.
+
+E.g., the Polish NameList, then a man's name, "Jan", and "Kowalski" give the Agent name "Jan Kowalski".
+
+The outcome derives from a seed of its own, which derives from the [Campaign seed](../foundation/determinism-and-randomness.md#glossary) and the new Agent's Instance ID, so that naming an Agent changes no other random outcome, and the Agent that a redone creation makes again has the same name. Agent names need not be unique: the Instance ID tells two Agents of one name apart. An Agent stores only its first name and its last name, and no rule reads them or whether its name is a woman's.
 
 # Assigning Agents
 
@@ -440,7 +470,7 @@ The [History entry](../foundation/world-history.md#glossary) of the Turn that th
 
 # Player-visible information
 
-A player plans around what each Agent can do and how worn down it is, so nothing about an Agent is hidden. Every property and every [Derived value](../foundation/core-concepts.md#value-classification) of every Agent, whatever its Agent status, and every property of the AgentArchetype and of AgentParameters, are [Player-visible information](../foundation/engine-contract.md#api-surfaces) from the moment they exist. The Derived values include whether an Agent is In base or Away and whether it meets the [incapacitation condition](combat.md#incapacitation-condition) with its current values.
+A player plans around what each Agent can do and how worn down it is, so nothing about an Agent is hidden. Every property and every [Derived value](../foundation/core-concepts.md#value-classification) of every Agent, whatever its Agent status, and every property of the AgentArchetype, of each NameList, and of AgentParameters, are [Player-visible information](../foundation/engine-contract.md#api-surfaces) from the moment they exist. The Derived values include whether an Agent is In base or Away and whether it meets the [incapacitation condition](combat.md#incapacitation-condition) with its current values.
 
 # TODOs
 

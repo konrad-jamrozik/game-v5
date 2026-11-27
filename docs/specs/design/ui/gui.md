@@ -5,7 +5,7 @@
 | Spec ID | GUI |
 | Family | UI |
 | Audience | UI designer, Implementer |
-| Owns | Which screens the graphical user interface has, the progress indicators that several of them show, the warnings it gives, its developer tools, how it names an Enemy and a Mission site, and the Ranks of Agents. |
+| Owns | Which screens the graphical user interface has, the progress indicators that several of them show, the warnings it gives, its developer tools, how it names an Agent, an Enemy, and a Mission site, and the Ranks of Agents. |
 | Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
@@ -132,6 +132,12 @@ A value that a Compendium article inserts for a [Placeholder](../mechanics/compe
 # EnemyArchetype order
 
 The Player meets the same few kinds of Enemy everywhere, so the GUI lists them in one canonical order, from the weakest to the strongest as the Game designer wrote them: the EnemyArchetype order is the [authored order](../foundation/game-data-records.md#gdr-file-layout) of the EnemyArchetypes in their GDR file. Wherever the GUI lists EnemyArchetypes, or groups Enemies by EnemyArchetype, in an order that no rule of its own gives, it uses the EnemyArchetype order; and a rule that gives an order of its own uses it to break ties, e.g. for the [Enemies of a Mission site](screens/missions-view.md#selected-mission-site) in the Missions View.
+
+# Agent shown by name
+
+The Player knows Agents as people, so the GUI shows every [Agent](../mechanics/domain-model.md#agency-and-agents) by its [Agent name](../mechanics/agents-spec.md#agent-names), wherever it names one, e.g. in a table, a tooltip, the [Turn summary](screens/turn-summary.md), or a line of the [History View](screens/history-view.md). It shows an Agent's [Instance ID](../foundation/campaign-instances.md#glossary) only in its [Agent details](screens/agents-view.md#agent-details), labelled "Instance ID", e.g. "agent-7", because two Agents can share a name. A list in the order of the Agents' Instance IDs, e.g. the default order of the [Agent table](screens/agents-view.md#agent-table), keeps that order, which is the order in which they were hired, and a column of Agent names sorts by the name.
+
+Only where a full Agent name has no room, i.e. beside a figure of the [Combat replay](screens/combat-replay.md#figures), does the GUI show its last name alone, e.g. "Kowalski" for "Jan Kowalski", or its first name when its last name is empty.
 
 # Enemy labels
 

@@ -110,3 +110,5 @@ Dependencies are pinned and installed reproducibly with `npm ci`. Dependabot ope
 ## License
 
 [CC BY-NC 4.0](LICENSE), matching [game-ts](https://github.com/konrad-jamrozik/game-ts).
+
+The Agent name lists in `content/agents/name_lists.yaml` are adapted from [The X-Com Files](https://github.com/SolariusScorch/XComFiles) by Solarius Scorch and its contributors, under [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/); the Agents GDRs section of [GDRs](docs/specs/design/content/gdrs.md#agents-gdrs) states what was changed.

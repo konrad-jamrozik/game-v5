@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="832" viewBox="0 0 1000 832" role="img" aria-label="Family architecture. Content builds on Foundation and Mechanics and UI. UI builds on Foundation and Mechanics. Autopilot AIs builds on Foundation and Mechanics and UI. Mandatory builds on Foundation and Mechanics and UI and Autopilot AIs. Guidance builds on Foundation and Mechanics and Autopilot AIs and Mandatory. Recipes builds on Foundation and UI and Mandatory. Autopilot Studies builds on Foundation and Mechanics and Autopilot AIs. Foundation and Mechanics form the game engine.">
-  <title>Family architecture. Content builds on Foundation and Mechanics and UI. UI builds on Foundation and Mechanics. Autopilot AIs builds on Foundation and Mechanics and UI. Mandatory builds on Foundation and Mechanics and UI and Autopilot AIs. Guidance builds on Foundation and Mechanics and Autopilot AIs and Mandatory. Recipes builds on Foundation and UI and Mandatory. Autopilot Studies builds on Foundation and Mechanics and Autopilot AIs. Foundation and Mechanics form the game engine.</title>
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="832" viewBox="0 0 1000 832" role="img" aria-label="Family architecture. Content builds on Foundation and Mechanics and UI and Mandatory. UI builds on Foundation and Mechanics. Autopilot AIs builds on Foundation and Mechanics and UI. Mandatory builds on Foundation and Mechanics and UI and Autopilot AIs. Guidance builds on Foundation and Mechanics and Autopilot AIs and Mandatory. Recipes builds on Foundation and UI and Mandatory. Autopilot Studies builds on Foundation and Mechanics and Autopilot AIs. Foundation and Mechanics form the game engine.">
+  <title>Family architecture. Content builds on Foundation and Mechanics and UI and Mandatory. UI builds on Foundation and Mechanics. Autopilot AIs builds on Foundation and Mechanics and UI. Mandatory builds on Foundation and Mechanics and UI and Autopilot AIs. Guidance builds on Foundation and Mechanics and Autopilot AIs and Mandatory. Recipes builds on Foundation and UI and Mandatory. Autopilot Studies builds on Foundation and Mechanics and Autopilot AIs. Foundation and Mechanics form the game engine.</title>
   <style>
     :root { --bg: #ffffff; --fg: #1b2330; --muted: #5b6676; --line: #8a94a6; --box: #f6f7f9;
       --engine-bg: #f1f2f5; --found-bg: #dfe5f7; --found-fg: #2d3f8f; --mech-bg: #f7dceb; --mech-fg: #8c2a5d; }
@@ -23,24 +23,24 @@
     .caption { fill: var(--muted); font-size: 12.5px; }
   </style>
   <rect class="bg" x="0" y="0" width="1000" height="832"/>
-  <rect class="box" x="246" y="28" width="230" height="66" rx="10"/>
-  <text class="title" x="361" y="56">Guidance</text>
-  <text class="count" x="361" y="77">5 specifications</text>
-  <rect class="box" x="524" y="28" width="230" height="66" rx="10"/>
-  <text class="title" x="639" y="56">Recipes</text>
-  <text class="count" x="639" y="77">2 specifications</text>
+  <rect class="box" x="107" y="28" width="230" height="66" rx="10"/>
+  <text class="title" x="222" y="56">Content</text>
+  <text class="count" x="222" y="77">1 specification</text>
+  <rect class="box" x="385" y="28" width="230" height="66" rx="10"/>
+  <text class="title" x="500" y="56">Guidance</text>
+  <text class="count" x="500" y="77">5 specifications</text>
+  <rect class="box" x="663" y="28" width="230" height="66" rx="10"/>
+  <text class="title" x="778" y="56">Recipes</text>
+  <text class="count" x="778" y="77">2 specifications</text>
   <rect class="box" x="246" y="164" width="230" height="66" rx="10"/>
   <text class="title" x="361" y="192">Mandatory</text>
   <text class="count" x="361" y="213">5 specifications</text>
   <rect class="box" x="524" y="164" width="230" height="66" rx="10"/>
   <text class="title" x="639" y="192">Autopilot Studies</text>
   <text class="count" x="639" y="213">2 specifications</text>
-  <rect class="box" x="246" y="300" width="230" height="66" rx="10"/>
-  <text class="title" x="361" y="328">Content</text>
-  <text class="count" x="361" y="349">1 specification</text>
-  <rect class="box" x="524" y="300" width="230" height="66" rx="10"/>
-  <text class="title" x="639" y="328">Autopilot AIs</text>
-  <text class="count" x="639" y="349">3 specifications</text>
+  <rect class="box" x="385" y="300" width="230" height="66" rx="10"/>
+  <text class="title" x="500" y="328">Autopilot AIs</text>
+  <text class="count" x="500" y="349">3 specifications</text>
   <rect class="box" x="385" y="436" width="230" height="66" rx="10"/>
   <text class="title" x="500" y="464">UI</text>
   <text class="count" x="500" y="485">20 specifications</text>
@@ -52,38 +52,40 @@
   <rect class="band-found" x="194" y="672" width="612" height="52" rx="8"/>
   <text class="band-name ink-found" x="500" y="694">Foundation</text>
   <text class="band-count ink-found" x="500" y="712">17 specifications</text>
-  <path class="arrow" d="M 361 366 L 361 564"/>
-  <path class="head" d="M 355 562 L 367 562 L 361 572 Z"/>
-  <path class="arrow" d="M 361 366 L 415 428"/>
+  <path class="arrow" d="M 222 94 L 222 564"/>
+  <path class="head" d="M 216 562 L 228 562 L 222 572 Z"/>
+  <path class="arrow" d="M 222 94 L 415 428"/>
   <path class="head" d="M 409 426 L 421 426 L 415 436 Z"/>
+  <path class="arrow" d="M 222 94 L 276 156"/>
+  <path class="head" d="M 270 154 L 282 154 L 276 164 Z"/>
   <path class="arrow" d="M 500 502 L 500 564"/>
   <path class="head" d="M 494 562 L 506 562 L 500 572 Z"/>
-  <path class="arrow" d="M 639 366 L 639 564"/>
-  <path class="head" d="M 633 562 L 645 562 L 639 572 Z"/>
-  <path class="arrow" d="M 639 366 L 585 428"/>
-  <path class="head" d="M 579 426 L 591 426 L 585 436 Z"/>
+  <path class="arrow" d="M 500 366 L 500 564"/>
+  <path class="head" d="M 494 562 L 506 562 L 500 572 Z"/>
+  <path class="arrow" d="M 500 366 L 500 428"/>
+  <path class="head" d="M 494 426 L 506 426 L 500 436 Z"/>
   <path class="arrow" d="M 361 230 L 361 564"/>
   <path class="head" d="M 355 562 L 367 562 L 361 572 Z"/>
   <path class="arrow" d="M 361 230 L 415 428"/>
   <path class="head" d="M 409 426 L 421 426 L 415 436 Z"/>
-  <path class="arrow" d="M 361 230 L 554 292"/>
-  <path class="head" d="M 548 290 L 560 290 L 554 300 Z"/>
-  <path class="arrow" d="M 361 94 L 361 564"/>
-  <path class="head" d="M 355 562 L 367 562 L 361 572 Z"/>
-  <path class="arrow" d="M 361 94 L 554 292"/>
-  <path class="head" d="M 548 290 L 560 290 L 554 300 Z"/>
-  <path class="arrow" d="M 361 94 L 361 156"/>
-  <path class="head" d="M 355 154 L 367 154 L 361 164 Z"/>
-  <path class="arrow" d="M 639 94 L 639 564"/>
-  <path class="head" d="M 633 562 L 645 562 L 639 572 Z"/>
-  <path class="arrow" d="M 639 94 L 585 428"/>
+  <path class="arrow" d="M 361 230 L 415 292"/>
+  <path class="head" d="M 409 290 L 421 290 L 415 300 Z"/>
+  <path class="arrow" d="M 500 94 L 500 564"/>
+  <path class="head" d="M 494 562 L 506 562 L 500 572 Z"/>
+  <path class="arrow" d="M 500 94 L 500 292"/>
+  <path class="head" d="M 494 290 L 506 290 L 500 300 Z"/>
+  <path class="arrow" d="M 500 94 L 446 156"/>
+  <path class="head" d="M 440 154 L 452 154 L 446 164 Z"/>
+  <path class="arrow" d="M 778 94 L 778 564"/>
+  <path class="head" d="M 772 562 L 784 562 L 778 572 Z"/>
+  <path class="arrow" d="M 778 94 L 585 428"/>
   <path class="head" d="M 579 426 L 591 426 L 585 436 Z"/>
-  <path class="arrow" d="M 639 94 L 446 156"/>
+  <path class="arrow" d="M 778 94 L 446 156"/>
   <path class="head" d="M 440 154 L 452 154 L 446 164 Z"/>
   <path class="arrow" d="M 639 230 L 639 564"/>
   <path class="head" d="M 633 562 L 645 562 L 639 572 Z"/>
-  <path class="arrow" d="M 639 230 L 639 292"/>
-  <path class="head" d="M 633 290 L 645 290 L 639 300 Z"/>
+  <path class="arrow" d="M 639 230 L 585 292"/>
+  <path class="head" d="M 579 290 L 591 290 L 585 300 Z"/>
   <text class="caption" x="500" y="772">Arrows point from a Family to the Families its specifications reference.</text>
   <text class="caption" x="500" y="794">Every specification also follows the Governance specifications, which are not drawn.</text>
 </svg>

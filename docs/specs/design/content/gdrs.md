@@ -42,6 +42,17 @@ Between tiers 1 and 2 stands the profile Lead of the Faction: the follow-up Lead
 
 The specification that owns a Type says what each of its properties means, and the GDR files hold the values. What neither shows is the intent that shapes a group of GDRs, e.g. why the Enemies form a ladder.
 
+## Agents GDRs
+
+Nine [Agent](../mechanics/domain-model.md#agency-and-agents) names in ten are men's: `female_name_percent` is 10.
+
+The 82 NameLists are the agent name lists of [The X-Com Files](https://github.com/SolariusScorch/XComFiles), a mod for OpenXcom by Solarius Scorch and its contributors, in its `AgentName` directory at commit `e43a98a7c235a8bd49bb2392e7dff144d332cde7`, used under [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/), the [Game license](../../implementation/mandatory/implementation-license.md#glossary). Each NameList is one `.nam` file, its `name` the file's name with a space between its words, e.g. "New Zealander" for `NewZealander.nam`, and its `weight` the file's `globalWeight`, so that nationalities keep the shares the mod gives them. Each list keeps the order of its names and every repeated entry, e.g. the eight "Nguyen" of the Vietnamese male first names, which make the most common family name as common as the mod meant. The Chinese and Vietnamese first names are family names and their last names given names, as in the mod, so those Agent names read family name first. The NameLists differ from the source in these ways only:
+
+- **Format:** each file is one YAML document of `name_lists.yaml`, whose comment at the top credits the source.
+- **Look:** the files' `lookWeights`, which choose an OpenXcom soldier's appearance, are left out.
+- **Blank names:** a last name that is only spaces, e.g. one of the 34 that give an Indonesian one name only, is the empty last name, and a space that ends a name is dropped, e.g. in the Tajik and Uzbek "Aliddin".
+- **Too long:** four female first names of `Spanish.nam` are left out, because some last name of that list makes an Agent name of more than [30 characters](../mechanics/agents-spec.md#namelist) with each: "María de los Ángeles", "María de la Concepción", "María de las Mercedes", and "María de la Victoria".
+
 ## Economy and Upgrades GDRs
 
 No [Upgrade](../mechanics/domain-model.md#agency-and-agents) of the GDRs is a [Max health Upgrade](../mechanics/economy-and-upgrades.md#glossary): Agents grow sturdier through armor, which costs them no [effective skill](../mechanics/agents-spec.md#combatant-attributes) when hit, rather than through more health.
@@ -89,7 +100,7 @@ The GDRs are authored in YAML files under the `content/` directory at the reposi
 | Directory | Type owner | Files |
 | --- | --- | --- |
 | `content/configuration/` | [Configuration](../foundation/configuration.md) | `campaign_configurations.yaml`, `configuration_parameters.yaml` |
-| `content/agents/` | [Agents](../mechanics/agents-spec.md) | `agent_archetypes.yaml`, `agent_parameters.yaml` |
+| `content/agents/` | [Agents](../mechanics/agents-spec.md) | `agent_archetypes.yaml`, `agent_parameters.yaml`, `name_lists.yaml` |
 | `content/economy-and-upgrades/` | [Economy and Upgrades](../mechanics/economy-and-upgrades.md) | `agency_archetypes.yaml`, `economy_parameters.yaml`, `upgrades.yaml` |
 | `content/leads-and-progression/` | [Leads and Progression](../mechanics/leads-and-progression.md) | `leads.yaml` |
 | `content/investigations/` | [Investigations](../mechanics/investigations.md) | `investigation_archetypes.yaml`, `investigation_parameters.yaml` |
@@ -110,6 +121,7 @@ The [coverage of parameter GDRs](../mechanics/compendium.md#coverage-of-paramete
 | GDR | Property | Why it is exempt |
 | --- | --- | --- |
 | `configuration_parameters` | `default_preset` | It names the preset that campaign creation starts from, which the Player sees while creating a Campaign. |
+| `agent_parameters` | `female_name_percent` | It shapes only the [Agent names](../mechanics/agents-spec.md#agent-names), which no rule reads. |
 | `equipment` | `starting_ammo` | It is a mapping, which no Placeholder can show, and the Player sees the rounds it gives in [Storage](../mechanics/equipment.md#glossary) from the first Turn. |
 
 The repository check `npm run compendium:check` reads the exemptions from this table, so a property added to a parameter GDR fails the check until an article explains the property or the table exempts it.

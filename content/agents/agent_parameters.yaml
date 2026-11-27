@@ -1,6 +1,7 @@
 id: agent_parameters
 type: AgentParameters
 initial_roster_size: 8
+female_name_percent: 10 # the Probability, in percent, that an Agent name is a woman's
 exhaustion_incapacitation: 100
 exhaustion_free_points: 30 # exhaustion up to this has no effect on skill
 skill_penalty_pct_per_exhaustion: 1 # per point of exhaustion above exhaustion_free_points

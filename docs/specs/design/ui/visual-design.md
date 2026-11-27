@@ -260,7 +260,7 @@ A column that shows a game quantity is wide enough for the widest value that qua
 
 | Quantity | Widest value |
 | --- | --- |
-| Agent, i.e. an [Agent](../mechanics/domain-model.md#agency-and-agents)'s [Instance ID](../foundation/campaign-instances.md#glossary) | 30 characters, so that it can later hold an Agent's full name. |
+| Agent, i.e. an [Agent name](../mechanics/agents-spec.md#agent-names) | 30 characters, the most an [Agent name](../mechanics/agents-spec.md#namelist) can hold. |
 | [Rank](gui.md#ranks) | The widest `abbreviation` of the [Rank](gui.md#glossary) GDRs followed by its [Rank insignia](gui.md#glossary), e.g. "Hi Cmdr" and three stars. |
 | [Enemy label](gui.md#enemy-labels) | The longest the [Game build](../foundation/core-concepts.md#game-build-and-content) can give, with a two-digit number, e.g. "high-commander-12". |
 | [Assignment](screens/agents-view.md#agent-table) | "[Recovery](../mechanics/agents-spec.md#assignments) · 99 T left" followed by the In transit icon. |
@@ -278,7 +278,7 @@ A column that shows a value at two moments joined by "→" holds the widest valu
 A table whose rows each have a selection checkbox lets the Player select several rows at once, in these ways:
 
 - **Click:** clicking a row's checkbox, or the row outside its links and buttons, selects or clears that row and makes it the anchor.
-- **Shift-click:** Shift-clicking a row gives every row from the anchor to that row, both included, the state the anchor has. E.g., after clicking agent-10 to select it and then Shift-clicking agent-3, agent-3 to agent-10 are all selected.
+- **Shift-click:** Shift-clicking a row gives every row from the anchor to that row, both included, the state the anchor has. E.g., in a table of ten Agents, after clicking the tenth to select it and then Shift-clicking the third, the third to the tenth are all selected.
 - **Drag:** pressing on a row and moving the pointer across others gives each row passed over the state the pressed row took, so one drag selects or clears a run of rows.
 
 A row whose checkbox is disabled is skipped by every one of these. Pressing or dragging over the rows never selects their text.
