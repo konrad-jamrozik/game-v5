@@ -22,6 +22,8 @@ Missions builds on [Factions](./factions.md): Factions says when a Faction opera
 | --- | --- |
 | Final Mission site state | A [lifecycle state](#mission-site-lifecycle) of a [Mission site](domain-model.md#leads-investigations-mission-sites-and-missions) that no transition leaves: Concluded, Expired, or Cancelled. A Mission site reaches one once its outcome is settled; its [Consequences](domain-model.md#leads-investigations-mission-sites-and-missions) then apply and it is [Retired](../foundation/world-history.md#glossary). |
 | Unfinished Mission site | A Mission site whose lifecycle state is not a Final Mission site state, i.e. Active or [Deployed](agents-spec.md#assignments). |
+| Health-adjusted base skill | Of an [Enemy](domain-model.md#combat) at the end of a [Combat](domain-model.md#combat): its [base skill](agents-spec.md#combatant-attributes) times its [current health](agents-spec.md#combatant-attributes) divided by its [effective max health](agents-spec.md#combatant-attributes). Its [exhaustion](agents-spec.md#combatant-attributes) and [effective skill](agents-spec.md#combatant-attributes) do not count. |
+| Loss severity | Of a Lost [Mission](domain-model.md#leads-investigations-mission-sites-and-missions): how much of its Enemies' strength still stands when its [Combat ends](combat.md#combat-rounds-and-results), i.e. the sum of the Health-adjusted base skill of its Enemies that the Combat ended [able to fight](combat.md#combatant-condition-in-a-combat), divided by the sum of the base skill of all its Enemies. It is above 0 and at most 1. |
 | Capable for deployment | Of an [Agent](domain-model.md#agency-and-agents): not meeting the [incapacitation condition](combat.md#incapacitation-condition) of [Combat](domain-model.md#combat) with its current values, so that it would not be [Incapacitated](combat.md#combatant-condition-in-a-combat) as soon as it is deployed. |
 | Deployable Agent | A [Serving](agents-spec.md#agent-statuses) Agent that is [In base](agents-spec.md#agent-statuses), [can take orders](agents-spec.md#agents-that-can-take-orders), and is Capable for deployment, i.e. one [At assignment](domain-model.md#agency-and-agents) on a [Base Assignment](agents-spec.md#assignments) that [`deployAgents` accepts](#deploying-agents) while the [Transport cap](economy-and-upgrades.md#glossary) has a place left. A [Recovering](agents-spec.md#agent-statuses) Agent is In base but cannot take orders, so it is never a Deployable Agent. |
 
@@ -80,7 +82,7 @@ A Mission site is a Campaign instance whose Archetype is a MissionSiteArchetype.
 | Turns until expiration | State | The number of Advance turns after which an Active Mission site is Expired. |
 | Enemies | State | The ordered list of the Enemies present at the Mission site, in their creation order. No rule changes the list after creation. |
 
-A Mission site also has [Derived values](../foundation/core-concepts.md#value-classification): its Mission, when one exists; its Consequences for each final state, i.e. what the [Consequences](#consequences) would change when its Mission is Won and when its Mission is Lost or it is Expired; and the Combat rating of its Enemies.
+A Mission site also has [Derived values](../foundation/core-concepts.md#value-classification): its Mission, when one exists; its Consequences for each final state, i.e. what the [Consequences](#consequences) would change when its Mission is Won and when it is Expired, which a Lost Mission scales down by [Loss scaling](#loss-scaling); and the Combat rating of its Enemies.
 
 In every [World state](../foundation/engine-contract.md#player-actions-and-turns), every Mission site satisfies these invariants:
 
@@ -293,20 +295,33 @@ What a final state changes depends on the kind of the Mission site: an Initiativ
 | Final state | Initiative | Response |
 | --- | --- | --- |
 | Mission Won | The Effect list `on_win` of its MissionSiteArchetype is applied. | The Effect list `on_win` of the operation level is applied. |
-| Mission Lost | Nothing. | The Effect list `on_ignored_or_lost` of the operation level is applied. |
-| Mission site Expired | Nothing. | As Lost: the Effect list `on_ignored_or_lost` of the operation level is applied. |
+| Mission Lost | Nothing. | The Effect list `on_ignored_or_lost` of the operation level is applied, scaled by the Mission's Loss severity. |
+| Mission site Expired | Nothing. | The Effect list `on_ignored_or_lost` of the operation level is applied in full. |
 | Mission site Cancelled | Nothing. | Nothing. |
 
 Each Effect list is [applied](../foundation/effect-lists.md#applying-an-effect-list) once, when the transition happens. Its Effects are of the Effect kinds [`money` and `funding`](economy-and-upgrades.md#money-and-funding-effect-kinds), [`panic`](panic-and-endings.md#panic-effect-kind), [`eliminate_faction`](factions.md#elimination), and [`defeat`](panic-and-endings.md#defeat-effect-kind), and the Mission site's target Faction is supplied to an `eliminate_faction` Effect.
 
-The Consequences apply in full whether or not the target Faction is Eliminated by then, e.g. a Won Response Mission still brings its money when another Mission resolved in the same step eliminated its Faction.
+The Consequences apply whether or not the target Faction is Eliminated by then, e.g. a Won Response Mission still brings its money when another Mission resolved in the same step eliminated its Faction.
+
+## Loss scaling
+
+A team that fails but wears its Enemies down spares the Campaign part of the harm, so that attempting a Response Mission and failing differs materially from ignoring it, as [F. Mission commitment: force concentration, casualties, and partial success](../../../game-design-brief.md#f-mission-commitment-force-concentration-casualties-and-partial-success) in the game design brief requires. A Lost Response Mission applies its `on_ignored_or_lost` with each Effect value scaled by its Loss severity L:
+
+```text
+funding change applied = round down( funding × L )
+Panic increase applied = round up( 10 × panic × L ) / 10
+```
+
+Each expression is [evaluated exactly](../foundation/numbers.md#exact-evaluation) and rounded once, the funding change to a whole number by [Round down](../foundation/numbers.md#glossary) and the Panic increase to tenths of a percentage point by [Round up](../foundation/numbers.md#glossary). A `defeat` Effect applies unscaled: a Lost Mission always has an Enemy able to fight, so L is above 0. Loss severity reads each Enemy's values when the Combat ends; whether an Enemy is able to fight is its final condition in the [Combat report](combat.md#combat-report).
+
+E.g., Enemies of base skill 600, 200, and 200, of which the first is dead, the second is Incapacitated, and the third ends able to fight with 60% of its effective max health and exhaustion 70, give an L of `200 × 0.6 / 1000 = 0.12`; an `on_ignored_or_lost` of funding −50 and Panic 10 then applies `round down(−6) = −6` funding and Panic `round up(12) / 10 = 1.2`. With an L of 0.35 it applies `round down(−17.5) = −18` funding and Panic 3.5.
 
 # Turn report
 
 The [Turn report](../foundation/campaign-state.md#glossary) of an Advance turn holds, of Mission sites and Missions:
 
 - **Mission sites created, Expired, and Cancelled:** three lists of the Mission sites that were created, that became Expired, and that became Cancelled in it, each by Instance ID.
-- **Each Mission resolved:** in the order of the [Combat reports](domain-model.md#combat), the Mission and its Mission site by Instance ID, whether it is Won or Lost, the Agents of its Team sent that were Killed, the survivors sent to Recovery, the survivors sent to Standby, and the Consequences that applied: the money, the funding change, the Panic increase, the Panic reduction, the Faction made Eliminated, and the Defeat, if any. For each survivor it also holds its [survival experience](agents-spec.md#growth), its [Mission experience](agents-spec.md#growth), and its base skill and Experience after them.
+- **Each Mission resolved:** in the order of the [Combat reports](domain-model.md#combat), the Mission and its Mission site by Instance ID, whether it is Won or Lost, the Loss severity of a Lost Response Mission, the Agents of its Team sent that were Killed, the survivors sent to Recovery, the survivors sent to Standby, and the Consequences that applied: the money, the funding change, the Panic increase, the Panic reduction, the Faction made Eliminated, and the Defeat, if any. For each survivor it also holds its [survival experience](agents-spec.md#growth), its [Mission experience](agents-spec.md#growth), and its base skill and Experience after them.
 - **Each Mission site Expired:** the Consequences that applied, in the same form.
 
 The [History entry](../foundation/world-history.md#glossary) of the Turn the Advance turn ends holds all of these except the values of each survivor's growth; it keeps the Consequences so that a Mission site in a final state can show what it changed for the rest of the Campaign. It also holds the number of Active Mission sites in the [Turn-start state](../foundation/engine-contract.md#player-actions-and-turns) and in the Turn-end state of that Turn, and two Combat ratings of the Turn-end state: that of every Serving Agent taken as one side, and that of every Deployable Agent taken as one side.
@@ -321,6 +336,5 @@ A MissionSiteArchetype also has a Derived value that is Player-visible informati
 
 # TODOs
 
-- TODO (later): Partial success among the [Consequences](#consequences), so that attempting and failing a Mission differs materially from ignoring its Mission site, as [F. Mission commitment: force concentration, casualties, and partial success](../../../game-design-brief.md#f-mission-commitment-force-concentration-casualties-and-partial-success) in the game design brief requires.
 - TODO (later): Faction suppression as one of the [Consequences](#consequences) of a Mission or a Mission site.
 - TODO (later): A second attempt at a Mission site, as a transition of the [Mission site lifecycle](#mission-site-lifecycle).
