@@ -14,15 +14,16 @@ Then open <http://localhost:4173/>. Any static file server works, e.g. `npx serv
 
 The page loads three.js r159 from the jsDelivr CDN, so the first load needs an internet connection. It needs a browser with WebGL 2.
 
-Drag to orbit the camera and scroll to zoom. The three buttons at the bottom left, above the imagery credit, are the globe's controls:
+Drag to orbit the camera and scroll to zoom. The buttons at the bottom left, above the imagery credit, are the globe's controls:
 
-| Button        | Each press                                                                              | Starts at |
-| ------------- | --------------------------------------------------------------------------------------- | --------- |
-| ■ or ▶        | Stops or starts the rotation of the planet in view.                                     | Rotating  |
-| Clouds        | Shows the clouds in full, then at half opacity, then not at all, then again in full.    | Full      |
-| Day and night | Sets the speed of the day and night cycle: 1×, 2×, 4×, 8×, 16×, stopped, then 1× again. | 1×        |
+| Button | Each press | Starts at |
+| --- | --- | --- |
+| ■ or ▶ | Stops or starts the rotation of the planet in view. | Rotating |
+| Clouds | Shows the clouds in full, then at half opacity, then not at all, then again in full. | Full |
+| − and + | Slow down or speed up the day and night cycle, which the speed between them shows, one step of stopped, 1×, 2×, 4×, 8×, 16×, and 32×; each is disabled at its end. | 1× |
+| Tilt | Leans the planet's axis in view: Level, i.e. upright with the equator level; Mild; Earth, i.e. Earth's own tilt of about 23.5° with the north pole leaning toward the camera; then Level again. | Level |
 
-The day and night cycle moves the sun over the surface, so it goes on while the rotation is stopped. With rotation on and the cycle at 1×, the two cancel and the sun stands still in view. A browser that asks for reduced motion starts with both the rotation and the cycle stopped.
+The tilt turns the planet as a whole, the sun with it, so the lit side stays where it was on the surface. The day and night cycle moves the sun over the surface, so it goes on while the rotation is stopped. With rotation on and the cycle at 1×, the two cancel and the sun stands still in view. A browser that asks for reduced motion starts with both the rotation and the cycle stopped.
 
 ## Files
 
@@ -101,7 +102,7 @@ The maps are compressed to keep the download small. Compared side by side in the
 - The surface is a sphere shaded from the four maps: day colour lit by a fixed sun, relief from the normal map, a sun glint on water only, and city lights that fade in on the night side.
 - The clouds are a second, slightly larger sphere that drifts over the surface at the day and night speed and casts shadows on it. At half opacity both the clouds and their shadows are halved.
 - The atmosphere is a third, larger sphere drawn from the inside with additive blending, blue on the day side and orange near the terminator.
-- The planet turns on a tilted axis, and the sun moves around that axis at the day and night speed. At 1× with rotation on, the two cancel, so the sun stands still in view while day and night sweep over the surface.
+- The planet turns on its axis, which the Tilt button leans, and the sun, placed for Earth's own tilt, moves around that axis at the day and night speed. At 1× with rotation on, the two cancel, so the sun stands still in view while day and night sweep over the surface.
 
 ## Rebuilding the maps
 

@@ -83,10 +83,38 @@
   outline-offset: 1px;
 }
 
-.globe-button svg {
+.globe-button:disabled {
+  border-color: rgb(232 228 216 / 14%);
+  background: transparent;
+  color: var(--text-muted, #9c978a);
+  opacity: 0.5;
+  cursor: default;
+}
+
+.globe-button svg,
+.globe-readout svg {
   width: 16px;
   height: 16px;
   fill: currentColor;
+}
+
+/* The day and night speed between its slower and faster buttons. */
+.globe-stepper {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.globe-readout {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 64px;
+  height: 32px;
+  color: var(--text, #e8e4d8);
+  font: 500 12px var(--font-figure, ui-monospace, Consolas, monospace);
+  font-variant-numeric: tabular-nums;
 }
 
 .globe-credit {
