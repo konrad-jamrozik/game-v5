@@ -22,7 +22,8 @@ Drag to orbit the camera and scroll to zoom. The buttons at the bottom left, abo
 | --- | --- | --- |
 | ■ or ▶ | Stops or starts the rotation of the planet in view. | Rotating |
 | Clouds | Shows the clouds in full, then at half opacity, then not at all, then again in full. | Full |
-| − and + | Slow down or speed up the day and night cycle, which the speed between them shows, one step of 0×, i.e. stopped, 1×, 2×, 4×, 8×, 16×, and 32×; + on 32× goes to 0×, and − on 0× to 32×. | 1× |
+| − and + | Slow down or speed up the day and night cycle, which the speed between them shows, one step of 0×, i.e. stopped, 1×, 2×, 4×, 8×, 16×, and 32×; + on 32× goes to 0×, and − on 0× to 32×. Each also resumes a paused cycle. | 1× |
+| The speed | Pauses the day and night cycle at whatever speed it is, showing ‖ in place of its icon, or resumes it at that speed. | Running |
 | Tilt | Leans the planet's axis in view: Level, i.e. upright with the equator level; Mild; Earth, i.e. Earth's own tilt of about 23.5° with the north pole leaning toward the camera; then Level again. | Level |
 
 The tilt turns the planet as a whole, the sun with it, so the lit side stays where it was on the surface. The day and night cycle moves the sun over the surface, so it goes on while the rotation is stopped. With rotation on and the cycle at 1×, the two cancel and the sun stands still in view. A browser that asks for reduced motion starts with both the rotation and the cycle stopped.

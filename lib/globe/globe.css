@@ -83,8 +83,7 @@
   outline-offset: 1px;
 }
 
-.globe-button svg,
-.globe-readout svg {
+.globe-button svg {
   width: 16px;
   height: 16px;
   fill: currentColor;
@@ -97,16 +96,10 @@
   gap: 4px;
 }
 
+/* The speed is a button that pauses the cycle; it shows a border only under the pointer, so it reads as the value. */
 .globe-readout {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
   min-width: 64px;
-  height: 32px;
-  color: var(--text, #e8e4d8);
-  font: 500 12px var(--font-figure, ui-monospace, Consolas, monospace);
-  font-variant-numeric: tabular-nums;
+  border-color: transparent;
 }
 
 .globe-credit {
