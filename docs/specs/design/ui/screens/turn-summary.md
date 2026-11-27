@@ -92,7 +92,7 @@ A Special event of `campaign_start` is shown on its own, in the dialog of the Tu
 - **Text:** its `title`, larger than a Section heading, then its `text`, larger than body text, both centred across the dialog and together centred from top to bottom on the Event art.
 - **Control row:** only "Continue", the primary button, centred. It, the Enter key, and the Escape key close the dialog.
 
-It is not shown again for that Campaign, e.g. after loading a [Campaign save](../../foundation/engine-contract.md#persisted-data) of its first Turn.
+It is not shown again on its own for that Campaign, e.g. after loading a [Campaign save](../../foundation/engine-contract.md#persisted-data) of its first Turn. The Player replays it, as it was first shown, from the [Turn summary button](turn-report-view.md#turn-summary-button) of the Turn Report View while the Campaign has no Turn report yet, so that the Player can read the opening again until the first Advance turn.
 
 # Screenshot
 
