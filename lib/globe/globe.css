@@ -83,14 +83,6 @@
   outline-offset: 1px;
 }
 
-.globe-button:disabled {
-  border-color: rgb(232 228 216 / 14%);
-  background: transparent;
-  color: var(--text-muted, #9c978a);
-  opacity: 0.5;
-  cursor: default;
-}
-
 .globe-button svg,
 .globe-readout svg {
   width: 16px;
