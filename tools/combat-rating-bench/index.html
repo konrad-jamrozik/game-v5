@@ -740,14 +740,15 @@
           </button>
         </div>
         <p class="note">
-          Retreat is off by default, by setting <code>retreat_below_agent_rating_fraction</code> to 0, because it reads
-          the game's own Combat rating rather than this formula. When it is allowed, the engine's own Retreated check
-          ends a Combat after a Combat round in which the Agents' rating has fallen below the first share of its
-          starting rating and the Enemies' rating is at least the second share of the Agents'; both start from the
-          content's CombatParameters and show in orange once changed. A retreat counts as a loss, and a cell shows its
-          retreat rate beside its Agent count, e.g. <code>55 ↩12%</code>. A cell whose closest Agent count still misses
-          its share by more than 5% is excluded: drawn dashed, never fought, and left out of the statistics and the fit,
-          e.g. one Agent of skill 500 against a small site.
+          Retreat is allowed by default; unchecking <b>Allow retreat</b> turns it off by setting
+          <code>retreat_below_agent_rating_fraction</code> to 0, since it reads the game's own Combat rating rather than
+          this formula. When it is allowed, the engine's own Retreated check ends a Combat after a Combat round in which
+          the Agents' rating has fallen below the first share of its starting rating and the Enemies' rating is at least
+          the second share of the Agents'; both start from the content's CombatParameters and show in orange once
+          changed. A retreat counts as a loss, and a cell shows its retreat rate beside its Agent count, e.g.
+          <code>55 ↩12%</code>. A cell whose closest Agent count still misses its share by more than 5% is excluded:
+          drawn dashed, never fought, and left out of the statistics and the fit, e.g. one Agent of skill 500 against a
+          small site.
         </p>
         <details>
           <summary class="lbl note" style="cursor: pointer">Combat values passed to the engine</summary>
@@ -936,7 +937,7 @@
               >
               <label
                 class="inline"
-                title="For a rating ratio from 90% to 120% only, the rest greyed out. The ratio sets the saturation, very low at 90%, medium at 100%, and full at 120%; the win rate sets the hue: green when it matches the ratio, through yellow toward red when below, fully turned at 20 points, and toward purple when above, fully turned at 10 points"
+                title="For a rating ratio from the lowest to the highest CR ratio line threshold only, by default 100% to 120%, the rest greyed out. The ratio sets the saturation, very low at 90%, medium at 100%, and full at 120%; the win rate sets the hue: green when it matches the ratio, through yellow toward red when below, fully turned at 20 points, and toward purple when above, fully turned at 10 points"
                 ><input type="radio" name="coloring" value="diff" data-bind="sweeper.coloring" data-type="str" /> CR to
                 win diff</label
               >
@@ -944,10 +945,21 @@
             <label
               class="inline"
               style="margin-top: 10px"
-              title="Cyan lines between the cells where the rating ratio crosses 100%, bold, and 90% and 110%, faint, over any colouring"
+              title="Cyan lines between the cells where the rating ratio crosses each threshold, bold at 100% and faint elsewhere, over any colouring"
               ><input type="checkbox" data-bind="sweeper.showLine" data-type="bool" />
               <span class="k-line">CR ratio line</span></label
             >
+            <label
+              class="inline"
+              title="The rating ratios, in %, separated by commas, that the CR ratio line draws; the lowest and highest also bound the cells that CR to win diff colours"
+              >Thresholds, %
+              <input
+                type="text"
+                style="width: 100px"
+                data-bind="sweeper.lineRatios"
+                data-type="str"
+                aria-label="CR ratio line thresholds"
+            /></label>
           </aside>
           <div id="sweeperOut" class="samples"></div>
         </div>
@@ -1080,11 +1092,11 @@
           ...expressionsOf(FORMULAS.default),
         },
         setup: {
-          targets: '80, 90, 100',
+          targets: '100, 110, 120',
           skills: '100, 250, 500',
           upgrades: '0/0, 0/5, 4/20, 6/25, 10/40, 12/50, 18/60, 22/80',
-          trials: 100,
-          retreat: false,
+          trials: 20,
+          retreat: true,
           /** Leaves the Response sites out of the grid, the runs, the statistics, and the fit. */
           skipResponse: false,
         },
@@ -1106,6 +1118,8 @@
           coloring: 'win',
           /** Draws the CR ratio line, contour lines of the rating ratio, over any colouring. */
           showLine: false,
+          /** The rating ratios, in %, of the CR ratio line; the lowest and highest bound the CR to win diff colouring. */
+          lineRatios: '100, 110, 120',
           showDiff: false,
           count: { mode: 'x', value: 20, base: 50, step: 10, count: 4, list: '' },
           skill: { mode: 'fixed', value: 250, base: 250, step: 50, count: 3, list: '' },
@@ -2565,8 +2579,8 @@
       /**
        * A sample's background under the chosen Colouring. Win rate: as in the grid. CR ratio: ratio − 100%, so red below
        * 100% down to 80% and yellow above up to 120%, and none beyond. CR to win diff: see diffColour; 'grey' outside a
-       * rating ratio from 90% to 120%, where it is not computed. Ratios are read by the whole percent shown, so that one
-       * that reads 90% is in range.
+       * rating ratio from the lowest to the highest CR ratio line threshold, where it is not computed. Ratios are read by
+       * the whole percent shown, so that one that reads 100% is in range.
        */
       function sampleBackground(cell, r) {
         const coloring = state.sweeper.coloring
@@ -2577,7 +2591,8 @@
         if (coloring === 'ratio') {
           return shownRatio < 80 || shownRatio > 120 ? 'transparent' : redYellow(cell.ratio - 1)
         }
-        if (shownRatio < 90 || shownRatio > 120) {
+        const thresholds = lineRatios()
+        if (shownRatio < thresholds[0] * 100 || shownRatio > thresholds.at(-1) * 100) {
           return 'grey'
         }
         if (!r) {
@@ -2586,8 +2601,8 @@
         return diffColour(cell.ratio, winOf(r))
       }
       /**
-       * The CR to win diff colour of a rating ratio from 90% to 120%. The ratio sets the saturation: very low at 90%,
-       * medium at 100%, and full at 120%. The win rate against the ratio sets the hue: green when they match, or when a
+       * The CR to win diff colour of a rating ratio. The ratio sets the saturation: very low at 90%, medium at 100%, and
+       * full at 120%. The win rate against the ratio sets the hue: green when they match, or when a
        * ratio of 100% or more wins every Combat; through yellow toward red as the win rate falls below the ratio, fully
        * turned at 20 points; and toward purple as it rises above, fully turned at 10 points, the most a win rate can rise
        * above a ratio of 90%. E.g. 90% and 90% is a pale green, 90% and 100% a purple, 110% and 100% a strong green, and
@@ -2610,12 +2625,31 @@
         const turn = Math.min(d, 0.1) / 0.1
         return `color-mix(in oklab, hsl(120, ${base.toFixed(0)}%, 32%), hsl(285, 50%, 42%) ${(turn * 100).toFixed(0)}%)`
       }
-      /** The rating ratios the Win rate + CR ratio line draws: a bold line at 100% and faint ones at 90% and 110%. */
-      const CONTOURS = [
-        [1, 3, 'rgb(var(--line))'],
-        [0.9, 1, 'rgba(var(--line), 0.6)'],
-        [1.1, 1, 'rgba(var(--line), 0.6)'],
-      ]
+      /**
+       * The CR ratio line's thresholds as ratios, ascending, e.g. [1, 1.1, 1.2] for `100, 110, 120`; the default ones
+       * when the list holds no positive number.
+       */
+      function lineRatios() {
+        const parse = (text) =>
+          [
+            ...new Set(
+              String(text ?? '')
+                .split(',')
+                .map((s) => Number(s.trim()))
+                .filter((v) => Number.isFinite(v) && v > 0),
+            ),
+          ]
+            .sort((a, b) => a - b)
+            .map((v) => v / 100)
+        const ratios = parse(state.sweeper.lineRatios)
+        return ratios.length > 0 ? ratios : parse(defaults().sweeper.lineRatios)
+      }
+      /** The contours the CR ratio line draws: a bold line at 100% and a faint one at every other threshold. */
+      function contours() {
+        return lineRatios().map((t) =>
+          Math.abs(t - 1) < 1e-9 ? [t, 3, 'rgb(var(--line))'] : [t, 1, 'rgba(var(--line), 0.6)'],
+        )
+      }
       /**
        * The lines of the Win rate + CR ratio line on one cell's edges, as a box-shadow: an edge that the rating ratio
        * crosses a contour across, from this cell to its neighbour on that side, carries the contour's line, so that the
@@ -2629,7 +2663,7 @@
           [around[2], (w) => `0 -${w}px`],
           [around[3], (w) => `${w}px 0`],
         ]
-        for (const [t, w, colour] of CONTOURS) {
+        for (const [t, w, colour] of contours()) {
           for (const [next, offset] of sides) {
             if (next && cell.ratio >= t !== next.ratio >= t) {
               shadows.push(`inset ${offset(w)} 0 ${colour}`)
@@ -2689,6 +2723,10 @@
         }
         for (const radio of document.querySelectorAll('[data-bind="sweeper.coloring"]')) {
           radio.checked = radio.value === state.sweeper.coloring
+        }
+        const lineInput = $('[data-bind="sweeper.lineRatios"]')
+        if (document.activeElement !== lineInput) {
+          lineInput.value = state.sweeper.lineRatios
         }
         const sites = info ? sitesOf(combatValues(), false) : []
         const modes = [
