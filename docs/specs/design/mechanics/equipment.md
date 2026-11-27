@@ -5,7 +5,7 @@
 | Spec ID | EQUIP |
 | Family | Mechanics |
 | Audience | Engine designer, Content designer, AI designer, Implementer |
-| Owns | Items, the Storage of the Agency, which Items are Unlocked, equipping Agents, buying and selling Items, Ammo short, Mission equipment losses and Spoils of war, the EquipmentParameters GDR, and the equipAgent, buyItems, and sellItems actions. |
+| Owns | Items, the Storage of the Agency, which Items are Unlocked, equipping Agents, buying and selling Items, Ammo short, Mission equipment losses and Spoils of war, the EquipmentParameters GDR, and the equipAgent, equipAgents, buyItems, and sellItems actions. |
 | Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
@@ -74,6 +74,10 @@ When the action is accepted, at once and within the same [Turn](../foundation/en
 3. The Agent's Weapon and [base weapon damage](agents-spec.md#combatant-attributes), or Armor and [base armor](agents-spec.md#combatant-attributes), become those of `equipment`, i.e. its `base_weapon_damage` or `base_armor`.
 
 E.g., an Agent wearing a pistol is equipped with a rifle while Storage holds 2 rifles and 0 pistols: Storage then holds 1 rifle and 1 pistol.
+
+The Player action `player.actions.equipAgents(changes)` makes several such changes at once, so that one Player action re-equips a whole team. `changes` lists one or more entries, each an `agent` and an `equipment` as for `equipAgent`. The entries take effect in their order, each as an `equipAgent` would on what the entries before it left, so an entry can put on an Item that an earlier entry took off another Agent. When any entry's requirement fails, the action equips nothing.
+
+E.g., agent-3 wears the only rifle, Storage holds 1 pistol, and agent-7 wears the Fallback Weapon. The entries "agent-3 with the pistol, then agent-7 with the rifle" are accepted: the first puts the rifle into Storage, and the second takes it out. In the reverse order the first entry finds no rifle in Storage, so the action equips nothing.
 
 ## Equipment of new and departing Agents
 

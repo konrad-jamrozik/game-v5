@@ -81,7 +81,7 @@ For Weapons, the Equipping plan takes every Weapon that a Serving Agent wears or
 
 E.g., with 3 rifles, 25 rounds of rifle Ammo, and an `ammo_short_rounds_per_agent` of 10, the first two Agents get rifles and the third the best pistol whose rounds suffice; the third rifle waits in Storage for rounds.
 
-The Basic Autopilot AI makes one [`equipAgent`](../mechanics/equipment.md#equipping-agents) for each Agent whose plan differs from what it wears, freeing an Item another Agent wears first when the plan moves it.
+The Basic Autopilot AI makes the whole Equipping plan one [`equipAgents`](../mechanics/equipment.md#equipping-agents), with an entry for each Weapon or Armor the plan changes, ordered so that an entry freeing an Item another Agent is to wear comes before the entry putting it on.
 
 ## Deploying and mustering
 

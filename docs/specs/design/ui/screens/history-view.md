@@ -67,6 +67,7 @@ Each line starts with the number of the Player action in the Turn, from 1, follo
 | `dismissAgents` | "[Dismissed](../../mechanics/agents-spec.md#agent-statuses) N Agents". |
 | `purchaseUpgrade` | "Bought N" and the [Upgrade](../../mechanics/economy-and-upgrades.md#upgrade)'s `name` followed by "[Upgrades](../../mechanics/domain-model.md#agency-and-agents)", e.g. "Bought 3 Agent cap Upgrades". |
 | `equipAgent` | "Equipped" and the [Agent](../../mechanics/domain-model.md#agency-and-agents)'s [Agent name](../../mechanics/agents-spec.md#agent-names), then "with" and the `name` of the Weapon or Armor, e.g. "Equipped Jan Kowalski with Rifle". |
+| `equipAgents` | "Equipped N Agents", e.g. "Equipped 11 Agents". |
 | `buyItems` | "Bought" and each entry's count and `name`, joined by ", ", e.g. "Bought 2 Rifles, 100 Pistol ammo". |
 | `sellItems` | "Sold" and each entry's count and `name`, joined by ", ", e.g. "Sold 1 Machine gun, 30 Rifle ammo". |
 | `assignAgents` | "Assigned N Agents to" and the [Assignment](../../mechanics/domain-model.md#agency-and-agents), e.g. "Assigned 5 Agents to Contracting". |
