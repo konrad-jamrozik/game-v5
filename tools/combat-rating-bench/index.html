@@ -694,6 +694,14 @@
             >Combats per cell
             <input type="number" min="10" max="2000" step="10" data-bind="setup.trials" data-type="num"
           /></label>
+          <label class="inline" title="The exhaustion every Agent starts a Combat with, e.g. 10"
+            >Starting exhaustion <input type="number" min="0" step="1" data-bind="setup.exhaustion" data-type="num"
+          /></label>
+          <label
+            class="inline"
+            title="The step between the base skills of a team's Agents, centred on its base skill, e.g. 1 makes 7 Agents of base skill 100 into 97, 98, 99, 100, 101, 102, and 103"
+            >Base skill spread <input type="number" min="0" step="1" data-bind="setup.skillSpread" data-type="num"
+          /></label>
           <span class="inline retreat">
             <label class="inline"
               ><input type="checkbox" data-bind="setup.retreat" data-type="bool" /> Allow retreat</label
@@ -820,8 +828,9 @@
             </div>
             <p class="note detail">
               Combatant variables: <code>skill</code> (effective skill), <code>base_skill</code>, <code>health</code>,
-              <code>armor</code>, <code>damage</code>, <code>exhaustion</code>, and the derived
-              <code>health_mult = 1 + (health − health_base) × cr_per_health</code>, likewise
+              <code>armor</code>, <code>damage</code>, <code>exhaustion</code>, which an expression can weigh again
+              beside the effective skill it already lowers, e.g. <code>− exhaustion / exhaustion_base</code>, and the
+              derived <code>health_mult = 1 + (health − health_base) × cr_per_health</code>, likewise
               <code>armor_mult</code> and <code>damage_mult</code>. An Agent's gear set counts only as the weapon damage
               and armor it adds. Agents are rated by the Agent expression and Enemies by the Enemy one; every preset
               sets both to the same expression. Team variables: <code>sum</code>, <code>count</code> (Combatants able to
@@ -1030,6 +1039,11 @@
           0.01,
         ],
         [
+          'exhaustion_base',
+          'Baseline exhaustion, for an expression that adds an exhaustion malus of its own, e.g. − exhaustion / exhaustion_base; the game has no such value.',
+          1,
+        ],
+        [
           'team_exp',
           'Exponent of the team size in team_cr: 1 sums the Combatants; above 1 favours larger teams, e.g. 2 is the Lanchester square law. Defaults to the game’s rating_team_size_exponent.',
           0.05,
@@ -1074,6 +1088,7 @@
             cr_per_armor: 0.004,
             damage_base: contentValue('rating_base_weapon_damage') ?? 10,
             cr_per_damage: 0.02,
+            exhaustion_base: 100,
             team_exp: contentValue('rating_team_size_exponent') ?? 1.2,
           },
           /** The parameters the designer edited, by typing or by Fit; every other one follows the content. */
@@ -1087,6 +1102,7 @@
             cr_per_armor: true,
             damage_base: false,
             cr_per_damage: true,
+            exhaustion_base: false,
             team_exp: true,
           },
           ...expressionsOf(FORMULAS.default),
@@ -1096,6 +1112,10 @@
           skills: '100, 250, 500',
           upgrades: '0/0, 0/5, 4/20, 6/25, 10/40, 12/50, 18/60, 22/80',
           trials: 20,
+          /** The exhaustion of every Agent. */
+          exhaustion: 0,
+          /** The step between the base skills of a team's Agents, centred on the team's base skill; 0 for one skill. */
+          skillSpread: 0,
           retreat: true,
           /** Leaves the Response sites out of the grid, the runs, the statistics, and the fit. */
           skipResponse: false,
@@ -1445,21 +1465,31 @@
         return `${kind} level ${site.level}${name ? `: ${esc(name)}` : ''}`
       }
 
+      /**
+       * An Agent team of a base skill, a gear set, and a count, as groups of Agents alike: one group, or with a base skill
+       * spread, one Agent per group, their base skills a spread apart and centred on the team's, e.g. 7 Agents of base
+       * skill 100 with a spread of 1 are 97 to 103, and 6 are 97 to 102. Every Agent has the setup's exhaustion.
+       */
       function agentGroups(skill, up, count) {
         const a = info.gdr.agentArchetypes[0] ?? { health: 30, damage: 10, armor: 0 }
+        const spread = Math.max(0, Math.round(Number(state.setup.skillSpread) || 0))
+        const exhaustion = Math.max(0, Math.round(Number(state.setup.exhaustion) || 0))
         // A gear set is the weapon damage and armor added to every Agent, e.g. 4/20 is +4 and +20.
-        return [
-          {
-            count,
-            skill,
-            health: a.health,
-            damage: a.damage + up.w,
-            armor: a.armor + up.a,
-            exhaustion: 0,
-            w: up.w,
-            a: up.a,
-          },
-        ]
+        const group = (n, s) => ({
+          count: n,
+          skill: s,
+          health: a.health,
+          damage: a.damage + up.w,
+          armor: a.armor + up.a,
+          exhaustion,
+          w: up.w,
+          a: up.a,
+        })
+        if (spread === 0 || count <= 1) {
+          return [group(count, skill)]
+        }
+        const low = Math.floor(count / 2)
+        return Array.from({ length: count }, (_, i) => group(1, Math.max(1, skill + (i - low) * spread)))
       }
 
       /** The Agent count whose rating is closest, by ratio, to the target; ratings rise with the count. */
@@ -1598,7 +1628,10 @@
         const formula = state.formula
         const cv = model.cv
         const start = rate(cell.groups, formula, cv, 'agent')
-        const g0 = cell.groups[0]
+        // The finals do not tell the Agents apart, so with a base skill spread each survivor counts at the mean base skill.
+        const n = cell.groups.reduce((s, g) => s + g.count, 0)
+        const meanSkill = n === 0 ? 0 : cell.groups.reduce((s, g) => s + g.skill * g.count, 0) / n
+        const g0 = { ...cell.groups[0], skill: Math.round(meanSkill) }
         const out = { crLeftSum: 0, exhSum: 0, exhN: 0, dN: finals.length, crSig: crSig() }
         for (const combat of finals) {
           const left = combat.map(([h, e, n]) => ({ ...g0, count: n, current: h / 100, exhaustion: e }))
@@ -3048,10 +3081,17 @@
         const lastKey = store.last[cell.id]
         const old = !r && lastKey ? store.results[lastKey] : null
         const g0 = cell.groups[0]
+        // The base skill, or the range a base skill spread makes, e.g. 97–103; and the exhaustion when there is any.
+        const skills = cell.groups.map((g) => g.skill)
+        const lo = Math.min(...skills)
+        const hi = Math.max(...skills)
+        const agents =
+          `${cell.count} Agents: skill ${lo === hi ? lo : `${lo}–${hi}`}, health ${g0.health}, damage ${g0.damage}, ` +
+          `armor ${g0.armor}${g0.exhaustion > 0 ? `, exhaustion ${g0.exhaustion}` : ''}`
         const lines = isSample
           ? [
               `${esc(cell.site.name)}, CR ${fmt(cell.site.cr)}`,
-              `${cell.count} Agents: skill ${cell.skill}, health ${g0.health}, damage ${g0.damage}, armor ${g0.armor}`,
+              agents,
               `team_cr ${fmt(cell.cr)}, ${cell.ratio.toFixed(3)}× the site; ${cell.trials} Combats`,
               ...(model.curve
                 ? [`${pct(predict(cell.ratio, model.curve))} predicted by the curve fitted on the Mission sites grid`]
@@ -3059,7 +3099,7 @@
             ]
           : [
               `${esc(cell.site.name)}, ${cell.t}% of CR ${fmt(cell.site.cr)}`,
-              `${cell.count} Agents: skill ${cell.skill}, health ${cell.groups[0].health}, damage ${cell.groups[0].damage}, armor ${cell.groups[0].armor}`,
+              agents,
               `team_cr ${fmt(cell.cr)}, ${cell.ratio.toFixed(3)}× the site${cell.off ? ': excluded, more than 5% off its share' : ''}`,
             ]
         // A result with fewer Combats than asked for still shows, as such.
