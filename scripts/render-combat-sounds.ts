@@ -41,6 +41,8 @@ interface Recipe {
   readonly name: string
   /** The loudest sample of the rendered file, from 0 to 1. */
   readonly level: number
+  /** What its noise is generated from, when not its place among the recipes. */
+  readonly seed?: number
   readonly parts: readonly (TonePart | NoisePart)[]
 }
 
@@ -152,10 +154,24 @@ const RECIPES: readonly Recipe[] = [
       tone({ dur: 0.08, peak: 0.5, f0: 110, f1: 50 }),
     ],
   },
+  // The three Sounds of a kinetic miss: a narrow whiz, the same an octave lower, and a wider, softer whoosh.
   {
-    name: 'miss-kinetic',
+    name: 'miss-kinetic-1',
     level: 0.25,
+    seed: 13,
     parts: [noise({ dur: 0.12, attack: 0.03, peak: 0.22, filter: 'bandpass', q: 6, f0: 3200, f1: 900 })],
+  },
+  {
+    name: 'miss-kinetic-2',
+    level: 0.25,
+    seed: 41,
+    parts: [noise({ dur: 0.12, attack: 0.03, peak: 0.22, filter: 'bandpass', q: 5, f0: 1600, f1: 450 })],
+  },
+  {
+    name: 'miss-kinetic-3',
+    level: 0.25,
+    seed: 42,
+    parts: [noise({ dur: 0.17, attack: 0.045, peak: 0.22, filter: 'bandpass', q: 2.2, f0: 900, f1: 300 })],
   },
 ]
 
@@ -262,6 +278,6 @@ function wav(samples: Float32Array): Buffer {
 const directory = join(dirname(fileURLToPath(import.meta.url)), '..', 'assets', 'sounds')
 mkdirSync(directory, { recursive: true })
 RECIPES.forEach((recipe, index) => {
-  writeFileSync(join(directory, `${recipe.name}.wav`), wav(render(recipe, index + 1)))
+  writeFileSync(join(directory, `${recipe.name}.wav`), wav(render(recipe, recipe.seed ?? index + 1)))
 })
 console.log(`Rendered ${RECIPES.length} Sounds into ${directory}`)

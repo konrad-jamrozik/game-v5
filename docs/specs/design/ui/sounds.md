@@ -50,7 +50,7 @@ The GUI plays the following Sounds. A file of the directory whose Sound name is 
 | `interesting-turn-summary` | When the [Turn summary](screens/turn-summary.md#glossary) [appears after an Advance turn](#turn-summary). |
 | `shot-` followed by a [shot](screens/combat-replay.md#shots) with a hyphen for each underscore, e.g. `shot-light-pistol` | When a Weapon with that shot [fires in the Combat replay](#combat-replay-sounds). |
 | `hit-blade`, `hit-kinetic`, `hit-energy` | When a shot of that kind [hits its defender in the Combat replay](#combat-replay-sounds). |
-| `miss-kinetic` | When a kinetic shot [passes its defender in the Combat replay](#combat-replay-sounds). |
+| `miss-kinetic-1`, `miss-kinetic-2`, `miss-kinetic-3` | One of the three when a kinetic shot [passes its defender in the Combat replay](#combat-replay-sounds). |
 
 # When Sounds play
 
@@ -103,11 +103,11 @@ For each attack that the Combat replay plays, whether at a pace, as a step, or p
 
 1. **Shot:** the `shot-` Sound of the attack's shot each time the Weapon fires, i.e. once for each round of a `machine_gun` and once for every other shot. A `blade` fires as its attacker reaches the defender.
 2. **Hit:** when the attack hits, one Sound as the shot lands on the defender: `hit-blade` for a blade, `hit-kinetic` for a kinetic shot, and `hit-energy` for an energy shot.
-3. **Miss:** when a kinetic shot misses, `miss-kinetic` once, as its first round passes the defender. A blade or an energy shot that misses plays no further Sound.
+3. **Miss:** when a kinetic shot misses, one of `miss-kinetic-1`, `miss-kinetic-2`, and `miss-kinetic-3` once, as its first round passes the defender. The three differ in pitch, so that one miss after another does not repeat the same Sound, and each is chosen about as often as the others. Which one an attack plays follows from its place in the Combat log, so that the same attack always sounds the same. A blade or an energy shot that misses plays no further Sound.
 
 An attack that is shown without being played plays no Sound, e.g. after the Rewind button, and neither does a paused attack until it plays on.
 
-With Overlap or Instant on, many attacks play at once, and a wall of Sounds would say less than a few. So of the Combat replay Sounds of one Sound name that would start at the same moment only one is played, and at most 6 Combat replay Sounds play at the same time: one that would start while 6 are playing is not played. So that a Weapon fired again and again does not sound like a machine, the Sounds of each attack are played up to 6% lower or higher in pitch than authored, by an amount that follows from the attack's place in the Combat log, so that the same attack always sounds the same.
+With Overlap or Instant on, many attacks play at once, and a wall of Sounds would say less than a few. So of the Combat replay Sounds of one Sound name that would start at the same moment only one is played, the three `miss-kinetic` Sounds counting as one Sound name, and at most 6 Combat replay Sounds play at the same time: one that would start while 6 are playing is not played. So that a Weapon fired again and again does not sound like a machine, the Sounds of each attack are played up to 6% lower or higher in pitch than authored, by an amount that follows from the attack's place in the Combat log, so that the same attack always sounds the same.
 
 # Sound settings
 
