@@ -19,7 +19,8 @@ It reads like a small reference work. The Player narrows from a category to an a
 | Term | Definition |
 | --- | --- |
 | Article history | The articles the Player has shown one after another in the Compendium View, with the place among them of the one shown now, through which the Previous article and Next article buttons move. |
-| Data sheet | The table of a subject's Player-visible values that the Compendium View shows below the description of a [Subject article](../../mechanics/compendium.md#glossary). |
+| Article art | The [picture](#article-pane) of a [Subject article](../../mechanics/compendium.md#glossary)'s subject at the right of the Article pane. |
+| Data sheet | The rows of a subject's Player-visible values that the Compendium View shows below the description of a [Subject article](../../mechanics/compendium.md#glossary). |
 
 # Panes
 
@@ -40,12 +41,15 @@ The Player finds an article without the mouse by pressing S, typing part of its 
 The Article pane shows the parts of one article in a fixed order, so that every article of a category reads alike. A part an article does not have is left out with its heading.
 
 1. **Title row:** the displayed title and the two buttons of the [Article history](#following-links).
-2. **Body:** the resolved `body`, as one paragraph.
-3. **Formulas,** for a Mechanics article: the heading "Formulas" and one row for each resolved formula row in order, its `label` beside its `text`.
-4. **Data sheet,** for a Subject article: the [Data sheet](#subject-data-sheets) of its subject.
-5. **See also:** the heading "See also" and the [See also entries](../../mechanics/compendium.md#see-also) of the article in order, separated by "·".
+2. **Article art,** for a Subject article: a picture of its subject, laid out as below.
+3. **Body:** the resolved `body`, as one paragraph.
+4. **Formulas,** for a Mechanics article: the heading "Formulas" and one row for each resolved formula row in order, its `label` beside its `text`.
+5. **Data sheet,** for a Subject article: the [Data sheet](#subject-data-sheets) of its subject.
+6. **See also:** the heading "See also" and the [See also entries](../../mechanics/compendium.md#see-also) of the article in order, separated by "·".
 
 Every resolved text is shown segment by segment: plain text and inserted values as they are, with nothing that sets an inserted value apart, and each [Article link](../../mechanics/compendium.md#glossary) as a link the Player [follows](#following-links).
+
+The Article art lets a Subject article show its subject as large as the Article pane allows while its text stays readable. The Article pane fills the height of the [Detail view](../gui.md#glossary), and the Article art is as tall as the Article pane and 4:3, i.e. 936 × 702 px in the [Reference window](../visual-design.md#reference-window), flush with the pane's top, right, and bottom edges. Art for it is painted at 1872 × 1404 px, so that it stays sharp on a display of twice the density. Its left 17% fades into the pane's Background fill, and the parts after the title row stand in a column 340 px wide over that faded part, so that no text lies over the picture itself. When the Article pane is too narrow for the whole width, the picture is cropped at its left. An article without Article art gives its parts the whole width of the Article pane. Until a picture exists, the Article art is a placeholder drawn in the colour of the article's category, as the page "Compendium Image Slot", <https://claude.ai/artifact/WXYDS6MpeA8WWQ2UNGWUvW>, shows for each category under layout D.
 
 # Following links
 
@@ -67,13 +71,14 @@ The two buttons of the Article history have the accessible names "Previous artic
 
 A Subject article describes its subject in words, and every value of the subject comes from the subject [GDR](../../foundation/core-concepts.md#game-build-and-content) itself, so that the Compendium never repeats a number that could go stale. The Data sheet shows those values, chosen and worded for each kind of subject instead of listed as raw properties.
 
-A Data sheet has a heading and rows of a label and a value. The following rules hold for every Data sheet:
+A Data sheet has a heading and rows of a label and a value, each label above its value, so that the Data sheet fits the narrow column beside the [Article art](#article-pane). The following rules hold for every Data sheet:
 
 - **Rows:** the rows are those of the table for the subject's Type below, in that order. A row whose value is absent or empty is left out, and a Data sheet without a row is left out with its heading.
 - **Labels:** a label is an Article link to the article that the [Article term lookup](../../mechanics/compendium.md#player-visible-information) reports for the label's text, and plain text when it reports none, e.g. "Skill" links to the article that has the Article term "skill".
 - **Referenced GDRs:** a GDR that a value references is shown by its `name`, as an Article link to the Subject article about it when that article is Player-visible, and as plain text otherwise.
-- **Subject articles listed:** a row that lists Subject articles shows the displayed title of each as an Article link, sorted by displayed title ignoring case and separated by "·".
-- **[Effect lists](../../foundation/effect-lists.md#glossary):** an [Effect list](../../foundation/effect-lists.md#glossary) is shown as its [Effects](../../foundation/effect-lists.md#glossary), separated by "·", each [worded by its Effect kind](#effects-shown), or as "None" when it holds no Effect.
+- **Subject articles listed:** a row that lists Subject articles shows the displayed title of each as an Article link, sorted by displayed title ignoring case.
+- **Items:** a value that lists two or more items, e.g. Subject articles, Effects, or the entries of `enemies`, shows each item on a line of its own.
+- **[Effect lists](../../foundation/effect-lists.md#glossary):** an [Effect list](../../foundation/effect-lists.md#glossary) is shown as its [Effects](../../foundation/effect-lists.md#glossary), each [worded by its Effect kind](#effects-shown), or as "None" when it holds no Effect.
 
 Each subject Type has a category name and a Data sheet heading. A Subject article whose subject has any other Type is listed under the category Other and has no Data sheet.
 
@@ -191,7 +196,7 @@ The Data sheet of a MissionSiteArchetype shows what awaits a team there and what
 | --- | --- |
 | Appears | For the kind initiative: "When an [Investigation](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) completes". For the kind response: "When a Faction carries out an operation of level", the `level` of the operation level, and its `name` in parentheses, e.g. "When a Faction carries out an operation of level 1 (Soft operations)". |
 | Expires in | `expires_in_turns`, followed by "turn" when it is 1 and "turns" otherwise, e.g. "1 turn" or "3 turns". |
-| Enemies | Each entry of `enemies` in authored order, separated by "·", as its count, "×", and the EnemyArchetype, e.g. "8 × Initiate · 1 × Soldier". |
+| Enemies | Each entry of `enemies` in authored order, as its count, "×", and the EnemyArchetype, e.g. "8 × Initiate" and "1 × Soldier". |
 | Reward for a win | For the kind initiative, the Effect list `on_win`. For the kind response, the Effect list `on_win` of the operation level. |
 | If lost or expired | For the kind response only, the Effect list `on_ignored_or_lost` of the operation level. |
 | Revealed by | For the kind initiative only, the Player-visible Subject articles whose subject is a Lead whose `on_completion` names this MissionSiteArchetype. |
@@ -224,6 +229,7 @@ _Captured on 2026-11-27 01:19 UTC._
 
 # TODOs
 
+- TODO (later): A picture of [Article art](#article-pane) for each Subject article.
 - TODO (later): Opening an article from elsewhere in the graphical user interface, e.g. from the word "exhaustion" in the Agents View.
 - TODO (later): Searching the text of articles as well as their displayed titles in the [search field](#panes).
 - TODO (later): Values of the current [Campaign](../../foundation/core-concepts.md#campaign-and-session) in a [Data sheet](#subject-data-sheets), e.g. whether a Faction is Eliminated or how often an Upgrade was acquired.
