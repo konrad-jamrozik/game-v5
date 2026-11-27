@@ -45,6 +45,7 @@ id: operation_level_5
 type: FactionOperationLevel
 level: 5
 name: Existential
+min_turns_between: 20 # the fewest Turns between two existential operations of any Factions; one rolled sooner is a level 4 operation
 on_win:
   - money: 15000
   - funding: 200

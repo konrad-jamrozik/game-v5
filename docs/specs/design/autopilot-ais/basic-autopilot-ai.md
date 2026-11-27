@@ -94,7 +94,7 @@ An Agent of the Muster keeps the Assignment it has. Step 2 forms the Muster anew
 
 ## Choosing Leads
 
-Research is what the clock runs against, so the Basic Autopilot AI runs several Investigations at once, up to Most Investigations, each with Research team size Agents. Step 4 first adds Free Agents to an Active Investigation whose team is smaller than that, and then starts an Investigation of the first [Lead](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) that qualifies, in this order:
+Research is what the clock runs against, so the Basic Autopilot AI runs several Investigations at once, up to Most Investigations, each with Research team size Agents while the Strength gap is open and Late research team size Agents once it is closed, since the Agents the Strike goal no longer needs research faster than they would wait. Step 4 first adds Free Agents to an Active Investigation whose team is smaller than that, and then starts an Investigation of the first [Lead](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) that qualifies, in this order:
 
 1. **A Lead that creates no Mission site**, always: the one that wins the Campaign, then the one that unlocks Contracting, then one that makes a Faction [Eliminated](../mechanics/domain-model.md#factions), then the others from the lowest [Initiative operation level](../mechanics/leads-and-progression.md#initiative-operation-level) up. Such a Lead advances progression by its completion alone, e.g. an interrogation unlocks gear for every Faction at once.
 2. **A Lead that creates a Mission site at the Next rung of its Faction**, the lowest [Initiative operation level](../mechanics/leads-and-progression.md#glossary) first. Climbing every rung, rather than skipping one through a shortcut, matters because each first win raises the Contracting cap and discovers the next interrogation.
@@ -137,7 +137,8 @@ The [Game build](../foundation/core-concepts.md#game-build-and-content) offers t
 | Recovery lookahead | The number of Advance turns over which a Projected Agent is projected. |
 | Threat window | The number of Turns over which the Threat is read. |
 | Threat levels ahead | How many Faction operation levels above those seen the Threat looks. |
-| Research team size | The number of Agents each Investigation is given. |
+| Research team size | The number of Agents each Investigation is given while the Strength gap is open. |
+| Late research team size | The number of Agents each Investigation is given once the Strength gap is closed. |
 | Most Investigations | The most Investigations the Basic Autopilot AI runs at once. |
 | Farming Panic | The Panic, in percent, from which farming a Won rung qualifies even while a new rung does. |
 | Ammo reserve | The rounds of each AmmoType bought, as a multiple of its Ammo need. |
@@ -161,6 +162,7 @@ The Game designer sets the following values of the Game build.
 | Threat window | 20 Turns. |
 | Threat levels ahead | 1. |
 | Research team size | 3 Agents. |
+| Late research team size | 6 Agents. |
 | Most Investigations | 3. |
 | Farming Panic | 30%. |
 | Ammo reserve | 2, i.e. twice the rounds that keep an AmmoType from being [Ammo short](../mechanics/equipment.md#glossary). |

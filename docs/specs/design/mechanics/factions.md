@@ -58,6 +58,7 @@ A FactionOperationLevel describes one Faction operation level, and what is at st
 | `name` | The level's display name. | [Player-visible information](#player-visible-information) |
 | `on_win` | An [Effect list](../foundation/effect-lists.md#glossary): what the [Agency](domain-model.md#agency-and-agents) gains when a [Response Mission](domain-model.md#leads-investigations-mission-sites-and-missions) at a site of this level is Won. | [Consequences](missions.md#consequences) |
 | `on_ignored_or_lost` | An Effect list: what changes when a Response Mission site of this level is Expired or its [Mission](domain-model.md#leads-investigations-mission-sites-and-missions) Lost. | [Consequences](missions.md#consequences) |
+| `min_turns_between` | Optional: the fewest [Turns](../foundation/engine-contract.md#player-actions-and-turns) between two Faction operation occurrences of this level, of any Factions, a whole number of at least 1; absent, no fewest. | [Operation level spacing](#operation-level-spacing) |
 
 # Faction State
 
@@ -142,6 +143,14 @@ A Faction operation occurrence of a Faction happens when its Turns until the nex
 - its initiating Faction;
 - its Faction operation level: the FactionOperationLevel whose `level` is the value of its [Operation level](#operation-level) outcome;
 - its turn number: the turn number of the Turn whose Advance turn it happens in.
+
+## Operation level spacing
+
+A Faction operation level with a `min_turns_between` comes no more often than that across all Factions, so that the Agency never faces two such operations at once, e.g. two existential ones.
+
+An occurrence whose Operation level outcome names a FactionOperationLevel with a `min_turns_between` of M has, instead, the FactionOperationLevel with the next lower `level` when an earlier occurrence of the named level, of any Faction, has a turn number more than its own less M. The rule then applies again to that lower level, and an occurrence of the lowest level is never moved. The occurrences of one Advance turn count as earlier in the order of their initiating Factions' Instance IDs, so of two occurrences of such a level in one Advance turn the later one is moved. The earlier occurrences are read from the Response Mission sites that the [Campaign](../foundation/core-concepts.md#campaign-and-session) keeps, each of which records the Faction operation level and turn number of its occurrence. Every random outcome is drawn as without the rule, so a moved occurrence changes no other outcome.
+
+E.g., with a `min_turns_between` of 20 for level 5, an occurrence that rolls level 5 in Turn 130 after one of level 5 in Turn 112 has level 4, and one that rolls level 5 in Turn 132 has level 5.
 
 An occurrence happens whatever [Mission sites](domain-model.md#leads-investigations-mission-sites-and-missions) exist: an Active Response Mission site of the same Faction neither prevents nor delays it. When several Factions have an occurrence in one Advance turn, their Response Mission sites are created in the order of the initiating Factions' Instance IDs, from the lowest number.
 
