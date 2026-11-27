@@ -1999,7 +1999,7 @@ Better quarters and rest rotations let every resting [Agent](#agents) shake off 
 | `price`               | `1000`                |
 | `effect`              | `exhaustion_recovery` |
 | `increment`           | `1`                   |
-| `max_acquisitions`    | `10`                  |
+| `max_acquisitions`    | `20`                  |
 
 ### Health recovery
 
@@ -2013,7 +2013,7 @@ A better infirmary lets every [Agent](#agents) on [Recovery](#recovery) heal fas
 | `price`            | `1000`            |
 | `effect`           | `health_recovery` |
 | `increment`        | `1`               |
-| `max_acquisitions` | `8`               |
+| `max_acquisitions` | `18`              |
 
 ### Training cap
 
@@ -2040,7 +2040,7 @@ Better instructors and simulators make every [Agent](#agents) on [Training](#tra
 | `price`               | `1000`                |
 | `effect`              | `training_skill_gain` |
 | `increment`           | `0.5`                 |
-| `max_acquisitions`    | `8`                   |
+| `max_acquisitions`    | `18`                  |
 
 ### Transport cap
 
