@@ -133,9 +133,11 @@ A Combat rating measures how strong a side is in a [Combat](#combat), so that yo
 | At the rating bases | A Combatant with weapon damage 10, max health 30, and no armor has a rating factor of 1 |
 | [Exhaustion](#exhaustion) factor | 1 up to exhaustion 70; each point above it takes 1/30 of the whole Combat rating, on top of what exhaustion already takes from effective skill |
 | One Combatant | Its effective skill × its rating factor × its exhaustion factor, rounded down |
-| A side | The sum of effective skill × rating factor × exhaustion factor over its Combatants able to fight, × n ^ (1.3 − 1), where n is their number, rounded down once, so that a larger side counts for more than its sum |
+| A side | The sum of effective skill × rating factor × exhaustion factor over its Combatants able to fight, × its Team Combat rating adjustment, rounded down once |
+| Enemies: Team Combat rating adjustment | n ^ (1.3 − 1), where n is the number of Combatants able to fight, so that a larger side counts for more than its sum |
+| Your team: Team Combat rating adjustment | The Enemies' adjustment × (1 − 0.25 × the Gini coefficient of your [Agents](#agents)' effective skill), so that a team carried by a few skilled Agents counts for less: four Agents of skill 300 lose nothing, while Agents of skill 900, 100, 100, and 100 have a Gini coefficient of 0.5 |
 | [Incapacitated](#incapacitated-agent) Combatants | Add nothing to the Combat rating of their side |
-| Base Combat rating | An [Agent](#agents)'s effective skill alone, shown beside its Combat rating so that you can see how much its [equipment](#equipment-and-storage) and [Upgrades](#upgrades) add |
+| Base Combat rating | An Agent's effective skill alone, shown beside its Combat rating so that you can see how much its [equipment](#equipment-and-storage) and [Upgrades](#upgrades) add |
 
 See also: [Combat](#combat) · [Retreat](#retreat) · [Damage](#damage) · [Skill](#skill) · [Missions](#missions)
 

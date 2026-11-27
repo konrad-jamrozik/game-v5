@@ -41,7 +41,7 @@ The Combat simulator has no [Campaign](../../foundation/core-concepts.md#campaig
 
 # Teams
 
-Every value a Combat reads of a [Combatant](../../mechanics/domain-model.md#combat) can be set, so that any Combat can be tried. The Teams pane lists the Agents' side and to its right the Enemies' side, so that both are seen at once without scrolling, each as one row per Combatant in the fixed order of the side, with a count of its Combatants.
+Every value a Combat reads of a [Combatant](../../mechanics/domain-model.md#combat) can be set, so that any Combat can be tried. The Teams pane lists the Agents' side and to its right the [Enemies' side](../../mechanics/combat.md#combatant-condition-in-a-combat), so that both are seen at once without scrolling, each as one row per Combatant in the fixed order of the side, with a count of its Combatants.
 
 A row holds one field for each value of an explicit entry of a [Detached Combat](../../mechanics/combat.md#detached-combat): [base skill](../../mechanics/agents-spec.md#combatant-attributes), [current health](../../mechanics/agents-spec.md#combatant-attributes), [effective max health](../../mechanics/agents-spec.md#combatant-attributes), [exhaustion](../../mechanics/agents-spec.md#combatant-attributes), [effective weapon damage](../../mechanics/agents-spec.md#combatant-attributes), and [effective armor](../../mechanics/agents-spec.md#combatant-attributes). Beside them it holds what the values were filled from, which also decides how the [Combat replay](combat-replay.md#figures) draws the Combatant:
 

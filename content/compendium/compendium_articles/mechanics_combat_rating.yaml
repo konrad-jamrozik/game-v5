@@ -18,7 +18,11 @@ formulas:
   - label: 'One Combatant'
     text: 'Its effective skill × its rating factor × its exhaustion factor, rounded down'
   - label: 'A side'
-    text: 'The sum of effective skill × rating factor × exhaustion factor over its Combatants able to fight, × n ^ ({combat_parameters.rating_team_size_exponent} − 1), where n is their number, rounded down once, so that a larger side counts for more than its sum'
+    text: 'The sum of effective skill × rating factor × exhaustion factor over its Combatants able to fight, × its Team Combat rating adjustment, rounded down once'
+  - label: 'Enemies: Team Combat rating adjustment'
+    text: 'n ^ ({combat_parameters.rating_team_size_exponent} − 1), where n is the number of Combatants able to fight, so that a larger side counts for more than its sum'
+  - label: 'Your team: Team Combat rating adjustment'
+    text: "The Enemies' adjustment × (1 − {combat_parameters.rating_agent_skill_gini_penalty} × the Gini coefficient of your Agents' effective skill), so that a team carried by a few skilled Agents counts for less: four Agents of skill 300 lose nothing, while Agents of skill 900, 100, 100, and 100 have a Gini coefficient of 0.5"
   - label: 'Incapacitated Combatants'
     text: 'Add nothing to the Combat rating of their side'
   - label: 'Base Combat rating'
