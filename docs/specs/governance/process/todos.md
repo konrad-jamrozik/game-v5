@@ -39,3 +39,22 @@ The Compendium View's specification describes an Ammo data sheet and the "Ammo" 
 - T3 thread ID: `42b665aa-ff94-40b0-8819-89662f41cb0b`
 
 Generate the Screenshots again after the redesign that fits every screen to the Reference window of 1408 × 784. The Screenshots still show the layouts from before it, e.g. the wide Side panel. They were left alone because each was captured less than 72 hours earlier; the oldest pass that age on 2026-11-26 19:47 UTC and the newest on 2026-11-27 00:10 UTC. After that, run `npm run screens:capture` in `game-v5-impl-web`, which already captures in the Reference window, and commit the images that differ with their new capture times.
+
+# Design a Faction suppression mechanic
+
+- Added: 2026-11-27 07:21 PST
+- T3 thread: Autopilot Full Team Share Impact
+- T3 thread ID: `3261ab9d-3d64-43b7-a059-cdfe14153942`
+
+Design and add a Faction suppression mechanic, so that a player who presses a Faction early is not overrun by its first existential operation. The Autopilot studies of 2026-11-27 found that every existential defeat came from a level 5 operation at about Turn 150, when no Agency the AI could field rated more than about 100% of its 99 Enemies.
+
+The Game designer's design: winning an Initiative Mission against a Faction delays that Faction's next escalation of its Faction activity level, e.g. by 1 Turn for `raid_safehouse`, 3 for `raid_outpost`, 10 for `raid_logistics_hub`, and 20 for `raid_regional_stronghold`. Each further win of the same MissionSiteArchetype against the same Faction delays less, so that a player cannot suppress a Faction indefinitely.
+
+Open questions for the specification:
+
+- How the delay shrinks with each repeated win, e.g. halving, and whether a delay of less than one Turn rounds to none.
+- Whether the delays are GDR values of each MissionSiteArchetype of kind `initiative`, as the Game designer's numbers suggest.
+- What the player sees, e.g. a Faction's "escalates no sooner than Turn N", since a delay the player cannot see is not one they can plan around.
+- How it interacts with the Basic Autopilot AI, which already farms Won rungs to lower Panic, and with Operation level spacing, which already keeps level 5 operations 20 Turns apart.
+
+Finished when Factions specifies the mechanic with its GDR values, the Implementation follows it, and an Autopilot Lab run shows whether existential defeats near Turn 150 fall.
