@@ -156,7 +156,7 @@ A second row holds what the Player needs less often:
 
 The Options are how the step buttons play, i.e. the four buttons at their end, and how the slider and the Combat log play an attack; the pace buttons never read them or change them. They are set once and then left alone, so they stay hidden until asked for, and the Battlefield and everything beside it share one screen of the [Reference window](../visual-design.md#reference-window) with them shown or hidden. Whether they are shown is the [Global configuration](../../foundation/configuration.md#global-configuration) setting Combat replay Options shown, off by default, so it stays as the Player last left it in every later [Session](../../foundation/core-concepts.md#campaign-and-session). Each is named by one or two words and explained nowhere on the screen, so that all of them take few rows:
 
-- **Speed:** how long one attack takes to play: from 4 s down to 0.25 s in steps of 0.25 s, or 0.1 s.
+- **Speed:** how long one attack takes to play: from 6 s down to 2 s in steps of 0.5 s, then down to 0.25 s in steps of 0.25 s, or 0.1 s.
 - **Overlap:** when on, the next attack starts a Delay after the last one started, whether or not that one has finished, and keeps doing so across phases and Combat rounds.
 - **Delay:** from 2 s down to 0.25 s in steps of 0.25 s, or 0.1 s, independent of the Speed. With Instant on, the Delay runs from the start of one phase to the start of the next.
 - **Instant:** when on, all attacks of a phase play at the same time, so a step of the playing is a phase, and several hits on one defender show their damage outcomes as one sum.
