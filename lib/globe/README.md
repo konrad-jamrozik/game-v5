@@ -24,9 +24,8 @@ Drag to orbit the camera and scroll to zoom. The buttons at the bottom left, abo
 | Clouds | Shows the clouds in full, then at half opacity, then not at all, then again in full. | Full |
 | − and + | Slow down or speed up the day and night cycle, which the speed between them shows, one step of 0×, i.e. stopped, 1×, 2×, 4×, 8×, 16×, and 32×; + on 32× goes to 0×, and − on 0× to 32×. Each also resumes a paused cycle. | 1× |
 | The speed | Pauses the day and night cycle at whatever speed it is, showing ‖ in place of its icon, or resumes it at that speed. | Running |
-| Tilt | Leans the planet's axis in view: Level, i.e. upright with the equator level; Mild; Earth, i.e. Earth's own tilt of about 23.5° with the north pole leaning toward the camera; then Level again. | Level |
 
-The tilt turns the planet as a whole, the sun with it, so the lit side stays where it was on the surface. The day and night cycle moves the sun over the surface, so it goes on while the rotation is stopped. With rotation on and the cycle at 1×, the two cancel and the sun stands still in view. A browser that asks for reduced motion starts with both the rotation and the cycle stopped.
+The planet's axis stands upright in view, with the equator level. The day and night cycle moves the sun over the surface, so it goes on while the rotation is stopped. With rotation on and the cycle at 1×, the two cancel and the sun stands still in view. A browser that asks for reduced motion starts with both the rotation and the cycle stopped.
 
 ## Devastation
 
@@ -101,8 +100,6 @@ export function Globe({ covered }: { covered: boolean }) {
 }
 ```
 
-The globe keeps nothing between page loads. To keep the tilt, pass the kept value as `tilt`, e.g. `'Earth'`, keep each new one that `onTiltChange` reports, and call `setTilt` on the handle when the kept value changes otherwise, e.g. when it is reset.
-
 `mapBase` is the address of the maps relative to the page, so the globe also loads when the build is served from a sub-path. `background` is the opaque colour behind the planet: the atmosphere is blended additively onto it, so it cannot be transparent. Everything else, i.e. loading three.js and the maps on first show, pausing while hidden, the controls, the messages, and recovery from a lost graphics context, is done by the copied files.
 
 A browser test that is not about the globe runs much faster without it, because a browser without a display draws the globe in software. Before the page loads, make `HTMLCanvasElement.prototype.getContext('webgl2')` return `null`; the globe then shows its message in its place.
@@ -125,7 +122,7 @@ The maps are kept at full quality, about 14 MB together, so the globe shows all 
 - The surface is a sphere shaded from the four maps: day colour lit by a fixed sun, relief from the normal map, a sun glint on water only, and city lights that fade in on the night side.
 - The clouds are a second, slightly larger sphere that drifts over the surface at the day and night speed and casts shadows on it. At half opacity both the clouds and their shadows are halved.
 - The atmosphere is a third, larger sphere drawn from the inside with additive blending, blue on the day side and orange near the terminator.
-- The planet turns on its axis, which the Tilt button leans, and the sun, placed for Earth's own tilt, moves around that axis at the day and night speed. At 1× with rotation on, the two cancel, so the sun stands still in view while day and night sweep over the surface.
+- The planet turns on its upright axis, and the sun, placed for Earth's own tilt of about 23.5° so that the lit side shows a season, moves around that axis at the day and night speed. At 1× with rotation on, the two cancel, so the sun stands still in view while day and night sweep over the surface.
 
 ## Rebuilding the maps
 

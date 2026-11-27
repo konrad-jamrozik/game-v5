@@ -20,20 +20,11 @@ export interface GlobeOptions {
   readonly background?: string
   /** An object in which the globe keeps its camera and control settings, to carry them over to a new globe. */
   readonly memory?: object
-  /** The tilt to start with; it wins over the tilt in `memory`. Default 'Level'. */
-  readonly tilt?: GlobeTilt
-  /** Called with the new tilt each time the Tilt button is pressed, e.g. to keep it. */
-  readonly onTiltChange?: (tilt: GlobeTilt) => void
 }
-
-/** How far the planet's axis leans in view: upright, a little, or as far as Earth's own tilt. */
-export type GlobeTilt = 'Level' | 'Mild' | 'Earth'
 
 export interface GlobeHandle {
   /** False while something covers the globe, e.g. a panel opened over it; it then stops drawing. */
   setVisible(visible: boolean): void
-  /** Leans the axis as the Tilt button would, e.g. after a kept tilt was reset, without calling `onTiltChange`. */
-  setTilt(tilt: GlobeTilt): void
   /** How wrecked the planet looks, from 0, as it is, to 1; the globe eases to it over about a second. */
   setDevastation(level: number): void
   /** Releases everything the globe created and removes it from its container. */

@@ -54,7 +54,6 @@ A Game build has the following Global configuration settings. The specification 
 | Last 100 Turns charts | [Charts](../ui/visual-design.md#charts) in Visual Design |
 | Artwork tuning | [Artwork tuning](../ui/visual-design.md#artwork-tuning) in Visual Design |
 | [Combat replay](../ui/screens/combat-replay.md#glossary) Options shown | [Options](../ui/screens/combat-replay.md#options) in Combat Replay |
-| Globe tilt | [Regions](../ui/screens/campaign-screen.md#regions) in Campaign Screen |
 
 Global configuration stores only values the player has set. A setting the player has not set follows the current Game build default, so a changed Game build default in a later Game build reaches it. Resetting a setting removes its stored value.
 
