@@ -12,6 +12,10 @@ How well an Autopilot AI plays can only be measured, and a measurement belongs t
 
 [Basic Autopilot AI Study, 2026-11-25](basic-autopilot-ai-study-2026-11-25.md) answers _why did the Basic Autopilot AI lose every Campaign, and what made it win?_ It found that the AI ignored a rung of each Faction's chain and that a team at 110% of the Enemies' Combat rating is not safe.
 
+## Basic Autopilot AI Study, 2026-11-27, current AI
+
+[Basic Autopilot AI Study, 2026-11-27, current AI](basic-autopilot-ai-study-2026-11-27-current-ai.md) answers how the Basic Autopilot AI fares after the exhaustion factor of the Combat rating and a Combat margin of 120%. It found that an existential site expires when the Strike team is planned for too few Agents.
+
 A study answers either a general question or one the Game designer names, e.g. whether to deploy more Agents on Missions. A further study is added as a document of its own, named by its date and by the subject of a named question, rather than by changing an earlier one, so that each stays the record of its time.
 
 # How they relate
@@ -24,7 +28,7 @@ _Generated from the links between the specifications by `npm run docs:generate`;
 
 ## Within the family
 
-This family has a single specification, so there are no references within it.
+No specification of this family links another specification of it.
 
 ## Across families
 

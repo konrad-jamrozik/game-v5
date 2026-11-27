@@ -22,7 +22,7 @@ These informative views are derived from the registered Markdown specifications.
 | Implementation     | Mandatory         | 5              |
 | Implementation     | Guidance          | 5              |
 | Implementation     | Recipes           | 2              |
-| Implementation     | Autopilot Studies | 1              |
+| Implementation     | Autopilot Studies | 2              |
 
 ## Conventions
 
@@ -155,3 +155,4 @@ These informative views are derived from the registered Markdown specifications.
 | ID | Document | Owns |
 | --- | --- | --- |
 | AISTUDY1 | [Basic Autopilot AI Study, 2026-11-25](../specs/implementation/autopilot-studies/basic-autopilot-ai-study-2026-11-25.md) | What the Autopilot Lab study of the Basic Autopilot AI of 2026-11-25 measured, the root causes of its defeats it found, the changes it tried and how each worked, and the balance issues it suggests, with retreat and in a follow-up without it. |
+| AISTUDY4 | [Basic Autopilot AI Study, 2026-11-27, current AI](../specs/implementation/autopilot-studies/basic-autopilot-ai-study-2026-11-27-current-ai.md) | What the Autopilot Lab study of 2026-11-27 measured of the Basic Autopilot AI after the exhaustion factor of the Combat rating, a Combat margin of 120%, and 2 Enemies per Agent, the root causes of its defeats and of its highest-rated losses, and the change it proposes. |

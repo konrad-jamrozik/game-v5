@@ -81,6 +81,7 @@ A → B means A is referenced by B: the text of B links to A. Layer 1 is drawn a
 | 21 | TESTVAL Test Values | CORE, PLACE |
 | 22 | AIEXPECT Autopilot AI Expectations | ALAB, BASICAI, COMBAT, CONFIG, CORE, DOM, ENG |
 | 22 | AISTUDY1 Basic Autopilot AI Study, 2026-11-25 | AGENT, ALAB, BASICAI, COMBAT, CONFIG, CORE, DOM, ECON, ENG, EQUIP, FACTION, GDR |
+| 23 | AISTUDY4 Basic Autopilot AI Study, 2026-11-27, current AI | AGENT, AIEXPECT, BASICAI, COMBAT, CORE, DOM, ECON, ENG, GDR |
 
 ## Governance specifications
 
