@@ -40,6 +40,7 @@ Explain the flaws before changing anything:
 2. Follow the Panic or the money to its sources in the summary, e.g. which Faction operation levels expire unanswered.
 3. Open the records, `<variant>-<seed>.json`, of a few typical seeds and of the worst, and read them Turn by Turn around the moment things go wrong, e.g. when the Strike team stops keeping up with its goal.
 4. When the summary lacks a value a root cause needs, add it to the Lab in the Spec repo worktree and commit it on the study branch.
+5. Take the five Combats not Won, i.e. Lost or Retreated, with the highest ratio of the Agents' Combat rating to the Enemies' at Combat start, over every Campaign of the baseline, e.g. from the Lab's list of Lost Combats at 110% or more or from the `combats` of `summary.json`. Decode each Combat setup seed, e.g. to each Agent's base skill, exhaustion, Weapon, and Armor against each Enemy's, and suspect a root cause for each, e.g. Agents near exhaustion Incapacitation or a few skilled Agents against many Enemies.
 
 State each root cause as a mechanism with its evidence, e.g. "Response Mission sites of level 4 outrate the Strike team by 3× from Turn 60, and each one that expires adds 10 Panic".
 
@@ -69,7 +70,7 @@ Recommend values for the Game designer to try; change no GDR value or Game desig
 Always write the study as a new document of the Autopilot Studies family in the Spec repo worktree, in the form of the latest study there, named by its date and, for a named question, its subject, e.g. `basic-autopilot-ai-study-2026-11-26-team-size.md`. Add it to the family's overview and to `docs/specs/word-budgets.json`, run `npm run fix` and `npm run check`, and commit it on the study branch. Its Overview states the study's question word for word, and its Method names the Implementation commit of the baseline, the study branch, and the seeds. Its sections:
 
 1. **Review of current performance:** the answers of step 2, with spreads.
-2. **Flaws and root causes:** each mechanism with its evidence and seeds, and, for a named question, a short "Noticed, out of scope" list.
+2. **Flaws and root causes:** each mechanism with its evidence and seeds; then always a "Top losses by Combat rating ratio" table of the five Combats of step 3.5, each with its ratio, Campaign seed, Turn, Mission site, Agents against Enemies, outcome, Combat setup seed, and suspected root cause; and, for a named question, a short "Noticed, out of scope" list.
 3. **Improvements:** every change tried, in the order tried, with its measure before and after on the same seeds; then the rejected ones, each with why; then the proposed ones, each with the decision it would make in Basic Autopilot AI. A study may propose nothing, e.g. when more Agents per Mission win more but cost more than they save.
 4. **Experimental results:** the proposed AI against the baseline on the questions of step 2, and against the [Autopilot AI Expectations](../../../docs/specs/design/autopilot-ais/autopilot-ai-expectations.md).
 5. **Game balance remarks:** each with its evidence and recommended values.
