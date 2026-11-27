@@ -29,7 +29,7 @@ The planet's axis stands upright in view, with the equator level. The day and ni
 
 ## Devastation
 
-Devastation is an experiment: one number from 0, the planet as it is, to 1, wrecked, that an Implementation sets with `setDevastation` on the handle. Nothing in the game sets it yet, e.g. from Panic: the globe is drawn at 0 everywhere but in the viewer and under the Globe devastation controls of the game's developer tools.
+Devastation is one number from 0, the planet as it is, to 1, wrecked, that an Implementation sets with `setDevastation` on the handle. The game sets it from Panic, and its developer tools can set it by hand; the globe itself reads nothing from the game.
 
 In the viewer, the Devastation slider at the top left sets it, and `?devastation=60` in the address starts with it at 60%. Each effect comes in over its own part of the range:
 
