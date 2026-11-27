@@ -20,7 +20,7 @@ The header ends with what all the gear is worth, so that the totals cost the tab
 
 # Storage table
 
-The [Storage](../../mechanics/equipment.md#glossary) table lists every [Item](../../mechanics/equipment.md#glossary) and [AmmoType](../../mechanics/combat.md#ammotype) that is [Unlocked](../../mechanics/equipment.md#glossary) or whose [Owned count](../../mechanics/equipment.md#glossary) is above 0, in three groups, Weapons, Armor, and [Ammo](../../mechanics/combat.md#ammo), each under a group row that sums its category's counts: the Owned count, the [Equipped count](../../mechanics/equipment.md#glossary), and the count in Storage. Within a group, the rows are in the order the [Game build](../../foundation/core-concepts.md#game-build-and-content) supplies them; a group with no row says "Nothing yet". The columns are:
+The [Storage](../../mechanics/equipment.md#glossary) table lists every [Item](../../mechanics/equipment.md#glossary) and [AmmoType](../../mechanics/combat.md#ammotype) that is [Unlocked](../../mechanics/equipment.md#glossary) or whose [Owned count](../../mechanics/equipment.md#glossary) is above 0, in three groups, Weapons, [Ammo](../../mechanics/combat.md#ammo), and Armor, each under a group row that sums its category's counts: the Owned count, the [Equipped count](../../mechanics/equipment.md#glossary), and the count in Storage. Within a group, the rows are in the order the [Game build](../../foundation/core-concepts.md#game-build-and-content) supplies them; a group with no row says "Nothing yet". The columns are:
 
 | Column | What it shows |
 | --- | --- |
