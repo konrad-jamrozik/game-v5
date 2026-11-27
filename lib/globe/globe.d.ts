@@ -32,6 +32,8 @@ export type GlobeTilt = 'Level' | 'Mild' | 'Earth'
 export interface GlobeHandle {
   /** False while something covers the globe, e.g. a panel opened over it; it then stops drawing. */
   setVisible(visible: boolean): void
+  /** Leans the axis as the Tilt button would, e.g. after a kept tilt was reset, without calling `onTiltChange`. */
+  setTilt(tilt: GlobeTilt): void
   /** Releases everything the globe created and removes it from its container. */
   dispose(): void
 }

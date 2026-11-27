@@ -80,7 +80,7 @@ export function Globe({ covered }: { covered: boolean }) {
 }
 ```
 
-The globe keeps nothing between page loads. To keep the tilt, pass the kept value as `tilt`, e.g. `'Earth'`, and keep each new one that `onTiltChange` reports.
+The globe keeps nothing between page loads. To keep the tilt, pass the kept value as `tilt`, e.g. `'Earth'`, keep each new one that `onTiltChange` reports, and call `setTilt` on the handle when the kept value changes otherwise, e.g. when it is reset.
 
 `mapBase` is the address of the maps relative to the page, so the globe also loads when the build is served from a sub-path. `background` is the opaque colour behind the planet: the atmosphere is blended additively onto it, so it cannot be transparent. Everything else, i.e. loading three.js and the maps on first show, pausing while hidden, the controls, the messages, and recovery from a lost graphics context, is done by the copied files.
 
