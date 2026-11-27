@@ -61,7 +61,7 @@ A → B means A is referenced by B: the text of B links to A. Layer 1 is drawn a
 | 17 | SITP Situation Panel | AGENT, CORE, DOM, ECON, ENG, GUI |
 | 17 | STVIEW Storage View | COMBAT, CORE, DOM, ENG, EQUIP, GUI |
 | 18 | CSIM Combat Simulator | AGENT, COMBAT, CORE, CRPLAY, DOM, ENG, GUI, LIFE |
-| 18 | TSUM Turn Summary | AGENT, COMBAT, CRPLAY, CSTATE, DOM, ECON, ENG, EQUIP, GUI, INVSTG, SITP |
+| 18 | TSUM Turn Summary | AGENT, COMBAT, CORE, CRPLAY, CSTATE, DOM, ECON, ENG, EQUIP, GUI, INVSTG, SITP |
 | 19 | SOUNDS Sounds | COMBAT, COMP, COMPV, CORE, CRPLAY, ENG, GUI, TSUM |
 | 19 | TRVIEW Turn Report View | AGENT, COMBAT, CSTATE, DOM, ENG, EQUIP, GUI, TSUM |
 | 19 | VIS Visual Design | AGENT, COMBAT, CORE, CRPLAY, DOM, ECON, ENG, GUI, INVSTG, LEAD, LIFE, TSUM |
@@ -80,7 +80,7 @@ A → B means A is referenced by B: the text of B links to A. Layer 1 is drawn a
 | 21 | TESTVAL Test Values | CORE, PLACE |
 | 22 | AIEXPECT Autopilot AI Expectations | ALAB, BASICAI, COMBAT, CONFIG, CORE, DOM, ENG |
 | 22 | AISTUDY1 Basic Autopilot AI Study, 2026-11-25 | AGENT, ALAB, BASICAI, COMBAT, CONFIG, CORE, DOM, ECON, ENG, EQUIP, FACTION, GDR |
-| 22 | GDRS GDRs | AGENT, COMBAT, COMP, CORE, DOM, ECON, EFFECT, ENG, EQUIP, FACTION, GDR, LEAD, LICENSE, MUSIC, VIS |
+| 22 | GDRS GDRs | AGENT, COMBAT, COMP, CORE, DOM, ECON, EFFECT, ENG, EQUIP, FACTION, GDR, LEAD, LICENSE, MUSIC, TSUM, VIS |
 | 23 | AISTUDY4 Basic Autopilot AI Study, 2026-11-27, current AI | AGENT, AIEXPECT, BASICAI, COMBAT, CORE, DOM, ECON, ENG, GDR |
 
 ## Governance specifications

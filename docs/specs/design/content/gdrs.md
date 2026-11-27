@@ -22,7 +22,7 @@ The content offers one way to win and three ways to lose. Each of the three Fact
 
 # Scope
 
-The GDRs supply every kind of [GDR](../foundation/core-concepts.md#game-build-and-content) the Game concepts of Domain Model require, and a GDR left out of them is kept as [Cut content](../foundation/game-data-records.md#glossary). They also supply what the user interface reads from game data: the [Background artwork](../ui/visual-design.md#glossary) of its views and the music files left out of the [Soundtrack](../ui/music.md#glossary).
+The GDRs supply every kind of [GDR](../foundation/core-concepts.md#game-build-and-content) the Game concepts of Domain Model require, and a GDR left out of them is kept as [Cut content](../foundation/game-data-records.md#glossary). They also supply what the user interface reads from game data: the [Background artwork](../ui/visual-design.md#glossary) of its views, the [Special events](../ui/screens/turn-summary.md#glossary), and the music files left out of the [Soundtrack](../ui/music.md#glossary).
 
 A parameter GDR bundles the values that the rules of one specification read, e.g. a hire cost and an upkeep, instead of supplying each value as a GDR of its own. Its [Type](../foundation/core-concepts.md#data-modeling) name ends in "Parameters".
 
@@ -113,6 +113,7 @@ The GDRs are authored in YAML files under the `content/` directory at the reposi
 | `content/compendium/` | [Compendium](../mechanics/compendium.md) | The directory `compendium_articles/`, with one file for each Compendium article |
 | `content/visual-design/` | [Visual Design](../ui/visual-design.md) | `background_artworks.yaml` |
 | `content/gui/` | [Graphical User Interface](../ui/gui.md) | `ranks.yaml` |
+| `content/turn-summary/` | [Turn Summary](../ui/screens/turn-summary.md) | `special_events.yaml` |
 
 # Compendium coverage
 

@@ -5,7 +5,7 @@
 | Spec ID | TSUM |
 | Family | UI |
 | Audience | UI designer, Implementer |
-| Owns | When the Turn summary dialog of the Campaign screen appears, which Summary events it shows, and how the Player steps through them. |
+| Owns | When the Turn summary dialog of the Campaign screen appears, which Summary events it shows, and how the Player steps through them; the Special events and the SpecialEvent GDRs. |
 | Conventions | [Specification Conventions](../../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
@@ -19,6 +19,7 @@ The Turn summary tells the Player, as soon as an Advance turn ends, what it did 
 | Turn summary | The dialog that shows what an Advance turn did, one [Summary event](#summary-events) at a time, shown after it only when it did something the Player must know. |
 | Summary event | One thing an Advance turn did that the Turn summary [shows on its own](#summary-events), e.g. one Mission resolved or one new Mission site. |
 | Event art | The [picture](#layout) at the top of the Turn summary that illustrates the Summary event shown. |
+| Special event | A story beat that the GUI shows in the Turn summary's dialog when a [trigger](#special-events) of its own is met, rather than because an Advance turn did something, e.g. the welcome to a new Campaign. |
 
 # Summary events
 
@@ -74,6 +75,24 @@ The Player [reopens the Turn summary](turn-report-view.md#turn-summary-button) f
 # Links
 
 A Summary event leads to where the Player acts on it. The Combat replay link of a Mission opens the Turn Report View with that Mission's [Combat replay](combat-replay.md#glossary) shown, as its [Visualize button](combat-replay.md#visualize-button) in the Turn Report View does, so that the Player who reads a Mission's outcome can watch how it came about. The link of a new or Expired Mission site opens the [Missions View](missions-view.md) with [that Mission site selected](missions-view.md#mission-site-list), so that the Player who reads of a new Mission site can deploy to it at once.
+
+# Special events
+
+A Special event sets the scene or marks a turning point of the story, so it reads as a page of its own rather than as a report. Each comes from a SpecialEvent [GDR](../../foundation/core-concepts.md#game-build-and-content), which serves the Display content purpose:
+
+| Property | Meaning |
+| --- | --- |
+| `trigger` | When the GUI shows it: `campaign_start`, as soon as the GUI first shows a [Campaign](../../foundation/core-concepts.md#campaign-and-session) just created, before its first Advance turn. No two SpecialEvent GDRs share one. |
+| `title` | Its title. |
+| `text` | Its text, one paragraph. |
+
+A Special event of `campaign_start` is shown on its own, in the dialog of the Turn summary and with its [layout](#layout), except that:
+
+- **Event art:** the placeholder is drawn in Special, with its own glyph, and holds neither "Turn N summary" nor "Now Turn N+1"; its eyebrow holds the kind, "Special event", without a tag, and no meta line stands under its title.
+- **Details:** its `text`, centred.
+- **Control row:** only "Continue", the primary button, centred. It, the Enter key, and the Escape key close the dialog.
+
+It is not shown again for that Campaign, e.g. after loading a [Campaign save](../../foundation/engine-contract.md#persisted-data) of its first Turn.
 
 # Screenshot
 
