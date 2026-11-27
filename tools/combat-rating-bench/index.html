@@ -699,7 +699,7 @@
           /></label>
           <label
             class="inline"
-            title="The step between the base skills of a team's Agents, centred on its base skill, e.g. 1 makes 7 Agents of base skill 100 into 97, 98, 99, 100, 101, 102, and 103"
+            title="The step between the base skills of a team's Agents, centred on its base skill, e.g. 1 makes 7 Agents of base skill 250 into 247, 248, 249, 250, 251, 252, and 253; it never takes a base skill below 100"
             >Base skill spread <input type="number" min="0" step="1" data-bind="setup.skillSpread" data-type="num"
           /></label>
           <span class="inline retreat">
@@ -1468,7 +1468,9 @@
       /**
        * An Agent team of a base skill, a gear set, and a count, as groups of Agents alike: one group, or with a base skill
        * spread, one Agent per group, their base skills a spread apart and centred on the team's, e.g. 7 Agents of base
-       * skill 100 with a spread of 1 are 97 to 103, and 6 are 97 to 102. Every Agent has the setup's exhaustion.
+       * skill 250 with a spread of 1 are 247 to 253, and 6 are 247 to 252. The spread never takes a base skill below 100,
+       * nor below the team's own when that is under 100, e.g. 7 Agents of base skill 100 are 100, 100, 100, 100, 101, 102,
+       * and 103. Every Agent has the setup's exhaustion.
        */
       function agentGroups(skill, up, count) {
         const a = info.gdr.agentArchetypes[0] ?? { health: 30, damage: 10, armor: 0 }
@@ -1489,7 +1491,8 @@
           return [group(count, skill)]
         }
         const low = Math.floor(count / 2)
-        return Array.from({ length: count }, (_, i) => group(1, Math.max(1, skill + (i - low) * spread)))
+        const floor = Math.min(skill, 100)
+        return Array.from({ length: count }, (_, i) => group(1, Math.max(floor, skill + (i - low) * spread)))
       }
 
       /** The Agent count whose rating is closest, by ratio, to the target; ratings rise with the count. */
@@ -3081,7 +3084,7 @@
         const lastKey = store.last[cell.id]
         const old = !r && lastKey ? store.results[lastKey] : null
         const g0 = cell.groups[0]
-        // The base skill, or the range a base skill spread makes, e.g. 97–103; and the exhaustion when there is any.
+        // The base skill, or the range a base skill spread makes, e.g. 247–253; and the exhaustion when there is any.
         const skills = cell.groups.map((g) => g.skill)
         const lo = Math.min(...skills)
         const hi = Math.max(...skills)
