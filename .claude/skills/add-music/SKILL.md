@@ -15,7 +15,7 @@ This skill adds Tracks only. It never changes a specification: whenever adding t
 
 ## Where it works
 
-The skill works directly in the main local clone of the Spec repo, e.g. `repos/game-v5/`, never in a worktree, because that is where the designer drops the files. Other sessions may have uncommitted work there. The skill leaves all of it untouched: it never stages, commits, stashes, resets, restores, or deletes a file it did not create or rename, and never runs a command that rewrites files outside `assets/music/`, e.g. `npm run fix` or `npm run format`.
+The skill works directly in the main local clone of the Spec repo, e.g. `repos/game-v5/`, never in a worktree, because that is where the designer drops the files. Other sessions may have uncommitted work there. When a step below blocks or stops on another session's work, it follows [Session coordination](../session-coordination.md) first: it waits for the thread that owns the work, runs the step again, and blocks or stops only where that file says. The skill leaves all of that work untouched: it never stages, commits, stashes, resets, restores, or deletes a file it did not create or rename, and never runs a command that rewrites files outside `assets/music/`, e.g. `npm run fix` or `npm run format`.
 
 Its own work is exactly these paths: each draft record it writes in `assets/music/yaml/drafts/`, as the designer may have renamed it, and the same record once moved into `assets/music/yaml/`, each record it adds there for another take of a draft's prompt, the music file of the same name as each of these records in `assets/music/tracks/`, `assets/music/README.md`, and `assets/music/music-taxonomy.md`.
 
@@ -88,7 +88,7 @@ Outside the repository, the skill also keeps the Game designer's personal music 
 10. **Push** with `git push origin main`. When it is rejected because `origin/main` moved, run `git fetch origin`, and:
 
 - when `git status --porcelain --untracked-files=no` prints nothing, run `git rebase origin/main`, rerun step 8, and push again;
-- otherwise another session's uncommitted changes stop a rebase; never stash or autostash them. Stop and report that the commit is made but not pushed, and why, and skip Phase 3.
+- otherwise another session's uncommitted changes stop a rebase; never stash or autostash them. Wait for their thread under [Session coordination](../session-coordination.md) and try this step again; when that file says to stop, stop and report that the commit is made but not pushed, and why, and skip Phase 3.
 
 After a push, confirm with `git fetch origin` and `git merge-base --is-ancestor HEAD origin/main`.
 
@@ -96,7 +96,7 @@ After a push, confirm with `git fetch origin` and `git merge-base --is-ancestor 
 
 The designer's request to add music is the explicit request to update the Implementation's content that this phase needs; it never makes any other change to the Implementation.
 
-1. The Implementation repo is `game-v5-impl-web`, the sibling of the Spec repo's main local clone. Run `git fetch` there. It must be on `main` with no uncommitted or untracked files; otherwise another session is working in it, so report that the new tracks are pushed but not yet in the Implementation, and stop. Then fast-forward its `main` to `origin/main`. Uncommitted work of other sessions in the Spec repo does not stop this phase, since it reads only committed files.
+1. The Implementation repo is `game-v5-impl-web`, the sibling of the Spec repo's main local clone. Run `git fetch` there. It must be on `main` with no uncommitted or untracked files; otherwise another session is working in it, so wait for its thread under [Session coordination](../session-coordination.md) and check again; when that file says to stop, report that the new tracks are pushed but not yet in the Implementation, and stop. Then fast-forward its `main` to `origin/main`. Uncommitted work of other sessions in the Spec repo does not stop this phase, since it reads only committed files.
 2. Read the Spec repo commit the Implementation follows, from the `Spec:` trailer of its newest commit that has one. When `git diff --name-only <that commit>..<the commit pushed in Phase 2> -- docs/specs` in the Spec repo lists any file, another specification change is waiting for the Implementation: change nothing there, and report that the new tracks are pushed but not yet in the Implementation, and that the `apply` skill brings them in together with that change.
 3. Otherwise run `npm run sync:spec` in the Implementation repo, then `npm run fix` and `npm run check`. Update a test that pins the Track list to the new list. When any other check fails, undo the sync with `git checkout -- . && git clean -fd` there and stop as in step 2. Then commit with the trailer `Spec: <full hash of the commit pushed in Phase 2>`, run `git fetch`, rebase onto `origin/main`, and push; the push deploys the game. Never force-push.
 
