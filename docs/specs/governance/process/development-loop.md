@@ -91,7 +91,7 @@ Several tasks of the Development loop recur, and each needs the same few specifi
 | --- | --- |
 | `apply` | Carries one change through a round: [sorts it as Designer feedback](#designer-feedback), changes the specifications when a decision changes, changes the Implementation, and publishes both. |
 | `spec-review` | Checks specifications against Specification Conventions and against each other. |
-| `add-music` | Adds new music tracks from the Game designer's description and refreshes the Implementation's copies with them. |
+| `add-new-music-track` | Puts the music tracks the Game designer added in order, completing their records and backup, and deploys them through `apply`. |
 
 A change to the game is one run of `apply`. A change to the specifications alone, e.g. a rewording that changes no decision, is checked with `spec-review` and needs no change to the Implementation; the next run of `apply` reads the commits the Implementation has not followed yet and carries over whatever they decided.
 
