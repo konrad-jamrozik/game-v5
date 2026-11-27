@@ -30,7 +30,7 @@ Copying the files unchanged keeps the globe's look, its controls, and its failur
 
 # Full-quality maps
 
-The maps in `lib/globe/assets/` are compressed, because a side-by-side comparison showed no visible difference from the same maps at full quality, which are about 14 MB together. The full-quality maps are not kept in the Spec repo, but `README.md` describes how to rebuild them into `assets-full/` and compare the two sets whenever the compression is suspected of costing detail, e.g. on a much larger display. An Implementation that is to show them copies them in place of the compressed maps and passes their addresses to `mountGlobe` as `maps`.
+The maps in `lib/globe/assets/` are kept at full quality, about 14 MB together, rather than compressed to about 5.3 MB, so that the globe shows all the detail of its sources on any display. A smaller download is not worth that detail, because the globe loads its maps only when it is first visible and the screen is usable before then.
 
 # Globe in the user interface
 
@@ -42,7 +42,7 @@ The globe is decoration, so it should never displace game information or reach i
 
 # Loading and running cost
 
-The globe's maps are about 5.3 MB to download and take a few hundred megabytes of graphics memory, and it redraws on every frame. The copied code therefore loads three.js and the maps only when the globe is first visible, and stops drawing while it is hidden or the browser tab is in the background.
+The globe's maps are about 14 MB to download and take a few hundred megabytes of graphics memory, and it redraws on every frame. The copied code therefore loads three.js and the maps only when the globe is first visible, and stops drawing while it is hidden or the browser tab is in the background.
 
 The `sharpness` setting in `globe-scene.js` decides how many pixels are drawn for each pixel of the canvas. It should be lowered, in the Spec repo, only when the globe cannot hold the frame rate of the display, because lowering it is what makes the globe look blurred.
 

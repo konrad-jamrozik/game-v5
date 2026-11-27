@@ -21,7 +21,7 @@
         position: fixed;
         inset: 0;
       }
-      /* Viewer only: the hint, the Devastation slider, and the map-set comparison, which an Implementation does not copy. */
+      /* Viewer only: the hint and the Devastation slider, which an Implementation does not copy. */
       #viewer {
         position: fixed;
         left: 0;
@@ -32,23 +32,6 @@
         align-items: center;
         gap: 8px;
         pointer-events: none;
-      }
-      #viewer button {
-        pointer-events: auto;
-        height: 36px;
-        padding: 0 14px;
-        background: #22211c;
-        border: 1px solid #3a382f;
-        border-radius: 2px;
-        color: #e8e4d8;
-        font: inherit;
-        cursor: pointer;
-      }
-      #viewer button:hover {
-        border-color: #9c978a;
-      }
-      #viewer button[hidden] {
-        display: none;
       }
       #hint {
         font-size: 13px;
@@ -84,64 +67,23 @@
         <input id="devastation-level" type="range" min="0" max="100" step="1" value="0" />
         <output id="devastation-shown" for="devastation-level">0%</output>
       </label>
-      <button id="maps" type="button" hidden></button>
       <div id="hint">Drag to orbit · scroll to zoom</div>
     </div>
     <script type="module">
       import { mountGlobe } from './globe.js'
 
-      // `standard` is the committed set. `full` is the same maps at full quality, present only after building them as
-      // README.md describes; `?maps=full` in the address starts with it.
-      const MAP_SETS = {
-        standard: { label: '5.3 MB maps', mapBase: './assets/' },
-        full: {
-          label: '14 MB maps',
-          maps: {
-            day: './assets-full/earth-day.jpg',
-            night: './assets-full/earth-night-lights.jpg',
-            normalWater: './assets-full/earth-normal-water.webp',
-            clouds: './assets-full/earth-clouds.jpg',
-          },
-        },
-      }
-      const otherOf = (name) => (name === 'full' ? 'standard' : 'full')
-      const exists = async (name) => {
-        const set = MAP_SETS[name]
-        const day = set.maps?.day ?? `${set.mapBase}earth-day.webp`
-        return (await fetch(day, { method: 'HEAD' })).ok
-      }
-
-      const stage = document.getElementById('stage')
-      const mapsButton = document.getElementById('maps')
-      // carried from one globe to the next, so that switching map sets keeps the camera and the controls
-      const memory = {}
-      let globe = null
-      let mapSet = 'standard'
-
-      const show = (name) => {
-        globe?.dispose()
-        mapSet = name
-        globe = mountGlobe(stage, { ...MAP_SETS[name], memory })
-        globe.setDevastation(devastationLevel.value / 100)
-        const other = otherOf(name)
-        mapsButton.textContent = `Showing ${MAP_SETS[name].label} · switch to ${MAP_SETS[other].label}`
-      }
+      const globe = mountGlobe(document.getElementById('stage'))
 
       // The devastation an Implementation would set from the game; `?devastation=60` in the address starts with it.
       const devastationLevel = document.getElementById('devastation-level')
       const devastationShown = document.getElementById('devastation-shown')
       const showDevastation = () => {
         devastationShown.textContent = `${devastationLevel.value}%`
-        globe?.setDevastation(devastationLevel.value / 100)
+        globe.setDevastation(devastationLevel.value / 100)
       }
       devastationLevel.value = new URLSearchParams(location.search).get('devastation') ?? '0'
       devastationLevel.addEventListener('input', showDevastation)
       showDevastation()
-
-      const asked = new URLSearchParams(location.search).get('maps')
-      show(asked in MAP_SETS && (await exists(asked)) ? asked : 'standard')
-      mapsButton.hidden = !(await exists(otherOf(mapSet)))
-      mapsButton.addEventListener('click', () => show(otherOf(mapSet)))
     </script>
   </body>
 </html>

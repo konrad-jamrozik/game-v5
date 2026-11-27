@@ -53,8 +53,8 @@ The globe eases to a new level over about a second. A browser that asks for redu
 | `globe-scene.js` | The scene, the three shaders, and the orbit and zoom. It imports three.js and is loaded on first show. |
 | `globe.css` | The styles of the globe's elements, using the game's Design tokens where the page defines them. |
 | `globe.d.ts` | The types of `globe.js`, for TypeScript. |
-| `index.html` | The viewer page: the three.js import map, the globe filling the window, the Devastation slider, and the map-set comparison. |
-| `assets/` | The four maps the globe loads, about 5.3 MB together. |
+| `index.html` | The viewer page: the three.js import map, the globe filling the window, and the Devastation slider. |
+| `assets/` | The four maps the globe loads, about 14 MB together. |
 | `scripts/build-globe-textures.py` | Rebuilds the maps from NASA's original maps. |
 | `scripts/serve.ts` | Serves the viewer on localhost, as `npm run globe` runs it. |
 
@@ -113,12 +113,12 @@ Every map is equirectangular, with north at the top and longitude -180° at the 
 
 | File | Size | Content |
 | --- | --- | --- |
-| `earth-day.webp` | 8192 × 4096 | Surface colour. |
-| `earth-night-lights.webp` | 8192 × 4096 | One channel: city lights only. |
-| `earth-normal-water.jpg` | 4096 × 2048 | Red and green: tangent-space normal, x towards east and y towards north. Blue: water mask. |
-| `earth-clouds.webp` | 2048 × 1024 | One channel: cloud cover. |
+| `earth-day.jpg` | 8192 × 4096 | Surface colour, as JPEG at quality 90 with full colour resolution. |
+| `earth-night-lights.jpg` | 8192 × 4096 | One channel: city lights only, as JPEG at quality 90. |
+| `earth-normal-water.webp` | 4096 × 2048 | Red and green: tangent-space normal, x towards east and y towards north. Blue: water mask. Lossless WebP. |
+| `earth-clouds.jpg` | 4096 × 2048 | One channel: cloud cover, upscaled smoothly from the 2048 × 1024 source. |
 
-The maps are compressed to keep the download small. Compared side by side in the viewer, they showed no visible difference from the full-quality maps described below.
+The maps are kept at full quality, about 14 MB together, so the globe shows all the detail of its sources.
 
 ## How it is drawn
 
@@ -136,27 +136,6 @@ python lib/globe/scripts/build-globe-textures.py
 ```
 
 The script downloads about 40 MB of source maps into the system temp directory on its first run and reuses them afterwards.
-
-## Full-quality maps
-
-The same four maps can be built at full quality, about 14 MB together. They are not committed, because the difference is not visible in the viewer. To get them back:
-
-```bash
-python lib/globe/scripts/build-globe-textures.py --full
-```
-
-This also writes the following files into `assets-full/`, which Git ignores:
-
-| File                      | Size        | Difference from `assets/`                                           |
-| ------------------------- | ----------- | ------------------------------------------------------------------- |
-| `earth-day.jpg`           | 8192 × 4096 | JPEG at quality 90 with full colour resolution, in place of WebP.   |
-| `earth-night-lights.jpg`  | 8192 × 4096 | JPEG at quality 90, in place of WebP.                               |
-| `earth-normal-water.webp` | 4096 × 2048 | Lossless WebP, in place of JPEG.                                    |
-| `earth-clouds.jpg`        | 4096 × 2048 | Upscaled smoothly from the source, in place of the 2048 × 1024 map. |
-
-Once `assets-full/` exists, the viewer shows a second button that switches between the two sets without moving the camera, so they can be compared in place. Adding `?maps=full` to the address starts with the full-quality set.
-
-To use the full-quality maps for good, make `full` the default in `MAP_SETS` in `index.html`, pass their addresses as `maps` to `mountGlobe` in an Implementation, remove `assets-full/` from `.gitignore`, and commit the folder.
 
 ## Sources
 
