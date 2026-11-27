@@ -86,10 +86,10 @@ A Special event sets the scene or marks a turning point of the story, so it read
 | `title` | Its heading, e.g. "Situation Report". |
 | `text` | Its text, one paragraph. A phrase between double asterisks is drawn in Special, without the asterisks, e.g. `**Continuity**`, so that the name a story beat turns on stands out. |
 
-A Special event of `campaign_start` is shown on its own, in the dialog of the Turn summary and with its [layout](#layout), except that:
+A Special event of `campaign_start` is shown on its own, in the dialog of the Turn summary, so that it reads as the opening page of the story rather than as a report:
 
-- **Event art:** the placeholder is drawn in Special, with its own glyph, and holds no text: neither "Turn N summary", "Now Turn N+1", an eyebrow, a title, nor a meta line.
-- **Details:** its `title` in the Section heading style, then its `text`, larger than body text, both centred across the dialog and together centred between the Event art and the control row.
+- **Event art:** it fills the whole dialog above the control row, as a backdrop. The placeholder is drawn in Special, with its own glyph faint behind the text, and holds neither "Turn N summary", "Now Turn N+1", an eyebrow, nor a meta line.
+- **Text:** its `title`, larger than a Section heading, then its `text`, larger than body text, both centred across the dialog and together centred from top to bottom on the Event art.
 - **Control row:** only "Continue", the primary button, centred. It, the Enter key, and the Escape key close the dialog.
 
 It is not shown again for that Campaign, e.g. after loading a [Campaign save](../../foundation/engine-contract.md#persisted-data) of its first Turn.
