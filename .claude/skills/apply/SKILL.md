@@ -16,6 +16,8 @@ First choose the mode from how the user phrased the request:
 
 When unsure which mode applies, use Discuss.
 
+**Landing an Autopilot AI study:** when asked to apply the proposals of a study branch of the `improve-autopilot-ai` skill, its proposals, in the study document on that branch, are the request. In step 6, first bring the study branch's own commits into the worktree with `git cherry-pick $(git merge-base origin/main <branch>)..<branch>`, then write each proposal that changes how the AI decides into [Basic Autopilot AI](../../../docs/specs/design/autopilot-ais/basic-autopilot-ai.md). In step 8, take the Implementation's code from the study branch of the Implementation repo with `git merge --squash <branch>` rather than writing it again, and follow the rest of step 8. Once both pushes are done, report the study's worktrees as no longer needed; an Implementation worktree loses its `node_modules` link before it is removed.
+
 ## Workflow
 
 1. **Check the Implementation repo.** It is `game-v5-impl-web`, the sibling of the Spec repo's main local clone. Run `git fetch` there. It must be on `main` with no uncommitted or untracked files; otherwise another session is working in it, so tell the user which check failed and stop. Never stash, commit, or discard its changes. Then fast-forward its `main` to `origin/main`.

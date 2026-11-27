@@ -4,7 +4,7 @@
 
 # What this family is for
 
-How well an Autopilot AI plays can only be measured, and a measurement belongs to one Implementation at one time. The Autopilot Studies family keeps the studies of the Implementation's Autopilot AIs that the Game designer asks for: what each measured with the Autopilot Lab, the root causes it found, which changes it tried and how they worked, and the balance issues it suggests. Like Guidance, it binds no Implementation; a study's suggestions become rules only through the specifications that own them, e.g. Basic Autopilot AI.
+How well an Autopilot AI plays can only be measured, and a measurement belongs to one Implementation at one time. The Autopilot Studies family keeps the studies of the Implementation's Autopilot AIs that the Game designer asks for, each on a branch of its own until the Game designer accepts it: what each measured with the Autopilot Lab, the root causes it found, which changes it tried and how they worked, and the balance issues it suggests. Like Guidance, it binds no Implementation; a study's suggestions become rules only through the specifications that own them, e.g. Basic Autopilot AI.
 
 # Documents
 
@@ -12,7 +12,7 @@ How well an Autopilot AI plays can only be measured, and a measurement belongs t
 
 [Basic Autopilot AI Study, 2026-11-25](basic-autopilot-ai-study-2026-11-25.md) answers _why did the Basic Autopilot AI lose every Campaign, and what made it win?_ It found that the AI ignored a rung of each Faction's chain and that a team at 110% of the Enemies' Combat rating is not safe.
 
-A further study is added as a document of its own, named by its date, rather than by changing an earlier one, so that each stays the record of its time.
+A study answers either a general question or one the Game designer names, e.g. whether to deploy more Agents on Missions. A further study is added as a document of its own, named by its date and by the subject of a named question, rather than by changing an earlier one, so that each stays the record of its time.
 
 # How they relate
 

@@ -2,7 +2,7 @@
 
 A command-line tool that plays many Campaigns with the Basic Autopilot AI, headless and in parallel, and prints one compact summary of them. It is built for an agent: one command, a few hundred lines of Markdown back, and the same seeds every time, so that one change can be measured against its baseline. The [Autopilot Bench](../autopilot-bench/README.md) is the same idea for a human watching a page.
 
-A run of the Lab is a Balancing run under [Campaign Tests](../../docs/specs/implementation/mandatory/campaign-tests.md#balancing-runs): an agent makes one only when the Game designer asks, and reports its results in chat or an Artifact, never in a specification, the code, a test, or a commit message. The `autopilot-lab` skill in `.claude/skills/` says how to use it.
+A run of the Lab is a Balancing run under [Campaign Tests](../../docs/specs/implementation/mandatory/campaign-tests.md#balancing-runs): an agent makes one only when the Game designer asks for a study of balance or of how the AI plays, never to verify a change, and reports its results in chat, in an Artifact, or in a dated study of the [Autopilot Studies family](../../docs/specs/implementation/autopilot-studies/about-autopilot-studies.md), never in any other specification, the code, a test, or a commit message. [Run a study](#run-a-study) says how to use it; the `improve-autopilot-ai` skill in `.claude/skills/` builds on it to improve the AI.
 
 It is not a specification and not part of any Implementation. It writes nothing to either repository; its records go to a folder outside them.
 
@@ -48,6 +48,21 @@ Each section has one column per variant:
 - **Errors:** every Campaign that failed, with the start of its stack.
 
 The records folder holds `summary.md`, `summary.json` with every Campaign's result but its Turn rows, and one `<variant>-<seed>.json` per Campaign with its values at the start of every Turn, to read one seed in detail.
+
+## Run a study
+
+1. **Ask a question,** e.g. "does a larger Research team size win the safehouse sooner?", and name the measure that answers it before running, e.g. the median Turn of the first win at `raid_safehouse`.
+2. **Baseline first:** run the current parameters, e.g. `npm run autopilot:lab -- --campaigns 20 --turns 400`, and keep its records folder.
+3. **Change one thing** and compare on the same seeds: `--vs key=value` for Tuning parameters, or `--impl-b <worktree>` for a change of the AI's code or of game data, made in a worktree of the Implementation repo under the rules of `AGENTS.md` for worktrees, e.g. its `node_modules` linked and unlinked before removal.
+4. **Read the Detectors and Errors before the averages.** A flag or an error is a defect to understand in that seed's record, `<variant>-<seed>.json`, before any balance reading counts.
+5. **Judge with enough Campaigns:** compare 20 Campaigns per variant, and repeat a close comparison on a second set of seeds, e.g. `--seeds two`, before calling a difference real; look at the 25th to 75th percentiles as well as the medians. Raise `--turns` to see the late game, e.g. 400.
+6. **Repeat** with the next change, keeping each run's records folder.
+
+Keep every run within its Run time limit: size it from the time per Campaign the last run reported, e.g. fewer Campaigns or fewer Turns, and split a larger experiment into several runs. Run one Lab run per shell command, with a shell timeout of 300000 ms or less, and never move a Lab run to the background.
+
+When the summary lacks a value a question needs, add it to the Lab rather than guessing.
+
+Report what was asked, the variants, the measure, and the result with its spread, e.g. "first safehouse win: T38 (T33–T45) for A against T31 (T28–T36) for B over 20 seeds". Name the Campaign setup seed of every Campaign and the Combat setup seed of every Combat a finding quotes, so that the Game designer can play it again. Recommend values; a GDR value or a Game designer value of a Tuning parameter changes only when the Game designer asks for it, through the `apply` skill.
 
 ## How a Campaign is played
 
