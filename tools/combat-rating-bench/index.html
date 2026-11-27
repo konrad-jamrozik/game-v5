@@ -945,7 +945,7 @@
             <label
               class="inline"
               style="margin-top: 10px"
-              title="Cyan lines between the cells where the rating ratio crosses each threshold, bold at 100% and faint elsewhere, over any colouring"
+              title="Cyan lines between the cells where the rating ratio crosses each threshold, bold at the middle one and faint at the others, over any colouring"
               ><input type="checkbox" data-bind="sweeper.showLine" data-type="bool" />
               <span class="k-line">CR ratio line</span></label
             >
@@ -2644,11 +2644,14 @@
         const ratios = parse(state.sweeper.lineRatios)
         return ratios.length > 0 ? ratios : parse(defaults().sweeper.lineRatios)
       }
-      /** The contours the CR ratio line draws: a bold line at 100% and a faint one at every other threshold. */
+      /**
+       * The contours the CR ratio line draws: a bold line at the middle threshold, the lower of the two middle ones for
+       * an even count, and a faint one at every other, e.g. bold at 110% for `100, 110, 120`.
+       */
       function contours() {
-        return lineRatios().map((t) =>
-          Math.abs(t - 1) < 1e-9 ? [t, 3, 'rgb(var(--line))'] : [t, 1, 'rgba(var(--line), 0.6)'],
-        )
+        const ratios = lineRatios()
+        const middle = Math.floor((ratios.length - 1) / 2)
+        return ratios.map((t, i) => (i === middle ? [t, 3, 'rgb(var(--line))'] : [t, 1, 'rgba(var(--line), 0.6)']))
       }
       /**
        * The lines of the Win rate + CR ratio line on one cell's edges, as a box-shadow: an edge that the rating ratio
