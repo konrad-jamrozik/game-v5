@@ -83,13 +83,13 @@ A Special event sets the scene or marks a turning point of the story, so it read
 | Property | Meaning |
 | --- | --- |
 | `trigger` | When the GUI shows it: `campaign_start`, as soon as the GUI first shows a [Campaign](../../foundation/core-concepts.md#campaign-and-session) just created, before its first Advance turn. No two SpecialEvent GDRs share one. |
-| `title` | Its title. |
-| `text` | Its text, one paragraph. |
+| `title` | Its heading, e.g. "Situation Report". |
+| `text` | Its text, one paragraph. A phrase between double asterisks is drawn in Special, without the asterisks, e.g. `**Continuity**`, so that the name a story beat turns on stands out. |
 
 A Special event of `campaign_start` is shown on its own, in the dialog of the Turn summary and with its [layout](#layout), except that:
 
-- **Event art:** the placeholder is drawn in Special, with its own glyph, and holds neither "Turn N summary" nor "Now Turn N+1"; its eyebrow holds the kind, "Special event", without a tag, and no meta line stands under its title.
-- **Details:** its `text`, centred.
+- **Event art:** the placeholder is drawn in Special, with its own glyph, and holds no text: neither "Turn N summary", "Now Turn N+1", an eyebrow, a title, nor a meta line.
+- **Details:** its `title` in the Section heading style, then its `text`, larger than body text, both centred across the dialog and together centred between the Event art and the control row.
 - **Control row:** only "Continue", the primary button, centred. It, the Enter key, and the Escape key close the dialog.
 
 It is not shown again for that Campaign, e.g. after loading a [Campaign save](../../foundation/engine-contract.md#persisted-data) of its first Turn.
