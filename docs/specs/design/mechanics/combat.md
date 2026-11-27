@@ -251,6 +251,18 @@ E.g., with a `rating_base_weapon_damage` of 8, a `rating_base_health` of 40, a `
 
 E.g., with a `rating_agent_skill_gini_penalty` of 0.25, an Agents' side of four Agents of effective skill 900, 100, 100, and 100 has 6 ordered pairs differing by 800, a Gini coefficient of `6 × 800 / (2 × 4 × 1200) = 0.5`, and a skill evenness factor of `1 − 0.25 × 0.5 = 0.875`, while four Agents of effective skill 300 each have a Gini coefficient of 0 and a skill evenness factor of 1.
 
+The Gini coefficient reads only how the skill is shared out, never how much there is: it is 0 when every Agent has the same effective skill, and it rises towards `(n − 1) / n` as one Agent holds ever more of it, so the skill evenness factor never takes more than `rating_agent_skill_gini_penalty` off the Combat rating. The following Agents' sides show the effect, each with a `rating_team_size_exponent` of 1.3 and a `rating_agent_skill_gini_penalty` of 0.25, every Agent at the rating bases with exhaustion 0, so that the sum is the sum of the effective skill; the column without the skill evenness factor is the Combat rating the same Agents would have as an Enemies' side.
+
+| Effective skill of the Agents | Gini coefficient | Skill evenness factor | Combat rating without it | Combat rating with it |
+| --- | --- | --- | --- | --- |
+| 300, 300, 300, 300 | 0 | 1 | 1,818 | 1,818, unchanged |
+| 500, 500, 100, 100 | 1/3 | 11/12 | 1,818 | 1,667, 8.3% less |
+| 900, 100, 100, 100 | 1/2 | 7/8 | 1,818 | 1,591, 12.5% less |
+| 1,800, 200, 200, 200 | 1/2 | 7/8 | 3,637 | 3,183, 12.5% less |
+| 2,000 and nine of 100 | 0.590 | 0.853 | 5,786 | 4,933, 14.7% less |
+
+The first three sides hold the same 1,200 effective skill in four Agents and rate the same without the factor, but the more of it one Agent holds, the less the side rates, because the side loses most of its strength with that Agent. The fourth is the third with every Agent twice as skilled: the Gini coefficient, and so the share taken off, is the same. The fifth shows the largest cut of these, a team carried by one Agent among ten, still short of the 25% that `rating_agent_skill_gini_penalty` bounds it to.
+
 E.g., with a `rating_exhaustion_free_points` of 70 and a `rating_exhaustion_span` of 30, a Combatant at the rating bases of effective skill 1000 and exhaustion 95 has an exhaustion factor of `(30 − 25) / 30 = 1/6` and a Combat rating of `round down(1000 × 1/6) = 166`; at exhaustion 70 or less its exhaustion factor is 1, and at exhaustion 100 or more it is 0.
 
 **Informative rationale:** The three terms, their rating bases, and the team size exponent were chosen with the Combat Rating Bench in `tools/combat-rating-bench/`, so that teams sized to one share of a Mission site's Combat rating win at a consistent rate whatever their skill and Upgrades; weighing armor against a base of its own, rather than adding it point for point to max health, rated armored teams more consistently, and a rating factor that weighed each point of health, armor, and weapon damage by a bonus of its own rated single kinds of Upgrade less consistently. Halving the sum of the three terms keeps a Combatant at the rating bases, e.g. an Agent without Upgrades, at its effective skill. Agent teams with few Upgrades still lose more often than better-equipped teams of the same Combat rating.
