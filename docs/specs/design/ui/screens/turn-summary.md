@@ -81,7 +81,7 @@ The Turn Summary as the game draws it:
 
 ![Turn summary Screenshot](../../../../images/screens/turn-summary.png)
 
-_Captured on 2026-11-24 00:10 UTC._
+_Captured on 2026-11-27 01:19 UTC._
 
 # TODOs
 

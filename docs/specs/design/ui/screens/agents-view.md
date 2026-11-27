@@ -149,12 +149,12 @@ The Agents View as the game draws it:
 
 ![Agents View Screenshot](../../../../images/screens/agents-view.png)
 
-_Captured on 2026-11-23 19:47 UTC._
+_Captured on 2026-11-27 01:19 UTC._
 
 ![Agents View Screenshot with the Memorial filter on](../../../../images/screens/agents-memorial.png)
 
-_Captured on 2026-11-23 19:47 UTC._
+_Captured on 2026-11-27 01:19 UTC._
 
 ![Agent details Screenshot](../../../../images/screens/agent-details.png)
 
-_Captured on 2026-11-23 19:47 UTC._
+_Captured on 2026-11-27 01:19 UTC._

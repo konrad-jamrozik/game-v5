@@ -56,4 +56,4 @@ The Storage View as the game draws it:
 
 ![Storage View Screenshot](../../../../images/screens/storage-view.png)
 
-_Captured on 2026-11-23 19:47 UTC._
+_Captured on 2026-11-27 01:19 UTC._

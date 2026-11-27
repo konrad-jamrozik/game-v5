@@ -48,4 +48,4 @@ The Charts View as the game draws it:
 
 ![Charts View Screenshot](../../../../images/screens/charts-view.png)
 
-_Captured on 2026-11-23 19:47 UTC._
+_Captured on 2026-11-27 01:19 UTC._

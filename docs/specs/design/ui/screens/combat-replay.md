@@ -184,7 +184,7 @@ The Combat replay as the game draws it:
 
 ![Combat replay Screenshot](../../../../images/screens/combat-replay.png)
 
-_Captured on 2026-11-24 00:10 UTC._
+_Captured on 2026-11-27 01:19 UTC._
 
 # TODOs
 

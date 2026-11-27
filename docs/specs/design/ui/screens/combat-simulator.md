@@ -85,7 +85,7 @@ The Combat simulator as the game draws it:
 
 ![Combat simulator Screenshot](../../../../images/screens/combat-simulator.png)
 
-_Captured on 2026-11-24 00:10 UTC._
+_Captured on 2026-11-27 01:19 UTC._
 
 # TODOs
 
