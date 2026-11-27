@@ -131,8 +131,9 @@ A Combat rating measures how strong a side is in a [Combat](#combat), so that yo
 | --- | --- |
 | Rating factor | Half the sum of weapon damage ÷ 10, [max health](#health) ÷ 30, and armor ÷ 20 |
 | At the rating bases | A Combatant with weapon damage 10, max health 30, and no armor has a rating factor of 1 |
-| One Combatant | Its effective skill × its rating factor, rounded down |
-| A side | The sum of effective skill × rating factor over its Combatants able to fight, × n ^ (1.2 − 1), where n is their number, rounded down once, so that a larger side counts for more than its sum |
+| [Exhaustion](#exhaustion) factor | 1 up to exhaustion 70; each point above it takes 1/30 of the whole Combat rating, on top of what exhaustion already takes from effective skill |
+| One Combatant | Its effective skill × its rating factor × its exhaustion factor, rounded down |
+| A side | The sum of effective skill × rating factor × exhaustion factor over its Combatants able to fight, × n ^ (1.3 − 1), where n is their number, rounded down once, so that a larger side counts for more than its sum |
 | [Incapacitated](#incapacitated-agent) Combatants | Add nothing to the Combat rating of their side |
 | Base Combat rating | An [Agent](#agents)'s effective skill alone, shown beside its Combat rating so that you can see how much its [equipment](#equipment-and-storage) and [Upgrades](#upgrades) add |
 

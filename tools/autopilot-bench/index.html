@@ -810,12 +810,6 @@
               'Advance turns of recovery over which resting Agents are projected for a Muster and for choosing Leads.',
               1,
             ],
-            [
-              'fullTeamPct',
-              'full team',
-              'Once a team that passes the margin can be formed for a Response Mission site, a stronger one goes instead: the fewest Agents, strongest first, that reach this % of the Enemies’ Combat rating, when the free Transport cap allows. A Mission site whose loss loses the Campaign gets the strongest Agents the cap allows.',
-              1,
-            ],
           ],
         },
         {
@@ -1307,8 +1301,8 @@
               // Whether a Mission site is available, then the three tests of the Basic Autopilot AI's winning team, with
               // this Campaign's parameters.
               const p = { ...DEFAULTS, ...(c?.params ?? {}) }
-              const margin = Number(p.combatMarginPct ?? 110)
-              const perAgent = Number(p.enemiesPerAgent ?? 3)
+              const margin = Number(p.combatMarginPct ?? 120)
+              const perAgent = Number(p.enemiesPerAgent ?? 2)
               const mark = (pass) => (pass ? '🟢' : '🔴')
               const pct = x.next.enemiesRating > 0 ? (s.ratingReady / x.next.enemiesRating) * 100 : null
               const crPass = s.ratingReady * 100 >= x.next.enemiesRating * margin

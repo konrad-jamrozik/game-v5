@@ -31,7 +31,7 @@ A fixed [Turn routine](#turn-routine) applies this in each [Turn](../foundation/
 | Strike team size | How many Agents the Strike goal asks for: the fewest first Eligible Agents in Agent order that reach the Strike goal with their Rested rating and number at least the Agents needed for the Enemies the Strike goal is set by; the [Transport cap](../mechanics/economy-and-upgrades.md#glossary) when no such number within it does. |
 | Strike team | The first Eligible Agents in Agent order, as many as the Strike team size, but never more than the Transport cap, nor more than the Roster size less the [Contracting cap](../mechanics/economy-and-upgrades.md#glossary) and the Research team size, so that the Agency keeps its income however many Agents it loses. |
 | Strength gap | Whether the Rested rating of the Strike team is below the Strike goal. |
-| Required rating share | The least share of the Combat rating of a [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions)'s Enemies that a team's Combat rating must reach for the Basic Autopilot AI to deploy it there: the [Combat](../mechanics/domain-model.md#combat) margin plus the Loss margin step times the number of Lost Missions at Mission sites of the same MissionSiteArchetype. E.g., with the Game designer values, 110% before any such Lost Mission and 120% after two. |
+| Required rating share | The least share of the Combat rating of a [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions)'s Enemies that a team's Combat rating must reach for the Basic Autopilot AI to deploy it there: the [Combat](../mechanics/domain-model.md#combat) margin plus the Loss margin step times the number of Lost Missions at Mission sites of the same MissionSiteArchetype. E.g., with the Game designer values, 120% before any such Lost Mission and 130% after two. |
 | Winning team | A set of Agents whose Combat rating is at least the Required rating share of the Combat rating of a Mission site's Enemies, whose number is at least the number of those Enemies divided by Enemies per Agent, rounded up, and that the Transport cap [allows to deploy](../mechanics/missions.md#deploying-agents). |
 | Projected Agent | An Agent on [Standby](../mechanics/agents-spec.md#assignments), [Training](../mechanics/agents-spec.md#assignments), or [Recovery](../mechanics/agents-spec.md#assignments) as it would be after the Recovery lookahead, i.e. after that many Advance turns of [Agent Recovery](../mechanics/agent-recovery.md) at the Agency's current rates, recovering only in the Advance turns in which [it would recover](../mechanics/agent-recovery.md#which-agents-recover). Its effective skill and whether it would be a [Deployable Agent](../mechanics/missions.md#glossary) are read from those projected values. |
 | Muster | The team that the Basic Autopilot AI [gathers](#deploying-and-mustering) for an [Initiative Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) that Deployable Agents alone cannot win yet, from Projected Agents and Contractors. |
@@ -86,7 +86,7 @@ The Basic Autopilot AI makes one [`equipAgent`](../mechanics/equipment.md#equipp
 
 Step 2 considers every Active Mission site to which no team is deployed, in order of urgency: Response Mission sites first, the one whose loss would cost most first, i.e. one that loses the Campaign, then the largest [Panic](../mechanics/domain-model.md#campaign-standing) increase, then the largest funding loss; then Initiative Mission sites; and among equals, the one that expires soonest first.
 
-1. **Deploy now:** when a Winning team of Deployable Agents can be formed for the Mission site from their current values, the Basic Autopilot AI deploys it. It takes the Deployable Agents with the lowest [exhaustion](../mechanics/agents-spec.md#combatant-attributes) first, among equal exhaustion the highest effective skill, so that rested Agents go first; when that order forms no Winning team within the Transport cap, the strongest first. Otherwise it deploys nobody rather than send a team likely to lose. Once a Winning team can be formed for a Response Mission site, the Basic Autopilot AI sends a stronger one in its place: for a Mission site whose loss loses the Campaign, the strongest Deployable Agents the free Transport cap allows; for any other, the fewest Deployable Agents, strongest first, that reach the Full team share of the Enemies' Combat rating with at least the Agents a Winning team needs, when the free Transport cap allows them. A Response Mission site cannot be tried again, so the margin goes where a loss cannot be made good. The Required rating share rises with each Lost Mission so that a kind of Mission site the Combat rating underrates is attempted only with ever stronger teams.
+1. **Deploy now:** when a Winning team of Deployable Agents can be formed for the Mission site from their current values, the Basic Autopilot AI deploys it. It takes the Deployable Agents with the lowest [exhaustion](../mechanics/agents-spec.md#combatant-attributes) first, among equal exhaustion the highest effective skill, so that rested Agents go first; when that order forms no Winning team within the Transport cap, the strongest first. Otherwise it deploys nobody rather than send a team likely to lose. Once a Winning team can be formed for a Response Mission site whose loss loses the Campaign, the Basic Autopilot AI sends in its place the strongest Deployable Agents the free Transport cap allows, because that loss can never be made good; to every other Mission site it sends the Winning team, so that the Agents it does not need stay free for the next one. The Required rating share rises with each Lost Mission so that a kind of Mission site the Combat rating underrates is attempted only with ever stronger teams.
 2. **Muster:** for the most urgent Initiative Mission site to which no team can be deployed now, the Basic Autopilot AI forms a Muster when a Winning team of Projected Agents and Contractors can be formed whose last member becomes a Deployable Agent within the Recovery lookahead and in fewer Advance turns than the Mission site's Turns until expiration. It takes the Deployable Agents first, then the Projected Agents that become Deployable Agents soonest, and only then Contractors, so that it recalls as few Contractors as it can. A Response Mission site is never mustered for, because it expires before a recalled Agent arrives.
 3. **Recall at the last moment:** step 3 recalls the Contractors of the Muster only when every other member is a Deployable Agent now or becomes one within one Advance turn, so that the recalled Agents earn until the team is ready.
 
@@ -137,7 +137,6 @@ The [Game build](../foundation/core-concepts.md#game-build-and-content) offers t
 | Recovery lookahead | The number of Advance turns over which a Projected Agent is projected. |
 | Threat window | The number of Turns over which the Threat is read. |
 | Threat levels ahead | How many Faction operation levels above those seen the Threat looks. |
-| Full team share | The share of the Enemies' Combat rating that a team sent to a Response Mission site reaches when the Transport cap allows. |
 | Research team size | The number of Agents each Investigation is given. |
 | Most Investigations | The most Investigations the Basic Autopilot AI runs at once. |
 | Farming Panic | The Panic, in percent, from which farming a Won rung qualifies even while a new rung does. |
@@ -155,13 +154,12 @@ The Game designer sets the following values of the Game build.
 
 | Tuning parameter | Value in the Game build |
 | --- | --- |
-| Combat margin | 110%. |
+| Combat margin | 120%. |
 | Loss margin step | 5 percentage points. |
-| Enemies per Agent | 2.5, e.g. a team of at least 4 Agents for 10 Enemies. |
+| Enemies per Agent | 2, e.g. a team of at least 5 Agents for 10 Enemies. |
 | Recovery lookahead | 2 Advance turns. |
 | Threat window | 20 Turns. |
 | Threat levels ahead | 1. |
-| Full team share | 150%. |
 | Research team size | 3 Agents. |
 | Most Investigations | 3. |
 | Farming Panic | 30%. |

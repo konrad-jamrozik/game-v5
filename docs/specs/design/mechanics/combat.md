@@ -5,7 +5,7 @@
 | Spec ID | COMBAT |
 | Family | Mechanics |
 | Audience | Engine designer, Content designer, AI designer, Implementer |
-| Owns | Enemies and the Combat GDRs, how a Combat is fought in Combat rounds, attacks and their random outcomes, Ammo spent in a Combat, Incapacitated, Combat rating with base Combat rating, rating factor, and team size factor, the Rested and Equipment Combat ratings, Combat outcomes, the Combat report, and the Combat setup seed. |
+| Owns | Enemies and the Combat GDRs, how a Combat is fought in Combat rounds, attacks and their random outcomes, Ammo spent in a Combat, Incapacitated, Combat rating with base Combat rating, rating factor, exhaustion factor, and team size factor, the Rested and Equipment Combat ratings, Combat outcomes, the Combat report, and the Combat setup seed. |
 | Conventions | [Specification Conventions](../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
@@ -57,8 +57,9 @@ Whether a Combatant still takes part in a Combat, and how strong it and its side
 | Able to fight | Alive and not Incapacitated, so still attacking and still liable to be attacked. |  |
 | Base Combat rating | How strong a Combatant or a side is by effective skill alone: the [effective skill](agents-spec.md#combatant-attributes) of one Combatant, or the [sum of the effective skill](#combat-rating) of a side's Combatants able to fight. |  |
 | Rating factor | How much a Combatant's [effective weapon damage](agents-spec.md#combatant-attributes), [effective max health](agents-spec.md#combatant-attributes), and [effective armor](agents-spec.md#combatant-attributes) raise or lower its Combat rating against its effective skill: [half the sum](#combat-rating) of how hard it hits, how much harm its max health can take, and how much harm its armor absorbs, each against its rating base, as a multiplier above 0 that is 1 for a Combatant at the rating bases, with no armor. |  |
+| Exhaustion factor | How much a Combatant's [exhaustion](agents-spec.md#combatant-attributes) above `rating_exhaustion_free_points` lowers its Combat rating, over and above what it takes from its effective skill: a multiplier from 0 to 1 that [loses one `rating_exhaustion_span`-th](#combat-rating) for each such point. |  |
 | Team size factor | How much the number of a side's Combatants able to fight raises its Combat rating above the sum of what each of them adds: that number [raised to `rating_team_size_exponent − 1`](#combat-rating). |  |
-| Combat rating | How strong a Combatant or a side is in a Combat: the sum, over the Combatants of the side able to fight, of the effective skill of each times its rating factor, times the team size factor of the side, and [rounded down](#combat-rating). | Combat strength; combat power; effective Combat rating |
+| Combat rating | How strong a Combatant or a side is in a Combat: the sum, over the Combatants of the side able to fight, of the effective skill of each times its rating factor and its exhaustion factor, times the team size factor of the side, and [rounded down](#combat-rating). | Combat strength; combat power; effective Combat rating |
 | Rested Combat rating | The Combat rating a [Serving](agents-spec.md#agent-statuses) Agent [would have fully rested and unhurt](#rested-and-equipment-combat-ratings). | Max Combat rating |
 | Equipment Combat rating | How much a Serving Agent's equipment [adds to its Combat rating](#rested-and-equipment-combat-ratings) above the issued kit; below 0 when it wears less. | Gear rating |
 
@@ -137,6 +138,8 @@ CombatParameters bundles the numbers that tune a Combat: how far damage spreads,
 | `rating_base_armor` | The effective armor that makes the armor term of a Combatant's rating factor 1, a whole number of at least 1. | [Combat rating](#combat-rating) |
 | `rating_base_weapon_damage` | The effective weapon damage that makes the attack term of a Combatant's rating factor 1, a whole number of at least 1. | [Combat rating](#combat-rating) |
 | `rating_team_size_exponent` | The exponent of the number of Combatants able to fight in the Combat rating of a side: 1 rates a side as the sum of what its Combatants add, and above 1 rates a side of more Combatants higher than that sum. It is from 1 to 2, with at most two digits after the decimal point. | [Combat rating](#combat-rating) |
+| `rating_exhaustion_free_points` | The exhaustion up to which a Combatant's exhaustion factor is 1, a whole number of at least 0. | [Combat rating](#combat-rating) |
+| `rating_exhaustion_span` | The number of points of exhaustion above `rating_exhaustion_free_points` that take a Combatant's exhaustion factor down to 0, each point taking one `rating_exhaustion_span`-th of it, a whole number of at least 1. | [Combat rating](#combat-rating) |
 | `fallback_weapon` | A reference to the Fallback Weapon: a Weapon with no `price` and no `ammo_type`. | [Ammo in a Combat](#ammo-in-a-combat); [Equipment](equipment.md) |
 
 # Enemies
@@ -213,25 +216,28 @@ A Combat takes no game time of its own. It begins and ends within one [Turn adva
 
 # Combat rating
 
-A Combat rating measures how strong a team is, so that the Player and the Agents' retreat can weigh it against the Enemies. Effective skill carries most of that strength; a Combatant's rating factor adjusts it for how hard the Combatant hits, how much harm its max health can take, and how much harm its armor absorbs, each against a rating base of its own. The team size factor then rates a side of more Combatants higher than the sum of what each adds, because more Combatants share the opponents' attacks.
+A Combat rating measures how strong a team is, so that the Player and the Agents' retreat can weigh it against the Enemies. Effective skill carries most of that strength; a Combatant's rating factor adjusts it for how hard the Combatant hits, how much harm its max health can take, and how much harm its armor absorbs, each against a rating base of its own. Its exhaustion factor then cuts the whole of it down once the Combatant is close to stopping, because a nearly spent Combatant fights on for only a few more attacks; this counts exhaustion a second time, by design, after it has already lowered effective skill. The team size factor then rates a side of more Combatants higher than the sum of what each adds, because more Combatants share the opponents' attacks.
 
 ```text
 attack(c)               = effective weapon damage(c) / rating_base_weapon_damage
 health(c)               = effective max health(c) / rating_base_health
 armor(c)                = effective armor(c) / rating_base_armor
 rating factor(c)        = (attack(c) + health(c) + armor(c)) / 2
+exhaustion factor(c)    = max(0, s − max(0, exhaustion(c) − f)) / s
 team size factor        = n ^ (rating_team_size_exponent − 1)
 base Combat rating      = Σ effective skill(c)
-Combat rating of a side = round down( team size factor × Σ effective skill(c) × rating factor(c) )
+Combat rating of a side = round down( team size factor × Σ effective skill(c) × rating factor(c) × exhaustion factor(c) )
 ```
 
-Each sum is over every Combatant `c` of the side that is [able to fight](#incapacitation-condition), and `n` is their number; a side with no such Combatant has a base Combat rating and a Combat rating of 0. The Combat rating is [evaluated exactly](../foundation/numbers.md#exact-evaluation) and [rounded](../foundation/numbers.md#rounding) once, for the side, so it can differ from the sum of the Combat ratings of its Combatants. Every input is the Combatant's value at the moment the Combat rating is read, and the armor term reads effective armor, never current armor.
+Here `f` is `rating_exhaustion_free_points` and `s` is `rating_exhaustion_span`. Each sum is over every Combatant `c` of the side that is [able to fight](#incapacitation-condition), and `n` is their number; a side with no such Combatant has a base Combat rating and a Combat rating of 0. The Combat rating is [evaluated exactly](../foundation/numbers.md#exact-evaluation) and [rounded](../foundation/numbers.md#rounding) once, for the side, so it can differ from the sum of the Combat ratings of its Combatants. Every input is the Combatant's value at the moment the Combat rating is read, and the armor term reads effective armor, never current armor.
 
 **A Combat rating reads the Weapon, never the Ammo.** The attack term reads effective weapon damage, i.e. the weapon damage of the Weapon the Combatant fights with, and no Combat rating reads a count of rounds. Outside a Combat that is the Weapon the Agent is equipped with, whatever rounds the Agency has at hand, so whether the Agents have the rounds for their Weapons is for the Player to keep track of. Within a Combat, an Agent whose rounds have run out [fights with the Fallback Weapon](#ammo-in-a-combat) and is rated with it from then on, e.g. by the Retreated check. E.g., an Agent with a rifle of weapon damage 14 is rated with 14 before a Combat while the Agency has no round for it; in the Combat it fights with a Fallback Weapon of weapon damage 5 from the start, and is rated with 5.
 
 The base Combat rating and the Combat rating of one Combatant are those of a side holding that Combatant alone, except that its base Combat rating is its effective skill even when it is not able to fight. Agents and Enemies are rated alike: an Agent's [Weapon and Armor](equipment.md#equipping-agents) and the Agency's [Upgrades](domain-model.md#agency-and-agents) count only through the effective max health, effective armor, and effective weapon damage they give it. Every rule that weighs one side against another reads the Combat rating, never the base Combat rating, e.g. the [Retreated check](#combat-end-checks).
 
 E.g., with a `rating_base_weapon_damage` of 8, a `rating_base_health` of 40, a `rating_base_armor` of 10, and a `rating_team_size_exponent` of 1.5, a Combatant of effective skill 60, effective weapon damage 12, effective max health 30, and effective armor 5 has an attack term of 12 / 8 = 1.5, a health term of 30 / 40 = 0.75, an armor term of 5 / 10 = 0.5, a rating factor of (1.5 + 0.75 + 0.5) / 2 = 1.375, and a Combat rating of `round down(60 × 1.375) = round down(82.5) = 82`. A side of four such Combatants has a team size factor of 4 ^ 0.5 = 2 and a Combat rating of `round down(2 × 4 × 82.5) = 660`, while their four Combat ratings sum to 328.
+
+E.g., with a `rating_exhaustion_free_points` of 70 and a `rating_exhaustion_span` of 30, a Combatant at the rating bases of effective skill 1000 and exhaustion 95 has an exhaustion factor of `(30 − 25) / 30 = 1/6` and a Combat rating of `round down(1000 × 1/6) = 166`; at exhaustion 70 or less its exhaustion factor is 1, and at exhaustion 100 or more it is 0.
 
 **Informative rationale:** The three terms, their rating bases, and the team size exponent were chosen with the Combat Rating Bench in `tools/combat-rating-bench/`, so that teams sized to one share of a Mission site's Combat rating win at a consistent rate whatever their skill and Upgrades; weighing armor against a base of its own, rather than adding it point for point to max health, rated armored teams more consistently, and a rating factor that weighed each point of health, armor, and weapon damage by a bonus of its own rated single kinds of Upgrade less consistently. Halving the sum of the three terms keeps a Combatant at the rating bases, e.g. an Agent without Upgrades, at its effective skill. Agent teams with few Upgrades still lose more often than better-equipped teams of the same Combat rating.
 
@@ -489,7 +495,7 @@ Each group of `agents` has these properties:
 
 # Player-visible information
 
-A player decides whom to deploy by weighing a team against the Enemies it will meet, so nothing about Enemies or Combats is hidden. Every property and every Derived value of an Enemy, the base Combat rating, rating factor, team size factor, and Combat rating of any Combatant or side, every fact of a Combat report, including every random outcome it records, and every property of the Combat GDRs except the `unlocked_by` of a Weapon or an Armor, which [stays hidden](equipment.md#player-visible-information), are [Player-visible information](../foundation/engine-contract.md#api-surfaces) from the moment they exist.
+A player decides whom to deploy by weighing a team against the Enemies it will meet, so nothing about Enemies or Combats is hidden. Every property and every Derived value of an Enemy, the base Combat rating, rating factor, exhaustion factor, team size factor, and Combat rating of any Combatant or side, every fact of a Combat report, including every random outcome it records, and every property of the Combat GDRs except the `unlocked_by` of a Weapon or an Armor, which [stays hidden](equipment.md#player-visible-information), are [Player-visible information](../foundation/engine-contract.md#api-surfaces) from the moment they exist.
 
 # TODOs
 

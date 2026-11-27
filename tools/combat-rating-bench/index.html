@@ -799,14 +799,14 @@
               <button
                 class="small"
                 data-act="preset-default"
-                title="The game's formula, skill × (damage / damage_base + health / health_base + armor / armor_base) / 2, with the game's parameters and every part enabled"
+                title="The game's formula, skill × (damage / damage_base + health / health_base + armor / armor_base) / 2 × exhaustion_mult, with the game's parameters and every part enabled"
               >
                 Restore all defaults
               </button>
               <button
                 class="small"
                 data-act="preset-game"
-                title="The game's formula, skill × (damage / damage_base + health / health_base + armor / armor_base) / 2; keeps the parameters"
+                title="The game's formula, skill × (damage / damage_base + health / health_base + armor / armor_base) / 2 × exhaustion_mult; keeps the parameters"
               >
                 Game's formula
               </button>
@@ -831,11 +831,13 @@
               <code>armor</code>, <code>damage</code>, <code>exhaustion</code>, which an expression can weigh again
               beside the effective skill it already lowers, e.g. <code>− exhaustion / exhaustion_base</code>, and the
               derived <code>health_mult = 1 + (health − health_base) × cr_per_health</code>, likewise
-              <code>armor_mult</code> and <code>damage_mult</code>. An Agent's gear set counts only as the weapon damage
-              and armor it adds. Agents are rated by the Agent expression and Enemies by the Enemy one; every preset
-              sets both to the same expression. Team variables: <code>sum</code>, <code>count</code> (Combatants able to
-              fight), and <code>game</code> (the game's base Combat rating, Σ effective skill). Every parameter, and
-              every Combat value under Setup, is a variable of both.
+              <code>armor_mult</code> and <code>damage_mult</code>, and the game's exhaustion factor
+              <code>exhaustion_mult = max(0, 1 − max(0, exhaustion − exhaustion_free) / exhaustion_span)</code>, which
+              weighs exhaustion a second time, e.g. 1/6 at exhaustion 95 with 70 and 30. An Agent's gear set counts only
+              as the weapon damage and armor it adds. Agents are rated by the Agent expression and Enemies by the Enemy
+              one; every preset sets both to the same expression. Team variables: <code>sum</code>,
+              <code>count</code> (Combatants able to fight), and <code>game</code> (the game's base Combat rating, Σ
+              effective skill). Every parameter, and every Combat value under Setup, is a variable of both.
             </p>
             <p class="note detail">
               <b>combatant_cr</b> is one Combatant's rating by the Agent or Enemy expression; <b>× skill</b> is that
@@ -1039,6 +1041,16 @@
           0.01,
         ],
         [
+          'exhaustion_free',
+          'The exhaustion up to which exhaustion_mult is 1. Defaults to the game’s rating_exhaustion_free_points.',
+          1,
+        ],
+        [
+          'exhaustion_span',
+          'The points of exhaustion above exhaustion_free that take exhaustion_mult down to 0, each taking 1 / exhaustion_span of the whole rating. Defaults to the game’s rating_exhaustion_span.',
+          1,
+        ],
+        [
           'exhaustion_base',
           'Baseline exhaustion, for an expression that adds an exhaustion malus of its own, e.g. − exhaustion / exhaustion_base; the game has no such value.',
           1,
@@ -1050,27 +1062,43 @@
         ],
       ]
       const FORMULAS = {
-        // The game's formula, under COMBAT, Combat rating: half the sum of an attack, a health, and an armor term.
+        // The game's formula, under COMBAT, Combat rating: half the sum of an attack, a health, and an armor term,
+        // times the exhaustion factor.
         default: {
-          combatant: 'skill * ((damage / damage_base) + (health / health_base) + (armor / armor_base)) / 2',
+          combatant:
+            'skill * ((damage / damage_base) + (health / health_base) + (armor / armor_base)) / 2 * exhaustion_mult',
           team: 'sum * count ** team_exp / count',
         },
-        lanchester: { combatant: 'skill * health_mult * armor_mult * damage_mult', team: 'sqrt(sum * count)' },
+        lanchester: {
+          combatant: 'skill * health_mult * armor_mult * damage_mult * exhaustion_mult',
+          team: 'sqrt(sum * count)',
+        },
         // The bonuses multiply, e.g. +10% health, +15% armor, and +30% damage make skill × 1.64.
         multiplicative: {
-          combatant: 'skill * health_mult * armor_mult * damage_mult',
+          combatant: 'skill * health_mult * armor_mult * damage_mult * exhaustion_mult',
           team: 'sum * count ** team_exp / count',
         },
         // The game's expressions alone, keeping the parameters, unlike Restore all defaults.
         game: {
-          combatant: 'skill * ((damage / damage_base) + (health / health_base) + (armor / armor_base)) / 2',
+          combatant:
+            'skill * ((damage / damage_base) + (health / health_base) + (armor / armor_base)) / 2 * exhaustion_mult',
           team: 'sum * count ** team_exp / count',
         },
         // The bonuses add rather than multiply, e.g. +10% health, +15% armor, and +30% damage make skill × 1.55.
         additive: {
-          combatant: 'skill * (1 + (health_mult - 1) + (armor_mult - 1) + (damage_mult - 1))',
+          combatant: 'skill * (1 + (health_mult - 1) + (armor_mult - 1) + (damage_mult - 1)) * exhaustion_mult',
           team: 'sum * count ** team_exp / count',
         },
+      }
+      /**
+       * The combatant expressions of the presets before the game's Combat rating had an exhaustion factor; a formula
+       * saved with one of them takes the preset's expression of today.
+       */
+      const OLD_PRESET_EXPRESSIONS = {
+        'skill * ((damage / damage_base) + (health / health_base) + (armor / armor_base)) / 2':
+          FORMULAS.default.combatant,
+        'skill * health_mult * armor_mult * damage_mult': FORMULAS.multiplicative.combatant,
+        'skill * (1 + (health_mult - 1) + (armor_mult - 1) + (damage_mult - 1))': FORMULAS.additive.combatant,
       }
       /** A preset's expressions: its combatant expression rates Agents and Enemies alike. */
       const expressionsOf = ({ combatant, team }) => ({ agent: combatant, enemy: combatant, team })
@@ -1088,13 +1116,21 @@
             cr_per_armor: 0.004,
             damage_base: contentValue('rating_base_weapon_damage') ?? 10,
             cr_per_damage: 0.02,
+            exhaustion_free: contentValue('rating_exhaustion_free_points') ?? 70,
+            exhaustion_span: contentValue('rating_exhaustion_span') ?? 30,
             exhaustion_base: 100,
-            team_exp: contentValue('rating_team_size_exponent') ?? 1.2,
+            team_exp: contentValue('rating_team_size_exponent') ?? 1.3,
           },
           /** The parameters the designer edited, by typing or by Fit; every other one follows the content. */
           edited: {},
           /** Which parts of the formula apply; a part switched off is a no-op: its multiplier is 1, or team_exp 1. */
-          enabled: { cr_per_health: true, cr_per_armor: true, cr_per_damage: true, team_exp: true },
+          enabled: {
+            cr_per_health: true,
+            cr_per_armor: true,
+            cr_per_damage: true,
+            exhaustion_span: true,
+            team_exp: true,
+          },
           fit: {
             health_base: false,
             cr_per_health: true,
@@ -1102,6 +1138,8 @@
             cr_per_armor: true,
             damage_base: false,
             cr_per_damage: true,
+            exhaustion_free: false,
+            exhaustion_span: false,
             exhaustion_base: false,
             team_exp: true,
           },
@@ -1222,6 +1260,13 @@
               saved.formula.agent ??= saved.formula.combatant
               saved.formula.enemy ??= saved.formula.combatant
               delete saved.formula.combatant
+            }
+            // A preset's expression saved before the exhaustion factor takes the preset's expression of today.
+            for (const side of ['agent', 'enemy']) {
+              const expr = saved.formula?.[side]
+              if (typeof expr === 'string' && Object.hasOwn(OLD_PRESET_EXPRESSIONS, expr.trim())) {
+                saved.formula[side] = OLD_PRESET_EXPRESSIONS[expr.trim()]
+              }
             }
             // The Sweeper was once the Sampler, saved under that name.
             if (saved.sampler) {
@@ -1355,6 +1400,9 @@
         if (on.team_exp === false) {
           p.team_exp = 1
         }
+        if (on.exhaustion_span === false) {
+          p.exhaustion_free = Infinity
+        }
         return p
       }
       /** The variables of the combatant expression for one Combatant of a group. */
@@ -1372,6 +1420,11 @@
           health_mult: 1 + (g.health - p.health_base) * p.cr_per_health,
           armor_mult: 1 + (g.armor - p.armor_base) * p.cr_per_armor,
           damage_mult: 1 + (g.damage - p.damage_base) * p.cr_per_damage,
+          // COMBAT, Combat rating: the exhaustion factor, 1 up to exhaustion_free and 0 from exhaustion_span above it.
+          exhaustion_mult:
+            p.exhaustion_free === Infinity
+              ? 1
+              : Math.max(0, 1 - Math.max(0, g.exhaustion - p.exhaustion_free) / Math.max(1, p.exhaustion_span)),
         }
       }
       /** The combatant_cr of one Combatant of a group, by the Agent or the Enemy expression; throws on a broken one. */
@@ -2158,7 +2211,12 @@
        * cr_per_health when no expression mentions health_mult, so that changing it visibly changes nothing.
        */
       /** The part of the formula a parameter belongs to: the one whose Enabled box switches it, e.g. cr_per_health. */
-      const partOf = (name) => (name.endsWith('_base') ? `cr_per_${name.slice(0, -'_base'.length)}` : name)
+      const partOf = (name) =>
+        name === 'exhaustion_free'
+          ? 'exhaustion_span'
+          : name.endsWith('_base') && name !== 'exhaustion_base'
+            ? `cr_per_${name.slice(0, -'_base'.length)}`
+            : name
       /** 'off' when its part is switched off, 'unused' when no expression reads it, and 'used' otherwise. */
       function useOf(name) {
         if (state.formula.enabled?.[partOf(name)] === false) {
@@ -2167,7 +2225,8 @@
         const text = `${state.formula.agent} ${state.formula.enemy} ${state.formula.team}`
         const mentions = (word) => new RegExp(`\\b${word}\\b`).test(text)
         const stat = ['health', 'armor', 'damage'].find((s) => name === `${s}_base` || name === `cr_per_${s}`)
-        return mentions(name) || (stat !== undefined && mentions(`${stat}_mult`)) ? 'used' : 'unused'
+        const viaExhaustion = (name === 'exhaustion_free' || name === 'exhaustion_span') && mentions('exhaustion_mult')
+        return mentions(name) || viaExhaustion || (stat !== undefined && mentions(`${stat}_mult`)) ? 'used' : 'unused'
       }
       const isUsed = (name) => useOf(name) === 'used'
       function markUnused() {
