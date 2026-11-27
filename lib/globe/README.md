@@ -25,6 +25,23 @@ Drag to orbit the camera and scroll to zoom. The buttons at the bottom left, abo
 
 The tilt turns the planet as a whole, the sun with it, so the lit side stays where it was on the surface. The day and night cycle moves the sun over the surface, so it goes on while the rotation is stopped. With rotation on and the cycle at 1×, the two cancel and the sun stands still in view. A browser that asks for reduced motion starts with both the rotation and the cycle stopped.
 
+## Devastation
+
+Devastation is an experiment: one number from 0, the planet as it is, to 1, wrecked, that an Implementation would set from the game, e.g. from Panic, with `setDevastation` on the handle. Nothing sets it yet, so the globe is drawn at 0 everywhere but in the viewer.
+
+In the viewer, the Devastation slider above the hint sets it, and `?devastation=60` in the address starts with it at 60%. Each effect comes in over its own part of the range:
+
+| From about | Effect |
+| --- | --- |
+| 0% | The atmosphere glow thickens and turns from blue to a dirty orange, the clouds grey to smoke, and banks of smoke fill the gaps between them. |
+| 10% | The land dries to brown, patch by patch, and the sea turns murky. |
+| 30% | City lights go out district by district, and fires start where the cities are, flickering and brightest on the night side. |
+| 35% | The ground scorches black, around the cities first. |
+| 45% | The sky turns red, and dark plumes stand over the burning regions. |
+| 60% | Wildfires spread over the scorched land, and a red glow reaches around the night side. |
+
+The globe eases to a new level over about a second. A browser that asks for reduced motion gets fires and smoke that stand still. Turning the clouds off also hides the smoke, which is drawn on the cloud shell.
+
 ## Files
 
 | Path | Content |
@@ -33,7 +50,7 @@ The tilt turns the planet as a whole, the sun with it, so the lit side stays whe
 | `globe-scene.js` | The scene, the three shaders, and the orbit and zoom. It imports three.js and is loaded on first show. |
 | `globe.css` | The styles of the globe's elements, using the game's Design tokens where the page defines them. |
 | `globe.d.ts` | The types of `globe.js`, for TypeScript. |
-| `index.html` | The viewer page: the three.js import map, the globe filling the window, and the map-set comparison. |
+| `index.html` | The viewer page: the three.js import map, the globe filling the window, the Devastation slider, and the map-set comparison. |
 | `assets/` | The four maps the globe loads, about 5.3 MB together. |
 | `scripts/build-globe-textures.py` | Rebuilds the maps from NASA's original maps. |
 

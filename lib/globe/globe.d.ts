@@ -34,6 +34,8 @@ export interface GlobeHandle {
   setVisible(visible: boolean): void
   /** Leans the axis as the Tilt button would, e.g. after a kept tilt was reset, without calling `onTiltChange`. */
   setTilt(tilt: GlobeTilt): void
+  /** How wrecked the planet looks, from 0, as it is, to 1; the globe eases to it over about a second. */
+  setDevastation(level: number): void
   /** Releases everything the globe created and removes it from its container. */
   dispose(): void
 }

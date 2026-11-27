@@ -21,7 +21,7 @@
         position: fixed;
         inset: 0;
       }
-      /* Viewer only: the hint and the map-set comparison, which an Implementation does not copy. */
+      /* Viewer only: the hint, the Devastation slider, and the map-set comparison, which an Implementation does not copy. */
       #viewer {
         position: fixed;
         left: 0;
@@ -54,6 +54,23 @@
         font-size: 13px;
         color: #9c978a;
       }
+      #devastation {
+        pointer-events: auto;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 13px;
+        color: #e8e4d8;
+      }
+      #devastation input {
+        width: 260px;
+        accent-color: #ff7a1a;
+      }
+      #devastation output {
+        min-width: 3ch;
+        font-family: ui-monospace, Consolas, monospace;
+        font-variant-numeric: tabular-nums;
+      }
     </style>
     <script type="importmap">
       { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.159.0/build/three.module.js" } }
@@ -62,6 +79,11 @@
   <body>
     <div id="stage"></div>
     <div id="viewer">
+      <label id="devastation">
+        Devastation
+        <input id="devastation-level" type="range" min="0" max="100" step="1" value="0" />
+        <output id="devastation-shown" for="devastation-level">0%</output>
+      </label>
       <button id="maps" type="button" hidden></button>
       <div id="hint">Drag to orbit · scroll to zoom</div>
     </div>
@@ -100,9 +122,21 @@
         globe?.dispose()
         mapSet = name
         globe = mountGlobe(stage, { ...MAP_SETS[name], memory })
+        globe.setDevastation(devastationLevel.value / 100)
         const other = otherOf(name)
         mapsButton.textContent = `Showing ${MAP_SETS[name].label} · switch to ${MAP_SETS[other].label}`
       }
+
+      // The devastation an Implementation would set from the game; `?devastation=60` in the address starts with it.
+      const devastationLevel = document.getElementById('devastation-level')
+      const devastationShown = document.getElementById('devastation-shown')
+      const showDevastation = () => {
+        devastationShown.textContent = `${devastationLevel.value}%`
+        globe?.setDevastation(devastationLevel.value / 100)
+      }
+      devastationLevel.value = new URLSearchParams(location.search).get('devastation') ?? '0'
+      devastationLevel.addEventListener('input', showDevastation)
+      showDevastation()
 
       const asked = new URLSearchParams(location.search).get('maps')
       show(asked in MAP_SETS && (await exists(asked)) ? asked : 'standard')
