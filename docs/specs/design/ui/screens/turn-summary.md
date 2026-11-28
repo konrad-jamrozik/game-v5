@@ -90,7 +90,7 @@ A Special event of `campaign_start` is shown on its own, in the dialog of the Tu
 
 - **Event art:** it fills the whole dialog above the control row, as a backdrop. The placeholder is drawn in Special, with its own glyph faint behind the text, and holds neither "Turn N summary", "Now Turn N+1", an eyebrow, nor a meta line.
 - **Text:** its `title`, larger than a Section heading, then its `text`, larger than body text, both centred across the dialog and together centred from top to bottom on the Event art.
-- **Tutorials checkbox:** a checkbox labelled "Tutorial" that shows and sets [Tutorials on](#tutorials), so that the Player chooses whether to be taught before play begins. It stands centred near the bottom of the Event art, 72 px above the control row, apart from the text.
+- **Tutorials checkbox:** a checkbox labelled "Tutorial" that shows and sets [Tutorials on](#tutorials), so that the Player chooses whether to be taught before play begins. It stands centred across the dialog, its middle halfway between the outer edge of the glyph's circle and the top of the control row, apart from the text.
 - **Control row:** only "Continue", the primary button, centred. It, the Enter key, and the Escape key close the dialog.
 
 It is not shown again on its own for that Campaign, e.g. after loading a [Campaign save](../../foundation/engine-contract.md#persisted-data) of its first Turn. The Player replays it, as it was first shown, from the [Turn summary button](turn-report-view.md#turn-summary-button) of the Turn Report View while the Campaign has no Turn report yet, so that the Player can read the opening again until the first Advance turn.
