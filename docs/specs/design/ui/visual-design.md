@@ -39,7 +39,18 @@ What a screen shows, in which order, and which operations it offers is stated by
 
 # Reference window
 
-The game is played in a browser window on a laptop, so every screen is designed for one window size and proven in it. The Reference window is 1408 px wide and 784 px tall. In it no screen scrolls sideways, and no heading, label, or button wraps onto a second line; a region that holds a list or a long text may scroll down. The Screenshots are captured in it. A larger window shows more of what scrolls, unless the [Screen limit](#screen-limit) is on, and a smaller one is out of scope.
+The game is played in a browser window on a laptop, so every screen is designed for one window size and proven in it. The Reference window is 1408 px wide and 784 px tall. In it no screen scrolls sideways, and no heading, label, or button wraps onto a second line; a region that holds a list or a long text may scroll down. The Screenshots are captured in it. A larger window shows more of what scrolls, unless the [Screen limit](#screen-limit) is on, and a smaller one is not played: the [Window check](#window-check) stops play until the window is large enough.
+
+## Window check
+
+A screen drawn in a window smaller than the Reference window cuts off or overlaps what the Player decides by, so the GUI refuses to be played in one and shows the Player how to fix it. Sizes are in CSS pixels, so zooming the browser out makes the window hold more of them.
+
+- **When:** On every screen, the GUI measures the viewport, the part of the browser window the page is drawn in, when it opens and whenever the window or the zoom changes. While the viewport is narrower or shorter than the Reference window, the Window check dialog stands over the screen.
+- **Blocking:** While the Window check dialog stands, every button, input, and keyboard shortcut of the screen beneath it is disabled, not only covered, so that nothing can be done on it even if the dialog is removed from the page by other means, e.g. the browser's developer tools.
+- **Dialog:** It covers most of the window, over a Scrim, with a 2 px Warning top edge, has no close control, and is titled "Window too small". It states the viewport's size, the Reference window's size, and how many px the viewport lacks in each direction, e.g. "The window shows 1,280 × 700 px; the game needs at least 1,408 × 784 px. Make it 128 px wider and 84 px taller."
+- **Picture:** Below the text a drawing to one scale shows the screen as the browser reports it, the viewport within it, placed where it stands on the screen when the browser reports the window's position and centred otherwise, and the Reference window as a dashed outline from the viewport's top left corner. Each edge of the viewport that must move has an arrow in Accent pointing outward that pulses: one to the right when the viewport is too narrow, and one down when it is too short.
+- **Screen too small:** When the available screen, less the browser's own frame around the viewport, is narrower or shorter than the Reference window, resizing the window cannot help. The dialog then says so, and suggests zooming out, e.g. with Ctrl and minus, or moving the window to a larger screen.
+- **Large enough:** Once the viewport is large enough, the dialog stays and turns to success: its top edge and title turn Positive bright, the title reads "Window large enough" with a check mark before it, the arrows go, and a primary Continue button dismisses it, enabling the screen again. When the window shrinks below the Reference window again, the dialog stands again.
 
 ## Screen limit
 
