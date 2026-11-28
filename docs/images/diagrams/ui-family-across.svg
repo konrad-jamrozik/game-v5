@@ -25,7 +25,7 @@
   <text class="legend" x="66" y="36">referenced by</text>
   <rect class="box external" x="182.4" y="25" width="22" height="14" rx="3"/>
   <text class="legend" x="214.4" y="36">another family</text>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 718.8 325 C 718.8 408.5 1106.5 408.5 1106.5 492 L 1106.5 537 C 1106.5 571.5 951.6 571.5 951.6 606"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 718.8 334.5 C 718.8 413.3 1106.5 413.3 1106.5 492 L 1106.5 537 C 1106.5 571.5 951.6 571.5 951.6 606"/>
   <path class="edge edge-references" marker-end="url(#head-references)" d="M 1272 325 C 1272 408.5 1353.4 408.5 1353.4 492 L 1353.4 537 C 1353.4 571.5 1355.1 571.5 1355.1 606"/>
   <path class="edge edge-references" marker-end="url(#head-references)" d="M 1204.6 325 C 1204.6 408.5 1242.6 408.5 1242.6 492 L 1242.6 537 C 1242.6 571.5 983.2 571.5 983.2 606"/>
   <path class="edge edge-references" marker-end="url(#head-references)" d="M 536.5 537 C 536.5 571.5 888.5 571.5 888.5 606"/>
@@ -40,7 +40,7 @@
   <path class="edge edge-references" marker-end="url(#head-references)" d="M 726.2 537 C 726.2 573 635.4 573 635.4 609 L 635.4 654 C 635.4 688.5 660.7 688.5 660.7 723"/>
   <path class="edge edge-references" marker-end="url(#head-references)" d="M 619.4 113 C 619.4 147.5 924.6 147.5 924.6 182"/>
   <path class="edge edge-references" marker-end="url(#head-references)" d="M 437.4 113 C 437.4 190.3 314.1 190.3 314.1 267.5"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 593.4 113 C 593.4 195 686.4 195 686.4 277"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 593.4 113 C 593.4 190.3 686.4 190.3 686.4 267.5"/>
   <path class="edge edge-references" marker-end="url(#head-references)" d="M 645.4 113 C 645.4 195 1204.6 195 1204.6 277"/>
   <path class="edge edge-references" marker-end="url(#head-references)" d="M 515.4 113 C 515.4 149 489.7 149 489.7 185 L 489.7 420 C 489.7 454.5 451.9 454.5 451.9 489"/>
   <path class="edge edge-references" marker-end="url(#head-references)" d="M 489.4 113 C 489.4 149 477.7 149 477.7 185 L 477.7 420 C 477.7 454.5 267.1 454.5 267.1 489"/>
@@ -48,7 +48,7 @@
   <path class="edge edge-references" marker-end="url(#head-references)" d="M 567.4 113 C 567.4 149 549.3 149 549.3 185 L 549.3 420 C 549.3 454.5 923.3 454.5 923.3 489"/>
   <path class="edge edge-references" marker-end="url(#head-references)" d="M 541.4 113 C 541.4 149 513.7 149 513.7 185 L 513.7 420 C 513.7 454.5 714.7 454.5 714.7 489"/>
   <path class="edge edge-references" marker-end="url(#head-references)" d="M 863.4 113 C 863.4 147.5 996.9 147.5 996.9 182"/>
-  <path class="edge edge-references" marker-end="url(#head-references)" d="M 837.4 113 C 837.4 195 751.3 195 751.3 277"/>
+  <path class="edge edge-references" marker-end="url(#head-references)" d="M 837.4 113 C 837.4 190.3 751.3 190.3 751.3 267.5"/>
   <path class="edge edge-references" marker-end="url(#head-references)" d="M 889.4 113 C 889.4 195 1272 195 1272 277"/>
   <path class="edge edge-references" marker-end="url(#head-references)" d="M 759.4 113 C 759.4 149 501.7 149 501.7 185 L 501.7 420 C 501.7 454.5 536.5 454.5 536.5 489"/>
   <path class="edge edge-references" marker-end="url(#head-references)" d="M 733.4 113 C 733.4 149 465.7 149 465.7 185 L 465.7 420 C 465.7 454.5 119.3 454.5 119.3 489"/>
@@ -61,8 +61,9 @@
   <rect class="box" x="194.5" y="270.5" width="239.2" height="64" rx="6"/>
   <text class="label" x="314.1" y="296.5">CLI — Command-Line Interface</text>
   <text class="label" x="314.1" y="315.5">MENU — Main Menu</text>
-  <rect class="box" x="621.4" y="280" width="194.8" height="45" rx="6"/>
-  <text class="label" x="718.8" y="306">CRPLAY — Combat Replay</text>
+  <rect class="box" x="621.4" y="270.5" width="194.8" height="64" rx="6"/>
+  <text class="label" x="718.8" y="296.5">CRPLAY — Combat Replay</text>
+  <text class="label" x="718.8" y="315.5">TUTOR — Tutorials</text>
   <rect class="box" x="852.2" y="185" width="217" height="235" rx="6"/>
   <text class="label" x="960.7" y="211">AVIEW — Agents View</text>
   <text class="label" x="960.7" y="230">COMPV — Compendium View</text>

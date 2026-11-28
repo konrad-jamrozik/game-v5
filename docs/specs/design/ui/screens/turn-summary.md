@@ -5,7 +5,7 @@
 | Spec ID | TSUM |
 | Family | UI |
 | Audience | UI designer, Implementer |
-| Owns | When the Turn summary dialog of the Campaign screen appears, which Summary events it shows, and how the Player steps through them; the Special events and the SpecialEvent GDRs; the Tutorials setting. |
+| Owns | When the Turn summary dialog of the Campaign screen appears, which Summary events it shows, and how the Player steps through them; the Special events and the SpecialEvent GDRs. |
 | Conventions | [Specification Conventions](../../../governance/conventions/spec-conventions.md), [Design Specification Conventions](../../../governance/conventions/design-spec-conventions.md) |
 
 # Overview
@@ -82,22 +82,19 @@ A Special event sets the scene or marks a turning point of the story, so it read
 
 | Property | Meaning |
 | --- | --- |
-| `trigger` | When the GUI shows it: `campaign_start`, as soon as the GUI first shows a [Campaign](../../foundation/core-concepts.md#campaign-and-session) just created, before its first Advance turn. No two SpecialEvent GDRs share one. |
+| `trigger` | When the GUI shows it: `campaign_start`, as soon as the GUI first shows a [Campaign](../../foundation/core-concepts.md#campaign-and-session) just created, before its first Advance turn; or `tutorial_intro`, right after it, as [Tutorials](../tutorials.md#tutorial-intro) states. No two SpecialEvent GDRs share one. |
 | `title` | Its heading, e.g. "Situation Report". |
 | `text` | Its text, one paragraph. A phrase between double asterisks is drawn in Special, without the asterisks, e.g. `**Continuity**`, so that the name a story beat turns on stands out. |
+| `points` | Optional, only for `tutorial_intro`: an ordered list of points, each with a `heading`, a `text` of one or two sentences, and an `icon`, one of `agents`, `support`, `objective`, `bubble`, `records`, and `compendium`, which names the line drawing shown beside it. |
 
 A Special event of `campaign_start` is shown on its own, in the dialog of the Turn summary, so that it reads as the opening page of the story rather than as a report:
 
 - **Event art:** it fills the whole dialog above the control row, as a backdrop. The placeholder is drawn in Special, with its own glyph faint behind the text, and holds neither "Turn N summary", "Now Turn N+1", an eyebrow, nor a meta line.
 - **Text:** its `title`, larger than a Section heading, then its `text`, larger than body text, both centred across the dialog and together centred from top to bottom on the Event art.
-- **Tutorials checkbox:** a checkbox labelled "Tutorial" that shows and sets [Tutorials on](#tutorials), so that the Player chooses whether to be taught before play begins. It stands centred across the dialog, its middle halfway between the outer edge of the glyph's circle and the top of the control row, apart from the text.
+- **Tutorials checkbox:** a checkbox labelled "Tutorial" that shows and sets [Tutorials on](../tutorials.md#tutorials-settings), so that the Player chooses whether to be taught before play begins. It stands centred across the dialog, its middle halfway between the outer edge of the glyph's circle and the top of the control row, apart from the text.
 - **Control row:** only "Continue", the primary button, centred. It, the Enter key, and the Escape key close the dialog.
 
-It is not shown again on its own for that Campaign, e.g. after loading a [Campaign save](../../foundation/engine-contract.md#persisted-data) of its first Turn. The Player replays it, as it was first shown, from the [Turn summary button](turn-report-view.md#turn-summary-button) of the Turn Report View while the Campaign has no Turn report yet, so that the Player can read the opening again until the first Advance turn.
-
-# Tutorials
-
-Whether the game teaches the Player as they play is the Player's choice, made once and kept for every later Campaign, so it is the [Global configuration](../../foundation/configuration.md#global-configuration) setting Tutorials on, `true` or `false`, with the [Game build default](../../foundation/engine-contract.md#persisted-data) `true`. The Player who turns it off starts every new Campaign without tutorials. It is set by the Tutorials checkbox of the `campaign_start` Special event and by the "Tutorials enabled" checkbox of the [Settings panel](../gui.md#settings-panel), which show the same value. Nothing reads it yet, so a change affects nothing else.
+It is not shown again on its own for that Campaign, e.g. after loading a [Campaign save](../../foundation/engine-contract.md#persisted-data) of its first Turn. The Player replays it, as it was first shown, from the [Turn summary button](turn-report-view.md#turn-summary-button) of the Turn Report View while the Campaign has no Turn report yet, so that the Player can read the opening again until the first Advance turn. What may follow it is stated in [Tutorials](../tutorials.md#tutorial-intro).
 
 # Screenshot
 

@@ -1,0 +1,76 @@
+id: tutorial_intro_bubble
+type: TutorialBubble
+anchor: tutorial_intro.bubble
+title: Tutorial bubbles
+text: >-
+  A bubble opens a short note about the thing beside it. Select it again, or anywhere else, to close the note.
+---
+id: campaign_screen_panic_bubble
+type: TutorialBubble
+anchor: campaign_screen.panic
+title: Panic
+text: >-
+  How alarmed the public is. It rises when threats go unanswered and falls after some won Missions. If it reaches its
+  limit, the Campaign is lost.
+article: mechanics_panic
+---
+id: campaign_screen_advance_turn_bubble
+type: TutorialBubble
+anchor: campaign_screen.advance_turn
+title: Advance turn
+text: >-
+  When your orders are set, advance the Turn. Agents work, Missions are fought, and the world moves on. A summary of
+  what happened follows.
+article: mechanics_turns
+---
+id: campaign_screen_operations_bubble
+type: TutorialBubble
+anchor: campaign_screen.operations
+title: Operations
+text: >-
+  Every view where you give orders. A number on a button shows how many things there are to look at, e.g. Leads you
+  can start investigating. Start with Agents.
+article: guide_agency
+---
+id: campaign_screen_situation_bubble
+type: TutorialBubble
+anchor: campaign_screen.situation
+title: Situation
+text: >-
+  What is under way and what is waiting for you. Each item says the one thing you need to know about it now. Select an
+  item to open the view where you act on it.
+---
+id: agents_view_hire_bubble
+type: TutorialBubble
+anchor: agents_view.hire
+title: Hire
+text: >-
+  A new Agent costs money and starts on Standby. More Agents get more work done each Turn, but every Agent you keep
+  costs upkeep.
+article: mechanics_hiring_and_upkeep
+---
+id: agents_view_assign_to_bubble
+type: TutorialBubble
+anchor: agents_view.assign_to
+title: Assign to
+text: >-
+  Select Agents in the table, then choose their work. Training raises skill and Standby rests them. Leads are
+  investigated from the Leads View.
+article: mechanics_assignments
+---
+id: agents_view_equip_bubble
+type: TutorialBubble
+anchor: agents_view.equip
+title: Equip
+text: >-
+  Give Agents Weapons and Armor from Storage. Better equipment wins Combats that skill alone would lose.
+article: mechanics_equipment
+---
+id: agents_view_exhaustion_column_bubble
+type: TutorialBubble
+anchor: agents_view.exhaustion_column
+title: Exhaustion
+text: >-
+  Work wears Agents down. Above a free amount, exhaustion lowers how well an Agent works and fights. Rest on Standby
+  brings it back down, and an Agent too exhausted is not fit to start work.
+article: mechanics_exhaustion

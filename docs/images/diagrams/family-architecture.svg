@@ -43,7 +43,7 @@
   <text class="count" x="500" y="349">3 specifications</text>
   <rect class="box" x="385" y="436" width="230" height="66" rx="10"/>
   <text class="title" x="500" y="464">UI</text>
-  <text class="count" x="500" y="485">20 specifications</text>
+  <text class="count" x="500" y="485">21 specifications</text>
   <rect class="engine" x="180" y="572" width="640" height="166" rx="12"/>
   <text class="engine-title" x="500" y="599">Game engine</text>
   <rect class="band-mech" x="234" y="612" width="532" height="52" rx="8"/>

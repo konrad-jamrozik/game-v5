@@ -83,6 +83,7 @@ Each colour has one role, so that the same colour always means the same thing ac
 | Danger deep | `#A3271F` | The far end of the [Danger scale](#danger-scale), e.g. an [Agent](../mechanics/domain-model.md#agency-and-agents) close to death; and a [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) [lost in the most recent Advance turn](screens/situation-panel.md#mission-site-urgency), struck through. |
 | Investigation | `#A77BDB` | An [Investigation](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) completed among the [Summary events](screens/turn-summary.md#summary-events) of the [Turn summary](screens/turn-summary.md#glossary). |
 | Special | `#5CC8B4` | A [Special event](screens/turn-summary.md#special-events), in its eyebrow and the placeholder of its [Event art](screens/turn-summary.md#glossary). |
+| Tutorial gold | `#F2C14E` | What [teaches the Player](tutorials.md), and nothing else. |
 | Notice | `#8FB8D6` | Welcome news that asks for no action, milder than a success in Positive, e.g. a discovered Lead among the events of the History View. |
 | Autopilot | `#B4A0E5` | The outline and text of an [Autopilot](../foundation/engine-contract.md#autopilot) button, which acts on what an [Autopilot AI](../foundation/engine-contract.md#principals-and-access) did. |
 | Agent attack tint | `#B7C77A` at 7% opacity | The fill of a [Combat log](../mechanics/combat.md#combat-rounds-and-results) row [whose attacker is an Agent](screens/turn-report-view.md#combat-log-colours). |

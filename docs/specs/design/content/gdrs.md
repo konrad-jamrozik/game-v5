@@ -114,6 +114,7 @@ The GDRs are authored in YAML files under the `content/` directory at the reposi
 | `content/visual-design/` | [Visual Design](../ui/visual-design.md) | `background_artworks.yaml` |
 | `content/gui/` | [Graphical User Interface](../ui/gui.md) | `ranks.yaml` |
 | `content/turn-summary/` | [Turn Summary](../ui/screens/turn-summary.md) | `special_events.yaml` |
+| `content/tutorials/` | [Tutorials](../ui/tutorials.md) | `tutorial_bubbles.yaml` |
 
 # Compendium coverage
 

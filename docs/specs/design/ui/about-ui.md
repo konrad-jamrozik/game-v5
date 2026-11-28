@@ -30,6 +30,10 @@ The guidance states what the Player is expected to be able to do comfortably and
 
 [Sounds](sounds.md) answers _how does the graphical user interface answer the Player's clicks?_ It owns the Sound set, which Player inputs play which Sound, the Sounds of the attacks of the Combat replay, and the settings that turn Sounds off and set their volume.
 
+## Tutorials
+
+[Tutorials](tutorials.md) answers _how does the graphical user interface teach the Player?_ It owns the Tutorial intro before the first Turn, the Tutorial bubbles that explain parts of the screens, and the settings and progress that decide which of them are shown.
+
 ## Screens
 
 The `screens/` directory groups one specification per screen, panel, or dialog of the graphical user interface, so that each answers _what does this part show by default, and which operations does it offer?_ next to its Screenshot. The [Main Menu](screens/main-menu.md) is where the GUI opens, and the [Campaign Screen](screens/campaign-screen.md) is where a Campaign is played. The parts of the Campaign screen that need more than a line have their own: the [Situation Panel](screens/situation-panel.md), the [Turn Summary](screens/turn-summary.md), and each Detail view, i.e. the [Missions View](screens/missions-view.md), [Leads View](screens/leads-view.md), [Agents View](screens/agents-view.md), [Storage View](screens/storage-view.md), and [Upgrades View](screens/upgrades-view.md), in which the Player acts, and the [Turn Report View](screens/turn-report-view.md), [History View](screens/history-view.md), [Charts View](screens/charts-view.md), and [Compendium View](screens/compendium-view.md), in which the Player reads what has happened and how the game works, and the [Combat Replay](screens/combat-replay.md), which plays a Combat of the Turn Report View back. The [Combat Simulator](screens/combat-simulator.md) is a screen for the Game designer, on which teams of any making fight a Combat.
