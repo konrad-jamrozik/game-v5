@@ -115,15 +115,15 @@ The Equipment picker is a dropdown that lists what the Agent can wear in place o
 
 # Memorial
 
-The Memorial remembers the Agents who have left the [Agency](../../mechanics/domain-model.md#agency-and-agents) and how their service ended. The Memorial button, after the Equip button, shows it one step away, in place of the Agent table, as a [Follow](campaign-screen.md#view-trail), titled "Memorial", covering the whole screen as the [Equip table](#equip-table) does, so that Where has room for a long Mission site name; the Back control and the Escape key return to the Agent table. It holds its table alone, under a title row with only the Back control and the close control, because no control of the Agents View acts on a former Agent. The table lists one row per [Terminated](../../mechanics/agents-spec.md#agent-statuses) Agent, by default newest [Turn](../../foundation/engine-contract.md#player-actions-and-turns) terminated first and then by Instance ID, and its column headers sort it. Its rows have no selection checkbox. Its columns are:
+The Memorial remembers the Agents who have left the [Agency](../../mechanics/domain-model.md#agency-and-agents) and how their service ended. The Memorial button, after the Equip button, shows it one step away, in place of the Agent table, as a [Follow](campaign-screen.md#view-trail), titled "Memorial", covering the whole screen as the [Equip table](#equip-table) does, so that Mission site has room for a long Mission site name; the Back control and the Escape key return to the Agent table. It holds its table alone, under a title row with only the Back control and the close control, because no control of the Agents View acts on a former Agent. The table lists one row per [Terminated](../../mechanics/agents-spec.md#agent-statuses) Agent, by default newest [Turn](../../foundation/engine-contract.md#player-actions-and-turns) terminated first and then by Instance ID, and its column headers sort it. Its rows have no selection checkbox. Its columns are:
 
-- **Agent name,** **[base skill](../../mechanics/agents-spec.md#combatant-attributes),** and **[Experience](../../mechanics/agents-spec.md#growth),** headed Exp.
+- **Agent name,** **[Rank](../gui.md#ranks)** as the [Agent table](#agent-table) shows it, **[base skill](../../mechanics/agents-spec.md#combatant-attributes),** and **[Experience](../../mechanics/agents-spec.md#growth),** headed Exp.
 - **Turn terminated,** headed Ended.
 - **Cause:** for a [Dismissed](../../mechanics/agents-spec.md#agent-statuses) Agent, "Dismissed" in Text muted; for a [Killed](../../mechanics/agents-spec.md#agent-statuses) one, "Killed by" and the [Enemy](../../mechanics/domain-model.md#combat) that its Killed by references, by its [Enemy label](../gui.md#glossary), in Danger text, e.g. "Killed by initiate-2".
 - **Missions:** the number of Missions in its [Participation history](../../mechanics/domain-model.md#agency-and-agents).
 - **Turns with the Agency,** headed Turns: its Turn terminated minus its Turn hired.
 - **Enemies killed,** headed Kills: the Enemies killed of its [Service record](../../mechanics/agents-spec.md#service-record).
-- **Where:** the Mission site that its Killed by references, by its [Archetype](../../foundation/core-concepts.md#campaign-instances)'s `name` followed by "#" and the number that ends its Instance ID, e.g. "Apprehend member #5" for mission-site-5; empty for a Dismissed Agent.
+- **Mission site:** the Mission site that its Killed by references, a [link](../gui.md#links-in-tables), by its [Archetype](../../foundation/core-concepts.md#campaign-instances)'s `name` followed by "#" and the number that ends its Instance ID, e.g. "Apprehend member #5" for mission-site-5; empty for a Dismissed Agent.
 
 # Agent details
 

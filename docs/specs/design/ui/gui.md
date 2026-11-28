@@ -165,3 +165,11 @@ Which base skill earns which Rank is content rather than design, so the Ranks co
 # Mission site titles
 
 Several Mission sites of one MissionSiteArchetype can be met in one Campaign, so wherever the GUI reports what a [Mission](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) brought, it names the Mission site by its Mission site title, which tells them apart. The Mission site title is its MissionSiteArchetype's `name`, its target [Faction](../mechanics/domain-model.md#factions)'s `name`, its kind, "Initiative" or "Response", and "#" followed by the number that ends its [Instance ID](../foundation/campaign-instances.md#glossary), joined by " · ", e.g. "Apprehend member · Red Dawn · Initiative · #3" for mission-site-3. The name is in Text and the rest in Text muted.
+
+# Links in tables
+
+The Player who reads a name in a [table](visual-design.md#tables) often wants what lies behind it, so wherever a table cell names an [Agent](../mechanics/domain-model.md#agency-and-agents), a [Lead](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), or a [Mission site](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), the name is a link, e.g. the Mission site where a Killed Agent fell in the [Memorial](screens/agents-view.md#memorial), or an Agent in a [Combat report](screens/turn-report-view.md). The name keeps its style until the pointer is over it or it has keyboard focus, when it is underlined. Pressing it opens, as a [Follow](screens/campaign-screen.md#view-trail):
+
+- for an Agent, its [Agent details](screens/agents-view.md#agent-details);
+- for a Lead, or an [Investigation](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) by its Lead, the [Leads View](screens/leads-view.md) with that Lead selected;
+- for a Mission site, or a [Mission](../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) by its Mission site, the [Missions View](screens/missions-view.md) with that Mission site selected, which shows a Mission site whose Mission concluded as a [Concluded Mission site](screens/missions-view.md#concluded-mission-site).
