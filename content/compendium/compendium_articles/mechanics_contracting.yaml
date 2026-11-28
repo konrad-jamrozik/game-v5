@@ -2,6 +2,7 @@ id: mechanics_contracting
 type: CompendiumArticle
 category: mechanics
 title: Contracting
+listed_under: AgentArchetype
 section: Assignments
 visible_when:
   lead_completed: contracting_opportunities

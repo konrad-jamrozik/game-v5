@@ -44,8 +44,8 @@ A long list reads faster in a few named groups, so the article list of some cate
 | Category | Article sections, in order |
 | --- | --- |
 | Guide | **Guides:** the Guide articles. **Tutorials:** the [Tutorial bubbles](../tutorials.md#tutorials-in-the-compendium) it lists, whatever Tutorials on is. |
-| Mechanics | **Campaign**, **[Leads](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) and Missions**, **Agents**, and **[Assignments](../../mechanics/domain-model.md#agency-and-agents):** each the Mechanics articles whose `section` names it. |
-| Agents | **Overview:** the Subject articles about AgentArchetypes. **Agent properties:** the articles listed under AgentArchetype. |
+| Mechanics | **Campaign**, **[Leads](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) and Missions**, and **Agents:** each the Mechanics articles without `listed_under` whose `section` names it. |
+| Agents | **Overview:** the Subject articles about AgentArchetypes. **Agent mechanics** and **[Assignments](../../mechanics/domain-model.md#agency-and-agents):** each the articles listed under AgentArchetype whose `section` names it. **Agent properties:** the other articles listed under AgentArchetype. |
 | Combat | **Overview:** the article whose displayed title is "Combat". **Combat mechanics:** the other articles listed under the topic `combat`. |
 | Weapons | **Weapons:** the Subject articles about Weapons. **Ammo:** those about AmmoTypes. |
 | Upgrades | **Cap upgrades:** the Subject articles about [Cap Upgrades](../../mechanics/economy-and-upgrades.md#glossary). **Other upgrades:** the rest. |
@@ -60,7 +60,7 @@ A Lead's kind is read from its [GDR](../../foundation/core-concepts.md#game-buil
 
 An article of a category with Article sections that is in none of them, e.g. a Lead of none of these kinds, is listed after the sections without a heading, so that every Player-visible article stays reachable.
 
-A Mechanics article with no `section`, or a `section` the table does not name, is a [data defect](../../foundation/game-data-records.md#data-defects), unless it has a `listed_under`.
+A Mechanics article without `listed_under` and without a `section` the Mechanics row names, and a Mechanics article listed under a Type with a `section` that the row of its category does not name, are each a [data defect](../../foundation/game-data-records.md#data-defects).
 
 # Subject order
 

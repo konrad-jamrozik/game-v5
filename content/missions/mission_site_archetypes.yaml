@@ -106,18 +106,6 @@ enemies:
   initiate: 4
   operative: 1
 ---
-id: foil_sabotage
-type: MissionSiteArchetype
-kind: response
-name: Foil sabotage
-operation_level: 2
-expires_in_turns: 1
-enemies:
-  initiate: 2
-  operative: 2
-  soldier: 2
-  handler: 1
----
 id: foil_supply_theft
 type: MissionSiteArchetype
 kind: response
@@ -137,6 +125,18 @@ expires_in_turns: 1
 enemies:
   initiate: 6
   operative: 2
+  handler: 1
+---
+id: foil_sabotage
+type: MissionSiteArchetype
+kind: response
+name: Foil sabotage
+operation_level: 2
+expires_in_turns: 1
+enemies:
+  initiate: 2
+  operative: 2
+  soldier: 2
   handler: 1
 ---
 id: foil_vip_assassination
@@ -204,19 +204,19 @@ enemies:
   lieutenant: 2
   commander: 1
 ---
-id: counter_civilian_terror
+id: foil_prison_break
 type: MissionSiteArchetype
 kind: response
-name: Counter civilian terror
+name: Foil prison break
 operation_level: 4
 expires_in_turns: 1
 enemies:
-  initiate: 30
-  operative: 24
-  soldier: 16
-  elite: 2
-  handler: 10
-  lieutenant: 4
+  initiate: 24
+  operative: 8
+  soldier: 12
+  elite: 4
+  handler: 6
+  lieutenant: 3
   commander: 1
 ---
 id: foil_nuclear_plant_bombing
@@ -233,19 +233,19 @@ enemies:
   lieutenant: 4
   commander: 1
 ---
-id: foil_prison_break
+id: counter_civilian_terror
 type: MissionSiteArchetype
 kind: response
-name: Foil prison break
+name: Counter civilian terror
 operation_level: 4
 expires_in_turns: 1
 enemies:
-  initiate: 24
-  operative: 8
-  soldier: 12
-  elite: 4
-  handler: 6
-  lieutenant: 3
+  initiate: 30
+  operative: 24
+  soldier: 16
+  elite: 2
+  handler: 10
+  lieutenant: 4
   commander: 1
 ---
 id: foil_bioweapon_release

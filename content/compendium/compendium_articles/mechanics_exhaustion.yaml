@@ -2,7 +2,8 @@ id: mechanics_exhaustion
 type: CompendiumArticle
 category: mechanics
 title: Exhaustion
-section: Agents
+listed_under: AgentArchetype
+section: Agent mechanics
 terms: [exhaustion, exhausted, tired]
 body: >-
   Exhaustion measures how tired an Agent is. Work and fighting raise it, and only rest on Standby or Recovery lowers

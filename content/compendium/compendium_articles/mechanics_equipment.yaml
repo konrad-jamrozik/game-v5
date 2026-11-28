@@ -2,7 +2,8 @@ id: mechanics_equipment
 type: CompendiumArticle
 category: mechanics
 title: Equipment and Storage
-section: Agents
+listed_under: AgentArchetype
+section: Agent mechanics
 terms: [Storage, equipment, ammo, rounds, spoils of war]
 body: >-
   The Agency keeps its weapons, armor, and rounds in Storage. Each Agent wears one weapon and one armor from it, and you

@@ -396,16 +396,19 @@ export function loadCompendium(gameData: GameData): Compendium {
   subjectTypes.add('combat')
   for (const gdr of gameData.gdrs.values()) {
     if (gdr.type !== ARTICLE_TYPE) continue
-    // COMP, CompendiumArticle: `section` is a non-empty name, only on a mechanics article without `listed_under`.
+    // COMP, CompendiumArticle: `section` is a non-empty name, only on a mechanics article without `listed_under` or
+    // listed under a Type.
     const section = gdr.properties['section']
     if (
       section !== undefined &&
       (gdr.properties['category'] !== 'mechanics' ||
-        gdr.properties['listed_under'] !== undefined ||
+        gdr.properties['listed_under'] === 'combat' ||
         typeof section !== 'string' ||
         section.trim() === '')
     ) {
-      findings.push(`${gdr.path}: only a mechanics article without listed_under has a section, and it is a name.`)
+      findings.push(
+        `${gdr.path}: only a mechanics article without listed_under or listed under a Type has a section, and it is a name.`,
+      )
     }
     const listedUnder = gdr.properties['listed_under']
     if (listedUnder === undefined) continue

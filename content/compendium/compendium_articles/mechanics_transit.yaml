@@ -2,6 +2,7 @@ id: mechanics_transit
 type: CompendiumArticle
 category: mechanics
 title: Transit
+listed_under: AgentArchetype
 section: Assignments
 terms: [transit, in transit]
 body: >-
