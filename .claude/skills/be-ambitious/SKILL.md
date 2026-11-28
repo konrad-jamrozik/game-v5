@@ -44,26 +44,26 @@ Felix names four types of ambition. **Speed** (the same work in less time) is ho
 
 ### Altitude: aim at the outcome
 
-Ask what the user wants to happen next. What's the goal beyond the goal? E.g. Felix used to ask Claude to fix single crashes. Then he asked it to keep the apps crash-free.
+Ask what the user wants to happen next. What's the goal beyond the goal? Felix used to ask Claude to fix single crashes. Then he asked it to keep the apps crash-free.
 
-Build a ladder of three rungs, each more ambitious than the last. E.g. Felix's quarterly business review (QBR) deck:
+Build a ladder of three rungs, each more ambitious than the last. Felix's example is a quarterly business review (QBR) deck:
 
 1. **Understand, don't fill in.** Skip updating the numbers in the template. Take in all the data you can get and work out "what changed this quarter, why, and what we should do about it."
 2. **Get to the decisions.** "Work out which three decisions are most urgent in the face of everything you've learned, and start working on potential directions with for/against arguments."
 3. **Replace the ritual.** "The review exists so leadership catches problems early and moves money and people to the right places. Design a better way to do that than a quarterly deck, show from our own history that it would have caught things sooner, and run it beside the current one for a quarter."
 
-The top rung is where durable workflows live, ones that take the human out of the loop. They often need setup first. E.g. before Claude could keep Felix's apps crash-free, it needed to fetch crash reports, map each app version to its git commit, and use Windows, macOS and Linux machines to reproduce and verify fixes. Name that setup as part of the plan.
+The top rung is where durable workflows live, ones that take the human out of the loop. They often need setup first. Before Claude could keep Felix's apps crash-free, it needed to fetch crash reports, map each app version to its git commit, and use Windows, macOS and Linux machines to reproduce and verify fixes. Name that setup as part of the plan.
 
-Know the ceiling. E.g. "go make money" is still too high for most businesses. If a rung has no outside judge, step down one rung.
+Know the ceiling. "Go make money" is still too high for most businesses. If a rung has no outside judge, step down one rung.
 
 ### Depth: work like the field's best
 
 Go one level below the task, to the underlying data, tools and problems. Keep pushing until even the best people in the field could learn something from the work.
 
 - **Use the expert's instruments.** Not just their words. Where you'd reach for a markdown table, a top data scientist reaches for a database and a statistical model. The user doesn't need to know what the experts use. You usually do.
-- **Set an unreasonable goal, and treat it as reasonable.** E.g. the page loads in 10 seconds and the user asked for 5? Aim for 200 milliseconds.
-- **Challenge what everyone believes.** Get the raw data and test the belief adversarially. E.g. "We believe churn is an onboarding problem. Try to reproduce that from the raw data."
-- **Produce new knowledge.** Once you're deep in the data, look for blind spots. E.g. "Build a simulation of our customers that reproduces the last year from our logs. Then find the earliest signal of churn we don't know about yet, and show it predicts on data it has not seen."
+- **Set an unreasonable goal, and treat it as reasonable.** The page loads in 10 seconds and the user asked for 5? Aim for 200 milliseconds.
+- **Challenge what everyone believes.** Get the raw data and test the belief adversarially: "We believe churn is an onboarding problem. Try to reproduce that from the raw data."
+- **Produce new knowledge.** Once you're deep in the data, look for blind spots: "Build a simulation of our customers that reproduces the last year from our logs. Then find the earliest signal of churn we don't know about yet, and show it predicts on data it has not seen."
 - **Bring in an outside judge** (rule 3).
 
 Run every Depth pass through Felix's prompt:
@@ -74,10 +74,10 @@ Run every Depth pass through Felix's prompt:
 
 Look at the work through more fields than used to be affordable. Every heist movie spends its first 30 minutes assembling the crew. Felix sees the most magic here, and it takes the most creativity.
 
-- **Replace the nouns with verbs.** A trick from _The Art of Innovation_ by Tom Kelley and Jonathan Littman. E.g. a quarterly review isn't "a deck". It's "getting busy people to believe a story about cause and effect, and to decide under uncertainty, in 30 minutes". The verbs show which fields can help.
-- **Assemble the crew.** Raise the stakes. E.g. the deck has to be amazing or aliens blow up Earth, so who does humanity send? For quality: an analyst, a journalist and an editor. If it's presented: a motion designer and an audio designer. As a red team: a short seller and a forensic accountant.
-- **Borrow their tools.** A field brings its software, not only its ideas. E.g. Felix's colleague Alex Albert renders interior designs in Blender, a 3D tool.
-- **Do, don't play** (rule 2). E.g. don't write like a short seller. Do what a short seller does to research a position. If you can run subagents, give each field its own subagent with that field's method and tools.
+- **Replace the nouns with verbs.** A trick from _The Art of Innovation_ by Tom Kelley and Jonathan Littman. A quarterly review isn't "a deck". It's "getting busy people to believe a story about cause and effect, and to decide under uncertainty, in 30 minutes". The verbs show which fields can help.
+- **Assemble the crew.** Raise the stakes: the deck has to be amazing or aliens blow up Earth, so who does humanity send? For quality: an analyst, a journalist and an editor. If it's presented: a motion designer and an audio designer. As a red team: a short seller and a forensic accountant.
+- **Borrow their tools.** A field brings its software, not only its ideas. Felix's colleague Alex Albert renders interior designs in Blender, a 3D tool.
+- **Do, don't play** (rule 2). Don't write like a short seller. Do what a short seller does to research a position. If you can run subagents, give each field its own subagent with that field's method and tools.
 
 ## Output
 
@@ -92,7 +92,7 @@ Size the output to the task: a one-line prompt gets a few lines of plan, because
 
 ## A short example
 
-E.g. for the input `/be-ambitious fix the crash in the login screen`:
+`/be-ambitious fix the crash in the login screen`
 
 - **Goal beyond the goal:** people can always log in.
 - **Types:** Altitude and Depth. Range skipped, since a crash fix has one right answer.
@@ -102,4 +102,4 @@ E.g. for the input `/be-ambitious fix the crash in the login screen`:
 
 ## Why this works
 
-Felix ends on self-efficacy: people who believe in their own abilities accomplish more, and that belief can be hacked. E.g. George Dantzig solved two unsolved statistics problems in 1939 because he thought they were homework. Roger Bannister broke the four-minute mile in 1954, and someone else broke it 46 days later. _The Inner Game of Tennis_ argues you play your best when you stop trying so hard. The same holds for the user and the model: say the hard thing is possible, and give permission to fail against an honest judge.
+Felix ends on self-efficacy: people who believe in their own abilities accomplish more, and that belief can be hacked. George Dantzig solved two unsolved statistics problems in 1939 because he thought they were homework. Roger Bannister broke the four-minute mile in 1954, and someone else broke it 46 days later. _The Inner Game of Tennis_ argues you play your best when you stop trying so hard. The same holds for the user and the model: say the hard thing is possible, and give permission to fail against an honest judge.
