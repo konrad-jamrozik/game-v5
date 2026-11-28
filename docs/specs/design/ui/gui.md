@@ -48,7 +48,7 @@ The Player changes [Global configuration](../foundation/engine-contract.md#persi
 
 The Settings panel is titled Settings and holds these rows from top to bottom, each a [row of a settings list](visual-design.md#inputs):
 
-1. **Playback:** the [Music control](music.md#music-control-in-the-settings-panel).
+1. **Music playback:** the [Music control](music.md#music-control-in-the-settings-panel).
 2. **Music volume:** the [Music volume slider](music.md#music-volume-slider).
 3. **Sounds volume:** the [Sounds toggle and the Sounds volume slider](sounds.md#sound-settings).
 4. **Tutorials:** a checkbox labelled "Tutorials enabled" that shows and sets [Tutorials on](tutorials.md#tutorials-settings), and after it the [neutral button "Reset tutorials"](tutorials.md#tutorials-settings).
