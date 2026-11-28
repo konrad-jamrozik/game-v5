@@ -21,13 +21,14 @@ It reads like a small reference work. The Player narrows from a category to an a
 | Article history | The articles the Player has shown one after another in the Compendium View, with the place among them of the one shown now, through which the Previous article and Next article buttons move. |
 | Article art | The [picture](#article-pane) of what an article is about, at the right of the Article pane. |
 | Data sheet | The rows of a subject's Player-visible values that the Compendium View shows below the description of a [Subject article](../../mechanics/compendium.md#glossary). |
+| Subject order | The [order](#subject-order) in which the Compendium View lists Subject articles, from the least to the most of their kind. |
 
 # Panes
 
 The category tabs and two panes narrow the Compendium from a category to one article:
 
 1. **Category tabs:** one row of tabs in the title row, between the title and the search field, so that the panes below keep the whole height and width. The tabs are Guide first, for the [Guide articles](../../mechanics/compendium.md#glossary) and [what the GUI teaches the Player](../tutorials.md#tutorials-in-the-compendium), then Mechanics, for the [Mechanics articles](../../mechanics/compendium.md#glossary), then the categories of the subjects of the Player-visible Subject articles, named after each subject's [Type](../../foundation/core-concepts.md#data-modeling) as [Subject data sheets](#subject-data-sheets) names it and sorted by that name, e.g. Enemies before Leads, except that the category Combat, for the articles listed under the topic `combat`, stands right after Agents. A Guide article or a Mechanics article with a [`listed_under`](../../mechanics/compendium.md#compendiumarticle) is in the category of that Type, or in [Combat](../../mechanics/domain-model.md#combat), instead of in Guide or Mechanics. A tab shows its category's name and no count, and a category with no Player-visible article has no tab. The tab of the selected category has a 2 px Accent line along its bottom edge. When the tabs are wider than the room between the title and the search field, their row scrolls sideways within that room and never wraps onto a second line.
-2. **Articles:** the [displayed title](../../mechanics/compendium.md#displayed-title) of each Player-visible article of the selected category, in the [Article sections](#article-sections) of that category, each sorted by displayed title ignoring case. A category without Article sections, e.g. Enemies or Combat, lists all its articles as one list, sorted the same way.
+2. **Articles:** the [displayed title](../../mechanics/compendium.md#displayed-title) of each Player-visible article of the selected category, in the [Article sections](#article-sections) of that category, each with its Subject articles first, in [Subject order](#subject-order), then its other articles sorted by displayed title ignoring case. A category without Article sections, e.g. Enemies or Combat, lists all its articles as one list, ordered the same way.
 3. **Article:** the selected article, in the parts of the [Article pane](#article-pane).
 
 When the Compendium View opens, the Guide category and its first article are selected. A search field filters the articles of every category to those whose displayed title contains the search text, ignoring case; while it holds text, the tab of a category with no matching article is disabled and dimmed but keeps its place, so that the tabs never move while the Player types. An article that a new [World state](../../foundation/engine-contract.md#player-actions-and-turns) makes Player-visible appears without reopening the Compendium View.
@@ -38,7 +39,7 @@ The Player finds an article without the mouse by pressing S, typing part of its 
 
 # Article sections
 
-A long list reads faster in a few named groups, so the article list of some categories is split into Article sections, each under a Group heading and sorted on its own. Which section an article is in is read from its GDRs wherever they tell, so that a new article needs no list of its own to be placed. The sections of a category stand in the order of this table, and a section with no listed article is left out with its heading, e.g. while the search text matches none of its articles.
+A long list reads faster in a few named groups, so the article list of some categories is split into Article sections, each under a Group heading and ordered on its own. Which section an article is in is read from its GDRs wherever they tell, so that a new article needs no list of its own to be placed. The sections of a category stand in the order of this table, and a section with no listed article is left out with its heading, e.g. while the search text matches none of its articles.
 
 | Category | Article sections, in order |
 | --- | --- |
@@ -60,6 +61,13 @@ A Lead's kind is read from its [GDR](../../foundation/core-concepts.md#game-buil
 An article of a category with Article sections that is in none of them, e.g. a Lead of none of these kinds, is listed after the sections without a heading, so that every Player-visible article stays reachable.
 
 A Mechanics article with no `section`, or a `section` the table does not name, is a [data defect](../../foundation/game-data-records.md#data-defects), unless it has a `listed_under`.
+
+# Subject order
+
+The Player reads a list of things of one kind as a progression, e.g. the Initiative Mission sites from Apprehend member to Raid HQ, so the Compendium View lists Subject articles in Subject order rather than by title. Subject articles whose subjects have different Types stand in the order of the Types in the table of [Subject data sheets](#subject-data-sheets), and those of a Type without a row there stand last, sorted by displayed title ignoring case. Those of one Type stand in the [authored order](../../foundation/game-data-records.md#gdr-file-layout) of their subject GDRs, which the Game designer writes from the least to the most, e.g. the One-time Leads end with "Peace on Earth", except as follows:
+
+- **EnemyArchetype:** in ascending order of the [Combat rating](../../mechanics/combat.md#combatant-condition-in-a-combat) of an [Enemy](../../mechanics/domain-model.md#combat) of it as [created](../../mechanics/combat.md#enemy-creation), and those of equal Combat rating in the [EnemyArchetype order](../gui.md#enemyarchetype-order).
+- **MissionSiteArchetype:** those of kind response in ascending order of their `operation_level`, and those of equal `operation_level` in authored order.
 
 # Article pane
 
@@ -101,7 +109,7 @@ A Data sheet has a heading and rows of a label and a value, each label above its
 - **Rows:** the rows are those of the table for the subject's Type below, in that order. A row whose value is absent or empty is left out, and a Data sheet without a row is left out with its heading.
 - **Labels:** a label is an Article link to the article that the [Article term lookup](../../mechanics/compendium.md#player-visible-information) reports for the label's text, and plain text when it reports none, e.g. "Skill" links to the article that has the Article term "skill".
 - **Referenced GDRs:** a GDR that a value references is shown by its `name`, as an Article link to the Subject article about it when that article is Player-visible, and as plain text otherwise.
-- **Subject articles listed:** a row that lists Subject articles shows the displayed title of each as an Article link, sorted by displayed title ignoring case.
+- **Subject articles listed:** a row that lists Subject articles shows the displayed title of each as an Article link, in [Subject order](#subject-order).
 - **Items:** a value that lists two or more items, e.g. Subject articles, Effects, or the entries of `enemies`, shows each item on a line of its own.
 - **[Effect lists](../../foundation/effect-lists.md#glossary):** an [Effect list](../../foundation/effect-lists.md#glossary) is shown as its [Effects](../../foundation/effect-lists.md#glossary), each [worded by its Effect kind](#effects-shown), or as "None" when it holds no Effect.
 
@@ -221,7 +229,7 @@ The Data sheet of a MissionSiteArchetype shows what awaits a team there and what
 | --- | --- |
 | Appears | For the kind initiative: "When an [Investigation](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) completes". For the kind response: "When a Faction carries out an operation of level", the `level` of the operation level, and its `name` in parentheses, e.g. "When a Faction carries out an operation of level 1 (Soft operations)". |
 | Expires in | `expires_in_turns`, followed by "turn" when it is 1 and "turns" otherwise, e.g. "1 turn" or "3 turns". |
-| Enemies | Each entry of `enemies` in authored order, as its count, "×", and the EnemyArchetype, e.g. "8 × Initiate" and "1 × Soldier". |
+| Enemies | Each entry of `enemies`, in the [Subject order](#subject-order) of its EnemyArchetype, as its count, "×", and the EnemyArchetype, e.g. "8 × Initiate" and "1 × Soldier". |
 | Reward for a win | For the kind initiative, the Effect list `on_win`. For the kind response, the Effect list `on_win` of the operation level. |
 | If lost or expired | For the kind response only, the Effect list `on_ignored_or_lost` of the operation level. |
 | Revealed by | For the kind initiative only, the Player-visible Subject articles whose subject is a Lead whose `on_completion` names this MissionSiteArchetype. |
