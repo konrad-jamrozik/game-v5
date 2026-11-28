@@ -170,12 +170,12 @@ Under the buttons, a slider returns to any attack, and the Combat log is listed 
 
 ## Attack being played
 
-Above the buttons, the Combat replay names the attack being played, i.e. its Combat round and phase, attacker, defender, [Hit chance](../../mechanics/combat.md#combat-rounds-and-results), and result, and at the end the [Combat outcome](../../mechanics/combat.md#combat-rounds-and-results). It keeps the height of its longest content, so that the buttons below it never move as the attacks are played.
+Above the buttons, the Combat replay names the attack being played, i.e. its Combat round and phase, attacker, defender, [Hit chance](../../mechanics/combat.md#combat-rounds-and-results), and result, and at the end the [Combat outcome](../../mechanics/combat.md#combat-rounds-and-results). It keeps the height of its longest content, with a result that wraps onto a second line shown whole, so that the buttons below it never move and never cover its text as the attacks are played.
 
 The result says how narrowly the attack hit or missed, as its margin: the difference between its Hit chance and its [Hit roll](../../mechanics/combat.md#hit-outcome), shown like a Hit chance, as a percentage with one decimal place. Nothing on the screen explains the margin.
 
-- **Miss:** the margin alone, e.g. "miss by 5.2%" for the Hit chance 11.6% and the Hit roll 168.
-- **Hit:** the margin, the damage outcome, and the defender's [current health](../../mechanics/agents-spec.md#combatant-attributes) before and after the attack, e.g. "hit with 9.0% margin, for 8 damage, health 20 → 12". When the defender had current armor before the hit, the [armor removed](../../mechanics/combat.md#combat-rounds-and-results) and the defender's current armor before and after the attack stand between the damage outcome and the health, e.g. "hit with 9.0% margin, for 15 damage, 8 absorbed, armor 8 → 0, health 31 → 23".
+- **Miss:** the margin alone, e.g. "Miss by 5.2%" for the Hit chance 11.6% and the Hit roll 168.
+- **Hit:** the margin, the damage outcome, and the defender's [current health](../../mechanics/agents-spec.md#combatant-attributes) before and after the attack, e.g. "Hit with 9.0% margin, for 8 damage, health 20 → 12". When the defender had current armor before the hit, the [armor removed](../../mechanics/combat.md#combat-rounds-and-results) and the defender's current armor before and after the attack stand between the damage outcome and the health, e.g. "Hit with 9.0% margin, for 15 damage, 8 absorbed, armor 8 → 0, health 31 → 23".
 
 Before the attack being played, on its left, a pie chart compares the [Combat ratings](../../mechanics/combat.md#combatant-condition-in-a-combat) of the two sides as of the last Combat round completed, the Agents' share in Positive and the Enemies' in Danger, so that it takes no height from the Battlefield. Under it stand the two Combat ratings, the Agents' first, e.g. "115 : 100", and under them the Agents' Combat rating as a percentage of the Enemies', rounded to a whole percent, e.g. "115%", or "–" when the Enemies' Combat rating is 0. The pointer resting on a figure shows the values of its Combatant.
 
