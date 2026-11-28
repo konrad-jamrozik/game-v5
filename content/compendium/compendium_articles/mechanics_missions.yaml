@@ -2,6 +2,7 @@ id: mechanics_missions
 type: CompendiumArticle
 category: mechanics
 title: Missions
+section: Operations
 terms: [Mission, Missions, deploy, deployed, Transport cap]
 body: >-
   A Mission is your team's one attempt at a Mission site. You deploy Agents from base, the Combat is fought when the

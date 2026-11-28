@@ -2,6 +2,7 @@ id: mechanics_skill
 type: CompendiumArticle
 category: mechanics
 title: Skill
+section: Agent strength
 terms: [skill, effective skill]
 body: >-
   Skill is how good an Agent is at everything it does: earning money, investigating, and fighting. Training and

@@ -2,6 +2,7 @@ id: mechanics_contracting
 type: CompendiumArticle
 category: mechanics
 title: Contracting
+section: Agent work
 visible_when:
   lead_completed: contracting_opportunities
 terms: [Contracting, Contracting cap]

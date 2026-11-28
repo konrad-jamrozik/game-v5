@@ -113,7 +113,7 @@ A Tutorial note never blocks play: the rest of the screen stays usable while it 
 
 ## Tutorials in the Compendium
 
-Every bubble the Player has opened, whether or not it has disappeared, is listed in the Tutorials category of the [Compendium View](screens/compendium-view.md#panes), so that nothing the GUI taught is lost when its bubble disappears. Each is listed under its `title`, sorted by its place in the table of [Tutorial anchors](#tutorial-anchors), and shown as a [Guide article](../mechanics/compendium.md#glossary) is, with its resolved `text` as its body and, when it has an `article`, that article as its only See also entry. The category follows Tutorials on and the Revealed Compendium as the bubbles do: it has no tab while Tutorials on is `false` or no bubble has been opened, and [Reveal hidden content](gui.md#reveal-hidden-content) lists every bubble.
+The Compendium keeps every lesson of the bubbles, so that nothing the GUI teaches is lost when a bubble disappears and a Player who turned tutorials off can still read them. The Tutorials section of the Guide category of the [Compendium View](screens/compendium-view.md#article-sections) lists every Tutorial bubble whose `visible_when`, if any, holds in the [Current world state](../foundation/engine-contract.md#player-actions-and-turns), whether or not it has been opened or has disappeared, and whatever Tutorials on is. Each is listed under its `title` and shown as a [Guide article](../mechanics/compendium.md#glossary) is, with its resolved `text` as its body and, when it has an `article`, that article as its only See also entry. While [Reveal hidden content](gui.md#reveal-hidden-content) is on, it lists every bubble.
 
 # TODOs
 

@@ -2,6 +2,7 @@ id: mechanics_winning_and_losing
 type: CompendiumArticle
 category: mechanics
 title: Winning and losing
+section: Campaign
 terms: [victory, defeat]
 body: >-
   You win the Campaign by completing the Lead Peace on Earth, which appears once every Faction is terminated. You lose it if Panic reaches its limit, your money falls below

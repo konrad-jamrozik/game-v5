@@ -2,6 +2,7 @@ id: mechanics_health
 type: CompendiumArticle
 category: mechanics
 title: Health
+section: Agent strength
 terms: [health, max health]
 body: >-
   Health is how much harm an Agent or an Enemy can still take. Hits in a Combat remove it once armor stops absorbing

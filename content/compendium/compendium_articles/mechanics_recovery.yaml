@@ -2,6 +2,7 @@ id: mechanics_recovery
 type: CompendiumArticle
 category: mechanics
 title: Recovery
+section: Agent strength
 terms: [Recovery, recovering, wounded]
 body: >-
   An Agent that comes back from a Mission with lost health goes to Recovery and stays there until it is back at max

@@ -2,6 +2,7 @@ id: mechanics_investigations
 type: CompendiumArticle
 category: mechanics
 title: Investigations
+section: Operations
 terms: [Investigation, Investigations]
 body: >-
   An Investigation is a team of Agents following a Lead. Each turn the team adds progress from its skill, and when the

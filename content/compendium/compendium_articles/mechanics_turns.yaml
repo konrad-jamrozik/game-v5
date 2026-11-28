@@ -2,6 +2,7 @@ id: mechanics_turns
 type: CompendiumArticle
 category: mechanics
 title: Turns
+section: Campaign
 terms: [turn, turns]
 body: >-
   The game is played in turns. During a turn you give orders, and each takes effect at once. When you advance the turn,

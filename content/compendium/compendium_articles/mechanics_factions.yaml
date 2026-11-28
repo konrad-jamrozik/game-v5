@@ -2,6 +2,7 @@ id: mechanics_factions
 type: CompendiumArticle
 category: mechanics
 title: Factions
+section: Campaign
 terms: [Faction, Factions]
 body: >-
   Factions are the hostile groups you are fighting. Each acts on its own, grows more active the longer it survives, and

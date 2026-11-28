@@ -2,6 +2,7 @@ id: mechanics_hiring_and_upkeep
 type: CompendiumArticle
 category: mechanics
 title: Hiring and upkeep
+section: Agent work
 terms: [hire, hires, hired, hiring, upkeep, Agent cap, dismiss, dismissed]
 body: >-
   Hiring adds an Agent to your Agency for a one-time cost, and every Agent you keep costs upkeep each turn, whatever it

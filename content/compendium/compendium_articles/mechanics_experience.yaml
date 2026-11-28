@@ -2,6 +2,7 @@ id: mechanics_experience
 type: CompendiumArticle
 category: mechanics
 title: Experience
+section: Agent strength
 terms: [Experience]
 body: >-
   Agents gain Experience by living through Missions. In a Combat an Agent earns Experience from every attack it makes
