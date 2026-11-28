@@ -342,9 +342,9 @@ Which Detail view shows which image, and how faintly, is content rather than des
 | `image` | The path of the image file, in the `assets/images/` directory, relative to the repository root, e.g. `assets/images/agents-at-work.png`. |
 | `opacity_pct` | The opacity at which the image is drawn, a whole number from 0 to 100. The Content designer chooses it so that Text muted keeps a contrast ratio of at least 4.5:1 against nearly all of what lies behind it, giving up that ratio only over the image's brightest highlights. |
 
-A Detail view draws its Background artwork at the `opacity_pct` of its GDR, whatever the Detail view holds, e.g. the Agents View with its Memorial filter on:
+A Detail view draws its Background artwork at the `opacity_pct` of its GDR, whatever the Detail view holds, e.g. the Agents View showing its Memorial:
 
-- **Place:** between its Surface fill and its content, filling the whole Detail view below its top edge. The image is scaled to cover that area with its proportions kept, centred, and cropped where the proportions differ. It stays in place while the content scrolls over it.
+- **Place:** between its Surface fill and its content, filling the whole Detail view. The image is scaled to cover that area with its proportions kept, centred, and cropped where the proportions differ. It stays in place while the content scrolls over it.
 - **Panels inside it:** a panel inside the Detail view, e.g. a pane of the Missions View, draws its Background fill at 35% opacity, so that the image shows through it too while the panel still reads as an area of its own. A selected row and a button keep their fills opaque.
 
 When the image cannot be loaded, the Detail view looks as it would without it.

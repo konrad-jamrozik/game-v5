@@ -44,22 +44,21 @@ The Agents View has two kinds of filter: one decides which Agents the table show
 
 ## Row filters
 
-Five row filters, each with its count, need no Label, because their names say what they filter: All, Fit, [In base](../../mechanics/agents-spec.md#agent-statuses), and [Away](../../mechanics/agents-spec.md#agent-statuses) stand in the title row after the places free, and Memorial, which shows former Agents rather than the roster, stands at the right end of the row under it, after the Equip button. Each of the three groups, those four, Equip with Memorial, and the [checkboxes](#row-filters), stands on a [Control backdrop](../visual-design.md#colours), so that the [Background artwork](../visual-design.md#glossary) does not blur them. Exactly one row filter is on at a time, and All is on whenever the Agents View opens.
+Four row filters, each with its count, need no Label, because their names say what they filter: All, Fit, [In base](../../mechanics/agents-spec.md#agent-statuses), and [Away](../../mechanics/agents-spec.md#agent-statuses) stand in the title row after the places free. The Equip button and the Memorial button, which open the [Equip table](#equip-table) and the [Memorial](#memorial), stand at the right end of the row under it. Each of the three groups, the row filters, Equip with Memorial, and the [checkboxes](#row-filters), stands on a [Control backdrop](../visual-design.md#colours), so that the [Background artwork](../visual-design.md#glossary) does not blur them. Exactly one row filter is on at a time, and All is on whenever the Agents View opens.
 
 - **All:** every Serving [Agent](../../mechanics/domain-model.md#agency-and-agents).
 - **Fit:** every Agent that [can take orders](../../mechanics/agents-spec.md#agents-that-can-take-orders) and is [Fit to start work](../../mechanics/agents-spec.md#assignments), i.e. every Agent the Player can give new work now.
 - **[In base](../../mechanics/agents-spec.md#agent-statuses):** every Agent In base.
 - **[Away](../../mechanics/agents-spec.md#agent-statuses):** every Agent Away.
-- **Memorial:** every [Terminated](../../mechanics/agents-spec.md#agent-statuses) Agent, in the [Memorial](#memorial).
 
 At the left of the row under the title row, two checkboxes hide more Agents from the table that All, Fit, In base, or Away shows, so that the Player can keep in view only the Agents ready for work:
 
 - **Hide too exhausted to start work:** hides every Agent whose [exhaustion](../../mechanics/agents-spec.md#combatant-attributes) is above `exhaustion_work_start_max` of [AgentParameters](../../mechanics/agents-spec.md#agentparameters), so that it is not [Fit to start work](../../mechanics/agents-spec.md#start-work-gate) whatever its health.
 - **Hide recovering:** hides every Agent whose Assignment is [Recovery](../../mechanics/agents-spec.md#assignments), whether it is [Recovering](../../mechanics/agents-spec.md#agent-statuses) or [In transit](../../mechanics/domain-model.md#agency-and-agents).
 
-Both are unchecked whenever the Agents View opens. They change no count of the row filters. While Memorial is on, both are disabled and keep their check.
+Both are unchecked whenever the Agents View opens. They change no count of the row filters.
 
-The [Equip table](#equip-table) shows the same four row filters, All, Fit, In base, and Away, in its title row after its title, and the two checkboxes at the left of the row under it, each group on a Control backdrop, so that the Player can narrow the Agents to equip without going back. They are the Agent table's own: a change in either table holds in the other.
+The [Equip table](#equip-table) shows the same four row filters, All, Fit, In base, and Away, in its title row after its title, and the two checkboxes after them in the same row, each group on a Control backdrop, so that the Player can narrow the Agents to equip without going back and the table keeps every row of height below the title row. They are the Agent table's own: a change in either table holds in the other.
 
 ## Assignment filters
 
@@ -100,7 +99,7 @@ A row whose Agent cannot be selected has its checkbox disabled and its text in T
 
 # Equip table
 
-What an Agent wears and every number behind how well it fights need more width than the Agents View has, so they are one press away: the Equip button, at the right end of the row under the title row, before Memorial, shows the Equip table one step away, in place of the Agent table, as a [Follow](campaign-screen.md#view-trail), titled "Equip". It covers the whole screen as the [Combat replay](combat-replay.md#whole-screen) does, i.e. the status bar, the [Side panel](../gui.md#glossary), and the [Globe stage](../gui.md#glossary), and the [Campaign](../../foundation/core-concepts.md#campaign-and-session) screen takes no keyboard shortcut but Escape meanwhile; the [Back control](../gui.md#glossary) and the Escape key return to the Agent table. Pressing Equip while Memorial is on first turns back on the row filter that was on before Memorial.
+What an Agent wears and every number behind how well it fights need more width than the Agents View has, so they are one press away: the Equip button, at the right end of the row under the title row, before the Memorial button, shows the Equip table one step away, in place of the Agent table, as a [Follow](campaign-screen.md#view-trail), titled "Equip". It covers the whole screen as the [Combat replay](combat-replay.md#whole-screen) does, i.e. the status bar, the [Side panel](../gui.md#glossary), and the [Globe stage](../gui.md#glossary), and the [Campaign](../../foundation/core-concepts.md#campaign-and-session) screen takes no keyboard shortcut but Escape meanwhile; the [Back control](../gui.md#glossary) and the Escape key return to the Agent table.
 
 The Equip table lists the Agents that the Agent table shows, in the order of its own [sort](../visual-design.md#tables), by default by Instance ID, without selection checkboxes, because the Player equips one Agent at a time. It is condensed, so that every column fits the [Reference window](../visual-design.md#glossary) without scrolling sideways: its text is a step smaller, 13 px, and its rows and cells are tighter than in other tables. Its columns are the Agent name; CR; the [Equipment Combat rating](../../mechanics/combat.md#rested-and-equipment-combat-ratings) headed Equip.; Rank; [effective skill](../../mechanics/agents-spec.md#combatant-attributes) headed Skill; [base skill](../../mechanics/agents-spec.md#combatant-attributes) headed Base; [Experience](../../mechanics/agents-spec.md#growth) headed Exp.; current health; exhaustion; Weapon; Armor; and Assignment, each read as in the Agent table. The Equip. cell shows the Equipment Combat rating with its sign, e.g. "+56", "0", or "−25": in Positive when it is above 0, in Danger when it is below 0, and in Text muted at 0. The tooltip of the Equip. header says that this is the part of CR that the Agent's Weapon and Armor add over the issued kit, already counted in CR and not added to it, so that the Player does not add the two. Selecting an Agent name opens the [Agent details](#agent-details) in place of the Equip table.
 
@@ -116,7 +115,7 @@ The Equipment picker is a dropdown that lists what the Agent can wear in place o
 
 # Memorial
 
-The Memorial remembers the Agents who have left the [Agency](../../mechanics/domain-model.md#agency-and-agents) and how their service ended. While the Memorial filter is on, the table lists one row per Terminated Agent, by default newest [Turn](../../foundation/engine-contract.md#player-actions-and-turns) terminated first and then by Instance ID, and its column headers sort it. Its rows have no selection checkbox, and the buttons and Assignment filters of Assign to and Dismiss are disabled. While Memorial is on, the Agents View covers the whole screen as the Equip table does, so that Where has room for a long Mission site name, and turning another row filter on returns it to the Globe stage. Its columns are:
+The Memorial remembers the Agents who have left the [Agency](../../mechanics/domain-model.md#agency-and-agents) and how their service ended. The Memorial button, after the Equip button, shows it one step away, in place of the Agent table, as a [Follow](campaign-screen.md#view-trail), titled "Memorial", covering the whole screen as the [Equip table](#equip-table) does, so that Where has room for a long Mission site name; the Back control and the Escape key return to the Agent table. It holds its table alone, under a title row with only the Back control and the close control, because no control of the Agents View acts on a former Agent. The table lists one row per [Terminated](../../mechanics/agents-spec.md#agent-statuses) Agent, by default newest [Turn](../../foundation/engine-contract.md#player-actions-and-turns) terminated first and then by Instance ID, and its column headers sort it. Its rows have no selection checkbox. Its columns are:
 
 - **Agent name,** **[base skill](../../mechanics/agents-spec.md#combatant-attributes),** and **[Experience](../../mechanics/agents-spec.md#growth),** headed Exp.
 - **Turn terminated,** headed Ended.
@@ -153,7 +152,7 @@ The Agents View as the game draws it:
 
 _Captured on 2026-11-27 01:19 UTC._
 
-![Agents View Screenshot with the Memorial filter on](../../../../images/screens/agents-memorial.png)
+![Memorial Screenshot](../../../../images/screens/agents-memorial.png)
 
 _Captured on 2026-11-27 01:19 UTC._
 
