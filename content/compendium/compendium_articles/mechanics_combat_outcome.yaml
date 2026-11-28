@@ -1,0 +1,23 @@
+id: mechanics_combat_outcome
+type: CompendiumArticle
+category: mechanics
+listed_under: combat
+title: Combat outcome
+terms: [Combat outcome, Combat outcomes, Wiped]
+body: >-
+  Every Combat ends with one Combat outcome, which decides whether its Mission is won. The Combat stops at once when one
+  side has no Combatant able to fight, even in the middle of a phase, and your team may also withdraw between rounds.
+formulas:
+  - label: 'Won'
+    text: 'No Enemy is able to fight: the Mission is won'
+  - label: 'Wiped'
+    text: 'No Agent of your team is able to fight: the Mission is lost'
+  - label: 'Retreated'
+    text: 'Your team withdrew after a round: the Mission is lost, but the survivors come home'
+  - label: 'Checked'
+    text: "Won and Wiped after every attack, in that order; Retreated after the Enemies' phase of each round"
+  - label: 'Both sides out at once'
+    text: 'Won, because it is checked first'
+  - label: 'Before any attack'
+    text: 'A Combat in which no Enemy, or no Agent, is able to fight when it starts ends at once, with 0 rounds'
+see_also: [mechanics_retreat, mechanics_able_to_fight, mechanics_missions, mechanics_combat_report]

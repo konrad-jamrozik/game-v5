@@ -1,0 +1,22 @@
+id: mechanics_combatant
+type: CompendiumArticle
+category: mechanics
+listed_under: combat
+title: Combatant
+terms: [Combatant, Combatants]
+body: >-
+  A Combatant is anyone who takes part in a Combat: each Agent of your deployed team and each Enemy at the Mission site.
+  Agents and Enemies fight by the same rules, with a few differences: only Agents spend rounds of ammo and choose whom
+  they attack, and only Agents can recover afterwards.
+formulas:
+  - label: 'What it fights with'
+    text: 'Its effective skill, its health, the weapon damage of its weapon, and the armor it wears'
+  - label: 'Effective skill'
+    text: 'Falls as it loses health and tires, so a worn-down Combatant hits less often and is hit more often'
+  - label: 'Armor'
+    text: 'Starts each Combat whole and absorbs the damage of hits before its health does'
+  - label: 'Leaving the Combat'
+    text: 'Killed when its health reaches 0, or Incapacitated while still alive'
+  - label: 'An Enemy'
+    text: 'Belongs to its Mission site, never runs out of ammo, and never recovers'
+see_also: [mechanics_able_to_fight, mechanics_combat, mechanics_damage, mechanics_skill, mechanics_health]

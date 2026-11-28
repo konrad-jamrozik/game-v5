@@ -58,6 +58,39 @@ See also: [Assignments](#assignments) · [Transit](#transit) · [Exhaustion](#ex
 
 ## Mechanics articles
 
+### Able to fight
+
+Source: `content/compendium/compendium_articles/mechanics_able_to_fight.yaml`
+
+A [Combatant](#combatant) able to fight is alive and not [Incapacitated](#incapacitated-agent): it still attacks on its [Combat turn](#combat-turn), and it can still be attacked. A side that has no Combatant able to fight has lost the [Combat](#combat). An Incapacitated Combatant is alive, so an Incapacitated Agent survives the Combat.
+
+| Formulas |  |
+| --- | --- |
+| Able to fight | [Health](#health) above 0, and neither of the two conditions below |
+| Too weakened | [Effective skill](#skill) at or below 0.1 × skill |
+| Too worn down | [Exhaustion](#exhaustion) of 100 or more |
+| Checked | For every Combatant when the Combat starts, and for the defender and the attacker after each attack |
+| Once Incapacitated | Stays so until the Combat ends, and neither attacks nor is attacked |
+| In the [Combat rating](#combat-rating) | Only Combatants able to fight add to the Combat rating of their side |
+
+See also: [Combatant](#combatant) · [Incapacitated Agent](#incapacitated-agent) · [Combat outcome](#combat-outcome) · [Exhaustion](#exhaustion)
+
+### Agent target selection
+
+Source: `content/compendium/compendium_articles/mechanics_agent_target_selection.yaml`
+
+An [Agent](#agents) picks its target at random, but it is drawn to an Enemy it is likely but not certain to hit, and away from an Enemy with so little [health](#health) and [armor](#damage) left that much of a hit would be wasted on it. So it neither wastes attacks on long shots nor spends them all finishing off the weakest Enemy. Every Enemy [able to fight](#able-to-fight) can still be its target.
+
+| Formulas |  |
+| --- | --- |
+| Candidates | Every Enemy able to fight at that moment |
+| Chance to be picked | An Enemy's selection weight ÷ the sum of the selection weights of every candidate |
+| Hit-chance weight | 100 minus one for each whole hundredth by which the [hit chance](#hit-chance) on the Enemy lies above or below 0.8 |
+| Usefulness | The share of the Agent's weapon damage that the Enemy's health and armor can still take, at most 1 |
+| Selection weight | Hit-chance weight × usefulness, rounded up, so at least 1 |
+
+See also: [Enemy target selection](#enemy-target-selection) · [Hit chance](#hit-chance) · [Damage](#damage) · [Combat turn](#combat-turn)
+
 ### Agents
 
 Source: `content/compendium/compendium_articles/mechanics_agents.yaml`
@@ -72,6 +105,22 @@ Agents are the people of your Agency. Each one has [skill](#skill), [health](#he
 | Killed or dismissed | The Agent is gone for good, and its skill with it                                       |
 
 See also: [Skill](#skill) · [Health](#health) · [Exhaustion](#exhaustion) · [Assignments](#assignments) · [Hiring and upkeep](#hiring-and-upkeep) · [Deployable Agent](#deployable-agent) · [Fit to start work](#fit-to-start-work) · [In base Agent](#in-base-agent) · [Away Agent](#away-agent) · [Fully rested Agent](#fully-rested-agent) · [Recovering Agent](#recovering-agent) · [Incapacitated Agent](#incapacitated-agent) · [Field agent](#field-agent)
+
+### Ammo in a Combat
+
+Source: `content/compendium/compendium_articles/mechanics_ammo_in_combat.yaml`
+
+Your [Agents](#agents) fight with the [rounds](#equipment-and-storage) of ammo the Agency has in Storage. An Agent whose rounds run out fights on with its [knife](#knife) until the [Combat](#combat) ends. Enemies never run out.
+
+| Formulas |  |
+| --- | --- |
+| Each attack of an Agent | Spends one round of the ammo its weapon uses, hit or miss |
+| The last round | The attack that spends it still hits with the weapon |
+| Out of ammo | The Agent's [weapon damage](#damage) becomes that of its knife, in its attacks and in its [Combat rating](#combat-rating) |
+| A weapon without ammo | Spends nothing, e.g. a knife |
+| Shared | Every Agent whose weapon uses one ammo draws on the same rounds |
+
+See also: [Equipment and Storage](#equipment-and-storage) · [Damage](#damage) · [Knife](#knife)
 
 ### Assignments
 
@@ -107,25 +156,55 @@ See also: [In base Agent](#in-base-agent) · [Assignments](#assignments) · [Tra
 
 Source: `content/compendium/compendium_articles/mechanics_combat.yaml`
 
-A Combat is fought in [rounds](#equipment-and-storage). In each round every [Agent](#agents) attacks once, then every Enemy still able to fight attacks once, the most skilled of each side first. Enemies attack any Agent able to fight, at random. Agents choose at random too, but favour an Enemy they are likely but not certain to hit, and one with enough [health](#health) left to take a full hit. The Combat ends the moment one side can no longer fight, or after a round in which your team [retreats](#retreat).
+A Combat is fought in [rounds](#equipment-and-storage). In each round every [Agent](#agents) attacks once, then every Enemy still [able to fight](#able-to-fight) attacks once, the most skilled of each side first. Enemies attack any Agent able to fight, at random. Agents choose at random too, but favour an Enemy they are likely but not certain to hit, and one with enough [health](#health) left to take a full hit. The Combat ends the moment one side can no longer fight, or after a round in which your team [retreats](#retreat).
 
 | Formulas |  |
 | --- | --- |
-| Chance to hit | A² ÷ (A² + D²), rounded down to a tenth of a percent and kept from 0.1% to 99.9%, where A is the [effective skill](#skill) of the attacker and D that of the defender |
-| Order | Within a side, from the highest to the lowest effective skill at the start of its part of the round |
-| Enemy target | Any Agent able to fight, each equally likely |
-| Agent target | Any Enemy able to fight, with a weight of 100 minus one for each whole hundredth by which the chance to hit it lies above or below 0.8, times the share of the Agent's [weapon damage](#damage) that the Enemy's health and armor can still take, rounded up |
+| Who fights | Your [deployed](#missions) team against the Enemies at the [Mission site](#mission-sites); you give no orders once it starts |
+| Each round | The [Agents' phase](#combat-phase), then the Enemies' phase; each [Combatant](#combatant) able to fight takes one [Combat turn](#combat-turn) and attacks once |
 | Each attack | +1 [exhaustion](#exhaustion) for the attacker and +0 for the defender, hit or miss |
-| [Incapacitated](#incapacitated-agent) | Alive but unable to fight: effective skill at or below 0.1 × skill, or exhaustion of 100 or more |
 | End of the Combat | As soon as no Enemy or no Agent is able to fight, or after a round in which the team retreats |
 
-See also: [Combat rating](#combat-rating) · [Damage](#damage) · [Retreat](#retreat) · [Skill](#skill) · [Missions](#missions)
+See also: [Combatant](#combatant) · [Combat round](#combat-round) · [Hit chance](#hit-chance) · [Agent target selection](#agent-target-selection) · [Combat outcome](#combat-outcome) · [Combat rating](#combat-rating) · [Damage](#damage) · [Retreat](#retreat) · [Combat report](#combat-report)
+
+### Combat outcome
+
+Source: `content/compendium/compendium_articles/mechanics_combat_outcome.yaml`
+
+Every [Combat](#combat) ends with one Combat outcome, which decides whether its [Mission](#missions) is won. The Combat stops at once when one side has no [Combatant](#combatant) [able to fight](#able-to-fight), even in the middle of a phase, and your team may also withdraw between [rounds](#equipment-and-storage).
+
+| Formulas |  |
+| --- | --- |
+| Won | No Enemy is able to fight: the Mission is won |
+| Wiped | No [Agent](#agents) of your team is able to fight: the Mission is lost |
+| [Retreated](#retreat) | Your team withdrew after a round: the Mission is lost, but the survivors come home |
+| Checked | Won and Wiped after every attack, in that order; Retreated after the [Enemies' phase](#combat-phase) of each round |
+| Both sides out at once | Won, because it is checked first |
+| Before any attack | A Combat in which no Enemy, or no Agent, is able to fight when it starts ends at once, with 0 rounds |
+
+See also: [Retreat](#retreat) · [Able to fight](#able-to-fight) · [Missions](#missions) · [Combat report](#combat-report)
+
+### Combat phase
+
+Source: `content/compendium/compendium_articles/mechanics_combat_phase.yaml`
+
+Each [Combat round](#combat-round) has two phases: the Agents' phase, in which every [Agent](#agents) takes its [Combat turn](#combat-turn), and then the Enemies' phase, in which every Enemy does. Within a phase the most skilled [Combatant](#combatant) goes first, so a strong Agent often strikes before a weaker one is put at risk.
+
+| Formulas          |                                                                                                  |
+| ----------------- | ------------------------------------------------------------------------------------------------ |
+| Agents' phase     | Each Agent of your team takes one Combat turn                                                    |
+| Enemies' phase    | Each Enemy takes one Combat turn                                                                 |
+| Phase order       | From the highest to the lowest [effective skill](#skill) at the start of the phase               |
+| Ties              | The Combatant listed earlier in its side goes first                                              |
+| Set for the phase | The order does not change within a phase, even when a Combatant is hit and loses effective skill |
+
+See also: [Combat round](#combat-round) · [Combat turn](#combat-turn) · [Skill](#skill)
 
 ### Combat rating
 
 Source: `content/compendium/compendium_articles/mechanics_combat_rating.yaml`
 
-A Combat rating measures how strong a side is in a [Combat](#combat), so that you can weigh your team against the Enemies before you [deploy](#missions) it. [Effective skill](#skill) carries most of it, and a rating factor adjusts it for how hard a Combatant hits, how much harm it can take, and how much its [armor](#damage) absorbs. Your team also weighs it during a Combat, to decide whether to [retreat](#retreat).
+A Combat rating measures how strong a side is in a [Combat](#combat), so that you can weigh your team against the Enemies before you [deploy](#missions) it. [Effective skill](#skill) carries most of it, and a rating factor adjusts it for how hard a [Combatant](#combatant) hits, how much harm it can take, and how much its [armor](#damage) absorbs. Your team also weighs it during a Combat, to decide whether to [retreat](#retreat).
 
 | Formulas |  |
 | --- | --- |
@@ -133,13 +212,77 @@ A Combat rating measures how strong a side is in a [Combat](#combat), so that yo
 | At the rating bases | A Combatant with weapon damage 10, max health 30, and no armor has a rating factor of 1 |
 | [Exhaustion](#exhaustion) factor | 1 up to exhaustion 70; each point above it takes 1/30 of the whole Combat rating, on top of what exhaustion already takes from effective skill |
 | One Combatant | Its effective skill × its rating factor × its exhaustion factor, rounded down |
-| A side | The sum of effective skill × rating factor × exhaustion factor over its Combatants able to fight, × its Team Combat rating adjustment, rounded down once |
+| A side | The sum of effective skill × rating factor × exhaustion factor over its Combatants [able to fight](#able-to-fight), × its [Team Combat rating adjustment](#team-combat-rating-adjustment), rounded down once |
 | Enemies: Team Combat rating adjustment | n ^ (1.3 − 1), where n is the number of Combatants able to fight, so that a larger side counts for more than its sum |
 | Your team: Team Combat rating adjustment | The Enemies' adjustment × (1 − 0.25 × the Gini coefficient of your [Agents](#agents)' effective skill), so that a team carried by a few skilled Agents counts for less: four Agents of skill 300 lose nothing, while Agents of skill 900, 100, 100, and 100 have a Gini coefficient of 0.5 |
 | [Incapacitated](#incapacitated-agent) Combatants | Add nothing to the Combat rating of their side |
 | Base Combat rating | An Agent's effective skill alone, shown beside its Combat rating so that you can see how much its [equipment](#equipment-and-storage) and [Upgrades](#upgrades) add |
 
-See also: [Combat](#combat) · [Retreat](#retreat) · [Damage](#damage) · [Skill](#skill) · [Missions](#missions)
+See also: [Combat](#combat) · [Team Combat rating adjustment](#team-combat-rating-adjustment) · [Retreat](#retreat) · [Damage](#damage) · [Skill](#skill) · [Missions](#missions)
+
+### Combat report
+
+Source: `content/compendium/compendium_articles/mechanics_combat_report.yaml`
+
+Every [Combat](#combat) leaves a Combat report, a full account from which you can follow every attack: who attacked whom, the [hit chance](#hit-chance) and the hit roll, the [damage](#damage), and who fell. The [Turn](#turns) report holds it, and the Combat replay plays it back as shots between the figures of the [Combatants](#combatant).
+
+| Formulas |  |
+| --- | --- |
+| Outcome | The [Combat outcome](#combat-outcome) and the number of [rounds](#equipment-and-storage) |
+| Combatants | Each with its values at the start and at the end, the damage it dealt and took, and, for an [Agent](#agents), what it learned |
+| [Combat ratings](#combat-rating) | Of each side at the start and after every round |
+| Ammo | The rounds at hand at the start and left at the end |
+| Combat log | Every attack, in order |
+| Kept | In full in the Turn report of its turn; a short summary in the History for the rest of the Campaign |
+
+See also: [Combat outcome](#combat-outcome) · [Hit chance](#hit-chance) · [Combat rating](#combat-rating)
+
+### Combat round
+
+Source: `content/compendium/compendium_articles/mechanics_combat_round.yaml`
+
+A Combat round is one pass of a [Combat](#combat) in which every [Combatant](#combatant) [able to fight](#able-to-fight) attacks once. Your [Agents](#agents) act first, in the [Agents' phase](#combat-phase), and the Enemies answer in the Enemies' phase. [Rounds](#equipment-and-storage) follow one another until the Combat ends.
+
+| Formulas |  |
+| --- | --- |
+| Numbered | From 1; a Combat that ends as it starts has 0 rounds |
+| Parts | The Agents' phase, then the Enemies' phase |
+| Effects of an attack | Apply at once, so an Enemy killed in the Agents' phase does not attack in the Enemies' phase of the same round |
+| After each round | Your team weighs whether to [retreat](#retreat) |
+| How many | No limit: every attack tires someone, so the Combatants of one side are in the end too worn down to fight |
+
+See also: [Combat phase](#combat-phase) · [Combat turn](#combat-turn) · [Retreat](#retreat) · [Combat](#combat)
+
+### Combat turn
+
+Source: `content/compendium/compendium_articles/mechanics_combat_turn.yaml`
+
+A Combat turn is one [Combatant](#combatant)'s part in a phase: it picks a target and attacks it once. A Combat turn is not a [turn](#turns) of the Campaign: a whole [Combat](#combat), with all its [rounds](#equipment-and-storage), is fought within one turn.
+
+| Formulas |  |
+| --- | --- |
+| [Able to fight](#able-to-fight) | Selects a target among the Combatants of the other side able to fight, and attacks it once |
+| Not able to fight | Does nothing |
+| The attack | Hits with its [hit chance](#hit-chance); a hit deals [damage](#damage), and the attack tires both sides, hit or miss |
+| Ends the Combat | When the attack leaves one side with no Combatant able to fight; no further Combat turn is taken |
+
+See also: [Combat phase](#combat-phase) · [Hit chance](#hit-chance) · [Agent target selection](#agent-target-selection) · [Enemy target selection](#enemy-target-selection) · [Damage](#damage)
+
+### Combatant
+
+Source: `content/compendium/compendium_articles/mechanics_combatant.yaml`
+
+A Combatant is anyone who takes part in a [Combat](#combat): each [Agent](#agents) of your [deployed](#missions) team and each Enemy at the [Mission site](#mission-sites). Agents and Enemies fight by the same rules, with a few differences: only Agents spend [rounds](#equipment-and-storage) of ammo and choose whom they attack, and only Agents can recover afterwards.
+
+| Formulas |  |
+| --- | --- |
+| What it fights with | Its [effective skill](#skill), its [health](#health), the [weapon damage](#damage) of its weapon, and the armor it wears |
+| Effective skill | Falls as it loses health and tires, so a worn-down Combatant hits less often and is hit more often |
+| Armor | Starts each Combat whole and absorbs the damage of hits before its health does |
+| Leaving the Combat | Killed when its health reaches 0, or [Incapacitated](#incapacitated-agent) while still alive |
+| An Enemy | Belongs to its Mission site, never [runs out of ammo](#ammo-in-a-combat), and never recovers |
+
+See also: [Able to fight](#able-to-fight) · [Combat](#combat) · [Damage](#damage) · [Skill](#skill) · [Health](#health)
 
 ### Contracting
 
@@ -190,6 +333,19 @@ A Deployable Agent is one you can send to a [Mission site](#mission-sites) right
 
 See also: [In base Agent](#in-base-agent) · [Incapacitated Agent](#incapacitated-agent) · [Missions](#missions)
 
+### Enemy target selection
+
+Source: `content/compendium/compendium_articles/mechanics_enemy_target_selection.yaml`
+
+Enemies have no such judgement as your [Agents](#agents): an Enemy strikes at whichever Agent is in reach, so its attacks spread evenly over your team. A larger team shares the Enemies' attacks among more Agents.
+
+| Formulas            |                                                                         |
+| ------------------- | ----------------------------------------------------------------------- |
+| Candidates          | Every Agent of your team [able to fight](#able-to-fight) at that moment |
+| Chance to be picked | Equal for each candidate                                                |
+
+See also: [Agent target selection](#agent-target-selection) · [Combat turn](#combat-turn) · [Team Combat rating adjustment](#team-combat-rating-adjustment)
+
 ### Equipment and Storage
 
 Source: `content/compendium/compendium_articles/mechanics_equipment.yaml`
@@ -205,7 +361,7 @@ The Agency keeps its weapons, [armor](#damage), and rounds in Storage. Each [Age
 | Low on rounds | Fewer than 10 rounds in Storage for each Agent whose weapon uses them |
 | Spoils of war | Every weapon of the Enemies of a won Mission, each with 0 to 4 rounds |
 | [Retreat](#retreat) | The gear of the Agents killed is lost |
-| Wiped | The gear of the whole team is lost |
+| [Wiped](#combat-outcome) | The gear of the whole team is lost |
 
 See also: [Knife](#knife) · [Standard uniform](#standard-uniform) · [Combat pistol](#combat-pistol) · [Damage](#damage) · [Missions](#missions)
 
@@ -228,7 +384,7 @@ Exhaustion measures how tired an [Agent](#agents) is. Work and fighting raise it
 | [Skill](#skill) penalty | −1% of skill for each point above 30 |
 | New work can start at most at | 30; deploying to a [Mission site](#mission-sites) needs only that the Agent could still fight |
 | Work ends at | 70 or more: after that turn's work the Agent is sent to Standby |
-| Unable to fight at | 100 or more |
+| [Unable to fight](#able-to-fight) at | 100 or more |
 
 See also: [Recovery](#recovery) · [Skill](#skill) · [Assignments](#assignments) · [Exhaustion recovery](#exhaustion-recovery)
 
@@ -346,6 +502,21 @@ Hiring adds an [Agent](#agents) to your Agency for a one-time cost, and every Ag
 
 See also: [Agents](#agents) · [Money and funding](#money-and-funding) · [Agent cap](#agent-cap)
 
+### Hit chance
+
+Source: `content/compendium/compendium_articles/mechanics_hit_chance.yaml`
+
+The hit chance is how likely one attack is to hit. It depends only on how the attacker's [effective skill](#skill) compares with the defender's: equal skill gives an even chance, and twice the skill hits four times in five. No attack is ever certain to hit or to miss.
+
+| Formulas |  |
+| --- | --- |
+| Chance to hit | A² ÷ (A² + D²), rounded down to a tenth of a percent and kept from 0.1% to 99.9%, where A is the effective skill of the attacker and D that of the defender |
+| Read when | At the moment of the attack, so wounds and [exhaustion](#exhaustion) taken earlier in the [Combat](#combat) count |
+| Hit roll | A number from 0 to 999 that the [Combat report](#combat-report) shows beside each attack; the attack hits when it is below the hit chance in tenths of a percent |
+| A hit | Deals [damage](#damage) |
+
+See also: [Damage](#damage) · [Skill](#skill) · [Agent target selection](#agent-target-selection) · [Combat report](#combat-report)
+
 ### In base Agent
 
 Source: `content/compendium/compendium_articles/mechanics_in_base_agent.yaml`
@@ -432,7 +603,7 @@ See also: [Missions](#missions) · [Faction operations](#faction-operations) · 
 
 Source: `content/compendium/compendium_articles/mechanics_missions.yaml`
 
-A Mission is your team's one attempt at a [Mission site](#mission-sites). You deploy [Agents](#agents) from base, the [Combat](#combat) is fought when the [turn](#turns) advances, and the Mission is won if no Enemy is left able to fight. Win or lose, the survivors come home [tired](#exhaustion) and a little more skilled.
+A Mission is your team's one attempt at a [Mission site](#mission-sites). You deploy [Agents](#agents) from base, the [Combat](#combat) is fought when the [turn](#turns) advances, and the Mission is won if no Enemy is left [able to fight](#able-to-fight). Win or lose, the survivors come home [tired](#exhaustion) and a little more skilled.
 
 | Formulas |  |
 | --- | --- |
@@ -520,7 +691,7 @@ Your team does not fight to the last [Agent](#agents). After each round of a [Co
 | Result | The Mission is lost |
 | [Exhaustion](#exhaustion) | Survivors gain as much as after any other Mission |
 
-See also: [Combat](#combat) · [Missions](#missions)
+See also: [Combat](#combat) · [Combat outcome](#combat-outcome) · [Missions](#missions)
 
 ### Skill
 
@@ -549,6 +720,22 @@ An [Agent](#agents)'s [skill](#skill) rises in two ways: by [Training](#training
 | Each point of Experience        | +1                             |
 
 See also: [Skill](#skill) · [Training](#training) · [Experience](#experience) · [Training skill gain](#training-skill-gain)
+
+### Team Combat rating adjustment
+
+Source: `content/compendium/compendium_articles/mechanics_team_combat_rating_adjustment.yaml`
+
+A side is worth more than the sum of its [Combatants](#combatant), because more Combatants share the other side's attacks. Your team is also worth less when a few skilled [Agents](#agents) carry it, because every Agent dies to the same harm whatever its [skill](#skill), so such a team loses most of its strength with its first few dead. The Team Combat rating adjustment multiplies the [Combat rating](#combat-rating) of a side by both.
+
+| Formulas |  |
+| --- | --- |
+| Team size factor | n ^ (1.3 − 1), where n is the number of Combatants of the side [able to fight](#able-to-fight) |
+| Skill evenness factor | 1 − 0.25 × the Gini coefficient of your Agents' effective skill |
+| Gini coefficient | 0 when every Agent has the same effective skill, and nearer 1 the more of it a few Agents hold: Agents of skill 900, 100, 100, and 100 have 0.5 |
+| Enemies | The team size factor |
+| Your team | The team size factor × the skill evenness factor |
+
+See also: [Combat rating](#combat-rating) · [Enemy target selection](#enemy-target-selection) · [Skill](#skill)
 
 ### Training
 

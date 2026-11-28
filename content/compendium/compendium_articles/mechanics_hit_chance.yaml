@@ -1,0 +1,20 @@
+id: mechanics_hit_chance
+type: CompendiumArticle
+category: mechanics
+listed_under: combat
+title: Hit chance
+terms: [hit chance, chance to hit]
+body: >-
+  The hit chance is how likely one attack is to hit. It depends only on how the attacker's effective skill compares with
+  the defender's: equal skill gives an even chance, and twice the skill hits four times in five. No attack is ever
+  certain to hit or to miss.
+formulas:
+  - label: 'Chance to hit'
+    text: 'A² ÷ (A² + D²), rounded down to a tenth of a percent and kept from 0.1% to 99.9%, where A is the effective skill of the attacker and D that of the defender'
+  - label: 'Read when'
+    text: 'At the moment of the attack, so wounds and exhaustion taken earlier in the Combat count'
+  - label: 'Hit roll'
+    text: 'A number from 0 to 999 that the Combat report shows beside each attack; the attack hits when it is below the hit chance in tenths of a percent'
+  - label: 'A hit'
+    text: 'Deals damage'
+see_also: [mechanics_damage, mechanics_skill, mechanics_agent_target_selection, mechanics_combat_report]

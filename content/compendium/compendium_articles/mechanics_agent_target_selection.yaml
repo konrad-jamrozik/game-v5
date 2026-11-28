@@ -1,0 +1,22 @@
+id: mechanics_agent_target_selection
+type: CompendiumArticle
+category: mechanics
+listed_under: combat
+title: Agent target selection
+terms: [Agent target selection, selection weight]
+body: >-
+  An Agent picks its target at random, but it is drawn to an Enemy it is likely but not certain to hit, and away from an
+  Enemy with so little health and armor left that much of a hit would be wasted on it. So it neither wastes attacks on
+  long shots nor spends them all finishing off the weakest Enemy. Every Enemy able to fight can still be its target.
+formulas:
+  - label: 'Candidates'
+    text: 'Every Enemy able to fight at that moment'
+  - label: 'Chance to be picked'
+    text: "An Enemy's selection weight ÷ the sum of the selection weights of every candidate"
+  - label: 'Hit-chance weight'
+    text: '{combat_parameters.target_base_weight} minus one for each whole hundredth by which the hit chance on the Enemy lies above or below {combat_parameters.target_preferred_hit_chance}'
+  - label: 'Usefulness'
+    text: "The share of the Agent's weapon damage that the Enemy's health and armor can still take, at most 1"
+  - label: 'Selection weight'
+    text: 'Hit-chance weight × usefulness, rounded up, so at least 1'
+see_also: [mechanics_enemy_target_selection, mechanics_hit_chance, mechanics_damage, mechanics_combat_turn]

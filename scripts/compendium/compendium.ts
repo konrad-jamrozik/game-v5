@@ -389,9 +389,10 @@ export function loadCompendium(gameData: GameData): Compendium {
   const titles = new Map<string, Article>()
   const subjects = new Map<string, Article>()
   const termOwners = new Map<string, Article>()
-  // COMP, CompendiumArticle: `listed_under` names a Type that the subject of some Subject article has, and only a
-  // guide or mechanics article has it.
+  // COMP, CompendiumArticle: `listed_under` names a Type that the subject of some Subject article has, or the topic
+  // `combat`, and only a guide or mechanics article has it.
   const subjectTypes = new Set(articles.flatMap((article) => (article.subject ? [article.subject.type] : [])))
+  subjectTypes.add('combat')
   for (const gdr of gameData.gdrs.values()) {
     if (gdr.type !== ARTICLE_TYPE) continue
     const listedUnder = gdr.properties['listed_under']
@@ -399,7 +400,9 @@ export function loadCompendium(gameData: GameData): Compendium {
     if (gdr.properties['category'] === 'subject') {
       findings.push(`${gdr.path}: a subject article has no listed_under.`)
     } else if (typeof listedUnder !== 'string' || !subjectTypes.has(listedUnder)) {
-      findings.push(`${gdr.path}: listed_under names a Type that the subject of some subject article has.`)
+      findings.push(
+        `${gdr.path}: listed_under names a Type that the subject of some subject article has, or the topic combat.`,
+      )
     }
   }
   for (const article of articles) {

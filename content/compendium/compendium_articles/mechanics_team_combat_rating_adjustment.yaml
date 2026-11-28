@@ -1,0 +1,23 @@
+id: mechanics_team_combat_rating_adjustment
+type: CompendiumArticle
+category: mechanics
+listed_under: combat
+title: Team Combat rating adjustment
+terms: [Team Combat rating adjustment, team size factor, skill evenness factor]
+body: >-
+  A side is worth more than the sum of its Combatants, because more Combatants share the other side's attacks. Your team
+  is also worth less when a few skilled Agents carry it, because every Agent dies to the same harm whatever its skill, so
+  such a team loses most of its strength with its first few dead. The Team Combat rating adjustment multiplies the
+  Combat rating of a side by both.
+formulas:
+  - label: 'Team size factor'
+    text: 'n ^ ({combat_parameters.rating_team_size_exponent} − 1), where n is the number of Combatants of the side able to fight'
+  - label: 'Skill evenness factor'
+    text: "1 − {combat_parameters.rating_agent_skill_gini_penalty} × the Gini coefficient of your Agents' effective skill"
+  - label: 'Gini coefficient'
+    text: '0 when every Agent has the same effective skill, and nearer 1 the more of it a few Agents hold: Agents of skill 900, 100, 100, and 100 have 0.5'
+  - label: 'Enemies'
+    text: 'The team size factor'
+  - label: 'Your team'
+    text: 'The team size factor × the skill evenness factor'
+see_also: [mechanics_combat_rating, mechanics_enemy_target_selection, mechanics_skill]

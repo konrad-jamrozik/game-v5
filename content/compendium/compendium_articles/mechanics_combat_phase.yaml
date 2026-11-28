@@ -1,0 +1,22 @@
+id: mechanics_combat_phase
+type: CompendiumArticle
+category: mechanics
+listed_under: combat
+title: Combat phase
+terms: [Combat phase, Combat phases, Agents' phase, Enemies' phase, phase order]
+body: >-
+  Each Combat round has two phases: the Agents' phase, in which every Agent takes its Combat turn, and then the Enemies'
+  phase, in which every Enemy does. Within a phase the most skilled Combatant goes first, so a strong Agent often strikes
+  before a weaker one is put at risk.
+formulas:
+  - label: "Agents' phase"
+    text: 'Each Agent of your team takes one Combat turn'
+  - label: "Enemies' phase"
+    text: 'Each Enemy takes one Combat turn'
+  - label: 'Phase order'
+    text: 'From the highest to the lowest effective skill at the start of the phase'
+  - label: 'Ties'
+    text: 'The Combatant listed earlier in its side goes first'
+  - label: 'Set for the phase'
+    text: 'The order does not change within a phase, even when a Combatant is hit and loses effective skill'
+see_also: [mechanics_combat_round, mechanics_combat_turn, mechanics_skill]

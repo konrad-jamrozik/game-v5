@@ -1,6 +1,7 @@
 id: mechanics_retreat
 type: CompendiumArticle
 category: mechanics
+listed_under: combat
 title: Retreat
 terms: [retreat, retreats, retreated]
 body: >-
@@ -16,4 +17,4 @@ formulas:
     text: 'The Mission is lost'
   - label: 'Exhaustion'
     text: 'Survivors gain as much as after any other Mission'
-see_also: [mechanics_combat, mechanics_missions]
+see_also: [mechanics_combat, mechanics_combat_outcome, mechanics_missions]

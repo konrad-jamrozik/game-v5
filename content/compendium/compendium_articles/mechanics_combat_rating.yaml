@@ -1,6 +1,7 @@
 id: mechanics_combat_rating
 type: CompendiumArticle
 category: mechanics
+listed_under: combat
 title: Combat rating
 terms: [Combat rating, Combat ratings]
 body: >-
@@ -27,4 +28,12 @@ formulas:
     text: 'Add nothing to the Combat rating of their side'
   - label: 'Base Combat rating'
     text: "An Agent's effective skill alone, shown beside its Combat rating so that you can see how much its equipment and Upgrades add"
-see_also: [mechanics_combat, mechanics_retreat, mechanics_damage, mechanics_skill, mechanics_missions]
+see_also:
+  [
+    mechanics_combat,
+    mechanics_team_combat_rating_adjustment,
+    mechanics_retreat,
+    mechanics_damage,
+    mechanics_skill,
+    mechanics_missions,
+  ]

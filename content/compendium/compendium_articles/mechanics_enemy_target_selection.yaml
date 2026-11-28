@@ -1,0 +1,15 @@
+id: mechanics_enemy_target_selection
+type: CompendiumArticle
+category: mechanics
+listed_under: combat
+title: Enemy target selection
+terms: [Enemy target selection]
+body: >-
+  Enemies have no such judgement as your Agents: an Enemy strikes at whichever Agent is in reach, so its attacks spread
+  evenly over your team. A larger team shares the Enemies' attacks among more Agents.
+formulas:
+  - label: 'Candidates'
+    text: 'Every Agent of your team able to fight at that moment'
+  - label: 'Chance to be picked'
+    text: 'Equal for each candidate'
+see_also: [mechanics_agent_target_selection, mechanics_combat_turn, mechanics_team_combat_rating_adjustment]

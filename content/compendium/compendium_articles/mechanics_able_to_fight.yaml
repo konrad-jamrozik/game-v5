@@ -1,0 +1,24 @@
+id: mechanics_able_to_fight
+type: CompendiumArticle
+category: mechanics
+listed_under: combat
+title: Able to fight
+terms: [able to fight, unable to fight]
+body: >-
+  A Combatant able to fight is alive and not Incapacitated: it still attacks on its Combat turn, and it can still be
+  attacked. A side that has no Combatant able to fight has lost the Combat. An Incapacitated Combatant is alive, so an
+  Incapacitated Agent survives the Combat.
+formulas:
+  - label: 'Able to fight'
+    text: 'Health above 0, and neither of the two conditions below'
+  - label: 'Too weakened'
+    text: 'Effective skill at or below {combat_parameters.incapacitation_skill_fraction} × skill'
+  - label: 'Too worn down'
+    text: 'Exhaustion of {agent_parameters.exhaustion_incapacitation} or more'
+  - label: 'Checked'
+    text: 'For every Combatant when the Combat starts, and for the defender and the attacker after each attack'
+  - label: 'Once Incapacitated'
+    text: 'Stays so until the Combat ends, and neither attacks nor is attacked'
+  - label: 'In the Combat rating'
+    text: 'Only Combatants able to fight add to the Combat rating of their side'
+see_also: [mechanics_combatant, mechanics_incapacitated_agent, mechanics_combat_outcome, mechanics_exhaustion]

@@ -1,0 +1,26 @@
+id: mechanics_combat_turn
+type: CompendiumArticle
+category: mechanics
+listed_under: combat
+title: Combat turn
+terms: [Combat turn, Combat turns]
+body: >-
+  A Combat turn is one Combatant's part in a phase: it picks a target and attacks it once. A Combat turn is not a turn
+  of the Campaign: a whole Combat, with all its rounds, is fought within one turn.
+formulas:
+  - label: 'Able to fight'
+    text: 'Selects a target among the Combatants of the other side able to fight, and attacks it once'
+  - label: 'Not able to fight'
+    text: 'Does nothing'
+  - label: 'The attack'
+    text: 'Hits with its hit chance; a hit deals damage, and the attack tires both sides, hit or miss'
+  - label: 'Ends the Combat'
+    text: 'When the attack leaves one side with no Combatant able to fight; no further Combat turn is taken'
+see_also:
+  [
+    mechanics_combat_phase,
+    mechanics_hit_chance,
+    mechanics_agent_target_selection,
+    mechanics_enemy_target_selection,
+    mechanics_damage,
+  ]

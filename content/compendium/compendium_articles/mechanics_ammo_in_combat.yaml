@@ -1,0 +1,21 @@
+id: mechanics_ammo_in_combat
+type: CompendiumArticle
+category: mechanics
+listed_under: combat
+title: Ammo in a Combat
+terms: [run out of ammo, runs out of ammo]
+body: >-
+  Your Agents fight with the rounds of ammo the Agency has in Storage. An Agent whose rounds run out fights on with its
+  knife until the Combat ends. Enemies never run out.
+formulas:
+  - label: 'Each attack of an Agent'
+    text: 'Spends one round of the ammo its weapon uses, hit or miss'
+  - label: 'The last round'
+    text: 'The attack that spends it still hits with the weapon'
+  - label: 'Out of ammo'
+    text: "The Agent's weapon damage becomes that of its knife, in its attacks and in its Combat rating"
+  - label: 'A weapon without ammo'
+    text: 'Spends nothing, e.g. a knife'
+  - label: 'Shared'
+    text: 'Every Agent whose weapon uses one ammo draws on the same rounds'
+see_also: [mechanics_equipment, mechanics_damage, knife_article]

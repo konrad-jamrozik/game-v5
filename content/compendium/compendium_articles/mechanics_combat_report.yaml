@@ -1,0 +1,24 @@
+id: mechanics_combat_report
+type: CompendiumArticle
+category: mechanics
+listed_under: combat
+title: Combat report
+terms: [Combat report, Combat reports, Combat log, Combat replay]
+body: >-
+  Every Combat leaves a Combat report, a full account from which you can follow every attack: who attacked whom, the hit
+  chance and the hit roll, the damage, and who fell. The Turn report holds it, and the Combat replay plays it back as
+  shots between the figures of the Combatants.
+formulas:
+  - label: 'Outcome'
+    text: 'The Combat outcome and the number of rounds'
+  - label: 'Combatants'
+    text: 'Each with its values at the start and at the end, the damage it dealt and took, and, for an Agent, what it learned'
+  - label: 'Combat ratings'
+    text: 'Of each side at the start and after every round'
+  - label: 'Ammo'
+    text: 'The rounds at hand at the start and left at the end'
+  - label: 'Combat log'
+    text: 'Every attack, in order'
+  - label: 'Kept'
+    text: 'In full in the Turn report of its turn; a short summary in the History for the rest of the Campaign'
+see_also: [mechanics_combat_outcome, mechanics_hit_chance, mechanics_combat_rating]

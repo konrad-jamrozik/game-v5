@@ -1,0 +1,21 @@
+id: mechanics_combat_round
+type: CompendiumArticle
+category: mechanics
+listed_under: combat
+title: Combat round
+terms: [Combat round, Combat rounds]
+body: >-
+  A Combat round is one pass of a Combat in which every Combatant able to fight attacks once. Your Agents act first, in
+  the Agents' phase, and the Enemies answer in the Enemies' phase. Rounds follow one another until the Combat ends.
+formulas:
+  - label: 'Numbered'
+    text: 'From 1; a Combat that ends as it starts has 0 rounds'
+  - label: 'Parts'
+    text: "The Agents' phase, then the Enemies' phase"
+  - label: 'Effects of an attack'
+    text: "Apply at once, so an Enemy killed in the Agents' phase does not attack in the Enemies' phase of the same round"
+  - label: 'After each round'
+    text: 'Your team weighs whether to retreat'
+  - label: 'How many'
+    text: 'No limit: every attack tires someone, so the Combatants of one side are in the end too worn down to fight'
+see_also: [mechanics_combat_phase, mechanics_combat_turn, mechanics_retreat, mechanics_combat]

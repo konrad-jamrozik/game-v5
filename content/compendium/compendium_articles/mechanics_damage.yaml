@@ -1,6 +1,7 @@
 id: mechanics_damage
 type: CompendiumArticle
 category: mechanics
+listed_under: combat
 title: Damage
 terms: [damage, weapon damage, armor]
 body: >-

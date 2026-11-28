@@ -1,26 +1,32 @@
 id: mechanics_combat
 type: CompendiumArticle
 category: mechanics
+listed_under: combat
 title: Combat
 terms: [Combat, Combats]
 body: >-
   A Combat is fought in rounds. In each round every Agent attacks once, then every Enemy still able to fight attacks
   once, the most skilled of each side first. Enemies attack any Agent able to fight, at random. Agents choose at random
-  too, but favour an Enemy they are likely but not certain to hit, and one with enough health left to take a full hit. The Combat ends the moment one side can no longer
-  fight, or after a round in which your team retreats.
+  too, but favour an Enemy they are likely but not certain to hit, and one with enough health left to take a full hit.
+  The Combat ends the moment one side can no longer fight, or after a round in which your team retreats.
 formulas:
-  - label: 'Chance to hit'
-    text: 'A² ÷ (A² + D²), rounded down to a tenth of a percent and kept from 0.1% to 99.9%, where A is the effective skill of the attacker and D that of the defender'
-  - label: 'Order'
-    text: 'Within a side, from the highest to the lowest effective skill at the start of its part of the round'
-  - label: 'Enemy target'
-    text: 'Any Agent able to fight, each equally likely'
-  - label: 'Agent target'
-    text: "Any Enemy able to fight, with a weight of {combat_parameters.target_base_weight} minus one for each whole hundredth by which the chance to hit it lies above or below {combat_parameters.target_preferred_hit_chance}, times the share of the Agent's weapon damage that the Enemy's health and armor can still take, rounded up"
+  - label: 'Who fights'
+    text: 'Your deployed team against the Enemies at the Mission site; you give no orders once it starts'
+  - label: 'Each round'
+    text: "The Agents' phase, then the Enemies' phase; each Combatant able to fight takes one Combat turn and attacks once"
   - label: 'Each attack'
     text: '+{agent_parameters.exhaustion_per_attack} exhaustion for the attacker and +{agent_parameters.exhaustion_per_defense} for the defender, hit or miss'
-  - label: 'Incapacitated'
-    text: 'Alive but unable to fight: effective skill at or below {combat_parameters.incapacitation_skill_fraction} × skill, or exhaustion of {agent_parameters.exhaustion_incapacitation} or more'
   - label: 'End of the Combat'
     text: 'As soon as no Enemy or no Agent is able to fight, or after a round in which the team retreats'
-see_also: [mechanics_combat_rating, mechanics_damage, mechanics_retreat, mechanics_skill, mechanics_missions]
+see_also:
+  [
+    mechanics_combatant,
+    mechanics_combat_round,
+    mechanics_hit_chance,
+    mechanics_agent_target_selection,
+    mechanics_combat_outcome,
+    mechanics_combat_rating,
+    mechanics_damage,
+    mechanics_retreat,
+    mechanics_combat_report,
+  ]
