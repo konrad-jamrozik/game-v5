@@ -43,18 +43,21 @@ A long list reads faster in a few named groups, so the article list of some cate
 | Category | Article sections, in order |
 | --- | --- |
 | Guide | **Guides:** the Guide articles. **Tutorials:** the [Tutorial bubbles](../tutorials.md#tutorials-in-the-compendium) it lists, whatever Tutorials on is. |
-| Mechanics | **Campaign**, **Operations**, **[Agent](../../mechanics/domain-model.md#agency-and-agents) work**, and **Agent strength:** each the Mechanics articles whose `section` names it. |
+| Mechanics | **Campaign**, **[Leads](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) and Missions**, **Agents**, and **[Assignments](../../mechanics/domain-model.md#agency-and-agents):** each the Mechanics articles whose `section` names it. |
 | Agents | **Overview:** the Subject articles about AgentArchetypes. **Agent properties:** the articles listed under AgentArchetype. |
+| Combat | **Overview:** the article whose displayed title is "Combat". **Combat mechanics:** the other articles listed under the topic `combat`. |
 | Weapons | **Weapons:** the Subject articles about Weapons. **Ammo:** those about AmmoTypes. |
 | Upgrades | **Cap upgrades:** the Subject articles about [Cap Upgrades](../../mechanics/economy-and-upgrades.md#glossary). **Other upgrades:** the rest. |
 | [Mission sites](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) | **Initiative**, then **Response:** the Subject articles about the MissionSiteArchetypes of that `kind`. |
 | Leads | **One-time**, **Initiative**, and **Interrogations:** the Subject articles about the [Leads](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions) of that kind, as below. |
 
-A Lead is of one kind, read from its [GDR](../../foundation/core-concepts.md#game-build-and-content), so that the Player tells a step that recurs from one that comes once:
+A Lead's kind is read from its [GDR](../../foundation/core-concepts.md#game-build-and-content), each rule tried in this order:
 
 - **Initiative:** its `on_completion` creates a Mission site, i.e. it leads to an [Initiative Mission site](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), however often it can be investigated.
-- **Interrogations:** otherwise, its `discovered_when` names a Won [Mission](../../mechanics/domain-model.md#leads-investigations-mission-sites-and-missions), by `mission_won` or `mission_won_with_enemy`, i.e. it questions what a Mission captured.
-- **One-time:** every other Lead, which is investigated once to move the story on, e.g. a Faction's profile.
+- **Interrogations:** otherwise, its identifier starts with `interrogate`.
+- **One-time:** otherwise, it has no `investigate_again`, so that it can be investigated only once, e.g. a Faction's profile.
+
+An article of a category with Article sections that is in none of them, e.g. a Lead of none of these kinds, is listed after the sections without a heading, so that every Player-visible article stays reachable.
 
 A Mechanics article with no `section`, or a `section` the table does not name, is a [data defect](../../foundation/game-data-records.md#data-defects), unless it has a `listed_under`.
 

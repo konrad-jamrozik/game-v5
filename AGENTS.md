@@ -46,6 +46,10 @@ When the Game designer sets work aside for later, add it to [TODOs](docs/specs/g
 
 In every document and in chat, introduce every example with "e.g.", as defined in [Marking examples](docs/specs/governance/conventions/spec-conventions.md#marking-examples). Never state an example as a bare sentence after a general statement; the reader must not have to infer whether a sentence is general or illustrative.
 
+## Terminology
+
+Be extremely precise about terminology and never use synonyms, as [Terminology Conventions](docs/specs/governance/conventions/terminology-conventions.md#canonical-terminology) defines. In every document, in the game's text, e.g. a heading, label, or Compendium section, and in chat, name a concept of the game only by the term that a specification Glossary defines for it, and never by a Prohibited synonym. Never coin a phrase that sounds like a term of the game, e.g. "Agent strength" when no Glossary defines it. When a new term is needed, check that no defined term already names the concept, so that the new one is not a synonym, and add it to the Glossary of the specification that owns the concept before using it.
+
 ## Reply markers
 
 In chat replies, mark these lines with an emoji at the start of the line or bullet, never mid-sentence. The markers are for chat only and never appear in committed files.
