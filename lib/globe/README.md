@@ -49,7 +49,7 @@ On top of those, three further effects can each be switched off, with the checkb
 | Name | Label | From about | Effect |
 | --- | --- | --- | --- |
 | `debris` | Ash in orbit | 55% | Ash and embers drift around the planet. |
-| `bloom` | Bloom | 10% | The fires and the red rim glow. The one effect with a real cost: the scene is drawn into an offscreen picture and blurred, though only while devastation is above 0. |
+| `bloom` | Bloom | 50% | The fires and the red rim glow. The one effect with a real cost: the scene is drawn into an offscreen picture and blurred, though only while devastation is above 50%. |
 | `sky` | Dim sun | 40% | The sunlight on the planet dims and reddens further. The stars stay as they are. |
 
 ### Decision record: rejected effects
