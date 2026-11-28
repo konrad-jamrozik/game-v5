@@ -71,17 +71,18 @@ A → B means A is referenced by B: the text of B links to A. Layer 1 is drawn a
 | 20 | CSCR Campaign Screen | AGENT, AUTO, CORE, CSTATE, DOM, ENDING, ENG, GUI, LIFE, SAVES, SITP, SOUNDS, TSUM |
 | 20 | PLACE Implementation Placement | CORE, MUSIC, SOUNDS, VIS |
 | 21 | ALAB Autopilot Lab | BASICAI, COMBAT, CONFIG, CORE, CSIM, DOM, ECON, ENG, FACTION, GDR |
-| 21 | APPERF Autopilot Performance | AGENT, BASICAI, COMBAT, COND, CORE, CSTATE, DOM, ECON, ENG, PLACE, SAVES |
 | 21 | CTEST Campaign Tests | BASICAI, CORE, DOM, ENG, PLACE |
 | 21 | GLOBE Globe Integration | CORE, ENG, GUI, PLACE |
 | 21 | LICENSE Implementation License | PLACE |
 | 21 | LOOP Development Loop | CORE, ENG, PLACE, VIS |
 | 21 | MENU Main Menu | CONFIG, CORE, CSIM, CSTATE, DETERM, DOM, ENG, GDR, GUI, LIFE, SAVES |
+| 21 | PERF Implementation Performance | AGENT, CORE, CSTATE, DOM, ENG, PLACE, SAVES |
 | 21 | REUSE Rule Reuse | COMBAT, CORE, DOM, ENG, PLACE |
 | 21 | TESTVAL Test Values | CORE, PLACE |
 | 22 | AIEXPECT Autopilot AI Expectations | ALAB, BASICAI, COMBAT, CONFIG, CORE, DOM, ENG |
 | 22 | AISTUDY1 Basic Autopilot AI Study, 2026-11-25 | AGENT, ALAB, BASICAI, COMBAT, CONFIG, CORE, DOM, ECON, ENG, EQUIP, FACTION, GDR |
 | 22 | GDRS GDRs | AGENT, COMBAT, COMP, CORE, DOM, ECON, EFFECT, ENG, EQUIP, FACTION, GDR, LEAD, LICENSE, MUSIC, TSUM, VIS |
+| 22 | PERFLOG Performance Log | AGENT, BASICAI, COMBAT, COND, CORE, CSTATE, DOM, ECON, ENG, PERF, PLACE, SAVES, WHIST |
 | 23 | AISTUDY4 Basic Autopilot AI Study, 2026-11-27, current AI | AGENT, AIEXPECT, BASICAI, COMBAT, CORE, DOM, ECON, ENG, GDR |
 
 ## Governance specifications

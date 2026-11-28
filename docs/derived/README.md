@@ -20,7 +20,7 @@ These informative views are derived from the registered Markdown specifications.
 | Design             | UI                | 21             |
 | Design             | Autopilot AIs     | 3              |
 | Implementation     | Mandatory         | 5              |
-| Implementation     | Guidance          | 5              |
+| Implementation     | Guidance          | 6              |
 | Implementation     | Recipes           | 2              |
 | Implementation     | Autopilot Studies | 2              |
 
@@ -138,9 +138,10 @@ These informative views are derived from the registered Markdown specifications.
 
 | ID | Document | Owns |
 | --- | --- | --- |
-| APPERF | [Autopilot Performance](../specs/implementation/guidance/autopilot-performance.md) | Non-behavioural guidance on keeping Turns fast as an Agency grows, and the record of the performance changes made to the current Implementation, with their commits, so that each can be reverted. |
 | DEPDIR | [Gameplay Dependency Direction](../specs/implementation/guidance/gameplay-dependency-direction.md) | Non-behavioural guidance keeping gameplay code from reaching Campaign state beyond its necessary inputs. |
 | HEADLESS | [Headless First](../specs/implementation/guidance/headless-first.md) | Guidance that an Implementation becomes fully playable headlessly, through its Command-Line Interface, before work on its Graphical User Interface begins. |
+| PERF | [Implementation Performance](../specs/implementation/guidance/implementation-performance.md) | Why play slows down as a Campaign grows, the responsiveness the Implementation is suggested to keep, and how a Performance change is measured and recorded. |
+| PERFLOG | [Performance Log](../specs/implementation/guidance/performance-log.md) | The record of every Performance change considered for the current Implementation and its tools, with its status, reasons, Estimated and Observed gains, and commits, so that each Applied one can be reverted. |
 | SCHEMA | [Storage Schema](../specs/implementation/guidance/storage-schema.md) | Non-behavioural guidance on the physical layout of everything the game persists. |
 | TFOCUS | [Test Focus](../specs/implementation/guidance/test-focus.md) | Non-behavioural guidance on which properties of an Implementation its automated tests are best spent on. |
 

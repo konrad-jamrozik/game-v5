@@ -24,13 +24,17 @@ The Design specifications leave technical matters open, e.g. how code is organiz
 
 [Test Focus](test-focus.md) answers _which properties are tests best spent on?_
 
-## Autopilot Performance
+## Implementation Performance
 
-[Autopilot Performance](autopilot-performance.md) answers _why does a Turn slow down as the Agency grows, and what was done about it?_ It records each performance change with its commits, so that each can be reverted once the game needs fewer Agents and Upgrades.
+[Implementation Performance](implementation-performance.md) answers _why does play slow down as a Campaign grows, how fast should it be, and how is a speed-up measured and recorded?_
+
+## Performance Log
+
+[Performance Log](performance-log.md) answers _which speed-ups were considered, which were applied, postponed, or rejected, why, and what did they save?_ It records each with its commits, so that each can be reverted once the game needs fewer Agents and Upgrades.
 
 # How they relate
 
-The Guidance specifications build on the Design specifications, mostly on the Foundation family's engine API, saves, and Timeline; Autopilot Performance also records changes to Basic Autopilot AI and to Economy and Upgrades. No Guidance specification relies on another.
+The Guidance specifications build on the Design specifications, mostly on the Foundation family's engine API, saves, and Timeline; the Performance Log also records changes to Basic Autopilot AI and to Economy and Upgrades. The Performance Log relies on Implementation Performance for how a Performance change is measured and recorded; no other Guidance specification relies on another.
 
 <!-- generated:family-diagram:start -->
 
@@ -38,7 +42,7 @@ _Generated from the links between the specifications by `npm run docs:generate`;
 
 ## Within the family
 
-No specification of this family links another specification of it.
+![Guidance family: references within the family](../../../images/diagrams/guidance-family-within.svg)
 
 ## Across families
 
