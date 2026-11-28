@@ -120,7 +120,7 @@ The Player decides whether Sounds play and how loud they are, and the choice sho
 
 The Sounds are authored to be heard over the music at their own level, so the [Game build default](../foundation/engine-contract.md#persisted-data) plays them as authored, and the Player turns them down from there.
 
-The two settings are independent of [Music on and Music volume](music.md#music-settings), so the Player can silence the music and keep the Sounds, or the reverse. The Player sets both in one row of the [Settings panel](gui.md#settings-panel), labelled Sounds, which holds from left to right:
+The two settings are independent of [Music on and Music volume](music.md#music-settings), so the Player can silence the music and keep the Sounds, or the reverse. The Player sets both in one row of the [Settings panel](gui.md#settings-panel), labelled Sounds volume, which holds from left to right:
 
 1. **Sounds toggle:** a neutral button showing a speaker, struck through while Sounds on is `false`, drawn as the Music toggle of the [Music control](music.md#music-control) is. Selecting it sets Sounds on to the opposite value. Its accessible name is "Sounds on" or "Sounds off", after the state it shows.
 2. **Sounds volume slider:** a horizontal [slider](visual-design.md#sliders) from 0 to 100 in steps of 1, showing the Sounds volume, followed by the Sounds volume in the Figure style. The Sounds volume is set when the Player releases the slider, and on release `main-click` plays at the new Sounds volume, so the Player hears the level they chose. The slider stays enabled while Sounds on is `false`.

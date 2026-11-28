@@ -48,12 +48,13 @@ The Player changes [Global configuration](../foundation/engine-contract.md#persi
 
 The Settings panel is titled Settings and holds these rows from top to bottom, each a [row of a settings list](visual-design.md#inputs):
 
-1. **Music,** on the Campaign Screen only: the [Music toggle and the Music volume slider](music.md#music-volume-slider).
-2. **Sounds:** the [Sounds toggle and the Sounds volume slider](sounds.md#sound-settings).
-3. **Tutorials:** a checkbox labelled "Tutorials enabled" that shows and sets [Tutorials on](tutorials.md#tutorials-settings), and after it the [neutral button "Reset tutorials"](tutorials.md#tutorials-settings).
-4. **Other settings:** one row for each other Global configuration setting, e.g. the [Autosave limit](../foundation/saves.md#glossary) or the [Screen limit](visual-design.md#screen-limit), with its input, except a setting that a control elsewhere sets where the Player uses it, e.g. the [Autopilot settings](screens/campaign-screen.md#autopilot-settings).
-5. **Changed settings:** what the Player has [changed](#changed-settings).
-6. **Tools,** on the Campaign Screen only: a neutral button for the [keyboard shortcuts](screens/campaign-screen.md#keyboard-shortcuts), and one for the developer tools. Each closes the Settings panel and opens what it names.
+1. **Playback:** the [Music control](music.md#music-control-in-the-settings-panel).
+2. **Music volume:** the [Music volume slider](music.md#music-volume-slider).
+3. **Sounds volume:** the [Sounds toggle and the Sounds volume slider](sounds.md#sound-settings).
+4. **Tutorials:** a checkbox labelled "Tutorials enabled" that shows and sets [Tutorials on](tutorials.md#tutorials-settings), and after it the [neutral button "Reset tutorials"](tutorials.md#tutorials-settings).
+5. **Other settings:** one row for each other Global configuration setting, e.g. the [Autosave limit](../foundation/saves.md#glossary) or the [Screen limit](visual-design.md#screen-limit), with its input, except a setting that a control elsewhere sets where the Player uses it, e.g. the [Autopilot settings](screens/campaign-screen.md#autopilot-settings).
+6. **Changed settings:** what the Player has [changed](#changed-settings).
+7. **Tools,** on the Campaign Screen only: a neutral button for the [keyboard shortcuts](screens/campaign-screen.md#keyboard-shortcuts), and one for the developer tools. Each closes the Settings panel and opens what it names.
 
 ## Changed settings
 
