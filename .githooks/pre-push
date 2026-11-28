@@ -1,11 +1,19 @@
 #!/bin/sh
 
-set -e
+HOOK_NAME=push
+. "$(dirname "$0")/run-step.sh"
 
-node scripts/lint-specs.ts
-node scripts/compendium-check.ts
-node scripts/derived-docs.ts check
-node node_modules/oxfmt/bin/oxfmt . --check
-node node_modules/oxlint/bin/oxlint . --type-aware --max-warnings 0 --report-unused-disable-directives
-node node_modules/vitest/vitest.mjs run
-node node_modules/typescript/bin/tsc --build
+run_step "specification lint" "Fix the specification problems listed above by hand; \"npm run lint:specs\" reruns the check." \
+  node scripts/lint-specs.ts
+run_step "Compendium check" "Fix the Compendium problems listed above by hand; \"npm run compendium:check\" reruns the check." \
+  node scripts/compendium-check.ts
+run_step "derived docs" "Run \"npm run docs:generate\" to regenerate the derived docs, then commit the result." \
+  node scripts/derived-docs.ts check
+run_step "formatting" "Run \"npm run format\" to format the files listed above, then commit the result." \
+  node node_modules/oxfmt/bin/oxfmt . --check
+run_step "code lint" "Run \"npm run lint:code -- --fix\"; fix by hand whatever it cannot fix." \
+  node node_modules/oxlint/bin/oxlint . --type-aware --max-warnings 0 --report-unused-disable-directives
+run_step "tests" "Fix the failing tests listed above; \"npm run test\" reruns them." \
+  node node_modules/vitest/vitest.mjs run
+run_step "type check" "Fix the type errors listed above; \"npm run typecheck\" reruns the check." \
+  node node_modules/typescript/bin/tsc --build

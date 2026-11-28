@@ -99,7 +99,7 @@ Enable the repository's tracked hooks once per checkout or worktree:
 npm run hooks:install
 ```
 
-The pre-commit hook runs specification linting first, followed by the Compendium check, the derived-view check, formatting, and code linting. The pre-push hook runs the same validation pipeline as `npm run check` and CI: specification linting, the Compendium check, the derived-view check, formatting, code linting, tests, and type checking. The hooks invoke the installed project tools directly so Git clients and agents do not depend on shell-specific npm initialization. A failing command aborts the Git operation. Git's `--no-verify` option can bypass client-side hooks, so CI remains authoritative.
+The pre-commit hook runs specification linting first, followed by the Compendium check, the derived-view check, formatting, and code linting. The pre-push hook runs the same validation pipeline as `npm run check` and CI: specification linting, the Compendium check, the derived-view check, formatting, code linting, tests, and type checking. The hooks invoke the installed project tools directly so Git clients and agents do not depend on shell-specific npm initialization. A failing command aborts the Git operation, and the hook then names the check that failed, the command that fixes it, e.g. `npm run format` for formatting, and any uncommitted changes, since the hooks check the files on disk. Git's `--no-verify` option can bypass client-side hooks, so CI remains authoritative.
 
 ## CI and updates
 
