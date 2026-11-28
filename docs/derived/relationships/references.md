@@ -76,7 +76,7 @@ A → B means A is referenced by B: the text of B links to A. Layer 1 is drawn a
 | 21 | GLOBE Globe Integration | CORE, ENG, GUI, PLACE |
 | 21 | LICENSE Implementation License | PLACE |
 | 21 | LOOP Development Loop | CORE, ENG, PLACE, VIS |
-| 21 | MENU Main Menu | CONFIG, CORE, CSIM, CSTATE, DETERM, ENG, GDR, LIFE, SAVES |
+| 21 | MENU Main Menu | CONFIG, CORE, CSIM, CSTATE, DETERM, ENG, GDR, GUI, LIFE, SAVES |
 | 21 | REUSE Rule Reuse | COMBAT, CORE, DOM, ENG, PLACE |
 | 21 | TESTVAL Test Values | CORE, PLACE |
 | 22 | AIEXPECT Autopilot AI Expectations | ALAB, BASICAI, COMBAT, CONFIG, CORE, DOM, ENG |

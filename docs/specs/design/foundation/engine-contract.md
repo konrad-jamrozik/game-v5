@@ -203,13 +203,13 @@ Game storage (persisted)
 ├── Global configuration
 └── Campaign saves (zero or more)
     └── Campaign save
-        ├── Campaign save ID and Campaign ID
+        ├── Campaign save ID, Campaign ID, and Campaign name
         ├── Campaign state (as it was when the Campaign save was written)
         └── Time it was last written
 
 Session (runtime)
 ├── Current campaign (at most one; the working copy that play changes)
-│   ├── Campaign ID
+│   ├── Campaign ID and Campaign name
 │   └── Campaign state
 ├── Dev mode
 ├── Active Autopilot engagement (at most one)

@@ -96,7 +96,7 @@ Outside these fades, f is 1. When a fade starts while another is under way, the 
 
 # Music control
 
-The Player should be able to silence the music or skip a Track without leaving what they are doing, and to find out what is playing. The Music control does all of these, and it appears in two places: above the [Settings panel](gui.md#glossary) of the [Main Menu](screens/main-menu.md), and on the [Globe stage](gui.md#glossary) of the [Campaign Screen](screens/campaign-screen.md), so it is one click away whenever the globe is in view, and one step away, by closing the [Detail view](gui.md#glossary), while one covers the Globe stage. Setting the volume is rarer, so the [Music volume slider](#music-volume-slider) sits in the Settings panel instead.
+The Player should be able to silence the music or skip a Track without leaving what they are doing, and to find out what is playing. The Music control does all of these, and it appears in two places: in the header of the [Main Menu](screens/main-menu.md), and on the [Globe stage](gui.md#glossary) of the [Campaign Screen](screens/campaign-screen.md), so it is one click away whenever the globe is in view, and one step away, by closing the [Detail view](gui.md#glossary), while one covers the Globe stage. Setting the volume is rarer, so the [Music volume slider](#music-volume-slider) sits in the [Settings panel](gui.md#glossary) instead.
 
 The Music control holds these parts, in one row from left to right on the Main Menu, and in one row [with the Track title first on the Globe stage](#music-control-on-the-globe-stage):
 

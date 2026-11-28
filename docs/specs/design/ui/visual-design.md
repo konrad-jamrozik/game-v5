@@ -68,7 +68,7 @@ Each colour has one role, so that the same colour always means the same thing ac
 | Divider | `#2B2A24` | Dividers between panel sections, empty meter segments, and the outline of a disabled checkbox. |
 | Border | `#3A382F` | Borders of controls, table header rules, chart baselines, and the top edge of a plain card. |
 | Text | `#E8E4D8` | Primary text and the lines of neutral chart series. |
-| Text secondary | `#B8B3A6` | Supporting prose, e.g. the game description on the Main menu. |
+| Text secondary | `#B8B3A6` | Supporting prose, e.g. the subtitle on the Main menu. |
 | Text muted | `#9C978A` | Labels, hints, and idle states, e.g. an Agent on standby or a missed attack in the Combat log; the outline of an enabled unchecked checkbox and the tick of a disabled checked one. |
 | Axis | `#8F8A7D` | Chart axis labels. |
 | Accent | `#FF7A1A` | The primary action, an enabled checked checkbox, the open-Detail-view marker, the card edge of the [Campaign](../foundation/core-concepts.md#campaign-and-session) of the most recent [Campaign save](../foundation/engine-contract.md#persisted-data) on the [Main menu](../foundation/campaign-lifecycle.md#glossary), and [Panic](../mechanics/domain-model.md#campaign-standing). |
@@ -194,7 +194,7 @@ Components are the building blocks every screen reuses. A screen that needs a co
 Buttons come in five kinds so that the Player can tell at a glance what a button will do.
 
 - A neutral button has a Raised fill, a Border outline, and Text-coloured text.
-- A primary button has an Accent fill and On-accent text. A panel has at most one primary button, and it is the action the panel exists for, e.g. Start Campaign or Advance turn.
+- A primary button has an Accent fill and On-accent text. A panel has at most one primary button, and it is the action the panel exists for, e.g. Start a new Campaign or Advance turn.
 - A destructive button has no fill, a Danger border outline, and Danger text, e.g. Delete and Delete campaign.
 - A weighty button has no fill, a Warning outline, and Warning text. It marks a reversible step with a larger reach than its usual form, e.g. Undo Turn in place of Undo Action.
 - An Autopilot button has no fill, an Autopilot outline, and Autopilot text. It marks a reversible step that crosses an [Autopilot engagement](../foundation/engine-contract.md#autopilot), e.g. Undo Autopilot in place of Undo Turn, so that it never passes for a step of the Player's own play.

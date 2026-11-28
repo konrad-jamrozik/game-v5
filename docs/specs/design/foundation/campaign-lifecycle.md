@@ -33,7 +33,7 @@ A Session starts when the game starts and ends when the game exits. A newly open
 
 The Campaign selection decides which [Campaign](core-concepts.md#campaign-and-session), if any, the Session is playing. Three operations change it:
 
-- **Create:** `session.campaign.create(options)` creates a Campaign using the current [Game build](core-concepts.md#game-build-and-content) and the Session's new-Campaign setup, and selects it as the Current campaign.
+- **Create:** `session.campaign.create(options)` creates a Campaign using the current [Game build](core-concepts.md#game-build-and-content) and the Session's new-Campaign setup, gives it the [Campaign name](saves.md#identifiers) that `options` holds, if any, and selects it as the Current campaign.
 - **Load:** `session.saves.load(save)` [restores a Campaign save](saves.md#loading) and selects its Campaign as the Current campaign.
 - **Close:** `session.campaign.close()` removes the Current campaign and returns the Session to the Main menu.
 

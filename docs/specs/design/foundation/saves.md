@@ -24,6 +24,7 @@ The identifiers of [Campaigns](core-concepts.md#campaign-and-session) and their 
 | --- | --- |
 | Campaign ID | The [Independent identifier](determinism-and-randomness.md#glossary) identifying one Campaign, assigned when the Campaign is created and shared by every Campaign save of that Campaign. It is not [Campaign state](core-concepts.md#campaign-and-session), and the [Game rules](core-concepts.md#game-build-and-content) never read it. |
 | Campaign save ID | The Independent identifier identifying one Campaign save, assigned when that Campaign save is created. |
+| Campaign name | The text by which an interface names one Campaign to the player, e.g. "Campaign 2026-11-27 #2". The [Session controller](engine-contract.md#principals-and-access) may supply it in `session.campaign.create(options)`; a Campaign created without one has an empty Campaign name. It is fixed at creation and shared by every Campaign save of that Campaign. Like the Campaign ID it lies outside Campaign state, but it need not be unique. |
 
 ## Autosave kinds
 
@@ -52,7 +53,7 @@ The bounds on Campaign saves.
 
 A Campaign save holds everything needed to continue its Campaign from one World state, and nothing of the Session that wrote it. Its [contents](engine-contract.md#data-ownership) are:
 
-- its Campaign save ID and the Campaign ID of its Campaign;
+- its Campaign save ID, and the Campaign ID and Campaign name of its Campaign;
 - the Campaign state of the Campaign as it was when the Campaign save was written, [whole](campaign-state.md#campaign-state-composition); its saved World state is the [Current world state](engine-contract.md#player-actions-and-turns) of that Campaign state, the one its [Timeline pointer](engine-contract.md#persisted-data) is on, and its [Timeline](engine-contract.md#persisted-data) is that of the Turn the saved World state belongs to;
 - the time it was last written, which is not Campaign state, so the Game rules never read it.
 
@@ -102,7 +103,7 @@ One further Autosave, and the removal of the Autosaves of abandoned play, belong
 
 `session.saves.list()` reports every Campaign save in [Game storage](engine-contract.md#persisted-data), of every Campaign, including every Autosave; e.g., a user interface's [Main menu](campaign-lifecycle.md#glossary) lists them for the player to choose from. For each Campaign save it reports:
 
-- its Campaign save ID, which `session.saves.load(save)` accepts, and its Campaign ID, so the Campaign saves of one Campaign can be grouped;
+- its Campaign save ID, which `session.saves.load(save)` accepts, and its Campaign ID, so the Campaign saves of one Campaign can be grouped, and its Campaign name;
 - whether it is an Autosave, and of which kind;
 - the Turn its saved World state belongs to;
 - the number of Player actions that lead from the start of that Turn to its saved World state, not counting Advance turn or any action that was undone; e.g., 0 when no Player action has been committed in that Turn yet;
