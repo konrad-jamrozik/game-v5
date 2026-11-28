@@ -10,7 +10,7 @@
 
 # Overview
 
-The GUI plays quiet background music under every screen, so that watching the Earth from the command console feels like a covert operation under way. The music is meant to be heard and then forgotten: it plays the Tracks of the Soundtrack in a random order, each fading in and out smoothly, and never stops or restarts because the Player changes screen. The Player can turn it off or skip to the next Track at any time, from the Main menu and from the Campaign screen, can always see which Track is playing, and sets its volume, or turns it off, in the Settings panel.
+Once the Player starts or loads a Campaign, the GUI plays quiet background music under every screen, so that watching the Earth from the command console feels like a covert operation under way. The music is meant to be heard and then forgotten: it plays the Tracks of the Soundtrack in a random order, each fading in and out smoothly, and never stops or restarts because the Player changes screen. The Player can turn it off or skip to the next Track from the Campaign screen, can see there which Track is playing, and sets its volume, or turns it off, in the Settings panel of the Campaign screen. The Main menu offers no music control, so that it stays free of anything but starting and resuming Campaigns.
 
 The music belongs to the [Graphical User Interface](gui.md) alone. It reads no game state, changes no [Campaign state](../foundation/core-concepts.md#campaign-and-session), and draws no random outcome of a [Campaign](../foundation/core-concepts.md#campaign-and-session); the [Command-Line Interface](cli.md) plays no music. Its settings are part of [Global configuration](../foundation/engine-contract.md#persisted-data), so a choice the Player makes once applies in every later [Session](../foundation/core-concepts.md#campaign-and-session).
 
@@ -60,9 +60,9 @@ Here f is the [fade factor](#fades). E.g., with a Music volume of 50 and no fade
 
 # Playback
 
-The GUI plays music from the moment it opens until the Session ends, whichever screen it shows, so that the music is one continuous background rather than a sound tied to a screen.
+The GUI plays music from the first time in the Session that a [Campaign](../foundation/core-concepts.md#campaign-and-session) is created or loaded until the Session ends, whichever screen it shows, so that the music is one continuous background rather than a sound tied to a screen. The [Main menu](../foundation/campaign-lifecycle.md#glossary) is silent until then, and once the music has started it goes on playing when the Player returns to the Main menu.
 
-- **Start:** When the GUI opens and Music on is `true`, it starts the first Track of the playing order. When the platform withholds sound until the Player first interacts with the GUI, e.g. a web browser that blocks sound until the first click or key press, the first Track starts at that first interaction instead, from its beginning.
+- **Start:** When a Campaign is first created or loaded in the Session and Music on is `true`, the GUI starts the first Track of the playing order. Creating or loading a Campaign is an interaction with the GUI, so a platform that withholds sound until the Player first interacts with it, e.g. a web browser that blocks sound until the first click or key press, lets it play.
 - **Continuity:** Changing screen, opening or closing a [Detail view](gui.md#glossary), and creating, loading, or closing a [Campaign](../foundation/core-concepts.md#campaign-and-session) neither restart nor interrupt the Current Track. Neither does an [Autopilot engagement](../foundation/engine-contract.md#autopilot).
 - **Next Track:** When the Current Track ends, the next Track of the playing order starts at once from its beginning and becomes the Current Track.
 - **Skip:** When the Player selects the Skip button, the Current Track [fades out](#fades), and when the fade ends the Current Track ends, so the next Track of the playing order starts. A skipped Track counts as played in its round.
@@ -96,9 +96,9 @@ Outside these fades, f is 1. When a fade starts while another is under way, the 
 
 # Music control
 
-The Player should be able to silence the music or skip a Track without leaving what they are doing, and to find out what is playing. The Music control does all of these, and it appears in two places: in the header of the [Main Menu](screens/main-menu.md), and on the [Globe stage](gui.md#glossary) of the [Campaign Screen](screens/campaign-screen.md), so it is one click away whenever the globe is in view, and one step away, by closing the [Detail view](gui.md#glossary), while one covers the Globe stage. Setting the volume is rarer, so the [Music volume slider](#music-volume-slider) sits in the [Settings panel](gui.md#glossary) instead.
+The Player should be able to silence the music or skip a Track without leaving what they are doing, and to find out what is playing. The Music control does all of these, and it stands on the [Globe stage](gui.md#glossary) of the [Campaign Screen](screens/campaign-screen.md), so it is one click away whenever the globe is in view, and one step away, by closing the [Detail view](gui.md#glossary), while one covers the Globe stage. Setting the volume is rarer, so the [Music volume slider](#music-volume-slider) sits in the [Settings panel](gui.md#glossary) instead.
 
-The Music control holds these parts, in one row from left to right on the Main Menu, and in one row [with the Track title first on the Globe stage](#music-control-on-the-globe-stage):
+The Music control holds these parts, in one row [with the Track title first](#music-control-on-the-globe-stage):
 
 1. **Music toggle:** a neutral button showing a speaker, struck through while Music on is `false`. Selecting it sets Music on to the opposite value. Its accessible name is "Music on" or "Music off", after the state it shows.
 2. **Skip button:** a neutral button showing "⏭", with the accessible name "Next Track". Selecting it [skips the Current Track](#playback). It is disabled while Music on is `false` and before the first Track starts.

@@ -56,7 +56,7 @@ A → B means A is referenced by B: the text of B links to A. Layer 1 is drawn a
 | 17 | CRPLAY Combat Replay | AGENT, COMBAT, CORE, DOM, GUI |
 | 17 | CVIEW Charts View | AGENT, COMBAT, CORE, DOM, ECON, ENDING, ENG, GUI, MISSION, WHIST |
 | 17 | LVIEW Leads View | AGENT, CINST, DOM, ECON, EFFECT, ENG, GUI, INVSTG, LEAD |
-| 17 | MUSIC Music | CORE, ENG, GUI |
+| 17 | MUSIC Music | CORE, ENG, GUI, LIFE |
 | 17 | MVIEW Missions View | AGENT, CINST, COMBAT, DOM, ECON, ENG, FACTION, GUI, MISSION, WHIST |
 | 17 | SITP Situation Panel | AGENT, CORE, DOM, ECON, ENG, GUI |
 | 17 | STVIEW Storage View | COMBAT, CORE, DOM, ENG, EQUIP, GUI |
@@ -76,7 +76,7 @@ A → B means A is referenced by B: the text of B links to A. Layer 1 is drawn a
 | 21 | GLOBE Globe Integration | CORE, ENG, GUI, PLACE |
 | 21 | LICENSE Implementation License | PLACE |
 | 21 | LOOP Development Loop | CORE, ENG, PLACE, VIS |
-| 21 | MENU Main Menu | CONFIG, CORE, CSIM, CSTATE, DETERM, ENG, GDR, GUI, LIFE, SAVES |
+| 21 | MENU Main Menu | CONFIG, CORE, CSIM, CSTATE, DETERM, DOM, ENG, GDR, GUI, LIFE, SAVES |
 | 21 | REUSE Rule Reuse | COMBAT, CORE, DOM, ENG, PLACE |
 | 21 | TESTVAL Test Values | CORE, PLACE |
 | 22 | AIEXPECT Autopilot AI Expectations | ALAB, BASICAI, COMBAT, CONFIG, CORE, DOM, ENG |
